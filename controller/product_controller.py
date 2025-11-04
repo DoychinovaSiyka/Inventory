@@ -1,0 +1,97 @@
+from storage.json_repository import Repository
+from models.product import Product
+
+
+class ProductController():
+    def __init__(self, repo:Repository):
+        self.repo = repo
+        self.products = [Product.from_dict(p) for p in self.repo.load()]
+
+
+    def add(self, name,categories, quantity, description, price):
+        product = Product(name, categories, quantity, description, price )
+        self.products.append(product)
+        self._save()
+        return product
+
+
+    def update_price(self,name,new_price):
+        for p in self.products:
+            if p.name == name:
+                p.price = new_price
+                self._save()
+                return True
+        return False
+
+    def search(self,keyword):
+        return [p for p in self.products if keyword in ( p.name or "").lower() or
+                keyword in (p.description or "").lower()]
+
+    def sort_by_name(self):
+        self.products.sort(key = lambda p:p.name.lower())
+
+    def filter_by_category(self,category):
+        return [p for p in self.products if category in p.categories]
+
+    def check_low_stock(self,threshold = 5):
+        return [p for p in self.products if p.quantity < threshold]
+
+    def remove_by_name(self, name):
+        original_len = len(self.products)
+        self.products = [p for p in self.products if p.name!= name]
+        if len(self.products) < original_len:
+            self._save()
+            return True
+        return False
+
+    def get_all(self):
+        return self.products
+
+
+
+    def sort_by_price_desc(self):
+        """Сортира продуктитите в низходящ ред по цена"""
+        self.products.sort(key = lambda p:p.price,reverse = True)
+        return self.products
+
+
+    def average_price(self):
+        if not self.products:
+            return 0.0
+        return sum(p.price for p in self.products)/ len(self.products)
+
+    def bubble_sort(self):
+        sorted_products = self.products[:]
+        n = len(sorted_products)
+        for i in range(n):
+            for j in range(0,n-i-1):
+                if sorted_products[j].price < sorted_products[j+1].price:
+                    sorted_products[j],sorted_products[j+1] = sorted_products[j+1],sorted_products[j]
+        return sorted_products
+
+    def selection_sort(self):
+        sorted_products = self.products[:]
+        i = 0
+        n = len(sorted_products)
+
+        while i < n:
+            max_idx = i
+            j = i + 1
+            while j < n:
+                if sorted_products[j].price > sorted_products[max_index].price:
+                    max_idx = j
+                j += 1
+
+            # Размяна
+            sorted_products[i],sorted_products[max_idx] = sorted_products[max_idx],sorted_products[i]
+            i+=1
+
+        return sorted_products
+
+
+
+    def _save(self):
+        self.repo.save([p.to_dict() for p in self.products])
+
+
+
