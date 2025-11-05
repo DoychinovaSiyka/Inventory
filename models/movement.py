@@ -21,6 +21,7 @@ class Movement:
             "movement_id": self.movement_id,
             "product_id":  self.product_id,
             "movement_type": self.movement_type.value,
+            "quantity":self.quantity,
             "description":self.description,
             "date": self.date
         }
