@@ -152,9 +152,9 @@ def product_menu(product_controller,category_controller):
             for i,c in enumerate(categories):
                 print(f"{i}.{c.name}")
             try:
-                selected = int(input("Изберете категория по номер: "))
-                category = categories[selected]
-                results = [p for p in product_controller.get_all() if category in p.categories]
+                selected_ids = [int(i) for i in input("Изберете категории по номер (разедлени със запетайка):").split(",")]
+                selected_categories = [categories[i] for i in selected_ids]
+                results = product_controller.filter_by_multiple_category_ids([c.category_id for c in selected_categories])
                 if not results:
                     print("Няма продукти в тази категория.")
 

@@ -30,8 +30,14 @@ class ProductController():
     def sort_by_name(self):
         self.products.sort(key = lambda p:p.name.lower())
 
-    def filter_by_category(self,category):
-        return [p for p in self.products if category in p.categories]
+    def filter_by_multiple_category_ids(self,category_ids):
+        filtered = []
+        for p in self.products:
+            for c in p.categories:
+                if c.category_id in category_ids:
+                    filtered.append(p)
+                    break # спира, за да не добави продукта многократно
+        return filtered
 
     def check_low_stock(self,threshold = 5):
         return [p for p in self.products if p.quantity < threshold]
@@ -78,7 +84,7 @@ class ProductController():
             max_idx = i
             j = i + 1
             while j < n:
-                if sorted_products[j].price > sorted_products[max_index].price:
+                if sorted_products[j].price > sorted_products[max_idx].price:
                     max_idx = j
                 j += 1
 
