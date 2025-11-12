@@ -52,8 +52,9 @@ class Movement(metaclass=MetaMovement):
 
 
     @staticmethod
-    def from_dict(data): # #  десериализация превръщам речник (текст) обратно в обект
-        return Movement(
+    def from_dict(data):
+        try:
+            return Movement(
             movement_id = data.get("movement_id"),
             product_id = data.get("product_id"),
             movement_type = MovementType(data["movement_type"]),
@@ -61,9 +62,12 @@ class Movement(metaclass=MetaMovement):
             description = data["description"],
             price = data["price"],
             created= data["created"],
-            modified = data["modified"]
+            modified = data["modified"])
+        except KeyError as e:
+            print(f"Пропуснат ключ в данните:{e}.")
+            return None
 
-        )
+
 
 
 

@@ -273,7 +273,7 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
 
             try:
                 product_idx = int(input("Изберете един от продуктите:"))
-                if product_idx <= len(products) or not product_idx > 0:
+                if product_idx < 0 or product_idx>= len(products):
                     raise ValueError()
                 product_id = products[product_idx].product_id
             except ValueError:
@@ -283,7 +283,7 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
                 movement_type_num = int(input("Въведете 0 за доставка или 1 за продажба: "))
                 if movement_type_num not in [0,1]:
                     raise ValueError()
-                movement_type = MovementType.DELIVERY if movement_type_num == 1 else MovementType.SALE
+                movement_type = MovementType.DELIVERY if movement_type_num == 0 else MovementType.SALE
 
             except ValueError:
                 print("Невалиден избор.")

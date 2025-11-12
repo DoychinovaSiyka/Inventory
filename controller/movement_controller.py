@@ -16,6 +16,8 @@ class MovementController():
         self._save()
         return movement
 
+    def _save(self):
+        self.repo.save([m.to_dict() for m in self.movements])
     def search(self,keyword):
         return [p for p in self.movements if keyword in (p.description or "").lower()]
 
