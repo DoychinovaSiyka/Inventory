@@ -1,4 +1,3 @@
-
 from controller.product_controller import ProductController
 from controller.movement_controller import MovementController
 from controller.category_controller import CategoryController
