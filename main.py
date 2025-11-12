@@ -312,7 +312,6 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
             except ValueError:
                 print("Невалидна цена.")
                 continue
-            # product_id, movement_type, quantity, description, price
             movement_controller.add(product_id,movement_type,quantity,description,price)
 
 
