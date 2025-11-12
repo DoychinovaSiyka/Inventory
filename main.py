@@ -1,9 +1,12 @@
+from enum import EnumType
+
+from controller.product_controller import ProductController
+from controller.movement_controller import MovementController
+from controller.category_controller import CategoryController
+from models.movement import MovementType
 from models.product import Product
 from models.category import Category
-from controller.category_controller import CategoryController
-from controller.product_controller import ProductController
 from storage.json_repository import JSONRepository
-
 
 
 
@@ -224,14 +227,17 @@ def show_menu():
     print("0.Назад")
     print("1.Управление на продукт")
     print("2.Управление на категория")
+    print("3.Управление на доставки/продажби")
 
 
 def main():
     category_repo = JSONRepository("data/categories.json")
     product_repo = JSONRepository("data/products.json")
+    movement_repo = JSONRepository("data/movements.json")
 
     category_controller = CategoryController(category_repo)
     product_controller = ProductController(product_repo)
+    movement_controller = MovementController(movement_repo)
     while True:
         show_menu()
         choice = input("Изберете опция: ")
@@ -241,11 +247,82 @@ def main():
             product_menu(product_controller,category_controller)
         elif choice == "2":
             category_menu(category_controller)
+        elif choice == "3":
+            movement_menu(product_controller,movement_controller)
+
+
+
+def movement_menu(product_controller:ProductController,movement_controller:MovementController):
+    while True:
+        print("\nМеню за Доставки/Продажби")
+        print("0.Назад")
+        print("1.Създаване на доставка/продажба")
+        print("2.Търсене на доставки/продажби")
+        print("3.Покажи всички доставки/продажби")
+
+
+
+        choice = input("Изберете опция: ")
+        if choice == "0":
+            break
+        elif choice == "1":
+            # movement_id, product_id, movement_type, quantity, description, price, date
+
+            products = product_controller.get_all()
+            for i, c in enumerate(products):
+                print(f"{i}. {c.name}")
+
+            try:
+                product_idx = int(input("Изберете един от продуктите:"))
+                if product_idx <= len(products) or not product_idx > 0:
+                    raise ValueError()
+                product_id = products[product_idx].product_id
+            except ValueError:
+                print("Избран е навалиден продукт.")
+                continue
+            try:
+                movement_type_num = int(input("Въведете 0 за доставка или 1 за продажба: "))
+                if movement_type_num not in [0,1]:
+                    raise ValueError()
+                movement_type = MovementType.DELIVERY if movement_type_num == 1 else MovementType.SALE
+
+            except ValueError:
+                print("Невалиден избор.")
+                continue
+
+            quantity = input("Количество: ")
+            try:
+                quantity = int(quantity)
+                if quantity <= 0:
+                    print("Количеството трябва да е положително число.")
+                    continue
+            except ValueError:
+                print("Невалидно количество")
+                continue
+
+            description = input("Описание: ")
+            if not description:
+                print("Описанието е задължително !")
+                continue
+
+            price = input("Цена: ")
+            try:
+                price = float(price)
+                if price <= 0:
+                    print("Цената трябва да е положително число.")
+                    continue
+            except ValueError:
+                print("Невалидна цена.")
+                continue
+            # product_id, movement_type, quantity, description, price
+            movement_controller.add(product_id,movement_type,quantity,description,price)
 
 
 if __name__  == "__main__":
 
     main()
+
+
 
 # Идея: парола за достъп до скрадовите наличности
 # С ИЗПОЛЗВАНЕТО НА ДЕКОРИРАЩА ФУНКЦИЯ - КАКТО Е ПРИ ТРАЯН

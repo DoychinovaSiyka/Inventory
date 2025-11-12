@@ -1,6 +1,6 @@
 from enum import Enum
 from datetime import datetime
-
+import uuid
 class MovementType(Enum):
     DELIVERY = "delivery"
     SALE = "sale"
@@ -21,49 +21,56 @@ class MetaMovement(type):
                     "movement_type": self.movement_type.value,
                     "quantity": self.quantity,
                     "description": self.description,
-                    "date": self.date
+                    "price":self.price,
+                    "created": self.created,
+                    "modified": self.modified
                 }
             namespace['to_dict'] = to_dict
 
         return super().__new__(cls,*args,**kwargs)
 
 class Movement(metaclass=MetaMovement):
-    def __init__(self,movement_id,product_id,movement_type,quantity,description = "",date = None):
-        self.movement_id = movement_id
+    def __init__(self,product_id,movement_type,quantity,description,price,created=None,modified=None,movement_id = None):
+        if movement_id is not None:
+            self.movement_id = movement_id
+        else:
+            self.movement_id = str(uuid.uuid4())
+
         self.product_id = product_id
         self.movement_type = movement_type
         self.quantity = quantity
         self.description = description
-        self.date = date  or datetime.now().isoformat()
-
-
+        self.price = price
+        if created is not None:
+            self.created = created
+        else:
+            self.created = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if modified is not None:
+            self.modified = modified
+        else:
+            self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
     @staticmethod
     def from_dict(data): # #  десериализация превръщам речник (текст) обратно в обект
         return Movement(
-            movement_id = data["movement_id"],
-            product_id = data["product_id"],
+            movement_id = data.get("movement_id"),
+            product_id = data.get("product_id"),
             movement_type = MovementType(data["movement_type"]),
             quantity = data["quantity"],
-            description = data.get("description",""),
-            date = data.get("date")
+            description = data["description"],
+            price = data["price"],
+            created= data["created"],
+            modified = data["modified"]
+
         )
 
-    def __str__(self):
-        return f"[{self.movement_type.name}] {self.quantity} бр. за продукт {self.product_id} на {self.date}"
 
 
 
-m1 = Movement(
-    movement_id=1,
-    product_id=101,
-    movement_type=MovementType.DELIVERY,
-    quantity=50,
-    description="Първоначална доставка"
-)
-print(m1)
-print(m1.to_dict())
+
+
+
 
 
 
