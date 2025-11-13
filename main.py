@@ -264,7 +264,6 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
         if choice == "0":
             break
         elif choice == "1":
-            # movement_id, product_id, movement_type, quantity, description, price, date
 
             products = product_controller.get_all()
             for i, c in enumerate(products):
@@ -315,10 +314,30 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
             movement_controller.add(product_id,movement_type,quantity,description,price)
 
 
+
+        elif choice == "2":
+            keyword = input("Въведи дума за търсене в описанието: ").lower()
+            results = [m for m in movement_controller.get_all() if keyword in m.description.lower()]
+            if not results:
+                print("Няма съвпадения.")
+            else:
+                print("\nНамерени двежения:")
+                for m in results:
+                    print(f"-{m.movement_type.name} | Продукт ID: {m.product_id} | Количество: {m.quantity}| Цена:{m.price} | Дата:{m.created}")
+
+
+        elif choice == "3":
+            movements = movement_controller.get_all()
+            if not movements:
+                print("Няма доставки или продажби.")
+            else:
+                print("\nСписък с двежения:")
+                for m in movements:
+                    print(f"-{m.movement_type.name} | Продукт ID: {m.product_id} | Количество: {m.quantity}| Цена:{m.price} | Дата:{m.created}")
+
 if __name__  == "__main__":
 
     main()
-
 
 
 # Идея: парола за достъп до скрадовите наличности
