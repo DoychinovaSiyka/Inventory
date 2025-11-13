@@ -1,10 +1,23 @@
 import uuid
-
+from datetime import datetime
 class Category:
-    def __init__(self,name,category_id = None):
+    def __init__(self,name,description = "",category_id = None,created = None,modified = None):
         self.name = name
-
         self.category_id = category_id or str(uuid.uuid4())
+        self.description = description
+        self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.modified = modified if modified else  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.categories = []
+
+
+
+    def to_dict(self): # сериализация от обект в текст
+        return {
+            'category_id':self.category_id,
+            'name': self.name,
+            'description': self.created,
+            'modified':self.modified,
+        }
 
     @staticmethod
     def from_dict(data): # десериализация от текст превръщам в обект
@@ -13,12 +26,6 @@ class Category:
             category_id=data["category_id"],
         )
 
-    def to_dict(self): # сериализация от обект в текст
-        return {
-            'name': self.name,
-
-            'category_id': self.category_id
-        }
 
 
 # Независимост — статичният

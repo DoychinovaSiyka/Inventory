@@ -23,14 +23,15 @@ class MetaMovement(type):
                     "description": self.description,
                     "price":self.price,
                     "created": self.created,
-                    "modified": self.modified
+                    "modified": self.modified,
+                    "location_id":self.location_id,
                 }
             namespace['to_dict'] = to_dict
 
         return super().__new__(cls,*args,**kwargs)
 
 class Movement(metaclass=MetaMovement):
-    def __init__(self,product_id,movement_type,quantity,description,price,created=None,modified=None,movement_id = None):
+    def __init__(self,product_id,movement_type,quantity,description,price,created=None,modified=None,movement_id = None,location_id = None):
         if movement_id is not None:
             self.movement_id = movement_id
         else:
@@ -49,6 +50,10 @@ class Movement(metaclass=MetaMovement):
             self.modified = modified
         else:
             self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if location_id is not None:
+            self.location_id = location_id
+        else:
+            self.location_id = str(uuid.uuid4())
 
 
     @staticmethod
@@ -66,10 +71,6 @@ class Movement(metaclass=MetaMovement):
         except KeyError as e:
             print(f"Пропуснат ключ в данните:{e}.")
             return None
-
-
-
-
 
 
 
