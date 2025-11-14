@@ -1,7 +1,7 @@
 
 from storage.json_repository import Repository
 
-from models.movement import Movement
+from models.movement import Movement, MovementType
 
 
 class MovementController():
