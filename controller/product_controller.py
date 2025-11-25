@@ -12,7 +12,6 @@ class ProductController():
     def add(self, name,categories, quantity, description, price):
         product = Product(name, categories, quantity, description, price )
         self.products.append(product)
-        self._cache.clear()
         self._save()
         return product
 
