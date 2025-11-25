@@ -7,6 +7,18 @@
         "description": "derg",
         "price": 5.0,
         "created": "2025-11-13 11:37:52",
-        "modified": "2025-11-13 11:37:52"
+        "modified": "2025-11-13 11:37:52",
+        "location_id": "347b677c-5b82-49a7-bdcd-8566f9b0c747"
+    },
+    {
+        "movement_id": "72564813-72d8-4960-b963-7a9425eef6e0",
+        "product_id": 1,
+        "movement_type": "delivery",
+        "quantity": 2,
+        "description": "\u0433\u043e\u0440\u0441\u043a\u0438 \u043f\u043b\u043e\u0434\u043e\u0432\u0435",
+        "price": 8.0,
+        "created": "2025-11-14 14:50:21",
+        "modified": "2025-11-14 14:50:21",
+        "location_id": "eb8cb51b-1332-4d42-a7f6-8f6af2c09255"
     }
 ]

@@ -7,6 +7,8 @@ from models.category import Category
 from storage.json_repository import JSONRepository
 
 
+from password import require_password
+from password import show_products_menu
 
 def product_menu(product_controller,category_controller):
     while True:
@@ -101,15 +103,9 @@ def product_menu(product_controller,category_controller):
                 print("Невалидна цена.")
 
         elif choice == "4":
-            products = product_controller.get_all()
-            if not products:
-                print("Няма налични продукти.")
-            else:
-                print("\nСписъкът с продукти: ")
-                for p in products:
-                    categories_names = ",".join([c.name for c in p.categories])
-                    print(f"-{p.name} |Категории: {categories_names} |Количество: {p.quantity}бр. |Цена: {p.price:.2f} лв.")
 
+            show_products_menu(product_controller)
+            break
 
 
         elif choice == "5":
@@ -335,13 +331,18 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
                 for m in movements:
                     print(f"-{m.movement_type.name} | Продукт ID: {m.product_id} | Количество: {m.quantity}| Цена:{m.price} | Дата:{m.created}")
 
+
+
+
+
+
 if __name__  == "__main__":
 
     main()
 
 
 # Идея: парола за достъп до скрадовите наличности
-# С ИЗПОЛЗВАНЕТО НА ДЕКОРИРАЩА ФУНКЦИЯ - КАКТО Е ПРИ ТРАЯН
+# С ИЗПОЛЗВАНЕТО НА ДЕКОРИРАЩА ФУНКЦИЯ
 
 
 

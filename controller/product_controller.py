@@ -6,19 +6,24 @@ class ProductController():
     def __init__(self, repo:Repository):
         self.repo = repo
         self.products = [Product.from_dict(p) for p in self.repo.load()]
-
+        self._cache = {} # кеш
 
     def add(self, name,categories, quantity, description, price):
         product = Product(name, categories, quantity, description, price )
         self.products.append(product)
+        self._cache.clear()
         self._save()
         return product
+
+    def clear_cache(self):
+        self._cache.clear()
 
 
     def update_price(self,name,new_price):
         for p in self.products:
             if p.name == name:
                 p.price = new_price
+                self._cache.clear()
                 self._save()
                 return True
         return False
@@ -46,6 +51,7 @@ class ProductController():
         original_len = len(self.products)
         self.products = [p for p in self.products if p.name!= name]
         if len(self.products) < original_len:
+            self._cache.clear()
             self._save()
             return True
         return False
@@ -62,9 +68,23 @@ class ProductController():
 
 
     def average_price(self):
+        key = ("average_price",len(self.products))
+        if key in self._cache:
+            return self._cache[key]
         if not self.products:
-            return 0.0
-        return sum(p.price for p in self.products)/ len(self.products)
+            result = 0.0
+        else:
+            result = sum(p.price for p in self.products)/ len(self.products)
+        self._cache[key] = result
+        return result
+
+    def total_values(self):
+        key = ("total_value", len(self.products))
+        if key in self._cache:
+            return self._cache[key]
+        result = sum(p.price*p.quantity for p in self.products)
+        self._cache[key] = result
+        return result
 
     def bubble_sort(self):
         sorted_products = self.products[:]
@@ -98,6 +118,8 @@ class ProductController():
 
     def _save(self):
         self.repo.save([p.to_dict() for p in self.products])
+
+
 
 
 

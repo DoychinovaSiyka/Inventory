@@ -3,24 +3,48 @@
         "name": "\u0447\u0430\u0439",
         "categories": [
             {
+                "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
                 "name": "\u043d\u0430\u043f\u0438\u0442\u043a\u0438",
-                "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6"
+                "description": "2025-11-25 13:59:39",
+                "modified": "2025-11-25 13:59:39"
             }
         ],
         "quantity": 5,
         "description": "\u0431\u0438\u043b\u043a\u043e\u0432 \u0447\u0430\u0439",
-        "price": 2.0
+        "price": 2.0,
+        "category_id": "da38e853-c571-4444-88f9-9f09766862d8",
+        "supplier_id": "62be95e1-d270-4324-b469-00919811b33f"
     },
     {
         "name": "\u043c\u043b\u044f\u043a\u043e",
         "categories": [
             {
+                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
                 "name": "\u043c\u043b\u0435\u0447\u043d\u0438 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0438",
-                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc"
+                "description": "2025-11-25 13:59:39",
+                "modified": "2025-11-25 13:59:39"
             }
         ],
         "quantity": 10,
         "description": "\u041f\u0440\u044f\u0441\u043d\u043e \u043a\u0440\u0430\u0432\u0435 \u043c\u043b\u044f\u043a\u043e, \u043f\u0430\u0441\u0442\u044c\u043e\u0440\u0438\u0437\u0438\u0440\u0430\u043d\u043e, 3.2% \u043c\u0430\u0441\u043b\u0435\u043d\u043e\u0441\u0442 \u0431\u0443\u0442\u0438\u043b\u043a\u0430 1 \u043b\u0438\u0442\u044a\u0440",
-        "price": 2.75
+        "price": 2.75,
+        "category_id": "6a35233e-5073-4a1b-9472-7bfe386b41a2",
+        "supplier_id": "6a8a4715-0b17-4182-b5bb-7907b56afed0"
+    },
+    {
+        "name": "\u044f\u0439\u0446\u0430",
+        "categories": [
+            {
+                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
+                "name": "\u043c\u043b\u0435\u0447\u043d\u0438 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0438",
+                "description": "2025-11-25 13:59:39",
+                "modified": "2025-11-25 13:59:39"
+            }
+        ],
+        "quantity": 4,
+        "description": "\u0442\u0445\u0436\u0448",
+        "price": 5.0,
+        "category_id": "a2182492-714c-4c61-8a7a-e153ec2eb07c",
+        "supplier_id": "822c6b66-1f28-4537-8c09-de3b377b96a8"
     }
 ]
