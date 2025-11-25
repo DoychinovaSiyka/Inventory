@@ -333,9 +333,6 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
 
 
 
-
-
-
 if __name__  == "__main__":
 
     main()
