@@ -2,7 +2,7 @@ from storage.json_repository import Repository
 from models.product import Product
 
 
-class ProductController():
+class ProductController:
     def __init__(self, repo: Repository):
         self.repo = repo
         self.products = [Product.from_dict(p) for p in self.repo.load()]
@@ -120,3 +120,5 @@ class ProductController():
 
     def _save(self):
         self.repo.save([p.to_dict() for p in self.products])
+
+
