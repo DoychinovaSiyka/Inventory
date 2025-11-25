@@ -6,8 +6,7 @@ class ProductController():
     def __init__(self, repo:Repository):
         self.repo = repo
         self.products = [Product.from_dict(p) for p in self.repo.load()]
-        self._cache = {} # кеш
-        self._log = []
+        self._log = []  # само лог 
 
     def add(self, name,categories, quantity, description, price):
         product = Product(name, categories, quantity, description, price )
