@@ -20,12 +20,6 @@ class Product:
         self.description = description
         self.price = price
 
-    # def update(self,name,category,quantity,description,price):
-    #     self.name = name
-    #     self.category = category
-    #     self.quantity = quantity
-    #     self.description = description
-    #     self.price = price
 
 
 

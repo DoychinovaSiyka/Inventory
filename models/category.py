@@ -7,7 +7,6 @@ class Category:
         self.description = description
         self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.modified = modified if modified else  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.categories = []
 
 
 
@@ -15,16 +14,19 @@ class Category:
         return {
             'category_id':self.category_id,
             'name': self.name,
-            'description': self.created,
+            'description': self.description,
+            'created':self.created,
             'modified':self.modified,
         }
 
     @staticmethod
     def from_dict(data): # десериализация от текст превръщам в обект
         return Category(
-            name = data["name"],
-            category_id=data["category_id"],
-        )
+            name = data.get("name"),
+            description = data.get("description"),
+            category_id=data.get("category_id"),
+            created = data.get("created"),
+            modified = data.get("modified"))
 
 
 

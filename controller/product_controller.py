@@ -7,6 +7,7 @@ class ProductController():
         self.repo = repo
         self.products = [Product.from_dict(p) for p in self.repo.load()]
         self._cache = {} # кеш
+        self._log = []
 
     def add(self, name,categories, quantity, description, price):
         product = Product(name, categories, quantity, description, price )
@@ -28,24 +29,26 @@ class ProductController():
                 return True
         return False
 
-    def search(self,keyword):
-        return [p for p in self.products if keyword in ( p.name or "").lower() or
-                keyword in (p.description or "").lower()]
+
 
     def sort_by_name(self):
         self.products.sort(key = lambda p:p.name.lower())
 
     def filter_by_multiple_category_ids(self,category_ids):
+
+        key = ("filter_by_multiple_category_ids",tuple(sorted(category_ids)))
+        if key in self._cache:
+            return self._cache[key]
         filtered = []
         for p in self.products:
             for c in p.categories:
                 if c.category_id in category_ids:
                     filtered.append(p)
                     break # спира, за да не добави продукта многократно
+        self._cache[key] = filtered
         return filtered
 
-    def check_low_stock(self,threshold = 5):
-        return [p for p in self.products if p.quantity < threshold]
+
 
     def remove_by_name(self, name):
         original_len = len(self.products)
@@ -59,12 +62,22 @@ class ProductController():
     def get_all(self):
         return self.products
 
+    def _log_action(self,action,product):
+        self._log.append({
+            "action":action,"name":product.name,
+            "price":product.price,
+            "quantity":product.quantity})
 
 
-    def sort_by_price_desc(self):
+
+    def sort_by_price_desc_cached(self):
         """Сортира продуктитите в низходящ ред по цена"""
-        self.products.sort(key = lambda p:p.price,reverse = True)
-        return self.products
+        key = ("sort_by_price_desc",len(self.products))
+        if key in self._cache:
+            return self._cache[key]
+        sorted_list = sorted(self.products,key = lambda p:p.price,reverse = True)
+        self._cache[key] = sorted_list
+        return sorted_list
 
 
     def average_price(self):
@@ -78,6 +91,29 @@ class ProductController():
         self._cache[key] = result
         return result
 
+    def check_low_stock(self, threshold=5):
+        key = ("low_stock", threshold, len(self.products))
+        if key in self._cache:
+            return self._cache[key]
+        result = [p for p in self.products if p.quantity < threshold]
+        self._cache[key] = result
+        return result
+
+    def search(self, keyword):
+        key = ("search", keyword.lower())
+        if key in self._cache:
+            return self._cache[key]
+        result = [p for p in self.products if keyword in (p.name or "").lower() or
+                  keyword in (p.description or "").lower()]
+        self._cache[key] = result
+        return result
+
+    def most_expensive(self):
+        return max(self.products,key = lambda p:p.price,default =None)
+
+    def cheapest(self):
+        return min(self.products,key = lambda p:p.price,default = None)
+
     def total_values(self):
         key = ("total_value", len(self.products))
         if key in self._cache:
@@ -85,6 +121,15 @@ class ProductController():
         result = sum(p.price*p.quantity for p in self.products)
         self._cache[key] = result
         return result
+
+
+
+    def group_by_category(self):
+        grouped = {}
+        for p in self.products:
+            for c in p.categories:
+                grouped.setdefault(c.category_id,[]).append(p)
+        return grouped
 
     def bubble_sort(self):
         sorted_products = self.products[:]

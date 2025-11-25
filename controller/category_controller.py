@@ -22,8 +22,8 @@ class CategoryController():
         return False
 
     def update_name(self, category_id, new_name):
-        for p in self.categories:
-            if p.category_id == category_id:
+        for c in self.categories:
+            if c.category_id == category_id:
                 c.name = new_name
                 self._save()
                 return True
