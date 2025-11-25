@@ -2,7 +2,7 @@ from functools import wraps
 import pwinput # Hides the password input
 
 
-# Decorator to require a password
+# Decorator to require a password  паролата не е скрита - ще го демонстрирам по време на защитата в bash или cmd там работи паролата
 def require_password(correct_password):
     def decorator(func):
         @wraps(func)
