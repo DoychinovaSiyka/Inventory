@@ -1,33 +1,26 @@
 from functools import wraps
-import pwinput # Hides the password input
 
-
-# Decorator to require a password  паролата не е скрита - ще го демонстрирам по време на защитата в bash или cmd там работи паролата
+# Декоратор за защита с парола (видима при въвеждане)
 def require_password(correct_password):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            try:
-                password = pwinput.pwinput(prompt ="Въведете парола: ",mask = "$")
-            except Exception:
-                # Fallback if getpass cannot hide input
-                password = input("Въведете парола (ще се вижда): ")
+            # Тук паролата ще се вижда при въвеждане
+            password = input("Въведете парола: ")
 
             if password == correct_password:
                 print("Достъп разрешен!\n")
-                return func(*args,**kwargs)
+                return func(*args, **kwargs)
             else:
                 print("Достъп отказан! Невалидна парола.\n")
                 return None
 
-
         return wrapper
-
     return decorator
 
 
 # Protected products menu
-@require_password("parola123")  # Set your password here
+@require_password("parola123")  # Задай паролата тук
 def show_products_menu(product_controller):
     products = product_controller.get_all()
     if not products:

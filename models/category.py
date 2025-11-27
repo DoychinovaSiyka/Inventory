@@ -22,6 +22,7 @@ class Category:
     @staticmethod
     def from_dict(data): # десериализация от текст превръщам в обект
         return Category(
+
             name = data.get("name"),
             description = data.get("description"),
             category_id=data.get("category_id"),

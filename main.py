@@ -105,8 +105,7 @@ def product_menu(product_controller,category_controller):
         elif choice == "4":
 
             show_products_menu(product_controller)
-            break
-
+            return
 
         elif choice == "5":
             keyword = input("Търси по име или по описание: ").lower()
@@ -138,7 +137,7 @@ def product_menu(product_controller,category_controller):
                 continue
             print("\nСоритрани продукти:")
             for p in sorted_products:
-                print(f"-{p.price}| Цена: {p.price}")
+                print(f"-{p.price}| Цена: {p.price:.2f}")
 
 
         elif choice == "7":
