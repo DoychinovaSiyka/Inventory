@@ -1,70 +1,110 @@
 [
     {
-        "name": "\u0447\u0430\u0439",
+        "product_id": 1,
+        "name": "чай",
         "categories": [
             {
                 "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
-                "name": "\u043d\u0430\u043f\u0438\u0442\u043a\u0438",
+                "name": "напитки",
                 "description": "2025-11-25 13:59:39",
                 "created": "2025-11-26 21:37:56",
                 "modified": "2025-11-25 13:59:39"
             }
         ],
         "quantity": 5,
-        "description": "\u0431\u0438\u043b\u043a\u043e\u0432 \u0447\u0430\u0439",
+        "description": "билков чай",
         "price": 2.0,
         "category_id": "da38e853-c571-4444-88f9-9f09766862d8",
         "supplier_id": "62be95e1-d270-4324-b469-00919811b33f"
     },
     {
-        "name": "\u043c\u043b\u044f\u043a\u043e",
+        "product_id": 2,
+        "name": "мляко",
         "categories": [
             {
                 "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-                "name": "\u043c\u043b\u0435\u0447\u043d\u0438 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0438",
+                "name": "млечни продукти",
                 "description": "2025-11-25 13:59:39",
                 "created": "2025-11-26 21:37:56",
                 "modified": "2025-11-25 13:59:39"
             }
         ],
         "quantity": 10,
-        "description": "\u041f\u0440\u044f\u0441\u043d\u043e \u043a\u0440\u0430\u0432\u0435 \u043c\u043b\u044f\u043a\u043e, \u043f\u0430\u0441\u0442\u044c\u043e\u0440\u0438\u0437\u0438\u0440\u0430\u043d\u043e, 3.2% \u043c\u0430\u0441\u043b\u0435\u043d\u043e\u0441\u0442 \u0431\u0443\u0442\u0438\u043b\u043a\u0430 1 \u043b\u0438\u0442\u044a\u0440",
+        "description": "Прясно краве мляко, пастьоризирано, 3.2% масленост бутилка 1 литър",
         "price": 2.75,
         "category_id": "6a35233e-5073-4a1b-9472-7bfe386b41a2",
         "supplier_id": "6a8a4715-0b17-4182-b5bb-7907b56afed0"
     },
     {
-        "name": "\u044f\u0439\u0446\u0430",
+        "product_id": 3,
+        "name": "яйца",
         "categories": [
             {
                 "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-                "name": "\u043c\u043b\u0435\u0447\u043d\u0438 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0438",
+                "name": "млечни продукти",
                 "description": "2025-11-25 13:59:39",
                 "created": "2025-11-26 21:37:56",
                 "modified": "2025-11-25 13:59:39"
             }
         ],
         "quantity": 4,
-        "description": "\u0442\u0445\u0436\u0448",
+        "description": "тхжш",
         "price": 5.0,
         "category_id": "a2182492-714c-4c61-8a7a-e153ec2eb07c",
         "supplier_id": "822c6b66-1f28-4537-8c09-de3b377b96a8"
     },
     {
-        "name": "\u0446\u0438\u0433\u0430\u0440\u0438",
+        "product_id": 4,
+        "name": "цигари",
         "categories": [
             {
                 "category_id": "22c76763-e708-49a3-9e3b-199e9d70a7f3",
-                "name": "\u043f\u043e\u0434\u043f\u0440\u0430\u0432\u043a\u0438 \u0438 \u0441\u043e\u0441\u043e\u0432\u0435",
+                "name": "подправки и сосове",
                 "description": null,
                 "created": "2025-11-26 21:37:56",
                 "modified": "2025-11-26 21:37:56"
             }
         ],
         "quantity": 8,
-        "description": "\u0445\u043e\u043e\u0438\u0448\u0433",
+        "description": "хооишг",
         "price": 9.0,
         "category_id": "d6f902e3-b7fd-458f-ae24-020ce2e205c1",
         "supplier_id": "1fcdfaa5-1095-4b7a-ba6b-0b870155866d"
+    },
+    {
+        "product_id": 5,
+        "name": "яйца",
+        "categories": [
+            {
+                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
+                "name": "млечни продукти",
+                "description": null,
+                "created": "2025-12-03 15:40:10",
+                "modified": "2025-12-03 15:40:10"
+            }
+        ],
+        "quantity": 10,
+        "description": "кокоши яйца",
+        "price": 2.5,
+        "category_id": "e2e7e26f-3652-4c1c-ad61-015e26a452f3",
+        "supplier_id": "f1cd20cd-50ff-490a-8d52-552f980f3935"
+    },
+    {
+        "product_id": 1,
+        "name": "кафе",
+        "categories": [
+            {
+                "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
+                "name": "напитки",
+                "description": null,
+                "created": "2025-12-04 15:21:07",
+                "modified": "2025-12-04 15:21:07"
+            }
+        ],
+        "quantity": 5,
+        "description": "оетижоеинж",
+        "price": 2.5,
+        "category_id": "c878d628-2056-4c84-bf12-76f066584d53",
+        "supplier_id": "0454e9cd-221b-4a5e-b5ba-9a82f5a01535"
     }
 ]
