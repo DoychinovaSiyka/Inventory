@@ -36,7 +36,7 @@ class CategoryController():
         self.repo.save([c.to_dict() for c in self.categories])
 
 
-# Конторолера е за изтриване  добавяне търсене
+
 
 
 

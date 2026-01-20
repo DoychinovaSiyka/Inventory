@@ -160,6 +160,8 @@ def product_menu(product_controller,category_controller):
                         print(f"-{p.name}| {p.price:.2f} лв")
             except (ValueError,IndexError):
                 print("Невалиден избор.")
+        else:
+            print("Невалидна опция. Опитай пак!")
 
 
 def category_menu(category_controller):
@@ -212,6 +214,8 @@ def category_menu(category_controller):
                 print("\nСписък с категории: ")
                 for c in categories:
                     print(f"-{c.name} (ID:{c.category_id})")
+        else:
+            print("Невалидна опция. Опитай пак!")
 
 
 
@@ -242,6 +246,11 @@ def main():
             category_menu(category_controller)
         elif choice == "3":
             movement_menu(product_controller,movement_controller)
+        else:
+            print("Невалидна опция. Опитай пак!")
+
+
+
 
 
 
@@ -330,6 +339,8 @@ def movement_menu(product_controller:ProductController,movement_controller:Movem
                 for m in movements:
                     print(f"-{m.movement_type.name} | Продукт ID: {m.product_id} | Количество: {m.quantity}| Цена:{m.price} | Дата:{m.created}")
 
+        else:
+            print("Невалидна опция. Опитай пак!")
 
 
 if __name__  == "__main__":
