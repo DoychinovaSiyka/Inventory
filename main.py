@@ -1,86 +1,136 @@
-from controllers.product_controller import ProductController
-from controllers.movement_controller import MovementController
-from controllers.category_controller import CategoryController
 from controllers.user_controller import UserController
-
-from storage.json_repository import JSONRepository
-
 from user_interface.product_menu import product_menu
 from user_interface.category_menu import category_menu
 from user_interface.movement_menu import movement_menu
+from user_interface.user_menu import user_menu
+from user_interface.reports_menu import reports_menu
+from models.user import User
 
 
-def login(user_controller):
-    print("\n   Вход в системата   ")
-    username = input("Потребителско име: ")
-    password = input("Парола: ")
+from user_interface.json_repository import JSONRepository
 
-    user = user_controller.authenticate(username, password)
-    if not user:
-        print("Грешно име или парола.")
-        return None
 
-    print(f"Добре дошъл, {user.username}! Роля: {user.role}")
-    return user
+
+def show_menu(user):
+    role = user.role
+
+    print("\nГлавно меню")
+
+    if role == "anonymous":
+        print("1. Преглед на продукти")
+        print("2. Преглед на категории")
+        print("0. Изход")
+        return "anonymous"
+
+    if role == "operator":
+        print("1. Управление на продукти")
+        print("2. Управление на категории")
+        print("3. Доставки и продажби")
+        print("0. Изход")
+        return "operator"
+
+    if role == "admin":
+        print("1. Управление на продукти")
+        print("2. Управление на категории")
+        print("3. Доставки и продажби")
+        print("4. Управление на потребители")
+        print("5. Справки")
+        print("0. Изход")
+        return "admin"
+
+
+def anonymous_menu(user):
+    while True:
+        choice = input("Избор: ")
+
+        if choice == "1":
+            product_menu(user, readonly=True)
+        elif choice == "2":
+            category_menu(user, readonly=True)
+        elif choice == "0":
+            break
+        else:
+            print("Невалиден избор.")
+
+
+def operator_menu(user):
+    while True:
+        choice = input("Избор: ")
+
+        if choice == "1":
+            product_menu(user)
+        elif choice == "2":
+            category_menu(user)
+        elif choice == "3":
+            movement_menu(user)
+        elif choice == "0":
+            break
+        else:
+            print("Невалиден избор.")
+
+
+def admin_menu(user):
+    while True:
+        choice = input("Избор: ")
+
+        if choice == "1":
+            product_menu(user)
+        elif choice == "2":
+            category_menu(user)
+        elif choice == "3":
+            movement_menu(user)
+        elif choice == "4":
+            user_menu(user)      # ← ТУК СЕ ИЗВИКВА user_menu ОТ ОТДЕЛНИЯ ФАЙЛ
+        elif choice == "5":
+            reports_menu(user)
+        elif choice == "0":
+            break
+        else:
+            print("Невалиден избор.")
 
 
 def main():
-    # Зареждане на репозиторита
-    category_repo = JSONRepository("data/categories.json")
-    product_repo = JSONRepository("data/products.json")
     user_repo = JSONRepository("data/users.json")
-    movement_repo = JSONRepository("data/movements.json")
-
-    # Контролери
-    category_controller = CategoryController(category_repo)
-    product_controller = ProductController(product_repo, category_controller)
     user_controller = UserController(user_repo)
-    movement_controller = MovementController(movement_repo, product_controller, user_controller)
 
-    # Логин
-    user = None
-    while not user:
-        user = login(user_controller)
+    print("\nВход в системата")
+    print("1. Вход с потребител")
+    print("2. Вход като гост")
+    print("0. Изход")
 
-    # Главно меню според роля
-    while True:
-        print("\n Главно меню ")
-        print("0. Изход")
+    option = input("Избор: ")
 
-        # Оператор + Администратор
-        if user.role in ("operator", "admin"):
-            print("1. Управление на продукт")
-            print("2. Управление на категория")
-            print("3. Управление на доставки/продажби")
-            print("4. Справки (по-късно)")
+    if option == "1":
+        username = input("Потребителско име: ")
+        password = input("Парола: ")
 
-        # Само Администратор
-        if user.role == "admin":
-            print("5. Управление на потребители (по-късно)")
-            print("6. Управление на доставчици (по-късно)")
-            print("7. Управление на локации (по-късно)")
+        user = user_controller.authenticate(username, password)
 
-        choice = input("Изберете опция: ")
+        if not user:
+            print("Грешно име или парола.")
+            return
 
-        if choice == "0":
-            break
+    elif option == "2":
+        user = User(
+            first_name="Guest",
+            last_name="",
+            email="",
+            username="anonymous",
+            password="",
+            role="anonymous",
+            status="active"
+        )
+    else:
+        return
 
-        # Оператор + Администратор
-        if choice == "1" and user.role in ("operator", "admin"):
-            product_menu(product_controller, category_controller)
+    role = show_menu(user)
 
-        elif choice == "2" and user.role in ("operator", "admin"):
-            category_menu(category_controller)
-
-        elif choice == "3" and user.role in ("operator", "admin"):
-            movement_menu(product_controller, movement_controller)
-
-        # Администратор
-        elif choice in ("5", "6", "7") and user.role != "admin":
-            print("Нямате права за тази операция.")
-
-        else:
-            print("Невалидна опция или нямате достъп.")
+    if role == "anonymous":
+        anonymous_menu(user)
+    elif role == "operator":
+        operator_menu(user)
+    elif role == "admin":
+        admin_menu(user)
 
 
 if __name__ == "__main__":
