@@ -8,8 +8,8 @@ class CategoryController():
         self.repo = repo
         self.categories = [Category.from_dict(c) for c in self.repo.load()]
 
-    def add(self, name):
 
+    def add(self, name,description = ""):
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
@@ -39,8 +39,25 @@ class CategoryController():
                 return True
         return False
 
+    def update_description(self, category_id, new_description):
+        CategoryValidator.validate_description(new_description)
+
+        for c in self.categories:
+            if c.category_id == category_id:
+                c.description = new_description
+                c.update_modified()
+                self._save()
+                return True
+        return False
+
     def get_all(self):
         return self.categories
+
+    def get_by_id(self, category_id):
+        for c in self.categories:
+            if c.category_id == category_id:
+                return c
+        return False
 
     def _save(self):
         self.repo.save([c.to_dict() for c in self.categories])

@@ -35,8 +35,17 @@ class MovementValidator:
         if not description or not description.strip():
             raise ValueError("Описанието е задължително.")
 
+        if len(description.strip()) > 200:
+            raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
     @staticmethod
     def validate_movement_type(movement_type):
         if not isinstance(movement_type, MovementType):
             raise ValueError("movement_type трябва да бъде MovementType Enum.")
+    @staticmethod
+    def validate_product_id(product_id):
+        if not isinstance(product_id,str):
+            raise ValueError("product_id трябва да бъде текст (UUID).")
+
+        if not product_id.strip():
+            raise ValueError("product_id не може да бъде празен.")
