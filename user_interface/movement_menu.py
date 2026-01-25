@@ -1,3 +1,7 @@
+from controllers.product_controller import ProductController
+from controllers.movement_controller import MovementController
+
+
 def movement_menu(product_controller: ProductController, movement_controller: MovementController):
     while True:
         print("\nМеню за Доставки/Продажби")

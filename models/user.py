@@ -5,20 +5,44 @@ from datetime import datetime
 
 
 class User:
-    def __init__(self,user_id = None,first_name = "",last_name = "",email = "",username ="",password = "",role = "operator",status = "active",metadata = None,actions = None,created = None, modified =None):
-        self.user_id = user_id if user_id else str(uuid.uuid4())
+    def __init__(self, first_name, last_name, email, username, password,
+                 role="operator", status="active",
+                 user_id=None, created=None, modified=None):
+
+        self.user_id = user_id or str(uuid.uuid4())
+
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.username = username
         self.password = password
-        self.role = role  # администратор или админ да бъде ролята
-        self.status = status # active,inactive , suspended
-        self.metadata = metadata if metadata else {}
-        self.actions = actions if actions else []
-        self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.modified = modified if modified else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        # Роля: anonymous / operator / admin
+        self.role = role
+
+        # Статус: active / inactive
+        self.status = status
+
+        self.created = created or datetime.now().isoformat()
+        self.modified = modified or datetime.now().isoformat()
+
+    def update_modified(self):
+        self.modified = datetime.now().isoformat()
+
+    @staticmethod
+    def from_dict(data):
+        return User(
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+            username=data["username"],
+            password=data["password"],
+            role=data.get("role", "operator"),
+            status=data.get("status", "active"),
+            user_id=data.get("user_id"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def to_dict(self):
         return {
@@ -30,25 +54,7 @@ class User:
             "password": self.password,
             "role": self.role,
             "status": self.status,
-            "metadata": self.metadata,
-            "actions": self.actions,
             "created": self.created,
             "modified": self.modified
         }
-    @staticmethod
-    def deserialize():
-        return Supplier(user_id=date.get("user_id"),
-                        first_name=data.get("first_name"),
-                        last_name=data.get("last_name"),
-                        email=data.get("email"),
-                        username=data.get("username"),
-                        password=data.get("password"),
-                        role = data.get("role","operator"),
-                        status = data.get("status","active"),
-                        metadata =  data.get("metadata",{}),
-                        actions = data.get("actions",[]),
-                        created = data.get("created"),
-                        modified =data.get("modified"))
-
-
 
