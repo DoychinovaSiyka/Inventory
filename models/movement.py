@@ -1,6 +1,7 @@
 from enum import Enum
 from datetime import datetime
 import uuid
+from validators.movement_validator import MovementValidator
 class MovementType(Enum):
     DELIVERY = "delivery"
     SALE = "sale"
@@ -55,6 +56,10 @@ class Movement(metaclass=MetaMovement):
         else:
             self.location_id = str(uuid.uuid4())
 
+        MovementValidator.validate_product_id(product_id)
+        MovementValidator.validate_quantity(quantity)
+        MovementValidator.validate_price(price)
+        MovementValidator.validate_type(movement_type)
 
     @staticmethod
     def from_dict(data):

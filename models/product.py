@@ -28,7 +28,32 @@ class Product:
         self.description  = description
         self.price = price
 
+        self.validate()
+    def validate(self):
+        ProductValidator.validate_name(self.name)
+        ProductValidator.validate_categories(self.categories)
+        ProductValidator.validate_quantity(self.quantity)
+        ProductValidator.validate_description(self.description)
+        ProductValidator.validate_price(self.price)
 
+    def increase_quantity(self,amount):
+        if amount <= 0:
+            raise ValueError("Увеличението трябва да е положително число.")
+        self.quantity+= amount
+
+    def decrease_quantity(self, amount):
+        if amount <= 0:
+            raise ValueError("Намалението трябва да е положително число.")
+        if amount > self.quantity:
+            raise ValueError("Няма достатъчно наличност.")
+        self.quantity-= amount
+    def is_low_stock(self,threshold = 5):
+        return self.quantity <= threshold
+
+    @property
+    def price_with_vat(self):
+        vat_rate = 0.20  # 20% ДДС
+        return round(self.price*(1+vat_rate),2)
     @staticmethod
     def from_dict(data):  # десериализация: превръща речник в обект
         return Product(

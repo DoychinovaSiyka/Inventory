@@ -1,5 +1,7 @@
 import uuid
 from datetime import datetime
+from validators.category_validator import CategoryValidator
+
 class Category:
     def __init__(self,name,description = "",category_id = None,created = None,modified = None):
         self.name = name
@@ -8,7 +10,14 @@ class Category:
         self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.modified = modified if modified else  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        CategoryValidator.validate_name(name)
+        self.validate()
 
+    def validate(self):
+        CategoryValidator.validate_name(self.name)
+
+    def update_modified(self):
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self): # сериализация от обект в текст
         return {

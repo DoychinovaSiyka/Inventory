@@ -1,3 +1,5 @@
+from password import show_products_menu
+
 
 def product_menu(product_controller,category_controller):
     while True:

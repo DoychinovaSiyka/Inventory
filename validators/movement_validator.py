@@ -35,9 +35,8 @@ class MovementValidator:
         if not description or not description.strip():
             raise ValueError("Описанието е задължително.")
 
+
     @staticmethod
-    def validate_movement_type(movement_type_num):
-        if movement_type_num not in [0, 1]:
-            raise ValueError("Невалиден тип движение. Изберете 0 или 1.")
-
-
+    def validate_movement_type(movement_type):
+        if not isinstance(movement_type, MovementType):
+            raise ValueError("movement_type трябва да бъде MovementType Enum.")
