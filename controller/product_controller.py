@@ -8,7 +8,9 @@ class ProductController:
         self.products = [Product.from_dict(p) for p in self.repo.load()]
         self._log = []  # само лог
 
-    def add(self, name, categories, quantity, description, price):
+    def add(self, name, categories, quantity, description,
+            price):
+        ProductValidator.validate_all(name, categories, quantity, description, price)
         product = Product(name, categories, quantity, description, price)
         self.products.append(product)
         self._save()

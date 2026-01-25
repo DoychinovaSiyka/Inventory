@@ -1,27 +1,34 @@
-
-from storage.json_repository import Repository  # ако имаш абстрактен интерфейс
+from storage.json_repository import Repository
 from models.category import Category
+from validators.category_validator import CategoryValidator
+
 
 class CategoryController():
-    def __init__(self,repo:Repository): #  Това прави контролера независим от конкретната имплементация и съвместим с DIP.
-        self.repo = repo # Инициализираме хранилището, което ще работи с JSON файлове
-        self.categories = [Category.from_dict(c) for c in self.repo.load()] # зареждаме категориите от файла и ги преобразуваме в обект от тип Category
+    def __init__(self, repo: Repository):
+        self.repo = repo
+        self.categories = [Category.from_dict(c) for c in self.repo.load()]
 
-    def add(self,name):
+    def add(self, name):
+        # 🔥 ДОБАВЕНА ВАЛИДАЦИЯ
+        CategoryValidator.validate_name(name)
+        CategoryValidator.validate_unique(name, self.categories)
+
         category = Category(name)
         self.categories.append(category)
         self._save()
         return category
 
-    def remove(self,category_id):
+    def remove(self, category_id):
         original_len = len(self.categories)
-        self.categories = [c for c in self.categories if c.category_id!= category_id]
+        self.categories = [c for c in self.categories if c.category_id != category_id]
         if len(self.categories) < original_len:
             self._save()
             return True
         return False
 
     def update_name(self, category_id, new_name):
+        CategoryValidator.validate_update_name(new_name)
+
         for c in self.categories:
             if c.category_id == category_id:
                 c.name = new_name
@@ -34,9 +41,6 @@ class CategoryController():
 
     def _save(self):
         self.repo.save([c.to_dict() for c in self.categories])
-
-
-
 
 
 

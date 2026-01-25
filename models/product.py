@@ -1,16 +1,23 @@
-from models.category import Category
+
 import uuid
+from validators.product_validator import ProductValidator
+from models.category import Category
 
 class Product:
     next_id = 1  # Статична променлива за следене на следващото ID
 
     def __init__(self, name, categories, quantity, description, price,
                  product_id=None, category_id=None, supplier_id=None):
-        if product_id is not None:
-            self.product_id = product_id
-        else:
-            self.product_id = Product.next_id
-            Product.next_id += 1
+
+        # Валидации
+        ProductValidator.validate_name(name)
+        ProductValidator.validate_categories(categories)
+        ProductValidator.validate_quantity(quantity)
+        ProductValidator.validate_description(description)
+        ProductValidator.validate_price(price)
+
+        self.product_id = product_id or Product.next_id
+        Product.next_id+= 1
 
         self.category_id = category_id or str(uuid.uuid4())
         self.supplier_id = supplier_id or str(uuid.uuid4())
@@ -18,10 +25,9 @@ class Product:
         self.name = name
         self.categories = categories
         self.quantity = quantity
-        if len(description) > 255:
-            raise ValueError("Описанието не може да бъде повече от 255 символа.")
-        self.description = description
+        self.description  = description
         self.price = price
+
 
     @staticmethod
     def from_dict(data):  # десериализация: превръща речник в обект

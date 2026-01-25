@@ -106,5 +106,23 @@
         "price": 2.5,
         "category_id": "c878d628-2056-4c84-bf12-76f066584d53",
         "supplier_id": "0454e9cd-221b-4a5e-b5ba-9a82f5a01535"
+    },
+    {
+        "product_id": 1,
+        "name": "0",
+        "categories": [
+            {
+                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
+                "name": "млечни продукти",
+                "description": null,
+                "created": "2026-01-24 10:07:54",
+                "modified": "2026-01-24 10:07:54"
+            }
+        ],
+        "quantity": 8,
+        "description": "уексс;",
+        "price": 78.0,
+        "category_id": "7caa3cde-c2a4-4480-8c19-8c7c2520de0d",
+        "supplier_id": "a4010d72-f518-4ea2-abdd-c428f36ec2b1"
     }
 ]
