@@ -1,6 +1,7 @@
 from storage.json_repository import Repository
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
+from datetime import datetime
 
 
 class MovementController:
@@ -10,12 +11,17 @@ class MovementController:
         self.user_controller = user_controller
         self.movements = [Movement.from_dict(m) for m in self.repo.load()]
 
-    def add(self, product_id, movement_type, quantity, description, price):
+    def add(self, product_id, user_id, movement_type, quantity, description, price):
         # Валидации
         MovementValidator.validate_movement_type(movement_type)
         quantity = MovementValidator.parse_quantity(quantity)
         price = MovementValidator.parse_price(price)
         MovementValidator.validate_description(description)
+
+        # Проверка дали потребителят съществува
+        user = self.user_controller.get_by_id(user_id)
+        if not user:
+            raise ValueError(f"Потребител с ID {user_id} не съществува.")
 
         # Преобразуване на movement_type (0/1 -> Enum)
         if isinstance(movement_type, int):
@@ -38,7 +44,16 @@ class MovementController:
         self.product_controller._save()
 
         # Създаване на движение
-        movement = Movement(product_id, movement_type, quantity, description, price)
+        movement = Movement(
+            product_id=product_id,
+            user_id=user_id,
+            movement_type=movement_type,
+            quantity=quantity,
+            description=description,
+            price=price,
+            date=str(datetime.now())
+        )
+
         self.movements.append(movement)
         self._save()
 

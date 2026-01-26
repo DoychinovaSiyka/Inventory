@@ -4,54 +4,108 @@ from storage.json_repository import JSONRepository
 
 
 class UserController:
-    def __init__(self, user_repo: JSONRepository):
-        self.user_repo = user_repo
+    def __init__(self, repo: JSONRepository):
+        self.repo = repo
+        self.users = [User.from_dict(u) for u in self.repo.load()]
 
-        # Зареждаме потребителите от JSON
-        self.users = [User.from_dict(u) for u in self.user_repo.load()]
-
-        # Ако няма НИТО един потребител → създаваме първия администратор
+        # Ако няма потребители → създаваме администратор
         if not self.users:
-            default_admin = User(
+            admin = User(
                 first_name="Admin",
                 last_name="User",
                 email="admin@example.com",
                 username="admin",
-                password="admin",
+                password=self._hash_password("admin"),
                 role="admin",
                 status="active"
             )
-            self.users.append(default_admin)
+            self.users.append(admin)
             self._save()
 
-        # Текущо логнат потребител
         self.logged_user: Optional[User] = None
 
-    def authenticate(self, username: str, password: str) -> Optional[User]:
-        """
-        Проверява дали има потребител с това име и парола.
-        Ако има → задава logged_user и връща User.
-        Ако няма → връща None.
-        """
-        for user in self.users:
-            if (
-                user.username == username
-                and user.password == password
-                and user.status == "active"
-            ):
-                self.logged_user = user
-                return user
+    # ---------------------------------------------------
+    #   ПРОСТ "ХЕШ" БЕЗ НИКАКВИ ИМПОРТИ
+    # ---------------------------------------------------
+    def _hash_password(self, password: str) -> str:
+        # Превръща всеки символ в ASCII код и ги слепва
+        return "".join(str(ord(c) * 7) for c in password)
+
+    # ---------------------------------------------------
+    #   ПОМОЩНИ МЕТОДИ
+    # ---------------------------------------------------
+    def _save(self):
+        self.repo.save([u.to_dict() for u in self.users])
+
+    def _is_unique_username(self, username: str) -> bool:
+        return not any(u.username == username for u in self.users)
+
+    def get_by_id(self, user_id: int) -> Optional[User]:
+        for u in self.users:
+            if u.id == user_id:
+                return u
         return None
 
-    def add_user(self, user: User):
-        """Добавя нов потребител и записва в JSON."""
-        self.users.append(user)
+    # ---------------------------------------------------
+    #   РЕГИСТРАЦИЯ
+    # ---------------------------------------------------
+    def register(self, first_name, last_name, email, username, password, role="operator"):
+        if not self._is_unique_username(username):
+            raise ValueError("Потребителското име вече съществува.")
+
+        hashed = self._hash_password(password)
+
+        new_user = User(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            username=username,
+            password=hashed,
+            role=role,
+            status="active"
+        )
+
+        self.users.append(new_user)
         self._save()
+        return new_user
 
+    # ---------------------------------------------------
+    #   ЛОГИН
+    # ---------------------------------------------------
+    def login(self, username: str, password: str) -> Optional[User]:
+        hashed = self._hash_password(password)
+
+        for user in self.users:
+            if user.username == username and user.password == hashed and user.status == "active":
+                self.logged_user = user
+                return user
+
+        return None
+
+    # ---------------------------------------------------
+    #   ПРОМЯНА НА РОЛЯ
+    # ---------------------------------------------------
+    def change_role(self, username: str, new_role: str):
+        for user in self.users:
+            if user.username == username:
+                user.role = new_role
+                self._save()
+                return True
+        return False
+
+    # ---------------------------------------------------
+    #   ДЕАКТИВИРАНЕ
+    # ---------------------------------------------------
+    def deactivate_user(self, username: str):
+        for user in self.users:
+            if user.username == username:
+                user.status = "inactive"
+                self._save()
+                return True
+        return False
+
+    # ---------------------------------------------------
+    #   СПИСЪК
+    # ---------------------------------------------------
     def get_all(self):
-        """Връща всички потребители."""
         return self.users
-
-    def _save(self):
-        """Записва всички потребители обратно в JSON."""
-        self.user_repo.save([u.to_dict() for u in self.users])

@@ -12,6 +12,8 @@ class ProductController:
         self.products = [Product.from_dict(p) for p in self.repo.load()]
         self._log = []  # само лог за действия
 
+    def exists_by_name(self, name):
+        return any(p.name.lower() == name.lower() for p in self.products)
     # create
     def add(self, name, category_ids, quantity, description,
             price):
