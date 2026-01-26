@@ -4,11 +4,7 @@ from user_interface.category_menu import category_menu
 from user_interface.movement_menu import movement_menu
 from user_interface.user_menu import user_menu
 from user_interface.reports_menu import reports_menu
-from models.user import User
-
-
-from user_interface.json_repository import JSONRepository
-
+from storage.json_repository import JSONRepository
 
 
 def show_menu(user):
@@ -80,7 +76,7 @@ def admin_menu(user):
         elif choice == "3":
             movement_menu(user)
         elif choice == "4":
-            user_menu(user)      # ← ТУК СЕ ИЗВИКВА user_menu ОТ ОТДЕЛНИЯ ФАЙЛ
+            user_menu(user)
         elif choice == "5":
             reports_menu(user)
         elif choice == "0":
