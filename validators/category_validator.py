@@ -1,4 +1,3 @@
-# validators/category_validator.py
 
 class CategoryValidator:
 

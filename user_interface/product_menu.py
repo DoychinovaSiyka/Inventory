@@ -1,5 +1,5 @@
-from password import show_products_menu
-from password import format_table
+from password_utils import show_products_menu
+from password_utils import format_table
 
 
 

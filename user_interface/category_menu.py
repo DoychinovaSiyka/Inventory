@@ -1,4 +1,4 @@
-from password import format_table
+from password_utils import format_table
 
 def category_menu(category_controller):
     while True:
