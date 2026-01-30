@@ -1,6 +1,4 @@
-from password_utils import show_products_menu
-from password_utils import format_table
-
+from storage.password_utils import show_products_menu
 
 
 def _read_int(prompt):

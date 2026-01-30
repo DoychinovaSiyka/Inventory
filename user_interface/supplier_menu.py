@@ -1,4 +1,4 @@
-from password_utils import format_table
+from storage.password_utils import format_table
 
 
 def supplier_menu(user, supplier_controller):
