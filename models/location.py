@@ -1,10 +1,9 @@
 
 
-import uuid
 
 class Location:
     def __init__(self,location_id = None,name = "",zone = "",capacity = 0,city = ""):
-        self.location_id = location_id if location_id else str(uuid.uuid4())
+        self.location_id = location_id
         self.name = name
         self.zone = zone
         self.capacity = capacity
@@ -19,12 +18,12 @@ class Location:
             "city": self.city
         }
     @staticmethod
-    def deserialize(data):
+    def from_dict(data):
         return Location(
-            location_id = data.get("location_id"),
-            name = data.get("name"),
-            zone = data.get("zone"),
-            capacity = data.get("capacity"),
-            city = data.get("city")
+            location_id = data["location_id"],
+            name = data.get("name",""),
+            zone = data.get("zone",""),
+            capacity = data.get("capacity",0),
+            city = data.get("city","")
         )
 

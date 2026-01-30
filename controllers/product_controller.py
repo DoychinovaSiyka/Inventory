@@ -1,23 +1,35 @@
 from storage.json_repository import Repository
 from models.product import Product
 from validators.product_validator import ProductValidator
-from controllers.category_controller  import CategoryController
-
-
+from controllers.category_controller import CategoryController
+from controllers.supplier_controller import SupplierController
+from datetime import datetime
 
 class ProductController:
-    def __init__(self, repo: Repository, category_controller: CategoryController):
+    def __init__(self, repo: Repository, category_controller: CategoryController,supplier_controller:SupplierController):
         self.repo = repo
         self.category_controller = category_controller
+        self.supplier_controller = supplier_controller
         self.products = [Product.from_dict(p) for p in self.repo.load()]
-        self._log = []  # само лог за действия
 
+    # Internal: ID GENERATOR
+    def _generate_id(self):
+        if not self.products:
+            return 1
+        return max(p.product_id for p in self.products) + 1
+
+    # CHECKS
     def exists_by_name(self, name):
         return any(p.name.lower() == name.lower() for p in self.products)
+
     # create
     def add(self, name, category_ids, quantity, description,
-            price):
+            price,supplier_id =None,tags =None):
         ProductValidator.validate_all(name, category_ids, quantity, description, price)
+        # Проверка за дублиране
+        if self.exists_by_name(name):
+            raise ValueError("Продукт с това име вече съществува.")
+
         # Проверка дали категориите съществуват
         categories = []
         for c_id in category_ids:
@@ -26,8 +38,23 @@ class ProductController:
                 raise ValueError(f"Категория с ID {c_id} не съществува.")
             categories.append(c)
 
-
-        product = Product(name, categories, quantity, description, price)
+        # Проверка за доставчик
+        supplier = None
+        if supplier_id is not None:
+            supplier = self.supplier_controller.get_by_id(supplier_id)
+            if  not supplier:
+                raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
+        # Създаване на продукт
+        now = str(datetime.now())
+        product = Product(product_id=self._generate_id(),
+                           name = name,
+                           categories = categories,
+                           quantity = quantity,
+                           description = description,
+                           price = price,
+                           supplier = supplier,
+                           tags = tags or [],
+                           created = now, modified = now)
         self.products.append(product)
         self._save()
         return product
@@ -43,10 +70,65 @@ class ProductController:
 
 
     # UPDATE
+    def update_name(self,product_id,new_name):
+        p = self.get_by_id(product_id)
+        if not p:
+            raise ValueError("Продуктът не е намерен.")
+
+        if self.exists_by_name(new_name) and new_name!= p.name:
+            raise ValueError("Продукт с това име вече съществува.")
+
+        ProductValidator.validate_name(new_name)
+        p.name = new_name
+        p.update_modified()
+        self._save()
+        return True
+
+    def update_description(self,product_id,new_description):
+        p = self.get_by_id(product_id)
+        if not p:
+            raise ValueError("Продуктът не е намерен.")
+        ProductValidator.validate_description(new_description)
+        p.description = new_description
+        p.update_modified()
+        self._save()
+        return True
+
+    def update_categories(self,product_id,new_category_ids):
+        p = self.get_by_id(product_id)
+        if not p:
+            raise ValueError("Продуктът не е намерен.")
+
+        categories = []
+        for c_id in new_category_ids:
+            c = self.category_controller.get_by_id(c_id)
+            if not c:
+                raise ValueError(f"Категория с ID {c_id} не съществува.")
+            categories.append(c)
+        p.categories = categories
+        p.update_modified()
+        self._save()
+        return True
+
+    def update_supplier(self,product_id,supplier_id):
+        p = self.get_by_id(product_id)
+        if not p:
+            raise ValueError("Продуктът не е намерен.")
+
+        supplier = self.supplier_controller.get_by_id(supplier_id)
+        if not supplier:
+            raise ValueError(f"Доставчикът с ID {supplier_id} не съществува.")
+
+        p.supplier = supplier
+        p.update_modified()
+        self._save()
+        return True
+
     def update_price(self, product_id, new_price):
         p = self.get_by_id(product_id)
         if not p:
-            return False
+            raise ValueError("Продуктът не е намерен.")
+        ProductValidator.validate_price(new_price)
         p.price = new_price
         p.update_modified()
         self._save()
@@ -56,7 +138,9 @@ class ProductController:
     def increase_quantity(self,product_id,amount):
         p = self.get_by_id(product_id)
         if not p:
-            return  False
+            raise ValueError("Продуктът не е намерен.")
+
+        ProductValidator.validate_quantity(amount)
         p.quantity+= amount
         p.update_modified()
         self._save()
@@ -65,7 +149,7 @@ class ProductController:
     def decrease_quantity(self,product_id,amount):
         p = self.get_by_id(product_id)
         if not p:
-            return  False
+            raise ValueError("Продуктът не е намерен.")
         if p.quantity < amount:
             raise ValueError("Недостатъчна наличност.")
         p.quantity-= amount
@@ -89,7 +173,7 @@ class ProductController:
             return True
         return False
 
-
+    # SeARCH AND FILTER
     def search(self, keyword):
         """Търси продукти по име или описание"""
         return [p for p in self.products
@@ -104,11 +188,7 @@ class ProductController:
                     break  # спира, за да не добави продукта многократно
         return filtered
 
-
-
-
-
-
+    # Reports
 
     def average_price(self):
         """Изчислява средната цена на всички продукти"""
@@ -139,6 +219,7 @@ class ProductController:
                 grouped.setdefault(c.category_id, []).append(p)
         return grouped
 
+    # Sorting
     def sort_by_name(self):
         self.products.sort(key=lambda p: p.name.lower())
 
@@ -174,6 +255,7 @@ class ProductController:
 
         return sorted_products
 
+    # SAVE
     def _save(self):
         self.repo.save([p.to_dict() for p in self.products])
 

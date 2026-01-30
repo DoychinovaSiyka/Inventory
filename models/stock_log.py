@@ -6,10 +6,11 @@ from models.movement import  MovementType
 class StockLog(object):
     def __init__(self,product_id,location_id,quantity,action,timestamp = None,log_id = None):
         self.log_id = log_id or str(uuid.uuid4())
+        self.log_id = log_id or str(uuid.uuid4())
         self.product_id = product_id # връзка към Product
         self.location_id = location_id  # връзка към Location
         self.quantity = quantity
-        self.action  = action # "delivery" или "sale"
+        self.action  = action # add ,remove, move
         self.timestamp = timestamp or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
@@ -22,9 +23,8 @@ class StockLog(object):
             "action": self.action,
             "timestamp": self.timestamp
         }
-
-
-    def deserialize(data):
+    @staticmethod
+    def from_dict(data):
         return StockLog(
             log_id = data.get("log_id"),
             product_id = data["product_id"],
