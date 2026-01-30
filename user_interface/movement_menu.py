@@ -1,5 +1,6 @@
 from controllers.product_controller import ProductController
 from controllers.movement_controller import MovementController
+from models.movement import MovementType
 
 
 def movement_menu(product_controller: ProductController, movement_controller: MovementController, user_controller):
@@ -18,15 +19,9 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
 
         choice = input("Изберете опция: ")
 
-        # ---------------------------------------------------
-        # 0. Назад
-        # ---------------------------------------------------
         if choice == "0":
             break
 
-        # ---------------------------------------------------
-        # 1. Създаване на движение
-        # ---------------------------------------------------
         elif choice == "1":
             products = product_controller.get_all()
 
@@ -44,21 +39,63 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 print("Невалиден избор.")
                 continue
 
+            # -----------------------------
+            # Избор на локация (по документацията)
+            # -----------------------------
+            locations = movement_controller.location_controller.get_all()
+
+            if not locations:
+                print("Няма налични локации.")
+                continue
+
+            print("\nИзберете локация:")
+            for i, loc in enumerate(locations):
+                print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
             try:
-                movement_type_num = int(input("Въведете 0 за доставка или 1 за продажба: "))
+                loc_idx = int(input("Локация: "))
+                location_id = locations[loc_idx].location_id
+            except (ValueError, IndexError):
+                print("Невалиден избор за локация.")
+                continue
+
+            # -----------------------------
+            # Тип движение
+            # -----------------------------
+            try:
+                movement_type_num = int(input("Въведете 0 за доставка (IN) или 1 за продажба (OUT): "))
+                if movement_type_num == 0:
+                    movement_type = MovementType.IN
+                elif movement_type_num == 1:
+                    movement_type = MovementType.OUT
+                else:
+                    print("Невалиден тип движение.")
+                    continue
             except ValueError:
                 print("Невалиден избор.")
                 continue
 
-            quantity = input("Количество: ")
-            description = input("Описание: ")
-            price = input("Цена: ")
+            # -----------------------------
+            # Количество и цена
+            # -----------------------------
+            try:
+                quantity = int(input("Количество: "))
+                price = float(input("Цена: "))
+            except ValueError:
+                print("Количество и цена трябва да са числа.")
+                continue
 
+            description = input("Описание: ")
+
+            # -----------------------------
+            # Създаване на движение
+            # -----------------------------
             try:
                 movement_controller.add(
                     product_id=product_id,
                     user_id=user.id,
-                    movement_type=movement_type_num,
+                    location_id=location_id,
+                    movement_type=movement_type,
                     quantity=quantity,
                     description=description,
                     price=price
@@ -66,43 +103,3 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 print("Движението е добавено успешно!")
             except ValueError as e:
                 print("Грешка:", e)
-
-        # ---------------------------------------------------
-        # 2. Търсене
-        # ---------------------------------------------------
-        elif choice == "2":
-            keyword = input("Въведи дума за търсене в описанието: ").lower()
-            results = movement_controller.search(keyword)
-
-            if not results:
-                print("Няма съвпадения.")
-            else:
-                print("\nНамерени движения:")
-                for m in results:
-                    print(f"- {m.movement_type.name} | "
-                          f"Продукт ID: {m.product_id} | "
-                          f"Количество: {m.quantity} | "
-                          f"Цена: {m.price} | "
-                          f"Дата: {m.date} | "
-                          f"User ID: {m.user_id}")
-
-        # ---------------------------------------------------
-        # 3. Всички движения
-        # ---------------------------------------------------
-        elif choice == "3":
-            movements = movement_controller.get_all()
-
-            if not movements:
-                print("Няма доставки или продажби.")
-            else:
-                print("\nСписък с движения:")
-                for m in movements:
-                    print(f"- {m.movement_type.name} | "
-                          f"Продукт ID: {m.product_id} | "
-                          f"Количество: {m.quantity} | "
-                          f"Цена: {m.price} | "
-                          f"Дата: {m.date} | "
-                          f"User ID: {m.user_id}")
-
-        else:
-            print("Невалидна опция. Опитай пак!")

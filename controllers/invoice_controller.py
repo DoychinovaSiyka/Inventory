@@ -1,5 +1,6 @@
 from models.invoice import Invoice
 from storage.json_repository import JSONRepository
+from datetime import datetime
 
 
 class InvoiceController:
@@ -20,12 +21,20 @@ class InvoiceController:
     # -----------------------------
     # Основни операции
     # -----------------------------
-    def create_invoice(self, movement, product, customer):
+    def add(self, invoice: Invoice):
+        """
+        Добавя вече създадена фактура (използва се от MovementController).
+        """
+        self.invoices.append(invoice)
+        self._save()
+        return invoice
+
+    def create_from_movement(self, movement, product, customer):
         """
         Генерира фактура при OUT движение.
         movement → Movement обект
         product → Product обект
-        customer → име на клиента
+        customer → име на клиента (username)
         """
 
         if movement.movement_type.name != "OUT":
@@ -55,6 +64,12 @@ class InvoiceController:
                 return inv
         return None
 
+    def get_by_movement_id(self, movement_id):
+        for inv in self.invoices:
+            if inv.movement_id == movement_id:
+                return inv
+        return None
+
     def search_by_customer(self, keyword):
         keyword = keyword.lower()
         return [inv for inv in self.invoices if keyword in inv.customer.lower()]
@@ -62,6 +77,12 @@ class InvoiceController:
     def search_by_product(self, keyword):
         keyword = keyword.lower()
         return [inv for inv in self.invoices if keyword in inv.product.lower()]
+
+    def search_by_date(self, date_str):
+        """
+        date_str = '2025-01-30'
+        """
+        return [inv for inv in self.invoices if inv.date.startswith(date_str)]
 
     # -----------------------------
     # Изтриване (ако е нужно)

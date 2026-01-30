@@ -15,17 +15,55 @@ class Invoice:
         created=None,
         modified=None
     ):
+        # ID — UUID според документацията
         self.invoice_id = invoice_id or str(uuid.uuid4())
-        self.movement_id = movement_id                     # връзка 1:1 с Movement
-        self.product = product                             # име на продукта
-        self.quantity = quantity                           # количество
-        self.unit_price = unit_price                       # единична цена
-        self.total_price = total_price or (quantity * unit_price)
-        self.customer = customer                           # клиент
-        self.date = date or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.created = created or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.modified = modified or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        # Movement → Invoice (1:1)
+        self.movement_id = str(movement_id) if movement_id is not None else None
+
+        # Основни полета
+        self.product = product
+        self.quantity = quantity
+        self.unit_price = unit_price
+
+        # total_price — коригирано, за да не презаписва 0.0
+        self.total_price = (
+            total_price if total_price is not None else quantity * unit_price
+        )
+
+        self.customer = customer
+
+        # Дати — съобразено с документациите
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.date = date or now
+        self.created = created or now
+        self.modified = modified or now
+
+        # Валидация според SRS
+        self.validate()
+
+    # -------------------------
+    # ВАЛИДАЦИЯ
+    # -------------------------
+    def validate(self):
+        if not self.product:
+            raise ValueError("Продуктът е задължителен (според SRS).")
+
+        if not self.customer:
+            raise ValueError("Клиентът е задължителен (според SRS).")
+
+        if self.quantity <= 0:
+            raise ValueError("Quantity трябва да е > 0 (според SRS).")
+
+        if self.unit_price <= 0:
+            raise ValueError("Unit price трябва да е > 0 (според SRS).")
+
+        if self.movement_id is None:
+            raise ValueError("movement_id е задължителен (според SRS).")
+
+    # -------------------------
+    # JSON сериализация
+    # -------------------------
     def to_dict(self):
         return {
             "invoice_id": self.invoice_id,
