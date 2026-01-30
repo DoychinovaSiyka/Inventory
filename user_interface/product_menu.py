@@ -19,7 +19,7 @@ def _read_float(prompt):
         return None
 
 
-def product_menu(product_controller, category_controller):
+def product_menu(product_controller, category_controller,readonly = False):
     while True:
         print("\n=== МЕНЮ ПРОДУКТИ ===")
         print("0. Назад")
@@ -41,6 +41,9 @@ def product_menu(product_controller, category_controller):
 
         choice = input("Избор: ")
 
+        if readonly and choice in ["1","2","3","9","10"]:
+            print("Тази функция не е достъпна за гост.")
+            continue
         if choice == "0":
             break
 

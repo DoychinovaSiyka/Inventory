@@ -82,6 +82,16 @@ class UserController:
 
         return None
 
+
+    def authenticate(self,username,password):
+        for user in self.users:
+            if user.username == username and user.password == password:
+                if user.status!= "active":
+                    return None
+                return user
+        return None
+
+
     # ---------------------------------------------------
     #   ПРОМЯНА НА РОЛЯ
     # ---------------------------------------------------

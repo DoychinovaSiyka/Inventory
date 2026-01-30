@@ -1,3 +1,7 @@
+
+from controllers.user_controller import UserController
+
+
 def user_menu(user_controller: UserController):
     user = user_controller.logged_user
 

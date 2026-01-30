@@ -1,11 +1,14 @@
+from controllers.category_controller import CategoryController
+from controllers.product_controller import ProductController
 from controllers.user_controller import UserController
+from models.user import User
 from user_interface.product_menu import product_menu
 from user_interface.category_menu import category_menu
 from user_interface.movement_menu import movement_menu
 from user_interface.user_menu import user_menu
 from user_interface.reports_menu import reports_menu
 from storage.json_repository import JSONRepository
-
+from controllers.location_controller import LocationController
 
 def show_menu(user):
     role = user.role
@@ -36,13 +39,21 @@ def show_menu(user):
 
 
 def anonymous_menu(user):
+    # Създаваме нужните контролери
+
+    category_repo = JSONRepository("data/categories.json")
+    category_controller = CategoryController(category_repo)
+
+    product_repo = JSONRepository("data/products.json")
+    product_controller = ProductController(product_repo,category_controller)
+
     while True:
         choice = input("Избор: ")
 
         if choice == "1":
-            product_menu(user, readonly=True)
+            product_menu(product_controller,category_controller, readonly=True)
         elif choice == "2":
-            category_menu(user, readonly=True)
+            category_menu(category_controller, readonly=True)
         elif choice == "0":
             break
         else:
