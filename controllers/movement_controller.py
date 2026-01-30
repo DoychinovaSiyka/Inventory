@@ -72,7 +72,7 @@ class MovementController:
             quantity=quantity,
             description=description,
             price=price,
-            date=str(datetime.now())
+            date=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )
 
         self.movements.append(movement)

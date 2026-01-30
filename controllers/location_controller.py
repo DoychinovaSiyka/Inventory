@@ -1,19 +1,22 @@
 from models.location import Location
-from validators.location_valiadator import LocationValidator
+from validators.location_validator import LocationValidator
+from storage.json_repository import Repository
 from datetime import datetime
 
 
 
 class LocationController:
-    def __init__(self,repo):
+    def __init__(self,repo:Repository):
         self.repo = repo
-        self.locations = [Location.deserialize(l) for l in self.repo.load()]
+        self.locations = [Location.from_dict(l)  for l in self.repo.load()]
 
+    # Internal Id generator
     def _generate_id(self):
         if not self.locations:
             return 1
-        return max(loc.location_id for loc in self.locations) + 1
+        return max(l.location_id for l in self.locations) + 1
 
+    # GET All
     def get_all(self):
         return self.locations
     def get_by_id(self,location_id):
@@ -43,6 +46,7 @@ class LocationController:
 
         return location
 
+    # UPDATE LOCATION
     def update(self,location_id,name =None,zone =None,capacity =None):
         loc = self.get_by_id(location_id)
         if not loc:
@@ -50,7 +54,7 @@ class LocationController:
 
         # Валидации
         if name is not None:
-            LocationValidator.valide_name(name)
+            LocationValidator.validate_name(name)
             if self.exist_by_name(name) and name!= loc.name:
                 raise ValueError("Локация с това име вече съществува.")
             loc.name = name
@@ -59,9 +63,9 @@ class LocationController:
             loc.zone = zone
         if capacity is not None:
             LocationValidator.validate_capacity(capacity)
-            loc.capacity = zone
+            loc.capacity = capacity
 
-        loc.modified = str(datetime.now())
+        loc.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self._save()
 
     # DELETE

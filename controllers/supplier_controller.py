@@ -1,18 +1,18 @@
 from models.supplier import Supplier
-from validators.suplier_validator import SupplierValidator
+from validators.supplier_validator import SupplierValidator
 from datetime import datetime
 
 
 class SupplierController:
     def __init__(self,repo):
         self.repo = repo
-        self.suppliers = [Suplier.from_dict(s) for s in self.repo.load()]
+        self.suppliers = [Supplier.from_dict(s) for s in self.repo.load()]
 
     # INTERNAL: ID GENERATOR
     def _generate_id(self):
         if not self.suppliers:
             return 1
-        return max(s.suplier_id for s in self.suppliers) + 1
+        return max(s.supplier_id for s in self.suppliers) + 1
 
     # CREATE
     def add(self,name,contact,address):
@@ -41,7 +41,7 @@ class SupplierController:
 
     def get_by_id(self, supplier_id):
         for s in self.suppliers:
-            if s.suplier_id == supplier_id:
+            if s.supplier_id == supplier_id:
                 return s
         return None
 
@@ -49,7 +49,7 @@ class SupplierController:
     def update(self, supplier_id, name=None, contact=None, address=None):
         s = self.get_by_id(supplier_id)
         if not s:
-            raise ValueError("Доставчикът  не е намерена.")
+            raise ValueError("Доставчикът  не е намерен.")
 
 
         if name is not None:

@@ -42,7 +42,7 @@ class UserController:
 
     def get_by_id(self, user_id: int) -> Optional[User]:
         for u in self.users:
-            if u.id == user_id:
+            if u.user_id == user_id:
                 return u
         return None
 

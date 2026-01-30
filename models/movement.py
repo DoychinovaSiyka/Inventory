@@ -26,7 +26,7 @@ class MetaMovement(type):
                     "quantity": self.quantity,
                     "description": self.description,
                     "price":self.price,
-                    "data":self.date,
+                    "date":self.date,
                 }
             namespace['to_dict'] = to_dict
 

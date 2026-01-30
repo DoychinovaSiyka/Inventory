@@ -1,20 +1,24 @@
-def reports_menu(user):
-    print("\nМеню справки")
-    print("1. Справка за продукти")
-    print("2. Справка за категории")
-    print("3. Справка за движения")
-    print("0. Назад")
-
+def reports_menu(user, report_controller):
     while True:
+        print("\n=== Справки ===")
+        print("1. Справка за наличности")
+        print("2. Справка за движения")
+        print("3. Справка за продажби")
+        print("0. Назад")
+
         choice = input("Избор: ")
 
         if choice == "1":
-            print("Тук ще бъде справка за продукти.")
+            report_controller.report_stock()
+
         elif choice == "2":
-            print("Тук ще бъде справка за категории.")
+            report_controller.report_movements()
+
         elif choice == "3":
-            print("Тук ще бъде справка за движения.")
+            report_controller.report_sales()
+
         elif choice == "0":
             break
+
         else:
             print("Невалиден избор.")

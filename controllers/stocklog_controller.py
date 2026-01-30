@@ -1,4 +1,4 @@
-from models.stock_log import Stocklog
+from models.stock_log import StockLog
 from datetime import datetime
 
 class StockLogController:
@@ -33,11 +33,11 @@ class StockLogController:
         if action not in ["add","remove","move"]:
             raise ValueError("Невалидно действие.Позволени: add,remove,move.")
 
-        log = Stocklog(log_id = self._generate_id(),
+        log = StockLog(log_id = self._generate_id(),
                        product_id = product_id,
                        location_id = location_id,
                        quantity = quantity,
-                       timestamp = str(datetime.now()),
+                       timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                        action = action)
 
         self.logs.append(log)
