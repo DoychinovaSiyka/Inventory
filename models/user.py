@@ -3,12 +3,23 @@ from datetime import datetime
 
 
 class User:
-    def __init__(self, first_name, last_name, email, username, password,
-                 role="Operator", status="Active",
-                 user_id=None, created=None, modified=None):
-
+    def __init__(
+        self,
+        first_name,
+        last_name,
+        email,
+        username,
+        password,
+        role="Operator",
+        status="Active",
+        user_id=None,
+        created=None,
+        modified=None
+    ):
+        # Уникален идентификатор на потребителя
         self.user_id = user_id or str(uuid.uuid4())
 
+        # Основни данни
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -21,6 +32,7 @@ class User:
         # Статус: Active / Disabled
         self.status = status
 
+        # Метаданни
         self.created = created or datetime.now().isoformat()
         self.modified = modified or datetime.now().isoformat()
 

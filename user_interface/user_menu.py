@@ -1,7 +1,8 @@
 from controllers.user_controller import UserController
+from models.user import User   # ако нямаш този импорт, махни го
 
 
-def user_menu(user, user_controller: UserController):
+def user_menu(user: User, user_controller: UserController):
     # Само Admin има достъп (SRS + Summary)
     if user.role != "Admin":
         print("Само администратор може да управлява потребители.")

@@ -2,91 +2,89 @@
     {
         "product_id": 1,
         "name": "Чай",
-        "categories": [
-            {
-                "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
-                "name": "Напитки",
-                "description": "Топли и студени напитки",
-                "created": "2025-11-26 21:37:56",
-                "modified": "2025-11-26 21:37:56"
-            }
-        ],
+        "categories": [],
         "quantity": 15,
         "description": "Билков чай 20 пакетчета",
-        "price": 2.00,
-        "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
-        "supplier_id": "62be95e1-d270-4324-b469-00919811b33f"
+        "price": 2.0,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 12:15:03",
+        "modified": "2026-02-02 12:15:03"
     },
     {
         "product_id": 2,
         "name": "Мляко",
-        "categories": [
-            {
-                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-                "name": "Млечни продукти",
-                "description": "Прясно и кисело мляко, сирена",
-                "created": "2025-11-26 21:37:56",
-                "modified": "2025-11-26 21:37:56"
-            }
-        ],
-        "quantity": 10,
+        "categories": [],
+        "quantity": 22,
         "description": "Прясно краве мляко 3.2% масленост, 1 литър",
         "price": 2.75,
-        "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-        "supplier_id": "6a8a4715-0b17-4182-b5bb-7907b56afed0"
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 12:15:03",
+        "modified": "2026-02-02 19:31:45.122087"
     },
     {
         "product_id": 3,
         "name": "Яйца",
-        "categories": [
-            {
-                "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-                "name": "Млечни продукти",
-                "description": "Прясно и кисело мляко, сирена",
-                "created": "2025-11-26 21:37:56",
-                "modified": "2025-11-26 21:37:56"
-            }
-        ],
+        "categories": [],
         "quantity": 30,
         "description": "Кокоши яйца размер L – 10 броя",
-        "price": 5.00,
-        "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
-        "supplier_id": "822c6b66-1f28-4537-8c09-de3b377b96a8"
+        "price": 5.0,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 12:15:03",
+        "modified": "2026-02-02 12:15:03"
     },
     {
         "product_id": 4,
         "name": "Кафе",
-        "categories": [
-            {
-                "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
-                "name": "Напитки",
-                "description": "Топли и студени напитки",
-                "created": "2025-11-26 21:37:56",
-                "modified": "2025-11-26 21:37:56"
-            }
-        ],
-        "quantity": 20,
+        "categories": [],
+        "quantity": 27,
         "description": "Мляно кафе 250 г",
-        "price": 4.50,
-        "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
-        "supplier_id": "0454e9cd-221b-4a5e-b5ba-9a82f5a01535"
+        "price": 4.5,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 12:15:03",
+        "modified": "2026-02-02 19:12:48.562816"
     },
     {
         "product_id": 5,
         "name": "Подправки микс",
-        "categories": [
-            {
-                "category_id": "22c76763-e708-49a3-9e3b-199e9d70a7f3",
-                "name": "Подправки и сосове",
-                "description": "Подправки, сосове и маринати",
-                "created": "2025-11-26 21:37:56",
-                "modified": "2025-11-26 21:37:56"
-            }
-        ],
+        "categories": [],
         "quantity": 12,
         "description": "Микс от подправки – 50 г",
-        "price": 1.80,
-        "category_id": "22c76763-e708-49a3-9e3b-199e9d70a7f3",
-        "supplier_id": "1fcdfaa5-1095-4b7a-ba6b-0b870155866d"
+        "price": 1.8,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 12:15:03",
+        "modified": "2026-02-02 12:15:03"
+    },
+    {
+        "product_id": 6,
+        "name": "ябълки",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 2,
+        "description": "от градината на баба Мина",
+        "price": 2.33,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 16:17:48.054526",
+        "modified": "2026-02-02 16:17:48.054526"
+    },
+    {
+        "product_id": 7,
+        "name": "банан",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 2,
+        "description": "плод ",
+        "price": 3.45,
+        "supplier": null,
+        "tags": [],
+        "created": "2026-02-02 18:32:25.126510",
+        "modified": "2026-02-02 18:33:11.387910"
     }
 ]

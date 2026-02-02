@@ -1,1 +1,58 @@
-[]
+[
+    {
+        "log_id": 1,
+        "product_id": 2,
+        "location_id": "2",
+        "quantity": 5,
+        "action": "add",
+        "timestamp": "2026-02-02 12:15:41"
+    },
+    {
+        "log_id": 2,
+        "product_id": 2,
+        "location_id": "2",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-02 12:18:55"
+    },
+    {
+        "log_id": 3,
+        "product_id": 4,
+        "location_id": "1",
+        "quantity": 6,
+        "action": "add",
+        "timestamp": "2026-02-02 19:07:34"
+    },
+    {
+        "log_id": 4,
+        "product_id": 4,
+        "location_id": "1",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-02 19:08:50"
+    },
+    {
+        "log_id": 5,
+        "product_id": 4,
+        "location_id": "1",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-02 19:12:48"
+    },
+    {
+        "log_id": 6,
+        "product_id": 2,
+        "location_id": "2",
+        "quantity": 10,
+        "action": "add",
+        "timestamp": "2026-02-02 19:21:10"
+    },
+    {
+        "log_id": 7,
+        "product_id": 2,
+        "location_id": "2",
+        "quantity": 1,
+        "action": "remove",
+        "timestamp": "2026-02-02 19:31:45"
+    }
+]

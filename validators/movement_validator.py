@@ -1,3 +1,5 @@
+from models.movement import MovementType
+
 class MovementValidator:
 
     @staticmethod
@@ -42,9 +44,10 @@ class MovementValidator:
     def validate_movement_type(movement_type):
         if not isinstance(movement_type, MovementType):
             raise ValueError("movement_type трябва да бъде MovementType Enum.")
+
     @staticmethod
     def validate_product_id(product_id):
-        if not isinstance(product_id,str):
+        if not isinstance(product_id, str):
             raise ValueError("product_id трябва да бъде текст (UUID).")
 
         if not product_id.strip():

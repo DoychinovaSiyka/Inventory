@@ -1,56 +1,116 @@
 from models.location import Location
 from storage.json_repository import JSONRepository
+from datetime import datetime
 
 
 class LocationController:
-    def __init__(self, location_repo: JSONRepository):
-        self.location_repo = location_repo
+    def __init__(self, repo: JSONRepository):
+        self.repo = repo
+        self.locations = [Location.from_dict(l) for l in self.repo.load()]
 
-    # --- Създаване на локация ---
-    def create_location(self, name):
-        if not name or name.strip() == "":
-            print("Името на локацията не може да бъде празно.")
-            return None
+    # ---------------------------------------------------------
+    # ID GENERATOR
+    # ---------------------------------------------------------
+    def _generate_id(self):
+        if not self.locations:
+            return 1
+        return max(l.location_id for l in self.locations) + 1
 
-        new_location = Location(name=name)
-        self.location_repo.add(new_location)
-        print(f"Локацията '{name}' е добавена успешно.")
-        return new_location
+    # ---------------------------------------------------------
+    # CREATE
+    # ---------------------------------------------------------
+    def add(self, name, zone="", capacity=0):
+        if not name or len(name.strip()) == 0:
+            raise ValueError("Името на локацията е задължително.")
 
-    # --- Връщане на всички локации ---
-    def get_all_locations(self):
-        return self.location_repo.get_all()
+        if capacity < 0:
+            raise ValueError("Капацитетът трябва да бъде >= 0.")
 
-    # --- Намиране по ID ---
-    def get_location_by_id(self, location_id):
-        return self.location_repo.get_by_id(location_id)
+        # Проверка за дублиране
+        if any(l.name.lower() == name.lower() for l in self.locations):
+            raise ValueError("Локация с това име вече съществува.")
 
-    # --- Актуализиране ---
-    def update_location(self, location_id, new_name):
-        location = self.location_repo.get_by_id(location_id)
-        if not location:
-            print("Локацията не е намерена.")
-            return None
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        if not new_name or new_name.strip() == "":
-            print("Новото име не може да бъде празно.")
-            return None
+        location = Location(
+            location_id=self._generate_id(),
+            name=name,
+            zone=zone,
+            capacity=capacity,
+            created=now,
+            modified=now
+        )
 
-        location.name = new_name
-        self.location_repo.update(location)
-        print("Локацията е обновена успешно.")
+        self.locations.append(location)
+        self._save()
         return location
 
-    # --- Изтриване ---
-    def delete_location(self, location_id):
-        location = self.location_repo.get_by_id(location_id)
-        if not location:
-            print("Локацията не е намерена.")
-            return False
+    # ---------------------------------------------------------
+    # READ
+    # ---------------------------------------------------------
+    def get_all(self):
+        return self.locations
 
-        self.location_repo.delete(location_id)
-        print("Локацията е изтрита успешно.")
+    def get_by_id(self, location_id):
+        return next((l for l in self.locations if l.location_id == location_id), None)
+
+    # ---------------------------------------------------------
+    # UPDATE
+    # ---------------------------------------------------------
+    def update(self, location_id, name=None, zone=None, capacity=None):
+        location = self.get_by_id(location_id)
+        if not location:
+            raise ValueError("Локацията не е намерена.")
+
+        if name is not None:
+            if len(name.strip()) == 0:
+                raise ValueError("Името не може да бъде празно.")
+            # Проверка за дублиране
+            if any(l.name.lower() == name.lower() and l.location_id != location_id for l in self.locations):
+                raise ValueError("Локация с това име вече съществува.")
+            location.name = name
+
+        if zone is not None:
+            location.zone = zone
+
+        if capacity is not None:
+            if capacity < 0:
+                raise ValueError("Капацитетът трябва да бъде >= 0.")
+            location.capacity = capacity
+
+        location.update_modified()
+        self._save()
         return True
+
+    # ---------------------------------------------------------
+    # DELETE
+    # ---------------------------------------------------------
+    def remove(self, location_id):
+        original_len = len(self.locations)
+        self.locations = [l for l in self.locations if l.location_id != location_id]
+
+        if len(self.locations) < original_len:
+            self._save()
+            return True
+        return False
+
+    # ---------------------------------------------------------
+    # SEARCH
+    # ---------------------------------------------------------
+    def search(self, keyword):
+        keyword = keyword.lower()
+        return [
+            l for l in self.locations
+            if keyword in l.name.lower()
+               or keyword in (l.zone or "").lower()
+        ]
+
+    # ---------------------------------------------------------
+    # SAVE
+    # ---------------------------------------------------------
+    def _save(self):
+        self.repo.save([l.to_dict() for l in self.locations])
+
 
 # LocationController е важен,защото иначе няма кой да управлява:
 # създаване на локации

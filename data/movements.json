@@ -1,1 +1,93 @@
-[]
+[
+    {
+        "movement_id": "7a4796df-d784-452b-924f-00379422ee4f",
+        "product_id": 2,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "2",
+        "movement_type": "IN",
+        "quantity": 5,
+        "price": 3.89,
+        "description": "козе мляко",
+        "date": "2026-02-02 12:15:41",
+        "created": "2026-02-02 12:15:41",
+        "modified": "2026-02-02 12:15:41"
+    },
+    {
+        "movement_id": "44d0ba89-6bcf-4c5e-9a9b-3df2eb52a988",
+        "product_id": 2,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "2",
+        "movement_type": "OUT",
+        "quantity": 2,
+        "price": 3.89,
+        "description": "продажба",
+        "date": "2026-02-02 12:18:55",
+        "created": "2026-02-02 12:18:55",
+        "modified": "2026-02-02 12:18:55"
+    },
+    {
+        "movement_id": "99720ce0-998b-47cd-80b1-3d4852f27a90",
+        "product_id": 4,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "1",
+        "movement_type": "IN",
+        "quantity": 6,
+        "price": 4.5,
+        "description": "3 в 1",
+        "date": "2026-02-02 19:07:34",
+        "created": "2026-02-02 19:07:34",
+        "modified": "2026-02-02 19:07:34"
+    },
+    {
+        "movement_id": "37cd5e5f-838c-4f9b-8d85-31804a9f8937",
+        "product_id": 4,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "1",
+        "movement_type": "OUT",
+        "quantity": 2,
+        "price": 3.5,
+        "description": "3 в 1",
+        "date": "2026-02-02 19:08:50",
+        "created": "2026-02-02 19:08:50",
+        "modified": "2026-02-02 19:08:50"
+    },
+    {
+        "movement_id": "7c731002-c9f2-4d99-a060-8745f0c1c0cf",
+        "product_id": 4,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "1",
+        "movement_type": "OUT",
+        "quantity": 2,
+        "price": 3.45,
+        "description": "едросмляно кафе",
+        "date": "2026-02-02 19:12:48",
+        "created": "2026-02-02 19:12:48",
+        "modified": "2026-02-02 19:12:48"
+    },
+    {
+        "movement_id": "a06c4c0f-46cc-456c-b6af-e1c3ca6a021f",
+        "product_id": 2,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "2",
+        "movement_type": "IN",
+        "quantity": 10,
+        "price": 3.45,
+        "description": "козе мляко от козата на баба",
+        "date": "2026-02-02 19:21:10",
+        "created": "2026-02-02 19:21:10",
+        "modified": "2026-02-02 19:21:10"
+    },
+    {
+        "movement_id": "7cbe29f5-a5a3-4b9d-9bbb-5106ae1b844b",
+        "product_id": 2,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "2",
+        "movement_type": "OUT",
+        "quantity": 1,
+        "price": 3.0,
+        "description": "козе мляко",
+        "date": "2026-02-02 19:31:45",
+        "created": "2026-02-02 19:31:45",
+        "modified": "2026-02-02 19:31:45"
+    }
+]

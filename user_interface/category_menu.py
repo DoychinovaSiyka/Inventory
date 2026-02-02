@@ -1,22 +1,24 @@
 from storage.password_utils import format_table
 
 
-def category_menu(user, category_controller):
-    is_admin = user.role == "Admin"
+def category_menu(user, category_controller, readonly=False):
+    is_admin = (user is not None and user.role == "Admin" and not readonly)
 
     while True:
         print("\n=== Меню Категории ===")
         print("1. Списък с категории")
+
         if is_admin:
             print("2. Добавяне на категория")
             print("3. Редактиране на категория")
             print("4. Изтриване на категория")
+
         print("0. Назад")
 
         choice = input("Избор: ")
 
         # ---------------------------------------------------------
-        # 1. Списък с категории (Admin + Operator)
+        # 1. Списък с категории
         # ---------------------------------------------------------
         if choice == "1":
             categories = category_controller.get_all()
@@ -34,7 +36,7 @@ def category_menu(user, category_controller):
             print("\n" + format_table(columns, rows))
 
         # ---------------------------------------------------------
-        # 2. Добавяне на категория (Admin only)
+        # 2. Добавяне (Admin only)
         # ---------------------------------------------------------
         elif choice == "2" and is_admin:
             name = input("Име на категория: ").strip()
@@ -47,10 +49,15 @@ def category_menu(user, category_controller):
                 print("Грешка:", e)
 
         # ---------------------------------------------------------
-        # 3. Редактиране на категория (Admin only)
+        # 3. Редактиране (Admin only)
         # ---------------------------------------------------------
         elif choice == "3" and is_admin:
-            category_id = input("Въведете ID на категория: ").strip()
+            try:
+                category_id = int(input("Въведете ID на категория: ").strip())
+            except ValueError:
+                print("Невалидно ID.")
+                continue
+
             category = category_controller.get_by_id(category_id)
 
             if not category:
@@ -72,18 +79,19 @@ def category_menu(user, category_controller):
                 print("Грешка:", e)
 
         # ---------------------------------------------------------
-        # 4. Изтриване на категория (Admin only)
+        # 4. Изтриване (Admin only)
         # ---------------------------------------------------------
         elif choice == "4" and is_admin:
-            category_id = input("Въведете ID на категория: ").strip()
-
             try:
-                if category_controller.remove(category_id):
-                    print("Категорията е изтрита успешно!")
-                else:
-                    print("Категорията не е намерена.")
-            except ValueError as e:
-                print("Грешка:", e)
+                category_id = int(input("Въведете ID на категория: ").strip())
+            except ValueError:
+                print("Невалидно ID.")
+                continue
+
+            if category_controller.remove(category_id):
+                print("Категорията е изтрита успешно!")
+            else:
+                print("Категорията не е намерена.")
 
         elif choice == "0":
             break

@@ -68,6 +68,20 @@ class Movement(metaclass=MetaMovement):
         # Валидация според документациите
         self.validate()
 
+    def __str__(self):
+        return (
+            f"Движение ID: {self.movement_id}\n"
+            f"Продукт ID: {self.product_id}\n"
+            f"Потребител ID: {self.user_id}\n"
+            f"Локация ID: {self.location_id}\n"
+            f"Тип: {self.movement_type.name}\n"
+            f"Количество: {self.quantity}\n"
+            f"Цена: {self.price}\n"
+            f"Описание: {self.description}\n"
+            f"Дата: {self.date}\n"
+            f"----------------------------------------"
+        )
+
     def validate(self):
         if self.product_id is None:
             raise ValueError("product_id е задължително поле.")

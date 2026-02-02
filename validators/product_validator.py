@@ -1,7 +1,5 @@
 # validators/product_validator.py
 
-from models.category import Category
-
 class ProductValidator:
 
     @staticmethod
@@ -10,12 +8,13 @@ class ProductValidator:
             raise ValueError("Името е задължително!")
 
     @staticmethod
-    def validate_categories(categories):
-        if not categories:
+    def validate_categories(category_ids):
+        if not category_ids:
             raise ValueError("Трябва да изберете поне една категория.")
 
-        for c in categories:
-            if not isinstance(c, Category):
+        # category_ids трябва да са UUID стрингове
+        for cid in category_ids:
+            if not isinstance(cid, str) or len(cid.strip()) == 0:
                 raise ValueError("Невалидна категория.")
 
     @staticmethod
@@ -43,9 +42,9 @@ class ProductValidator:
             raise ValueError("Цената трябва да е положителна.")
 
     @staticmethod
-    def validate_all(name, categories, quantity, description, price):
+    def validate_all(name, category_ids, quantity, description, price):
         ProductValidator.validate_name(name)
-        ProductValidator.validate_categories(categories)
+        ProductValidator.validate_categories(category_ids)
         ProductValidator.validate_quantity(quantity)
         ProductValidator.validate_description(description)
         ProductValidator.validate_price(price)

@@ -4,6 +4,7 @@ from models.movement import MovementType
 
 
 def movement_menu(product_controller: ProductController, movement_controller: MovementController, user_controller):
+    # ВЗИМАМЕ ЛОГНАТИЯ ПОТРЕБИТЕЛ
     user = user_controller.logged_user
 
     if not user:
@@ -40,7 +41,7 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 continue
 
             # -----------------------------
-            # Избор на локация (по документацията)
+            # Избор на локация
             # -----------------------------
             locations = movement_controller.location_controller.get_all()
 
@@ -78,14 +79,19 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
             # -----------------------------
             # Количество и цена
             # -----------------------------
-            try:
-                quantity = int(input("Количество: "))
-                price = float(input("Цена: "))
-            except ValueError:
-                print("Количество и цена трябва да са числа.")
-                continue
-
+            quantity = input("Количество: ")
+            price = input("Цена: ")
             description = input("Описание: ")
+
+            # -----------------------------
+            # Клиент (само при OUT)
+            # -----------------------------
+            customer = None
+            if movement_type == MovementType.OUT:
+                customer = input("Въведете име на клиент: ").strip()
+                if not customer:
+                    print("Не е въведено име на клиент. Ще се използва потребителското име.")
+                    customer = None  # fallback към username
 
             # -----------------------------
             # Създаване на движение
@@ -93,13 +99,39 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
             try:
                 movement_controller.add(
                     product_id=product_id,
-                    user_id=user.id,
+                    user_id=user.user_id,
                     location_id=location_id,
                     movement_type=movement_type,
                     quantity=quantity,
                     description=description,
-                    price=price
+                    price=price,
+                    customer=customer
                 )
                 print("Движението е добавено успешно!")
+                print("Ако е OUT → фактурата е генерирана автоматично.")
             except ValueError as e:
                 print("Грешка:", e)
+
+        elif choice == "2":
+            keyword = input("Търси по описание: ")
+            results = movement_controller.search(keyword)
+
+            if not results:
+                print("Няма намерени движения.")
+                continue
+
+            for m in results:
+                print(m)
+
+        elif choice == "3":
+            all_movements = movement_controller.get_all()
+
+            if not all_movements:
+                print("Няма движения.")
+                continue
+
+            for m in all_movements:
+                print(m)
+
+        else:
+            print("Невалиден избор.")
