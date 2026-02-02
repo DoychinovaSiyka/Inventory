@@ -1,88 +1,56 @@
 from models.location import Location
-from validators.location_validator import LocationValidator
-from storage.json_repository import Repository
-from datetime import datetime
-
+from storage.json_repository import JSONRepository
 
 
 class LocationController:
-    def __init__(self,repo:Repository):
-        self.repo = repo
-        self.locations = [Location.from_dict(l)  for l in self.repo.load()]
+    def __init__(self, location_repo: JSONRepository):
+        self.location_repo = location_repo
 
-    # Internal Id generator
-    def _generate_id(self):
-        if not self.locations:
-            return 1
-        return max(l.location_id for l in self.locations) + 1
+    # --- Създаване на локация ---
+    def create_location(self, name):
+        if not name or name.strip() == "":
+            print("Името на локацията не може да бъде празно.")
+            return None
 
-    # GET All
-    def get_all(self):
-        return self.locations
-    def get_by_id(self,location_id):
-        for loc in self.locations:
-            if loc.location_id == location_id:
-                return loc
-        return None
+        new_location = Location(name=name)
+        self.location_repo.add(new_location)
+        print(f"Локацията '{name}' е добавена успешно.")
+        return new_location
 
-    def exist_by_name(self,name):
-        return any(loc.name.lower() ==name.lower() for loc in self.locations)
-    def add(self,name,zone = None,capacity = 0):
-        # 1) Валидации
-        LocationValidator.validate_all(name,zone,capacity)
+    # --- Връщане на всички локации ---
+    def get_all_locations(self):
+        return self.location_repo.get_all()
 
-        # 2) Проверка за дублиране
-        if self.exist_by_name(name):
-            raise ValueError("Локация с това име вече съществува.")
+    # --- Намиране по ID ---
+    def get_location_by_id(self, location_id):
+        return self.location_repo.get_by_id(location_id)
 
-        # 3)  Създаване на обект
-        new_id = self._generate_id()
-        now = str(datetime.now())
-        location = Location(location_id = new_id, name = name, zone = zone, capacity = capacity,created = now,modified = now)
+    # --- Актуализиране ---
+    def update_location(self, location_id, new_name):
+        location = self.location_repo.get_by_id(location_id)
+        if not location:
+            print("Локацията не е намерена.")
+            return None
 
-        # 4) Запис
-        self.locations.append(location)
-        self._save()
+        if not new_name or new_name.strip() == "":
+            print("Новото име не може да бъде празно.")
+            return None
 
+        location.name = new_name
+        self.location_repo.update(location)
+        print("Локацията е обновена успешно.")
         return location
 
-    # UPDATE LOCATION
-    def update(self,location_id,name =None,zone =None,capacity =None):
-        loc = self.get_by_id(location_id)
-        if not loc:
-            raise ValueError("Локацията не е намерена.")
-
-        # Валидации
-        if name is not None:
-            LocationValidator.validate_name(name)
-            if self.exist_by_name(name) and name!= loc.name:
-                raise ValueError("Локация с това име вече съществува.")
-            loc.name = name
-        if zone is not None:
-            LocationValidator.validate_zone(zone)
-            loc.zone = zone
-        if capacity is not None:
-            LocationValidator.validate_capacity(capacity)
-            loc.capacity = capacity
-
-        loc.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self._save()
-
-    # DELETE
-    def remove(self,location_id):
-        loc = self.get_by_id(location_id)
-        if not loc:
+    # --- Изтриване ---
+    def delete_location(self, location_id):
+        location = self.location_repo.get_by_id(location_id)
+        if not location:
+            print("Локацията не е намерена.")
             return False
-        self.locations.remove(loc)
-        self._save()
+
+        self.location_repo.delete(location_id)
+        print("Локацията е изтрита успешно.")
         return True
-
-    # save to JSON
-    def _save(self):
-        self.repo.save([l.to_dict() for l in self.locations])
-
-
-
 
 # LocationController е важен,защото иначе няма кой да управлява:
 # създаване на локации

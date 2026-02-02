@@ -17,9 +17,7 @@ class MovementController:
         # Зареждаме движенията от JSON
         self.movements = [Movement.from_dict(m) for m in self.repo.load()]
 
-    # ---------------------------------------------------------
-    # Генериране на UUID за movement_id
-    # ---------------------------------------------------------
+
     def _generate_id(self):
         return str(uuid.uuid4())
 

@@ -1,14 +1,14 @@
+from storage.json_repository import JSONRepository
 from controllers.user_controller import UserController
 from models.user import User
-from storage.json_repository import JSONRepository
 
-from user_interface.main_menu import show_menu
 from user_interface.anonymous_menu import anonymous_menu
 from user_interface.operator_menu import operator_menu
 from user_interface.admin_menu import admin_menu
 
 
 def main():
+    # Зареждане на потребителите
     user_repo = JSONRepository("data/users.json")
     user_controller = UserController(user_repo)
 
@@ -19,6 +19,7 @@ def main():
 
     option = input("Избор: ")
 
+    # --- Вход с потребител ---
     if option == "1":
         username = input("Потребителско име: ")
         password = input("Парола: ")
@@ -29,6 +30,7 @@ def main():
             print("Грешно име или парола.")
             return
 
+    # --- Вход като гост ---
     elif option == "2":
         user = User(
             first_name="Guest",
@@ -39,19 +41,23 @@ def main():
             role="anonymous",
             status="active"
         )
+
     else:
         return
 
-    role = show_menu(user)
-
-    if role == "anonymous":
+    # --- Избор на меню според ролята ---
+    if user.role == "anonymous":
         anonymous_menu(user)
-    elif role == "operator":
+
+    elif user.role == "operator":
         operator_menu(user)
-    elif role == "admin":
+
+    elif user.role == "admin":
         admin_menu(user)
+
+    else:
+        print("Невалидна роля. Достъпът е отказан.")
 
 
 if __name__ == "__main__":
     main()
-

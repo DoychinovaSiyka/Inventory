@@ -5,6 +5,10 @@ from controllers.product_controller import ProductController
 from controllers.user_controller import UserController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
+from controllers.movement_controller import MovementController
+from controllers.supplier_controller import SupplierController
+from controllers.location_controller import LocationController
+from controllers.stocklog_controller import StockLogController
 
 from user_interface.product_menu import product_menu
 from user_interface.category_menu import category_menu
@@ -13,28 +17,49 @@ from user_interface.user_menu import user_menu
 from user_interface.reports_menu import reports_menu
 from user_interface.invoice_menu import invoice_menu
 from user_interface.system_info_menu import system_info_menu
-from  controllers.supplier_controller import SupplierController
+
 
 def admin_menu(user):
-    # --- Създаване на контролери ---
+    # --- Репота ---
     category_repo = JSONRepository("data/categories.json")
-    category_controller = CategoryController(category_repo)
-
     supplier_repo = JSONRepository("data/suppliers.json")
+    product_repo = JSONRepository("data/products.json")
+    user_repo = JSONRepository("data/users.json")
+    invoice_repo = JSONRepository("data/invoices.json")
+    movement_repo = JSONRepository("data/movements.json")
+    location_repo = JSONRepository("data/locations.json")
+    stocklog_repo = JSONRepository("data/stocklogs.json")
+    report_repo = JSONRepository("data/reports.json")
+
+    # --- Контролери ---
+    category_controller = CategoryController(category_repo)
     supplier_controller = SupplierController(supplier_repo)
 
-    product_repo = JSONRepository("data/products.json")
-    product_controller = ProductController(product_repo, category_controller, supplier_controller)
+    product_controller = ProductController(
+        product_repo,
+        category_controller,
+        supplier_controller
+    )
 
-
-    user_repo = JSONRepository("data/users.json")
     user_controller = UserController(user_repo)
-
-    invoice_repo = JSONRepository("data/invoices.json")
     invoice_controller = InvoiceController(invoice_repo)
+    location_controller = LocationController(location_repo)
+    stocklog_controller = StockLogController(stocklog_repo)
 
-    report_repo = JSONRepository("data/reports.json")
-    report_controller = ReportController(report_repo)
+    movement_controller = MovementController(
+        movement_repo,
+        product_controller,
+        user_controller,
+        location_controller,
+        stocklog_controller,
+        invoice_controller
+    )
+
+    report_controller = ReportController(
+        report_repo,
+        movement_controller,
+        invoice_controller
+    )
 
     # --- Меню ---
     while True:
@@ -57,7 +82,7 @@ def admin_menu(user):
             category_menu(category_controller, readonly=False)
 
         elif choice == "3":
-            movement_menu(user)
+            movement_menu(user, movement_controller)
 
         elif choice == "4":
             user_menu(user, user_controller)

@@ -32,7 +32,8 @@ def anonymous_menu(user):
             product_menu(product_controller, category_controller, readonly=True)
 
         elif choice == "2":
-            category_menu(category_controller, readonly=True)
+            category_menu(user, category_controller)
+
 
         elif choice == "7":
             system_info_menu()
