@@ -1,14 +1,38 @@
 [
-  {
-    "user_id": "1",
-    "first_name": "Siyka",
-    "last_name": "Doychinova",
-    "email": "siyka@example.com",
-    "username": "Сийка",
-    "password": "123",
-    "role": "admin",
-    "status": "active",
-    "created": "2024-01-01T12:00:00",
-    "modified": "2024-01-01T12:00:00"
-  }
+    {
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "first_name": "Siyka",
+        "last_name": "Doychinova",
+        "email": "siyka@example.com",
+        "username": "Siyka",
+        "password": "343350357364371378",
+        "role": "Admin",
+        "status": "Disabled",
+        "created": "2026-02-02T09:00:00",
+        "modified": "2026-02-02 09:29:53"
+    },
+    {
+        "user_id": "0772fc45-3d8b-42aa-9d76-88e5f65fd123",
+        "first_name": "Иван",
+        "last_name": "",
+        "email": "ivan@abv.bg",
+        "username": "ivan123",
+        "password": "343350357364371378735826749777",
+        "role": "Operator",
+        "status": "Active",
+        "created": "2026-02-02 09:31:11",
+        "modified": "2026-02-02 09:31:11"
+    },
+    {
+        "user_id": "f25d20d6-d99a-46dc-bfb1-8b97667efc1d",
+        "first_name": "Ирина",
+        "last_name": "Иванова",
+        "email": "irina_i@abv.bg",
+        "username": "irinka0603",
+        "password": "336378336357350336336343",
+        "role": "Admin",
+        "status": "Active",
+        "created": "2026-02-02 09:32:37",
+        "modified": "2026-02-02 09:32:37"
+    }
 ]

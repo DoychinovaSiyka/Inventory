@@ -4,7 +4,7 @@ from datetime import datetime
 
 class User:
     def __init__(self, first_name, last_name, email, username, password,
-                 role="operator", status="active",
+                 role="Operator", status="Active",
                  user_id=None, created=None, modified=None):
 
         self.user_id = user_id or str(uuid.uuid4())
@@ -15,10 +15,10 @@ class User:
         self.username = username
         self.password = password
 
-        # Роля: anonymous / operator / admin
+        # Роля: Admin / Operator / Anonymous
         self.role = role
 
-        # Статус: active / inactive
+        # Статус: Active / Disabled
         self.status = status
 
         self.created = created or datetime.now().isoformat()
@@ -35,8 +35,8 @@ class User:
             email=data["email"],
             username=data["username"],
             password=data["password"],
-            role=data.get("role", "operator"),
-            status=data.get("status", "active"),
+            role=data.get("role", "Operator"),
+            status=data.get("status", "Active"),
             user_id=data.get("user_id"),
             created=data.get("created"),
             modified=data.get("modified")
@@ -55,4 +55,3 @@ class User:
             "created": self.created,
             "modified": self.modified
         }
-

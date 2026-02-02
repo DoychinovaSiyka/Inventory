@@ -1,62 +1,98 @@
-from storage.json_repository import JSONRepository
 from controllers.user_controller import UserController
-from models.user import User
+from controllers.product_controller import ProductController
+from controllers.category_controller import CategoryController
+from controllers.supplier_controller import SupplierController
+from controllers.location_controller import LocationController
+from controllers.stocklog_controller import StockLogController
+from controllers.movement_controller import MovementController
+from controllers.invoice_controller import InvoiceController
 
-from user_interface.anonymous_menu import anonymous_menu
-from user_interface.operator_menu import operator_menu
 from user_interface.admin_menu import admin_menu
+from user_interface.operator_menu import operator_menu
+from  user_interface.anonymous_menu import anonymous_menu
+
+from storage.json_repository import JSONRepository
 
 
 def main():
-    # Зареждане на потребителите
+    # ---------------------------------------------------------
+    # Репозитории
+    # ---------------------------------------------------------
     user_repo = JSONRepository("data/users.json")
+    product_repo = JSONRepository("data/products.json")
+    category_repo = JSONRepository("data/categories.json")
+    supplier_repo = JSONRepository("data/suppliers.json")
+    location_repo = JSONRepository("data/locations.json")
+    stocklog_repo = JSONRepository("data/stocklogs.json")
+    movement_repo = JSONRepository("data/movements.json")
+    invoice_repo = JSONRepository("data/invoices.json")
+
+    # ---------------------------------------------------------
+    # Контролери (в правилния ред!)
+    # ---------------------------------------------------------
     user_controller = UserController(user_repo)
+    category_controller = CategoryController(category_repo)
+    supplier_controller = SupplierController(supplier_repo)
+    location_controller = LocationController(location_repo)
+    stocklog_controller = StockLogController(stocklog_repo)
 
-    print("\nВход в системата")
-    print("1. Вход с потребител")
-    print("2. Вход като гост")
-    print("0. Изход")
+    product_controller = ProductController(product_repo, category_controller, supplier_controller)
 
-    option = input("Избор: ")
+    invoice_controller = InvoiceController(invoice_repo)
 
-    # --- Вход с потребител ---
-    if option == "1":
-        username = input("Потребителско име: ")
-        password = input("Парола: ")
+    movement_controller = MovementController(
+        movement_repo,
+        product_controller,
+        user_controller,
+        location_controller,
+        stocklog_controller,
+        invoice_controller
+    )
 
-        user = user_controller.authenticate(username, password)
+    # ---------------------------------------------------------
+    # Главен цикъл
+    # ---------------------------------------------------------
+    while True:
+        print("\nВход в системата")
+        print("1. Вход с потребител")
+        print("2. Вход като гост")
+        print("0. Изход")
 
-        if not user:
-            print("Грешно име или парола.")
-            return
+        choice = input("Избор: ")
 
-    # --- Вход като гост ---
-    elif option == "2":
-        user = User(
-            first_name="Guest",
-            last_name="",
-            email="",
-            username="anonymous",
-            password="",
-            role="anonymous",
-            status="active"
-        )
+        if choice == "1":
+            username = input("Потребителско име: ")
+            password = input("Парола: ")
 
-    else:
-        return
+            user = user_controller.login(username, password)
 
-    # --- Избор на меню според ролята ---
-    if user.role == "anonymous":
-        anonymous_menu(user)
+            if not user:
+                print("Грешно потребителско име или парола.")
+                continue
 
-    elif user.role == "operator":
-        operator_menu(user)
+            # ЗАДЪЛЖИТЕЛНО!
+            user_controller.logged_user = user
 
-    elif user.role == "admin":
-        admin_menu(user)
+            if user.role == "Admin":
+                admin_menu(user)
 
-    else:
-        print("Невалидна роля. Достъпът е отказан.")
+            elif user.role == "Operator":
+                operator_menu(product_controller, category_controller,
+                              supplier_controller, movement_controller, invoice_controller)
+
+            else:
+                print("Невалидна роля.")
+                continue
+
+        elif choice == "2":
+            anonymous_menu(product_controller, category_controller)
+
+        elif choice == "0":
+            print("Изход от системата.")
+            break
+
+        else:
+            print("Невалиден избор.")
 
 
 if __name__ == "__main__":

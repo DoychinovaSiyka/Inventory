@@ -1,6 +1,8 @@
 from typing import Optional
+from datetime import datetime
 from models.user import User
 from storage.json_repository import JSONRepository
+from validators.user_validator import UserValidator
 
 
 class UserController:
@@ -8,16 +10,18 @@ class UserController:
         self.repo = repo
         self.users = [User.from_dict(u) for u in self.repo.load()]
 
-        # Ако няма потребители → създаваме администратор
+        # Ако няма потребители → създаваме администратор (както е в SRS)
         if not self.users:
             admin = User(
                 first_name="Admin",
                 last_name="User",
                 email="admin@example.com",
                 username="admin",
-                password=self._hash_password("admin"),
-                role="admin",
-                status="active"
+                password=self._hash_password("admin123"),  # минимум 6 символа
+                role="Admin",
+                status="Active",
+                created=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                modified=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
             self.users.append(admin)
             self._save()
@@ -25,10 +29,9 @@ class UserController:
         self.logged_user: Optional[User] = None
 
     # ---------------------------------------------------
-    #   ПРОСТ "ХЕШ" БЕЗ НИКАКВИ ИМПОРТИ
+    #   ХЕШИРАНЕ НА ПАРОЛА (SRS: password = hashed)
     # ---------------------------------------------------
     def _hash_password(self, password: str) -> str:
-        # Превръща всеки символ в ASCII код и ги слепва
         return "".join(str(ord(c) * 7) for c in password)
 
     # ---------------------------------------------------
@@ -47,13 +50,18 @@ class UserController:
         return None
 
     # ---------------------------------------------------
-    #   РЕГИСТРАЦИЯ
+    #   РЕГИСТРАЦИЯ (SRS: валидиране + timestamps)
     # ---------------------------------------------------
-    def register(self, first_name, last_name, email, username, password, role="operator"):
+    def register(self, first_name, last_name, email, username, password, role="Operator"):
+
+        # Валидация според SRS
+        UserValidator.validate_user_data(username, password, email, role, "Active")
+
         if not self._is_unique_username(username):
             raise ValueError("Потребителското име вече съществува.")
 
         hashed = self._hash_password(password)
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         new_user = User(
             first_name=first_name,
@@ -62,7 +70,9 @@ class UserController:
             username=username,
             password=hashed,
             role=role,
-            status="active"
+            status="Active",
+            created=now,
+            modified=now
         )
 
         self.users.append(new_user)
@@ -70,46 +80,48 @@ class UserController:
         return new_user
 
     # ---------------------------------------------------
-    #   ЛОГИН
+    #   ЛОГИН (единен процес, както е в документациите)
     # ---------------------------------------------------
     def login(self, username: str, password: str) -> Optional[User]:
         hashed = self._hash_password(password)
 
         for user in self.users:
-            if user.username == username and user.password == hashed and user.status == "active":
+            if user.username == username and user.password == hashed:
+                if user.status != "Active":
+                    return None
                 self.logged_user = user
                 return user
 
         return None
 
-
-    def authenticate(self,username,password):
-        for user in self.users:
-            if user.username == username and user.password == password:
-                if user.status!= "active":
-                    return None
-                return user
-        return None
-
-
     # ---------------------------------------------------
-    #   ПРОМЯНА НА РОЛЯ
+    #   ПРОМЯНА НА РОЛЯ (само Admin)
     # ---------------------------------------------------
-    def change_role(self, username: str, new_role: str):
+    def change_role(self, acting_user: User, username: str, new_role: str):
+        if acting_user.role != "Admin":
+            raise PermissionError("Само администратор може да променя роли.")
+
+        UserValidator.validate_role(new_role)
+
         for user in self.users:
             if user.username == username:
                 user.role = new_role
+                user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self._save()
                 return True
         return False
 
     # ---------------------------------------------------
-    #   ДЕАКТИВИРАНЕ
+    #   ДЕАКТИВИРАНЕ (само Admin)
     # ---------------------------------------------------
-    def deactivate_user(self, username: str):
+    def deactivate_user(self, acting_user: User, username: str):
+        if acting_user.role != "Admin":
+            raise PermissionError("Само администратор може да деактивира потребители.")
+
         for user in self.users:
             if user.username == username:
-                user.status = "inactive"
+                user.status = "Disabled"
+                user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self._save()
                 return True
         return False

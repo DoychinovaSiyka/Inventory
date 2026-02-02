@@ -82,16 +82,19 @@ def admin_menu(user):
             category_menu(category_controller, readonly=False)
 
         elif choice == "3":
-            movement_menu(user, movement_controller)
+            # movement_menu изисква (user, movement_controller, user_controller)
+            movement_menu(user, movement_controller, user_controller)
 
         elif choice == "4":
+
             user_menu(user, user_controller)
 
+
         elif choice == "5":
-            reports_menu(user, report_controller)
+            reports_menu(report_controller)
 
         elif choice == "6":
-            invoice_menu(user, invoice_controller)
+            invoice_menu(invoice_controller)
 
         elif choice == "7":
             system_info_menu()
