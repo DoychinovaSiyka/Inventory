@@ -38,7 +38,7 @@ def main_menu(user, controllers):
         elif choice == "7":
             user_menu(user, controllers["user"])
         elif choice == "8":
-            graph_menu()   # ← ТУК СЕ ИЗВИКВА ДЕЙКСТРА
+            graph_menu()
         elif choice == "0":
             break
         else:

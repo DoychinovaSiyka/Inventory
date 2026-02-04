@@ -1,50 +1,26 @@
 [
     {
-        "invoice_id": "f9430baf-0b4e-4bc5-ad19-815ecd371ab5",
-        "movement_id": "44d0ba89-6bcf-4c5e-9a9b-3df2eb52a988",
+        "invoice_id": "d6e31594-2716-4a90-96df-d5715361970c",
+        "movement_id": "fc5c455f-a4e8-481f-8f12-59592fbbb7d1",
         "product": "Мляко",
         "quantity": 2,
-        "unit_price": 3.89,
-        "total_price": 7.78,
+        "unit_price": 2.0,
+        "total_price": 4.0,
         "customer": "Siyka",
-        "date": "2026-02-02 12:18:55",
-        "created": "2026-02-02 12:18:55",
-        "modified": "2026-02-02 12:18:55"
+        "date": "2026-02-03 22:23:22",
+        "created": "2026-02-03 22:23:22",
+        "modified": "2026-02-03 22:23:22"
     },
     {
-        "invoice_id": "374b5c14-80b3-4db5-b6c4-67ec9f961478",
-        "movement_id": "37cd5e5f-838c-4f9b-8d85-31804a9f8937",
-        "product": "Кафе",
-        "quantity": 2,
-        "unit_price": 3.5,
-        "total_price": 7.0,
-        "customer": "Siyka",
-        "date": "2026-02-02 19:08:50",
-        "created": "2026-02-02 19:08:50",
-        "modified": "2026-02-02 19:08:50"
-    },
-    {
-        "invoice_id": "e1de7ddd-440f-48a1-8fb5-20f6122cb566",
-        "movement_id": "7c731002-c9f2-4d99-a060-8745f0c1c0cf",
-        "product": "Кафе",
-        "quantity": 2,
-        "unit_price": 3.45,
-        "total_price": 6.9,
-        "customer": "Siyka",
-        "date": "2026-02-02 19:12:48",
-        "created": "2026-02-02 19:12:48",
-        "modified": "2026-02-02 19:12:48"
-    },
-    {
-        "invoice_id": "4318e56d-54d2-42c6-a000-6908da0a41b9",
-        "movement_id": "7cbe29f5-a5a3-4b9d-9bbb-5106ae1b844b",
+        "invoice_id": "c4bf850b-59f7-49c6-81f7-27e82b164ab4",
+        "movement_id": "6c78ae41-1258-4f04-a1e7-3a61233fac58",
         "product": "Мляко",
-        "quantity": 1,
-        "unit_price": 3.0,
-        "total_price": 3.0,
-        "customer": "Сийка",
-        "date": "2026-02-02 19:31:45",
-        "created": "2026-02-02 19:31:45",
-        "modified": "2026-02-02 19:31:45"
+        "quantity": 2,
+        "unit_price": 2.75,
+        "total_price": 5.5,
+        "customer": "Елена Иванова",
+        "date": "2026-02-04 11:55:37",
+        "created": "2026-02-04 11:55:37",
+        "modified": "2026-02-04 11:55:37"
     }
 ]

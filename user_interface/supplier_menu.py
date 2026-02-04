@@ -15,9 +15,8 @@ def supplier_menu(user, supplier_controller):
 
         choice = input("Избор: ")
 
-        # ---------------------------------------------------------
+
         # 1. Списък с доставчици (Admin + Operator)
-        # ---------------------------------------------------------
         if choice == "1":
             suppliers = supplier_controller.get_all()
 
@@ -33,27 +32,22 @@ def supplier_menu(user, supplier_controller):
 
             print("\n" + format_table(columns, rows))
 
-        # ---------------------------------------------------------
+
         # 2. Добавяне на доставчик (Admin only)
-        # ---------------------------------------------------------
         elif choice == "2" and is_admin:
             name = input("Име на доставчик: ").strip()
             contact = input("Контакт (телефон/имейл): ").strip()
             address = input("Адрес: ").strip()
 
             try:
-                supplier_controller.add(
-                    name=name,
-                    contact=contact,
-                    address=address
-                )
+                supplier_controller.add(name=name,contact=contact,address=address)
                 print("Доставчикът е добавен успешно!")
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 3. Редактиране на доставчик (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "3" and is_admin:
             supplier_id = input("Въведете ID на доставчик: ").strip()
             supplier = supplier_controller.get_by_id(supplier_id)
@@ -78,9 +72,9 @@ def supplier_menu(user, supplier_controller):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 4. Изтриване на доставчик (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "4" and is_admin:
             supplier_id = input("Въведете ID на доставчик: ").strip()
 

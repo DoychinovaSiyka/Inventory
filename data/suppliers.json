@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "supplier_id": 1,
+        "name": "Fresh Market Distribution",
+        "contact": "ofice@freshmarket.bg",
+        "address": "Пловдив, ул. Коматевско шосе 45",
+        "created": "2026-02-03 22:19:52",
+        "modified": "2026-02-03 22:19:52"
+    }
+]

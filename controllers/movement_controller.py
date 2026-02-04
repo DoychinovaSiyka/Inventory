@@ -1,3 +1,4 @@
+from typing import Optional, List
 import uuid
 from datetime import datetime
 from models.movement import Movement, MovementType
@@ -16,13 +17,25 @@ class MovementController:
         self.stocklog_controller = stocklog_controller
         self.invoice_controller = invoice_controller
 
-        self.movements = [Movement.from_dict(m) for m in self.repo.load()]
+        self.movements: List[Movement] = [
+            Movement.from_dict(m) for m in self.repo.load()
+        ]
+        # Зареждаме всички движения от JSON файла и ги преобразуваме в Movement обекти.
 
-    def _generate_id(self):
+    def _generate_id(self) -> str:
         return str(uuid.uuid4())
 
-    def add(self, product_id, user_id, location_id,
-            movement_type, quantity, description, price, customer=None):
+    def add(
+        self,
+        product_id: str,
+        user_id: int,
+        location_id: int,
+        movement_type,
+        quantity,
+        description: str,
+        price,
+        customer: Optional[str] = None
+    ) -> Movement:
 
         # Валидации
         validators.movement_validator.MovementValidator.validate_movement_type(movement_type)
@@ -46,7 +59,7 @@ class MovementController:
         if not location:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Преобразуване на movement_type
+        # Преобразуване на movement_type, ако е подаден като число
         if isinstance(movement_type, int):
             mapping = {0: MovementType.IN, 1: MovementType.OUT, 2: MovementType.MOVE}
             if movement_type not in mapping:
@@ -54,8 +67,6 @@ class MovementController:
             movement_type = mapping[movement_type]
 
         # Бизнес логика
-        old_location = getattr(product, "location_id", None)
-
         if movement_type == MovementType.IN:
             product.quantity += quantity
             action = "add"
@@ -70,11 +81,13 @@ class MovementController:
             action = "move"
             product.location_id = location_id
 
+        # Обновяване на продукта
         product.update_modified()
         self.product_controller._save()
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        # Създаване на Movement
         movement = Movement(
             movement_id=self._generate_id(),
             product_id=product_id,
@@ -92,7 +105,7 @@ class MovementController:
         self.movements.append(movement)
         self._save()
 
-        # StockLog
+        # Запис в StockLog
         self.stocklog_controller.add_log(
             product_id=product_id,
             location_id=location_id,
@@ -100,7 +113,7 @@ class MovementController:
             action=action
         )
 
-        # Invoice при OUT
+        # Автоматична фактура при OUT
         if movement_type == MovementType.OUT:
             customer = customer or user.username
 
@@ -115,12 +128,15 @@ class MovementController:
 
         return movement
 
-    def _save(self):
+    def _save(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
-    def get_all(self):
+    def get_all(self) -> List[Movement]:
         return self.movements
 
-    def search(self, keyword):
+    def search(self, keyword: str) -> List[Movement]:
         keyword = keyword.lower()
-        return [m for m in self.movements if keyword in (m.description or "").lower()]
+        return [
+            m for m in self.movements
+            if keyword in (m.description or "").lower()
+        ]

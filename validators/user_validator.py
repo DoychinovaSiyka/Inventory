@@ -17,9 +17,9 @@ class UserValidator:
 
         return True
 
-    # ---------------------------------------------------
-    #   PASSWORD (SRS: минимум 6 символа, хеширана)
-    # ---------------------------------------------------
+
+    #   PASSWORD (минимум 6 символа, хеширана)
+
     @staticmethod
     def validate_password(password: str):
         if not password:
@@ -30,9 +30,9 @@ class UserValidator:
 
         return True
 
-    # ---------------------------------------------------
-    #   EMAIL (SRS: задължителен, валиден формат)
-    # ---------------------------------------------------
+
+    #   EMAIL ( валиден формат )
+
     @staticmethod
     def validate_email(email: str):
         if not email:
@@ -44,9 +44,8 @@ class UserValidator:
 
         return True
 
-    # ---------------------------------------------------
+
     #   ROLE (SRS: Admin, Operator, Anonymous)
-    # ---------------------------------------------------
     @staticmethod
     def validate_role(role: str):
         valid_roles = ["Admin", "Operator", "Anonymous"]
@@ -55,9 +54,9 @@ class UserValidator:
 
         return True
 
-    # ---------------------------------------------------
+
+
     #   STATUS (SRS: Active, Disabled)
-    # ---------------------------------------------------
     @staticmethod
     def validate_status(status: str):
         valid_status = ["Active", "Disabled"]
@@ -66,9 +65,9 @@ class UserValidator:
 
         return True
 
-    # ---------------------------------------------------
+
     #   ПЪЛНА ВАЛИДАЦИЯ НА ПОТРЕБИТЕЛ
-    # ---------------------------------------------------
+
     @staticmethod
     def validate_user_data(username, password, email, role, status):
         UserValidator.validate_username(username)

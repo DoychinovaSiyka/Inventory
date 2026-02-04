@@ -9,16 +9,17 @@ from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
 
 from user_interface.admin_menu import admin_menu
-from user_interface.operator_menu import operator_menu
+import user_interface.operator_menu
 from user_interface.anonymous_menu import anonymous_menu
-
+from user_interface.product_sort_menu import sorting_menu
 from storage.json_repository import JSONRepository
+from datetime import datetime
+from models.user import User
 
 
 def main():
-    # ---------------------------------------------------------
+
     # Репозитории
-    # ---------------------------------------------------------
     user_repo = JSONRepository("data/users.json")
     product_repo = JSONRepository("data/products.json")
     category_repo = JSONRepository("data/categories.json")
@@ -29,20 +30,27 @@ def main():
     invoice_repo = JSONRepository("data/invoices.json")
     report_repo = JSONRepository("data/reports.json")
 
-    # ---------------------------------------------------------
     # Контролери
-    # ---------------------------------------------------------
     user_controller = UserController(user_repo)
     category_controller = CategoryController(category_repo)
     supplier_controller = SupplierController(supplier_repo)
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
-    product_controller = ProductController(product_repo,category_controller,supplier_controller)
+    product_controller = ProductController(
+        product_repo,
+        category_controller,
+        supplier_controller
+    )
 
     invoice_controller = InvoiceController(invoice_repo)
 
-    movement_controller = MovementController(movement_repo,product_controller,user_controller,location_controller,stocklog_controller,
+    movement_controller = MovementController(
+        movement_repo,
+        product_controller,
+        user_controller,
+        location_controller,
+        stocklog_controller,
         invoice_controller
     )
 
@@ -53,9 +61,7 @@ def main():
         invoice_controller
     )
 
-    # ---------------------------------------------------------
-    # Главно меню
-    # ---------------------------------------------------------
+    # Главен цикъл
     while True:
         print("\nВход в системата")
         print("1. Вход с потребител")
@@ -64,9 +70,7 @@ def main():
 
         choice = input("Избор: ")
 
-        # ---------------------------------------------------------
         # Вход с потребител
-        # ---------------------------------------------------------
         if choice == "1":
             username = input("Потребителско име: ")
             password = input("Парола: ")
@@ -92,35 +96,41 @@ def main():
                 )
 
             elif user.role == "Operator":
-                operator_menu(
+                user_interface.operator_menu.operator_menu(
+                    user,
                     product_controller,
                     category_controller,
                     supplier_controller,
                     movement_controller,
                     invoice_controller,
-                    report_controller
+                    report_controller,
+                    user_controller
                 )
 
             else:
                 print("Невалидна роля.")
                 continue
 
-        # ---------------------------------------------------------
         # Вход като гост
-        # ---------------------------------------------------------
         elif choice == "2":
-            anonymous_menu(
-                product_controller,
-                category_controller,
-                supplier_controller,
-                movement_controller,
-                invoice_controller,
-                report_controller
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            guest_user = User(
+                user_id="guest-0000",
+                first_name="Anonymous",
+                last_name="",
+                email="",
+                username="guest",
+                password="",
+                role="guest",
+                status="Active",
+                created=now,
+                modified=now
             )
 
-        # ---------------------------------------------------------
+            anonymous_menu(guest_user)
+
         # Изход
-        # ---------------------------------------------------------
         elif choice == "0":
             print("Изход от системата.")
             break

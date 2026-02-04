@@ -17,9 +17,9 @@ def category_menu(user, category_controller, readonly=False):
 
         choice = input("Избор: ")
 
-        # ---------------------------------------------------------
+
         # 1. Списък с категории
-        # ---------------------------------------------------------
+
         if choice == "1":
             categories = category_controller.get_all()
 
@@ -35,9 +35,9 @@ def category_menu(user, category_controller, readonly=False):
 
             print("\n" + format_table(columns, rows))
 
-        # ---------------------------------------------------------
+
         # 2. Добавяне (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "2" and is_admin:
             name = input("Име на категория: ").strip()
             description = input("Описание: ").strip()
@@ -48,9 +48,9 @@ def category_menu(user, category_controller, readonly=False):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 3. Редактиране (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "3" and is_admin:
             try:
                 category_id = int(input("Въведете ID на категория: ").strip())
@@ -78,9 +78,9 @@ def category_menu(user, category_controller, readonly=False):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 4. Изтриване (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "4" and is_admin:
             try:
                 category_id = int(input("Въведете ID на категория: ").strip())

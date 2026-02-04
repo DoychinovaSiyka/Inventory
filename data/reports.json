@@ -1,1 +1,542 @@
-[]
+[
+    {
+        "report_id": 1,
+        "report_type": "stock",
+        "generated_on": "2026-02-02 21:46:11",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Банан",
+                "quantity": 2,
+                "price": 3.45,
+                "location": "Основен склад"
+            },
+            {
+                "product": "Кафе",
+                "quantity": 27,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Мляко",
+                "quantity": 22,
+                "price": 2.75,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12,
+                "price": 1.80,
+                "location": "Рафтове – подправки"
+            },
+            {
+                "product": "Чай",
+                "quantity": 15,
+                "price": 2.00,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Ябълки",
+                "quantity": 2,
+                "price": 2.33,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Яйца",
+                "quantity": 30,
+                "price": 5.00,
+                "location": "Хладилна камера"
+            }
+        ]
+    },
+    {
+        "report_id": 2,
+        "report_type": "stock",
+        "generated_on": "2026-02-02 21:46:20",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Банан",
+                "quantity": 2,
+                "price": 3.45,
+                "location": "Основен склад"
+            },
+            {
+                "product": "Кафе",
+                "quantity": 27,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Мляко",
+                "quantity": 22,
+                "price": 2.75,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12,
+                "price": 1.80,
+                "location": "Рафтове – подправки"
+            },
+            {
+                "product": "Чай",
+                "quantity": 15,
+                "price": 2.00,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Ябълки",
+                "quantity": 2,
+                "price": 2.33,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Яйца",
+                "quantity": 30,
+                "price": 5.00,
+                "location": "Хладилна камера"
+            }
+        ]
+    },
+    {
+        "report_id": 3,
+        "report_type": "movements_by_product",
+        "generated_on": "2026-02-02 21:46:34",
+        "parameters": {
+            "keyword": "яйца"
+        },
+        "data": []
+    },
+    {
+        "report_id": 4,
+        "report_type": "stock",
+        "generated_on": "2026-02-02 21:46:39",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Банан",
+                "quantity": 2,
+                "price": 3.45,
+                "location": "Основен склад"
+            },
+            {
+                "product": "Кафе",
+                "quantity": 27,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Мляко",
+                "quantity": 22,
+                "price": 2.75,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12,
+                "price": 1.80,
+                "location": "Рафтове – подправки"
+            },
+            {
+                "product": "Чай",
+                "quantity": 15,
+                "price": 2.00,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Ябълки",
+                "quantity": 2,
+                "price": 2.33,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Яйца",
+                "quantity": 30,
+                "price": 5.00,
+                "location": "Хладилна камера"
+            }
+        ]
+    },
+    {
+        "report_id": 5,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 21:46:54",
+        "parameters": {
+            "product": "яйця"
+        },
+        "data": []
+    },
+    {
+        "report_id": 6,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 21:47:03",
+        "parameters": {
+            "product": "кафе"
+        },
+        "data": [
+            {
+                "date": "2026-02-02 19:08:50",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 7.00
+            },
+            {
+                "date": "2026-02-02 19:12:48",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 6.90
+            }
+        ]
+    },
+    {
+        "report_id": 7,
+        "report_type": "stock",
+        "generated_on": "2026-02-02 21:51:21",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Банан",
+                "quantity": 2,
+                "price": 3.45,
+                "location": "Основен склад"
+            },
+            {
+                "product": "Кафе",
+                "quantity": 27,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Мляко",
+                "quantity": 22,
+                "price": 2.75,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12,
+                "price": 1.80,
+                "location": "Рафтове – подправки"
+            },
+            {
+                "product": "Чай",
+                "quantity": 15,
+                "price": 2.00,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Ябълки",
+                "quantity": 2,
+                "price": 2.33,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Яйца",
+                "quantity": 30,
+                "price": 5.00,
+                "location": "Хладилна камера"
+            }
+        ]
+    },
+    {
+        "report_id": 8,
+        "report_type": "movements_by_product",
+        "generated_on": "2026-02-02 21:51:29",
+        "parameters": {
+            "keyword": "яйца"
+        },
+        "data": []
+    },
+    {
+        "report_id": 9,
+        "report_type": "movements_by_type",
+        "generated_on": "2026-02-02 21:51:47",
+        "parameters": {
+            "type": "IN"
+        },
+        "data": [
+            {
+                "date": "2026-02-02 12:15:41",
+                "product_id": 2,
+                "quantity": 5
+            },
+            {
+                "date": "2026-02-02 19:07:34",
+                "product_id": 4,
+                "quantity": 6
+            },
+            {
+                "date": "2026-02-02 19:21:10",
+                "product_id": 2,
+                "quantity": 10
+            }
+        ]
+    },
+    {
+        "report_id": 10,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 21:52:02",
+        "parameters": {
+            "product": "мляко"
+        },
+        "data": [
+            {
+                "date": "2026-02-02 12:18:55",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 7.78
+            },
+            {
+                "date": "2026-02-02 19:31:45",
+                "customer": "Сийка",
+                "quantity": 1,
+                "total_price": 3.00
+            }
+        ]
+    },
+    {
+        "report_id": 11,
+        "report_type": "movements_by_type",
+        "generated_on": "2026-02-02 23:17:08",
+        "parameters": {
+            "type": "OUT"
+        },
+        "data": [
+            {
+                "date": "2026-02-02 12:18:55",
+                "product_id": 2,
+                "quantity": 2
+            },
+            {
+                "date": "2026-02-02 19:08:50",
+                "product_id": 4,
+                "quantity": 2
+            },
+            {
+                "date": "2026-02-02 19:12:48",
+                "product_id": 4,
+                "quantity": 2
+            },
+            {
+                "date": "2026-02-02 19:31:45",
+                "product_id": 2,
+                "quantity": 1
+            }
+        ]
+    },
+    {
+        "report_id": 12,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 23:27:46",
+        "parameters": {
+            "product": "яйца"
+        },
+        "data": []
+    },
+    {
+        "report_id": 13,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 23:28:24",
+        "parameters": {
+            "product": "ябълки"
+        },
+        "data": []
+    },
+    {
+        "report_id": 14,
+        "report_type": "sales_all",
+        "generated_on": "2026-02-02 23:35:23",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-02 12:18:55",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 7.78,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:08:50",
+                "product": "Кафе",
+                "quantity": 2,
+                "total_price": 7.00,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:12:48",
+                "product": "Кафе",
+                "quantity": 2,
+                "total_price": 6.90,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:31:45",
+                "product": "Мляко",
+                "quantity": 1,
+                "total_price": 3.00,
+                "customer": "Сийка"
+            }
+        ]
+    },
+    {
+        "report_id": 15,
+        "report_type": "sales_all",
+        "generated_on": "2026-02-02 23:36:28",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-02 12:18:55",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 7.78,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:08:50",
+                "product": "Кафе",
+                "quantity": 2,
+                "total_price": 7.00,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:12:48",
+                "product": "Кафе",
+                "quantity": 2,
+                "total_price": 6.90,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-02 19:31:45",
+                "product": "Мляко",
+                "quantity": 1,
+                "total_price": 3.00,
+                "customer": "Сийка"
+            }
+        ]
+    },
+    {
+        "report_id": 16,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-02-02 23:36:39",
+        "parameters": {
+            "product": "мляко"
+        },
+        "data": [
+            {
+                "date": "2026-02-02 12:18:55",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 7.78
+            },
+            {
+                "date": "2026-02-02 19:31:45",
+                "customer": "Сийка",
+                "quantity": 1,
+                "total_price": 3.00
+            }
+        ]
+    },
+    {
+        "report_id": 17,
+        "report_type": "stock",
+        "generated_on": "2026-02-03 09:28:19",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Чай",
+                "quantity": 15,
+                "price": 2.00,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Мляко",
+                "quantity": 22,
+                "price": 2.75,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Яйца",
+                "quantity": 31,
+                "price": 5.00,
+                "location": "Хладилна камера"
+            },
+            {
+                "product": "Кафе",
+                "quantity": 26,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12,
+                "price": 1.95,
+                "location": "Рафтове – подправки"
+            },
+            {
+                "product": "Ябълки",
+                "quantity": 2,
+                "price": 2.33,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Картофи",
+                "quantity": 12,
+                "price": 3.56,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Лимон",
+                "quantity": 4,
+                "price": 4.00,
+                "location": "Плодове и зеленчуци"
+            },
+            {
+                "product": "Домати",
+                "quantity": 25,
+                "price": 3.20,
+                "location": "Плодове и зеленчуци"
+            }
+        ]
+    },
+    {
+        "report_id": 18,
+        "report_type": "movements_all",
+        "generated_on": "2026-02-03 09:28:32",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-02 12:15:41",
+                "type": "IN",
+                "product_id": 2,
+                "quantity": 5,
+                "price": 3.89,
+                "location": "Хладилна камера"
+            },
+            {
+                "date": "2026-02-02 12:18:55",
+                "type": "OUT",
+                "product_id": 2,
+                "quantity": 2,
+                "price": 3.89,
+                "location": "Хладилна камера"
+            },
+            {
+                "date": "2026-02-02 19:07:34",
+                "type": "IN",
+                "product_id": 4,
+                "quantity": 6,
+                "price": 4.50,
+                "location": "Рафтове – напитки"
+            },
+            {
+                "date": "2026-02-02 19:08:50",
+                "type": "OUT",
+                "product_id": 4,
+                "quantity": 2,
+                "price": 3.50,
+                "location": "Рафтове – напитки"
+            }
+        ]
+    }
+]

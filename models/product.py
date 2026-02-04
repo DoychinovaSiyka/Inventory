@@ -36,6 +36,12 @@ class Product:
     def update_modified(self):
         self.modified = str(datetime.now())
 
+    def __str__(self):
+        return f"{self.name} | {self.price:.2f} лв. | {self.quantity} бр."
+
+    def __repr__(self):
+        return self.__str__()
+
     def to_dict(self):
         return {
             "product_id": self.product_id,

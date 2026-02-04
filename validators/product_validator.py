@@ -1,4 +1,3 @@
-# validators/product_validator.py
 
 class ProductValidator:
 

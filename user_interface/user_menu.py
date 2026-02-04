@@ -3,7 +3,7 @@ from models.user import User   # ако нямаш този импорт, мах
 
 
 def user_menu(user: User, user_controller: UserController):
-    # Само Admin има достъп (SRS + Summary)
+    # Само Admin има достъп
     if user.role != "Admin":
         print("Само администратор може да управлява потребители.")
         return
@@ -18,17 +18,17 @@ def user_menu(user: User, user_controller: UserController):
 
         choice = input("Избор: ")
 
-        # ---------------------------------------------------------
+
         # 1. Списък
-        # ---------------------------------------------------------
+
         if choice == "1":
             users = user_controller.get_all()
             for u in users:
                 print(f"{u.username} | {u.role} | {u.status}")
 
-        # ---------------------------------------------------------
+
         # 2. Добавяне (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "2":
             fn = input("Име: ")
             ln = input("Фамилия: ")
@@ -43,9 +43,9 @@ def user_menu(user: User, user_controller: UserController):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 3. Промяна на роля (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "3":
             username = input("Потребителско име: ")
             new_role = input("Нова роля (Admin/Operator): ")
@@ -58,9 +58,8 @@ def user_menu(user: User, user_controller: UserController):
             except Exception as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
         # 4. Деактивиране (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "4":
             username = input("Потребителско име: ")
 

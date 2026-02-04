@@ -1,10 +1,8 @@
-[
-    {
-        "location_id": "1",
-        "name": "Склад 1"
-    },
-    {
-        "location_id": "2",
-        "name": "Магазин"
-    }
+
+    [
+    { "location_id": "1", "name": "Склад София", "zone": "A", "capacity": 1000 },
+    { "location_id": "2", "name": "Склад Пловдив", "zone": "B", "capacity": 800 },
+    { "location_id": "3", "name": "Склад Варна", "zone": "C", "capacity": 600 },
+    { "location_id": "4", "name": "Склад Бургас", "zone": "C", "capacity": 500 },
+    { "location_id": "5", "name": "Магазин Смолян", "zone": "D", "capacity": 200 }
 ]

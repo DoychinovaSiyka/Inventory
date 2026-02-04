@@ -54,5 +54,45 @@
         "quantity": 1,
         "action": "remove",
         "timestamp": "2026-02-02 19:31:45"
+    },
+    {
+        "log_id": 8,
+        "product_id": 4,
+        "location_id": "2",
+        "quantity": 3,
+        "action": "add",
+        "timestamp": "2026-02-03 09:39:27"
+    },
+    {
+        "log_id": 9,
+        "product_id": 4,
+        "location_id": "2",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-03 09:47:21"
+    },
+    {
+        "log_id": 10,
+        "product_id": 1,
+        "location_id": "2",
+        "quantity": 3,
+        "action": "add",
+        "timestamp": "2026-02-03 09:50:30"
+    },
+    {
+        "log_id": 11,
+        "product_id": 2,
+        "location_id": "2",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-03 22:23:22"
+    },
+    {
+        "log_id": 12,
+        "product_id": 2,
+        "location_id": "5",
+        "quantity": 2,
+        "action": "remove",
+        "timestamp": "2026-02-04 11:55:37"
     }
 ]

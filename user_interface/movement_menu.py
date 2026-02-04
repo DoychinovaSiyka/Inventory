@@ -4,7 +4,7 @@ from models.movement import MovementType
 
 
 def movement_menu(product_controller: ProductController, movement_controller: MovementController, user_controller):
-    # ВЗИМАМЕ ЛОГНАТИЯ ПОТРЕБИТЕЛ
+
     user = user_controller.logged_user
 
     if not user:
@@ -40,9 +40,9 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 print("Невалиден избор.")
                 continue
 
-            # -----------------------------
+
             # Избор на локация
-            # -----------------------------
+
             locations = movement_controller.location_controller.get_all()
 
             if not locations:
@@ -60,9 +60,9 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 print("Невалиден избор за локация.")
                 continue
 
-            # -----------------------------
+
             # Тип движение
-            # -----------------------------
+
             try:
                 movement_type_num = int(input("Въведете 0 за доставка (IN) или 1 за продажба (OUT): "))
                 if movement_type_num == 0:
@@ -76,16 +76,16 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                 print("Невалиден избор.")
                 continue
 
-            # -----------------------------
+
             # Количество и цена
-            # -----------------------------
+
             quantity = input("Количество: ")
             price = input("Цена: ")
             description = input("Описание: ")
 
-            # -----------------------------
+
             # Клиент (само при OUT)
-            # -----------------------------
+
             customer = None
             if movement_type == MovementType.OUT:
                 customer = input("Въведете име на клиент: ").strip()
@@ -93,9 +93,7 @@ def movement_menu(product_controller: ProductController, movement_controller: Mo
                     print("Не е въведено име на клиент. Ще се използва потребителското име.")
                     customer = None  # fallback към username
 
-            # -----------------------------
             # Създаване на движение
-            # -----------------------------
             try:
                 movement_controller.add(
                     product_id=product_id,

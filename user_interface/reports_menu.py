@@ -1,3 +1,5 @@
+from storage.password_utils import format_table
+
 def reports_menu(user, report_controller):
     while True:
         print("\n=== Справки ===")
@@ -13,7 +15,12 @@ def reports_menu(user, report_controller):
 
         # --- 1. Наличности ---
         if choice == "1":
-            report_controller.report_stock()
+            report = report_controller.report_stock()
+            rows = [
+                [item["product"], item["quantity"], item["price"], item["location"]]
+                for item in report.data
+            ]
+            print(format_table(["Продукт", "Количество", "Цена", "Локация"], rows))
 
         # --- 2. Движения ---
         elif choice == "2":
@@ -25,41 +32,81 @@ def reports_menu(user, report_controller):
             sub = input("Избор: ")
 
             if sub == "1":
-                report_controller.report_movements()
+                report = report_controller.report_movements()
+                rows = [
+                    [item["date"], item["type"], item["product_id"], item["quantity"], item["price"], item["location"]]
+                    for item in report.data
+                ]
+                print(format_table(["Дата", "Тип", "Продукт ID", "Количество", "Цена", "Локация"], rows))
 
             elif sub == "2":
                 keyword = input("Име на продукт: ")
-                report_controller.report_movements_by_product(keyword)
+                report = report_controller.report_movements_by_product(keyword)
+                rows = [
+                    [item["date"], item["type"], item["quantity"], item["price"]]
+                    for item in report.data
+                ]
+                print(format_table(["Дата", "Тип", "Количество", "Цена"], rows))
 
             elif sub == "3":
                 mtype = input("Тип движение (IN/OUT/MOVE): ").upper()
-                report_controller.report_movements_by_type(mtype)
+                report = report_controller.report_movements_by_type(mtype)
+                rows = [
+                    [item["date"], item["product_id"], item["quantity"]]
+                    for item in report.data
+                ]
+                print(format_table(["Дата", "Продукт ID", "Количество"], rows))
 
             elif sub == "4":
                 date_str = input("Дата (ГГГГ-ММ-ДД): ")
-                report_controller.report_movements_by_date(date_str)
+                report = report_controller.report_movements_by_date(date_str)
+                rows = [
+                    [item["date"], item["type"], item["quantity"]]
+                    for item in report.data
+                ]
+                print(format_table(["Дата", "Тип", "Количество"], rows))
 
             else:
                 print("Невалиден избор.")
 
         # --- 3. Продажби (общо) ---
         elif choice == "3":
-            report_controller.report_sales()
+            report = report_controller.report_sales()
+            rows = [
+                [item["date"], item["product"], item["quantity"], item["total_price"], item["customer"]]
+                for item in report.data
+            ]
+            print(format_table(["Дата", "Продукт", "Количество", "Общо", "Клиент"], rows))
 
         # --- 4. Продажби по клиент ---
         elif choice == "4":
             customer = input("Име на клиент: ")
-            report_controller.report_sales_by_customer(customer)
+            report = report_controller.report_sales_by_customer(customer)
+            rows = [
+                [item["date"], item["product"], item["quantity"], item["total_price"]]
+                for item in report.data
+            ]
+            print(format_table(["Дата", "Продукт", "Количество", "Общо"], rows))
 
         # --- 5. Продажби по продукт ---
         elif choice == "5":
             product = input("Име на продукт: ")
-            report_controller.report_sales_by_product(product)
+            report = report_controller.report_sales_by_product(product)
+            rows = [
+                [item["date"], item["customer"], item["quantity"], item["total_price"]]
+                for item in report.data
+            ]
+            print(format_table(["Дата", "Клиент", "Количество", "Общо"], rows))
 
         # --- 6. Продажби по дата ---
         elif choice == "6":
             date_str = input("Дата (ГГГГ-ММ-ДД): ")
-            report_controller.report_sales_by_date(date_str)
+            report = report_controller.report_sales_by_date(date_str)
+            rows = [
+                [item["product"], item["customer"], item["quantity"], item["total_price"]]
+                for item in report.data
+            ]
+            print(format_table(["Продукт", "Клиент", "Количество", "Общо"], rows))
 
         elif choice == "0":
             break

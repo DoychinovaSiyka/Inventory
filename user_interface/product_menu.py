@@ -1,5 +1,6 @@
-from storage.password_utils import show_products_menu
+from storage.password_utils import format_table
 
+from controllers.product_controller import ProductController
 
 def _read_int(prompt):
     try:
@@ -47,7 +48,6 @@ def product_menu(product_controller, category_controller, readonly=False):
         if choice == "0":
             break
 
-        # ---------------------------------------------------------
         # 1. Създаване на продукт
         elif choice == "1":
             name = input("Име: ").strip()
@@ -120,9 +120,8 @@ def product_menu(product_controller, category_controller, readonly=False):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 2. Премахване
-        # ---------------------------------------------------------
         elif choice == "2":
             name = input("Име на продукта: ").strip()
             if product_controller.remove_by_name(name):
@@ -130,9 +129,8 @@ def product_menu(product_controller, category_controller, readonly=False):
             else:
                 print("Не е намерен.")
 
-        # ---------------------------------------------------------
+
         # 3. Редактиране
-        # ---------------------------------------------------------
         elif choice == "3":
             product_id = _read_int("ID на продукта: ")
             if product_id is None:
@@ -177,15 +175,21 @@ def product_menu(product_controller, category_controller, readonly=False):
                 else:
                     print("Не е намерен.")
 
-        # ---------------------------------------------------------
-        # 4. Покажи всички
-        # ---------------------------------------------------------
-        elif choice == "4":
-            show_products_menu(product_controller)
 
-        # ---------------------------------------------------------
+        # 4. Покажи всички
+
+        elif choice == "4":
+            products = product_controller.products
+            if not products:
+                print("Няма налични продукти.")
+            else:
+                print("\n=== Списък с продукти ===")
+                for p in products:
+                    print(f"{p.product_id} | {p.name} | {p.quantity} бр. | {p.price} лв.")
+
+
         # 5. Търсене
-        # ---------------------------------------------------------
+
         elif choice == "5":
             keyword = input("Търси: ").lower()
             results = product_controller.search(keyword)
@@ -195,37 +199,56 @@ def product_menu(product_controller, category_controller, readonly=False):
                 for p in results:
                     print(f"{p.product_id} | {p.name} | {p.price} лв")
 
-        # ---------------------------------------------------------
+
         # 6. Сортиране
-        # ---------------------------------------------------------
+
         elif choice == "6":
-            print("1. Вградено")
-            print("2. Bubble Sort")
-            print("3. Selection Sort")
+            print("\nСортиране по цена:")
+            print("1. Вградено (висока → ниска)")
+            print("2. Bubble Sort (ниска → висока)")
+            print("3. Selection Sort (висока → ниска)")
             m = input("Избор: ")
 
             if m == "1":
                 sorted_list = product_controller.sort_by_price_desc()
+                title = "Цена (висока → ниска) ↓"
+                algorithm = "Вградено сортиране"
+
             elif m == "2":
                 sorted_list = product_controller.bubble_sort()
+                sorted_list.sort(key=lambda p: p.price)
+                title = "Цена (ниска → висока) ↑"
+                algorithm = "Bubble Sort"
+
             elif m == "3":
                 sorted_list = product_controller.selection_sort()
+                sorted_list.sort(key=lambda p: p.price, reverse=True)
+                title = "Цена (висока → ниска) ↓"
+                algorithm = "Selection Sort"
+
             else:
                 print("Невалидно.")
                 continue
 
-            for p in sorted_list:
-                print(f"{p.name} | {p.price} лв")
+            print(f"\n=== Сортиране по: {title} ===")
+            print(f"Алгоритъм: {algorithm}\n")
 
-        # ---------------------------------------------------------
+            rows = [
+                [p.name.ljust(20), f"{p.price:.2f} лв.", str(p.quantity)]
+                for p in sorted_list
+            ]
+
+            print(format_table(["Име", "Цена", "Количество"], rows))
+
+
         # 7. Средна цена
-        # ---------------------------------------------------------
+
         elif choice == "7":
             print("Средна цена:", product_controller.average_price())
 
-        # ---------------------------------------------------------
+
         # 8. Филтриране по категория
-        # ---------------------------------------------------------
+
         elif choice == "8":
             categories = category_controller.get_all()
             for c in categories:
@@ -247,9 +270,8 @@ def product_menu(product_controller, category_controller, readonly=False):
             for p in results:
                 print(f"{p.name} | {p.price} лв")
 
-        # ---------------------------------------------------------
         # 9. Увеличаване
-        # ---------------------------------------------------------
+
         elif choice == "9":
             pid = _read_int("ID: ")
             amount = _read_int("Добави: ")
@@ -261,9 +283,8 @@ def product_menu(product_controller, category_controller, readonly=False):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
         # 10. Намаляване
-        # ---------------------------------------------------------
+
         elif choice == "10":
             pid = _read_int("ID: ")
             amount = _read_int("Извади: ")
@@ -275,9 +296,8 @@ def product_menu(product_controller, category_controller, readonly=False):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 11. Ниска наличност
-        # ---------------------------------------------------------
         elif choice == "11":
             low = product_controller.check_low_stock()
 
@@ -287,31 +307,31 @@ def product_menu(product_controller, category_controller, readonly=False):
                 for p in low:
                     print(f"{p.name} | {p.quantity} бр")
 
-        # ---------------------------------------------------------
+
         # 12. Най-скъп
-        # ---------------------------------------------------------
+
         elif choice == "12":
             p = product_controller.most_expensive()
             if p:
                 print(f"{p.name} | {p.price} лв")
 
-        # ---------------------------------------------------------
+
         # 13. Най-евтин
-        # ---------------------------------------------------------
+
         elif choice == "13":
             p = product_controller.cheapest()
             if p:
                 print(f"{p.name} | {p.price} лв")
 
-        # ---------------------------------------------------------
+
         # 14. Обща стойност
-        # ---------------------------------------------------------
+
         elif choice == "14":
             print("Обща стойност:", product_controller.total_values(), "лв")
 
-        # ---------------------------------------------------------
+
         # 15. Групиране
-        # ---------------------------------------------------------
+
         elif choice == "15":
             grouped = product_controller.group_by_category()
             for cat_id, products in grouped.items():

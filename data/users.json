@@ -5,7 +5,7 @@
         "last_name": "Doychinova",
         "email": "siyka@example.com",
         "username": "Siyka",
-        "password": "343350357364371378",
+        "password": "97100109105110495051",
         "role": "Admin",
         "status": "Active",
         "created": "2026-02-02T09:00:00",
@@ -17,7 +17,7 @@
         "last_name": "",
         "email": "ivan@abv.bg",
         "username": "ivan123",
-        "password": "343350357364371378735826749777",
+        "password": "11111210111497116111114495051",
         "role": "Operator",
         "status": "Active",
         "created": "2026-02-02 09:31:11",
@@ -29,10 +29,22 @@
         "last_name": "Иванова",
         "email": "irina_i@abv.bg",
         "username": "irinka0603",
-        "password": "336378336357350336336343",
-        "role": "Admin",
+        "password": "10511410511097495051",
+        "role": "Operator",
         "status": "Active",
         "created": "2026-02-02 09:32:37",
-        "modified": "2026-02-02 09:32:37"
+        "modified": "2026-02-03 09:48:27"
+    },
+    {
+        "user_id": "fcf2dffc-695c-42ec-81f3-aed52efdfe68",
+        "first_name": "Dimitar",
+        "last_name": "Dimitrov",
+        "email": "dimitar123@abv.bg",
+        "username": "dimitar_admin",
+        "password": "971001091051109510010510910511697114",
+        "role": "Admin",
+        "status": "Active",
+        "created": "2026-02-03 09:49:32",
+        "modified": "2026-02-03 09:49:32"
     }
 ]

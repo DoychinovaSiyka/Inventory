@@ -15,9 +15,9 @@ def location_menu(user, location_controller):
 
         choice = input("Избор: ")
 
-        # ---------------------------------------------------------
+
         # 1. Списък с локации (Admin + Operator)
-        # ---------------------------------------------------------
+
         if choice == "1":
             locations = location_controller.get_all()
 
@@ -33,9 +33,9 @@ def location_menu(user, location_controller):
 
             print("\n" + format_table(columns, rows))
 
-        # ---------------------------------------------------------
+
         # 2. Добавяне на локация (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "2" and is_admin:
             name = input("Име на локация: ").strip()
             zone = input("Зона/Сектор: ").strip()
@@ -51,9 +51,9 @@ def location_menu(user, location_controller):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 3. Редактиране на локация (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "3" and is_admin:
             loc_id = input("Въведете ID на локация: ").strip()
             location = location_controller.get_by_id(loc_id)
@@ -84,9 +84,9 @@ def location_menu(user, location_controller):
             except ValueError as e:
                 print("Грешка:", e)
 
-        # ---------------------------------------------------------
+
         # 4. Изтриване на локация (Admin only)
-        # ---------------------------------------------------------
+
         elif choice == "4" and is_admin:
             loc_id = input("Въведете ID на локация: ").strip()
 
