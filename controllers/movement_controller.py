@@ -20,7 +20,6 @@ class MovementController:
         self.movements: List[Movement] = [
             Movement.from_dict(m) for m in self.repo.load()
         ]
-        # Зареждаме всички движения от JSON файла и ги преобразуваме в Movement обекти.
 
     def _generate_id(self) -> str:
         return str(uuid.uuid4())
@@ -95,6 +94,7 @@ class MovementController:
             location_id=location_id,
             movement_type=movement_type,
             quantity=quantity,
+            unit=product.unit,
             description=description,
             price=price,
             date=now,
@@ -105,11 +105,12 @@ class MovementController:
         self.movements.append(movement)
         self._save()
 
-        # Запис в StockLog
+        # Запис в StockLog (НОВО: unit)
         self.stocklog_controller.add_log(
             product_id=product_id,
             location_id=location_id,
             quantity=quantity,
+            unit=product.unit,
             action=action
         )
 
@@ -121,6 +122,7 @@ class MovementController:
                 movement_id=movement.movement_id,
                 product=product.name,
                 quantity=quantity,
+                unit=product.unit,
                 unit_price=price,
                 customer=customer
             )

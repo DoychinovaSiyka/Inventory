@@ -18,11 +18,24 @@ class ProductValidator:
 
     @staticmethod
     def validate_quantity(quantity):
-        if not isinstance(quantity, int):
-            raise ValueError("Количеството трябва да е цяло число.")
+        # quantity вече е float
+        if not isinstance(quantity, (int, float)):
+            raise ValueError("Количеството трябва да е число.")
 
         if quantity <= 0:
             raise ValueError("Количеството трябва да е положително число.")
+
+    @staticmethod
+    def validate_unit(unit):
+        if not unit or not unit.strip():
+            raise ValueError("Мерната единица е задължителна.")
+
+        allowed_units = ["бр.", "кг", "г", "л", "мл", "стек", "кашон"]
+
+        if unit not in allowed_units:
+            raise ValueError(
+                f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}"
+            )
 
     @staticmethod
     def validate_description(description):
@@ -41,9 +54,10 @@ class ProductValidator:
             raise ValueError("Цената трябва да е положителна.")
 
     @staticmethod
-    def validate_all(name, category_ids, quantity, description, price):
+    def validate_all(name, category_ids, quantity, unit, description, price):
         ProductValidator.validate_name(name)
         ProductValidator.validate_categories(category_ids)
         ProductValidator.validate_quantity(quantity)
+        ProductValidator.validate_unit(unit)
         ProductValidator.validate_description(description)
         ProductValidator.validate_price(price)

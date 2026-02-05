@@ -8,6 +8,7 @@ class Invoice:
         movement_id=None,
         product="",
         quantity=0,
+        unit="",              # ← НОВО: мерна единица
         unit_price=0.0,
         total_price=None,
         customer="",
@@ -24,6 +25,7 @@ class Invoice:
         # Основни полета
         self.product = product
         self.quantity = quantity
+        self.unit = unit              # ← НОВО
         self.unit_price = unit_price
 
         # total_price — коригирано, за да не презаписва 0.0
@@ -55,6 +57,9 @@ class Invoice:
         if self.quantity <= 0:
             raise ValueError("Quantity трябва да е > 0 (според SRS).")
 
+        if not self.unit or not self.unit.strip():
+            raise ValueError("Мерната единица е задължителна (според SRS).")  # ← НОВО
+
         if self.unit_price <= 0:
             raise ValueError("Unit price трябва да е > 0 (според SRS).")
 
@@ -70,6 +75,7 @@ class Invoice:
             "movement_id": self.movement_id,
             "product": self.product,
             "quantity": self.quantity,
+            "unit": self.unit,              # ← НОВО
             "unit_price": self.unit_price,
             "total_price": self.total_price,
             "customer": self.customer,
@@ -85,6 +91,7 @@ class Invoice:
             movement_id=data.get("movement_id"),
             product=data.get("product"),
             quantity=data.get("quantity"),
+            unit=data.get("unit", "бр."),   # ← НОВО (fallback)
             unit_price=data.get("unit_price"),
             total_price=data.get("total_price"),
             customer=data.get("customer"),

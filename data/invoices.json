@@ -4,6 +4,7 @@
         "movement_id": "fc5c455f-a4e8-481f-8f12-59592fbbb7d1",
         "product": "Мляко",
         "quantity": 2,
+        "unit": "бр.",
         "unit_price": 2.0,
         "total_price": 4.0,
         "customer": "Siyka",
@@ -16,11 +17,25 @@
         "movement_id": "6c78ae41-1258-4f04-a1e7-3a61233fac58",
         "product": "Мляко",
         "quantity": 2,
+        "unit": "бр.",
         "unit_price": 2.75,
         "total_price": 5.5,
         "customer": "Елена Иванова",
         "date": "2026-02-04 11:55:37",
         "created": "2026-02-04 11:55:37",
         "modified": "2026-02-04 11:55:37"
+    },
+    {
+        "invoice_id": "f074814a-c9e4-4ec2-b85e-51dbcd0cce64",
+        "movement_id": "ee403a26-2ac1-43e2-810a-70a491b6e223",
+        "product": "брашно",
+        "quantity": 4.0,
+        "unit": "кг",
+        "unit_price": 4.5,
+        "total_price": 18.0,
+        "customer": "Ивана Петрова Асенова",
+        "date": "2026-02-04 23:37:43",
+        "created": "2026-02-04 23:37:43",
+        "modified": "2026-02-04 23:37:43"
     }
 ]

@@ -1,5 +1,3 @@
-# models/product.py
-
 from datetime import datetime
 from models.category import Category
 
@@ -10,6 +8,7 @@ class Product:
         name,
         categories,
         quantity,
+        unit,               # ← НОВО: мерна единица
         description,
         price,
         supplier=None,
@@ -25,7 +24,13 @@ class Product:
         self.product_id = product_id
         self.name = name
         self.categories = categories  # може да са UUID или Category обекти
-        self.quantity = quantity
+
+        # Количеството вече е float
+        self.quantity = float(quantity)
+
+        # НОВО: мерна единица
+        self.unit = unit
+
         self.description = description
         self.price = price
         self.supplier = supplier
@@ -37,7 +42,8 @@ class Product:
         self.modified = str(datetime.now())
 
     def __str__(self):
-        return f"{self.name} | {self.price:.2f} лв. | {self.quantity} бр."
+        # НОВО: показваме quantity + unit
+        return f"{self.name} | {self.price:.2f} лв. | {self.quantity} {self.unit}"
 
     def __repr__(self):
         return self.__str__()
@@ -51,6 +57,7 @@ class Product:
                 for c in self.categories
             ],
             "quantity": self.quantity,
+            "unit": self.unit,  # ← НОВО
             "description": self.description,
             "price": self.price,
             "supplier": self.supplier.supplier_id if self.supplier else None,
@@ -68,6 +75,7 @@ class Product:
             name=data["name"],
             categories=data["categories"],  # ← оставяме ги като UUID
             quantity=data["quantity"],
+            unit=data.get("unit", "бр."),  # ← НОВО: ако липсва, по подразбиране "бр."
             description=data["description"],
             price=data["price"],
             supplier=data.get("supplier"),

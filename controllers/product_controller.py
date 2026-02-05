@@ -39,11 +39,19 @@ class ProductController:
 
     # CREATE
     def add(
-        self, name: str,
-        category_ids: List[int],quantity: int,
-        description: str,price: float,supplier_id: Optional[int] = None,tags: Optional[List[str]] = None) -> Product:
+        self,
+        name: str,
+        category_ids: List[int],
+        quantity: float,
+        unit: str,
+        description: str,
+        price: float,
+        supplier_id: Optional[int] = None,
+        tags: Optional[List[str]] = None
+    ) -> Product:
 
-        ProductValidator.validate_all(name, category_ids, quantity, description, price)
+        # ✔ ПОПРАВЕНО — вече подава unit
+        ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
 
         # Проверка за дублиране
         if self.exists_by_name(name):
@@ -69,8 +77,9 @@ class ProductController:
         product = Product(
             product_id=self._generate_id(),
             name=name,
-            categories=categories,  # ← Category обекти
-            quantity=quantity,
+            categories=categories,
+            quantity=float(quantity),
+            unit=unit,
             description=description,
             price=price,
             supplier=supplier,
@@ -161,35 +170,41 @@ class ProductController:
         self._save()
         return True
 
-    def increase_quantity(self, product_id: int, amount: int) -> bool:
+    # QUANTITY UPDATE (float)
+    def increase_quantity(self, product_id: int, amount: float) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
 
-        ProductValidator.validate_quantity(amount)
-        p.quantity += amount
+        if amount < 0:
+            raise ValueError("Количество трябва да е положително.")
+
+        p.quantity += float(amount)
         p.update_modified()
         self._save()
         return True
 
-    def decrease_quantity(self, product_id: int, amount: int) -> bool:
+    def decrease_quantity(self, product_id: int, amount: float) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
 
+        if amount < 0:
+            raise ValueError("Количество трябва да е положително.")
+
         if p.quantity < amount:
             raise ValueError("Недостатъчна наличност.")
 
-        ProductValidator.validate_quantity(amount)
-        p.quantity -= amount
+        p.quantity -= float(amount)
         p.update_modified()
         self._save()
         return True
 
     # DELETE
     def remove_by_name(self, name: str) -> bool:
+        name = name.lower()
         original_len = len(self.products)
-        self.products = [p for p in self.products if p.name != name]
+        self.products = [p for p in self.products if p.name.lower() != name]
 
         if len(self.products) < original_len:
             self._save()
@@ -231,7 +246,7 @@ class ProductController:
             return 0.0
         return sum(p.price for p in self.products) / len(self.products)
 
-    def check_low_stock(self, threshold: int = 5) -> List[Product]:
+    def check_low_stock(self, threshold: float = 5) -> List[Product]:
         return [p for p in self.products if p.quantity < threshold]
 
     def total_values(self) -> float:

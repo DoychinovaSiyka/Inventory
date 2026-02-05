@@ -21,6 +21,7 @@ class MetaMovement(type):
                     "location_id": self.location_id,
                     "movement_type": self.movement_type.name,  # string, не int
                     "quantity": self.quantity,
+                    "unit": self.unit,                        # ← НОВО
                     "price": self.price,
                     "description": self.description,
                     "date": self.date,
@@ -41,6 +42,7 @@ class Movement(metaclass=MetaMovement):
         location_id=None,
         movement_type=None,
         quantity=0,
+        unit="бр.",              # ← НОВО: мерна единица (задължителна)
         description="",
         price=0.0,
         date=None,
@@ -56,6 +58,7 @@ class Movement(metaclass=MetaMovement):
         self.location_id = location_id
         self.movement_type = movement_type
         self.quantity = quantity
+        self.unit = unit            # ← НОВО
         self.description = description
         self.price = price
 
@@ -75,7 +78,7 @@ class Movement(metaclass=MetaMovement):
             f"Потребител ID: {self.user_id}\n"
             f"Локация ID: {self.location_id}\n"
             f"Тип: {self.movement_type.name}\n"
-            f"Количество: {self.quantity}\n"
+            f"Количество: {self.quantity} {self.unit}\n"   # ← НОВО
             f"Цена: {self.price}\n"
             f"Описание: {self.description}\n"
             f"Дата: {self.date}\n"
@@ -95,6 +98,9 @@ class Movement(metaclass=MetaMovement):
         if self.quantity <= 0:
             raise ValueError("quantity трябва да е > 0.")
 
+        if not self.unit:
+            raise ValueError("unit е задължително поле.")   # ← НОВО
+
         if self.price <= 0:
             raise ValueError("price трябва да е > 0.")
 
@@ -107,6 +113,7 @@ class Movement(metaclass=MetaMovement):
             location_id=data.get("location_id"),
             movement_type=MovementType(data.get("movement_type")),
             quantity=data.get("quantity"),
+            unit=data.get("unit", "бр."),   # ← НОВО
             description=data.get("description"),
             price=data.get("price"),
             date=data.get("date"),

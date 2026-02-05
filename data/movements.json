@@ -6,6 +6,7 @@
         "location_id": "2",
         "movement_type": "OUT",
         "quantity": 2,
+        "unit": "бр.",
         "price": 2.0,
         "description": "тестова доставка",
         "date": "2026-02-03 22:23:22",
@@ -19,10 +20,25 @@
         "location_id": "5",
         "movement_type": "OUT",
         "quantity": 2,
+        "unit": "бр.",
         "price": 2.75,
         "description": "домашно краве мляко",
         "date": "2026-02-04 11:55:37",
         "created": "2026-02-04 11:55:37",
         "modified": "2026-02-04 11:55:37"
+    },
+    {
+        "movement_id": "ee403a26-2ac1-43e2-810a-70a491b6e223",
+        "product_id": 11,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "1",
+        "movement_type": "OUT",
+        "quantity": 4.0,
+        "unit": "кг",
+        "price": 4.5,
+        "description": "еуе,уеу,",
+        "date": "2026-02-04 23:37:43",
+        "created": "2026-02-04 23:37:43",
+        "modified": "2026-02-04 23:37:43"
     }
 ]

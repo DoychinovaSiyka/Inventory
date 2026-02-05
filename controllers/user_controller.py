@@ -30,7 +30,7 @@ class UserController:
         self.logged_user: Optional[User] = None
 
 
-    # PASSWORD HASHING (SRS requirement)
+    # PASSWORD HASHING
 
     def _hash_password(self, password: str) -> str:
         return "".join(str(ord(c)) for c in password)
@@ -51,7 +51,7 @@ class UserController:
         return next((u for u in self.users if u.user_id == user_id), None)
 
 
-    # REGISTER (SRS: validation + timestamps)
+    # REGISTER
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
 

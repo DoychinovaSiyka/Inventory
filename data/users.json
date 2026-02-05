@@ -46,5 +46,17 @@
         "status": "Active",
         "created": "2026-02-03 09:49:32",
         "modified": "2026-02-03 09:49:32"
+    },
+    {
+        "user_id": "555af42d-e5ca-4f3b-abd3-5b89b6043a52",
+        "first_name": "Аделина",
+        "last_name": "Донева",
+        "email": "donka_bonbonka@abv.bg",
+        "username": "donka",
+        "password": "10011111010797495051",
+        "role": "Operator",
+        "status": "Active",
+        "created": "2026-02-04 23:42:38",
+        "modified": "2026-02-04 23:42:38"
     }
 ]

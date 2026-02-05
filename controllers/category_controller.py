@@ -47,7 +47,8 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_update_name(new_name)
-        CategoryValidator.validate_unique(new_name, self.categories)
+        # Проверяваме уникалност, но изключваме текущата категория
+        CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()

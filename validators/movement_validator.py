@@ -8,9 +8,9 @@ class MovementValidator:
             raise ValueError("Количеството е задължително.")
 
         try:
-            quantity = int(quantity)
+            quantity = float(quantity)   # ← ВЕЧЕ Е FLOAT
         except ValueError:
-            raise ValueError("Количеството трябва да е цяло число.")
+            raise ValueError("Количеството трябва да е число.")
 
         if quantity <= 0:
             raise ValueError("Количеството трябва да е положително.")
@@ -52,3 +52,15 @@ class MovementValidator:
 
         if not product_id.strip():
             raise ValueError("product_id не може да бъде празен.")
+
+    @staticmethod
+    def validate_unit(unit):
+        if not unit or not unit.strip():
+            raise ValueError("Мерната единица е задължителна.")  # ← НОВО
+
+        allowed_units = ["бр.", "кг", "г", "л", "мл", "стек", "кашон"]
+
+        if unit not in allowed_units:
+            raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
+
+        return unit

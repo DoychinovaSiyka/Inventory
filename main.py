@@ -8,10 +8,10 @@ from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
 
-from user_interface.admin_menu import admin_menu
-import user_interface.operator_menu
-from user_interface.anonymous_menu import anonymous_menu
-from user_interface.product_sort_menu import sorting_menu
+from views.admin_menu_view import AdminMenuView
+from views.operator_menu_view import OperatorMenuView
+from views.anonymous_menu_view import AnonymousMenuView
+
 from storage.json_repository import JSONRepository
 from datetime import datetime
 from models.user import User
@@ -61,11 +61,22 @@ def main():
         invoice_controller
     )
 
+    # Пакет от контролери за менюта
+    controllers = {
+        "user": user_controller,
+        "product": product_controller,
+        "category": category_controller,
+        "supplier": supplier_controller,
+        "movement": movement_controller,
+        "invoice": invoice_controller,
+        "report": report_controller
+    }
+
     # Главен цикъл
     while True:
         print("\nВход в системата")
         print("1. Вход с потребител")
-        print("2. Вход като гост")
+        print("2. Вход като анонимен потребител")
         print("0. Изход")
 
         choice = input("Избор: ")
@@ -84,34 +95,16 @@ def main():
             user_controller.logged_user = user
 
             if user.role == "Admin":
-                admin_menu(
-                    user,
-                    user_controller,
-                    product_controller,
-                    category_controller,
-                    supplier_controller,
-                    movement_controller,
-                    invoice_controller,
-                    report_controller
-                )
+                AdminMenuView(controllers).show_menu(user)
 
             elif user.role == "Operator":
-                user_interface.operator_menu.operator_menu(
-                    user,
-                    product_controller,
-                    category_controller,
-                    supplier_controller,
-                    movement_controller,
-                    invoice_controller,
-                    report_controller,
-                    user_controller
-                )
+                OperatorMenuView(controllers).show_menu(user)
 
             else:
                 print("Невалидна роля.")
                 continue
 
-        # Вход като гост
+        # Вход като анонимен потребител
         elif choice == "2":
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -122,13 +115,13 @@ def main():
                 email="",
                 username="guest",
                 password="",
-                role="guest",
+                role="Anonymous",
                 status="Active",
                 created=now,
                 modified=now
             )
 
-            anonymous_menu(guest_user)
+            AnonymousMenuView().show_menu()
 
         # Изход
         elif choice == "0":

@@ -36,6 +36,7 @@ class InvoiceController:
             movement_id=movement.movement_id,
             product=product.name,
             quantity=movement.quantity,
+            unit=movement.unit,
             unit_price=movement.price,
             total_price=movement.quantity * movement.price,
             customer=customer,

@@ -4,6 +4,7 @@
         "product_id": 2,
         "location_id": "2",
         "quantity": 5,
+        "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-02 12:15:41"
     },
@@ -12,6 +13,7 @@
         "product_id": 2,
         "location_id": "2",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-02 12:18:55"
     },
@@ -20,6 +22,7 @@
         "product_id": 4,
         "location_id": "1",
         "quantity": 6,
+        "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-02 19:07:34"
     },
@@ -28,6 +31,7 @@
         "product_id": 4,
         "location_id": "1",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-02 19:08:50"
     },
@@ -36,6 +40,7 @@
         "product_id": 4,
         "location_id": "1",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-02 19:12:48"
     },
@@ -44,6 +49,7 @@
         "product_id": 2,
         "location_id": "2",
         "quantity": 10,
+        "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-02 19:21:10"
     },
@@ -52,6 +58,7 @@
         "product_id": 2,
         "location_id": "2",
         "quantity": 1,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-02 19:31:45"
     },
@@ -60,6 +67,7 @@
         "product_id": 4,
         "location_id": "2",
         "quantity": 3,
+        "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-03 09:39:27"
     },
@@ -68,6 +76,7 @@
         "product_id": 4,
         "location_id": "2",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-03 09:47:21"
     },
@@ -76,6 +85,7 @@
         "product_id": 1,
         "location_id": "2",
         "quantity": 3,
+        "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-03 09:50:30"
     },
@@ -84,6 +94,7 @@
         "product_id": 2,
         "location_id": "2",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-03 22:23:22"
     },
@@ -92,7 +103,17 @@
         "product_id": 2,
         "location_id": "5",
         "quantity": 2,
+        "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-02-04 11:55:37"
+    },
+    {
+        "log_id": 13,
+        "product_id": 11,
+        "location_id": "1",
+        "quantity": 4.0,
+        "unit": "кг",
+        "action": "remove",
+        "timestamp": "2026-02-04 23:37:43"
     }
 ]
