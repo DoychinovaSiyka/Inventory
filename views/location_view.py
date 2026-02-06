@@ -35,7 +35,7 @@ class LocationView:
                 break
 
     # 1. Списък с локации
-    def show_all(self, user: User):
+    def show_all(self, _):
         locations = self.location_controller.get_all()
 
         if not locations:
@@ -51,7 +51,7 @@ class LocationView:
         print("\n" + format_table(columns, rows))
 
     # 2. Добавяне
-    def add_location(self, user: User):
+    def add_location(self, _):
         name = input("Име на локация: ").strip()
         zone = input("Зона/Сектор: ").strip()
 
@@ -68,7 +68,7 @@ class LocationView:
             print("Грешка:", e)
 
     # 3. Редактиране
-    def edit_location(self, user: User):
+    def edit_location(self,_):
         loc_id = input("Въведете ID на локация: ").strip()
         location = self.location_controller.get_by_id(loc_id)
 
@@ -99,7 +99,7 @@ class LocationView:
             print("Грешка:", e)
 
     # 4. Изтриване
-    def delete_location(self, user: User):
+    def delete_location(self, _):
         loc_id = input("Въведете ID на локация: ").strip()
 
         try:

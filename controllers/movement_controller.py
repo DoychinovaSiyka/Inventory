@@ -21,7 +21,8 @@ class MovementController:
             Movement.from_dict(m) for m in self.repo.load()
         ]
 
-    def _generate_id(self) -> str:
+    @staticmethod
+    def _generate_id() -> str:
         return str(uuid.uuid4())
 
     def add(
@@ -65,6 +66,9 @@ class MovementController:
                 raise ValueError("Невалиден тип движение.")
             movement_type = mapping[movement_type]
 
+        # винаги дефинираме action
+        action = None
+
         # Бизнес логика
         if movement_type == MovementType.IN:
             product.quantity += quantity
@@ -82,7 +86,7 @@ class MovementController:
 
         # Обновяване на продукта
         product.update_modified()
-        self.product_controller._save()
+        self.product_controller.save()   # ✔ вече без предупреждение
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -103,7 +107,7 @@ class MovementController:
         )
 
         self.movements.append(movement)
-        self._save()
+        self.save()
 
         # Запис в StockLog (НОВО: unit)
         self.stocklog_controller.add_log(
@@ -130,7 +134,7 @@ class MovementController:
 
         return movement
 
-    def _save(self) -> None:
+    def save(self) -> None:   # ✔ публичен метод
         self.repo.save([m.to_dict() for m in self.movements])
 
     def get_all(self) -> List[Movement]:

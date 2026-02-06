@@ -121,7 +121,9 @@ def main():
                 modified=now
             )
 
-            AnonymousMenuView().show_menu()
+            AnonymousMenuView().show_menu(guest_user)
+
+
 
         # Изход
         elif choice == "0":

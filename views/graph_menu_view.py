@@ -39,7 +39,7 @@ class GraphView:
             if result == "break":
                 break
 
-    def calculate_path(self, user):
+    def calculate_path(self, _):
         print("\nНалични складове:")
         for wid, w in self.graph.nodes.items():
             print(f"{wid}: {w.name}")

@@ -17,7 +17,6 @@ class ProductController:
         for p_data in self.repo.load():
             product = Product.from_dict(p_data)
 
-            # Превръщаме UUID → Category обекти
             fixed_categories = []
             for cid in product.categories:
                 c = self.category_controller.get_by_id(cid)
@@ -27,17 +26,14 @@ class ProductController:
             product.categories = fixed_categories
             self.products.append(product)
 
-    # Internal: ID GENERATOR
     def _generate_id(self) -> int:
         if not self.products:
             return 1
         return max(p.product_id for p in self.products) + 1
 
-    # CHECKS
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-    # CREATE
     def add(
         self,
         name: str,
@@ -50,14 +46,11 @@ class ProductController:
         tags: Optional[List[str]] = None
     ) -> Product:
 
-        # ✔ ПОПРАВЕНО — вече подава unit
         ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
 
-        # Проверка за дублиране
         if self.exists_by_name(name):
             raise ValueError("Продукт с това име вече съществува.")
 
-        # Превръщаме UUID → Category обекти
         categories = []
         for cid in category_ids:
             c = self.category_controller.get_by_id(cid)
@@ -65,14 +58,12 @@ class ProductController:
                 raise ValueError(f"Категория с ID {cid} не съществува.")
             categories.append(c)
 
-        # Проверка за доставчик
-        supplier = None
         if supplier_id is not None:
-            supplier = self.supplier_controller.get_by_id(supplier_id)
-            if not supplier:
+            if not self.supplier_controller.get_by_id(supplier_id):
                 raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
         now = str(datetime.now())
+
 
         product = Product(
             product_id=self._generate_id(),
@@ -82,7 +73,7 @@ class ProductController:
             unit=unit,
             description=description,
             price=price,
-            supplier=supplier,
+            supplier_id=supplier_id,
             tags=tags or [],
             created=now,
             modified=now
@@ -92,7 +83,6 @@ class ProductController:
         self._save()
         return product
 
-    # READ
     def get_all(self) -> List[Product]:
         return self.products
 
@@ -102,7 +92,6 @@ class ProductController:
                 return p
         return None
 
-    # UPDATE
     def update_name(self, product_id: int, new_name: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
@@ -154,7 +143,9 @@ class ProductController:
         if not supplier:
             raise ValueError(f"Доставчикът с ID {supplier_id} не съществува.")
 
-        p.supplier = supplier
+        # ⭐ ОПРАВЕНО — записваме само supplier_id
+        p.supplier_id = supplier_id
+
         p.update_modified()
         self._save()
         return True
@@ -170,7 +161,6 @@ class ProductController:
         self._save()
         return True
 
-    # QUANTITY UPDATE (float)
     def increase_quantity(self, product_id: int, amount: float) -> bool:
         p = self.get_by_id(product_id)
         if not p:
@@ -200,7 +190,6 @@ class ProductController:
         self._save()
         return True
 
-    # DELETE
     def remove_by_name(self, name: str) -> bool:
         name = name.lower()
         original_len = len(self.products)
@@ -222,7 +211,6 @@ class ProductController:
 
         return False
 
-    # SEARCH & FILTER
     def search(self, keyword: str) -> List[Product]:
         keyword = (keyword or "").lower()
         return [
@@ -240,7 +228,6 @@ class ProductController:
                     break
         return filtered
 
-    # REPORTS
     def average_price(self) -> float:
         if not self.products:
             return 0.0
@@ -265,7 +252,6 @@ class ProductController:
                 grouped.setdefault(c.category_id, []).append(p)
         return grouped
 
-    # SORTING
     def sort_by_name(self) -> List[Product]:
         self.products.sort(key=lambda p: p.name.lower())
         return self.products
@@ -300,6 +286,5 @@ class ProductController:
 
         return sorted_products
 
-    # SAVE
     def _save(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

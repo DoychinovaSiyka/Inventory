@@ -118,7 +118,7 @@ class MovementView:
             print("Грешка:", e)
 
     # 2. Търсене
-    def search_movements(self, user):
+    def search_movements(self, _):
         keyword = input("Търси по описание: ")
         results = self.movement_controller.search(keyword)
 
@@ -130,7 +130,7 @@ class MovementView:
             print(m)
 
     # 3. Всички движения
-    def show_all(self, user):
+    def show_all(self, _):
         all_movements = self.movement_controller.get_all()
 
         if not all_movements:

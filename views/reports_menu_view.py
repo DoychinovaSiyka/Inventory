@@ -28,7 +28,7 @@ class ReportsView:
                 break
 
     # 1. Наличности
-    def report_stock(self, user: User):
+    def report_stock(self, _):
         report = self.controller.report_stock()
         rows = [
             [item["product"], item["quantity"], item["price"], item["location"]]
@@ -37,7 +37,7 @@ class ReportsView:
         print(format_table(["Продукт", "Количество", "Цена", "Локация"], rows))
 
     # 2. Движения
-    def report_movements(self, user: User):
+    def report_movements(self, _):
         print("\n1. Всички движения")
         print("2. По продукт")
         print("3. По тип движение (IN/OUT/MOVE)")
@@ -88,7 +88,7 @@ class ReportsView:
             print("Невалиден избор.")
 
     # 3. Продажби (общо)
-    def report_sales(self, user: User):
+    def report_sales(self, _):
         report = self.controller.report_sales()
         rows = [
             [item["date"], item["product"], item["quantity"], item["total_price"], item["customer"]]
@@ -97,7 +97,7 @@ class ReportsView:
         print(format_table(["Дата", "Продукт", "Количество", "Общо", "Клиент"], rows))
 
     # 4. Продажби по клиент
-    def report_sales_by_customer(self, user: User):
+    def report_sales_by_customer(self, _):
         customer = input("Име на клиент: ")
         report = self.controller.report_sales_by_customer(customer)
         rows = [
@@ -107,7 +107,7 @@ class ReportsView:
         print(format_table(["Дата", "Продукт", "Количество", "Общо"], rows))
 
     # 5. Продажби по продукт
-    def report_sales_by_product(self, user: User):
+    def report_sales_by_product(self, _):
         product = input("Име на продукт: ")
         report = self.controller.report_sales_by_product(product)
         rows = [
@@ -117,7 +117,7 @@ class ReportsView:
         print(format_table(["Дата", "Клиент", "Количество", "Общо"], rows))
 
     # 6. Продажби по дата
-    def report_sales_by_date(self, user: User):
+    def report_sales_by_date(self, _):
         date_str = input("Дата (ГГГГ-ММ-ДД): ")
         report = self.controller.report_sales_by_date(date_str)
         rows = [

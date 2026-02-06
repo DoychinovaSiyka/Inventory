@@ -54,7 +54,7 @@ class AdminMenuView:
         ).show_menu(user)
 
     # 3. Движения
-    def open_movements(self, user):
+    def open_movements(self, _):
         MovementView(
             self.controllers["product"],
             self.controllers["movement"],
@@ -80,7 +80,8 @@ class AdminMenuView:
         ).show_menu(user)
 
     # 7. Информация за системата
-    def open_system_info(self, user):
+    @staticmethod
+    def open_system_info(_):
         SystemInfoView().show_menu()
 
     # 8. Доставчици
@@ -90,6 +91,7 @@ class AdminMenuView:
         ).show_menu(user)
 
     # 9. Dijkstra – най-кратък път
-    def open_graph(self, user):
+    @staticmethod
+    def open_graph(_):
         GraphView().show_menu()
 

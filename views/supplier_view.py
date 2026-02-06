@@ -35,7 +35,7 @@ class SupplierView:
                 break
 
     # 1. Списък с доставчици
-    def show_suppliers(self, user: User):
+    def show_suppliers(self, _):
         suppliers = self.controller.get_all()
 
         if not suppliers:
@@ -51,7 +51,7 @@ class SupplierView:
         print("\n" + format_table(columns, rows))
 
     # 2. Добавяне на доставчик (Admin only)
-    def add_supplier(self, user: User):
+    def add_supplier(self,_):
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()
         address = input("Адрес: ").strip()
@@ -63,7 +63,7 @@ class SupplierView:
             print("Грешка:", e)
 
     # 3. Редактиране на доставчик (Admin only)
-    def edit_supplier(self, user: User):
+    def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
         supplier = self.controller.get_by_id(int(supplier_id))
 
@@ -88,7 +88,7 @@ class SupplierView:
             print("Грешка:", e)
 
     # 4. Изтриване на доставчик (Admin only)
-    def delete_supplier(self, user: User):
+    def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
 
         try:

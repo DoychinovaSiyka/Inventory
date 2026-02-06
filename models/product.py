@@ -8,32 +8,28 @@ class Product:
         name,
         categories,
         quantity,
-        unit,               # ← НОВО: мерна единица
+        unit,
         description,
         price,
-        supplier=None,
+        supplier_id=None,
         tags=None,
         created=None,
         modified=None
     ):
-        # ВАЖНО:
-        # НЕ валидираме категории тук!
-        # Защото при from_dict() те са UUID (стрингове),
-        # а при add() ProductController ги валидира и превръща в Category обекти.
-
         self.product_id = product_id
         self.name = name
         self.categories = categories  # може да са UUID или Category обекти
 
-        # Количеството вече е float
         self.quantity = float(quantity)
 
-        # НОВО: мерна единица
         self.unit = unit
 
         self.description = description
         self.price = price
-        self.supplier = supplier
+
+        # ВАЖНО: supplier вече е само ID, не Supplier обект
+        self.supplier_id = supplier_id
+
         self.tags = tags or []
         self.created = created or str(datetime.now())
         self.modified = modified or str(datetime.now())
@@ -42,7 +38,6 @@ class Product:
         self.modified = str(datetime.now())
 
     def __str__(self):
-        # НОВО: показваме quantity + unit
         return f"{self.name} | {self.price:.2f} лв. | {self.quantity} {self.unit}"
 
     def __repr__(self):
@@ -57,10 +52,13 @@ class Product:
                 for c in self.categories
             ],
             "quantity": self.quantity,
-            "unit": self.unit,  # ← НОВО
+            "unit": self.unit,
             "description": self.description,
             "price": self.price,
-            "supplier": self.supplier.supplier_id if self.supplier else None,
+
+            # ВАЖНО: вече записваме само supplier_id
+            "supplier_id": self.supplier_id,
+
             "tags": self.tags,
             "created": self.created,
             "modified": self.modified
@@ -68,17 +66,18 @@ class Product:
 
     @staticmethod
     def from_dict(data):
-        # Категориите в JSON са UUID стрингове.
-        # ProductController ще ги превърне в Category обекти при зареждане.
         return Product(
             product_id=data["product_id"],
             name=data["name"],
-            categories=data["categories"],  # ← оставяме ги като UUID
+            categories=data["categories"],
             quantity=data["quantity"],
-            unit=data.get("unit", "бр."),  # ← НОВО: ако липсва, по подразбиране "бр."
+            unit=data.get("unit", "бр."),
             description=data["description"],
             price=data["price"],
-            supplier=data.get("supplier"),
+
+            # ВАЖНО: зареждаме supplier_id, не Supplier обект
+            supplier_id=data.get("supplier_id"),
+
             tags=data.get("tags", []),
             created=data.get("created"),
             modified=data.get("modified")

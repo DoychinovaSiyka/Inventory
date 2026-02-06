@@ -77,7 +77,7 @@ class ProductView:
                 break
 
     # 1. Създаване на продукт
-    def create_product(self, user):
+    def create_product(self, _):
         name = input("Име: ").strip()
         if not name:
             print("Името не може да е празно.")
@@ -131,20 +131,13 @@ class ProductView:
             return
 
         try:
-            self.product_controller.add(
-                name,
-                category_ids,
-                quantity,
-                unit,
-                description,
-                price
-            )
+            self.product_controller.add(name,category_ids,quantity,unit,description, price)
             print("Продуктът е добавен!")
         except ValueError as e:
             print("Грешка:", e)
 
     # 2. Премахване
-    def remove_product(self, user):
+    def remove_product(self, _):
         name = input("Име на продукта за премахване: ").strip()
         if not name:
             print("Името е задължително.")
@@ -286,7 +279,8 @@ class ProductView:
                 unit = input("Нова мерна единица: ").strip()
                 product.unit = unit
                 product.update_modified()
-                self.product_controller._save()
+                self.product_controller.save()
+
                 print("Мерната единица е обновена.")
 
             elif choice == "6":
@@ -314,7 +308,7 @@ class ProductView:
                 print("Невалиден избор.")
 
     # 4. Покажи всички продукти
-    def show_all(self, user):
+    def show_all(self,_):
         products = self.product_controller.get_all()
         if not products:
             print("Няма налични продукти.")
@@ -325,7 +319,7 @@ class ProductView:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
     # 5. Търсене
-    def search(self, user):
+    def search(self, _):
         keyword = input("Търси по име или описание: ").strip().lower()
         if not keyword:
             print("Моля въведете ключова дума.")
@@ -342,16 +336,16 @@ class ProductView:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
     # 6. Сортиране
-    def sort_menu(self, user):
+    def sort_menu(self, _):
         self.sort_view.show_menu()
 
     # 7. Средна цена
-    def average_price(self, user):
+    def average_price(self, _):
         avg = self.product_controller.average_price()
         print(f"Средна цена: {avg:.2f} лв.")
 
     # 8. Филтриране по категория
-    def filter_by_category(self, user):
+    def filter_by_category(self, _):
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
@@ -383,7 +377,7 @@ class ProductView:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
     # 9. Увеличаване
-    def increase_quantity(self, user):
+    def increase_quantity(self, _):
         pid = _read_int("ID: ")
         amount = _read_float("Добави: ")
         if pid is None or amount is None:
@@ -395,7 +389,7 @@ class ProductView:
             print("Грешка:", e)
 
     # 10. Намаляване
-    def decrease_quantity(self, user):
+    def decrease_quantity(self, _):
         pid = _read_int("ID: ")
         amount = _read_float("Извади: ")
         if pid is None or amount is None:
@@ -407,7 +401,7 @@ class ProductView:
             print("Грешка:", e)
 
     # 11. Ниска наличност
-    def low_stock(self, user):
+    def low_stock(self, _):
         low = self.product_controller.check_low_stock()
         if not low:
             print("Няма продукти с ниска наличност.")
@@ -416,7 +410,7 @@ class ProductView:
                 print(f"{p.name} | {p.quantity} {p.unit}")
 
     # 12. Най-скъп продукт
-    def most_expensive(self, user):
+    def most_expensive(self, _):
         p = self.product_controller.most_expensive()
         if not p:
             print("Няма продукти.")
@@ -424,7 +418,7 @@ class ProductView:
             print(f"Най-скъп продукт: {p.name} – {p.price} лв.")
 
     # 13. Най-евтин продукт
-    def cheapest(self, user):
+    def cheapest(self, _):
         p = self.product_controller.cheapest()
         if not p:
             print("Няма продукти.")
@@ -432,12 +426,12 @@ class ProductView:
             print(f"Най-евтин продукт: {p.name} – {p.price} лв.")
 
     # 14. Обща стойност
-    def total_value(self, user):
+    def total_value(self,_ ):
         value = self.product_controller.total_values()
         print(f"Обща стойност на склада: {value:.2f} лв.")
 
     # 15. Групиране по категории (показва името на категорията, не UUID)
-    def group_by_category(self, user):
+    def group_by_category(self, _):
         groups = self.product_controller.group_by_category()
 
         for category_id, products in groups.items():

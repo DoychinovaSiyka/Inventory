@@ -35,13 +35,13 @@ class UserView:
                 break
 
     # Показване на всички потребители
-    def show_users(self, user):
+    def show_users(self, _):
         users = self.controller.get_all()
         for u in users:
             print(f"{u.username} | {u.role} | {u.status}")
 
     # Добавяне на потребител
-    def add_user(self, user):
+    def add_user(self, _):
         fn = input("Име: ")
         ln = input("Фамилия: ")
         email = input("Email: ")

@@ -27,7 +27,7 @@ class InvoiceView:
                 break
 
     # 1. Списък с всички фактури
-    def show_all(self, user: User):
+    def show_all(self, _):
         invoices = self.invoice_controller.get_all()
 
         if not invoices:
@@ -51,7 +51,7 @@ class InvoiceView:
         print("\n" + format_table(columns, rows))
 
     # 2. Преглед по ID
-    def view_by_id(self, user: User):
+    def view_by_id(self, _):
         invoice_id = input("Въведете ID на фактура: ")
         invoice = self.invoice_controller.get_by_id(invoice_id)
 
@@ -74,7 +74,7 @@ class InvoiceView:
         print("\n" + format_table(columns, rows))
 
     # 3. Търсене по клиент
-    def search_by_customer(self, user: User):
+    def search_by_customer(self, _):
         keyword = input("Въведете име на клиент: ")
         results = self.invoice_controller.search_by_customer(keyword)
 
@@ -97,7 +97,7 @@ class InvoiceView:
         print("\n" + format_table(columns, rows))
 
     # 4. Търсене по продукт
-    def search_by_product(self, user: User):
+    def search_by_product(self, _):
         keyword = input("Въведете име на продукт: ")
         results = self.invoice_controller.search_by_product(keyword)
 
@@ -120,7 +120,7 @@ class InvoiceView:
         print("\n" + format_table(columns, rows))
 
     # 5. Търсене по дата
-    def search_by_date(self, user: User):
+    def search_by_date(self, _):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ")
         results = self.invoice_controller.search_by_date(date_str)
 

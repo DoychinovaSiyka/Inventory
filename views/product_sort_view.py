@@ -27,34 +27,35 @@ class ProductSortView:
                 break
 
     # 1. По име
-    def sort_by_name(self, user):
+    def sort_by_name(self, _):
         products = self.controller.sort_by_name()
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
     # 2. Цена
-    def sort_price_desc(self, user):
+    def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
 
     # 3. Цена
-    def sort_price_asc(self, user):
+    def sort_price_asc(self, _):
         products = self.controller.bubble_sort()
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
     # 4. Количество
-    def sort_qty_desc(self, user):
+    def sort_qty_desc(self,_):
         products = self.controller.bubble_sort()
         products.sort(key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
     # 5. Количество
-    def sort_qty_asc(self, user):
+    def sort_qty_asc(self, ):
         products = self.controller.selection_sort()
         products.sort(key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
     # Общ метод за печат
-    def _print_sorted(self, products, title, algorithm):
+    @staticmethod
+    def _print_sorted( products, title, algorithm):
         print(f"\n=== Сортиране по: {title} ===")
         print(f"Алгоритъм: {algorithm}\n")
 

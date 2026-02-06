@@ -32,7 +32,10 @@ class UserController:
 
     # PASSWORD HASHING
 
-    def _hash_password(self, password: str) -> str:
+
+
+    @staticmethod
+    def _hash_password(password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
 

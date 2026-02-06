@@ -16,6 +16,6 @@ class AnonymousMenuView:
             result = menu.execute(choice, None)
             if result == "break":
                 break
-
-    def show_system_info(self, user):
+    @staticmethod
+    def show_system_info(_):
         SystemInfoView().show_menu()

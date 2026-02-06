@@ -1,7 +1,8 @@
 
 
 class SystemInfoView:
-    def show_menu(self):
+    @staticmethod
+    def show_menu():
         print("\n Информация за системата (WIMS) \n")
 
         print("Име на проекта:")

@@ -35,7 +35,7 @@ class CategoryView:
                 break
 
     # 1. Списък
-    def show_all(self, user: User):
+    def show_all(self,_):
         categories = self.controller.get_all()
 
         if not categories:
@@ -51,7 +51,7 @@ class CategoryView:
         print("\n" + format_table(columns, rows))
 
     # 2. Добавяне
-    def add_category(self, user: User):
+    def add_category(self, _):
         name = input("Име на категория: ").strip()
         description = input("Описание: ").strip()
 
@@ -62,7 +62,7 @@ class CategoryView:
             print("Грешка:", e)
 
     # 3. Редактиране
-    def edit_category(self, user: User):
+    def edit_category(self, _):
         try:
             category_id = int(input("Въведете ID на категория: ").strip())
         except ValueError:
@@ -90,7 +90,7 @@ class CategoryView:
             print("Грешка:", e)
 
     # 4. Изтриване
-    def delete_category(self, user: User):
+    def delete_category(self, _):
         try:
             category_id = int(input("Въведете ID на категория: ").strip())
         except ValueError:

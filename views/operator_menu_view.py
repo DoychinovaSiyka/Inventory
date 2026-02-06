@@ -50,7 +50,7 @@ class OperatorMenuView:
         ).show_menu(user)
 
     # 3. Движения
-    def open_movements(self, user):
+    def open_movements(self,_):
         MovementView(
             self.controllers["product"],
             self.controllers["movement"],
@@ -70,11 +70,12 @@ class OperatorMenuView:
         ).show_menu(user)
 
     # 6. Информация за системата
-    def open_system_info(self, user):
+    @staticmethod
+    def open_system_info(_):
         SystemInfoView().show_menu()
 
     # 7. Сортиране
-    def open_sorting(self, user):
+    def open_sorting(self,_ ):
         ProductSortView(
             self.controllers["product"]
         ).show_menu()
