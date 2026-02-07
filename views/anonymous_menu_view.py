@@ -1,11 +1,9 @@
-
-
 from menus.menu import Menu, MenuItem
 from views.system_info_view import SystemInfoView
 
 
 class AnonymousMenuView:
-    def show_menu(self):
+    def show_menu(self, _user=None):
         menu = Menu("Меню за анонимен потребител", [
             MenuItem("1", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")
@@ -16,6 +14,7 @@ class AnonymousMenuView:
             result = menu.execute(choice, None)
             if result == "break":
                 break
+
     @staticmethod
     def show_system_info(_):
         SystemInfoView().show_menu()

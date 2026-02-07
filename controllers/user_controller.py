@@ -31,9 +31,6 @@ class UserController:
 
 
     # PASSWORD HASHING
-
-
-
     @staticmethod
     def _hash_password(password: str) -> str:
         return "".join(str(ord(c)) for c in password)
@@ -128,6 +125,41 @@ class UserController:
                 return True
 
         return False
+
+
+    # ACTIVATE USER (Admin only)
+
+    def activate_user(self, acting_user: User, username: str):
+        if acting_user.role != "Admin":
+            raise PermissionError("Само администратор може да активира потребители.")
+
+        for user in self.users:
+            if user.username == username:
+                user.status = "Active"
+                user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                self._save()
+                return True
+
+        return False
+
+    # DELETE USER (Admin only)
+
+    def delete_user(self, acting_user: User, username: str):
+        if acting_user.role != "Admin":
+            raise PermissionError("Само администратор може да изтрива потребители.")
+
+        # Не позволявай администратор да изтрие сам себе си
+        if acting_user.username == username:
+            raise ValueError("Администраторът не може да изтрие собствения си акаунт.")
+
+        for user in self.users:
+            if user.username == username:
+                self.users.remove(user)
+                self._save()
+                return True
+
+        return False
+
 
 
     # LIST USERS

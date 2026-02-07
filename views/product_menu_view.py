@@ -279,7 +279,7 @@ class ProductView:
                 unit = input("Нова мерна единица: ").strip()
                 product.unit = unit
                 product.update_modified()
-                self.product_controller.save()
+                self.product_controller._save()
 
                 print("Мерната единица е обновена.")
 

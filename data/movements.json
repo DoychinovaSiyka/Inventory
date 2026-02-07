@@ -40,5 +40,61 @@
         "date": "2026-02-04 23:37:43",
         "created": "2026-02-04 23:37:43",
         "modified": "2026-02-04 23:37:43"
+    },
+    {
+        "movement_id": "6f7bdb57-f5bb-436e-9828-4344c391a93f",
+        "product_id": 14,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "2",
+        "movement_type": "OUT",
+        "quantity": 55.0,
+        "unit": "бр.",
+        "price": 1.05,
+        "description": "опакована вафла с дълъг срок на годност, подходяща за търговски обекти, вендинг машини и директна консумация",
+        "date": "2026-02-06 20:15:00",
+        "created": "2026-02-06 20:15:00",
+        "modified": "2026-02-06 20:15:00"
+    },
+    {
+        "movement_id": "c34714ee-25a9-49b2-ae51-24df85f93168",
+        "product_id": 13,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "5",
+        "movement_type": "IN",
+        "quantity": 100.0,
+        "unit": "кг",
+        "price": 3.79,
+        "description": "диня от Испания",
+        "date": "2026-02-06 20:16:59",
+        "created": "2026-02-06 20:16:59",
+        "modified": "2026-02-06 20:16:59"
+    },
+    {
+        "movement_id": "1ed4c239-e6b4-426d-81a8-04999c0d4c53",
+        "product_id": 14,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "4",
+        "movement_type": "OUT",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "price": 0.99,
+        "description": "за непосредствена консумация не е препоръчително деца под 3 години да приемат вафли",
+        "date": "2026-02-06 23:02:14",
+        "created": "2026-02-06 23:02:14",
+        "modified": "2026-02-06 23:02:14"
+    },
+    {
+        "movement_id": "4aec6dfd-6036-42ce-a653-7acde8819535",
+        "product_id": 13,
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "location_id": "1",
+        "movement_type": "IN",
+        "quantity": 6.0,
+        "unit": "бр.",
+        "price": 4.99,
+        "description": "за лятото",
+        "date": "2026-02-06 23:03:47",
+        "created": "2026-02-06 23:03:47",
+        "modified": "2026-02-06 23:03:47"
     }
 ]

@@ -86,7 +86,7 @@ class MovementController:
 
         # Обновяване на продукта
         product.update_modified()
-        self.product_controller.save()   # ✔ вече без предупреждение
+        self.product_controller._save()
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 

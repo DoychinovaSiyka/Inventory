@@ -84,19 +84,24 @@ class ReportController:
     def report_movements_by_product(self, keyword):
         keyword = keyword.lower()
 
-        data = [
-            {
-                "date": m.date,
-                "type": m.movement_type.name,
-                "quantity": m.quantity,
-                "price": m.price
-            }
-            for m in self.movement_controller.movements
-            if keyword in self.product_controller.get_by_id(m.product_id).name.lower()
-        ]
+        data = []
+
+        for m in self.movement_controller.movements:
+            product = self.product_controller.get_by_id(m.product_id)
+
+            # Ако продуктът е изтрит → пропускаме движението
+            if not product:
+                continue
+
+            if keyword in product.name.lower():
+                data.append({
+                    "date": m.date,
+                    "type": m.movement_type.name,
+                    "quantity": m.quantity,
+                    "price": m.price
+                })
 
         return self._create_report("movements_by_product", {"keyword": keyword}, data)
-
 
     # 4. MOVEMENTS BY TYPE
 

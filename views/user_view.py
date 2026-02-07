@@ -14,9 +14,6 @@ class UserView:
             print("Само администратор може да управлява потребители.")
             return
 
-
-        # Menu(title, items)
-        # MenuItem(key, text, action)
         menu = Menu(
             "МЕНЮ ПОТРЕБИТЕЛИ",
             [
@@ -24,6 +21,8 @@ class UserView:
                 MenuItem("2", "Добавяне на потребител", lambda u: self.add_user(u)),
                 MenuItem("3", "Промяна на роля", lambda u: self.change_role(u)),
                 MenuItem("4", "Деактивиране на потребител", lambda u: self.deactivate_user(u)),
+                MenuItem("5", "Активиране на потребител", lambda u: self.activate_user(u)),
+                MenuItem("6", "Премахване на потребител", lambda u: self.delete_user(u)),
                 MenuItem("0", "Назад", lambda u: "break"),
             ]
         )
@@ -75,6 +74,30 @@ class UserView:
         try:
             if self.controller.deactivate_user(user, username):
                 print("Потребителят е деактивиран.")
+            else:
+                print("Потребителят не е намерен.")
+        except Exception as e:
+            print("Грешка:", e)
+
+    # Активиране на потребител
+    def activate_user(self, user):
+        username = input("Потребителско име: ")
+
+        try:
+            if self.controller.activate_user(user, username):
+                print("Потребителят е активиран.")
+            else:
+                print("Потребителят не е намерен.")
+        except Exception as e:
+            print("Грешка:", e)
+
+    # Премахване на потребител
+    def delete_user(self, user):
+        username = input("Потребителско име за изтриване: ")
+
+        try:
+            if self.controller.delete_user(user, username):
+                print("Потребителят е изтрит.")
             else:
                 print("Потребителят не е намерен.")
         except Exception as e:

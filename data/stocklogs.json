@@ -115,5 +115,41 @@
         "unit": "кг",
         "action": "remove",
         "timestamp": "2026-02-04 23:37:43"
+    },
+    {
+        "log_id": 14,
+        "product_id": 14,
+        "location_id": "2",
+        "quantity": 55.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-02-06 20:15:00"
+    },
+    {
+        "log_id": 15,
+        "product_id": 13,
+        "location_id": "5",
+        "quantity": 100.0,
+        "unit": "кг",
+        "action": "add",
+        "timestamp": "2026-02-06 20:16:59"
+    },
+    {
+        "log_id": 16,
+        "product_id": 14,
+        "location_id": "4",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-02-06 23:02:14"
+    },
+    {
+        "log_id": 17,
+        "product_id": 13,
+        "location_id": "1",
+        "quantity": 6.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-06 23:03:47"
     }
 ]

@@ -48,7 +48,7 @@ class ProductSortView:
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
     # 5. Количество
-    def sort_qty_asc(self, ):
+    def sort_qty_asc(self,_):
         products = self.controller.selection_sort()
         products.sort(key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")

@@ -1,5 +1,3 @@
-
-
 from menus.menu import Menu, MenuItem
 from storage.password_utils import format_table
 from controllers.category_controller import CategoryController
@@ -63,11 +61,7 @@ class CategoryView:
 
     # 3. Редактиране
     def edit_category(self, _):
-        try:
-            category_id = int(input("Въведете ID на категория: ").strip())
-        except ValueError:
-            print("Невалидно ID.")
-            return
+        category_id = input("Въведете ID на категория: ").strip()
 
         category = self.controller.get_by_id(category_id)
 
@@ -80,22 +74,18 @@ class CategoryView:
         new_desc = input(f"Ново описание ({category.description}): ").strip()
 
         try:
-            self.controller.update(
-                category_id,
-                name=new_name if new_name else category.name,
-                description=new_desc if new_desc else category.description
-            )
+            if new_name:
+                self.controller.update_name(category_id, new_name)
+            if new_desc:
+                self.controller.update_description(category_id, new_desc)
+
             print("Категорията е обновена успешно!")
         except ValueError as e:
             print("Грешка:", e)
 
     # 4. Изтриване
     def delete_category(self, _):
-        try:
-            category_id = int(input("Въведете ID на категория: ").strip())
-        except ValueError:
-            print("Невалидно ID.")
-            return
+        category_id = input("Въведете ID на категория: ").strip()
 
         if self.controller.remove(category_id):
             print("Категорията е изтрита успешно!")

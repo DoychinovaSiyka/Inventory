@@ -64,7 +64,6 @@ class ProductController:
 
         now = str(datetime.now())
 
-
         product = Product(
             product_id=self._generate_id(),
             name=name,
@@ -143,9 +142,7 @@ class ProductController:
         if not supplier:
             raise ValueError(f"Доставчикът с ID {supplier_id} не съществува.")
 
-        # ⭐ ОПРАВЕНО — записваме само supplier_id
         p.supplier_id = supplier_id
-
         p.update_modified()
         self._save()
         return True

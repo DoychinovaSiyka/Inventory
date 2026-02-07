@@ -37,5 +37,31 @@
         "date": "2026-02-04 23:37:43",
         "created": "2026-02-04 23:37:43",
         "modified": "2026-02-04 23:37:43"
+    },
+    {
+        "invoice_id": "548e6e46-8eb0-45d3-ab91-fa20d4b1df4f",
+        "movement_id": "6f7bdb57-f5bb-436e-9828-4344c391a93f",
+        "product": "вафла \"Боровец\"",
+        "quantity": 55.0,
+        "unit": "бр.",
+        "unit_price": 1.05,
+        "total_price": 57.75,
+        "customer": "Златомир",
+        "date": "2026-02-06 20:15:00",
+        "created": "2026-02-06 20:15:00",
+        "modified": "2026-02-06 20:15:00"
+    },
+    {
+        "invoice_id": "f8903658-6f0a-49a1-9008-c13aaa2f4dc3",
+        "movement_id": "1ed4c239-e6b4-426d-81a8-04999c0d4c53",
+        "product": "вафла \"Боровец\"",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 0.99,
+        "total_price": 11.879999999999999,
+        "customer": "Нора",
+        "date": "2026-02-06 23:02:14",
+        "created": "2026-02-06 23:02:14",
+        "modified": "2026-02-06 23:02:14"
     }
 ]
