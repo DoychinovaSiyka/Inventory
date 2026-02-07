@@ -45,21 +45,11 @@ def main():
 
     invoice_controller = InvoiceController(invoice_repo)
 
-    movement_controller = MovementController(
-        movement_repo,
-        product_controller,
-        user_controller,
-        location_controller,
-        stocklog_controller,
-        invoice_controller
-    )
+    movement_controller = MovementController(movement_repo,product_controller,
+        user_controller,location_controller,stocklog_controller,invoice_controller )
 
-    report_controller = ReportController(
-        report_repo,
-        product_controller,
-        movement_controller,
-        invoice_controller
-    )
+    report_controller = ReportController(report_repo,product_controller,
+        movement_controller,invoice_controller )
 
     # Пакет от контролери за менюта
     controllers = {
