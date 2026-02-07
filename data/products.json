@@ -133,5 +133,20 @@
         "tags": [],
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
+    },
+    {
+        "product_id": 18,
+        "name": "зелен лук",
+        "categories": [
+            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
+        ],
+        "quantity": 14.0,
+        "unit": "кг",
+        "description": "зелен лук",
+        "price": 0.34,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-02-07 09:21:59.794094",
+        "modified": "2026-02-07 09:23:28.155704"
     }
 ]

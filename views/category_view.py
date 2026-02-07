@@ -11,9 +11,7 @@ class CategoryView:
     def show_menu(self, user: User):
         is_admin = (user is not None and user.role == "Admin")
 
-        menu_items = [
-            MenuItem("1", "Списък с категории", self.show_all)
-        ]
+        menu_items = [MenuItem("1", "Списък с категории", self.show_all)]
 
         if is_admin:
             menu_items.extend([
