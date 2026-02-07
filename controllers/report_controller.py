@@ -31,11 +31,7 @@ class ReportController:
 
         report = Report(
             report_id=self._generate_id(),
-            report_type=report_type,
-            generated_on=now,
-            parameters=parameters,
-            data=data
-        )
+            report_type=report_type,generated_on=now,parameters=parameters,data=data)
 
         self.reports.append(report)
         self._save()
