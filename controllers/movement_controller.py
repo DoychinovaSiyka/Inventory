@@ -86,7 +86,7 @@ class MovementController:
 
         # Обновяване на продукта
         product.update_modified()
-        self.product_controller._save()
+        self.product_controller.save_changes()
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -107,9 +107,9 @@ class MovementController:
         )
 
         self.movements.append(movement)
-        self.save()
+        self.save_changes()
 
-        # Запис в StockLog (НОВО: unit)
+        # Запис в StockLog
         self.stocklog_controller.add_log(
             product_id=product_id,
             location_id=location_id,
@@ -134,7 +134,7 @@ class MovementController:
 
         return movement
 
-    def save(self) -> None:   # ✔ публичен метод
+    def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
     def get_all(self) -> List[Movement]:

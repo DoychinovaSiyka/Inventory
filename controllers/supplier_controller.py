@@ -8,8 +8,6 @@ class SupplierController:
     def __init__(self, repo):
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
-        # Зареждаме всички доставчици от JSON файла чрез хранилището.
-        # Supplier.from_dict преобразува речниците в реални Supplier обекти.
 
     # ID GENERATOR
     def _generate_id(self) -> int:
@@ -33,7 +31,7 @@ class SupplierController:
         )
 
         self.suppliers.append(supplier)
-        self._save()
+        self.save_changes()
         return supplier
 
     # READ
@@ -69,7 +67,7 @@ class SupplierController:
             supplier.address = address
 
         supplier.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self._save()
+        self.save_changes()
         return supplier
 
     # DELETE
@@ -78,11 +76,11 @@ class SupplierController:
         self.suppliers = [s for s in self.suppliers if s.supplier_id != supplier_id]
 
         if len(self.suppliers) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
 
     # SAVE
-    def _save(self) -> None:
+    def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

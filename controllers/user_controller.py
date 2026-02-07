@@ -25,34 +25,27 @@ class UserController:
                 modified=now
             )
             self.users.append(admin)
-            self._save()
+            self.save_changes()
 
         self.logged_user: Optional[User] = None
-
 
     # PASSWORD HASHING
     @staticmethod
     def _hash_password(password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
-
-    # SAVE
-
-    def _save(self):
+    # SAVE (renamed)
+    def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
-
     # HELPERS
-
     def _is_unique_username(self, username: str) -> bool:
         return not any(u.username == username for u in self.users)
 
     def get_by_id(self, user_id: int) -> Optional[User]:
         return next((u for u in self.users if u.user_id == user_id), None)
 
-
     # REGISTER
-
     def register(self, first_name, last_name, email, username, password, role="Operator"):
 
         UserValidator.validate_user_data(username, password, email, role, "Active")
@@ -75,11 +68,10 @@ class UserController:
         )
 
         self.users.append(new_user)
-        self._save()
+        self.save_changes()
         return new_user
 
     # LOGIN
-
     def login(self, username: str, password: str) -> Optional[User]:
         hashed = self._hash_password(password)
 
@@ -92,9 +84,7 @@ class UserController:
 
         return None
 
-
     # CHANGE ROLE (Admin only)
-
     def change_role(self, acting_user: User, username: str, new_role: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да променя роли.")
@@ -105,14 +95,12 @@ class UserController:
             if user.username == username:
                 user.role = new_role
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self._save()
+                self.save_changes()
                 return True
 
         return False
 
-
     # DEACTIVATE USER (Admin only)
-
     def deactivate_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да деактивира потребители.")
@@ -121,14 +109,12 @@ class UserController:
             if user.username == username:
                 user.status = "Disabled"
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self._save()
+                self.save_changes()
                 return True
 
         return False
 
-
     # ACTIVATE USER (Admin only)
-
     def activate_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да активира потребители.")
@@ -137,32 +123,27 @@ class UserController:
             if user.username == username:
                 user.status = "Active"
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self._save()
+                self.save_changes()
                 return True
 
         return False
 
     # DELETE USER (Admin only)
-
     def delete_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да изтрива потребители.")
 
-        # Не позволявай администратор да изтрие сам себе си
         if acting_user.username == username:
             raise ValueError("Администраторът не може да изтрие собствения си акаунт.")
 
         for user in self.users:
             if user.username == username:
                 self.users.remove(user)
-                self._save()
+                self.save_changes()
                 return True
 
         return False
 
-
-
     # LIST USERS
-
     def get_all(self):
         return self.users

@@ -21,14 +21,19 @@ class CategoryController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        category = Category(name=name,description=description,created=now,modified=now )
+        category = Category(
+            name=name,
+            description=description,
+            created=now,
+            modified=now
+        )
 
         # Създаваме нова категория чрез конструктора на Category.
         # Подаваме всички полета, описани в документацията — name, description, created и modified.
         # Това гарантира, че Category обектът е валиден още при създаването си.
 
         self.categories.append(category)
-        self._save()
+        self.save_changes()
         return category
 
     def get_all(self) -> List[Category]:
@@ -44,11 +49,14 @@ class CategoryController:
 
         CategoryValidator.validate_update_name(new_name)
         # Проверяваме уникалност, но изключваме текущата категория
-        CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
+        CategoryValidator.validate_unique(
+            new_name,
+            [c for c in self.categories if c.category_id != category_id]
+        )
 
         category.name = new_name
         category.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def update_description(self, category_id: str, new_description: str) -> bool:
@@ -60,7 +68,7 @@ class CategoryController:
 
         category.description = new_description
         category.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def remove(self, category_id: str) -> bool:
@@ -68,7 +76,7 @@ class CategoryController:
         self.categories = [c for c in self.categories if c.category_id != category_id]
 
         if len(self.categories) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
@@ -81,5 +89,5 @@ class CategoryController:
             or keyword in (c.description or "").lower()
         ]
 
-    def _save(self) -> None:
+    def save_changes(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])

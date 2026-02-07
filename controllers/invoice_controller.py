@@ -21,7 +21,7 @@ class InvoiceController:
     def add(self, invoice: Invoice) -> Invoice:
         # Добавя вече създадена фактура (използва се от MovementController).
         self.invoices.append(invoice)
-        self._save()
+        self.save_changes()
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
@@ -46,7 +46,7 @@ class InvoiceController:
         )
 
         self.invoices.append(invoice)
-        self._save()
+        self.save_changes()
         return invoice
 
     # READ
@@ -96,7 +96,7 @@ class InvoiceController:
 
         inv.customer = new_customer
         inv.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self._save()
+        self.save_changes()
         return True
 
     # DELETE
@@ -105,11 +105,11 @@ class InvoiceController:
         self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
 
         if len(self.invoices) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
 
     # SAVE
-    def _save(self) -> None:
+    def save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])

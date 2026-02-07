@@ -15,7 +15,6 @@ class StockLogController:
 
     # CREATE
     def add_log(self, product_id, location_id, quantity, unit, action):
-        # quantity вече е float
         if quantity <= 0:
             raise ValueError("Количеството трябва да е > 0.")
 
@@ -36,7 +35,7 @@ class StockLogController:
         )
 
         self.logs.append(log)
-        self._save()
+        self.save_changes()
         return log
 
     # READ
@@ -57,16 +56,16 @@ class StockLogController:
                or keyword in log.timestamp.lower()
         ]
 
-    # DELETE (optional)
+    # DELETE
     def remove(self, log_id):
         original_len = len(self.logs)
         self.logs = [l for l in self.logs if l.log_id != log_id]
 
         if len(self.logs) < original_len:
-            self._save()
+            self.save_changes()
             return True
         return False
 
-    # SAVE
-    def _save(self):
+    # SAVE (renamed)
+    def save_changes(self):
         self.repo.save([l.to_dict() for l in self.logs])

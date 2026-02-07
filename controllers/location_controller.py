@@ -41,7 +41,7 @@ class LocationController:
         )
 
         self.locations.append(location)
-        self._save()
+        self.save_changes()
         return location
 
     # READ
@@ -80,7 +80,7 @@ class LocationController:
             location.capacity = capacity
 
         location.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     # DELETE
@@ -89,7 +89,7 @@ class LocationController:
         self.locations = [l for l in self.locations if l.location_id != location_id]
 
         if len(self.locations) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
@@ -104,9 +104,8 @@ class LocationController:
         ]
 
     # SAVE
-    def _save(self) -> None:
+    def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])
-
 
 
 # LocationController е важен,защото иначе няма кой да управлява:

@@ -39,11 +39,8 @@ class MainMenuView:
                 SupplierView(self.controllers["supplier"]).show_menu(user)
 
             elif choice == "4":
-                MovementView(
-                    self.controllers["product"],
-                    self.controllers["movement"],
-                    self.controllers["user"]
-                ).show_menu()
+                MovementView(self.controllers["product"],
+                    self.controllers["movement"],self.controllers["user"]).show_menu()
 
             elif choice == "5":
                 InvoiceView(self.controllers["invoice"]).show_menu(user)

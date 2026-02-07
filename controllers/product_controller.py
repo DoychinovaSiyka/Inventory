@@ -79,7 +79,7 @@ class ProductController:
         )
 
         self.products.append(product)
-        self._save()
+        self.save_changes()
         return product
 
     def get_all(self) -> List[Product]:
@@ -102,7 +102,7 @@ class ProductController:
         ProductValidator.validate_name(new_name)
         p.name = new_name
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def update_description(self, product_id: int, new_description: str) -> bool:
@@ -113,7 +113,7 @@ class ProductController:
         ProductValidator.validate_description(new_description)
         p.description = new_description
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def update_categories(self, product_id: int, new_category_ids: List[int]) -> bool:
@@ -130,7 +130,7 @@ class ProductController:
 
         p.categories = categories
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def update_supplier(self, product_id: int, supplier_id: int) -> bool:
@@ -144,7 +144,7 @@ class ProductController:
 
         p.supplier_id = supplier_id
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def update_price(self, product_id: int, new_price: float) -> bool:
@@ -155,7 +155,7 @@ class ProductController:
         ProductValidator.validate_price(new_price)
         p.price = new_price
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def increase_quantity(self, product_id: int, amount: float) -> bool:
@@ -168,7 +168,7 @@ class ProductController:
 
         p.quantity += float(amount)
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def decrease_quantity(self, product_id: int, amount: float) -> bool:
@@ -184,7 +184,7 @@ class ProductController:
 
         p.quantity -= float(amount)
         p.update_modified()
-        self._save()
+        self.save_changes()
         return True
 
     def remove_by_name(self, name: str) -> bool:
@@ -193,7 +193,7 @@ class ProductController:
         self.products = [p for p in self.products if p.name.lower() != name]
 
         if len(self.products) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
@@ -203,7 +203,7 @@ class ProductController:
         self.products = [p for p in self.products if p.product_id != product_id]
 
         if len(self.products) < original_len:
-            self._save()
+            self.save_changes()
             return True
 
         return False
@@ -283,5 +283,5 @@ class ProductController:
 
         return sorted_products
 
-    def _save(self) -> None:
+    def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])
