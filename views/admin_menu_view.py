@@ -63,21 +63,15 @@ class AdminMenuView:
 
     # 4. Потребители
     def open_users(self, user):
-        UserView(
-            self.controllers["user"]
-        ).show_menu(user)
+        UserView(self.controllers["user"]).show_menu(user)
 
     # 5. Справки
     def open_reports(self, user):
-        ReportsView(
-            self.controllers["report"]
-        ).show_menu(user)
+        ReportsView(self.controllers["report"]).show_menu(user)
 
     # 6. Фактури
     def open_invoices(self, user):
-        InvoiceView(
-            self.controllers["invoice"]
-        ).show_menu(user)
+        InvoiceView(self.controllers["invoice"] ).show_menu(user)
 
     # 7. Информация за системата
     @staticmethod
@@ -86,9 +80,7 @@ class AdminMenuView:
 
     # 8. Доставчици
     def open_suppliers(self, user):
-        SupplierView(
-            self.controllers["supplier"]
-        ).show_menu(user)
+        SupplierView(self.controllers["supplier"] ).show_menu(user)
 
     # 9. Dijkstra – най-кратък път
     @staticmethod
