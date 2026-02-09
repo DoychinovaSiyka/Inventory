@@ -1,5 +1,3 @@
-
-
 from menus.menu import Menu, MenuItem
 from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
@@ -36,9 +34,10 @@ def _read_float(prompt):
 
 
 class ProductView:
-    def __init__(self, product_controller: ProductController, category_controller: CategoryController):
+    def __init__(self, product_controller: ProductController, category_controller: CategoryController, activity_log_controller=None):
         self.product_controller = product_controller
         self.category_controller = category_controller
+        self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
 
     # Главно меню
@@ -61,6 +60,7 @@ class ProductView:
             MenuItem("13", "Най-евтин продукт", self.cheapest),
             MenuItem("14", "Обща стойност на склада", self.total_value),
             MenuItem("15", "Групиране по категории", self.group_by_category),
+            MenuItem("16", "Разширено търсене", self.advanced_search),
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
@@ -77,7 +77,7 @@ class ProductView:
                 break
 
     # 1. Създаване на продукт
-    def create_product(self, _):
+    def create_product(self, user):
         name = input("Име: ").strip()
         if not name:
             print("Името не може да е празно.")
@@ -131,20 +131,38 @@ class ProductView:
             return
 
         try:
-            self.product_controller.add(name,category_ids,quantity,unit,description, price)
+            self.product_controller.add(
+                name,
+                category_ids,
+                quantity,
+                unit,
+                description,
+                price,
+                None,
+                user.id   # ← ДОБАВЕНО
+            )
             print("Продуктът е добавен!")
+
+            # ЛОГВАНЕ
+            if self.activity_log:
+                self.activity_log.add_log(user.id, "ADD_PRODUCT", f"Added product: {name}")
+
         except ValueError as e:
             print("Грешка:", e)
 
     # 2. Премахване
-    def remove_product(self, _):
+    def remove_product(self, user):
         name = input("Име на продукта за премахване: ").strip()
         if not name:
             print("Името е задължително.")
             return
 
-        if self.product_controller.remove_by_name(name):
+        if self.product_controller.remove_by_name(name, user.id):   # ← ДОБАВЕНО user.id
             print("Продуктът е премахнат.")
+
+            if self.activity_log:
+                self.activity_log.add_log(user.id, "DELETE_PRODUCT", f"Deleted product: {name}")
+
         else:
             print("Продуктът не е намерен.")
 
@@ -199,10 +217,14 @@ class ProductView:
                         diff = amount - product.quantity
                         try:
                             if diff > 0:
-                                self.product_controller.increase_quantity(pid, diff)
+                                self.product_controller.increase_quantity(pid, diff, user.id)
                             else:
-                                self.product_controller.decrease_quantity(pid, abs(diff))
+                                self.product_controller.decrease_quantity(pid, abs(diff), user.id)
                             print("Количество обновено.")
+
+                            if self.activity_log:
+                                self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated quantity of product ID {pid}")
+
                         except ValueError as e:
                             print("Грешка:", e)
 
@@ -210,16 +232,24 @@ class ProductView:
                     price = _read_float("Нова цена: ")
                     if price is not None:
                         try:
-                            self.product_controller.update_price(pid, price)
+                            self.product_controller.update_price(pid, price, user.id)
                             print("Цена обновена.")
+
+                            if self.activity_log:
+                                self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated price of product ID {pid}")
+
                         except ValueError as e:
                             print("Грешка:", e)
 
                 elif choice == "3":
                     desc = input("Ново описание: ").strip()
                     try:
-                        self.product_controller.update_description(pid, desc)
+                        self.product_controller.update_description(pid, desc, user.id)
                         print("Описание обновено.")
+
+                        if self.activity_log:
+                            self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated description of product ID {pid}")
+
                     except ValueError as e:
                         print("Грешка:", e)
 
@@ -234,16 +264,24 @@ class ProductView:
             if choice == "1":
                 new_name = input("Ново име: ").strip()
                 try:
-                    self.product_controller.update_name(pid, new_name)
+                    self.product_controller.update_name(pid, new_name, user.id)
                     print("Името е обновено.")
+
+                    if self.activity_log:
+                        self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated name of product ID {pid}")
+
                 except ValueError as e:
                     print("Грешка:", e)
 
             elif choice == "2":
                 desc = input("Ново описание: ").strip()
                 try:
-                    self.product_controller.update_description(pid, desc)
+                    self.product_controller.update_description(pid, desc, user.id)
                     print("Описание обновено.")
+
+                    if self.activity_log:
+                        self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated description of product ID {pid}")
+
                 except ValueError as e:
                     print("Грешка:", e)
 
@@ -257,8 +295,12 @@ class ProductView:
                 try:
                     indexes = [int(x) for x in raw.split(",") if x.strip()]
                     new_ids = [categories[i].category_id for i in indexes]
-                    self.product_controller.update_categories(pid, new_ids)
+                    self.product_controller.update_categories(pid, new_ids, user.id)
                     print("Категориите са обновени.")
+
+                    if self.activity_log:
+                        self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated categories of product ID {pid}")
+
                 except Exception:
                     print("Невалиден избор.")
 
@@ -268,10 +310,14 @@ class ProductView:
                     diff = amount - product.quantity
                     try:
                         if diff > 0:
-                            self.product_controller.increase_quantity(pid, diff)
+                            self.product_controller.increase_quantity(pid, diff, user.id)
                         else:
-                            self.product_controller.decrease_quantity(pid, abs(diff))
+                            self.product_controller.decrease_quantity(pid, abs(diff), user.id)
                         print("Количество обновено.")
+
+                        if self.activity_log:
+                            self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated quantity of product ID {pid}")
+
                     except ValueError as e:
                         print("Грешка:", e)
 
@@ -283,12 +329,19 @@ class ProductView:
 
                 print("Мерната единица е обновена.")
 
+                if self.activity_log:
+                    self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated unit of product ID {pid}")
+
             elif choice == "6":
                 price = _read_float("Нова цена: ")
                 if price is not None:
                     try:
-                        self.product_controller.update_price(pid, price)
+                        self.product_controller.update_price(pid, price, user.id)
                         print("Цена обновена.")
+
+                        if self.activity_log:
+                            self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated price of product ID {pid}")
+
                     except ValueError as e:
                         print("Грешка:", e)
 
@@ -296,8 +349,12 @@ class ProductView:
                 sid = _read_int("ID на доставчик: ")
                 if sid is not None:
                     try:
-                        self.product_controller.update_supplier(pid, sid)
+                        self.product_controller.update_supplier(pid, sid, user.id)
                         print("Доставчик обновен.")
+
+                        if self.activity_log:
+                            self.activity_log.add_log(user.id, "EDIT_PRODUCT", f"Updated supplier of product ID {pid}")
+
                     except ValueError as e:
                         print("Грешка:", e)
 
@@ -308,7 +365,7 @@ class ProductView:
                 print("Невалиден избор.")
 
     # 4. Покажи всички продукти
-    def show_all(self,_):
+    def show_all(self, _):
         products = self.product_controller.get_all()
         if not products:
             print("Няма налични продукти.")
@@ -377,26 +434,34 @@ class ProductView:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
     # 9. Увеличаване
-    def increase_quantity(self, _):
+    def increase_quantity(self, user):
         pid = _read_int("ID: ")
         amount = _read_float("Добави: ")
         if pid is None or amount is None:
             return
         try:
-            self.product_controller.increase_quantity(pid, amount)
+            self.product_controller.increase_quantity(pid, amount, user.id)
             print("Обновено.")
+
+            if self.activity_log:
+                self.activity_log.add_log(user.id, "INCREASE_QUANTITY", f"Added {amount} to product ID {pid}")
+
         except ValueError as e:
             print("Грешка:", e)
 
     # 10. Намаляване
-    def decrease_quantity(self, _):
+    def decrease_quantity(self, user):
         pid = _read_int("ID: ")
         amount = _read_float("Извади: ")
         if pid is None or amount is None:
             return
         try:
-            self.product_controller.decrease_quantity(pid, amount)
+            self.product_controller.decrease_quantity(pid, amount, user.id)
             print("Обновено.")
+
+            if self.activity_log:
+                self.activity_log.add_log(user.id, "DECREASE_QUANTITY", f"Removed {amount} from product ID {pid}")
+
         except ValueError as e:
             print("Грешка:", e)
 
@@ -426,7 +491,7 @@ class ProductView:
             print(f"Най-евтин продукт: {p.name} – {p.price} лв.")
 
     # 14. Обща стойност
-    def total_value(self,_ ):
+    def total_value(self, _):
         value = self.product_controller.total_values()
         print(f"Обща стойност на склада: {value:.2f} лв.")
 
@@ -441,3 +506,58 @@ class ProductView:
             print(f"\nКатегория: {cat_name}")
             for p in products:
                 print(f" - {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+
+
+    # 16. РАЗШИРЕНО ТЪРСЕНЕ
+
+    def advanced_search(self, _):
+        print("\n=== Разширено търсене на продукти ===")
+
+        # 1) Търсене по ключова дума
+        keyword = input("Ключова дума (име/описание) или Enter за пропуск: ").strip()
+
+        # 2) Категория
+        categories = self.category_controller.get_all()
+        print("\nКатегории:")
+        for i, c in enumerate(categories):
+            print(f"{i}. {c.name}")
+        raw_cat = input("Изберете категория (номер) или Enter за пропуск: ").strip()
+        category_id = None
+        if raw_cat.isdigit():
+            idx = int(raw_cat)
+            if 0 <= idx < len(categories):
+                category_id = categories[idx].category_id
+
+        # 3) Цена (диапазон)
+        min_price = _read_float("Минимална цена (или Enter): ")
+        max_price = _read_float("Максимална цена (или Enter): ")
+
+        # 4) Количество (диапазон)
+        min_qty = _read_float("Минимално количество (или Enter): ")
+        max_qty = _read_float("Максимално количество (или Enter): ")
+
+        # 5) Доставчик
+        raw_sup = input("ID на доставчик или Enter за пропуск: ").strip()
+        supplier_id = int(raw_sup) if raw_sup.isdigit() else None
+
+        # ИЗВИКВАНЕ НА КОМБИНИРАНО ТЪРСЕНЕ
+        results = self.product_controller.search_combined(
+            name_keyword=keyword if keyword else None,
+            category_id=category_id,
+            min_price=min_price,
+            max_price=max_price,
+            min_qty=min_qty,
+            max_qty=max_qty,
+            supplier_id=supplier_id
+        )
+
+        # ПОКАЗВАНЕ НА РЕЗУЛТАТИТЕ
+        if not results:
+            print("\nНяма намерени продукти.")
+            return
+
+        print("\n=== Резултати ===")
+        for p in results:
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+
+

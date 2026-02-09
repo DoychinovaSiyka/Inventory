@@ -8,12 +8,20 @@ from controllers.supplier_controller import SupplierController
 
 
 class ProductController:
-    def __init__(self, repo: Repository, category_controller: CategoryController, supplier_controller: SupplierController):
+    def __init__(
+        self,
+        repo: Repository,
+        category_controller: CategoryController,
+        supplier_controller: SupplierController,
+        activity_log_controller=None
+    ):
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
+        self.activity_log = activity_log_controller
         self.products: List[Product] = []
 
+        # Зареждане на продуктите
         for p_data in self.repo.load():
             product = Product.from_dict(p_data)
 
@@ -42,7 +50,8 @@ class ProductController:
         unit: str,
         description: str,
         price: float,
-        supplier_id: Optional[int] = None,
+        supplier_id: Optional[int],
+        user_id: str,  # ← ДОБАВЕНО
         tags: Optional[List[str]] = None
     ) -> Product:
 
@@ -80,6 +89,15 @@ class ProductController:
 
         self.products.append(product)
         self.save_changes()
+
+        # ЛОГВАНЕ НА ДОБАВЯНЕ
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "ADD_PRODUCT",
+                f"Added product: {product.name}"
+            )
+
         return product
 
     def get_all(self) -> List[Product]:
@@ -91,7 +109,7 @@ class ProductController:
                 return p
         return None
 
-    def update_name(self, product_id: int, new_name: str) -> bool:
+    def update_name(self, product_id: int, new_name: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -103,9 +121,18 @@ class ProductController:
         p.name = new_name
         p.update_modified()
         self.save_changes()
+
+        # ЛОГВАНЕ
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "EDIT_PRODUCT",
+                f"Updated name of product ID {product_id} to '{new_name}'"
+            )
+
         return True
 
-    def update_description(self, product_id: int, new_description: str) -> bool:
+    def update_description(self, product_id: int, new_description: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -114,9 +141,17 @@ class ProductController:
         p.description = new_description
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "EDIT_PRODUCT",
+                f"Updated description of product ID {product_id}"
+            )
+
         return True
 
-    def update_categories(self, product_id: int, new_category_ids: List[int]) -> bool:
+    def update_categories(self, product_id: int, new_category_ids: List[int], user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -131,9 +166,17 @@ class ProductController:
         p.categories = categories
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "EDIT_PRODUCT",
+                f"Updated categories of product ID {product_id}"
+            )
+
         return True
 
-    def update_supplier(self, product_id: int, supplier_id: int) -> bool:
+    def update_supplier(self, product_id: int, supplier_id: int, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -145,9 +188,17 @@ class ProductController:
         p.supplier_id = supplier_id
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "EDIT_PRODUCT",
+                f"Updated supplier of product ID {product_id}"
+            )
+
         return True
 
-    def update_price(self, product_id: int, new_price: float) -> bool:
+    def update_price(self, product_id: int, new_price: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -156,9 +207,17 @@ class ProductController:
         p.price = new_price
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "EDIT_PRODUCT",
+                f"Updated price of product ID {product_id} to {new_price}"
+            )
+
         return True
 
-    def increase_quantity(self, product_id: int, amount: float) -> bool:
+    def increase_quantity(self, product_id: int, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -169,9 +228,17 @@ class ProductController:
         p.quantity += float(amount)
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "INCREASE_QUANTITY",
+                f"Added {amount} units to product ID {product_id}"
+            )
+
         return True
 
-    def decrease_quantity(self, product_id: int, amount: float) -> bool:
+    def decrease_quantity(self, product_id: int, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -185,25 +252,49 @@ class ProductController:
         p.quantity -= float(amount)
         p.update_modified()
         self.save_changes()
+
+        if self.activity_log:
+            self.activity_log.add_log(
+                user_id,
+                "DECREASE_QUANTITY",
+                f"Removed {amount} units from product ID {product_id}"
+            )
+
         return True
 
-    def remove_by_name(self, name: str) -> bool:
+    def remove_by_id(self, product_id: int, user_id: str) -> bool:
+        original_len = len(self.products)
+        self.products = [p for p in self.products if p.product_id != product_id]
+
+        if len(self.products) < original_len:
+            self.save_changes()
+
+            if self.activity_log:
+                self.activity_log.add_log(
+                    user_id,
+                    "DELETE_PRODUCT",
+                    f"Deleted product ID {product_id}"
+                )
+
+            return True
+
+        return False
+
+    def remove_by_name(self, name: str, user_id: str) -> bool:
         name = name.lower()
         original_len = len(self.products)
         self.products = [p for p in self.products if p.name.lower() != name]
 
         if len(self.products) < original_len:
             self.save_changes()
-            return True
 
-        return False
+            if self.activity_log:
+                self.activity_log.add_log(
+                    user_id,
+                    "DELETE_PRODUCT",
+                    f"Deleted product '{name}'"
+                )
 
-    def remove_by_id(self, product_id: int) -> bool:
-        original_len = len(self.products)
-        self.products = [p for p in self.products if p.product_id != product_id]
-
-        if len(self.products) < original_len:
-            self.save_changes()
             return True
 
         return False
@@ -282,6 +373,84 @@ class ProductController:
             i += 1
 
         return sorted_products
+
+
+    # ADVANCED SEARCH & FILTERING
+
+    def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
+        results = self.products
+
+        if min_price is not None:
+            results = [p for p in results if p.price >= min_price]
+
+        if max_price is not None:
+            results = [p for p in results if p.price <= max_price]
+
+        return results
+
+    def search_by_quantity_range(self, min_qty: float = None, max_qty: float = None) -> List[Product]:
+        results = self.products
+
+        if min_qty is not None:
+            results = [p for p in results if p.quantity >= min_qty]
+
+        if max_qty is not None:
+            results = [p for p in results if p.quantity <= max_qty]
+
+        return results
+
+    def search_by_category(self, category_id: int) -> List[Product]:
+        return [
+            p for p in self.products
+            if any(c.category_id == category_id for c in p.categories)
+        ]
+
+    def search_by_supplier(self, supplier_id: int) -> List[Product]:
+        return [p for p in self.products if p.supplier_id == supplier_id]
+
+    def search_combined(
+        self,
+        name_keyword: str = None,
+        category_id: int = None,
+        min_price: float = None,
+        max_price: float = None,
+        min_qty: float = None,
+        max_qty: float = None,
+        supplier_id: int = None
+    ) -> List[Product]:
+
+        results = self.products
+
+        if name_keyword:
+            kw = name_keyword.lower()
+            results = [
+                p for p in results
+                if kw in p.name.lower() or kw in p.description.lower()
+            ]
+
+        if category_id is not None:
+            results = [
+                p for p in results
+                if any(c.category_id == category_id for c in p.categories)
+            ]
+
+        if supplier_id is not None:
+            results = [p for p in results if p.supplier_id == supplier_id]
+
+        if min_price is not None:
+            results = [p for p in results if p.price >= min_price]
+
+        if max_price is not None:
+            results = [p for p in results if p.price <= max_price]
+
+        if min_qty is not None:
+            results = [p for p in results if p.quantity >= min_qty]
+
+        if max_qty is not None:
+            results = [p for p in results if p.quantity <= max_qty]
+
+        return results
+
 
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

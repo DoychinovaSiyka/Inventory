@@ -21,12 +21,7 @@ class CategoryController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        category = Category(
-            name=name,
-            description=description,
-            created=now,
-            modified=now
-        )
+        category = Category( name=name,description=description,created=now,modified=now)
 
         # Създаваме нова категория чрез конструктора на Category.
         # Подаваме всички полета, описани в документацията — name, description, created и modified.
@@ -50,9 +45,7 @@ class CategoryController:
         CategoryValidator.validate_update_name(new_name)
         # Проверяваме уникалност, но изключваме текущата категория
         CategoryValidator.validate_unique(
-            new_name,
-            [c for c in self.categories if c.category_id != category_id]
-        )
+            new_name,[c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()
@@ -83,11 +76,8 @@ class CategoryController:
 
     def search(self, keyword: str) -> List[Category]:
         keyword = keyword.lower()
-        return [
-            c for c in self.categories
-            if keyword in c.name.lower()
-            or keyword in (c.description or "").lower()
-        ]
+        return [ c for c in self.categories
+            if keyword in c.name.lower() or keyword in (c.description or "").lower() ]
 
     def save_changes(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])

@@ -8,14 +8,15 @@ import validators.movement_validator
 
 class MovementController:
     def __init__(self, repo, product_controller, user_controller,
-                 location_controller, stocklog_controller, invoice_controller):
-
+                 location_controller, stocklog_controller, invoice_controller,
+                 activity_log_controller=None):
         self.repo = repo
         self.product_controller = product_controller
         self.user_controller = user_controller
         self.location_controller = location_controller
         self.stocklog_controller = stocklog_controller
         self.invoice_controller = invoice_controller
+        self.activity_log = activity_log_controller
 
         self.movements: List[Movement] = [
             Movement.from_dict(m) for m in self.repo.load()
@@ -118,6 +119,27 @@ class MovementController:
             action=action
         )
 
+        # ЛОГВАНЕ НА IN/OUT/MOVE
+        if self.activity_log:
+            if movement_type == MovementType.IN:
+                self.activity_log.add_log(
+                    user_id,
+                    "IN_MOVEMENT",
+                    f"IN movement: product {product_id}, qty={quantity}, location={location_id}"
+                )
+            elif movement_type == MovementType.OUT:
+                self.activity_log.add_log(
+                    user_id,
+                    "OUT_MOVEMENT",
+                    f"OUT movement: product {product_id}, qty={quantity}, location={location_id}"
+                )
+            elif movement_type == MovementType.MOVE:
+                self.activity_log.add_log(
+                    user_id,
+                    "MOVE_PRODUCT",
+                    f"MOVE movement: product {product_id} moved to location {location_id}"
+                )
+
         # Автоматична фактура при OUT
         if movement_type == MovementType.OUT:
             customer = customer or user.username
@@ -132,7 +154,51 @@ class MovementController:
             )
             self.invoice_controller.add(invoice)
 
+            # ЛОГВАНЕ НА ФАКТУРА
+            if self.activity_log:
+                self.activity_log.add_log(
+                    user_id,
+                    "GENERATE_INVOICE",
+                    f"Invoice generated for movement {movement.movement_id}, customer={customer}"
+                )
+
         return movement
+
+
+    #  SEARCH & FILTERING FOR MOVEMENTS
+
+
+    def filter_by_type(self, movement_type) -> List[Movement]:
+        return [m for m in self.movements if m.movement_type == movement_type]
+
+    def filter_by_date_range(self, start_date: str = None, end_date: str = None) -> List[Movement]:
+        results = self.movements
+
+        def parse(d):
+            try:
+                return datetime.strptime(d, "%Y-%m-%d")
+            except:
+                return None
+
+        start = parse(start_date) if start_date else None
+        end = parse(end_date) if end_date else None
+
+        if start:
+            results = [m for m in results if datetime.strptime(m.date[:10], "%Y-%m-%d") >= start]
+
+        if end:
+            results = [m for m in results if datetime.strptime(m.date[:10], "%Y-%m-%d") <= end]
+
+        return results
+
+    def filter_by_product(self, product_id: str) -> List[Movement]:
+        return [m for m in self.movements if m.product_id == product_id]
+
+    def filter_by_location(self, location_id: int) -> List[Movement]:
+        return [m for m in self.movements if m.location_id == location_id]
+
+    def filter_by_user(self, user_id: int) -> List[Movement]:
+        return [m for m in self.movements if m.user_id == user_id]
 
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])

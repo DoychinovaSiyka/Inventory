@@ -1,5 +1,3 @@
-
-
 from menus.menu import Menu, MenuItem
 from views.product_menu_view import ProductView
 from views.category_view import CategoryView
@@ -38,18 +36,23 @@ class OperatorMenuView:
 
     # 1. Продукти
     def open_products(self, user):
-        ProductView(self.controllers["product"],self.controllers["category"]).show_menu(user)
+        ProductView(
+            self.controllers["product"],
+            self.controllers["category"],
+            self.controllers["activity_log"]
+        ).show_menu(user)
 
     # 2. Категории
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
 
     # 3. Движения
-    def open_movements(self,_):
+    def open_movements(self, _):
         MovementView(
             self.controllers["product"],
             self.controllers["movement"],
-            self.controllers["user"]
+            self.controllers["user"],
+            self.controllers["activity_log"]
         ).show_menu()
 
     # 4. Справки
@@ -58,7 +61,10 @@ class OperatorMenuView:
 
     # 5. Фактури
     def open_invoices(self, user):
-        InvoiceView(self.controllers["invoice"]).show_menu(user)
+        InvoiceView(
+            self.controllers["invoice"],
+            self.controllers["activity_log"]
+        ).show_menu(user)
 
     # 6. Информация за системата
     @staticmethod
@@ -66,5 +72,5 @@ class OperatorMenuView:
         SystemInfoView().show_menu()
 
     # 7. Сортиране
-    def open_sorting(self,_ ):
-        ProductSortView( self.controllers["product"] ).show_menu()
+    def open_sorting(self, _):
+        ProductSortView(self.controllers["product"]).show_menu()

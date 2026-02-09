@@ -1,5 +1,3 @@
-
-
 from menus.menu import Menu, MenuItem
 from views.product_menu_view import ProductView
 from views.category_view import CategoryView
@@ -30,7 +28,7 @@ class AdminMenuView:
             MenuItem("6", "Фактури", self.open_invoices),
             MenuItem("7", "Информация за системата", self.open_system_info),
             MenuItem("8", "Управление на доставчици", self.open_suppliers),
-            MenuItem("9", "Най-кратък път между складове (Dijkstra)", self.open_graph),  # ← добавено
+            MenuItem("9", "Най-кратък път между складове (Dijkstra)", self.open_graph),
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
@@ -42,24 +40,16 @@ class AdminMenuView:
 
     # 1. Продукти
     def open_products(self, user):
-        ProductView(
-            self.controllers["product"],
-            self.controllers["category"]
-        ).show_menu(user)
+        ProductView( self.controllers["product"],self.controllers["category"],self.controllers["activity_log"]).show_menu(user)
 
     # 2. Категории
     def open_categories(self, user):
-        CategoryView(
-            self.controllers["category"]
-        ).show_menu(user)
+        CategoryView(self.controllers["category"]).show_menu(user)
 
     # 3. Движения
     def open_movements(self, _):
-        MovementView(
-            self.controllers["product"],
-            self.controllers["movement"],
-            self.controllers["user"]
-        ).show_menu()
+        MovementView(self.controllers["product"],self.controllers["movement"],self.controllers["user"],
+                     self.controllers["activity_log"]).show_menu()
 
     # 4. Потребители
     def open_users(self, user):
@@ -71,7 +61,7 @@ class AdminMenuView:
 
     # 6. Фактури
     def open_invoices(self, user):
-        InvoiceView(self.controllers["invoice"] ).show_menu(user)
+        InvoiceView( self.controllers["invoice"],self.controllers["activity_log"] ).show_menu(user)
 
     # 7. Информация за системата
     @staticmethod
@@ -80,10 +70,9 @@ class AdminMenuView:
 
     # 8. Доставчици
     def open_suppliers(self, user):
-        SupplierView(self.controllers["supplier"] ).show_menu(user)
+        SupplierView( self.controllers["supplier"],self.controllers["activity_log"]).show_menu(user)
 
     # 9. Dijkstra – най-кратък път
     @staticmethod
     def open_graph(_):
         GraphView().show_menu()
-

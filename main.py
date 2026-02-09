@@ -8,6 +8,8 @@ from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
 
+from controllers.user_activity_log_controller import UserActivityLogController
+
 from views.admin_menu_view import AdminMenuView
 from views.operator_menu_view import OperatorMenuView
 from views.anonymous_menu_view import AnonymousMenuView
@@ -30,6 +32,9 @@ def main():
     invoice_repo = JSONRepository("data/invoices.json")
     report_repo = JSONRepository("data/reports.json")
 
+    # Репозитори за логове
+    activity_log_repo = JSONRepository("data/user_activity_log.json")
+
     # Контролери
     user_controller = UserController(user_repo)
     category_controller = CategoryController(category_repo)
@@ -37,19 +42,23 @@ def main():
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
-    product_controller = ProductController(
-        product_repo,
-        category_controller,
-        supplier_controller
-    )
+    product_controller = ProductController( product_repo,category_controller,supplier_controller)
 
     invoice_controller = InvoiceController(invoice_repo)
 
-    movement_controller = MovementController(movement_repo,product_controller,
-        user_controller,location_controller,stocklog_controller,invoice_controller )
+    movement_controller = MovementController(
+        movement_repo,
+        product_controller,
+        user_controller,
+        location_controller,
+        stocklog_controller,
+        invoice_controller
+    )
 
-    report_controller = ReportController(report_repo,product_controller,
-        movement_controller,invoice_controller )
+    report_controller = ReportController( report_repo,product_controller,movement_controller,invoice_controller )
+
+    # Контролер за Activity Log
+    activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
     # Пакет от контролери за менюта
     controllers = {
@@ -59,7 +68,8 @@ def main():
         "supplier": supplier_controller,
         "movement": movement_controller,
         "invoice": invoice_controller,
-        "report": report_controller
+        "report": report_controller,
+        "activity_log": activity_log_controller
     }
 
     # Главен цикъл
@@ -84,6 +94,13 @@ def main():
 
             user_controller.logged_user = user
 
+            # ЛОГВАНЕ НА LOGIN
+            activity_log_controller.add_log(
+                user.id,
+                "LOGIN",
+                f"User {user.username} logged in"
+            )
+
             if user.role == "Admin":
                 AdminMenuView(controllers).show_menu(user)
 
@@ -93,6 +110,13 @@ def main():
             else:
                 print("Невалидна роля.")
                 continue
+
+            # ЛОГВАНЕ НА LOGOUT
+            activity_log_controller.add_log(
+                user.id,
+                "LOGOUT",
+                f"User {user.username} logged out"
+            )
 
         # Вход като анонимен потребител
         elif choice == "2":
@@ -111,9 +135,21 @@ def main():
                 modified=now
             )
 
+            # ЛОГВАНЕ НА ANONYMOUS LOGIN
+            activity_log_controller.add_log(
+                guest_user.id,
+                "ANONYMOUS_LOGIN",
+                "Anonymous user entered the system"
+            )
+
             AnonymousMenuView().show_menu(guest_user)
 
-
+            # ЛОГВАНЕ НА ANONYMOUS LOGOUT
+            activity_log_controller.add_log(
+                guest_user.id,
+                "ANONYMOUS_LOGOUT",
+                "Anonymous user exited the system"
+            )
 
         # Изход
         elif choice == "0":

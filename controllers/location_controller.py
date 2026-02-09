@@ -31,14 +31,8 @@ class LocationController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        location = Location(
-            location_id=self._generate_id(),
-            name=name,
-            zone=zone,
-            capacity=capacity,
-            created=now,
-            modified=now
-        )
+        location = Location( location_id=self._generate_id(),
+            name=name,zone=zone,capacity=capacity,created=now,modified=now )
 
         self.locations.append(location)
         self.save_changes()

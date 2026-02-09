@@ -5,8 +5,9 @@ from storage.json_repository import JSONRepository
 
 
 class InvoiceController:
-    def __init__(self, repo: JSONRepository):
+    def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
+        self.activity_log = activity_log_controller
         self.invoices: List[Invoice] = [Invoice.from_dict(i) for i in self.repo.load()]
         # Зареждаме всички фактури от JSON файла чрез хранилището.
         # Invoice.from_dict преобразува речниците в реални Invoice обекти.
@@ -22,6 +23,15 @@ class InvoiceController:
         # Добавя вече създадена фактура (използва се от MovementController).
         self.invoices.append(invoice)
         self.save_changes()
+
+        # ЛОГВАНЕ
+        if self.activity_log:
+            self.activity_log.add_log(
+                invoice.customer,  # няма user_id → логваме по клиент
+                "GENERATE_INVOICE",
+                f"Invoice created for movement {invoice.movement_id}"
+            )
+
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
@@ -47,6 +57,15 @@ class InvoiceController:
 
         self.invoices.append(invoice)
         self.save_changes()
+
+        # ЛОГВАНЕ
+        if self.activity_log:
+            self.activity_log.add_log(
+                movement.user_id,
+                "GENERATE_INVOICE",
+                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
+            )
+
         return invoice
 
     # READ
@@ -97,6 +116,15 @@ class InvoiceController:
         inv.customer = new_customer
         inv.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_changes()
+
+        # ЛОГВАНЕ
+        if self.activity_log:
+            self.activity_log.add_log(
+                new_customer,
+                "EDIT_INVOICE",
+                f"Updated customer for invoice {invoice_id}"
+            )
+
         return True
 
     # DELETE
@@ -106,9 +134,75 @@ class InvoiceController:
 
         if len(self.invoices) < original_len:
             self.save_changes()
+
+            # ЛОГВАНЕ
+            if self.activity_log:
+                self.activity_log.add_log(
+                    "system",
+                    "DELETE_INVOICE",
+                    f"Deleted invoice {invoice_id}"
+                )
+
             return True
 
         return False
+
+
+    # SEARCH & FILTERING FOR INVOICES
+
+    def advanced_search(
+        self,
+        customer: Optional[str] = None,
+        product: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        min_total: Optional[float] = None,
+        max_total: Optional[float] = None
+    ) -> List[Invoice]:
+
+        results = self.invoices
+
+        # 1) Филтър по клиент
+        if customer:
+            kw = customer.lower()
+            results = [inv for inv in results if kw in inv.customer.lower()]
+
+        # 2) Филтър по продукт
+        if product:
+            kw = product.lower()
+            results = [inv for inv in results if kw in inv.product.lower()]
+
+        # 3) Филтър по дата (диапазон)
+        def parse_date(d):
+            try:
+                return datetime.strptime(d, "%Y-%m-%d")
+            except:
+                return None
+
+        start = parse_date(start_date) if start_date else None
+        end = parse_date(end_date) if end_date else None
+
+        if start:
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start
+            ]
+
+        if end:
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end
+            ]
+
+        # 4) Филтър по обща стойност
+        if min_total is not None:
+            results = [inv for inv in results if inv.total_price >= min_total]
+
+        if max_total is not None:
+            results = [inv for inv in results if inv.total_price <= max_total]
+
+        return results
+
 
     # SAVE
     def save_changes(self) -> None:

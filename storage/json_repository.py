@@ -23,7 +23,7 @@ class JSONRepository(Repository):
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
-    # --- ДОБАВЕНО: нужно за LocationController, MovementMenu и документацията ---
+
     def get_all(self):
         return self.load()
 

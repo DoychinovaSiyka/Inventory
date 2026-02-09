@@ -16,7 +16,7 @@ class MainMenuView:
 
     def show_menu(self, user):
         while True:
-            print("\n=== Главно меню ===")
+            print("\n Главно меню ")
             print("1. Продукти")
             print("2. Категории")
             print("3. Доставчици")
