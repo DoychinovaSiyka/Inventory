@@ -34,6 +34,7 @@ def main():
 
     # Репозитори за логове
     activity_log_repo = JSONRepository("data/user_activity_log.json")
+    activity_log_controller = UserActivityLogController(activity_log_repo)
 
     # Контролери
     user_controller = UserController(user_repo)
@@ -42,7 +43,11 @@ def main():
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
-    product_controller = ProductController( product_repo,category_controller,supplier_controller)
+    product_controller = ProductController(
+        product_repo,
+        category_controller,
+        supplier_controller
+    )
 
     invoice_controller = InvoiceController(invoice_repo)
 
@@ -55,10 +60,12 @@ def main():
         invoice_controller
     )
 
-    report_controller = ReportController( report_repo,product_controller,movement_controller,invoice_controller )
-
-    # Контролер за Activity Log
-    activity_log_controller = UserActivityLogController("data/user_activity_log.json")
+    report_controller = ReportController(
+        report_repo,
+        product_controller,
+        movement_controller,
+        invoice_controller
+    )
 
     # Пакет от контролери за менюта
     controllers = {
