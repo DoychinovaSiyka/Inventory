@@ -33,8 +33,7 @@ def main():
     report_repo = JSONRepository("data/reports.json")
 
     # Репозитори за логове
-    activity_log_repo = JSONRepository("data/user_activity_log.json")
-    activity_log_controller = UserActivityLogController(activity_log_repo)
+    activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
     # Контролери
     user_controller = UserController(user_repo)
@@ -103,7 +102,7 @@ def main():
 
             # ЛОГВАНЕ НА LOGIN
             activity_log_controller.add_log(
-                user.id,
+                user.user_id,
                 "LOGIN",
                 f"User {user.username} logged in"
             )
@@ -120,7 +119,7 @@ def main():
 
             # ЛОГВАНЕ НА LOGOUT
             activity_log_controller.add_log(
-                user.id,
+                user.user_id,
                 "LOGOUT",
                 f"User {user.username} logged out"
             )
@@ -144,7 +143,7 @@ def main():
 
             # ЛОГВАНЕ НА ANONYMOUS LOGIN
             activity_log_controller.add_log(
-                guest_user.id,
+                guest_user.user_id,
                 "ANONYMOUS_LOGIN",
                 "Anonymous user entered the system"
             )
@@ -153,7 +152,7 @@ def main():
 
             # ЛОГВАНЕ НА ANONYMOUS LOGOUT
             activity_log_controller.add_log(
-                guest_user.id,
+                guest_user.user_id,
                 "ANONYMOUS_LOGOUT",
                 "Anonymous user exited the system"
             )

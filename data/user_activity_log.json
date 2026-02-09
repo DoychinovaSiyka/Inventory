@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "log_id": "0ac07cbd-e0af-413d-8077-11daf33da63c",
+        "user_id": "guest-0000",
+        "action": "ANONYMOUS_LOGIN",
+        "details": "Anonymous user entered the system",
+        "timestamp": "2026-02009 10:15:39"
+    },
+    {
+        "log_id": "b2b36eea-c1c8-42cf-878f-8d0ff789bd42",
+        "user_id": "guest-0000",
+        "action": "ANONYMOUS_LOGOUT",
+        "details": "Anonymous user exited the system",
+        "timestamp": "2026-02009 10:15:43"
+    },
+    {
+        "log_id": "f0074964-e136-421a-894b-612847fb802b",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGIN",
+        "details": "User Siyka logged in",
+        "timestamp": "2026-02009 10:15:54"
+    }
+]

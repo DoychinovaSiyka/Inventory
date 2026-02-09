@@ -7,7 +7,7 @@ class UserActivityLog:
         self.user_id = user_id
         self.action = action
         self.details = details
-        self.timestamp - datetime.datetime.now().strftime("%Y-%m0%d %H:%M:%S")
+        self.timestamp = datetime.datetime.now().strftime("%Y-%m0%d %H:%M:%S")
 
 
     def to_dict(self):
