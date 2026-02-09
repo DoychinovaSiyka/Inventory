@@ -19,5 +19,61 @@
         "action": "LOGIN",
         "details": "User Siyka logged in",
         "timestamp": "2026-02009 10:15:54"
+    },
+    {
+        "log_id": "a6d0139d-3d98-4ead-85eb-20abc679b5a4",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGIN",
+        "details": "User Siyka logged in",
+        "timestamp": "2026-02009 10:19:48"
+    },
+    {
+        "log_id": "0e2fc546-8554-4ce3-aad0-183bfe199180",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGOUT",
+        "details": "User Siyka logged out",
+        "timestamp": "2026-02009 10:20:03"
+    },
+    {
+        "log_id": "f4777a3e-9b22-4350-a287-47c8169c7c61",
+        "user_id": "guest-0000",
+        "action": "ANONYMOUS_LOGIN",
+        "details": "Anonymous user entered the system",
+        "timestamp": "2026-02009 10:20:08"
+    },
+    {
+        "log_id": "263fb168-8912-45eb-a288-a6185c9009ae",
+        "user_id": "guest-0000",
+        "action": "ANONYMOUS_LOGOUT",
+        "details": "Anonymous user exited the system",
+        "timestamp": "2026-02009 10:20:19"
+    },
+    {
+        "log_id": "057aee4e-19bc-4298-a653-3b1da0a217ad",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGIN",
+        "details": "User Siyka logged in",
+        "timestamp": "2026-02009 10:20:29"
+    },
+    {
+        "log_id": "03be6cc9-843e-4a56-91d1-0d3e6b3ff686",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGOUT",
+        "details": "User Siyka logged out",
+        "timestamp": "2026-02009 10:26:04"
+    },
+    {
+        "log_id": "35c25a9d-af01-4c05-a9f3-65af661ec2c2",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGIN",
+        "details": "User Siyka logged in",
+        "timestamp": "2026-02009 10:26:15"
+    },
+    {
+        "log_id": "0cb30384-23ef-418a-849c-977010d24c33",
+        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
+        "action": "LOGOUT",
+        "details": "User Siyka logged out",
+        "timestamp": "2026-02009 10:26:27"
     }
 ]
