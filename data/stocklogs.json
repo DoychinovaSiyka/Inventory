@@ -214,5 +214,113 @@
         "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-13 17:17:13"
+    },
+    {
+        "log_id": "416993c1-47db-437b-b877-2df62e7124ca",
+        "product_id": 20,
+        "location_id": "1",
+        "quantity": 40.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 19:31:14"
+    },
+    {
+        "log_id": "998a7754-62d0-4edf-8b84-e4049efb329c",
+        "product_id": 20,
+        "location_id": "1",
+        "quantity": 20.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 19:40:48"
+    },
+    {
+        "log_id": "932ae715-a7bd-4f05-9e71-0fa0abb43527",
+        "product_id": 14,
+        "location_id": "2",
+        "quantity": 2.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-02-13 19:42:03"
+    },
+    {
+        "log_id": "5a1e0d72-8faa-4fda-a16f-96e19ef9fb9d",
+        "product_id": 14,
+        "location_id": "2",
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 20:21:35"
+    },
+    {
+        "log_id": "a835b9f5-3454-4925-8c11-420c4d59b2d0",
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 50.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 21:53:10"
+    },
+    {
+        "log_id": "56228c4a-5775-4966-8e80-6b970f00c38d",
+        "product_id": 20,
+        "location_id": "5",
+        "quantity": 50.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 21:53:10"
+    },
+    {
+        "log_id": "52cba7ff-883c-4f40-8d40-950f2102927b",
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 60.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:03:50"
+    },
+    {
+        "log_id": "0d0cb6a3-9761-4cae-9eb4-8526f6124c76",
+        "product_id": 20,
+        "location_id": "5",
+        "quantity": 60.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:03:50"
+    },
+    {
+        "log_id": "be108047-7577-4210-b31b-74e431082414",
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 50.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:07:12"
+    },
+    {
+        "log_id": "227ecb62-48bc-4906-87e7-511cf6ab9ec3",
+        "product_id": 20,
+        "location_id": "5",
+        "quantity": 50.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:07:12"
+    },
+    {
+        "log_id": "dd08eb96-9361-4d1d-b0e6-5f1277c23e35",
+        "product_id": 14,
+        "location_id": "2",
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:13:22"
+    },
+    {
+        "log_id": "2a5c6481-05ca-4131-9386-cf58050c87e2",
+        "product_id": 14,
+        "location_id": "5",
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-02-13 22:13:22"
     }
 ]

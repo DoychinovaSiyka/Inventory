@@ -4,11 +4,13 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController
 from models.user import User
+from controllers.location_controller import LocationController   # ⭐ добавено
 
 
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
+        self.location_controller = controller.location_controller   # ⭐ добавено
 
     def show_menu(self, user: User):
         menu = Menu("Справки", [
@@ -28,13 +30,20 @@ class ReportsView:
                 break
 
     # 1. Наличности
+
     def report_stock(self, _):
         report = self.controller.report_stock()
-        rows = [
-            [item["product"], item["quantity"], item["price"], item["location"]]
-            for item in report.data
-        ]
-        print(format_table(["Продукт", "Количество", "Цена", "Локация"], rows))
+
+        rows = []
+        for item in report.data:
+            # продуктите нямат location_id
+            rows.append([
+                item["product"],
+                item["quantity"],
+                item["price"]
+            ])
+
+        print(format_table(["Продукт", "Количество", "Цена"], rows))
 
     # 2. Движения
     def report_movements(self, _):
@@ -48,10 +57,21 @@ class ReportsView:
         # 2.1 Всички движения
         if sub == "1":
             report = self.controller.report_movements()
-            rows = [
-                [item["date"], item["type"], item["product_id"], item["quantity"], item["price"], item["location"]]
-                for item in report.data
-            ]
+
+            rows = []
+            for item in report.data:
+                loc = self.location_controller.get_by_id(item["location"])
+                location_name = loc.name if loc else "—"
+
+                rows.append([
+                    item["date"],
+                    item["type"],
+                    item["product_id"],
+                    item["quantity"],
+                    item["price"],
+                    location_name
+                ])
+
             print(format_table(["Дата", "Тип", "Продукт ID", "Количество", "Цена", "Локация"], rows))
 
         # 2.2 По продукт

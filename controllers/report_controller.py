@@ -4,11 +4,12 @@ from storage.json_repository import JSONRepository
 
 
 class ReportController:
-    def __init__(self, repo: JSONRepository, product_controller, movement_controller, invoice_controller):
+    def __init__(self, repo: JSONRepository, product_controller, movement_controller, invoice_controller,location_controller):
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
+        self.location_controller = location_controller
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
     # ID GENERATOR

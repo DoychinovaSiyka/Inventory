@@ -593,5 +593,285 @@
         "action": "LOGIN",
         "details": "User operator logged in",
         "timestamp": "2026-02013 17:56:13"
+    },
+    {
+        "log_id": "196310cd-3f96-44ba-a472-ea4cf726604d",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 19:22:44"
+    },
+    {
+        "log_id": "4d740c3d-ff89-4772-9a54-d6a0084d1ad6",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: кафе 3 в 1",
+        "timestamp": "2026-02013 19:25:25"
+    },
+    {
+        "log_id": "5a99b8c6-1761-47a2-8e4f-249d82693724",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "DELETE_PRODUCT",
+        "details": "Deleted product ID 19",
+        "timestamp": "2026-02013 19:25:47"
+    },
+    {
+        "log_id": "5cb3bec9-2a45-48d1-8e76-8028c39217f1",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "INCREASE_QUANTITY",
+        "details": "Added 7.0 units to product ID 20",
+        "timestamp": "2026-02013 19:26:58"
+    },
+    {
+        "log_id": "be67ed13-e623-4f4e-9a40-d298b7922100",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "INCREASE_QUANTITY",
+        "details": "Added 7.0 to product ID 20",
+        "timestamp": "2026-02013 19:26:58"
+    },
+    {
+        "log_id": "6a7365a1-413e-4640-bed2-7172e9114485",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 10.0 units from product ID 10",
+        "timestamp": "2026-02013 19:27:31"
+    },
+    {
+        "log_id": "602747e2-061a-4940-b7ca-d5864809d28b",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 10.0 from product ID 10",
+        "timestamp": "2026-02013 19:27:31"
+    },
+    {
+        "log_id": "d894921c-3659-4385-93af-0ee5e6db4cbf",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product 20, qty=40.0, location=1, supplier=2",
+        "timestamp": "2026-02013 19:31:14"
+    },
+    {
+        "log_id": "eccda75d-4b79-44ca-ad28-a312b17dcc85",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-02013 19:33:01"
+    },
+    {
+        "log_id": "1d8f704e-8142-4461-8af3-a8bd6a51566a",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-02013 19:33:28"
+    },
+    {
+        "log_id": "f2680316-f5dc-49d2-a93e-8666365b4829",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 19:39:31"
+    },
+    {
+        "log_id": "396fa134-47ce-4b3f-b01b-7a0215f9e869",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 19:39:55"
+    },
+    {
+        "log_id": "dfde6baf-4e1d-49ed-9e2e-da2498285ccd",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product 20, qty=20.0, location=1, supplier=3",
+        "timestamp": "2026-02013 19:40:48"
+    },
+    {
+        "log_id": "42ac41a9-c75f-4a89-83ba-d67a77d4051f",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product 14, qty=2.0, location=2, customer=Ирина Петрова",
+        "timestamp": "2026-02013 19:42:03"
+    },
+    {
+        "log_id": "2ab2f53f-65bc-4e2b-8638-1911b5dad4e4",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "GENERATE_INVOICE",
+        "details": "Invoice generated for movement b698653a-f4a5-468c-a000-2441cafc1bd4, customer=Ирина Петрова",
+        "timestamp": "2026-02013 19:42:03"
+    },
+    {
+        "log_id": "ad3192a5-f6a0-4a2e-a164-84a3389bc8b2",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 19:45:28"
+    },
+    {
+        "log_id": "c072b5b1-40f6-4315-be34-6398d1374409",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 19:45:57"
+    },
+    {
+        "log_id": "aafcd724-20f7-45d9-a755-adfdd8606cd0",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 20:03:04"
+    },
+    {
+        "log_id": "8e2e3c25-ba9e-4b5a-9ea5-1a8dc3535d63",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 20:03:25"
+    },
+    {
+        "log_id": "0e11e014-0270-48d3-8ff3-c65800ea4813",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 20:10:46"
+    },
+    {
+        "log_id": "ccd79565-7405-4fee-971a-968f691b8881",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product 14, qty=1.0, location=2, supplier=2",
+        "timestamp": "2026-02013 20:21:35"
+    },
+    {
+        "log_id": "1f6d7cc5-0018-44b2-b80b-51a651de246c",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 21:10:50"
+    },
+    {
+        "log_id": "23d1b4bc-379f-48b9-a127-0e35072691f4",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 21:20:35"
+    },
+    {
+        "log_id": "1e42c3e6-7e0c-44d0-b44e-2c1397e39a03",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 21:27:02"
+    },
+    {
+        "log_id": "2c68b68b-0e9b-4a4b-98b6-aaf5d3ba20e1",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 21:27:29"
+    },
+    {
+        "log_id": "c7d900a6-5bf9-42fc-b63c-aef433e1ed82",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 21:35:36"
+    },
+    {
+        "log_id": "7a42a19a-1cce-4387-b3ff-f57c01f7a645",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 21:35:55"
+    },
+    {
+        "log_id": "9b8012d1-448e-43e2-b5d3-0103cc3ce2e0",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 21:45:41"
+    },
+    {
+        "log_id": "f7d114bd-06fa-4eda-b7ef-1d20fb8d459e",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 21:46:03"
+    },
+    {
+        "log_id": "b7a5308b-5b00-4bdf-ad75-ffff63a7e0ea",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 21:52:00"
+    },
+    {
+        "log_id": "8a87924a-16e5-432f-a439-d6bab095c094",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 21:52:20"
+    },
+    {
+        "log_id": "34916c97-3914-46f5-bf0b-2684feb98f68",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved product 20 from 2 to 5, qty=50.0",
+        "timestamp": "2026-02013 21:53:10"
+    },
+    {
+        "log_id": "8143fc9c-ae37-4d80-8edf-946362065f92",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 22:02:53"
+    },
+    {
+        "log_id": "bb96d2ff-297b-487b-ad61-6f18bf36a1aa",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 22:03:11"
+    },
+    {
+        "log_id": "c8e47f7c-e795-4836-a411-9277e79dd37c",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved product 20 from 2 to 5, qty=60.0",
+        "timestamp": "2026-02013 22:03:50"
+    },
+    {
+        "log_id": "12e36dbf-c3c6-41a8-a09b-80a28e15a372",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 22:06:39"
+    },
+    {
+        "log_id": "6b26bef4-27a4-4520-8bc9-867303f56ed8",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02013 22:06:56"
+    },
+    {
+        "log_id": "28121541-638a-4c14-bf71-27ce6357dcb3",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved product 20 from 2 to 5, qty=50.0",
+        "timestamp": "2026-02013 22:07:12"
+    },
+    {
+        "log_id": "2edb3e66-c57a-42ef-8315-ba27aee6bea9",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved product 14 from 2 to 5, qty=1.0",
+        "timestamp": "2026-02013 22:13:22"
+    },
+    {
+        "log_id": "51e1619f-30d6-4b4c-9d88-2e0bfe76cb98",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGOUT",
+        "details": "User admin logged out",
+        "timestamp": "2026-02013 22:14:21"
     }
 ]

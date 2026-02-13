@@ -10,15 +10,21 @@ class StockLogController:
 
     # CREATE
     def add_log(self, product_id, location_id, quantity, unit, action):
+        # Количеството трябва да е > 0
         if quantity <= 0:
             raise ValueError("Количеството трябва да е > 0.")
 
+        # Мерната единица е задължителна
         if not unit or not unit.strip():
             raise ValueError("Мерната единица е задължителна.")
 
-        if action not in ["add", "remove", "move"]:
+        #  Позволени действия
+        allowed_actions = ["add", "remove", "move"]
+
+        if action not in allowed_actions:
             raise ValueError("Невалидно действие. Позволени: add, remove, move.")
 
+        # Създаване на лог
         log = StockLog(
             product_id=product_id,
             location_id=location_id,

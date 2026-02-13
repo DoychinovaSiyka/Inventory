@@ -5,14 +5,14 @@
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 133.0,
+        "quantity": 200.0,
         "unit": "бр.",
         "description": "от хмел",
         "price": 3.99,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-13 16:43:38.646315",
-        "modified": "2026-02-13 17:12:03.497410"
+        "modified": "2026-02-13 22:07:12.834028"
     },
     {
         "product_id": 14,
@@ -20,14 +20,14 @@
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
         ],
-        "quantity": 32.0,
+        "quantity": 31.0,
         "unit": "бр.",
         "description": "без оцветители и консерванти",
         "price": 0.89,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-06 16:15:51.160793",
-        "modified": "2026-02-13 17:12:46.844387"
+        "modified": "2026-02-13 22:13:22.297405"
     },
     {
         "product_id": 18,
@@ -60,6 +60,21 @@
         "modified": "2026-02-13 17:17:13.390694"
     },
     {
+        "product_id": 21,
+        "name": "кафе 3 в 1",
+        "categories": [
+            "45d29434-381b-4f5f-a149-497e353a0cf6"
+        ],
+        "quantity": 90.0,
+        "unit": "бр.",
+        "description": "напитка кофеинова",
+        "price": 3.21,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-02-13 19:25:25.693245",
+        "modified": "2026-02-13 19:25:25.693245"
+    },
+    {
         "product_id": 3,
         "name": "кокоши и пъдпъдъчи яйца",
         "categories": [
@@ -73,21 +88,6 @@
         "tags": [],
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-06 16:24:32.947563"
-    },
-    {
-        "product_id": 19,
-        "name": "лимони",
-        "categories": [
-            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
-        ],
-        "quantity": 2.0,
-        "unit": "кг",
-        "description": "за сокове овкусяване ",
-        "price": 3.04,
-        "supplier_id": null,
-        "tags": [],
-        "created": "2026-02-13 13:27:39.059606",
-        "modified": "2026-02-13 13:31:25.030747"
     },
     {
         "product_id": 5,
@@ -125,14 +125,14 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 110.0,
+        "quantity": 100.0,
         "unit": "бр.",
         "description": "домашни розови домати",
         "price": 2.19,
         "supplier_id": 2,
         "tags": [],
         "created": "2026-02-03 09:11:34.418148",
-        "modified": "2026-02-13 13:30:57.430702"
+        "modified": "2026-02-13 19:27:31.058911"
     },
     {
         "product_id": 15,

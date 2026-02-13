@@ -1,5 +1,6 @@
 from models.movement import MovementType
 
+
 class MovementValidator:
 
     @staticmethod
@@ -8,7 +9,7 @@ class MovementValidator:
             raise ValueError("Количеството е задължително.")
 
         try:
-            quantity = float(quantity)   # ← ВЕЧЕ Е FLOAT
+            quantity = float(quantity)
         except ValueError:
             raise ValueError("Количеството трябва да е число.")
 
@@ -18,7 +19,22 @@ class MovementValidator:
         return quantity
 
     @staticmethod
-    def parse_price(price):
+    def parse_price(price, movement_type=None):
+        """
+        При IN/OUT → price > 0
+        При MOVE → price може да е 0 или празно
+        """
+
+        if movement_type == MovementType.MOVE:
+            # MOVE няма цена → позволяваме празно или 0
+            if not price.strip():
+                return 0.0
+            try:
+                return float(price)
+            except ValueError:
+                raise ValueError("Цената трябва да е число.")
+
+        # IN / OUT → задължителна цена
         if not price.strip():
             raise ValueError("Цената е задължителна.")
 
@@ -33,7 +49,16 @@ class MovementValidator:
         return price
 
     @staticmethod
-    def validate_description(description):
+    def validate_description(description, movement_type=None):
+        """
+        При MOVE → описанието може да е празно
+        При IN/OUT → задължително
+        """
+
+        if movement_type == MovementType.MOVE:
+            # MOVE може да е без описание
+            return
+
         if not description or not description.strip():
             raise ValueError("Описанието е задължително.")
 
@@ -53,10 +78,11 @@ class MovementValidator:
         if not product_id.strip():
             raise ValueError("product_id не може да бъде празен.")
 
+
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():
-            raise ValueError("Мерната единица е задължителна.")  # ← НОВО
+            raise ValueError("Мерната единица е задължителна.")
 
         allowed_units = ["бр.", "кг", "г", "л", "мл", "стек", "кашон"]
 
