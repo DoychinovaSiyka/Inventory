@@ -3,11 +3,13 @@ import uuid
 from datetime import datetime
 from models.movement import Movement, MovementType
 from models.invoice import Invoice
+from storage.json_repository import JSONRepository
+
 import validators.movement_validator
 
 
 class MovementController:
-    def __init__(self, repo, product_controller, user_controller,
+    def __init__(self, repo: JSONRepository, product_controller, user_controller,
                  location_controller, stocklog_controller, invoice_controller,
                  activity_log_controller=None):
         self.repo = repo
@@ -35,7 +37,8 @@ class MovementController:
         quantity,
         description: str,
         price,
-        customer: Optional[str] = None
+        customer: Optional[str] = None,
+        supplier_id: Optional[int] = None   # ⭐ НОВО
     ) -> Movement:
 
         # Валидации
@@ -75,11 +78,19 @@ class MovementController:
             product.quantity += quantity
             action = "add"
 
+            # ⭐ ЗАДЪЛЖИТЕЛНО: доставчик при IN
+            if supplier_id is None:
+                raise ValueError("При IN движение трябва да има доставчик (supplier_id).")
+
         elif movement_type == MovementType.OUT:
             if product.quantity < quantity:
                 raise ValueError("Недостатъчна наличност за продажба.")
             product.quantity -= quantity
             action = "remove"
+
+            # ⭐ ЗАДЪЛЖИТЕЛНО: клиент при OUT
+            if not customer:
+                raise ValueError("При OUT движение трябва да има клиент.")
 
         elif movement_type == MovementType.MOVE:
             action = "move"
@@ -91,7 +102,7 @@ class MovementController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Създаване на Movement
+        #  Създаване на Movement с доставчик/клиент
         movement = Movement(
             movement_id=self._generate_id(),
             product_id=product_id,
@@ -102,6 +113,8 @@ class MovementController:
             unit=product.unit,
             description=description,
             price=price,
+            supplier_id=supplier_id,
+            customer=customer,
             date=now,
             created=now,
             modified=now
@@ -125,13 +138,13 @@ class MovementController:
                 self.activity_log.add_log(
                     user_id,
                     "IN_MOVEMENT",
-                    f"IN movement: product {product_id}, qty={quantity}, location={location_id}"
+                    f"IN movement: product {product_id}, qty={quantity}, location={location_id}, supplier={supplier_id}"
                 )
             elif movement_type == MovementType.OUT:
                 self.activity_log.add_log(
                     user_id,
                     "OUT_MOVEMENT",
-                    f"OUT movement: product {product_id}, qty={quantity}, location={location_id}"
+                    f"OUT movement: product {product_id}, qty={quantity}, location={location_id}, customer={customer}"
                 )
             elif movement_type == MovementType.MOVE:
                 self.activity_log.add_log(
@@ -142,8 +155,6 @@ class MovementController:
 
         # Автоматична фактура при OUT
         if movement_type == MovementType.OUT:
-            customer = customer or user.username
-
             invoice = Invoice(
                 movement_id=movement.movement_id,
                 product=product.name,
@@ -164,9 +175,7 @@ class MovementController:
 
         return movement
 
-
-    #  SEARCH & FILTERING FOR MOVEMENTS
-
+    # SEARCH & FILTERING FOR MOVEMENTS
 
     def filter_by_type(self, movement_type) -> List[Movement]:
         return [m for m in self.movements if m.movement_type == movement_type]

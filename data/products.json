@@ -1,18 +1,48 @@
 [
     {
+        "product_id": 20,
+        "name": "бира",
+        "categories": [
+            "45d29434-381b-4f5f-a149-497e353a0cf6"
+        ],
+        "quantity": 133.0,
+        "unit": "бр.",
+        "description": "от хмел",
+        "price": 3.99,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-02-13 16:43:38.646315",
+        "modified": "2026-02-13 17:12:03.497410"
+    },
+    {
         "product_id": 14,
         "name": "вафла \"Боровец\"",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
         ],
-        "quantity": 21.0,
+        "quantity": 32.0,
         "unit": "бр.",
         "description": "без оцветители и консерванти",
         "price": 0.89,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-06 16:15:51.160793",
-        "modified": "2026-02-06 23:02:14.947963"
+        "modified": "2026-02-13 17:12:46.844387"
+    },
+    {
+        "product_id": 18,
+        "name": "зелен лук",
+        "categories": [
+            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
+        ],
+        "quantity": 14.0,
+        "unit": "кг",
+        "description": "зелен лук",
+        "price": 0.34,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-02-07 09:21:59.794094",
+        "modified": "2026-02-07 09:23:28.155704"
     },
     {
         "product_id": 4,
@@ -20,14 +50,14 @@
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 40.0,
+        "quantity": 42.22,
         "unit": "бр.",
         "description": "Италианско кафе - плътен вкус, богат аромат и перрфектен баланс за всякакъв тип приготвяне",
         "price": 4.89,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-02 12:15:03",
-        "modified": "2026-02-06 23:14:04.813921"
+        "modified": "2026-02-13 17:17:13.390694"
     },
     {
         "product_id": 3,
@@ -45,19 +75,19 @@
         "modified": "2026-02-06 16:24:32.947563"
     },
     {
-        "product_id": 17,
-        "name": "морков",
+        "product_id": 19,
+        "name": "лимони",
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 45.0,
+        "quantity": 2.0,
         "unit": "кг",
-        "description": "Произход Турция",
-        "price": 2.02,
+        "description": "за сокове овкусяване ",
+        "price": 3.04,
         "supplier_id": null,
         "tags": [],
-        "created": "2026-02-06 23:10:06.531840",
-        "modified": "2026-02-06 23:10:06.531840"
+        "created": "2026-02-13 13:27:39.059606",
+        "modified": "2026-02-13 13:31:25.030747"
     },
     {
         "product_id": 5,
@@ -95,29 +125,29 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 100.0,
+        "quantity": 110.0,
         "unit": "бр.",
         "description": "домашни розови домати",
         "price": 2.19,
         "supplier_id": 2,
         "tags": [],
         "created": "2026-02-03 09:11:34.418148",
-        "modified": "2026-02-06 23:11:44.943184"
+        "modified": "2026-02-13 13:30:57.430702"
     },
     {
         "product_id": 15,
-        "name": "слодалед \"Family\"",
+        "name": "сладолед \"Family\" с вкус на шоколад",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
         ],
-        "quantity": 450.0,
+        "quantity": 400.0,
         "unit": "бр.",
         "description": "с вкус на шоколад и какао",
         "price": 9.99,
         "supplier_id": 3,
         "tags": [],
         "created": "2026-02-06 19:44:50.384986",
-        "modified": "2026-02-06 21:26:38.005994"
+        "modified": "2026-02-13 13:29:02.576942"
     },
     {
         "product_id": 16,
@@ -133,20 +163,5 @@
         "tags": [],
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
-    },
-    {
-        "product_id": 18,
-        "name": "зелен лук",
-        "categories": [
-            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
-        ],
-        "quantity": 14.0,
-        "unit": "кг",
-        "description": "зелен лук",
-        "price": 0.34,
-        "supplier_id": null,
-        "tags": [],
-        "created": "2026-02-07 09:21:59.794094",
-        "modified": "2026-02-07 09:23:28.155704"
     }
 ]

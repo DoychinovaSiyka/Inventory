@@ -1,6 +1,11 @@
-
+import sys, os
 import json
 from pathlib import Path
+
+
+# Добавям само родителската директория, за да са стабилни импортите,
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from storage.repository import Repository
 
 
@@ -23,9 +28,9 @@ class JSONRepository(Repository):
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
-
     def get_all(self):
         return self.load()
+
 
 # При JSON не ми се налага да извличам и добавям ръчно ред по ред.
 # С json.load(file) получавам директно списък от речници,

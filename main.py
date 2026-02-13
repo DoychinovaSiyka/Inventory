@@ -42,21 +42,25 @@ def main():
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
+    # ⭐ ДОБАВЕНО: activity_log_controller
     product_controller = ProductController(
         product_repo,
         category_controller,
-        supplier_controller
+        supplier_controller,
+        activity_log_controller
     )
 
     invoice_controller = InvoiceController(invoice_repo)
 
+    # ⭐ ДОБАВЕНО: activity_log_controller
     movement_controller = MovementController(
         movement_repo,
         product_controller,
         user_controller,
         location_controller,
         stocklog_controller,
-        invoice_controller
+        invoice_controller,
+        activity_log_controller
     )
 
     report_controller = ReportController(
@@ -90,9 +94,9 @@ def main():
         # Вход с потребител
         if choice == "1":
             username = input("Потребителско име: ")
-            password = input("Парола: ")
 
-            user = user_controller.login(username, password)
+            # Паролата се въвежда скрито вътре в UserController.login()
+            user = user_controller.login(username)
 
             if not user:
                 print("Грешно потребителско име или парола.")

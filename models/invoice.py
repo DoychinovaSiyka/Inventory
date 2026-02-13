@@ -8,7 +8,7 @@ class Invoice:
         movement_id=None,
         product="",
         quantity=0,
-        unit="",              # ← НОВО: мерна единица
+        unit="",
         unit_price=0.0,
         total_price=None,
         customer="",
@@ -16,7 +16,7 @@ class Invoice:
         created=None,
         modified=None
     ):
-        # ID — UUID според документацията
+        # ID — UUID
         self.invoice_id = invoice_id or str(uuid.uuid4())
 
         # Movement → Invoice (1:1)
@@ -44,9 +44,8 @@ class Invoice:
         # Валидация според SRS
         self.validate()
 
-    # -------------------------
     # ВАЛИДАЦИЯ
-    # -------------------------
+
     def validate(self):
         if not self.product:
             raise ValueError("Продуктът е задължителен (според SRS).")
@@ -66,16 +65,16 @@ class Invoice:
         if self.movement_id is None:
             raise ValueError("movement_id е задължителен (според SRS).")
 
-    # -------------------------
+
     # JSON сериализация
-    # -------------------------
+
     def to_dict(self):
         return {
             "invoice_id": self.invoice_id,
             "movement_id": self.movement_id,
             "product": self.product,
             "quantity": self.quantity,
-            "unit": self.unit,              # ← НОВО
+            "unit": self.unit,
             "unit_price": self.unit_price,
             "total_price": self.total_price,
             "customer": self.customer,

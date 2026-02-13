@@ -63,5 +63,31 @@
         "date": "2026-02-06 23:02:14",
         "created": "2026-02-06 23:02:14",
         "modified": "2026-02-06 23:02:14"
+    },
+    {
+        "invoice_id": "08bd4b8c-b77b-4787-ac77-040775682298",
+        "movement_id": "30a15ba5-5549-4a43-9f1d-ed92bd1a9a80",
+        "product": "бира",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 2.33,
+        "total_price": 27.96,
+        "customer": "Антон",
+        "date": "2026-02-13 17:10:04",
+        "created": "2026-02-13 17:10:04",
+        "modified": "2026-02-13 17:10:04"
+    },
+    {
+        "invoice_id": "fd1f9dc2-138f-4465-b643-4dc9876a282f",
+        "movement_id": "9117c13c-553b-44f1-a848-6520e6161718",
+        "product": "бира",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 2.33,
+        "total_price": 27.96,
+        "customer": "Кирил",
+        "date": "2026-02-13 17:11:16",
+        "created": "2026-02-13 17:11:16",
+        "modified": "2026-02-13 17:11:16"
     }
 ]

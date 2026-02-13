@@ -375,7 +375,7 @@ class ProductController:
         return sorted_products
 
 
-    # ADVANCED SEARCH & FILTERING
+    # Разширено търсене и филтриране
 
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
         results = self.products

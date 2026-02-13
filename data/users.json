@@ -1,26 +1,26 @@
 [
     {
-        "user_id": "e1b2c3d4-5678-4321-9999-abcdef123456",
-        "first_name": "Siyka",
-        "last_name": "Doychinova",
-        "email": "siyka@example.com",
-        "username": "Siyka",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "first_name": "Admin",
+        "last_name": "User",
+        "email": "admin@example.com",
+        "username": "admin",
         "password": "97100109105110495051",
         "role": "Admin",
         "status": "Active",
-        "created": "2026-02-02T09:00:00",
-        "modified": "2026-02-02 09:29:53"
+        "created": "2026-02-13 15:24:02",
+        "modified": "2026-02-13 15:24:02"
     },
     {
-        "user_id": "f25d20d6-d99a-46dc-bfb1-8b97667efc1d",
-        "first_name": "Ирина",
-        "last_name": "Иванова",
-        "email": "irina_i@abv.bg",
-        "username": "irinka0603",
-        "password": "10511410511097495051",
+        "user_id": "4dc1d457-d8c8-4298-b6ee-0de5b96e9474",
+        "first_name": "Operator",
+        "last_name": "User",
+        "email": "operator@example.com",
+        "username": "operator",
+        "password": "11111210111497116111114495051",
         "role": "Operator",
         "status": "Active",
-        "created": "2026-02-02 09:32:37",
-        "modified": "2026-02-03 09:48:27"
+        "created": "2026-02-13 15:24:02",
+        "modified": "2026-02-13 15:24:02"
     }
 ]

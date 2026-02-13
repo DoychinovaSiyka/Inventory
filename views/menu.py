@@ -1,5 +1,3 @@
-
-
 class MenuItem:
     def __init__(self, key, text, action):
         self.key = key
@@ -15,7 +13,7 @@ class Menu:
     def show(self):
         print(f"\n   {self.title}   ")
         for item in self.items:
-            print(f"{item.key}.{item.text}")
+            print(f"{item.key}. {item.text}")
         return input("Избор: ")
 
     def execute(self, choice, user):
@@ -24,3 +22,7 @@ class Menu:
                 return item.action(user)
         print("Невалиден избор.")
         return None
+
+# Меню системата е реализирана чрез класовете Menu и MenuItem. MenuItem съдържа ключ, текст и действие,
+# а Menu показва опциите и извиква съответната функция според
+# избора на потребителя. Това е универсален механизъм за навигация в приложението и позволява лесно добавяне на нови менюта и опции.

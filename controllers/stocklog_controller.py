@@ -1,17 +1,12 @@
 from models.stock_log import StockLog
+from storage.json_repository import JSONRepository
 from datetime import datetime
 
 
 class StockLogController:
-    def __init__(self, repo):
+    def __init__(self, repo: JSONRepository):
         self.repo = repo
         self.logs = [StockLog.from_dict(l) for l in self.repo.load()]
-
-    # ID GENERATOR
-    def _generate_id(self):
-        if not self.logs:
-            return 1
-        return max(log.log_id for log in self.logs) + 1
 
     # CREATE
     def add_log(self, product_id, location_id, quantity, unit, action):
@@ -25,13 +20,12 @@ class StockLogController:
             raise ValueError("Невалидно действие. Позволени: add, remove, move.")
 
         log = StockLog(
-            log_id=self._generate_id(),
             product_id=product_id,
             location_id=location_id,
             quantity=quantity,
             unit=unit,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            action=action
+            action=action,
+            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )
 
         self.logs.append(log)
@@ -66,6 +60,6 @@ class StockLogController:
             return True
         return False
 
-    # SAVE (renamed)
+    # SAVE
     def save_changes(self):
         self.repo.save([l.to_dict() for l in self.logs])

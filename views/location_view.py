@@ -1,7 +1,7 @@
 
 
-from menus.menu import Menu, MenuItem
-from storage.password_utils import format_table
+from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 from controllers.location_controller import LocationController
 from models.user import User
 

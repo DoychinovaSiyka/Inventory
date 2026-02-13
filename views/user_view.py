@@ -1,8 +1,7 @@
-# views/user_view.py
 
 from models.user import User
 from controllers.user_controller import UserController
-from menus.menu import Menu, MenuItem
+from views.menu import Menu, MenuItem
 
 
 class UserView:

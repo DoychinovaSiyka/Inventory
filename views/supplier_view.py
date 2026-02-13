@@ -1,7 +1,6 @@
-# views/supplier_view.py
 
-from menus.menu import Menu, MenuItem
-from storage.password_utils import format_table
+from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 from controllers.supplier_controller import SupplierController
 from models.user import User
 

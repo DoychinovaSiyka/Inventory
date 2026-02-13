@@ -3,6 +3,40 @@ from datetime import datetime
 from models.user import User
 from storage.json_repository import JSONRepository
 from validators.user_validator import UserValidator
+import getpass
+import msvcrt   #  звездички при въвеждане на парола
+
+
+#  Функция за въвеждане на парола със звездички (работи в CMD/PowerShell)
+def input_password(prompt="Парола: "):
+    print(prompt, end="", flush=True)
+    password = ""
+
+    while True:
+        ch = msvcrt.getch()
+
+        # Enter
+        if ch in {b"\r", b"\n"}:
+            print()
+            break
+
+        # Backspace
+        if ch == b"\x08":
+            if password:
+                password = password[:-1]
+                print("\b \b", end="", flush=True)
+            continue
+
+        # Специални клавиши (стрелки, F1 и др.)
+        if ch in {b"\x00", b"\xe0"}:
+            msvcrt.getch()
+            continue
+
+        # Нормален символ
+        password += ch.decode("utf-8")
+        print("*", end="", flush=True)
+
+    return password
 
 
 class UserController:
@@ -25,6 +59,38 @@ class UserController:
                 modified=now
             )
             self.users.append(admin)
+
+            # Автоматично създаване на оператор (първоначално)
+            operator = User(
+                first_name="Operator",
+                last_name="User",
+                email="operator@example.com",
+                username="operator",
+                password=self._hash_password("operator123"),
+                role="Operator",
+                status="Active",
+                created=now,
+                modified=now
+            )
+            self.users.append(operator)
+
+            self.save_changes()
+
+        # Ако няма оператор → създаваме един
+        if not any(u.role == "Operator" for u in self.users):
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            operator = User(
+                first_name="Operator",
+                last_name="User",
+                email="operator@example.com",
+                username="operator",
+                password=self._hash_password("operator123"),
+                role="Operator",
+                status="Active",
+                created=now,
+                modified=now
+            )
+            self.users.append(operator)
             self.save_changes()
 
         self.logged_user: Optional[User] = None
@@ -34,7 +100,7 @@ class UserController:
     def _hash_password(password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
-    # SAVE (renamed)
+    # SAVE
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
@@ -71,8 +137,17 @@ class UserController:
         self.save_changes()
         return new_user
 
-    # LOGIN
-    def login(self, username: str, password: str) -> Optional[User]:
+    #  LOGIN — скрито въвеждане на парола (със звездички)
+    def login(self, username: str, password: Optional[str] = None) -> Optional[User]:
+
+        # Ако паролата не е подадена от main.py → искаме я тук
+        if password is None:
+            try:
+                password = input_password("Парола: ")
+            except Exception:
+                # ⭐ Поправено: НИКОГА не показваме видима парола
+                password = getpass.getpass("Парола: ")
+
         hashed = self._hash_password(password)
 
         for user in self.users:

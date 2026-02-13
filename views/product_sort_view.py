@@ -1,7 +1,5 @@
-# views/product_sort_view.py
-
-from menus.menu import Menu, MenuItem
-from storage.password_utils import format_table
+from views.menu import Menu, MenuItem
+from views.password_utils import format_table   # ⭐ премахнат require_password
 from controllers.product_controller import ProductController
 
 
@@ -9,7 +7,8 @@ class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
 
-    # Няма нужда от user – не се използва
+    # ⭐ ВАЖНО: ТУК ВЕЧЕ НЯМА ПАРОЛА
+    # Паролата се контролира само от ProductView.sort_menu_protected
     def show_menu(self):
         menu = Menu("Сортиране на продукти", [
             MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
@@ -42,20 +41,20 @@ class ProductSortView:
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
     # 4. Количество
-    def sort_qty_desc(self,_):
+    def sort_qty_desc(self, _):
         products = self.controller.bubble_sort()
         products.sort(key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
     # 5. Количество
-    def sort_qty_asc(self,_):
+    def sort_qty_asc(self, _):
         products = self.controller.selection_sort()
         products.sort(key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
     # Общ метод за печат
     @staticmethod
-    def _print_sorted( products, title, algorithm):
+    def _print_sorted(products, title, algorithm):
         print(f"\n=== Сортиране по: {title} ===")
         print(f"Алгоритъм: {algorithm}\n")
 

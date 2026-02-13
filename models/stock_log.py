@@ -7,7 +7,7 @@ class StockLog:
         self.product_id = product_id
         self.location_id = location_id
         self.quantity = quantity
-        self.unit = unit                  # ← НОВО
+        self.unit = unit
         self.action = action              # add, remove, move
         self.timestamp = timestamp or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -17,7 +17,7 @@ class StockLog:
             "product_id": self.product_id,
             "location_id": self.location_id,
             "quantity": self.quantity,
-            "unit": self.unit,            # ← НОВО
+            "unit": self.unit,
             "action": self.action,
             "timestamp": self.timestamp
         }
@@ -29,7 +29,7 @@ class StockLog:
             product_id=data["product_id"],
             location_id=data["location_id"],
             quantity=data["quantity"],
-            unit=data.get("unit", "бр."),   # ← НОВО (fallback ако липсва)
+            unit=data.get("unit", "бр."),
             action=data["action"],
             timestamp=data.get("timestamp")
         )

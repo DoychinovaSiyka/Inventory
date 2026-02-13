@@ -18,6 +18,7 @@ class User:
     ):
         # Уникален идентификатор на потребителя
         self.user_id = user_id or str(uuid.uuid4())
+        self.id = self.user_id   # 🔥 добавено, за да работи user.id навсякъде
 
         # Основни данни
         self.first_name = first_name
@@ -41,7 +42,7 @@ class User:
 
     @staticmethod
     def from_dict(data):
-        return User(
+        user = User(
             first_name=data["first_name"],
             last_name=data["last_name"],
             email=data["email"],
@@ -53,6 +54,9 @@ class User:
             created=data.get("created"),
             modified=data.get("modified")
         )
+
+        user.id = user.user_id
+        return user
 
     def to_dict(self):
         return {

@@ -151,5 +151,68 @@
         "unit": "бр.",
         "action": "add",
         "timestamp": "2026-02-06 23:03:47"
+    },
+    {
+        "log_id": 18,
+        "product_id": 14,
+        "location_id": "1",
+        "quantity": 9.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 16:15:41"
+    },
+    {
+        "log_id": 19,
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 17:05:27"
+    },
+    {
+        "log_id": 20,
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-02-13 17:10:04"
+    },
+    {
+        "log_id": 21,
+        "product_id": 20,
+        "location_id": "5",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-02-13 17:11:16"
+    },
+    {
+        "log_id": 22,
+        "product_id": 20,
+        "location_id": "2",
+        "quantity": 45.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 17:12:03"
+    },
+    {
+        "log_id": 23,
+        "product_id": 14,
+        "location_id": "2",
+        "quantity": 2.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 17:12:46"
+    },
+    {
+        "log_id": 24,
+        "product_id": 4,
+        "location_id": "2",
+        "quantity": 2.22,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-02-13 17:17:13"
     }
 ]

@@ -1,4 +1,4 @@
-from menus.menu import Menu, MenuItem
+from views.menu import Menu, MenuItem
 from views.system_info_view import SystemInfoView
 
 

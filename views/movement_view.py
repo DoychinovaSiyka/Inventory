@@ -1,4 +1,4 @@
-from menus.menu import Menu, MenuItem
+from views.menu import Menu, MenuItem
 from controllers.product_controller import ProductController
 from controllers.movement_controller import MovementController
 from controllers.user_controller import UserController
@@ -91,11 +91,31 @@ class MovementView:
 
         # Количество, цена, описание
         print(f"Мерна единица на продукта: {product.unit}")
-        quantity = input("Количество: ")  # ← остава string, валидира се в контролера
+        quantity = input("Количество: ")
         price = input("Цена: ")
         description = input("Описание: ")
 
-        # Клиент (само при OUT)
+        # ⭐ ДОСТАВЧИК (само при IN)
+        supplier_id = None
+        if movement_type == MovementType.IN:
+            suppliers = self.product_controller.supplier_controller.get_all()
+
+            if not suppliers:
+                print("Няма доставчици. Добавете доставчик първо.")
+                return
+
+            print("\nИзберете доставчик:")
+            for i, s in enumerate(suppliers):
+                print(f"{i}. {s.name} (ID: {s.supplier_id})")
+
+            try:
+                sup_idx = int(input("Доставчик: "))
+                supplier_id = suppliers[sup_idx].supplier_id
+            except (ValueError, IndexError):
+                print("Невалиден избор за доставчик.")
+                return
+
+        # ⭐ КЛИЕНТ (само при OUT)
         customer = None
         if movement_type == MovementType.OUT:
             customer = input("Име на клиент: ").strip()
@@ -113,19 +133,11 @@ class MovementView:
                 quantity=quantity,
                 description=description,
                 price=price,
-                customer=customer
+                customer=customer,
+                supplier_id=supplier_id   # ⭐ НОВО
             )
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
-
-            # ЛОГВАНЕ
-            if self.activity_log:
-                action = "IN_MOVEMENT" if movement_type == MovementType.IN else "OUT_MOVEMENT"
-                self.activity_log.add_log(
-                    user.user_id,
-                    action,
-                    f"{action} for product ID {product_id}, qty={quantity}"
-                )
 
         except ValueError as e:
             print("Грешка:", e)
@@ -140,7 +152,7 @@ class MovementView:
             return
 
         for m in results:
-            print(m)
+            self._print_movement(m)
 
     # 3. Всички движения
     def show_all(self, _):
@@ -151,15 +163,32 @@ class MovementView:
             return
 
         for m in all_movements:
-            print(m)
+            self._print_movement(m)
 
+    # ⭐ Показване на движение с доставчик/клиент
+    def _print_movement(self, m):
+        print(f"Движение ID: {m.movement_id}")
+        print(f"Продукт ID: {m.product_id}")
+        print(f"Потребител ID: {m.user_id}")
+        print(f"Локация ID: {m.location_id}")
+        print(f"Тип: {m.movement_type.name}")
+        print(f"Количество: {m.quantity} {m.unit}")
+        print(f"Цена: {m.price}")
+        print(f"Описание: {m.description}")
 
-    # 4. РАЗШИРЕНО ФИЛТРИРАНЕ НА ДВИЖЕНИЯ
+        # ⭐ Показваме доставчик или клиент
+        if m.movement_type == MovementType.IN:
+            print(f"Доставчик ID: {m.supplier_id}")
+        elif m.movement_type == MovementType.OUT:
+            print(f"Клиент: {m.customer}")
 
+        print(f"Дата: {m.date}")
+        print("----------------------------------------")
+
+    # 4. Разширено филтриране
     def advanced_filter(self, _):
         print("\n=== Разширено филтриране на движения ===")
 
-        # 1) Филтър по тип движение
         print("Тип движение:")
         print("0 = IN (доставка)")
         print("1 = OUT (продажба)")
@@ -175,27 +204,19 @@ class MovementView:
             elif raw_type == 2:
                 movement_type = MovementType.MOVE
 
-        # 2) Филтър по дата (диапазон)
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
         end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
         start_date = start_date if start_date else None
         end_date = end_date if end_date else None
 
-        # 3) Филтър по продукт
         raw_pid = input("ID на продукт или Enter: ").strip()
         product_id = raw_pid if raw_pid else None
 
-        # 4) Филтър по локация
         raw_loc = input("ID на локация или Enter: ").strip()
         location_id = int(raw_loc) if raw_loc.isdigit() else None
 
-        # 5) Филтър по потребител
         raw_uid = input("ID на потребител или Enter: ").strip()
         user_id = int(raw_uid) if raw_uid.isdigit() else None
-
-
-        # ИЗВИКВАНЕ НА КОНТРОЛЕРИТЕ
-
 
         results = self.movement_controller.movements
 
@@ -214,13 +235,10 @@ class MovementView:
         if user_id is not None:
             results = [m for m in results if m.user_id == user_id]
 
-
-        # ПОКАЗВАНЕ НА РЕЗУЛТАТИТЕ
-
         if not results:
             print("\nНяма движения, които отговарят на критериите.")
             return
 
         print("\n=== Резултати ===")
         for m in results:
-            print(m)
+            self._print_movement(m)

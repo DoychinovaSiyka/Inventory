@@ -1,5 +1,5 @@
-from menus.menu import Menu, MenuItem
-from storage.password_utils import format_table
+from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 from controllers.invoice_controller import InvoiceController
 from models.user import User
 
@@ -162,10 +162,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-
-
     # 6. РАЗШИРЕНО ТЪРСЕНЕ НА ФАКТУРИ
-
     def advanced_search(self, user):
         print("\n=== Разширено търсене на фактури ===")
 
@@ -194,9 +191,7 @@ class InvoiceView:
             print("Невалидна стойност за цена.")
             return
 
-
         # ИЗВИКВАНЕ НА КОНТРОЛЕРА
-
         results = self.invoice_controller.advanced_search(
             customer=customer,
             product=product,
@@ -206,9 +201,7 @@ class InvoiceView:
             max_total=max_total
         )
 
-
         # ПОКАЗВАНЕ НА РЕЗУЛТАТИТЕ
-
         if not results:
             print("\nНяма фактури, които отговарят на критериите.")
             return
@@ -231,4 +224,3 @@ class InvoiceView:
         # ЛОГВАНЕ
         if self.activity_log:
             self.activity_log.add_log(user.user_id, "ADVANCED_SEARCH_INVOICE", "Used advanced invoice search")
-

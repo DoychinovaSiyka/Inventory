@@ -13,3 +13,6 @@ class UserActivityLogController:
 
     def get_all_logs(self):
         return self.repo.get_all()
+# UserActivityLogController е единственият контролер, който не използва dependency injection.
+# Това е умишлено, защото той винаги работи само с един конкретен лог файл и е напълно самостоятелен.
+# Всички останали контролери получават JSONRepository отвън, което е по‑професионално и следва SOLID принципите.

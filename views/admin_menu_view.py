@@ -1,4 +1,4 @@
-from menus.menu import Menu, MenuItem
+from views.menu import Menu, MenuItem
 from views.product_menu_view import ProductView
 from views.category_view import CategoryView
 from views.movement_view import MovementView
@@ -70,7 +70,7 @@ class AdminMenuView:
 
     # 8. Доставчици
     def open_suppliers(self, user):
-        SupplierView( self.controllers["supplier"],self.controllers["activity_log"]).show_menu(user)
+        SupplierView(self.controllers["supplier"]).show_menu(user)
 
     # 9. Dijkstra – най-кратък път
     @staticmethod

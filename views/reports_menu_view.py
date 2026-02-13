@@ -1,7 +1,7 @@
 # views/reports_view.py
 
-from menus.menu import Menu, MenuItem
-from storage.password_utils import format_table
+from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 from controllers.report_controller import ReportController
 from models.user import User
 

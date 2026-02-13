@@ -1,9 +1,10 @@
 from datetime import datetime
 from models.report import Report
+from storage.json_repository import JSONRepository
 
 
 class ReportController:
-    def __init__(self, repo, product_controller, movement_controller, invoice_controller):
+    def __init__(self, repo: JSONRepository, product_controller, movement_controller, invoice_controller):
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -16,7 +17,7 @@ class ReportController:
             return 1
         return max(r.report_id for r in self.reports) + 1
 
-    # INTERNAL SAVE (renamed)
+    # INTERNAL SAVE
     def save_changes(self):
         self.repo.save([r.to_dict() for r in self.reports])
 
@@ -63,7 +64,9 @@ class ReportController:
                 "product_id": m.product_id,
                 "quantity": m.quantity,
                 "price": m.price,
-                "location": m.location_id
+                "location": m.location_id,
+                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                "customer": m.customer if m.movement_type.name == "OUT" else None
             }
             for m in movements
         ]
@@ -87,7 +90,9 @@ class ReportController:
                     "date": m.date,
                     "type": m.movement_type.name,
                     "quantity": m.quantity,
-                    "price": m.price
+                    "price": m.price,
+                    "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                    "customer": m.customer if m.movement_type.name == "OUT" else None
                 })
 
         return self._create_report("movements_by_product", {"keyword": keyword}, data)
@@ -100,7 +105,9 @@ class ReportController:
             {
                 "date": m.date,
                 "product_id": m.product_id,
-                "quantity": m.quantity
+                "quantity": m.quantity,
+                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                "customer": m.customer if m.movement_type.name == "OUT" else None
             }
             for m in self.movement_controller.movements
             if m.movement_type.name == movement_type
@@ -114,7 +121,9 @@ class ReportController:
             {
                 "date": m.date,
                 "type": m.movement_type.name,
-                "quantity": m.quantity
+                "quantity": m.quantity,
+                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                "customer": m.customer if m.movement_type.name == "OUT" else None
             }
             for m in self.movement_controller.movements
             if m.date.startswith(date_str)
