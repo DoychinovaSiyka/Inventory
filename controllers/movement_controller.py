@@ -40,6 +40,7 @@ class MovementController:
         customer: Optional[str] = None,
         supplier_id: Optional[int] = None
     ) -> Movement:
+        action = None
 
         # Валидации
         validators.movement_validator.MovementValidator.validate_movement_type(movement_type)
@@ -123,7 +124,7 @@ class MovementController:
             location_id=location_id,
             quantity=quantity,
             unit=product.unit,
-            action=action
+            action= action
         )
 
         # Activity Log
