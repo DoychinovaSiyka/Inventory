@@ -1,16 +1,15 @@
-# views/reports_view.py
 
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController
 from models.user import User
-from controllers.location_controller import LocationController   # ⭐ добавено
+from controllers.location_controller import LocationController
 
 
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
-        self.location_controller = controller.location_controller   # ⭐ добавено
+        self.location_controller = controller.location_controller
 
     def show_menu(self, user: User):
         menu = Menu("Справки", [

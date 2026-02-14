@@ -6,8 +6,7 @@ class AnonymousMenuView:
     def show_menu(self, _user=None):
         menu = Menu("Меню за анонимен потребител", [
             MenuItem("1", "Информация за системата", self.show_system_info),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break") ])
 
         while True:
             choice = menu.show()

@@ -30,9 +30,7 @@ class OperatorMenuView:
 
             # Фактурите съдържат чувствителни данни → защитаваме
             MenuItem("5", "Фактури", self.open_invoices),
-
             MenuItem("6", "Информация за системата", self.open_system_info),
-
             MenuItem("0", "Назад", lambda u: "break")
         ])
 

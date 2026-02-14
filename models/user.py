@@ -18,7 +18,7 @@ class User:
     ):
         # Уникален идентификатор на потребителя
         self.user_id = user_id or str(uuid.uuid4())
-        self.id = self.user_id   # 🔥 добавено, за да работи user.id навсякъде
+        self.id = self.user_id   # за да работи user.id навсякъде
 
         # Основни данни
         self.first_name = first_name

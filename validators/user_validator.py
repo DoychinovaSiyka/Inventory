@@ -31,7 +31,7 @@ class UserValidator:
         return True
 
 
-    #   EMAIL ( валиден формат )
+    #   EMAIL (валиден формат )
 
     @staticmethod
     def validate_email(email: str):

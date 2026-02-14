@@ -145,7 +145,7 @@ class UserController:
             try:
                 password = input_password("Парола: ")
             except Exception:
-                # ⭐ Поправено: НИКОГА не показваме видима парола
+                #  НИКОГА не показваме видима парола
                 password = getpass.getpass("Парола: ")
 
         hashed = self._hash_password(password)

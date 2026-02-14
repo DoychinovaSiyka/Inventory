@@ -1,4 +1,3 @@
-
 from models.user import User
 from controllers.user_controller import UserController
 from views.menu import Menu, MenuItem

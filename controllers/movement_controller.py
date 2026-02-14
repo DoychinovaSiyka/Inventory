@@ -71,7 +71,7 @@ class MovementController:
                 raise ValueError("Невалиден тип движение.")
             movement_type = mapping[movement_type]
 
-        # ⭐ ЗАБРАНЯВАМЕ MOVE ПРЕЗ add()
+        #  ЗАБРАНЯВАМЕ MOVE ПРЕЗ add()
         if movement_type == MovementType.MOVE:
             raise ValueError("MOVE може да се извършва само чрез move_product().")
 
@@ -156,7 +156,7 @@ class MovementController:
 
         return movement
 
-    # ⭐⭐ ПРАВИЛНОТО MOVE — С ДВЕ MOVE ДВИЖЕНИЯ ⭐⭐
+    #  MOVE — С ДВЕ MOVE ДВИЖЕНИЯ
     def move_product(
         self,
         product_id: str,
@@ -234,7 +234,7 @@ class MovementController:
         self.movements.append(in_movement)
         self.save_changes()
 
-        # ⭐ StockLog — ВЕЧЕ ПРАВИЛНО
+        #  StockLog
         self.stocklog_controller.add_log(
             product_id=product_id,
             location_id=from_location_id,

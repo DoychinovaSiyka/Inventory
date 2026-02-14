@@ -27,7 +27,7 @@ class Product:
         self.description = description
         self.price = price
 
-        # ВАЖНО: supplier вече е само ID, не Supplier обект
+        # supplier е само ID, не Supplier обект
         self.supplier_id = supplier_id
 
         self.tags = tags or []
@@ -56,7 +56,7 @@ class Product:
             "description": self.description,
             "price": self.price,
 
-            # ВАЖНО: вече записваме само supplier_id
+            # вече записваме само supplier_id
             "supplier_id": self.supplier_id,
 
             "tags": self.tags,
@@ -75,7 +75,7 @@ class Product:
             description=data["description"],
             price=data["price"],
 
-            # ВАЖНО: зареждаме supplier_id, не Supplier обект
+            # зареждаме supplier_id, не Supplier обект
             supplier_id=data.get("supplier_id"),
 
             tags=data.get("tags", []),

@@ -4,7 +4,7 @@ import msvcrt    # За звездички при въвеждане на пар
 
 
 def input_password(prompt="Въведете парола: "):
-    """Въвеждане на парола със звездички (работи в CMD/PowerShell)"""
+    """Въвежда парола, като показва звездички вместо символи (Windows CMD)."""
     print(prompt, end="", flush=True)
     password = ""
 
@@ -12,7 +12,7 @@ def input_password(prompt="Въведете парола: "):
         ch = msvcrt.getch()
 
         # Enter
-        if ch in {b"\r", b"\n"}:
+        if ch in (b"\r", b"\n"):
             print()
             break
 
@@ -23,16 +23,22 @@ def input_password(prompt="Въведете парола: "):
                 print("\b \b", end="", flush=True)
             continue
 
-        # Специални клавиши (стрелки, F1 и др.)
-        if ch in {b"\x00", b"\xe0"}:
+        # Игнориране на специални клавиши
+        if ch in (b"\x00", b"\xe0"):
             msvcrt.getch()
             continue
 
         # Нормален символ
-        password += ch.decode("utf-8")
+        try:
+            char = ch.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+
+        password += char
         print("*", end="", flush=True)
 
     return password
+
 
 
 def format_table(columns, rows):
@@ -63,8 +69,6 @@ def require_password(correct_password):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-
-            # Опит за скрито въвеждане (идеята на господина, но адаптирана)
             try:
                 # вместо getpass → звездички
                 password = input_password("Въведете парола: ")

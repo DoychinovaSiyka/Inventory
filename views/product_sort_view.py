@@ -1,5 +1,5 @@
 from views.menu import Menu, MenuItem
-from views.password_utils import format_table   # ⭐ премахнат require_password
+from views.password_utils import format_table
 from controllers.product_controller import ProductController
 
 
@@ -7,7 +7,7 @@ class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
 
-    # ⭐ ВАЖНО: ТУК ВЕЧЕ НЯМА ПАРОЛА
+
     # Паролата се контролира само от ProductView.sort_menu_protected
     def show_menu(self):
         menu = Menu("Сортиране на продукти", [

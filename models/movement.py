@@ -3,18 +3,14 @@ from enum import Enum
 from datetime import datetime
 
 
-# ============================
-#  ENUM: MovementType
-# ============================
+# ENUM: MovementType
 class MovementType(Enum):
     IN = "IN"
     OUT = "OUT"
     MOVE = "MOVE"
 
 
-# ============================
-#  META CLASS: MetaMovement
-# ============================
+# META CLASS: MetaMovement
 class MetaMovement(type):
     def __new__(cls, name, bases, namespace):
 
@@ -44,9 +40,7 @@ class MetaMovement(type):
         return super().__new__(cls, name, bases, namespace)
 
 
-# ============================
-#  CLASS: Movement
-# ============================
+# CLASS: Movement
 class Movement(metaclass=MetaMovement):
     def __init__(
         self,
@@ -91,9 +85,7 @@ class Movement(metaclass=MetaMovement):
 
         self.validate()
 
-    # ============================
-    #  VALIDATION
-    # ============================
+    # VALIDATION
     def validate(self):
         if self.product_id is None:
             raise ValueError("product_id е задължително поле.")
@@ -110,34 +102,28 @@ class Movement(metaclass=MetaMovement):
         if not self.unit:
             raise ValueError("unit е задължително поле.")
 
-        # ============================
-        #  IN LOGIC
-        # ============================
+        # IN LOGIC
         if self.movement_type == MovementType.IN:
             if self.price <= 0:
                 raise ValueError("IN movement трябва да има цена > 0.")
             if self.supplier_id is None:
                 raise ValueError("IN movement трябва да има supplier_id.")
 
-        # ============================
-        #  OUT LOGIC
-        # ============================
+        # OUT LOGIC
         elif self.movement_type == MovementType.OUT:
             if self.price <= 0:
                 raise ValueError("OUT movement трябва да има цена > 0.")
             if self.customer is None:
                 raise ValueError("OUT movement трябва да има customer.")
 
-        # ============================
-        #  MOVE LOGIC
-
+        # MOVE LOGIC
         elif self.movement_type == MovementType.MOVE:
-            # MOVE няма цена
             if self.from_location_id is None or self.to_location_id is None:
                 raise ValueError("MOVE movement трябва да има from_location_id и to_location_id.")
 
             if self.from_location_id == self.to_location_id:
                 raise ValueError("MOVE movement трябва да е между различни локации.")
+
     @staticmethod
     def from_dict(data):
         return Movement(
@@ -158,4 +144,3 @@ class Movement(metaclass=MetaMovement):
             created=data.get("created"),
             modified=data.get("modified")
         )
-

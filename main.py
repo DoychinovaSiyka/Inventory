@@ -7,7 +7,6 @@ from controllers.stocklog_controller import StockLogController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
-
 from controllers.user_activity_log_controller import UserActivityLogController
 
 from views.admin_menu_view import AdminMenuView
@@ -42,7 +41,7 @@ def main():
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
-    # ⭐ ДОБАВЕНО: activity_log_controller
+    #  activity_log_controller
     product_controller = ProductController(
         product_repo,
         category_controller,
@@ -52,7 +51,7 @@ def main():
 
     invoice_controller = InvoiceController(invoice_repo)
 
-    # ⭐ ДОБАВЕНО: activity_log_controller
+    # activity_log_controller
     movement_controller = MovementController(
         movement_repo,
         product_controller,

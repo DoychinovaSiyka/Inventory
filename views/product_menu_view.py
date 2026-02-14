@@ -5,7 +5,8 @@ from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
 
-# Четене на цяло число
+
+# Четене на цяло число от потребителя
 def _read_int(prompt):
     try:
         return int(input(prompt))
@@ -14,7 +15,7 @@ def _read_int(prompt):
         return None
 
 
-# Четене на float (поддържа 5,5 → 5.5 и игнорира мерни единици след числото)
+# Четене на число с плаваща запетая (позволява 5,5 → 5.5 и игнорира текст след числото)
 def _read_float(prompt):
     raw = input(prompt)
     raw = raw.replace(",", ".").strip()
@@ -40,7 +41,7 @@ class ProductView:
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
 
-    # Главно меню
+    # Основно меню за работа с продукти
     def show_menu(self, user: User):
         readonly = user.role != "Admin"
 
@@ -49,13 +50,13 @@ class ProductView:
             MenuItem("2", "Премахване на продукт", self.remove_product),
             MenuItem("3", "Редактиране на продукт", self.edit_product),
 
-            # ⭐ Оператор → защита, админ → без защита
+            # За оператор показването на всички продукти е защитено с парола
             MenuItem("4", "Покажи всички продукти",
                      self.show_all_protected if user.role == "Operator" else self.show_all),
 
             MenuItem("5", "Търсене", self.search),
 
-            # ⭐ Сортирането също е защитено за оператор
+            # Сортирането също е защитено за оператор
             MenuItem("6", "Сортиране на продукти",
                      self.sort_menu_protected if user.role == "Operator" else self.sort_menu),
 
@@ -84,7 +85,7 @@ class ProductView:
             if result == "break":
                 break
 
-    # ⭐ Защитена версия само за оператор
+    # Показване на всички продукти (за оператор е защитено с парола)
     @require_password("parola123")
     def show_all_protected(self, _):
         products = self.product_controller.get_all()
@@ -153,7 +154,7 @@ class ProductView:
             return
 
         try:
-            self.product_controller.remove_by_id(pid, user.id)   # ⭐ поправено
+            self.product_controller.remove_by_id(pid, user.id)
             print("Продуктът е премахнат.")
         except ValueError as e:
             print("Грешка:", e)
@@ -178,7 +179,6 @@ class ProductView:
         new_quantity = _read_float(f"Ново количество ({product.quantity}): ") or product.quantity
 
         try:
-            # ⭐ Твоят контролер няма update(), затова не го пипам
             product.name = new_name
             product.description = new_description
             product.price = new_price
@@ -190,7 +190,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 4. Покажи всички продукти (оригинал — само за администратор)
+    # Показване на всички продукти (за администратор)
     def show_all(self, _):
         products = self.product_controller.get_all()
         if not products:
@@ -218,12 +218,12 @@ class ProductView:
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
-    # ⭐ Защитено сортиране за оператор
+    # Защитено сортиране за оператор
     @require_password("parola123")
     def sort_menu_protected(self, _):
         self.sort_view.show_menu()
 
-    # ⭐ Нормално сортиране за администратор
+    # Нормално сортиране за администратор
     def sort_menu(self, _):
         self.sort_view.show_menu()
 
@@ -264,7 +264,7 @@ class ProductView:
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
 
-    # 9. Увеличаване
+    # 9. Увеличаване на количество
     def increase_quantity(self, user):
         pid = _read_int("ID: ")
         amount = _read_float("Добави: ")
@@ -280,7 +280,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 10. Намаляване
+    # 10. Намаляване на количество
     def decrease_quantity(self, user):
         pid = _read_int("ID: ")
         amount = _read_float("Извади: ")
@@ -296,7 +296,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 11. Ниска наличност
+    # 11. Продукти с ниска наличност
     def low_stock(self, _):
         low = self.product_controller.check_low_stock()
         if not low:
@@ -321,7 +321,7 @@ class ProductView:
         else:
             print(f"Най-евтин продукт: {p.name} – {p.price} лв.")
 
-    # 14. Обща стойност
+    # 14. Обща стойност на склада
     def total_value(self, _):
         value = self.product_controller.total_values()
         print(f"Обща стойност на склада: {value:.2f} лв.")
