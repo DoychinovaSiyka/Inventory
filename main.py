@@ -70,18 +70,6 @@ def main():
         location_controller
     )
 
-    # Пакет от контролери за менюта
-    controllers = {
-        "user": user_controller,
-        "product": product_controller,
-        "category": category_controller,
-        "supplier": supplier_controller,
-        "movement": movement_controller,
-        "invoice": invoice_controller,
-        "report": report_controller,
-        "location": location_controller,
-        "activity_log": activity_log_controller
-    }
 
 
     # Пакет от контролери за менюта

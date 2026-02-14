@@ -50,13 +50,11 @@ class ProductView:
             MenuItem("2", "Премахване на продукт", self.remove_product),
             MenuItem("3", "Редактиране на продукт", self.edit_product),
 
-            # За оператор показването на всички продукти е защитено с парола
             MenuItem("4", "Покажи всички продукти",
                      self.show_all_protected if user.role == "Operator" else self.show_all),
 
             MenuItem("5", "Търсене", self.search),
 
-            # Сортирането също е защитено за оператор
             MenuItem("6", "Сортиране на продукти",
                      self.sort_menu_protected if user.role == "Operator" else self.sort_menu),
 
@@ -76,7 +74,6 @@ class ProductView:
         while True:
             choice = menu.show()
 
-            # Ограничения за оператор
             if readonly and choice in ["1", "2", "3", "9", "10"]:
                 print("Тази функция не е достъпна за оператор.")
                 continue
@@ -160,7 +157,7 @@ class ProductView:
             print("Грешка:", e)
 
     # 3. Редактиране на продукт
-    def edit_product(self, user):
+    def edit_product(self, _):
         print("\n=== Редактиране на продукт ===")
         pid = _read_int("ID на продукт: ")
         if pid is None:
