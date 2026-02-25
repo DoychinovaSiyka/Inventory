@@ -44,7 +44,7 @@ class UserController:
         self.repo = repo
         self.users = [User.from_dict(u) for u in self.repo.load()]
 
-        # Ако няма потребители → създаваме администратор (SRS)
+        # Ако няма потребители → създаваме администратор
         if not self.users:
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             admin = User(
@@ -60,7 +60,7 @@ class UserController:
             )
             self.users.append(admin)
 
-            # Автоматично създаване на оператор (първоначално)
+            # Автоматично създаване на оператор
             operator = User(
                 first_name="Operator",
                 last_name="User",

@@ -36,6 +36,16 @@ def main():
 
     # Контролери
     user_controller = UserController(user_repo)
+    #  добавяме нов потребител
+    user_controller.register(
+        first_name="Ivan",
+        last_name="Petrov",
+        email="ivan@example.com",
+        username="ivan",
+        password="test123",
+        role="Operator"
+    )
+
     category_controller = CategoryController(category_repo)
     supplier_controller = SupplierController(supplier_repo)
     location_controller = LocationController(location_repo)

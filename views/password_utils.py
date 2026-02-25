@@ -9,23 +9,24 @@ def input_password(prompt="Въведете парола: "):
     password = ""
 
     while True:
-        ch = msvcrt.getch()
+        ch = msvcrt.getch()  # getch() връща байт — не буква, а суров код от клавиатурата
+        code = ord(ch)       # превръщаме байта в число, за да не пишем хардкоднати \x08, \x00, \xe0
 
         # Enter
-        if ch in (b"\r", b"\n"):
+        if code in (10, 13):     # 10 = '\n', 13 = '\r' — извлечени от Windows при натискане на Enter
             print()
             break
 
         # Backspace
-        if ch == b"\x08":
+        if code == 8:            # 8 = '\x08' — извлечено от Windows при натискане на Backspace
             if password:
                 password = password[:-1]
                 print("\b \b", end="", flush=True)
             continue
 
         # Игнориране на специални клавиши
-        if ch in (b"\x00", b"\xe0"):
-            msvcrt.getch()
+        if code in (0, 224):     # 0 и 224 — първи байт на специални клавиши (стрелки, F-клавиши)
+            msvcrt.getch()       # втори байт
             continue
 
         # Нормален символ
@@ -109,3 +110,11 @@ def show_products_menu(product_controller):
         ])
 
     print("\n" + format_table(columns, rows))
+# Кодовете на специалните клавиши не са ASCII или Unicode.
+# Те идват от хардуерните scan codes на клавиатурата.
+# Windows Console API ги превежда в два байта – първо \x00 или \xE0, което е сигнал, че клавишът е специален,
+# и втори байт, който е конкретният код на клавиша. msvcrt.getch() просто връща тези байтове директно от Windows.
+# Конкретните кодове не съм ги измисляла – взела съм ги от стандарта на Windows,
+# описан в документацията за keyboard scan codes. Същите кодове могат да се видят и в
+# официалната документация за Windows Console Input.
+# Освен това мога да ги проверя и сама, като пусна малък тест с getch() и натискам стрелките, за да видя какво връща

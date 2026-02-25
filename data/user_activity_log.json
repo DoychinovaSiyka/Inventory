@@ -873,5 +873,19 @@
         "action": "LOGOUT",
         "details": "User admin logged out",
         "timestamp": "2026-02013 22:14:21"
+    },
+    {
+        "log_id": "f2e8a2af-91e4-4048-8e96-47c3ab2c086b",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02024 21:08:50"
+    },
+    {
+        "log_id": "cea9722a-55c4-4ca2-813c-059bfc9083f1",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-02025 11:44:55"
     }
 ]
