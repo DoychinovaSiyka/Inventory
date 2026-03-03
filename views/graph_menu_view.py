@@ -1,4 +1,3 @@
-# views/graph_view.py
 
 from views.menu import Menu, MenuItem
 from graph.warehouse import Warehouse

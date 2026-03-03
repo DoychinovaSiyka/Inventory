@@ -13,8 +13,7 @@ class ProductController:
         repo: Repository,
         category_controller: CategoryController,
         supplier_controller: SupplierController,
-        activity_log_controller=None
-    ):
+        activity_log_controller=None):
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
