@@ -21,8 +21,8 @@ class MovementValidator:
     @staticmethod
     def parse_price(price, movement_type=None):
         """
-        При IN/OUT → price > 0
-        При MOVE → price може да е 0 или празно
+        При IN/OUT -> price > 0
+        При MOVE -> price може да е 0 или празно
         """
 
         if movement_type == MovementType.MOVE:

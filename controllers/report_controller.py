@@ -12,17 +12,17 @@ class ReportController:
         self.location_controller = location_controller
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
-    # ID GENERATOR
+    # id generator
     def _generate_id(self):
         if not self.reports:
             return 1
         return max(r.report_id for r in self.reports) + 1
 
-    # INTERNAL SAVE
+    # internal save
     def save_changes(self):
         self.repo.save([r.to_dict() for r in self.reports])
 
-    # CREATE REPORT OBJECT
+    # create report object
     def _create_report(self, report_type, parameters, data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 

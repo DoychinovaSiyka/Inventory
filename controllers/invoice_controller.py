@@ -27,7 +27,7 @@ class InvoiceController:
         # ЛОГВАНЕ
         if self.activity_log:
             self.activity_log.add_log(
-                invoice.customer,  # няма user_id → логваме по клиент
+                invoice.customer,
                 "GENERATE_INVOICE",
                 f"Invoice created for movement {invoice.movement_id}")
 
@@ -147,7 +147,7 @@ class InvoiceController:
         return False
 
 
-    # SEARCH & FILTERING FOR INVOICES
+    # SEARCH AND FILTERING FOR INVOICES
 
     def advanced_search(self,
         customer: Optional[str] = None,

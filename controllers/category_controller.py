@@ -22,10 +22,7 @@ class CategoryController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         category = Category(name=name,description=description,created=now,modified=now)
-
-        # Създаваме нова категория чрез конструктора на Category.
-        # Подаваме всички полета, описани в документацията — name, description, created и modified.
-        # Това гарантира, че Category обектът е валиден още при създаването си.
+        #  Category обектът е валиден още при създаването си.
 
         self.categories.append(category)
         self.save_changes()

@@ -18,7 +18,7 @@ class Product:
     ):
         self.product_id = product_id
         self.name = name
-        self.categories = categories  # може да са UUID или Category обекти
+        self.categories = categories  # става или да UUID или Category обекти
 
         self.quantity = float(quantity)
 
