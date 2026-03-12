@@ -163,5 +163,20 @@
         "tags": [],
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
+    },
+    {
+        "product_id": 22,
+        "name": "киви",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 3.0,
+        "unit": "кг",
+        "description": "плод",
+        "price": 1.0,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-03-12 09:44:27.251007",
+        "modified": "2026-03-12 09:44:27.251007"
     }
 ]

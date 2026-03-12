@@ -887,5 +887,19 @@
         "action": "LOGIN",
         "details": "User admin logged in",
         "timestamp": "2026-02025 11:44:55"
+    },
+    {
+        "log_id": "4699b34f-4607-4a24-bd13-fcb7c1aceb9d",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "LOGIN",
+        "details": "User admin logged in",
+        "timestamp": "2026-03012 09:43:34"
+    },
+    {
+        "log_id": "79b94076-7f0e-4b2f-9f89-beec8c57148a",
+        "user_id": "5006cdef-0d25-40d3-81b5-9d9795016a38",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: киви",
+        "timestamp": "2026-03012 09:44:27"
     }
 ]
