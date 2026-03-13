@@ -20,10 +20,8 @@ class CategoryController:
         CategoryValidator.validate_description(description)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         category = Category(name=name,description=description,created=now,modified=now)
         #  Category обектът е валиден още при създаването си.
-
         self.categories.append(category)
         self.save_changes()
         return category
@@ -55,7 +53,6 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_description(new_description)
-
         category.description = new_description
         category.update_modified()
         self.save_changes()

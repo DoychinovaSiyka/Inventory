@@ -11,14 +11,14 @@ class ProductValidator:
         if not category_ids:
             raise ValueError("Трябва да изберете поне една категория.")
 
-        # category_ids трябва да са UUID стрингове
+        # category_ids са UUID стрингове
         for cid in category_ids:
             if not isinstance(cid, str) or len(cid.strip()) == 0:
                 raise ValueError("Невалидна категория.")
 
     @staticmethod
     def validate_quantity(quantity):
-        # quantity вече е float
+        # quantity  е float
         if not isinstance(quantity, (int, float)):
             raise ValueError("Количеството трябва да е число.")
 

@@ -9,7 +9,7 @@ class GraphView:
     def __init__(self):
         self.graph = WarehouseGraph()
 
-        # Примерни складове
+        # Складове
         w1 = Warehouse("W1", "Склад София")
         w2 = Warehouse("W2", "Склад Пловдив")
         w3 = Warehouse("W3", "Склад Варна")
@@ -20,7 +20,7 @@ class GraphView:
         self.graph.add_warehouse(w3)
         self.graph.add_warehouse(w4)
 
-        # Примерни разстояния
+        # Разстояния
         self.graph.add_edge("W1", "W2", 150)
         self.graph.add_edge("W2", "W3", 250)
         self.graph.add_edge("W1", "W4", 380)

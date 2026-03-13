@@ -26,7 +26,7 @@ class InvoiceView:
             if result == "break":
                 break
 
-    # 1. Списък с всички фактури
+    # Списък с всички фактури
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
 
@@ -54,7 +54,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 2. Преглед по ID
+    #  Преглед по ID
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура: ")
         invoice = self.invoice_controller.get_by_id(invoice_id)
@@ -81,7 +81,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 3. Търсене по клиент
+    # Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ")
         results = self.invoice_controller.search_by_customer(keyword)
@@ -108,7 +108,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 4. Търсене по продукт
+    # Търсене по продукт
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ")
         results = self.invoice_controller.search_by_product(keyword)
@@ -135,7 +135,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 5. Търсене по дата
+    # Търсене по дата
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ")
         results = self.invoice_controller.search_by_date(date_str)
@@ -162,7 +162,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 6. РАЗШИРЕНО ТЪРСЕНЕ НА ФАКТУРИ
+    # РАЗШИРЕНО ТЪРСЕНЕ НА ФАКТУРИ
     def advanced_search(self, user):
         print("\n=== Разширено търсене на фактури ===")
 

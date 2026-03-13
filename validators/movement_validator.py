@@ -34,7 +34,7 @@ class MovementValidator:
             except ValueError:
                 raise ValueError("Цената трябва да е число.")
 
-        # IN / OUT → задължителна цена
+        # IN / OUT  - задължителна цена
         if not price.strip():
             raise ValueError("Цената е задължителна.")
 

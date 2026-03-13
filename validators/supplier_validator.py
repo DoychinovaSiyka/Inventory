@@ -5,7 +5,7 @@ class SupplierValidator:
     # Регулярен израз за имейл
     email_regex = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
-    # Регулярен израз за телефон (международен формат)
+    # Регулярен израз за телефон - международен формат
     phone_regex = re.compile(r"^\+?\d{7,15}$")
 
     @staticmethod
@@ -23,11 +23,11 @@ class SupplierValidator:
 
         contact = contact.strip()
 
-        # Валиден имейл?
+        # Валиден имейл
         if SupplierValidator.email_regex.match(contact):
             return True
 
-        # Валиден телефон?
+        # Валиден телефон
         if SupplierValidator.phone_regex.match(contact):
             return True
 

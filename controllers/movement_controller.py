@@ -5,7 +5,7 @@ from models.movement import Movement, MovementType
 from models.invoice import Invoice
 from storage.json_repository import JSONRepository
 
-import validators.movement_validator
+from validators.movement_validator import MovementValidator
 
 
 class MovementController:
@@ -43,11 +43,11 @@ class MovementController:
         action = None
 
         # Валидации
-        validators.movement_validator.MovementValidator.validate_movement_type(movement_type)
-        validators.movement_validator.MovementValidator.validate_description(description)
+        MovementValidator.validate_movement_type(movement_type)
+        MovementValidator.validate_description(description)
 
-        quantity = validators.movement_validator.MovementValidator.parse_quantity(quantity)
-        price = validators.movement_validator.MovementValidator.parse_price(price)
+        quantity = MovementValidator.parse_quantity(quantity)
+        price = MovementValidator.parse_price(price)
 
         # Потребител
         user = next((u for u in self.user_controller.users if u.user_id == user_id), None)
@@ -71,7 +71,7 @@ class MovementController:
                 raise ValueError("Невалиден тип движение.")
             movement_type = mapping[movement_type]
 
-        #  ЗАБРАНЯВАМЕ MOVE ПРЕЗ add()
+        # Забраняваме MOVE през add()
         if movement_type == MovementType.MOVE:
             raise ValueError("MOVE може да се извършва само чрез move_product().")
 
@@ -124,7 +124,7 @@ class MovementController:
             location_id=location_id,
             quantity=quantity,
             unit=product.unit,
-            action= action
+            action=action
         )
 
         # Activity Log
@@ -156,7 +156,7 @@ class MovementController:
 
         return movement
 
-    #  MOVE — С ДВЕ MOVE ДВИЖЕНИЯ
+    # MOVE — с две MOVE движения
     def move_product(
         self,
         product_id: str,
@@ -234,7 +234,7 @@ class MovementController:
         self.movements.append(in_movement)
         self.save_changes()
 
-        #  StockLog
+        # StockLog
         self.stocklog_controller.add_log(
             product_id=product_id,
             location_id=from_location_id,

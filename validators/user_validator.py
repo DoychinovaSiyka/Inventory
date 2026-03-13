@@ -45,7 +45,7 @@ class UserValidator:
         return True
 
 
-    #   ROLE (SRS: Admin, Operator, Anonymous)
+    #   ROLE (Admin, Operator, Anonymous)
     @staticmethod
     def validate_role(role: str):
         valid_roles = ["Admin", "Operator", "Anonymous"]
@@ -56,7 +56,7 @@ class UserValidator:
 
 
 
-    #   STATUS (SRS: Active, Disabled)
+    #   STATUS (Active, Disabled)
     @staticmethod
     def validate_status(status: str):
         valid_status = ["Active", "Disabled"]
@@ -67,7 +67,6 @@ class UserValidator:
 
 
     #   ПЪЛНА ВАЛИДАЦИЯ НА ПОТРЕБИТЕЛ
-
     @staticmethod
     def validate_user_data(username, password, email, role, status):
         UserValidator.validate_username(username)
