@@ -1,12 +1,11 @@
 import sys, os
 import json
 from pathlib import Path
+from storage.repository import Repository
 
-
-# Добавям само родителската директория, за да са стабилни импортите,
+# Родителската директория, за да са стабилни импортите,
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from storage.repository import Repository
 
 
 class JSONRepository(Repository):
