@@ -20,7 +20,7 @@ from models.user import User
 
 def main():
 
-    # Репозитории
+
     user_repo = JSONRepository("data/users.json")
     product_repo = JSONRepository("data/products.json")
     category_repo = JSONRepository("data/categories.json")
@@ -176,7 +176,7 @@ def main():
                 "Anonymous user exited the system"
             )
 
-        # Изход
+
         elif choice == "0":
             print("Изход от системата.")
             break

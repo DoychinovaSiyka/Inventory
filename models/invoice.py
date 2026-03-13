@@ -2,37 +2,22 @@ import uuid
 from datetime import datetime
 
 class Invoice:
-    def __init__(
-        self,
-        invoice_id=None,
-        movement_id=None,
-        product="",
-        quantity=0,
-        unit="",
-        unit_price=0.0,
-        total_price=None,
-        customer="",
-        date=None,
-        created=None,
-        modified=None
-    ):
+    def __init__(self, invoice_id=None, movement_id=None, product="", quantity=0,
+                 unit="", unit_price=0.0,
+                 total_price=None, customer="", date=None, created=None, modified=None):
+
         # ID — UUID
         self.invoice_id = invoice_id or str(uuid.uuid4())
 
         # Movement → Invoice (1:1)
         self.movement_id = str(movement_id) if movement_id is not None else None
 
-        # Основни полета
+
         self.product = product
         self.quantity = quantity
         self.unit = unit
         self.unit_price = unit_price
-
-        # total_price
-        self.total_price = (
-            total_price if total_price is not None else quantity * unit_price
-        )
-
+        self.total_price = (total_price if total_price is not None else quantity * unit_price)
         self.customer = customer
 
         # Дати
@@ -41,11 +26,9 @@ class Invoice:
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация
         self.validate()
 
     # ВАЛИДАЦИЯ
-
     def validate(self):
         if not self.product:
             raise ValueError("Продуктът е задължителен (според SRS).")
@@ -67,7 +50,6 @@ class Invoice:
 
 
     # JSON сериализация
-
     def to_dict(self):
         return {
             "invoice_id": self.invoice_id,

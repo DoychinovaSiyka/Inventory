@@ -3,7 +3,6 @@ import re
 
 class UserValidator:
 
-
     @staticmethod
     def validate_username(username: str):
         if not username:
@@ -19,7 +18,6 @@ class UserValidator:
 
 
     #   PASSWORD (минимум 6 символа, хеширана)
-
     @staticmethod
     def validate_password(password: str):
         if not password:
@@ -32,7 +30,6 @@ class UserValidator:
 
 
     #   EMAIL (валиден формат )
-
     @staticmethod
     def validate_email(email: str):
         if not email:
@@ -53,7 +50,6 @@ class UserValidator:
             raise ValueError(f"Невалидна роля. Позволени роли: {valid_roles}")
 
         return True
-
 
 
     #   STATUS (Active, Disabled)

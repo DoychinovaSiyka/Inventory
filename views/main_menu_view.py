@@ -1,5 +1,3 @@
-
-
 from views.product_menu_view import ProductView
 from views.category_view import CategoryView
 from views.supplier_view import SupplierView

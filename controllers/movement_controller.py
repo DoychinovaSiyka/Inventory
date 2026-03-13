@@ -4,8 +4,8 @@ from datetime import datetime
 from models.movement import Movement, MovementType
 from models.invoice import Invoice
 from storage.json_repository import JSONRepository
-
 from validators.movement_validator import MovementValidator
+
 
 
 class MovementController:

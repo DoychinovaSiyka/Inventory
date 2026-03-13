@@ -18,7 +18,7 @@ class Product:
     ):
         self.product_id = product_id
         self.name = name
-        self.categories = categories  # става или да UUID или Category обекти
+        self.categories = categories  #  или да UUID или Category обекти
 
         self.quantity = float(quantity)
 
@@ -74,11 +74,7 @@ class Product:
             unit=data.get("unit", "бр."),
             description=data["description"],
             price=data["price"],
-
-            # зареждаме supplier_id, не Supplier обект
             supplier_id=data.get("supplier_id"),
-
             tags=data.get("tags", []),
             created=data.get("created"),
-            modified=data.get("modified")
-        )
+            modified=data.get("modified"))

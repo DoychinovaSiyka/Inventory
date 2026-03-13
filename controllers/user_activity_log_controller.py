@@ -1,6 +1,7 @@
 from models.user_activity_log import UserActivityLog
 from storage.json_repository import JSONRepository
 
+
 class UserActivityLogController:
     def __init__(self, filepath="data/user_activity_log.json"):
         self.repo = JSONRepository(filepath)

@@ -1,4 +1,3 @@
-
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController

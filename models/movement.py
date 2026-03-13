@@ -3,18 +3,17 @@ from enum import Enum
 from datetime import datetime
 
 
-# ENUM: MovementType
+
 class MovementType(Enum):
     IN = "IN"
     OUT = "OUT"
     MOVE = "MOVE"
 
 
-# META CLASS: MetaMovement
 class MetaMovement(type):
     def __new__(cls, name, bases, namespace):
 
-        # Автоматично добавяне на to_dict, ако липсва
+
         if "to_dict" not in namespace:
             def to_dict(self):
                 return {
@@ -40,7 +39,7 @@ class MetaMovement(type):
         return super().__new__(cls, name, bases, namespace)
 
 
-# CLASS: Movement
+
 class Movement(metaclass=MetaMovement):
     def __init__(
         self,

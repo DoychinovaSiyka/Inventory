@@ -375,7 +375,6 @@ class ProductController:
 
 
     # Разширено търсене и филтриране
-
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
         results = self.products
 
@@ -407,16 +406,10 @@ class ProductController:
     def search_by_supplier(self, supplier_id: int) -> List[Product]:
         return [p for p in self.products if p.supplier_id == supplier_id]
 
-    def search_combined(
-        self,
-        name_keyword: str = None,
-        category_id: int = None,
-        min_price: float = None,
-        max_price: float = None,
-        min_qty: float = None,
-        max_qty: float = None,
-        supplier_id: int = None
-    ) -> List[Product]:
+    def search_combined(self, name_keyword: str = None,
+        category_id: int = None, min_price: float = None,
+        max_price: float = None, min_qty: float = None,
+        max_qty: float = None, supplier_id: int = None) -> List[Product]:
 
         results = self.products
 

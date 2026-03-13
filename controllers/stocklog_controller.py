@@ -25,14 +25,9 @@ class StockLogController:
             raise ValueError("Невалидно действие. Позволени: add, remove, move.")
 
         # Създаване на лог
-        log = StockLog(
-            product_id=product_id,
-            location_id=location_id,
-            quantity=quantity,
-            unit=unit,
-            action=action,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        )
+        log = StockLog(product_id = product_id,
+            location_id=location_id,quantity=quantity,unit = unit,action=action,
+            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         self.logs.append(log)
         self.save_changes()
