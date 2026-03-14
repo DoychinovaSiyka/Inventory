@@ -3,10 +3,8 @@ from datetime import datetime
 
 
 class User:
-    def __init__(
-        self, first_name, last_name, email, username, password,
-        role="Operator", status="Active", user_id=None, created=None, modified=None
-    ):
+    def __init__(self, first_name, last_name, email, username, password,
+        role="Operator", status="Active", user_id=None, created=None, modified=None):
         # Уникален идентификатор на потребителя (UUID)
         self.user_id = user_id or str(uuid.uuid4())
         self.id = self.user_id   # за съвместимост с user.id
@@ -36,15 +34,10 @@ class User:
         user = User(
             first_name=data["first_name"],
             last_name=data["last_name"],
-            email=data["email"],
-            username=data["username"],
-            password=data["password"],
-            role=data.get("role", "Operator"),
-            status=data.get("status", "Active"),
-            user_id=data.get("user_id"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+            email=data["email"],username=data["username"],
+            password=data["password"],role=data.get("role", "Operator"),
+            status=data.get("status", "Active"),user_id=data.get("user_id"),
+            created=data.get("created"),modified=data.get("modified"))
 
         user.id = user.user_id
         return user

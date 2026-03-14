@@ -101,13 +101,8 @@ def show_products_menu(product_controller):
     rows = []
     for p in products:
         categories = ", ".join([c.name for c in p.categories])
-        rows.append([
-            p.product_id,
-            p.name,
-            p.price,
-            p.quantity,
-            categories
-        ])
+        rows.append([p.product_id,
+            p.name,p.price,p.quantity,categories])
 
     print("\n" + format_table(columns, rows))
 

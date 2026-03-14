@@ -14,13 +14,9 @@ class Location:
 
     def to_dict(self):
         return {
-            "location_id": self.location_id,
-            "name": self.name,
-            "zone": self.zone,
-            "capacity": self.capacity,
-            "created": self.created,
-            "modified": self.modified
-        }
+            "location_id": self.location_id,"name": self.name,
+            "zone": self.zone,"capacity": self.capacity,
+            "created": self.created,"modified": self.modified}
 
     @staticmethod
     def from_dict(data):

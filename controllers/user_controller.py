@@ -4,10 +4,10 @@ from models.user import User
 from storage.json_repository import JSONRepository
 from validators.user_validator import UserValidator
 import getpass
-import msvcrt   #  звездички при въвеждане на парола
+import msvcrt
 
 
-#  Функция за въвеждане на парола със звездички (работи в CMD/PowerShell)
+# функция за въвеждане на парола със звездички (работи в cmd/powershell)
 def input_password(prompt="Парола: "):
     print(prompt, end="", flush=True)
     password = ""
@@ -15,24 +15,24 @@ def input_password(prompt="Парола: "):
     while True:
         ch = msvcrt.getch()
 
-        # Enter
+        # enter
         if ch in {b"\r", b"\n"}:
             print()
             break
 
-        # Backspace
+        # backspace
         if ch == b"\x08":
             if password:
                 password = password[:-1]
                 print("\b \b", end="", flush=True)
             continue
 
-        # Специални клавиши (стрелки, F1 и др.)
+        # специални клавиши (стрелки, f1 и др.)
         if ch in {b"\x00", b"\xe0"}:
             msvcrt.getch()
             continue
 
-        # Нормален символ
+        # нормален символ
         password += ch.decode("utf-8")
         print("*", end="", flush=True)
 
@@ -44,76 +44,51 @@ class UserController:
         self.repo = repo
         self.users = [User.from_dict(u) for u in self.repo.load()]
 
-        # Ако няма потребители → създаваме администратор
+        # ако няма потребители → създаваме администратор
         if not self.users:
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            admin = User(
-                first_name="Admin",
-                last_name="User",
-                email="admin@example.com",
-                username="admin",
-                password=self._hash_password("admin123"),
-                role="Admin",
-                status="Active",
-                created=now,
-                modified=now
-            )
-            self.users.append(admin)
 
-            # Автоматично създаване на оператор
-            operator = User(
-                first_name="Operator",
-                last_name="User",
-                email="operator@example.com",
-                username="operator",
-                password=self._hash_password("operator123"),
-                role="Operator",
-                status="Active",
-                created=now,
-                modified=now
-            )
-            self.users.append(operator)
+            admin = User(first_name="Admin", last_name="User", email="admin@example.com",
+                         username="admin", password=self._hash_password("admin123"),
+                         role="Admin", status="Active", created=now, modified=now)
 
+            # автоматично създаване на оператор
+            operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+                            username="operator", password=self._hash_password("operator123"),
+                            role="Operator", status="Active", created=now, modified=now)
+
+            self.users.extend([admin, operator])
             self.save_changes()
 
-        # Ако няма оператор → създаваме един
+        # ако няма оператор → създаваме един
         if not any(u.role == "Operator" for u in self.users):
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            operator = User(
-                first_name="Operator",
-                last_name="User",
-                email="operator@example.com",
-                username="operator",
-                password=self._hash_password("operator123"),
-                role="Operator",
-                status="Active",
-                created=now,
-                modified=now
-            )
+            operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+                            username="operator", password=self._hash_password("operator123"),
+                            role="Operator", status="Active", created=now, modified=now)
             self.users.append(operator)
             self.save_changes()
 
         self.logged_user: Optional[User] = None
 
-    # PASSWORD HASHING
+    # password hashing
     @staticmethod
     def _hash_password(password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
-    # SAVE
+    # save
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
-    # HELPERS
+    # helpers
     def _is_unique_username(self, username: str) -> bool:
         return not any(u.username == username for u in self.users)
 
     def get_by_id(self, user_id: str) -> Optional[User]:
         return next((u for u in self.users if u.user_id == user_id), None)
 
-    # REGISTER
+    # register
     def register(self, first_name, last_name, email, username, password, role="Operator"):
-
         UserValidator.validate_user_data(username, password, email, role, "Active")
 
         if not self._is_unique_username(username):
@@ -121,31 +96,22 @@ class UserController:
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        new_user = User(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            username=username,
-            password=self._hash_password(password),
-            role=role,
-            status="Active",
-            created=now,
-            modified=now
-        )
+        new_user = User(first_name=first_name, last_name=last_name, email=email,
+                        username=username, password=self._hash_password(password),
+                        role=role, status="Active", created=now, modified=now)
 
         self.users.append(new_user)
         self.save_changes()
         return new_user
 
-    #  LOGIN — скрито въвеждане на парола (със звездички)
+    # login — скрито въвеждане на парола (със звездички)
     def login(self, username: str, password: Optional[str] = None) -> Optional[User]:
-
-        # Ако паролата не е подадена от main.py → искаме я тук
+        # ако паролата не е подадена от main.py → искаме я тук
         if password is None:
             try:
                 password = input_password("Парола: ")
             except Exception:
-                #  НИКОГА не показваме видима парола
+                # никога не показваме видима парола
                 password = getpass.getpass("Парола: ")
 
         hashed = self._hash_password(password)
@@ -159,7 +125,7 @@ class UserController:
 
         return None
 
-    # CHANGE ROLE (Admin only)
+    # change role (admin only)
     def change_role(self, acting_user: User, username: str, new_role: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да променя роли.")
@@ -175,7 +141,7 @@ class UserController:
 
         return False
 
-    # DEACTIVATE USER (Admin only)
+    # deactivate user (admin only)
     def deactivate_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да деактивира потребители.")
@@ -189,7 +155,7 @@ class UserController:
 
         return False
 
-    # ACTIVATE USER (Admin only)
+    # activate user (admin only)
     def activate_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да активира потребители.")
@@ -203,7 +169,7 @@ class UserController:
 
         return False
 
-    # DELETE USER (Admin only)
+    # delete user (admin only)
     def delete_user(self, acting_user: User, username: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да изтрива потребители.")
@@ -219,6 +185,6 @@ class UserController:
 
         return False
 
-    # LIST USERS
+    # list users
     def get_all(self):
         return self.users

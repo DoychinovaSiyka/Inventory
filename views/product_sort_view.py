@@ -7,8 +7,7 @@ class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
 
-
-    # Паролата се контролира само от ProductView.sort_menu_protected
+    # паролата се контролира само от productview.sort_menu_protected
     def show_menu(self):
         menu = Menu("Сортиране на продукти", [
             MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
@@ -25,42 +24,46 @@ class ProductSortView:
             if result == "break":
                 break
 
-    # 1. По име
+    # 1. по име
     def sort_by_name(self, _):
         products = self.controller.sort_by_name()
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-    # 2. Цена
+    # 2. цена
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
 
-    # 3. Цена
+    # 3. цена
     def sort_price_asc(self, _):
         products = self.controller.bubble_sort()
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
-    # 4. Количество
+    # 4. количество
     def sort_qty_desc(self, _):
         products = self.controller.bubble_sort()
         products.sort(key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
-    # 5. Количество
+    # 5. количество
     def sort_qty_asc(self, _):
         products = self.controller.selection_sort()
         products.sort(key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
-    # Общ метод за печат
+    # общ метод за печат
     @staticmethod
     def _print_sorted(products, title, algorithm):
         print(f"\n=== Сортиране по: {title} ===")
         print(f"Алгоритъм: {algorithm}\n")
 
-        rows = [
-            [p.name.ljust(20), f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}"]
-            for p in products
-        ]
+        rows = []
+        for p in products:
+            rows.append([
+                p.name.ljust(20),
+                f"{p.price:.2f} лв.",
+                f"{p.quantity} {p.unit}"
+            ])
 
         print(format_table(["Име", "Цена", "Количество"], rows))
+

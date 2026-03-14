@@ -19,7 +19,6 @@ class OperatorMenuView:
 
         menu = Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти", self.open_products),
-
             # Управление на категории е административна функция → защитаваме
             MenuItem("2", "Управление на категории", self.open_categories),
 
@@ -42,40 +41,30 @@ class OperatorMenuView:
 
     # 1. Продукти
     def open_products(self, user):
-        ProductView(
-            self.controllers["product"],
-            self.controllers["category"],
-            self.controllers["activity_log"]
-        ).show_menu(user)
+        ProductView(self.controllers["product"],self.controllers["category"],
+                    self.controllers["activity_log"]).show_menu(user)
 
     # 2. Категории — операторът може само да ги гледа → защитаваме менюто
     @require_password("parola123")
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
 
-    # 3. Движения — операторът трябва да има достъп → НЕ защитаваме
+    # 3. Движения — операторът трябва да има достъп - НЕ защитаваме
     def open_movements(self, _):
-        MovementView(
-            self.controllers["product"],
-            self.controllers["movement"],
-            self.controllers["user"],
-            self.controllers["activity_log"]
-        ).show_menu()
+        MovementView(self.controllers["product"],self.controllers["movement"],
+            self.controllers["user"],self.controllers["activity_log"]).show_menu()
 
-    # 4. Справки — съдържат финансови данни → защитаваме
+    # 4. Справки — съдържат финансови данни - защитаваме
     @require_password("parola123")
     def open_reports(self, user):
         ReportsView(self.controllers["report"]).show_menu(user)
 
-    # 5. Фактури — съдържат чувствителни данни → защитаваме
+    # 5. Фактури — съдържат чувствителни данни - защитаваме
     @require_password("parola123")
     def open_invoices(self, user):
-        InvoiceView(
-            self.controllers["invoice"],
-            self.controllers["activity_log"]
-        ).show_menu(user)
+        InvoiceView(self.controllers["invoice"],self.controllers["activity_log"]).show_menu(user)
 
-    # 6. Информация за системата — публична → НЕ защитаваме
+    # 6. Информация за системата — публична - НЕ защитаваме
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()

@@ -11,9 +11,7 @@ class SupplierView:
     def show_menu(self, user: User):
         is_admin = user.role == "Admin"
 
-        menu_items = [
-            MenuItem("1", "Списък с доставчици", self.show_suppliers)
-        ]
+        menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
 
         if is_admin:
             menu_items.extend([
@@ -32,7 +30,7 @@ class SupplierView:
             if result == "break":
                 break
 
-    # 1. Списък с доставчици
+    # 1. списък с доставчици
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
 
@@ -41,15 +39,12 @@ class SupplierView:
             return
 
         columns = ["ID", "Име", "Контакт", "Адрес"]
-        rows = [
-            [s.supplier_id, s.name, s.contact, s.address]
-            for s in suppliers
-        ]
+        rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
 
         print("\n" + format_table(columns, rows))
 
-    # 2. Добавяне на доставчик (Admin only)
-    def add_supplier(self,_):
+    # 2. добавяне на доставчик (admin only)
+    def add_supplier(self, _):
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()
         address = input("Адрес: ").strip()
@@ -60,10 +55,10 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 3. Редактиране на доставчик (Admin only)
+    # 3. редактиране на доставчик (admin only)
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-        supplier = self.controller.get_by_id(int(supplier_id))
+        supplier = self.controller.get_by_id(supplier_id)
 
         if not supplier:
             print("Доставчикът не е намерен.")
@@ -75,22 +70,19 @@ class SupplierView:
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
 
         try:
-            self.controller.update(
-                supplier_id=int(supplier_id),
-                name=new_name if new_name else supplier.name,
-                contact=new_contact if new_contact else supplier.contact,
-                address=new_address if new_address else supplier.address
-            )
+            self.controller.update(supplier_id=supplier_id,
+                name=new_name or supplier.name,contact=new_contact or supplier.contact,
+                address=new_address or supplier.address)
             print("Доставчикът е обновен успешно!")
         except ValueError as e:
             print("Грешка:", e)
 
-    # 4. Изтриване на доставчик (Admin only)
+    # 4. изтриване на доставчик (admin only)
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
 
         try:
-            if self.controller.remove(int(supplier_id)):
+            if self.controller.remove(supplier_id):
                 print("Доставчикът е изтрит успешно!")
             else:
                 print("Доставчикът не е намерен.")

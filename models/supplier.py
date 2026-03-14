@@ -25,11 +25,7 @@ class Supplier:
 
     @staticmethod
     def from_dict(data):
-        return Supplier(
-            supplier_id=data.get("supplier_id"),
-            name=data["name"],
-            contact=data["contact"],
-            address=data["address"],
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Supplier( supplier_id=data.get("supplier_id"),
+            name=data["name"],contact=data["contact"],
+            address=data["address"],created=data.get("created"),
+            modified=data.get("modified"))

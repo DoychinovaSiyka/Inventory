@@ -4,7 +4,8 @@ from storage.json_repository import JSONRepository
 
 
 class ReportController:
-    def __init__(self, repo: JSONRepository, product_controller, movement_controller, invoice_controller,location_controller):
+    def __init__(self, repo: JSONRepository, product_controller, movement_controller,
+                 invoice_controller, location_controller):
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -25,174 +26,90 @@ class ReportController:
     # create report object
     def _create_report(self, report_type, parameters, data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        report = Report(
-            report_id=self._generate_id(),
-            report_type=report_type,
-            generated_on=now,
-            parameters=parameters,
-            data=data
-        )
-
+        report = Report(report_id=self._generate_id(), report_type=report_type,
+                        generated_on=now, parameters=parameters, data=data)
         self.reports.append(report)
         self.save_changes()
         return report
 
-    # 1. STOCK REPORT
+    # stock report
     def report_stock(self):
         products = self.product_controller.products
-
-        data = [
-            {
-                "product": p.name,
-                "quantity": p.quantity,
-                "price": p.price,
-                "location": getattr(p, "location_id", None)
-            }
-            for p in products
-        ]
-
+        data = [{"product": p.name, "quantity": p.quantity, "price": p.price,
+                 "location": getattr(p, "location_id", None)} for p in products]
         return self._create_report("stock", {}, data)
 
-    # 2. ALL MOVEMENTS
+    # all movements
     def report_movements(self):
         movements = self.movement_controller.movements
-
-        data = [
-            {
-                "date": m.date,
-                "type": m.movement_type.name,
-                "product_id": m.product_id,
-                "quantity": m.quantity,
-                "price": m.price,
-                "location": m.location_id,
-                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
-                "customer": m.customer if m.movement_type.name == "OUT" else None
-            }
-            for m in movements
-        ]
-
+        data = [{"date": m.date, "type": m.movement_type.name, "product_id": m.product_id,
+                 "quantity": m.quantity, "price": m.price,
+                 "location": m.location_id,
+                 "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                 "customer": m.customer if m.movement_type.name == "OUT" else None} for m in movements]
         return self._create_report("movements_all", {}, data)
 
-    # 3. MOVEMENTS BY PRODUCT
+    # movements by product
     def report_movements_by_product(self, keyword):
         keyword = keyword.lower()
-
         data = []
-
         for m in self.movement_controller.movements:
             product = self.product_controller.get_by_id(m.product_id)
-
             if not product:
                 continue
-
             if keyword in product.name.lower():
-                data.append({
-                    "date": m.date,
-                    "type": m.movement_type.name,
-                    "quantity": m.quantity,
-                    "price": m.price,
-                    "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
-                    "customer": m.customer if m.movement_type.name == "OUT" else None
-                })
+                data.append({"date": m.date, "type": m.movement_type.name,
+                             "quantity": m.quantity, "price": m.price,
+                             "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                             "customer": m.customer if m.movement_type.name == "OUT" else None})
+        return self._create_report("movements_by_product",
+                                   {"keyword": keyword}, data)
 
-        return self._create_report("movements_by_product", {"keyword": keyword}, data)
-
-    # 4. MOVEMENTS BY TYPE
+    # movements by type
     def report_movements_by_type(self, movement_type):
         movement_type = movement_type.upper()
+        data = [{"date": m.date, "product_id": m.product_id, "quantity": m.quantity,
+                 "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                 "customer": m.customer if m.movement_type.name == "OUT" else None}
+                for m in self.movement_controller.movements if m.movement_type.name == movement_type]
+        return self._create_report("movements_by_type",
+                                   {"type": movement_type}, data)
 
-        data = [
-            {
-                "date": m.date,
-                "product_id": m.product_id,
-                "quantity": m.quantity,
-                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
-                "customer": m.customer if m.movement_type.name == "OUT" else None
-            }
-            for m in self.movement_controller.movements
-            if m.movement_type.name == movement_type
-        ]
-
-        return self._create_report("movements_by_type", {"type": movement_type}, data)
-
-    # 5. MOVEMENTS BY DATE
+    # movements by date
     def report_movements_by_date(self, date_str):
-        data = [
-            {
-                "date": m.date,
-                "type": m.movement_type.name,
-                "quantity": m.quantity,
-                "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
-                "customer": m.customer if m.movement_type.name == "OUT" else None
-            }
-            for m in self.movement_controller.movements
-            if m.date.startswith(date_str)
-        ]
+        data = [{"date": m.date, "type": m.movement_type.name, "quantity": m.quantity,
+                 "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
+                 "customer": m.customer if m.movement_type.name == "OUT" else None}
+                for m in self.movement_controller.movements if m.date.startswith(date_str)]
+        return self._create_report("movements_by_date",
+                                   {"date": date_str}, data)
 
-        return self._create_report("movements_by_date", {"date": date_str}, data)
-
-    # 6. SALES REPORT
+    # sales report
     def report_sales(self):
         invoices = self.invoice_controller.invoices
-
-        data = [
-            {
-                "date": inv.date,
-                "product": inv.product,
-                "quantity": inv.quantity,
-                "total_price": inv.total_price,
-                "customer": inv.customer
-            }
-            for inv in invoices
-        ]
-
+        data = [{"date": inv.date, "product": inv.product, "quantity": inv.quantity,
+                 "total_price": inv.total_price, "customer": inv.customer} for inv in invoices]
         return self._create_report("sales_all", {}, data)
 
-    # 7. SALES BY CUSTOMER
+    # sales by customer
     def report_sales_by_customer(self, customer):
         invoices = self.invoice_controller.search_by_customer(customer)
+        data = [{"date": inv.date, "product": inv.product,
+                 "quantity": inv.quantity, "total_price": inv.total_price} for inv in invoices]
+        return self._create_report("sales_by_customer",
+                                   {"customer": customer}, data)
 
-        data = [
-            {
-                "date": inv.date,
-                "product": inv.product,
-                "quantity": inv.quantity,
-                "total_price": inv.total_price
-            }
-            for inv in invoices
-        ]
-
-        return self._create_report("sales_by_customer", {"customer": customer}, data)
-
-    # 8. SALES BY PRODUCT
+    # sales by product
     def report_sales_by_product(self, product):
         invoices = self.invoice_controller.search_by_product(product)
+        data = [{"date": inv.date, "customer": inv.customer,
+                 "quantity": inv.quantity, "total_price": inv.total_price} for inv in invoices]
+        return self._create_report("sales_by_product",
+                                   {"product": product}, data)
 
-        data = [
-            {
-                "date": inv.date,
-                "customer": inv.customer,
-                "quantity": inv.quantity,
-                "total_price": inv.total_price
-            }
-            for inv in invoices
-        ]
-
-        return self._create_report("sales_by_product", {"product": product}, data)
-
-    # 9. SALES BY DATE
+    # sales by date
     def report_sales_by_date(self, date_str):
         invoices = self.invoice_controller.search_by_date(date_str)
-
-        data = [
-            {
-                "product": inv.product,
-                "quantity": inv.quantity,
-                "total_price": inv.total_price,
-                "customer": inv.customer
-            }
-            for inv in invoices
-        ]
-
+        data = [{"product": inv.product, "quantity": inv.quantity,
+                 "total_price": inv.total_price, "customer": inv.customer} for inv in invoices]
         return self._create_report("sales_by_date", {"date": date_str}, data)

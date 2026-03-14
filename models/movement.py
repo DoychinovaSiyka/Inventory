@@ -20,14 +20,11 @@ def generate_next_id(existing_items):
 
 class Movement:
     def __init__(
-        self, movement_id=None,
-        product_id=None, user_id=None,
+        self, movement_id=None,product_id=None, user_id=None,
         location_id=None, movement_type=None, quantity=0,
-        unit="бр.", description="",
-        price=0.0, supplier_id=None, customer=None,
+        unit="бр.", description="",price=0.0, supplier_id=None, customer=None,
         from_location_id=None, to_location_id=None,
-        date=None, created=None, modified=None
-    ):
+        date=None, created=None, modified=None):
 
         # movement_id = AUTO-INCREMENT INT
         self.movement_id = int(movement_id) if movement_id is not None else None
@@ -117,20 +114,13 @@ class Movement:
     @staticmethod
     def from_dict(data):
         return Movement(
-            movement_id=data.get("movement_id"),
-            product_id=data.get("product_id"),
+            movement_id=data.get("movement_id"),product_id=data.get("product_id"),
             user_id=data.get("user_id"),
             location_id=data.get("location_id"),
             movement_type=MovementType[data.get("movement_type")],
-            quantity=data.get("quantity"),
-            unit=data.get("unit"),
-            description=data.get("description"),
-            price=data.get("price"),
-            supplier_id=data.get("supplier_id"),
-            customer=data.get("customer"),
+            quantity=data.get("quantity"),unit=data.get("unit"),description=data.get("description"),
+            price=data.get("price"),supplier_id=data.get("supplier_id"),customer=data.get("customer"),
             from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"),
-            date=data.get("date"),
+            to_location_id=data.get("to_location_id"),date=data.get("date"),
             created=data.get("created"),
-            modified=data.get("modified")
-        )
+            modified=data.get("modified"))

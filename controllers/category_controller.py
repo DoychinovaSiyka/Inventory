@@ -64,7 +64,6 @@ class CategoryController:
         if len(self.categories) < original_len:
             self.save_changes()
             return True
-
         return False
 
     def search(self, keyword: str) -> List[Category]:

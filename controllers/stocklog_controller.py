@@ -8,32 +8,30 @@ class StockLogController:
         self.repo = repo
         self.logs = [StockLog.from_dict(l) for l in self.repo.load()]
 
-    # CREATE
+    # create
     def add_log(self, product_id, location_id, quantity, unit, action):
-        # Количеството трябва да е > 0
+
         if quantity <= 0:
-            raise ValueError("Количеството трябва да е > 0.")
+            raise ValueError("количеството трябва да е > 0.")
 
-        # Мерната единица е задължителна
         if not unit or not unit.strip():
-            raise ValueError("Мерната единица е задължителна.")
+            raise ValueError("мерната единица е задължителна.")
 
-        #  Позволени действия
+        # позволени действия
         allowed_actions = ["add", "remove", "move"]
-
         if action not in allowed_actions:
-            raise ValueError("Невалидно действие. Позволени: add, remove, move.")
+            raise ValueError("невалидно действие. позволени: add, remove, move.")
 
-        # Създаване на лог
-        log = StockLog(product_id = product_id,
-            location_id=location_id,quantity=quantity,unit = unit,action=action,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        # създаване на лог
+        log = StockLog(product_id=product_id, location_id=location_id, quantity=quantity,
+                       unit=unit, action=action,
+                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         self.logs.append(log)
         self.save_changes()
         return log
 
-    # READ
+    # read
     def get_all(self):
         return self.logs
 
@@ -45,22 +43,18 @@ class StockLogController:
 
     def search(self, keyword):
         keyword = keyword.lower()
-        return [
-            log for log in self.logs
-            if keyword in log.action.lower()
-               or keyword in log.timestamp.lower()
-        ]
+        return [log for log in self.logs
+                if keyword in log.action.lower() or keyword in log.timestamp.lower()]
 
-    # DELETE
+    # delete
     def remove(self, log_id):
         original_len = len(self.logs)
         self.logs = [l for l in self.logs if l.log_id != log_id]
-
         if len(self.logs) < original_len:
             self.save_changes()
             return True
         return False
 
-    # SAVE
+    # save
     def save_changes(self):
         self.repo.save([l.to_dict() for l in self.logs])

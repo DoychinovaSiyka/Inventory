@@ -20,21 +20,15 @@ class Category:
         self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self): # сериализация от обект в текст
-        return {
-            'category_id':self.category_id,
-            'name': self.name,
-            'description': self.description,
-            'created':self.created,
-            'modified':self.modified,
-        }
+        return {'category_id':self.category_id,
+            'name': self.name,'description': self.description,
+            'created':self.created,'modified':self.modified}
 
     @staticmethod
     def from_dict(data): # десериализация от текст превръщам в обект
         return Category(
-            name = data.get("name"),
-            description = data.get("description"),
-            category_id=data.get("category_id"),
-            created = data.get("created"),
+            name = data.get("name"),description = data.get("description"),
+            category_id=data.get("category_id"),created = data.get("created"),
             modified = data.get("modified"))
 
 

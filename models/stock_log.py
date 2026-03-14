@@ -2,7 +2,7 @@ from datetime import datetime
 
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp=None, log_id=None):
-        # log_id е int, генериран от контролера (max+1)
+        # log_id е int
         self.log_id = log_id
 
         self.product_id = product_id
@@ -25,12 +25,6 @@ class StockLog:
 
     @staticmethod
     def from_dict(data):
-        return StockLog(
-            log_id=data.get("log_id"),
-            product_id=data["product_id"],
-            location_id=data["location_id"],
-            quantity=data["quantity"],
-            unit=data.get("unit", "бр."),
-            action=data["action"],
-            timestamp=data.get("timestamp")
-        )
+        return StockLog( log_id=data.get("log_id"), product_id=data["product_id"],
+            location_id=data["location_id"], quantity=data["quantity"],unit=data.get("unit", "бр."),
+            action=data["action"],timestamp=data.get("timestamp"))

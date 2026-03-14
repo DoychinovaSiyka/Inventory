@@ -128,18 +128,14 @@ class ReportsView:
     def report_sales_by_product(self, _):
         product = input("Име на продукт: ")
         report = self.controller.report_sales_by_product(product)
-        rows = [
-            [item["date"], item["customer"], item["quantity"], item["total_price"]]
-            for item in report.data
-        ]
+        rows = [ [item["date"], item["customer"], item["quantity"], item["total_price"] ]
+            for item in report.data]
         print(format_table(["Дата", "Клиент", "Количество", "Общо"], rows))
 
     # 6. Продажби по дата
     def report_sales_by_date(self, _):
         date_str = input("Дата (ГГГГ-ММ-ДД): ")
         report = self.controller.report_sales_by_date(date_str)
-        rows = [
-            [item["product"], item["customer"], item["quantity"], item["total_price"]]
-            for item in report.data
-        ]
+        rows = [[item["product"], item["customer"], item["quantity"], item["total_price"]]
+            for item in report.data]
         print(format_table(["Продукт", "Клиент", "Количество", "Общо"], rows))

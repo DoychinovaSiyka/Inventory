@@ -14,11 +14,9 @@ class LocationView:
         menu_items = [MenuItem("1", "Списък с локации", self.show_all)]
 
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на локация", self.add_location),
+            menu_items.extend([MenuItem("2", "Добавяне на локация", self.add_location),
                 MenuItem("3", "Редактиране на локация", self.edit_location),
-                MenuItem("4", "Изтриване на локация", self.delete_location)
-            ])
+                MenuItem("4", "Изтриване на локация", self.delete_location)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
 
@@ -82,11 +80,8 @@ class LocationView:
 
         try:
             self.location_controller.update(
-                loc_id,
-                name=new_name if new_name else location.name,
-                zone=new_zone if new_zone else location.zone,
-                capacity=new_capacity
-            )
+                loc_id, name=new_name if new_name else location.name,
+                zone=new_zone if new_zone else location.zone, capacity=new_capacity)
             print("Локацията е обновена успешно!")
         except ValueError as e:
             print("Грешка:", e)

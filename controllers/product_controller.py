@@ -9,12 +9,8 @@ from controllers.supplier_controller import SupplierController
 
 
 class ProductController:
-    def __init__(
-        self,
-        repo: Repository,
-        category_controller: CategoryController,
-        supplier_controller: SupplierController,
-        activity_log_controller=None):
+    def __init__(self, repo: Repository, category_controller: CategoryController,
+                 supplier_controller: SupplierController, activity_log_controller=None):
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
@@ -34,24 +30,16 @@ class ProductController:
             product.categories = fixed_categories
             self.products.append(product)
 
-    def _generate_id(self) -> str:
+    @staticmethod
+    def _generate_id() -> str:
         return str(uuid.uuid4())
 
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-    def add(
-        self,
-        name: str,
-        category_ids: List[str],
-        quantity: float,
-        unit: str,
-        description: str,
-        price: float,
-        supplier_id: Optional[str],
-        user_id: str,
-        tags: Optional[List[str]] = None
-    ) -> Product:
+    def add(self, name: str, category_ids: List[str], quantity: float, unit: str,
+            description: str, price: float, supplier_id: Optional[str], user_id: str,
+            tags: Optional[List[str]] = None) -> Product:
 
         ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
 
@@ -71,31 +59,17 @@ class ProductController:
 
         now = str(datetime.now())
 
-        product = Product(
-            product_id=self._generate_id(),
-            name=name,
-            categories=categories,
-            quantity=float(quantity),
-            unit=unit,
-            description=description,
-            price=price,
-            supplier_id=supplier_id,
-            tags=tags or [],
-            created=now,
-            modified=now
-        )
+        product = Product(product_id=self._generate_id(), name=name, categories=categories,
+                          quantity=float(quantity), unit=unit, description=description,
+                          price=price, supplier_id=supplier_id, tags=tags or [],
+                          created=now, modified=now)
 
         self.products.append(product)
         self.save_changes()
 
         # ЛОГВАНЕ НА ДОБАВЯНЕ
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "ADD_PRODUCT",
-                f"Added product: {product.name}"
-            )
-
+            self.activity_log.add_log(user_id,"ADD_PRODUCT",f"Added product: {product.name}")
         return product
 
     def get_all(self) -> List[Product]:
@@ -121,13 +95,10 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "EDIT_PRODUCT",
-                f"Updated name of product ID {product_id} to '{new_name}'"
-            )
-
+            self.activity_log.add_log( user_id,"EDIT_PRODUCT",
+                f"Updated name of product ID {product_id} to '{new_name}'")
         return True
+
 
     def update_description(self, product_id: str, new_description: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
@@ -140,15 +111,13 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "EDIT_PRODUCT",
-                f"Updated description of product ID {product_id}"
-            )
+            self.activity_log.add_log( user_id,
+                "EDIT_PRODUCT",f"Updated description of product ID {product_id}")
 
         return True
 
-    def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:
+    def update_categories(self, product_id: str,
+                          new_category_ids: List[str], user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -166,10 +135,7 @@ class ProductController:
 
         if self.activity_log:
             self.activity_log.add_log(
-                user_id,
-                "EDIT_PRODUCT",
-                f"Updated categories of product ID {product_id}"
-            )
+                user_id,"EDIT_PRODUCT",f"Updated categories of product ID {product_id}")
 
         return True
 
@@ -187,13 +153,10 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "EDIT_PRODUCT",
-                f"Updated supplier of product ID {product_id}"
-            )
-
+            self.activity_log.add_log(user_id,
+                "EDIT_PRODUCT",f"Updated supplier of product ID {product_id}")
         return True
+
 
     def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
@@ -206,13 +169,10 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "EDIT_PRODUCT",
-                f"Updated price of product ID {product_id} to {new_price}"
-            )
-
+            self.activity_log.add_log(user_id,"EDIT_PRODUCT",
+                                      f"Updated price of product ID {product_id} to {new_price}")
         return True
+
 
     def increase_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
@@ -227,11 +187,8 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
-                "INCREASE_QUANTITY",
-                f"Added {amount} units to product ID {product_id}"
-            )
+            self.activity_log.add_log(user_id,"INCREASE_QUANTITY",
+                f"Added {amount} units to product ID {product_id}")
 
         return True
 
@@ -251,11 +208,9 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id,
+            self.activity_log.add_log(user_id,
                 "DECREASE_QUANTITY",
-                f"Removed {amount} units from product ID {product_id}"
-            )
+                f"Removed {amount} units from product ID {product_id}")
 
         return True
 
@@ -267,12 +222,8 @@ class ProductController:
             self.save_changes()
 
             if self.activity_log:
-                self.activity_log.add_log(
-                    user_id,
-                    "DELETE_PRODUCT",
-                    f"Deleted product ID {product_id}"
-                )
-
+                self.activity_log.add_log(user_id,"DELETE_PRODUCT",
+                    f"Deleted product ID {product_id}")
             return True
 
         return False
@@ -286,25 +237,19 @@ class ProductController:
             self.save_changes()
 
             if self.activity_log:
-                self.activity_log.add_log(
-                    user_id,
-                    "DELETE_PRODUCT",
-                    f"Deleted product '{name}'"
-                )
-
+                self.activity_log.add_log(user_id,
+                    "DELETE_PRODUCT",f"Deleted product '{name}'")
             return True
 
         return False
 
     def search(self, keyword: str) -> List[Product]:
         keyword = (keyword or "").lower()
-        return [
-            p for p in self.products
-            if keyword in (p.name or "").lower()
-            or keyword in (p.description or "").lower()
-        ]
+        return [p for p in self.products if keyword in (p.name or "").lower()
+            or keyword in (p.description or "").lower() ]
 
-    def filter_by_multiple_category_ids(self, category_ids: List[int]) -> List[Product]:
+    def filter_by_multiple_category_ids(self,
+                                        category_ids: List[int]) -> List[Product]:
         filtered = []
         for p in self.products:
             for c in p.categories:
@@ -371,7 +316,8 @@ class ProductController:
 
         return sorted_products
 
-    def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
+    def search_by_price_range(self, min_price: float = None,
+                              max_price: float = None) -> List[Product]:
         results = self.products
 
         if min_price is not None:
@@ -382,7 +328,8 @@ class ProductController:
 
         return results
 
-    def search_by_quantity_range(self, min_qty: float = None, max_qty: float = None) -> List[Product]:
+    def search_by_quantity_range(self, min_qty: float = None,
+                                 max_qty: float = None) -> List[Product]:
         results = self.products
 
         if min_qty is not None:
@@ -411,16 +358,12 @@ class ProductController:
 
         if name_keyword:
             kw = name_keyword.lower()
-            results = [
-                p for p in results
-                if kw in p.name.lower() or kw in p.description.lower()
-            ]
+            results = [ p for p in results if kw in p.name.lower()
+                        or kw in p.description.lower()]
 
         if category_id is not None:
-            results = [
-                p for p in results
-                if any(c.category_id == category_id for c in p.categories)
-            ]
+            results = [ p for p in results
+                        if any(c.category_id == category_id for c in p.categories)]
 
         if supplier_id is not None:
             results = [p for p in results if p.supplier_id == supplier_id]

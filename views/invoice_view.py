@@ -17,8 +17,7 @@ class InvoiceView:
             MenuItem("4", "Търсене по продукт", self.search_by_product),
             MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
             MenuItem("6", "Разширено търсене", self.advanced_search),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break") ])
 
         while True:
             choice = menu.show()

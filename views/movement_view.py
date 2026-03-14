@@ -126,17 +126,10 @@ class MovementView:
 
         # Създаване на движение
         try:
-            self.movement_controller.add(
-                product_id=product_id,
-                user_id=user.user_id,
-                location_id=location_id,
-                movement_type=movement_type,
-                quantity=quantity,
-                description=description,
-                price=price,
-                customer=customer,
-                supplier_id=supplier_id
-            )
+            self.movement_controller.add(product_id=product_id,
+                user_id=user.user_id,location_id=location_id,
+                movement_type=movement_type,quantity=quantity,description=description,
+                price=price,customer=customer,supplier_id=supplier_id)
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
 

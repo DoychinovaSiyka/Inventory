@@ -11,13 +11,13 @@ class LocationController:
         # Зареждаме всички локации от JSON файла чрез хранилището.
         # Location.from_dict преобразува речниците в реални Location обекти.
 
-    # ID GENERATOR
+    # id generator
     def _generate_id(self) -> int:
         if not self.locations:
             return 1
         return max(l.location_id for l in self.locations) + 1
 
-    # CREATE
+    # create
     def add(self, name: str, zone: str = "", capacity: int = 0) -> Location:
         if not name or len(name.strip()) == 0:
             raise ValueError("Името на локацията е задължително.")
@@ -47,12 +47,8 @@ class LocationController:
 
     # UPDATE
     def update(
-        self,
-        location_id: int,
-        name: Optional[str] = None,
-        zone: Optional[str] = None,
-        capacity: Optional[int] = None
-    ) -> bool:
+        self,location_id: int,name: Optional[str] = None,zone: Optional[str] = None,
+        capacity: Optional[int] = None) -> bool:
 
         location = self.get_by_id(location_id)
         if not location:
@@ -61,7 +57,8 @@ class LocationController:
         if name is not None:
             if len(name.strip()) == 0:
                 raise ValueError("Името не може да бъде празно.")
-            if any(l.name.lower() == name.lower() and l.location_id != location_id for l in self.locations):
+            if any(l.name.lower() == name.lower() and l.location_id != location_id
+                   for l in self.locations):
                 raise ValueError("Локация с това име вече съществува.")
             location.name = name
 
@@ -90,11 +87,8 @@ class LocationController:
 
     def search(self, keyword: str) -> List[Location]:
         keyword = keyword.lower()
-        return [
-            l for l in self.locations
-            if keyword in l.name.lower()
-            or keyword in (l.zone or "").lower()
-        ]
+        return [l for l in self.locations if keyword in l.name.lower()
+                 or keyword in (l.zone or "").lower()]
 
 
     def save_changes(self) -> None:

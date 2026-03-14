@@ -20,7 +20,6 @@ from models.user import User
 
 def main():
 
-
     user_repo = JSONRepository("data/users.json")
     product_repo = JSONRepository("data/products.json")
     category_repo = JSONRepository("data/categories.json")
@@ -31,73 +30,43 @@ def main():
     invoice_repo = JSONRepository("data/invoices.json")
     report_repo = JSONRepository("data/reports.json")
 
-    # Репозитори за логове
+    # логове
     activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
-    # Контролери
+    # контролери
     user_controller = UserController(user_repo)
-    #  добавяме нов потребител
+
+    # добавяме тестов потребител (ако вече го има → игнорираме)
     try:
-        user_controller.register(
-            first_name="Ivan",
-            last_name="Petrov",
-            email="ivan@example.com",
-            username="ivan",
-            password="test123",
-            role="Operator"
-        )
+        user_controller.register("Ivan", "Petrov", "ivan@example.com", "ivan", "test123", "Operator")
     except ValueError:
-        pass  # потребителят вече съществува
+        pass
 
     category_controller = CategoryController(category_repo)
     supplier_controller = SupplierController(supplier_repo)
     location_controller = LocationController(location_repo)
     stocklog_controller = StockLogController(stocklog_repo)
 
-    #  activity_log_controller
-    product_controller = ProductController(
-        product_repo,
-        category_controller,
-        supplier_controller,
-        activity_log_controller
-    )
+    product_controller = ProductController(product_repo, category_controller,
+                                           supplier_controller, activity_log_controller)
 
     invoice_controller = InvoiceController(invoice_repo)
 
-    # activity_log_controller
     movement_controller = MovementController(
-        movement_repo,
-        product_controller,
-        user_controller,
-        location_controller,
-        stocklog_controller,
-        invoice_controller,
-        activity_log_controller
-    )
+        movement_repo, product_controller, user_controller,
+        location_controller, stocklog_controller, invoice_controller,activity_log_controller)
 
-    report_controller = ReportController(
-        report_repo,
-        product_controller,
-        movement_controller,
-        invoice_controller,
-        location_controller
-    )
+    report_controller = ReportController(report_repo, product_controller, movement_controller,
+        invoice_controller, location_controller)
 
-
-
-    # Пакет от контролери за менюта
     controllers = {
-        "user": user_controller,
-        "product": product_controller,
-        "category": category_controller,
-        "supplier": supplier_controller,
-        "movement": movement_controller,
-        "invoice": invoice_controller,
-        "report": report_controller,
-        "activity_log": activity_log_controller
+        "user": user_controller, "product": product_controller,
+        "category": category_controller, "supplier": supplier_controller,
+        "movement": movement_controller, "invoice": invoice_controller,
+        "report": report_controller, "activity_log": activity_log_controller
     }
 
-    # Главен цикъл
+    # главен цикъл
     while True:
         print("\nВход в системата")
         print("1. Вход с потребител")
@@ -106,11 +75,8 @@ def main():
 
         choice = input("Избор: ")
 
-        # Вход с потребител
         if choice == "1":
             username = input("Потребителско име: ")
-
-            # Паролата се въвежда скрито вътре в UserController.login()
             user = user_controller.login(username)
 
             if not user:
@@ -118,64 +84,34 @@ def main():
                 continue
 
             user_controller.logged_user = user
-
-            # ЛОГВАНЕ НА LOGIN
-            activity_log_controller.add_log(
-                user.user_id,
-                "LOGIN",
-                f"User {user.username} logged in"
-            )
+            activity_log_controller.add_log(user.user_id, "LOGIN",
+                                            f"{user.username} logged in")
 
             if user.role == "Admin":
                 AdminMenuView(controllers).show_menu(user)
-
             elif user.role == "Operator":
                 OperatorMenuView(controllers).show_menu(user)
-
             else:
                 print("Невалидна роля.")
                 continue
 
-            # ЛОГВАНЕ НА LOGOUT
-            activity_log_controller.add_log(
-                user.user_id,
-                "LOGOUT",
-                f"User {user.username} logged out"
-            )
+            activity_log_controller.add_log(user.user_id, "LOGOUT",
+                                            f"{user.username} logged out")
 
-        # Вход като анонимен потребител
         elif choice == "2":
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            guest_user = User(
-                user_id="guest-0000",
-                first_name="Anonymous",
-                last_name="",
-                email="",
-                username="guest",
-                password="",
-                role="Anonymous",
-                status="Active",
-                created=now,
-                modified=now
-            )
+            guest_user = User(user_id="guest-0000", first_name="Anonymous", last_name="",
+                email="", username="guest", password="",
+                role="Anonymous", status="Active", created=now, modified=now)
 
-            # ЛОГВАНЕ НА ANONYMOUS LOGIN
-            activity_log_controller.add_log(
-                guest_user.user_id,
-                "ANONYMOUS_LOGIN",
-                "Anonymous user entered the system"
-            )
+            activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN",
+                                            "Anonymous entered")
 
             AnonymousMenuView().show_menu(guest_user)
 
-            # ЛОГВАНЕ НА ANONYMOUS LOGOUT
-            activity_log_controller.add_log(
-                guest_user.user_id,
-                "ANONYMOUS_LOGOUT",
-                "Anonymous user exited the system"
-            )
-
+            activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT",
+                                            "Anonymous exited")
 
         elif choice == "0":
             print("Изход от системата.")
