@@ -1,5 +1,6 @@
 from typing import Optional, List
 from datetime import datetime
+import uuid
 from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
@@ -10,10 +11,8 @@ class SupplierController:
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
     # ID GENERATOR
-    def _generate_id(self) -> int:
-        if not self.suppliers:
-            return 1
-        return max(s.supplier_id for s in self.suppliers) + 1
+    def _generate_id(self) -> str:
+        return str(uuid.uuid4())
 
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
@@ -22,7 +21,7 @@ class SupplierController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         supplier = Supplier(
-            supplier_id=self._generate_id(),
+            supplier_id=self._generate_id(),   # ← UUID вместо int
             name=name,
             contact=contact,
             address=address,
@@ -38,13 +37,13 @@ class SupplierController:
     def get_all(self) -> List[Supplier]:
         return self.suppliers
 
-    def get_by_id(self, supplier_id: int) -> Optional[Supplier]:
+    def get_by_id(self, supplier_id: str) -> Optional[Supplier]:   # ← ID вече е string
         return next((s for s in self.suppliers if s.supplier_id == supplier_id), None)
 
     # UPDATE
     def update(
         self,
-        supplier_id: int,
+        supplier_id: str,   # ← string, не int
         name: Optional[str] = None,
         contact: Optional[str] = None,
         address: Optional[str] = None
@@ -71,7 +70,7 @@ class SupplierController:
         return supplier
 
     # DELETE
-    def remove(self, supplier_id: int) -> bool:
+    def remove(self, supplier_id: str) -> bool:   # ← string, не int
         original_len = len(self.suppliers)
         self.suppliers = [s for s in self.suppliers if s.supplier_id != supplier_id]
 

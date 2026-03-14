@@ -88,7 +88,6 @@ class LocationController:
 
         return False
 
-    # SEARCH
     def search(self, keyword: str) -> List[Location]:
         keyword = keyword.lower()
         return [
@@ -97,7 +96,7 @@ class LocationController:
             or keyword in (l.zone or "").lower()
         ]
 
-    # SAVE
+
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])
 

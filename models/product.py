@@ -18,24 +18,26 @@ class Product:
     ):
         self.product_id = product_id
         self.name = name
-        self.categories = categories  #  или да UUID или Category обекти
+
+        # categories = списък от UUID или Category обекти
+        self.categories = categories
 
         self.quantity = float(quantity)
-
         self.unit = unit
-
         self.description = description
         self.price = price
 
-        # supplier е само ID, не Supplier обект
+        # supplier е само ID
         self.supplier_id = supplier_id
 
         self.tags = tags or []
-        self.created = created or str(datetime.now())
-        self.modified = modified or str(datetime.now())
+
+        # унифициран timestamp формат
+        self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def update_modified(self):
-        self.modified = str(datetime.now())
+        self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def __str__(self):
         return f"{self.name} | {self.price:.2f} лв. | {self.quantity} {self.unit}"
@@ -55,10 +57,7 @@ class Product:
             "unit": self.unit,
             "description": self.description,
             "price": self.price,
-
-            # вече записваме само supplier_id
             "supplier_id": self.supplier_id,
-
             "tags": self.tags,
             "created": self.created,
             "modified": self.modified
@@ -77,4 +76,5 @@ class Product:
             supplier_id=data.get("supplier_id"),
             tags=data.get("tags", []),
             created=data.get("created"),
-            modified=data.get("modified"))
+            modified=data.get("modified")
+        )

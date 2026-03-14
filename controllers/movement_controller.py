@@ -1,11 +1,9 @@
 from typing import Optional, List
-import uuid
 from datetime import datetime
 from models.movement import Movement, MovementType
 from models.invoice import Invoice
 from storage.json_repository import JSONRepository
 from validators.movement_validator import MovementValidator
-
 
 
 class MovementController:
@@ -24,22 +22,25 @@ class MovementController:
             Movement.from_dict(m) for m in self.repo.load()
         ]
 
-    @staticmethod
-    def _generate_id() -> str:
-        return str(uuid.uuid4())
+    # ID GENERATOR → оперативен запис → int (max+1)
+    def _generate_id(self) -> int:
+        if not self.movements:
+            return 1
+        return max(m.movement_id for m in self.movements) + 1
 
     def add(
         self,
         product_id: str,
-        user_id: int,
+        user_id: str,
         location_id: int,
         movement_type,
         quantity,
         description: str,
         price,
         customer: Optional[str] = None,
-        supplier_id: Optional[int] = None
+        supplier_id: Optional[str] = None
     ) -> Movement:
+
         action = None
 
         # Валидации
@@ -160,7 +161,7 @@ class MovementController:
     def move_product(
         self,
         product_id: str,
-        user_id: int,
+        user_id: str,
         from_location_id: int,
         to_location_id: int,
         quantity: float,
@@ -222,7 +223,7 @@ class MovementController:
             to_location_id=to_location_id
         )
 
-        # Количества
+        # Количества (логически)
         product.quantity -= quantity
         product.quantity += quantity
 
@@ -292,7 +293,7 @@ class MovementController:
     def filter_by_location(self, location_id: int) -> List[Movement]:
         return [m for m in self.movements if m.location_id == location_id]
 
-    def filter_by_user(self, user_id: int) -> List[Movement]:
+    def filter_by_user(self, user_id: str) -> List[Movement]:
         return [m for m in self.movements if m.user_id == user_id]
 
     def save_changes(self) -> None:

@@ -1,9 +1,10 @@
-import uuid
 from datetime import datetime
 
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp=None, log_id=None):
-        self.log_id = log_id or str(uuid.uuid4())
+        # log_id вече е int, генериран от контролера (max+1)
+        self.log_id = log_id
+
         self.product_id = product_id
         self.location_id = location_id
         self.quantity = quantity

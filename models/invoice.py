@@ -20,7 +20,7 @@ class Invoice:
         self.total_price = (total_price if total_price is not None else quantity * unit_price)
         self.customer = customer
 
-        # Дати
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
@@ -28,7 +28,7 @@ class Invoice:
 
         self.validate()
 
-    # ВАЛИДАЦИЯ
+
     def validate(self):
         if not self.product:
             raise ValueError("Продуктът е задължителен (според SRS).")

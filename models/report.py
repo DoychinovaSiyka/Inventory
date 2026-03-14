@@ -1,10 +1,11 @@
-import uuid
 from datetime import datetime
 
 class Report:
     def __init__(self, report_id=None, report_type="", generated_on=None,
                  parameters=None, data=None):
-        self.report_id = report_id or str(uuid.uuid4())
+        # report_id вече е int, генериран от контролера (max+1)
+        self.report_id = report_id
+
         self.report_type = report_type
         self.generated_on = generated_on or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.parameters = parameters if parameters else {}

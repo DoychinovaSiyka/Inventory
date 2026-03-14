@@ -108,7 +108,7 @@ class UserController:
     def _is_unique_username(self, username: str) -> bool:
         return not any(u.username == username for u in self.users)
 
-    def get_by_id(self, user_id: int) -> Optional[User]:
+    def get_by_id(self, user_id: str) -> Optional[User]:
         return next((u for u in self.users if u.user_id == user_id), None)
 
     # REGISTER

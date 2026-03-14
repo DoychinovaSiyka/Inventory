@@ -42,26 +42,15 @@ class MetaMovement(type):
 
 class Movement(metaclass=MetaMovement):
     def __init__(
-        self,
-        movement_id=None,
-        product_id=None,
-        user_id=None,
-        location_id=None,
-        movement_type=None,
-        quantity=0,
-        unit="бр.",
-        description="",
-        price=0.0,
-        supplier_id=None,
-        customer=None,
-        from_location_id=None,
-        to_location_id=None,
-        date=None,
-        created=None,
-        modified=None
-    ):
-        self.movement_id = movement_id or str(uuid.uuid4())
+        self, movement_id=None,
+        product_id=None, user_id=None,
+        location_id=None,movement_type=None,quantity=0,
+        unit="бр.",description="",
+        price=0.0,supplier_id=None,customer=None,from_location_id=None,
+        to_location_id=None,date=None,created=None,modified=None):
 
+
+        self.movement_id = movement_id or str(uuid.uuid4())
         self.product_id = product_id
         self.user_id = user_id
         self.location_id = location_id
@@ -70,13 +59,10 @@ class Movement(metaclass=MetaMovement):
         self.unit = unit
         self.description = description
         self.price = price
-
         self.supplier_id = supplier_id
         self.customer = customer
-
         self.from_location_id = from_location_id
         self.to_location_id = to_location_id
-
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
@@ -84,7 +70,7 @@ class Movement(metaclass=MetaMovement):
 
         self.validate()
 
-    # VALIDATION
+
     def validate(self):
         if self.product_id is None:
             raise ValueError("product_id е задължително поле.")

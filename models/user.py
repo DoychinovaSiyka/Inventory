@@ -4,21 +4,12 @@ from datetime import datetime
 
 class User:
     def __init__(
-        self,
-        first_name,
-        last_name,
-        email,
-        username,
-        password,
-        role="Operator",
-        status="Active",
-        user_id=None,
-        created=None,
-        modified=None
+        self, first_name, last_name, email, username, password,
+        role="Operator", status="Active", user_id=None, created=None, modified=None
     ):
-        # Уникален идентификатор на потребителя
+        # Уникален идентификатор на потребителя (UUID)
         self.user_id = user_id or str(uuid.uuid4())
-        self.id = self.user_id   # за да работи user.id навсякъде
+        self.id = self.user_id   # за съвместимост с user.id
 
         # Основни данни
         self.first_name = first_name
