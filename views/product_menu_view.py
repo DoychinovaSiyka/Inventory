@@ -263,9 +263,9 @@ class ProductView:
 
     # 9. Увеличаване на количество
     def increase_quantity(self, user):
-        pid = _read_int("ID: ")
+        pid = input("ID: ").strip()
         amount = _read_float("Добави: ")
-        if pid is None or amount is None:
+        if amount is None:
             return
         try:
             self.product_controller.increase_quantity(pid, amount, user.id)
@@ -279,9 +279,9 @@ class ProductView:
 
     # 10. Намаляване на количество
     def decrease_quantity(self, user):
-        pid = _read_int("ID: ")
+        pid = input("ID: ").strip()
         amount = _read_float("Извади: ")
-        if pid is None or amount is None:
+        if amount is None:
             return
         try:
             self.product_controller.decrease_quantity(pid, amount, user.id)

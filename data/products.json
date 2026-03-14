@@ -1,21 +1,21 @@
 [
     {
-        "product_id": 20,
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "name": "бира",
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 200.0,
+        "quantity": 190.0,
         "unit": "бр.",
         "description": "от хмел",
         "price": 3.99,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-13 16:43:38.646315",
-        "modified": "2026-02-13 22:07:12.834028"
+        "modified": "2026-03-14 17:31:11"
     },
     {
-        "product_id": 14,
+        "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
         "name": "вафла \"Боровец\"",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
@@ -30,22 +30,22 @@
         "modified": "2026-02-13 22:13:22.297405"
     },
     {
-        "product_id": 18,
+        "product_id": "a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44",
         "name": "зелен лук",
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 14.0,
+        "quantity": 20.0,
         "unit": "кг",
         "description": "зелен лук",
         "price": 0.34,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-07 09:21:59.794094",
-        "modified": "2026-02-07 09:23:28.155704"
+        "modified": "2026-03-14 17:31:45"
     },
     {
-        "product_id": 4,
+        "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
         "name": "кафе \"Lavazza\"",
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
@@ -60,7 +60,7 @@
         "modified": "2026-02-13 17:17:13.390694"
     },
     {
-        "product_id": 21,
+        "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
         "name": "кафе 3 в 1",
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
@@ -75,7 +75,7 @@
         "modified": "2026-02-13 19:25:25.693245"
     },
     {
-        "product_id": 3,
+        "product_id": "d9c3b7a5-1e4f-4a9c-8b2d-5f7a1c3e8b77",
         "name": "кокоши и пъдпъдъчи яйца",
         "categories": [
             "47a393b7-2385-43cd-812c-5eb5d00964dc"
@@ -84,13 +84,13 @@
         "unit": "бр.",
         "description": "от свободно отглеждани кокошки",
         "price": 6.99,
-        "supplier_id": 1,
+        "supplier_id": "00000000-0000-0000-0000-000000000001",
         "tags": [],
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-06 16:24:32.947563"
     },
     {
-        "product_id": 5,
+        "product_id": "c1e7f9a3-4b2d-4e0f-9c8a-3d5f7b1a6c88",
         "name": "Подправки микс",
         "categories": [
             "22c76763-e708-49a3-9e3b-199e9d70a7f3"
@@ -105,7 +105,7 @@
         "modified": "2026-02-03 09:13:00.725537"
     },
     {
-        "product_id": 2,
+        "product_id": "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99",
         "name": "Прясно мляко",
         "categories": [
             "47a393b7-2385-43cd-812c-5eb5d00964dc"
@@ -120,7 +120,7 @@
         "modified": "2026-02-06 19:54:05.485710"
     },
     {
-        "product_id": 10,
+        "product_id": "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
         "name": "Розови домати",
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
@@ -129,13 +129,13 @@
         "unit": "бр.",
         "description": "домашни розови домати",
         "price": 2.19,
-        "supplier_id": 2,
+        "supplier_id": "00000000-0000-0000-0000-000000000002",
         "tags": [],
         "created": "2026-02-03 09:11:34.418148",
         "modified": "2026-02-13 19:27:31.058911"
     },
     {
-        "product_id": 15,
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "name": "сладолед \"Family\" с вкус на шоколад",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
@@ -144,13 +144,13 @@
         "unit": "бр.",
         "description": "с вкус на шоколад и какао",
         "price": 9.99,
-        "supplier_id": 3,
+        "supplier_id": "00000000-0000-0000-0000-000000000003",
         "tags": [],
         "created": "2026-02-06 19:44:50.384986",
         "modified": "2026-02-13 13:29:02.576942"
     },
     {
-        "product_id": 16,
+        "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
         "name": "шоколад \"Милка\"",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
@@ -165,7 +165,7 @@
         "modified": "2026-02-06 23:14:25.701255"
     },
     {
-        "product_id": 22,
+        "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
         "name": "киви",
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"

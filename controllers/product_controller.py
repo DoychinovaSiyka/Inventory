@@ -34,7 +34,6 @@ class ProductController:
             product.categories = fixed_categories
             self.products.append(product)
 
-
     def _generate_id(self) -> str:
         return str(uuid.uuid4())
 
@@ -102,13 +101,13 @@ class ProductController:
     def get_all(self) -> List[Product]:
         return self.products
 
-    def get_by_id(self, product_id: str) -> Optional[Product]:   # ← поправено
+    def get_by_id(self, product_id: str) -> Optional[Product]:
         for p in self.products:
             if p.product_id == product_id:
                 return p
         return None
 
-    def update_name(self, product_id: str, new_name: str, user_id: str) -> bool:  # ← поправено
+    def update_name(self, product_id: str, new_name: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -121,7 +120,6 @@ class ProductController:
         p.update_modified()
         self.save_changes()
 
-        # ЛОГВАНЕ
         if self.activity_log:
             self.activity_log.add_log(
                 user_id,
@@ -131,7 +129,7 @@ class ProductController:
 
         return True
 
-    def update_description(self, product_id: str, new_description: str, user_id: str) -> bool:  # ← поправено
+    def update_description(self, product_id: str, new_description: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -150,7 +148,7 @@ class ProductController:
 
         return True
 
-    def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:  # ← поправено
+    def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -175,7 +173,7 @@ class ProductController:
 
         return True
 
-    def update_supplier(self, product_id: str, supplier_id: str, user_id: str) -> bool:  # ← поправено
+    def update_supplier(self, product_id: str, supplier_id: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -197,7 +195,7 @@ class ProductController:
 
         return True
 
-    def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:  # ← поправено
+    def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -216,7 +214,7 @@ class ProductController:
 
         return True
 
-    def increase_quantity(self, product_id: str, amount: float, user_id: str) -> bool:  # ← поправено
+    def increase_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -237,7 +235,7 @@ class ProductController:
 
         return True
 
-    def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:  # ← поправено
+    def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
@@ -261,7 +259,7 @@ class ProductController:
 
         return True
 
-    def remove_by_id(self, product_id: str, user_id: str) -> bool:  # ← поправено
+    def remove_by_id(self, product_id: str, user_id: str) -> bool:
         original_len = len(self.products)
         self.products = [p for p in self.products if p.product_id != product_id]
 
@@ -278,7 +276,6 @@ class ProductController:
             return True
 
         return False
-
 
     def remove_by_name(self, name: str, user_id: str) -> bool:
         name = name.lower()
@@ -374,8 +371,6 @@ class ProductController:
 
         return sorted_products
 
-
-    # Разширено търсене и филтриране
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
         results = self.products
 
@@ -443,7 +438,6 @@ class ProductController:
             results = [p for p in results if p.quantity <= max_qty]
 
         return results
-
 
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

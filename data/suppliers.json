@@ -1,6 +1,6 @@
 [
     {
-        "supplier_id": 1,
+        "supplier_id": "c4f2a8d1-7b3e-4f9a-9c1d-2e7f5b9a8c11",
         "name": "Fresh Market Distribution",
         "contact": "ofice@freshmarket.bg",
         "address": "Пловдив, ул. Коматевско шосе 45",
@@ -8,7 +8,7 @@
         "modified": "2026-02-03 22:19:52"
     },
     {
-        "supplier_id": 2,
+        "supplier_id": "a9d7c3b5-1e4f-4a8c-9b2d-5f7a3e1c7d22",
         "name": "Александър Павлов",
         "contact": "sashoo@abv.bg",
         "address": "ул.\"Мир\" №23",
@@ -16,7 +16,7 @@
         "modified": "2026-02-06 22:47:53"
     },
     {
-        "supplier_id": 3,
+        "supplier_id": "f1b8e7c3-4d2a-4f0e-8c9a-3b7d5e9a6f33",
         "name": "Константин Валентинов",
         "contact": "0882445688",
         "address": "ул.\"Осми март №8\"",
@@ -24,3 +24,4 @@
         "modified": "2026-02-06 20:37:40"
     }
 ]
+

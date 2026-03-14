@@ -1,7 +1,7 @@
 [
     {
-        "invoice_id": "d6e31594-2716-4a90-96df-d5715361970c",
-        "movement_id": "fc5c455f-a4e8-481f-8f12-59592fbbb7d1",
+        "invoice_id": 1,
+        "movement_id": 1,
         "product": "Мляко",
         "quantity": 2,
         "unit": "бр.",
@@ -13,8 +13,8 @@
         "modified": "2026-02-03 22:23:22"
     },
     {
-        "invoice_id": "c4bf850b-59f7-49c6-81f7-27e82b164ab4",
-        "movement_id": "6c78ae41-1258-4f04-a1e7-3a61233fac58",
+        "invoice_id": 2,
+        "movement_id": 2,
         "product": "Мляко",
         "quantity": 2,
         "unit": "бр.",
@@ -26,8 +26,8 @@
         "modified": "2026-02-04 11:55:37"
     },
     {
-        "invoice_id": "f074814a-c9e4-4ec2-b85e-51dbcd0cce64",
-        "movement_id": "ee403a26-2ac1-43e2-810a-70a491b6e223",
+        "invoice_id": 3,
+        "movement_id": 3,
         "product": "брашно",
         "quantity": 4.0,
         "unit": "кг",
@@ -39,8 +39,8 @@
         "modified": "2026-02-04 23:37:43"
     },
     {
-        "invoice_id": "548e6e46-8eb0-45d3-ab91-fa20d4b1df4f",
-        "movement_id": "6f7bdb57-f5bb-436e-9828-4344c391a93f",
+        "invoice_id": 4,
+        "movement_id": 4,
         "product": "вафла \"Боровец\"",
         "quantity": 55.0,
         "unit": "бр.",
@@ -52,21 +52,21 @@
         "modified": "2026-02-06 20:15:00"
     },
     {
-        "invoice_id": "f8903658-6f0a-49a1-9008-c13aaa2f4dc3",
-        "movement_id": "1ed4c239-e6b4-426d-81a8-04999c0d4c53",
+        "invoice_id": 5,
+        "movement_id": 5,
         "product": "вафла \"Боровец\"",
         "quantity": 12.0,
         "unit": "бр.",
         "unit_price": 0.99,
-        "total_price": 11.879999999999999,
+        "total_price": 11.88,
         "customer": "Нора",
         "date": "2026-02-06 23:02:14",
         "created": "2026-02-06 23:02:14",
         "modified": "2026-02-06 23:02:14"
     },
     {
-        "invoice_id": "08bd4b8c-b77b-4787-ac77-040775682298",
-        "movement_id": "30a15ba5-5549-4a43-9f1d-ed92bd1a9a80",
+        "invoice_id": 6,
+        "movement_id": 6,
         "product": "бира",
         "quantity": 12.0,
         "unit": "бр.",
@@ -78,8 +78,8 @@
         "modified": "2026-02-13 17:10:04"
     },
     {
-        "invoice_id": "fd1f9dc2-138f-4465-b643-4dc9876a282f",
-        "movement_id": "9117c13c-553b-44f1-a848-6520e6161718",
+        "invoice_id": 7,
+        "movement_id": 6,
         "product": "бира",
         "quantity": 12.0,
         "unit": "бр.",
@@ -91,8 +91,8 @@
         "modified": "2026-02-13 17:11:16"
     },
     {
-        "invoice_id": "05b45294-a204-451d-9bd2-3a978014e0c7",
-        "movement_id": "b698653a-f4a5-468c-a000-2441cafc1bd4",
+        "invoice_id": 8,
+        "movement_id": 6,
         "product": "вафла \"Боровец\"",
         "quantity": 2.0,
         "unit": "бр.",

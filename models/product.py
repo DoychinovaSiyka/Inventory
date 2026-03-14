@@ -17,6 +17,7 @@ class Product:
         self.product_id = validate_uuid(product_id)
         self.name = name
 
+        # ВИНАГИ преобразуваме категориите в UUID низове
         self.categories = [
             validate_uuid(c.category_id) if isinstance(c, Category) else validate_uuid(c)
             for c in categories
@@ -46,7 +47,15 @@ class Product:
         return {
             "product_id": self.product_id,
             "name": self.name,
-            "categories": self.categories,
+
+            # ТУК Е ГОЛЯМАТА ПОПРАВКА:
+            # Ако е Category → взимаме category_id
+            # Ако е UUID → връщаме директно
+            "categories": [
+                c.category_id if isinstance(c, Category) else c
+                for c in self.categories
+            ],
+
             "quantity": self.quantity,
             "unit": self.unit,
             "description": self.description,
@@ -62,7 +71,7 @@ class Product:
         return Product(
             product_id=data["product_id"],
             name=data["name"],
-            categories=data["categories"],
+            categories=data["categories"],  # ← списък от UUID низове
             quantity=data["quantity"],
             unit=data.get("unit", "бр."),
             description=data["description"],
