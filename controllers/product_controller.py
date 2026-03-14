@@ -249,14 +249,17 @@ class ProductController:
             or keyword in (p.description or "").lower() ]
 
     def filter_by_multiple_category_ids(self,
-                                        category_ids: List[int]) -> List[Product]:
+                                        category_ids: List[str]) -> List[Product]:
         filtered = []
         for p in self.products:
             for c in p.categories:
-                if c.category_id in category_ids:
+                # c може да е Category обект или директно string (id)
+                cid = c.category_id if hasattr(c, "category_id") else c
+                if cid in category_ids:
                     filtered.append(p)
                     break
         return filtered
+
 
     def average_price(self) -> float:
         if not self.products:

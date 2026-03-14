@@ -130,8 +130,7 @@ class ProductView:
 
         try:
             self.product_controller.add(
-                name=name,
-                description=description,
+                name=name,description=description,
                 price=price,
                 quantity=quantity,
                 unit=unit,
@@ -157,11 +156,9 @@ class ProductView:
             print("Грешка:", e)
 
     # 3. Редактиране на продукт
-    def edit_product(self, _):
+    def edit_product(self, user):
         print("\n=== Редактиране на продукт ===")
-        pid = _read_int("ID на продукт: ")
-        if pid is None:
-            return
+        pid = input("ID на продукт: ").strip()
 
         product = self.product_controller.get_by_id(pid)
         if not product:
