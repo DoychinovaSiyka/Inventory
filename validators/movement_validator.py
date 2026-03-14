@@ -51,8 +51,8 @@ class MovementValidator:
     @staticmethod
     def validate_description(description, movement_type=None):
         """
-        При MOVE → описанието може да е празно
-        При IN/OUT → задължително
+        При MOVE - описанието може да е празно
+        При IN/OUT - задължително
         """
 
         if movement_type == MovementType.MOVE:

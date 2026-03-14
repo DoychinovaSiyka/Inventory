@@ -27,7 +27,6 @@ class SupplierValidator:
         if SupplierValidator.email_regex.match(contact):
             return True
 
-        # Валиден телефон
         if SupplierValidator.phone_regex.match(contact):
             return True
 

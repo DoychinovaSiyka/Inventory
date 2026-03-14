@@ -11,9 +11,7 @@ class LocationView:
     def show_menu(self, user: User):
         is_admin = user.role == "Admin"
 
-        menu_items = [
-            MenuItem("1", "Списък с локации", self.show_all)
-        ]
+        menu_items = [MenuItem("1", "Списък с локации", self.show_all)]
 
         if is_admin:
             menu_items.extend([
@@ -41,10 +39,7 @@ class LocationView:
             return
 
         columns = ["ID", "Име", "Зона", "Капацитет"]
-        rows = [
-            [loc.location_id, loc.name, loc.zone, loc.capacity]
-            for loc in locations
-        ]
+        rows = [ [loc.location_id, loc.name, loc.zone, loc.capacity] for loc in locations]
 
         print("\n" + format_table(columns, rows))
 

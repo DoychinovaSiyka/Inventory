@@ -1,6 +1,5 @@
 import re
 
-
 class UserValidator:
 
     @staticmethod
@@ -51,7 +50,6 @@ class UserValidator:
 
         return True
 
-
     #   STATUS (Active, Disabled)
     @staticmethod
     def validate_status(status: str):
@@ -60,7 +58,6 @@ class UserValidator:
             raise ValueError("Статусът трябва да бъде 'Active' или 'Disabled'.")
 
         return True
-
 
     #   ПЪЛНА ВАЛИДАЦИЯ НА ПОТРЕБИТЕЛ
     @staticmethod

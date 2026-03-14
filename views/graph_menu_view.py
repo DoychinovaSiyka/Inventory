@@ -47,7 +47,7 @@ class GraphView:
 
         try:
             distance, path = dijkstra(self.graph, start, end)
-            print("\n=== Резултат ===")
+            print("\n   Резултат   ")
             print("Маршрут:", " → ".join(path))
             print("Общо разстояние:", distance, "км")
         except Exception as e:

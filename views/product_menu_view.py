@@ -363,13 +363,9 @@ class ProductView:
 
         results = self.product_controller.search_combined(
             name_keyword=keyword if keyword else None,
-            category_id=category_id,
-            min_price=min_price,
-            max_price=max_price,
-            min_qty=min_qty,
-            max_qty=max_qty,
-            supplier_id=supplier_id
-        )
+            category_id=category_id, min_price=min_price,
+            max_price=max_price, min_qty=min_qty,
+            max_qty=max_qty, supplier_id=supplier_id )
 
         if not results:
             print("\nНяма намерени продукти.")
