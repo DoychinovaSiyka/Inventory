@@ -5,14 +5,14 @@
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 190.0,
+        "quantity": 134.0,
         "unit": "бр.",
         "description": "от хмел",
         "price": 3.99,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-13 16:43:38.646315",
-        "modified": "2026-03-14 17:31:11"
+        "modified": "2026-03-14 17:43:19"
     },
     {
         "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",

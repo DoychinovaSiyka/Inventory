@@ -166,5 +166,19 @@
         "action": "INCREASE_QUANTITY",
         "details": "Added 6.0 to product ID a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44",
         "timestamp": "2026-03-14 17:31:45"
+    },
+    {
+        "log_id": "7fba9e52-6e73-4252-8059-135bf79f5ece",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved product c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11 from 5 to 1, qty=1.0",
+        "timestamp": "2026-03-14 17:38:52"
+    },
+    {
+        "log_id": "3bbcf8a9-4f30-4cd4-837e-f17a16239176",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11, qty=56.0, location=2, customer=Сийка Дойчинова",
+        "timestamp": "2026-03-14 17:43:19"
     }
 ]

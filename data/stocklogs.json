@@ -260,7 +260,7 @@
         "action": "move",
         "timestamp": "2026-02-13 21:53:10"
     },
-        {
+    {
         "log_id": "f9c1e3a7-5d4f-4e2a-8f9c-1b7d3e5a9f88",
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "location_id": 5,
@@ -322,5 +322,32 @@
         "unit": "бр.",
         "action": "move",
         "timestamp": "2026-02-13 22:13:22"
+    },
+    {
+        "log_id": null,
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "location_id": 5,
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-03-14 17:38:52"
+    },
+    {
+        "log_id": null,
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "location_id": 1,
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "move",
+        "timestamp": "2026-03-14 17:38:52"
+    },
+    {
+        "log_id": null,
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "location_id": 2,
+        "quantity": 56.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-03-14 17:43:19"
     }
 ]
