@@ -243,5 +243,166 @@
         "action": "LOGIN",
         "details": "admin logged in",
         "timestamp": "2026-03-14 22:02:53"
+    },
+    {
+        "log_id": "b46d3140-6d71-4d9c-b280-6bcfb5e116ac",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 22:19:00"
+    },
+    {
+        "log_id": "77e698e2-c0fe-491f-b4b2-758130bfa93e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 22:19:19"
+    },
+    {
+        "log_id": "d009a8ef-c911-4e3f-9d17-fad91b2b43f3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 22:19:29"
+    },
+    {
+        "log_id": "83e2d205-1a89-4368-85ef-a5b0dad9ee25",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADVANCED_SEARCH_INVOICE",
+        "details": "Used advanced invoice search",
+        "timestamp": "2026-03-14 22:26:01"
+    },
+    {
+        "log_id": "59377fc0-8303-4cbb-9479-f57f3e4b4698",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 22:32:12"
+    },
+    {
+        "log_id": "f22e0dd5-6691-4acc-a723-afa30b49d571",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 22:42:46"
+    },
+    {
+        "log_id": "eb2b9b7b-9195-4eba-841e-d759c5ca6a16",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 22:43:03"
+    },
+    {
+        "log_id": "fe0b3106-2edd-42d9-a129-2b60668d01fa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADVANCED_SEARCH_INVOICE",
+        "details": "Used advanced invoice search",
+        "timestamp": "2026-03-14 22:44:12"
+    },
+    {
+        "log_id": "291b76b1-a3fd-402f-9d99-5e738cb4ce99",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADVANCED_SEARCH_INVOICE",
+        "details": "Used advanced invoice search",
+        "timestamp": "2026-03-14 22:44:47"
+    },
+    {
+        "log_id": "b60c2323-cc79-4e96-a732-6d570a388dd4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 22:52:52"
+    },
+    {
+        "log_id": "85a5589e-db8b-45dc-874e-24d235382f1a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 22:53:11"
+    },
+    {
+        "log_id": "5791bedc-2522-432d-acc4-a823044da04b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 22:53:39"
+    },
+    {
+        "log_id": "fad8a596-fd21-4eee-b4a6-033b0c131513",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADVANCED_SEARCH_INVOICE",
+        "details": "Used advanced invoice search",
+        "timestamp": "2026-03-14 22:54:22"
+    },
+    {
+        "log_id": "f56322d6-d1df-454b-8548-a31fdfbe9f06",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 23:01:13"
+    },
+    {
+        "log_id": "81233df4-f4dc-40d0-829b-1757dd5aaf94",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 23:01:29"
+    },
+    {
+        "log_id": "37e0d6ec-de2f-4293-978d-6a12d3bb150f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 23:01:50"
+    },
+    {
+        "log_id": "cb5ab5bc-591f-4ef0-9513-518d99edc9d7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 23:04:02"
+    },
+    {
+        "log_id": "3813ab34-5b88-4225-b625-83bb021ba50c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 23:04:40"
+    },
+    {
+        "log_id": "75e43c38-9ef1-47bf-911c-e91ccc959f9f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 23:05:59"
+    },
+    {
+        "log_id": "3ea734db-4b1d-42fe-8161-532444d7c272",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-03-14 23:06:11"
+    },
+    {
+        "log_id": "728bc5f3-5b0c-4dd1-91af-d65cc80eab8a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "SEARCH_INVOICE",
+        "details": "Searched invoices by customer 'Нора'",
+        "timestamp": "2026-03-14 23:06:23"
+    },
+    {
+        "log_id": "41afaef3-77b6-4cc6-a46d-486e36b440c7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 23:11:05"
+    },
+    {
+        "log_id": "b8fbd9a9-f49d-481e-912e-4289a9627c52",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 23:11:22"
     }
 ]

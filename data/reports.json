@@ -4689,5 +4689,2483 @@
                 "total_price": 223.44
             }
         ]
+    },
+    {
+        "report_id": 95,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 22:43:15",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 96,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 22:43:27",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 97,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 22:54:31",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 98,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 22:55:40",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 99,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:01:39",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 100,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:02:07",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 101,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:04:44",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 102,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:04:53",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 103,
+        "report_type": "sales_all",
+        "generated_on": "2026-03-14 23:05:14",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 104,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:05:37",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 105,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:05:42",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 106,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:11:27",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 107,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:11:34",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 108,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:11:51",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 109,
+        "report_type": "sales_all",
+        "generated_on": "2026-03-14 23:11:59",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 110,
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-03-14 23:12:38",
+        "parameters": {
+            "customer": " Ясщнь"
+        },
+        "data": []
+    },
+    {
+        "report_id": 111,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:20:46",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 112,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:20:53",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 113,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:24:36",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 114,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:24:41",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 115,
+        "report_type": "sales_all",
+        "generated_on": "2026-03-14 23:24:51",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 116,
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-03-14 23:24:59",
+        "parameters": {
+            "customer": "Нора"
+        },
+        "data": [
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88
+            }
+        ]
+    },
+    {
+        "report_id": 117,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-03-14 23:25:05",
+        "parameters": {
+            "product": "мляко"
+        },
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 4.0
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "customer": "Елена Иванова",
+                "quantity": 2,
+                "total_price": 5.5
+            }
+        ]
+    },
+    {
+        "report_id": 118,
+        "report_type": "sales_by_date",
+        "generated_on": "2026-03-14 23:25:24",
+        "parameters": {
+            "date": "2026-02-03"
+        },
+        "data": [
+            {
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            }
+        ]
+    },
+    {
+        "report_id": 119,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:25:27",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 120,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:27:02",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 121,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:27:08",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 122,
+        "report_type": "sales_all",
+        "generated_on": "2026-03-14 23:27:21",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 123,
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-03-14 23:27:26",
+        "parameters": {
+            "customer": "Нора"
+        },
+        "data": [
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88
+            }
+        ]
+    },
+    {
+        "report_id": 124,
+        "report_type": "sales_by_product",
+        "generated_on": "2026-03-14 23:27:32",
+        "parameters": {
+            "product": "мляко"
+        },
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "customer": "Siyka",
+                "quantity": 2,
+                "total_price": 4.0
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "customer": "Елена Иванова",
+                "quantity": 2,
+                "total_price": 5.5
+            }
+        ]
+    },
+    {
+        "report_id": 125,
+        "report_type": "sales_by_date",
+        "generated_on": "2026-03-14 23:27:44",
+        "parameters": {
+            "date": "2026-02-04"
+        },
+        "data": [
+            {
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            }
+        ]
+    },
+    {
+        "report_id": 126,
+        "report_type": "movements_all",
+        "generated_on": "2026-03-14 23:28:29",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 3,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 2,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 5,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0,
+                "location": 1,
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": 2,
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
+    },
+    {
+        "report_id": 127,
+        "report_type": "stock",
+        "generated_on": "2026-03-14 23:28:36",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": null
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": null
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": null
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 42.22,
+                "price": 4.89,
+                "location": null
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": null
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": null
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": null
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": null
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": null
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": null
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": null
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": null
+            }
+        ]
+    },
+    {
+        "report_id": 128,
+        "report_type": "sales_all",
+        "generated_on": "2026-03-14 23:28:46",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            }
+        ]
     }
 ]

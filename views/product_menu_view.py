@@ -5,6 +5,8 @@ from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
 
+def format_lv(value):
+    return f"{value:.2f} лв."
 
 # Четене на цяло число от потребителя
 def _read_int(prompt):
@@ -13,7 +15,6 @@ def _read_int(prompt):
     except ValueError:
         print("Стойността трябва да е цяло число.")
         return None
-
 
 # Четене на число с плаваща запетая (позволява 5,5 → 5.5 и игнорира текст след числото)
 def _read_float(prompt):
@@ -32,7 +33,6 @@ def _read_float(prompt):
     except ValueError:
         print("Стойността трябва да е число.")
         return None
-
 
 class ProductView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController, activity_log_controller=None):
@@ -92,7 +92,7 @@ class ProductView:
 
         print("\n=== Списък с продукти ===")
         for p in products:
-            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
     # 1. Създаване на продукт
     def create_product(self, user):
@@ -193,7 +193,7 @@ class ProductView:
 
         print("\n=== Списък с продукти ===")
         for p in products:
-            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
     # 5. Търсене
     def search(self, _):
@@ -210,7 +210,7 @@ class ProductView:
 
         print("\n=== Резултати от търсенето ===")
         for p in results:
-            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
     # Защитено сортиране за оператор
     @require_password("parola123")
@@ -224,7 +224,7 @@ class ProductView:
     # 7. Средна цена
     def average_price(self, _):
         avg = self.product_controller.average_price()
-        print(f"Средна цена: {avg:.2f} лв.")
+        print(f"Средна цена: {format_lv(avg)}")
 
     # 8. Филтриране по категория
     def filter_by_category(self, _):
@@ -256,7 +256,7 @@ class ProductView:
 
         print("\n=== Продукти в категорията ===")
         for p in results:
-            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
     # 9. Увеличаване на количество
     def increase_quantity(self, user):
@@ -305,7 +305,7 @@ class ProductView:
         if not p:
             print("Няма продукти.")
         else:
-            print(f"Най-скъп продукт: {p.name} – {p.price} лв.")
+            print(f"Най-скъп продукт: {p.name} – {format_lv(p.price)}")
 
     # 13. Най-евтин продукт
     def cheapest(self, _):
@@ -313,12 +313,12 @@ class ProductView:
         if not p:
             print("Няма продукти.")
         else:
-            print(f"Най-евтин продукт: {p.name} – {p.price} лв.")
+            print(f"Най-евтин продукт: {p.name} – {format_lv(p.price)}")
 
     # 14. Обща стойност на склада
     def total_value(self, _):
         value = self.product_controller.total_values()
-        print(f"Обща стойност на склада: {value:.2f} лв.")
+        print(f"Обща стойност на склада: {format_lv(value)}")
 
     # 15. Групиране по категории
     def group_by_category(self, _):
@@ -330,7 +330,7 @@ class ProductView:
 
             print(f"\nКатегория: {cat_name}")
             for p in products:
-                print(f" - {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+                print(f" - {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
     # 16. Разширено търсене
     def advanced_search(self, _):
@@ -370,4 +370,4 @@ class ProductView:
 
         print("\n=== Резултати ===")
         for p in results:
-            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {p.price} лв.")
+            print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
