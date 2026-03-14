@@ -180,5 +180,68 @@
         "action": "OUT_MOVEMENT",
         "details": "OUT movement: product c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11, qty=56.0, location=2, customer=Сийка Дойчинова",
         "timestamp": "2026-03-14 17:43:19"
+    },
+    {
+        "log_id": "16c50a47-0f05-4c18-aca5-b75dbdac40ff",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 21:44:19"
+    },
+    {
+        "log_id": "e168ad64-b345-41a2-b4b3-e9502f7385a4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: картофи",
+        "timestamp": "2026-03-14 21:47:49"
+    },
+    {
+        "log_id": "94ce5dd7-86e1-42d8-b2b6-4eb33c80534e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 21:55:39"
+    },
+    {
+        "log_id": "d79e2b33-a5a7-4df8-bb34-142713e761cd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "INCREASE_QUANTITY",
+        "details": "Added 4.0 units to product ID 9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "timestamp": "2026-03-14 21:56:29"
+    },
+    {
+        "log_id": "36559604-59ba-490d-98d9-e35fd1164d26",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "INCREASE_QUANTITY",
+        "details": "Added 4.0 to product ID 9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "timestamp": "2026-03-14 21:56:29"
+    },
+    {
+        "log_id": "d3c01e73-2107-4f9a-ab85-74c55af00c01",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 4.0 units from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "timestamp": "2026-03-14 21:56:54"
+    },
+    {
+        "log_id": "a0667b64-a443-4e2e-9f50-1bff032306cc",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 4.0 from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "timestamp": "2026-03-14 21:56:54"
+    },
+    {
+        "log_id": "dc8308fa-8aa4-4b2c-ac0f-c16048aa460d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin logged out",
+        "timestamp": "2026-03-14 22:02:33"
+    },
+    {
+        "log_id": "ce48fd19-264a-4aef-bb8d-c9a2fde0d215",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-14 22:02:53"
     }
 ]

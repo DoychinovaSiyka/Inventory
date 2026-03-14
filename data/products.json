@@ -1,18 +1,18 @@
 [
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
-        "name": "бира",
+        "name": "бира \"Siyka\"",
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 134.0,
+        "quantity": 77.0,
         "unit": "бр.",
-        "description": "от хмел",
-        "price": 3.99,
+        "description": "Тя е едно от най‑старите и най‑разпространени алкохолни питиета в света, като съчетава характерна горчивина от хмела, аромат от малца и различни вкусови профили според стила.",
+        "price": 9.99,
         "supplier_id": null,
         "tags": [],
         "created": "2026-02-13 16:43:38.646315",
-        "modified": "2026-03-14 17:43:19"
+        "modified": "2026-03-14 22:07:10"
     },
     {
         "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
@@ -45,6 +45,21 @@
         "modified": "2026-03-14 17:31:45"
     },
     {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "name": "картофи",
+        "categories": [
+            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
+        ],
+        "quantity": 20.0,
+        "unit": "кг",
+        "description": "зеленчук съдържащ много нишесте и има висока хранителна стойност",
+        "price": 2.21,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-03-14 21:47:49.788604",
+        "modified": "2026-03-14 21:56:29"
+    },
+    {
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
         "name": "кафе \"Lavazza\"",
         "categories": [
@@ -73,6 +88,21 @@
         "tags": [],
         "created": "2026-02-13 19:25:25.693245",
         "modified": "2026-02-13 19:25:25.693245"
+    },
+    {
+        "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
+        "name": "киви",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 3.0,
+        "unit": "кг",
+        "description": "плод",
+        "price": 1.0,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-03-12 09:44:27.251007",
+        "modified": "2026-03-12 09:44:27.251007"
     },
     {
         "product_id": "d9c3b7a5-1e4f-4a9c-8b2d-5f7a1c3e8b77",
@@ -163,20 +193,5 @@
         "tags": [],
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
-    },
-    {
-        "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
-        "name": "киви",
-        "categories": [
-            "2ed81812-7f7e-48bb-a446-4c96da251856"
-        ],
-        "quantity": 3.0,
-        "unit": "кг",
-        "description": "плод",
-        "price": 1.0,
-        "supplier_id": null,
-        "tags": [],
-        "created": "2026-03-12 09:44:27.251007",
-        "modified": "2026-03-12 09:44:27.251007"
     }
 ]
