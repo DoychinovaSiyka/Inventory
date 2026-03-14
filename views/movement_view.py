@@ -194,14 +194,9 @@ class MovementView:
 
         # Извършване на преместването
         try:
-            self.movement_controller.move_product(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                from_location_id=from_location_id,
-                to_location_id=to_location_id,
-                quantity=float(quantity),
-                description=description
-            )
+            self.movement_controller.move_product(product_id=product.product_id,
+                user_id=user.user_id,from_location_id=from_location_id,to_location_id=to_location_id,
+                quantity=float(quantity),description=description)
             print("\nПреместването е извършено успешно!")
 
         except ValueError as e:
