@@ -2,7 +2,7 @@ from datetime import datetime
 
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp=None, log_id=None):
-        # log_id вече е int, генериран от контролера (max+1)
+        # log_id е int, генериран от контролера (max+1)
         self.log_id = log_id
 
         self.product_id = product_id

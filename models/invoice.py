@@ -1,25 +1,33 @@
-import uuid
 from datetime import datetime
+
+
+def generate_next_invoice_id(existing_items):
+    if not existing_items:
+        return 1
+    try:
+        ids = [int(item["invoice_id"]) for item in existing_items if "invoice_id" in item]
+        return max(ids) + 1
+    except:
+        return 1
+
 
 class Invoice:
     def __init__(self, invoice_id=None, movement_id=None, product="", quantity=0,
                  unit="", unit_price=0.0,
                  total_price=None, customer="", date=None, created=None, modified=None):
 
-        # ID — UUID
-        self.invoice_id = invoice_id or str(uuid.uuid4())
+        # ID — AUTO-INCREMENT INT
+        self.invoice_id = int(invoice_id) if invoice_id is not None else None
 
         # Movement → Invoice (1:1)
-        self.movement_id = str(movement_id) if movement_id is not None else None
-
+        self.movement_id = int(movement_id) if movement_id is not None else None
 
         self.product = product
         self.quantity = quantity
         self.unit = unit
         self.unit_price = unit_price
-        self.total_price = (total_price if total_price is not None else quantity * unit_price)
+        self.total_price = total_price if total_price is not None else quantity * unit_price
         self.customer = customer
-
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
@@ -28,6 +36,10 @@ class Invoice:
 
         self.validate()
 
+    def assign_new_id(self, existing_items):
+        """Извиква се от контролера, когато invoice_id е None."""
+        if self.invoice_id is None:
+            self.invoice_id = generate_next_invoice_id(existing_items)
 
     def validate(self):
         if not self.product:
@@ -48,8 +60,6 @@ class Invoice:
         if self.movement_id is None:
             raise ValueError("movement_id е задължителен (според SRS).")
 
-
-    # JSON сериализация
     def to_dict(self):
         return {
             "invoice_id": self.invoice_id,

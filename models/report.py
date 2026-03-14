@@ -3,7 +3,7 @@ from datetime import datetime
 class Report:
     def __init__(self, report_id=None, report_type="", generated_on=None,
                  parameters=None, data=None):
-        # report_id вече е int, генериран от контролера (max+1)
+        # report_id е int, генериран от контролера (max+1)
         self.report_id = report_id
 
         self.report_type = report_type

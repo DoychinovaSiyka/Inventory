@@ -1,7 +1,5 @@
-import uuid
 from enum import Enum
 from datetime import datetime
-
 
 
 class MovementType(Enum):
@@ -10,47 +8,30 @@ class MovementType(Enum):
     MOVE = "MOVE"
 
 
-class MetaMovement(type):
-    def __new__(cls, name, bases, namespace):
+def generate_next_id(existing_items):
+    if not existing_items:
+        return 1
+    try:
+        ids = [int(item["movement_id"]) for item in existing_items if "movement_id" in item]
+        return max(ids) + 1
+    except:
+        return 1
 
 
-        if "to_dict" not in namespace:
-            def to_dict(self):
-                return {
-                    "movement_id": self.movement_id,
-                    "product_id": self.product_id,
-                    "user_id": self.user_id,
-                    "location_id": self.location_id,
-                    "movement_type": self.movement_type.name,
-                    "quantity": self.quantity,
-                    "unit": self.unit,
-                    "description": self.description,
-                    "price": self.price,
-                    "supplier_id": self.supplier_id,
-                    "customer": self.customer,
-                    "from_location_id": self.from_location_id,
-                    "to_location_id": self.to_location_id,
-                    "date": self.date,
-                    "created": self.created,
-                    "modified": self.modified
-                }
-            namespace["to_dict"] = to_dict
-
-        return super().__new__(cls, name, bases, namespace)
-
-
-
-class Movement(metaclass=MetaMovement):
+class Movement:
     def __init__(
         self, movement_id=None,
         product_id=None, user_id=None,
-        location_id=None,movement_type=None,quantity=0,
-        unit="бр.",description="",
-        price=0.0,supplier_id=None,customer=None,from_location_id=None,
-        to_location_id=None,date=None,created=None,modified=None):
+        location_id=None, movement_type=None, quantity=0,
+        unit="бр.", description="",
+        price=0.0, supplier_id=None, customer=None,
+        from_location_id=None, to_location_id=None,
+        date=None, created=None, modified=None
+    ):
 
+        # movement_id = AUTO-INCREMENT INT
+        self.movement_id = int(movement_id) if movement_id is not None else None
 
-        self.movement_id = movement_id or str(uuid.uuid4())
         self.product_id = product_id
         self.user_id = user_id
         self.location_id = location_id
@@ -63,6 +44,7 @@ class Movement(metaclass=MetaMovement):
         self.customer = customer
         self.from_location_id = from_location_id
         self.to_location_id = to_location_id
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
@@ -70,6 +52,10 @@ class Movement(metaclass=MetaMovement):
 
         self.validate()
 
+    def assign_new_id(self, existing_items):
+        """Извиква се от контролера, когато movement_id е None."""
+        if self.movement_id is None:
+            self.movement_id = generate_next_id(existing_items)
 
     def validate(self):
         if self.product_id is None:
@@ -105,9 +91,28 @@ class Movement(metaclass=MetaMovement):
         elif self.movement_type == MovementType.MOVE:
             if self.from_location_id is None or self.to_location_id is None:
                 raise ValueError("MOVE movement трябва да има from_location_id и to_location_id.")
-
             if self.from_location_id == self.to_location_id:
                 raise ValueError("MOVE movement трябва да е между различни локации.")
+
+    def to_dict(self):
+        return {
+            "movement_id": self.movement_id,
+            "product_id": self.product_id,
+            "user_id": self.user_id,
+            "location_id": self.location_id,
+            "movement_type": self.movement_type.name,
+            "quantity": self.quantity,
+            "unit": self.unit,
+            "description": self.description,
+            "price": self.price,
+            "supplier_id": self.supplier_id,
+            "customer": self.customer,
+            "from_location_id": self.from_location_id,
+            "to_location_id": self.to_location_id,
+            "date": self.date,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):

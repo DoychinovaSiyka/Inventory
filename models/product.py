@@ -1,38 +1,35 @@
 from datetime import datetime
+from uuid import UUID
 from models.category import Category
 
+def validate_uuid(value):
+    if value is None:
+        return None
+    try:
+        return str(UUID(str(value)))
+    except ValueError:
+        raise ValueError(f"Invalid UUID value: {value}")
+
 class Product:
-    def __init__(
-        self,
-        product_id,
-        name,
-        categories,
-        quantity,
-        unit,
-        description,
-        price,
-        supplier_id=None,
-        tags=None,
-        created=None,
-        modified=None
-    ):
-        self.product_id = product_id
+    def __init__(self, product_id, name, categories, quantity, unit, description, price,
+                 supplier_id=None, tags=None, created=None, modified=None):
+
+        self.product_id = validate_uuid(product_id)
         self.name = name
 
-        # categories = списък от UUID или Category обекти
-        self.categories = categories
+        self.categories = [
+            validate_uuid(c.category_id) if isinstance(c, Category) else validate_uuid(c)
+            for c in categories
+        ]
 
         self.quantity = float(quantity)
         self.unit = unit
         self.description = description
-        self.price = price
+        self.price = float(price)
 
-        # supplier е само ID
-        self.supplier_id = supplier_id
-
+        self.supplier_id = validate_uuid(supplier_id)
         self.tags = tags or []
 
-        # унифициран timestamp формат
         self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -49,10 +46,7 @@ class Product:
         return {
             "product_id": self.product_id,
             "name": self.name,
-            "categories": [
-                c.category_id if isinstance(c, Category) else c
-                for c in self.categories
-            ],
+            "categories": self.categories,
             "quantity": self.quantity,
             "unit": self.unit,
             "description": self.description,
