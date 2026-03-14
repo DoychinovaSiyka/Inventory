@@ -74,14 +74,7 @@ class ReportsView:
 
                 price = f"{item['price']} лв." if item["type"] == "OUT" else item["price"]
 
-                rows.append([
-                    item["date"],
-                    item["type"],
-                    item["product_id"],
-                    f"{item['quantity']} бр.",
-                    price,
-                    location_name
-                ])
+                rows.append([item["date"],item["type"],item["product_id"],f"{item['quantity']} бр.",price,location_name])
 
             print(format_table(["Дата", "Тип", "Продукт ID", "Количество", "Цена", "Локация"], rows))
 
@@ -158,27 +151,14 @@ class ReportsView:
         product = input("Име на продукт: ")
         report = self.controller.report_sales_by_product(product)
         rows = [
-            [
-                item["date"],
-                item["customer"],
-                f"{item['quantity']} бр.",
-                f"{item['total_price']} лв."
-            ]
-            for item in report.data
-        ]
+            [item["date"], item["customer"], f"{item['quantity']} бр.", f"{item['total_price']} лв."]
+            for item in report.data ]
         print(format_table(["Дата", "Клиент", "Количество", "Общо"], rows))
 
     # 6. Продажби по дата
     def report_sales_by_date(self, _):
         date_str = input("Дата (ГГГГ-ММ-ДД): ")
         report = self.controller.report_sales_by_date(date_str)
-        rows = [
-            [
-                item["product"],
-                item["customer"],
-                f"{item['quantity']} бр.",
-                f"{item['total_price']} лв."
-            ]
-            for item in report.data
-        ]
+        rows = [ [ item["product"],item["customer"],f"{item['quantity']} бр.", f"{item['total_price']} лв."]
+            for item in report.data]
         print(format_table(["Продукт", "Клиент", "Количество", "Общо"], rows))

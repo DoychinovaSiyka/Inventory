@@ -38,7 +38,8 @@ def main():
 
     # добавяме тестов потребител (ако вече го има → игнорираме)
     try:
-        user_controller.register("Ivan", "Petrov", "ivan@example.com", "ivan", "test123", "Operator")
+        user_controller.register("Ivan", "Petrov", "ivan@example.com", "ivan",
+                                 "test123", "Operator")
     except ValueError:
         pass
 
