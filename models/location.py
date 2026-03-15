@@ -21,10 +21,6 @@ class Location:
     @staticmethod
     def from_dict(data):
         return Location(
-            location_id=data.get("location_id"),
-            name=data.get("name", ""),
-            zone=data.get("zone", ""),
-            capacity=data.get("capacity", 0),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+            location_id=data.get("location_id"),name=data.get("name", ""),
+            zone=data.get("zone", ""),capacity=data.get("capacity", 0),created=data.get("created"),
+            modified=data.get("modified"))

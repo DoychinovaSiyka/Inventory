@@ -6,10 +6,8 @@ from models.movement import MovementType
 
 
 class MovementView:
-    def __init__(self, product_controller: ProductController,
-                 movement_controller: MovementController,
-                 user_controller: UserController,
-                 activity_log_controller=None):
+    def __init__(self, product_controller: ProductController,movement_controller: MovementController,
+                 user_controller: UserController,activity_log_controller=None):
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.user_controller = user_controller
@@ -22,7 +20,7 @@ class MovementView:
             print("Трябва да сте логнат, за да правите доставки/продажби.")
             return
 
-        # Добавена е опция за вътрешно преместване (MOVE)
+        # Опция за вътрешно преместване (MOVE)
         menu = Menu("Меню за Доставки/Продажби/Премествания", [
             MenuItem("1", "Създаване на доставка/продажба (IN/OUT)", self.create_movement),
             MenuItem("2", "Преместване между локации (MOVE)", self.move_between_locations),
@@ -38,7 +36,7 @@ class MovementView:
             if result == "break":
                 break
 
-    # Създаване на IN/OUT движение
+    # създаване на IN/OUT движение
     def create_movement(self, user):
         products = self.product_controller.get_all()
 
@@ -60,7 +58,6 @@ class MovementView:
 
         # Избор на локация
         locations = self.movement_controller.location_controller.get_all()
-
         if not locations:
             print("Няма налични локации.")
             return

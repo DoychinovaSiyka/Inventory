@@ -71,10 +71,10 @@ def require_password(correct_password):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                # вместо getpass → звездички
+                # вместо getpass - звездички
                 password = input_password("Въведете парола: ")
             except Exception:
-                # Ако средата не поддържа → видима парола
+                # Ако средата не поддържа - видима парола
                 password = input("Въведете парола (видима): ")
 
             if password == correct_password:

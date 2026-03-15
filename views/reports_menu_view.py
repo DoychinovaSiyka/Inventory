@@ -83,14 +83,8 @@ class ReportsView:
             keyword = input("Име на продукт: ")
             report = self.controller.report_movements_by_product(keyword)
             rows = [
-                [
-                    item["date"],
-                    item["type"],
-                    f"{item['quantity']} бр.",
-                    f"{item['price']} лв." if item["type"] == "OUT" else item["price"]
-                ]
-                for item in report.data
-            ]
+                [ item["date"],item["type"],f"{item['quantity']} бр.",f"{item['price']} лв."
+                if item["type"] == "OUT" else item["price"]] for item in report.data ]
             print(format_table(["Дата", "Тип", "Количество", "Цена"], rows))
 
         # 2.3 По тип движение
@@ -119,16 +113,8 @@ class ReportsView:
     # 3. Продажби (общо)
     def report_sales(self, _):
         report = self.controller.report_sales()
-        rows = [
-            [
-                item["date"],
-                item["product"],
-                f"{item['quantity']} бр.",
-                f"{item['total_price']} лв.",
-                item["customer"]
-            ]
-            for item in report.data
-        ]
+        rows = [[ item["date"],item["product"],f"{item['quantity']} бр.",f"{item['total_price']} лв.",item["customer"]]
+            for item in report.data]
         print(format_table(["Дата", "Продукт", "Количество", "Общо", "Клиент"], rows))
 
     # 4. Продажби по клиент
@@ -136,14 +122,7 @@ class ReportsView:
         customer = input("Име на клиент: ")
         report = self.controller.report_sales_by_customer(customer)
         rows = [
-            [
-                item["date"],
-                item["product"],
-                f"{item['quantity']} бр.",
-                f"{item['total_price']} лв."
-            ]
-            for item in report.data
-        ]
+            [item["date"],item["product"], f"{item['quantity']} бр.", f"{item['total_price']} лв."] for item in report.data ]
         print(format_table(["Дата", "Продукт", "Количество", "Общо"], rows))
 
     # 5. Продажби по продукт

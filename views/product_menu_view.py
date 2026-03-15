@@ -16,7 +16,7 @@ def _read_int(prompt):
         print("Стойността трябва да е цяло число.")
         return None
 
-# Четене на число с плаваща запетая (позволява 5,5 → 5.5 и игнорира текст след числото)
+# Четене на число с плаваща запетая (позволява 5,5 - 5.5 и игнорира текст след числото)
 def _read_float(prompt):
     raw = input(prompt)
     raw = raw.replace(",", ".").strip()
@@ -94,7 +94,7 @@ class ProductView:
         for p in products:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
-    # 1. Създаване на продукт
+    #  Създаване на продукт
     def create_product(self, user):
         print("\n=== Създаване на продукт ===")
         name = input("Име: ").strip()
@@ -129,20 +129,14 @@ class ProductView:
         category_id = categories[idx].category_id
 
         try:
-            self.product_controller.add(
-                name=name,description=description,
-                price=price,
-                quantity=quantity,
-                unit=unit,
-                category_ids=[category_id],
-                supplier_id=None,
-                user_id=user.id
-            )
+            self.product_controller.add(name=name,description=description,price=price,
+                quantity=quantity,unit=unit,category_ids=[category_id],
+                supplier_id=None,user_id=user.id)
             print("Продуктът е създаден успешно.")
         except ValueError as e:
             print("Грешка:", e)
 
-    # 2. Премахване на продукт
+    #  Премахване на продукт
     def remove_product(self, user):
         print("\n=== Премахване на продукт ===")
         pid = _read_int("ID на продукт: ")
@@ -155,7 +149,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 3. Редактиране на продукт
+    # Редактиране на продукт
     def edit_product(self, user):
         print("\n=== Редактиране на продукт ===")
         pid = input("ID на продукт: ").strip()
@@ -195,7 +189,7 @@ class ProductView:
         for p in products:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
-    # 5. Търсене
+    #  Търсене
     def search(self, _):
         keyword = input("Търси по име или описание: ").strip().lower()
         if not keyword:
@@ -221,12 +215,12 @@ class ProductView:
     def sort_menu(self, _):
         self.sort_view.show_menu()
 
-    # 7. Средна цена
+    #  Средна цена
     def average_price(self, _):
         avg = self.product_controller.average_price()
         print(f"Средна цена: {format_lv(avg)}")
 
-    # 8. Филтриране по категория
+    #  Филтриране по категория
     def filter_by_category(self, _):
         categories = self.category_controller.get_all()
         if not categories:
@@ -258,7 +252,7 @@ class ProductView:
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
-    # 9. Увеличаване на количество
+    #  Увеличаване на количество
     def increase_quantity(self, user):
         pid = input("ID: ").strip()
         amount = _read_float("Добави: ")
@@ -274,7 +268,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 10. Намаляване на количество
+    #  Намаляване на количество
     def decrease_quantity(self, user):
         pid = input("ID: ").strip()
         amount = _read_float("Извади: ")
@@ -290,7 +284,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 11. Продукти с ниска наличност
+    #  Продукти с ниска наличност
     def low_stock(self, _):
         low = self.product_controller.check_low_stock()
         if not low:
@@ -299,7 +293,7 @@ class ProductView:
             for p in low:
                 print(f"{p.name} | {p.quantity} {p.unit}")
 
-    # 12. Най-скъп продукт
+    #  Най-скъп продукт
     def most_expensive(self, _):
         p = self.product_controller.most_expensive()
         if not p:
@@ -307,7 +301,7 @@ class ProductView:
         else:
             print(f"Най-скъп продукт: {p.name} – {format_lv(p.price)}")
 
-    # 13. Най-евтин продукт
+    #  Най-евтин продукт
     def cheapest(self, _):
         p = self.product_controller.cheapest()
         if not p:
@@ -315,12 +309,12 @@ class ProductView:
         else:
             print(f"Най-евтин продукт: {p.name} – {format_lv(p.price)}")
 
-    # 14. Обща стойност на склада
+    #  Обща стойност на склада
     def total_value(self, _):
         value = self.product_controller.total_values()
         print(f"Обща стойност на склада: {format_lv(value)}")
 
-    # 15. Групиране по категории
+    #  Групиране по категории
     def group_by_category(self, _):
         groups = self.product_controller.group_by_category()
 
@@ -332,7 +326,8 @@ class ProductView:
             for p in products:
                 print(f" - {p.name} | {p.quantity} {p.unit} | {format_lv(p.price)}")
 
-    # 16. Разширено търсене
+
+
     def advanced_search(self, _):
         print("\n=== Разширено търсене на продукти ===")
 
