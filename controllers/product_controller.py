@@ -42,7 +42,6 @@ class ProductController:
             tags: Optional[List[str]] = None) -> Product:
 
         ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
-
         if self.exists_by_name(name):
             raise ValueError("Продукт с това име вече съществува.")
 
@@ -58,7 +57,6 @@ class ProductController:
                 raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
         now = str(datetime.now())
-
         product = Product(product_id=self._generate_id(), name=name, categories=categories,
                           quantity=float(quantity), unit=unit, description=description,
                           price=price, supplier_id=supplier_id, tags=tags or [],
@@ -344,10 +342,7 @@ class ProductController:
         return results
 
     def search_by_category(self, category_id: int) -> List[Product]:
-        return [
-            p for p in self.products
-            if any(c.category_id == category_id for c in p.categories)
-        ]
+        return [p for p in self.products if any(c.category_id == category_id for c in p.categories)]
 
     def search_by_supplier(self, supplier_id: int) -> List[Product]:
         return [p for p in self.products if p.supplier_id == supplier_id]
@@ -361,8 +356,7 @@ class ProductController:
 
         if name_keyword:
             kw = name_keyword.lower()
-            results = [ p for p in results if kw in p.name.lower()
-                        or kw in p.description.lower()]
+            results = [ p for p in results if kw in p.name.lower() or kw in p.description.lower()]
 
         if category_id is not None:
             results = [ p for p in results
