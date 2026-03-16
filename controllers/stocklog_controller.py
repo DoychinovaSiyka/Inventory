@@ -55,6 +55,6 @@ class StockLogController:
             return True
         return False
 
-    # save
+
     def save_changes(self):
         self.repo.save([l.to_dict() for l in self.logs])

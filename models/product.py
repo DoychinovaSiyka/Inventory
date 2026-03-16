@@ -65,8 +65,7 @@ class Product:
 
     @staticmethod
     def from_dict(data):
-        return Product(
-            product_id=data["product_id"],
+        return Product(product_id=data["product_id"],
             name=data["name"],
             categories=data["categories"],
             quantity=data["quantity"],
@@ -74,7 +73,4 @@ class Product:
             description=data["description"],
             price=data["price"],
             supplier_id=data.get("supplier_id"),
-            tags=data.get("tags", []),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+            tags=data.get("tags", []),created=data.get("created"),modified=data.get("modified"))

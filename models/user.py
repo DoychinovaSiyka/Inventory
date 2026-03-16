@@ -9,7 +9,7 @@ class User:
         self.user_id = user_id or str(uuid.uuid4())
         self.id = self.user_id   # за съвместимост с user.id
 
-        # Основни данни
+
         self.first_name = first_name
         self.last_name = last_name
         self.email = email

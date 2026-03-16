@@ -20,5 +20,5 @@ class Report:
     @staticmethod
     def from_dict(d):
         return Report(report_id=d.get("report_id"),
-            report_type=d.get("report_type"),generated_on=d.get("generated_on"),
-            parameters=d.get("parameters", {}),data=d.get("data", []))
+            report_type=d.get("report_type"), generated_on=d.get("generated_on"),
+            parameters=d.get("parameters", {}), data=d.get("data", []))

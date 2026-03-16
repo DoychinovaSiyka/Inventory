@@ -45,9 +45,8 @@ class LocationController:
     def get_by_id(self, location_id: int) -> Optional[Location]:
         return next((l for l in self.locations if l.location_id == location_id), None)
 
-    # UPDATE
-    def update(
-        self,location_id: int,name: Optional[str] = None,zone: Optional[str] = None,
+
+    def update(self,location_id: int,name: Optional[str] = None,zone: Optional[str] = None,
         capacity: Optional[int] = None) -> bool:
 
         location = self.get_by_id(location_id)

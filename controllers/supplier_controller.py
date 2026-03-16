@@ -68,6 +68,6 @@ class SupplierController:
             return True
         return False
 
-    # save
+
     def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

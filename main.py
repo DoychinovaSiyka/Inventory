@@ -36,7 +36,7 @@ def main():
     # контролери
     user_controller = UserController(user_repo)
 
-    # добавяме тестов потребител (ако вече го има → игнорираме)
+    # добавяме тестов потребител (ако вече го има - игнорираме)
     try:
         user_controller.register("Ivan", "Petrov", "ivan@example.com", "ivan",
                                  "test123", "Operator")
@@ -67,7 +67,7 @@ def main():
         "report": report_controller, "activity_log": activity_log_controller
     }
 
-    # главен цикъл
+
     while True:
         print("\nВход в системата")
         print("1. Вход с потребител")

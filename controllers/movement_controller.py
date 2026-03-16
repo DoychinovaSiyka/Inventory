@@ -82,9 +82,8 @@ class MovementController:
         movement = Movement(
             movement_id=self._generate_id(), product_id=product_id, user_id=user_id,
             location_id=location_id, movement_type=movement_type, quantity=quantity,
-            unit=product.unit, description=description, price=price,
-            supplier_id=supplier_id, customer=customer, date=now,
-            created=now, modified=now)
+            unit=product.unit, description=description, price=price,supplier_id=supplier_id,
+            customer=customer, date=now,created=now, modified=now)
 
         self.movements.append(movement); self.save_changes()
 
@@ -144,8 +143,7 @@ class MovementController:
             quantity=quantity, unit=product.unit,
             description=f"Преместване от {from_location_id} → {to_location_id}. {description}",
             price=0, customer=None, supplier_id=None,
-            from_location_id=from_location_id, to_location_id=to_location_id
-        )
+            from_location_id=from_location_id, to_location_id=to_location_id)
 
         # move in
         in_movement = Movement(
