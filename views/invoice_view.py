@@ -187,17 +187,8 @@ class InvoiceView:
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id,
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{inv.total_price} лв.",
-                inv.date
-            ]
-            for inv in results
-        ]
+        rows = [ [ inv.invoice_id, inv.product,inv.customer,f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв.", inv.date ] for inv in results ]
 
         print("\n" + format_table(columns, rows))
 

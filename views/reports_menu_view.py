@@ -5,23 +5,24 @@ from models.user import User
 from controllers.location_controller import LocationController
 
 
+def get_unit(product_name: str):
+    name = product_name.lower()
+
+    if any(x in name for x in ["домати", "ябъл", "картоф", "диня",
+                               "лимон", "плод", "зеленч", "брашно"]):
+        return "кг"
+
+    if any(x in name for x in ["яйца", "вафла", "шоколад", "кафе",
+                               "чай", "мляко", "сладолед", "подправки"]):
+        return "бр."
+
+    return "бр."
+
+
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
         self.location_controller = controller.location_controller
-
-    def get_unit(self, product_name: str):
-        name = product_name.lower()
-
-        if any(x in name for x in ["домати", "ябъл", "картоф", "диня",
-                                   "лимон", "плод", "зеленч", "брашно"]):
-            return "кг"
-
-        if any(x in name for x in ["яйца", "вафла", "шоколад", "кафе",
-                                   "чай", "мляко", "сладолед", "подправки"]):
-            return "бр."
-
-        return "бр."
 
     def show_menu(self, user: User):
         menu = Menu("Справки", [
@@ -48,7 +49,7 @@ class ReportsView:
         for item in report.data:
             rows.append([
                 item["product"],
-                f"{item['quantity']} {self.get_unit(item['product'])}",
+                f"{item['quantity']} {get_unit(item['product'])}",
                 f"{item['price']} лв."
             ])
 
@@ -101,10 +102,7 @@ class ReportsView:
         elif sub == "4":
             date_str = input("Дата (ГГГГ-ММ-ДД): ")
             report = self.controller.report_movements_by_date(date_str)
-            rows = [
-                [item["date"], item["type"], f"{item['quantity']} бр."]
-                for item in report.data
-            ]
+            rows = [ [item["date"], item["type"], f"{item['quantity']} бр."] for item in report.data]
             print(format_table(["Дата", "Тип", "Количество"], rows))
 
         else:

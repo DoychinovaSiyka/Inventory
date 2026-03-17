@@ -24,10 +24,10 @@ class OperatorMenuView:
 
             MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
 
-            # Справките съдържат финансови данни → защитаваме
+            # Справките съдържат финансови данни - защитаваме
             MenuItem("4", "Справки", self.open_reports),
 
-            # Фактурите съдържат чувствителни данни → защитаваме
+            # Фактурите съдържат чувствителни данни - защитаваме
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("0", "Назад", lambda u: "break")
@@ -44,7 +44,7 @@ class OperatorMenuView:
         ProductView(self.controllers["product"],self.controllers["category"],
                     self.controllers["activity_log"]).show_menu(user)
 
-    # 2. Категории — операторът може само да ги гледа → защитаваме менюто
+    # 2. Категории — операторът може само да ги гледа - защитаваме менюто
     @require_password("parola123")
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)

@@ -59,11 +59,7 @@ class ProductSortView:
 
         rows = []
         for p in products:
-            rows.append([
-                p.name.ljust(20),
-                f"{p.price:.2f} лв.",
-                f"{p.quantity} {p.unit}"
-            ])
+            rows.append([p.name.ljust(20), f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}" ])
 
         print(format_table(["Име", "Цена", "Количество"], rows))
 

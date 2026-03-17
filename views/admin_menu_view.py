@@ -38,41 +38,41 @@ class AdminMenuView:
             if result == "break":
                 break
 
-    # 1. Продукти
+    # Продукти
     def open_products(self, user):
         ProductView( self.controllers["product"],self.controllers["category"],self.controllers["activity_log"]).show_menu(user)
 
-    # 2. Категории
+    # Категории
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
 
-    # 3. Движения
+    # Движения
     def open_movements(self, _):
         MovementView(self.controllers["product"],self.controllers["movement"],self.controllers["user"],
                      self.controllers["activity_log"]).show_menu()
 
-    # 4. Потребители
+    # Потребители
     def open_users(self, user):
         UserView(self.controllers["user"]).show_menu(user)
 
-    # 5. Справки
+    # Справки
     def open_reports(self, user):
         ReportsView(self.controllers["report"]).show_menu(user)
 
-    # 6. Фактури
+    # Фактури
     def open_invoices(self, user):
         InvoiceView( self.controllers["invoice"],self.controllers["activity_log"] ).show_menu(user)
 
-    # 7. Информация за системата
+    # Информация за системата
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()
 
-    # 8. Доставчици
+    # Доставчици
     def open_suppliers(self, user):
         SupplierView(self.controllers["supplier"]).show_menu(user)
 
-    # 9. Dijkstra – най-кратък път
+    # Dijkstra – най-кратък път
     @staticmethod
     def open_graph(_):
         GraphView().show_menu()

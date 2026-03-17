@@ -77,7 +77,7 @@ class CategoryView:
         except ValueError as e:
             print("Грешка:", e)
 
-    #  Изтриване
+
     def delete_category(self, _):
         category_id = input("Въведете ID на категория: ").strip()
 

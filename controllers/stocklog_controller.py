@@ -46,7 +46,7 @@ class StockLogController:
         return [log for log in self.logs
                 if keyword in log.action.lower() or keyword in log.timestamp.lower()]
 
-    # delete
+
     def remove(self, log_id):
         original_len = len(self.logs)
         self.logs = [l for l in self.logs if l.log_id != log_id]

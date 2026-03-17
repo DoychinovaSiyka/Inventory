@@ -28,8 +28,7 @@ class GraphView:
     def show_menu(self):
         menu = Menu("Най-кратък път между складове (Dijkstra)", [
             MenuItem("1", "Изчисли най-кратък път", self.calculate_path),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break") ])
 
         while True:
             choice = menu.show()

@@ -150,7 +150,7 @@ class ProductView:
             print("Грешка:", e)
 
     # Редактиране на продукт
-    def edit_product(self, user):
+    def edit_product(self, _):
         print("\n=== Редактиране на продукт ===")
         pid = input("ID на продукт: ").strip()
 

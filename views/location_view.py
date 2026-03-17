@@ -19,7 +19,6 @@ class LocationView:
                 MenuItem("4", "Изтриване на локация", self.delete_location)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
-
         menu = Menu("Меню Локации", menu_items)
 
         while True:
@@ -28,7 +27,7 @@ class LocationView:
             if result == "break":
                 break
 
-    # 1. Списък с локации
+    # Списък с локации
     def show_all(self, _):
         locations = self.location_controller.get_all()
 
@@ -41,7 +40,7 @@ class LocationView:
 
         print("\n" + format_table(columns, rows))
 
-    # 2. Добавяне
+    # Добавяне
     def add_location(self, _):
         name = input("Име на локация: ").strip()
         zone = input("Зона/Сектор: ").strip()
@@ -58,7 +57,7 @@ class LocationView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 3. Редактиране
+    # Редактиране
     def edit_location(self,_):
         loc_id = input("Въведете ID на локация: ").strip()
         location = self.location_controller.get_by_id(loc_id)
@@ -86,7 +85,7 @@ class LocationView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # 4. Изтриване
+    # Изтриване
     def delete_location(self, _):
         loc_id = input("Въведете ID на локация: ").strip()
 
