@@ -78,9 +78,8 @@ class LocationView:
             return
 
         try:
-            self.location_controller.update(
-                loc_id, name=new_name if new_name else location.name,
-                zone=new_zone if new_zone else location.zone, capacity=new_capacity)
+            self.location_controller.update(loc_id, name=new_name if new_name else location.name,zone=new_zone
+            if new_zone else location.zone, capacity=new_capacity)
             print("Локацията е обновена успешно!")
         except ValueError as e:
             print("Грешка:", e)
@@ -88,7 +87,6 @@ class LocationView:
     # Изтриване
     def delete_location(self, _):
         loc_id = input("Въведете ID на локация: ").strip()
-
         try:
             if self.location_controller.remove(loc_id):
                 print("Локацията е изтрита успешно!")
