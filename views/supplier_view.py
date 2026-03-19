@@ -14,11 +14,9 @@ class SupplierView:
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
 
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на доставчик", self.add_supplier),
+            menu_items.extend([ MenuItem("2", "Добавяне на доставчик", self.add_supplier),
                 MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)
-            ])
+                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
 

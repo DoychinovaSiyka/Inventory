@@ -136,7 +136,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    #  Премахване на продукт
+
     def remove_product(self, user):
         print("\n=== Премахване на продукт ===")
         pid = _read_int("ID на продукт: ")
@@ -149,7 +149,7 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # Редактиране на продукт
+
     def edit_product(self, _):
         print("\n=== Редактиране на продукт ===")
         pid = input("ID на продукт: ").strip()

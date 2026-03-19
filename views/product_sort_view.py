@@ -15,8 +15,7 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска → висока) – bubble sort", self.sort_price_asc),
             MenuItem("4", "По количество (високо → ниско) – bubble sort", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско → високо) – selection sort", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
             choice = menu.show()

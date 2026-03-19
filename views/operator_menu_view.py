@@ -21,7 +21,6 @@ class OperatorMenuView:
             MenuItem("1", "Управление на продукти", self.open_products),
             # Управление на категории е административна функция → защитаваме
             MenuItem("2", "Управление на категории", self.open_categories),
-
             MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
 
             # Справките съдържат финансови данни - защитаваме
@@ -30,8 +29,7 @@ class OperatorMenuView:
             # Фактурите съдържат чувствителни данни - защитаваме
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break") ])
 
         while True:
             choice = menu.show()

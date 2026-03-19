@@ -89,16 +89,8 @@ class InvoiceView:
                                       f"Searched invoices by customer '{keyword}'")
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id,
-                inv.product,
-                f"{inv.quantity} {inv.unit}",
-                f"{inv.total_price} лв.",
-                inv.date
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id,inv.product,f"{inv.quantity} {inv.unit}",f"{inv.total_price} лв.",inv.date]
+            for inv in results]
 
         print("\n" + format_table(columns, rows))
 
@@ -116,15 +108,8 @@ class InvoiceView:
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
         rows = [
-            [
-                inv.invoice_id,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{inv.total_price} лв.",
-                inv.date
-            ]
-            for inv in results
-        ]
+            [inv.invoice_id,inv.customer,f"{inv.quantity} {inv.unit}",f"{inv.total_price} лв.",inv.date]
+            for inv in results]
 
         print("\n" + format_table(columns, rows))
 
@@ -142,15 +127,8 @@ class InvoiceView:
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
         rows = [
-            [
-                inv.invoice_id,
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{inv.total_price} лв."
-            ]
-            for inv in results
-        ]
+            [inv.invoice_id,inv.product,inv.customer,f"{inv.quantity} {inv.unit}",f"{inv.total_price} лв."]
+            for inv in results]
 
         print("\n" + format_table(columns, rows))
 
@@ -173,14 +151,8 @@ class InvoiceView:
             print("Невалидна стойност за цена.")
             return
 
-        results = self.invoice_controller.advanced_search(
-            customer=customer,
-            product=product,
-            start_date=start_date,
-            end_date=end_date,
-            min_total=min_total,
-            max_total=max_total
-        )
+        results = self.invoice_controller.advanced_search(customer=customer,product=product,start_date=start_date,
+                                                          end_date=end_date, min_total=min_total,max_total=max_total)
 
         if not results:
             print("\nНяма фактури, които отговарят на критериите.")

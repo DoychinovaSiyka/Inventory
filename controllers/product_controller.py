@@ -356,11 +356,10 @@ class ProductController:
 
         if name_keyword:
             kw = name_keyword.lower()
-            results = [ p for p in results if kw in p.name.lower() or kw in p.description.lower()]
+            results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
 
         if category_id is not None:
-            results = [ p for p in results
-                        if any(c.category_id == category_id for c in p.categories)]
+            results = [p for p in results if any(c.category_id == category_id for c in p.categories)]
 
         if supplier_id is not None:
             results = [p for p in results if p.supplier_id == supplier_id]

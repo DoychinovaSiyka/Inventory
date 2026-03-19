@@ -146,14 +146,12 @@ class MovementController:
             from_location_id=from_location_id, to_location_id=to_location_id)
 
         # move in
-        in_movement = Movement(
-            movement_id=self._generate_id(), product_id=product_id, user_id=user_id,
+        in_movement = Movement(movement_id=self._generate_id(), product_id=product_id, user_id=user_id,
             location_id=to_location_id, movement_type=MovementType.MOVE,
             quantity=quantity, unit=product.unit,
             description=f"Преместване към {to_location_id} ← {from_location_id}. {description}",
             price=0, customer=None, supplier_id=None,
-            from_location_id=from_location_id, to_location_id=to_location_id
-        )
+            from_location_id=from_location_id, to_location_id=to_location_id)
 
         # количества
         product.quantity -= quantity; product.quantity += quantity

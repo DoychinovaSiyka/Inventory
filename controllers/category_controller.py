@@ -8,11 +8,11 @@ from validators.category_validator import CategoryValidator
 class CategoryController:
     def __init__(self, repo: Repository):
         self.repo = repo
-        self.categories: List[Category] = [Category.from_dict(c) for c in self.repo.load()]
         # Зареждаме всички категории от JSON файла чрез хранилището (JSONRepository).
         # Методът repo.load() връща списък от речници, а Category.from_dict()
         # преобразува всеки речник в Category обект. Така получаваме списък от реални Category обекти,
         # с които контролерът може да работи.
+        self.categories: List[Category] = [Category.from_dict(c) for c in self.repo.load()]
 
     def add(self, name: str, description: str = "") -> Category:
         CategoryValidator.validate_name(name)
@@ -20,7 +20,7 @@ class CategoryController:
         CategoryValidator.validate_description(description)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        category = Category(name=name,description=description,created=now,modified=now)
+        category = Category(name=name, description=description, created=now, modified=now)
         self.categories.append(category)
         self.save_changes()
         return category
@@ -38,7 +38,7 @@ class CategoryController:
 
         CategoryValidator.validate_update_name(new_name)
         # Проверяваме уникалност, но изключваме текущата категория
-        CategoryValidator.validate_unique(new_name,[c for c in self.categories
+        CategoryValidator.validate_unique(new_name, [c for c in self.categories
                                                     if c.category_id != category_id])
 
         category.name = new_name
@@ -57,7 +57,13 @@ class CategoryController:
         self.save_changes()
         return True
 
-    def remove(self, category_id: str) -> bool:
+    def remove(self, category_id: str, product_controller=None) -> bool:
+        # Проверка дали има продукти, свързани с тази категория, преди да я изтрием
+        if product_controller:
+            has_products = any(p.category_id == category_id for p in product_controller.get_all())
+            if has_products:
+                raise ValueError("Не може да изтриете категория с налични продукти в нея!")
+
         original_len = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
 
@@ -69,7 +75,8 @@ class CategoryController:
     def search(self, keyword: str) -> List[Category]:
         keyword = keyword.lower()
         return [c for c in self.categories
-            if keyword in c.name.lower() or keyword in (c.description or "").lower()]
+                if keyword in c.name.lower() or keyword in (c.description or "").lower()]
 
     def save_changes(self) -> None:
+        # Записваме промените обратно в JSON файла чрез репозиторито
         self.repo.save([c.to_dict() for c in self.categories])
