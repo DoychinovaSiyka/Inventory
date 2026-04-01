@@ -3,51 +3,71 @@ from graph.warehouse import Warehouse
 from graph.warehouse_graph import WarehouseGraph
 from graph.dijkstra import dijkstra
 
-
 class GraphView:
-    def __init__(self):
+    def __init__(self, inventory_controller):
+        self.inventory_controller = inventory_controller
         self.graph = WarehouseGraph()
+        self._setup_network()
 
-        # Складове
-        w1 = Warehouse("W1", "Склад София")
-        w2 = Warehouse("W2", "Склад Пловдив")
-        w3 = Warehouse("W3", "Склад Варна")
-        w4 = Warehouse("W4", "Склад Бургас")
+    def _setup_network(self):
+        warehouses = [
+            Warehouse("W1", "София"),
+            Warehouse("W2", "Пловдив"),
+            Warehouse("W3", "Варна"),
+            Warehouse("W4", "Бургас"),
+            Warehouse("W5", "Русе")
+        ]
+        for w in warehouses:
+            self.graph.add_warehouse(w)
 
-        self.graph.add_warehouse(w1)
-        self.graph.add_warehouse(w2)
-        self.graph.add_warehouse(w3)
-        self.graph.add_warehouse(w4)
-
-        # Разстояния
         self.graph.add_edge("W1", "W2", 150)
-        self.graph.add_edge("W2", "W3", 250)
-        self.graph.add_edge("W1", "W4", 380)
-        self.graph.add_edge("W3", "W4", 90)
+        self.graph.add_edge("W2", "W4", 250)
+        self.graph.add_edge("W4", "W3", 130)
+        self.graph.add_edge("W1", "W5", 310)
+        self.graph.add_edge("W5", "W3", 190)
 
-    def show_menu(self):
-        menu = Menu("Най-кратък път между складове (Dijkstra)", [
-            MenuItem("1", "Изчисли най-кратък път", self.calculate_path),
-            MenuItem("0", "Назад", lambda u: "break") ])
+    def show_menu(self, user):
+        menu = Menu("Логистичен Модул", [
+            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
         while True:
             choice = menu.show()
-            result = menu.execute(choice, None)
-            if result == "break":
+            if menu.execute(choice, user) == "break":
                 break
 
-    def calculate_path(self, _):
-        print("\nНалични складове:")
-        for wid, w in self.graph.nodes.items():
-            print(f"{wid}: {w.name}")
+    def calculate_best_delivery(self, _):
+        product_name = input("Име на стока: ").strip()
+        my_location = input("Вашето ID (напр. W1): ").strip()
 
-        start = input("Начален склад (ID): ").strip()
-        end = input("Краен склад (ID): ").strip()
+        if my_location not in self.graph.nodes:
+            print("Грешка: Невалидна локация!")
+            return
 
-        try:
-            distance, path = dijkstra(self.graph, start, end)
-            print("\n   Резултат   ")
-            print("Маршрут:", " → ".join(path))
-            print("Общо разстояние:", distance, "км")
-        except Exception as e:
-            print("Грешка:", e)
+        possible_sources = self.inventory_controller.get_warehouses_with_product(product_name)
+        possible_sources = [s for s in possible_sources if s != my_location]
+
+        if not possible_sources:
+            print(f"Стоката '{product_name}' не е налична другаде.")
+            return
+
+        best_dist = float('inf')
+        best_path = []
+        best_source = None
+
+        for source_id in possible_sources:
+            dist, path = dijkstra(self.graph, source_id, my_location)
+            if dist < best_dist:
+                best_dist = dist
+                best_path = path
+                best_source = source_id
+
+        if best_source:
+            source_name = self.graph.nodes[best_source].name
+            print("\nОПТИМАЛНО РЕШЕНИЕ")
+            print(f"Склад: {source_name} ({best_source})")
+            print(f"Разстояние: {best_dist} км")
+            print(f"Маршрут: {' -> '.join(best_path)}")
+        else:
+            print("Няма открит маршрут.")

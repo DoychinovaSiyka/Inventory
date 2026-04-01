@@ -11,6 +11,7 @@
         "price": 9.99,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-13 16:43:38.646315",
         "modified": "2026-03-14 22:07:10"
     },
@@ -26,6 +27,7 @@
         "price": 0.89,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-06 16:15:51.160793",
         "modified": "2026-02-13 22:13:22.297405"
     },
@@ -41,6 +43,7 @@
         "price": 0.34,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-07 09:21:59.794094",
         "modified": "2026-03-14 17:31:45"
     },
@@ -56,6 +59,7 @@
         "price": 2.21,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-03-14 21:47:49.788604",
         "modified": "2026-03-14 21:56:29"
     },
@@ -65,14 +69,15 @@
         "categories": [
             "45d29434-381b-4f5f-a149-497e353a0cf6"
         ],
-        "quantity": 42.22,
+        "quantity": 37.22,
         "unit": "бр.",
         "description": "Италианско кафе - плътен вкус, богат аромат и перрфектен баланс за всякакъв тип приготвяне",
         "price": 4.89,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-02 12:15:03",
-        "modified": "2026-02-13 17:17:13.390694"
+        "modified": "2026-04-01 19:53:53"
     },
     {
         "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
@@ -86,6 +91,7 @@
         "price": 3.21,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-13 19:25:25.693245",
         "modified": "2026-02-13 19:25:25.693245"
     },
@@ -101,6 +107,7 @@
         "price": 1.0,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-03-12 09:44:27.251007",
         "modified": "2026-03-12 09:44:27.251007"
     },
@@ -116,6 +123,7 @@
         "price": 6.99,
         "supplier_id": "00000000-0000-0000-0000-000000000001",
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-06 16:24:32.947563"
     },
@@ -131,6 +139,7 @@
         "price": 1.95,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-03 09:13:00.725537"
     },
@@ -146,6 +155,7 @@
         "price": 4.01,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W3",
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-06 19:54:05.485710"
     },
@@ -161,6 +171,7 @@
         "price": 2.19,
         "supplier_id": "00000000-0000-0000-0000-000000000002",
         "tags": [],
+        "location_id": "W3",
         "created": "2026-02-03 09:11:34.418148",
         "modified": "2026-02-13 19:27:31.058911"
     },
@@ -176,6 +187,7 @@
         "price": 9.99,
         "supplier_id": "00000000-0000-0000-0000-000000000003",
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-06 19:44:50.384986",
         "modified": "2026-02-13 13:29:02.576942"
     },
@@ -191,6 +203,7 @@
         "price": 3.34,
         "supplier_id": null,
         "tags": [],
+        "location_id": "W1",
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
     }

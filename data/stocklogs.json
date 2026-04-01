@@ -349,5 +349,14 @@
         "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-03-14 17:43:19"
+    },
+    {
+        "log_id": null,
+        "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
+        "location_id": 1,
+        "quantity": 5.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-04-01 19:53:53"
     }
 ]

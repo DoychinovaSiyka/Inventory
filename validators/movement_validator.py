@@ -78,7 +78,22 @@ class MovementValidator:
         if not product_id.strip():
             raise ValueError("product_id не може да бъде празен.")
 
+    @staticmethod
+    def validate_locations(from_id, to_id, movement_type):
+        """
+        Проверява локациите спрямо типа движение.
+        """
+        if movement_type == MovementType.MOVE:
+            if not from_id or not to_id:
+                raise ValueError("За преместване (MOVE) са нужни начална и крайна локация.")
+            if from_id == to_id:
+                raise ValueError("Началната и крайната локация не могат да бъдат еднакви.")
 
+        # Проверка дали ID-тата са текст (заради твоите "W1", "W2")
+        if from_id and not isinstance(from_id, str):
+            raise ValueError("Началната локация трябва да е текст (код).")
+        if to_id and not isinstance(to_id, str):
+            raise ValueError("Крайната локация трябва да е текст (код).")
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():

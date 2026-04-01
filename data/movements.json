@@ -160,5 +160,23 @@
         "date": "2026-03-14 17:43:19",
         "created": "2026-03-14 17:43:19",
         "modified": "2026-03-14 17:43:19"
+    },
+    {
+        "movement_id": 9,
+        "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": 1,
+        "movement_type": "OUT",
+        "quantity": 5.0,
+        "unit": "бр.",
+        "description": "италианско висококачество кафе",
+        "price": 2.22,
+        "supplier_id": null,
+        "customer": "Стоян",
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-01 19:53:53",
+        "created": "2026-04-01 19:53:53",
+        "modified": "2026-04-01 19:53:53"
     }
 ]

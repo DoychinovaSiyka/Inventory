@@ -404,5 +404,89 @@
         "action": "LOGIN",
         "details": "admin logged in",
         "timestamp": "2026-03-14 23:11:22"
+    },
+    {
+        "log_id": "5f856cb8-9e7e-4980-8933-93f0371c1b4e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-03-19 20:00:49"
+    },
+    {
+        "log_id": "e3a73798-2b18-4dca-8076-31629686b64f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-04-01 19:14:15"
+    },
+    {
+        "log_id": "75c2946d-892f-4cf6-a7e1-2a4a43cd2c80",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin logged in",
+        "timestamp": "2026-04-01 19:39:47"
+    },
+    {
+        "log_id": "f15e536c-8c27-47e8-bb97-dfb932b87757",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-01 19:44:29"
+    },
+    {
+        "log_id": "6554df24-cc1c-43b7-87e5-0b85f0a0312f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55, qty=5.0, loc=1, customer=Стоян",
+        "timestamp": "2026-04-01 19:53:53"
+    },
+    {
+        "log_id": "6928d409-e5f8-43d2-b360-2f443f1615bf",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-01 19:54:04"
+    },
+    {
+        "log_id": "221fa2c1-e496-48b6-b4d6-7cb46140a72f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin влезе в системата",
+        "timestamp": "2026-04-01 21:36:24"
+    },
+    {
+        "log_id": "efe17236-4433-4a04-8e81-4a3eb2ddc9fa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin влезе в системата",
+        "timestamp": "2026-04-01 21:40:27"
+    },
+    {
+        "log_id": "18effca2-ae82-4867-b8b8-e2f2ae602564",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin влезе в системата",
+        "timestamp": "2026-04-01 21:44:22"
+    },
+    {
+        "log_id": "1480cc15-cc13-4c7d-b5b6-5e0942fbea94",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin излезе от системата",
+        "timestamp": "2026-04-01 22:07:32"
+    },
+    {
+        "log_id": "93505452-358b-4b73-98d1-57699c27fcc6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "admin влезе в системата",
+        "timestamp": "2026-04-01 22:07:45"
+    },
+    {
+        "log_id": "f93a6126-a3b7-41b5-88d3-b37b0f778e1e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "admin излезе от системата",
+        "timestamp": "2026-04-01 22:23:52"
     }
 ]

@@ -378,5 +378,24 @@ class ProductController:
 
         return results
 
+    def get_warehouses_with_product(self, product_name: str) -> List[str]:
+        """
+        Връща списък с уникални ID-та на складове (location_id),
+        в които даденият продукт е наличен.
+        """
+        product_name = product_name.lower()
+        warehouses = []
+
+        for p in self.products:
+            # Проверяваме името и дали количеството е над 0
+            if p.name.lower() == product_name and p.quantity > 0:
+                # Вземаме location_id от обекта Product
+                # Ако в модела ти се казва по друг начин, промени го тук
+                loc_id = getattr(p, 'location_id', None)
+                if loc_id and loc_id not in warehouses:
+                    warehouses.append(loc_id)
+
+        return warehouses
+
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

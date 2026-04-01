@@ -7,17 +7,28 @@ from storage.json_repository import JSONRepository
 class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
+        # Зареждаме локациите
         self.locations: List[Location] = [Location.from_dict(l) for l in self.repo.load()]
-        # Зареждаме всички локации от JSON файла чрез хранилището.
-        # Location.from_dict преобразува речниците в реални Location обекти.
 
-    # id generator
-    def _generate_id(self) -> int:
+    # КОРИГИРАН ID GENERATOR: Трябва да поддържаме консистентност с "W" префикса
+    def _generate_id(self) -> str:
         if not self.locations:
-            return 1
-        return max(l.location_id for l in self.locations) + 1
+            return "W1"
+        # Извличаме само числата от идентификатори като "W1", "W2"
+        try:
+            ids = []
+            for l in self.locations:
+                # Вземаме числото след 'W'
+                num_part = str(l.location_id).replace("W", "")
+                if num_part.isdigit():
+                    ids.append(int(num_part))
 
-    # create
+            next_id = max(ids) + 1 if ids else 1
+            return f"W{next_id}"
+        except:
+            # Ако по някаква причина не са във формат W1, генерираме по стария начин, но като стринг
+            return str(len(self.locations) + 1)
+
     def add(self, name: str, zone: str = "", capacity: int = 0) -> Location:
         if not name or len(name.strip()) == 0:
             raise ValueError("Името на локацията е задължително.")
@@ -25,29 +36,34 @@ class LocationController:
         if capacity < 0:
             raise ValueError("Капацитетът трябва да бъде >= 0.")
 
-        # Проверка за дублиране
         if any(l.name.lower() == name.lower() for l in self.locations):
             raise ValueError("Локация с това име вече съществува.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        location = Location( location_id=self._generate_id(),
-            name=name,zone=zone,capacity=capacity,created=now,modified=now )
+        # Генерираме ID от типа "W1", "W2"...
+        location = Location(
+            location_id=self._generate_id(),
+            name=name,
+            zone=zone,
+            capacity=capacity,
+            created=now,
+            modified=now
+        )
 
         self.locations.append(location)
         self.save_changes()
         return location
 
-    # READ
     def get_all(self) -> List[Location]:
         return self.locations
 
-    def get_by_id(self, location_id: int) -> Optional[Location]:
-        return next((l for l in self.locations if l.location_id == location_id), None)
+    # КОРИГИРАНО: Търсим по стринг (W1), защото така са в графа
+    def get_by_id(self, location_id: str) -> Optional[Location]:
+        return next((l for l in self.locations if str(l.location_id) == str(location_id)), None)
 
-
-    def update(self,location_id: int,name: Optional[str] = None,zone: Optional[str] = None,
-        capacity: Optional[int] = None) -> bool:
+    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None,
+               capacity: Optional[int] = None) -> bool:
 
         location = self.get_by_id(location_id)
         if not location:
@@ -73,29 +89,13 @@ class LocationController:
         self.save_changes()
         return True
 
-    # DELETE
-    def remove(self, location_id: int) -> bool:
+    def remove(self, location_id: str) -> bool:
         original_len = len(self.locations)
-        self.locations = [l for l in self.locations if l.location_id != location_id]
-
+        self.locations = [l for l in self.locations if str(l.location_id) != str(location_id)]
         if len(self.locations) < original_len:
             self.save_changes()
             return True
-
         return False
-
-    def search(self, keyword: str) -> List[Location]:
-        keyword = keyword.lower()
-        return [l for l in self.locations if keyword in l.name.lower()
-                 or keyword in (l.zone or "").lower()]
-
 
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])
-
-
-# LocationController е важен,защото иначе няма кой да управлява:
-# създаване на локации
-# списък с локации
-# връзка между склад и локация
-# евентуално търсене по локация

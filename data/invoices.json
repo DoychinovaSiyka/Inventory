@@ -115,5 +115,18 @@
         "date": "2026-03-14 17:43:19",
         "created": "2026-03-14 17:43:19",
         "modified": "2026-03-14 17:43:19"
+    },
+    {
+        "invoice_id": null,
+        "movement_id": 9,
+        "product": "кафе \"Lavazza\"",
+        "quantity": 5.0,
+        "unit": "бр.",
+        "unit_price": 2.22,
+        "total_price": 11.100000000000001,
+        "customer": "Стоян",
+        "date": "2026-04-01 19:53:53",
+        "created": "2026-04-01 19:53:53",
+        "modified": "2026-04-01 19:53:53"
     }
 ]

@@ -8,7 +8,9 @@ from views.invoice_view import InvoiceView
 from views.supplier_view import SupplierView
 from views.system_info_view import SystemInfoView
 
-from views.graph_menu_view import GraphView
+
+# Вече няма нужда да импортираме класа GraphView тук,
+# защото ще ползваме готовия обект от контролерите.
 
 class AdminMenuView:
     def __init__(self, controllers):
@@ -40,16 +42,24 @@ class AdminMenuView:
 
     # Продукти
     def open_products(self, user):
-        ProductView( self.controllers["product"],self.controllers["category"],self.controllers["activity_log"]).show_menu(user)
+        ProductView(
+            self.controllers["product"],
+            self.controllers["category"],
+            self.controllers["activity_log"]
+        ).show_menu(user)
 
     # Категории
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
 
     # Движения
-    def open_movements(self, _):
-        MovementView(self.controllers["product"],self.controllers["movement"],self.controllers["user"],
-                     self.controllers["activity_log"]).show_menu()
+    def open_movements(self, user):
+        MovementView(
+            self.controllers["product"],
+            self.controllers["movement"],
+            self.controllers["user"],
+            self.controllers["activity_log"]
+        ).show_menu()
 
     # Потребители
     def open_users(self, user):
@@ -61,22 +71,29 @@ class AdminMenuView:
 
     # Фактури
     def open_invoices(self, user):
-        InvoiceView( self.controllers["invoice"],self.controllers["activity_log"] ).show_menu(user)
+        InvoiceView(
+            self.controllers["invoice"],
+            self.controllers["activity_log"]
+        ).show_menu(user)
 
     # Информация за системата
-    @staticmethod
-    def open_system_info(_):
+    def open_system_info(self, _):
         SystemInfoView().show_menu()
 
     # Доставчици
     def open_suppliers(self, user):
         SupplierView(self.controllers["supplier"]).show_menu(user)
 
-    # Dijkstra – най-кратък път
-    @staticmethod
-    def open_graph(_):
-        GraphView().show_menu()
+    # Dijkstra – най-кратък път (КОРИГИРАН)
+    def open_graph(self, user):
+        # Вземаме инстанцията на GraphView, която създадохме в main.py
+        logistic_module = self.controllers.get("logistic")
 
-# Използвам речник, защото чрез него подавам всички контролери към менюто по име.
-# Това е контейнер за зависимости (dependency injection).
-# Речникът не държи продукти, а държи контролерите, които работят с тях.
+        if logistic_module:
+            logistic_module.show_menu(user)
+        else:
+            print("\nГрешка: Логистичният модул (Dijkstra) не е инициализиран.")
+
+# Бележка: Чрез речника 'controllers' постигаме Dependency Injection.
+# В метода open_graph вече не създаваме нов обект, а използваме
+# съществуващия, който вече има достъп до всички данни.

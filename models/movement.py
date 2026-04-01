@@ -12,6 +12,7 @@ def generate_next_id(existing_items):
     if not existing_items:
         return 1
     try:
+        # movement_id остава число (ID на самия запис в базата)
         ids = [int(item["movement_id"]) for item in existing_items if "movement_id" in item]
         return max(ids) + 1
     except:
@@ -20,27 +21,30 @@ def generate_next_id(existing_items):
 
 class Movement:
     def __init__(
-        self, movement_id=None,product_id=None, user_id=None,
-        location_id=None, movement_type=None, quantity=0,
-        unit="бр.", description="",price=0.0, supplier_id=None, customer=None,
-        from_location_id=None, to_location_id=None,
-        date=None, created=None, modified=None):
+            self, movement_id=None, product_id=None, user_id=None,
+            location_id=None, movement_type=None, quantity=0,
+            unit="бр.", description="", price=0.0, supplier_id=None, customer=None,
+            from_location_id=None, to_location_id=None,
+            date=None, created=None, modified=None):
 
-        # movement_id = AUTO-INCREMENT INT
+        # Техническото ID на записа остава int
         self.movement_id = int(movement_id) if movement_id is not None else None
 
         self.product_id = product_id
         self.user_id = user_id
-        self.location_id = location_id
+
+        # ВАЖНО: Всички локации превръщаме в str, за да работят с "W1", "W2" и т.н.
+        self.location_id = str(location_id) if location_id is not None else None
+        self.from_location_id = str(from_location_id) if from_location_id is not None else None
+        self.to_location_id = str(to_location_id) if to_location_id is not None else None
+
         self.movement_type = movement_type
         self.quantity = quantity
         self.unit = unit
         self.description = description
-        self.price = price
+        self.price = float(price)
         self.supplier_id = supplier_id
         self.customer = customer
-        self.from_location_id = from_location_id
-        self.to_location_id = to_location_id
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
@@ -50,7 +54,6 @@ class Movement:
         self.validate()
 
     def assign_new_id(self, existing_items):
-        """Извиква се от контролера, когато movement_id е None."""
         if self.movement_id is None:
             self.movement_id = generate_next_id(existing_items)
 
@@ -67,51 +70,55 @@ class Movement:
         if self.quantity <= 0:
             raise ValueError("quantity трябва да е > 0.")
 
-        if not self.unit:
-            raise ValueError("unit е задължително поле.")
-
-        # IN LOGIC
-        if self.movement_type == MovementType.IN:
-            if self.price <= 0:
-                raise ValueError("IN movement трябва да има цена > 0.")
-            if self.supplier_id is None:
-                raise ValueError("IN movement трябва да има supplier_id.")
-
-        # OUT LOGIC
-        elif self.movement_type == MovementType.OUT:
-            if self.price <= 0:
-                raise ValueError("OUT movement трябва да има цена > 0.")
-            if self.customer is None:
-                raise ValueError("OUT movement трябва да има customer.")
-
-        # MOVE LOGIC
-        elif self.movement_type == MovementType.MOVE:
-            if self.from_location_id is None or self.to_location_id is None:
-                raise ValueError("MOVE movement трябва да има from_location_id и to_location_id.")
+        # Проверка за локации при MOVE
+        if self.movement_type == MovementType.MOVE:
+            if not self.from_location_id or not self.to_location_id:
+                raise ValueError("MOVE движението изисква начална и крайна локация.")
             if self.from_location_id == self.to_location_id:
-                raise ValueError("MOVE movement трябва да е между различни локации.")
+                raise ValueError("Началната и крайната локация не могат да бъдат еднакви.")
+
+        # Валидация за цени
+        if self.movement_type in [MovementType.IN, MovementType.OUT]:
+            if self.price <= 0:
+                raise ValueError(f"{self.movement_type.name} движение трябва да има цена > 0.")
 
     def to_dict(self):
         return {
-            "movement_id": self.movement_id,"product_id": self.product_id,
-            "user_id": self.user_id,"location_id": self.location_id,
-            "movement_type": self.movement_type.name,"quantity": self.quantity,
-            "unit": self.unit,"description": self.description,
-            "price": self.price,"supplier_id": self.supplier_id,
-            "customer": self.customer,"from_location_id": self.from_location_id,
-            "to_location_id": self.to_location_id, "date": self.date,
-            "created": self.created,"modified": self.modified }
+            "movement_id": self.movement_id,
+            "product_id": self.product_id,
+            "user_id": self.user_id,
+            "location_id": self.location_id,
+            "movement_type": self.movement_type.name,
+            "quantity": self.quantity,
+            "unit": self.unit,
+            "description": self.description,
+            "price": self.price,
+            "supplier_id": self.supplier_id,
+            "customer": self.customer,
+            "from_location_id": self.from_location_id,
+            "to_location_id": self.to_location_id,
+            "date": self.date,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):
         return Movement(
-            movement_id=data.get("movement_id"),product_id=data.get("product_id"),
+            movement_id=data.get("movement_id"),
+            product_id=data.get("product_id"),
             user_id=data.get("user_id"),
             location_id=data.get("location_id"),
             movement_type=MovementType[data.get("movement_type")],
-            quantity=data.get("quantity"),unit=data.get("unit"),description=data.get("description"),
-            price=data.get("price"),supplier_id=data.get("supplier_id"),customer=data.get("customer"),
+            quantity=data.get("quantity"),
+            unit=data.get("unit"),
+            description=data.get("description"),
+            price=data.get("price", 0.0),
+            supplier_id=data.get("supplier_id"),
+            customer=data.get("customer"),
             from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"),date=data.get("date"),
+            to_location_id=data.get("to_location_id"),
+            date=data.get("date"),
             created=data.get("created"),
-            modified=data.get("modified"))
+            modified=data.get("modified")
+        )
