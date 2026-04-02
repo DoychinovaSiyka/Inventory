@@ -1,38 +1,44 @@
 import uuid
 from datetime import datetime
 from validators.category_validator import CategoryValidator
+from typing import Optional
 
 class Category:
-    def __init__(self,name,description = "",category_id = None,created = None,modified = None):
-        self.name = name
+    def __init__(self, name, description="", category_id=None, parent_id=None, created=None, modified=None):
         self.category_id = category_id or str(uuid.uuid4())
+        self.name = name
         self.description = description
+        self.parent_id = parent_id  # ТОВА Е НОВОТО ПОЛЕ за подкатегориите
         self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.modified = modified if modified else  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.modified = modified if modified else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        CategoryValidator.validate_name(name)
-        self.validate()
-
-    def validate(self):
+        # Валидация
         CategoryValidator.validate_name(self.name)
+        CategoryValidator.validate_description(self.description)
 
     def update_modified(self):
+        """Обновява датата на последна промяна."""
         self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def to_dict(self): # сериализация от обект в текст
-        return {'category_id':self.category_id,
-            'name': self.name,'description': self.description,
-            'created':self.created,'modified':self.modified}
+    def to_dict(self):
+        """Сериализация: от обект към речник (за запис в JSON)."""
+        return {
+            'category_id': self.category_id,
+            'name': self.name,
+            'description': self.description,
+            'parent_id': self.parent_id,  # Добавяме го тук
+            'created': self.created,
+            'modified': self.modified
+        }
 
     @staticmethod
-    def from_dict(data): # десериализация от текст превръщам в обект
+    def from_dict(data):
+        """Десериализация: от речник към обект (при зареждане от JSON)."""
         return Category(
-            name = data.get("name"),description = data.get("description"),
-            category_id=data.get("category_id"),created = data.get("created"),
-            modified = data.get("modified"))
-
-
-
-# Независимост — статичният
-# метод не зависи от инстанция на класа и може да се
-# извика директно за създаване на обект от данни.
+            category_id=data.get("category_id"),
+            name=data.get("name"),
+            description=data.get("description"),
+            parent_id=data.get("parent_id"),  # И тук го зареждаме
+            created=data.get("created"),
+            modified=data.get("modified")
+        )

@@ -3,7 +3,7 @@
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "name": "бира \"Siyka\"",
         "categories": [
-            "45d29434-381b-4f5f-a149-497e353a0cf6"
+            "sub-alko-001"
         ],
         "quantity": 77.0,
         "unit": "бр.",
@@ -67,7 +67,7 @@
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
         "name": "кафе \"Lavazza\"",
         "categories": [
-            "45d29434-381b-4f5f-a149-497e353a0cf6"
+            "sub-bezalko-002"
         ],
         "quantity": 37.22,
         "unit": "бр.",
@@ -83,7 +83,7 @@
         "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
         "name": "кафе 3 в 1",
         "categories": [
-            "45d29434-381b-4f5f-a149-497e353a0cf6"
+            "sub-bezalko-002"
         ],
         "quantity": 90.0,
         "unit": "бр.",
@@ -147,11 +147,11 @@
         "product_id": "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99",
         "name": "Прясно мляко",
         "categories": [
-            "47a393b7-2385-43cd-812c-5eb5d00964dc"
+            "sub-dairy-002"
         ],
         "quantity": 17.0,
         "unit": "бр.",
-        "description": "Прясно краве мляко 3.2% масленост – 1 литър. Подходящо за директна консумация, кафе, сладкиши и готвене.",
+        "description": "Прясно краве мляко 3.2% масленост – 1 литър.",
         "price": 4.01,
         "supplier_id": null,
         "tags": [],

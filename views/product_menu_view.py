@@ -50,7 +50,8 @@ class ProductView:
         self.sort_view = ProductSortView(product_controller)
 
     def show_menu(self, user: User):
-        readonly = user.role != "Admin"
+        # Ограничаваме достъпа според ролята
+        readonly = user.role in ["Operator", "Anonymous"]
 
         menu = Menu("МЕНЮ ПРОДУКТИ", [
             MenuItem("1", "Създаване на продукт", self.create_product),
@@ -76,9 +77,11 @@ class ProductView:
 
         while True:
             choice = menu.show()
+            # Проверка за права
             if readonly and choice in ["1", "2", "3", "9", "10"]:
-                print("[!] Тази функция не е достъпна за оператор.")
+                print(f"[!] Функцията не е достъпна за роля: {user.role}")
                 continue
+
             result = menu.execute(choice, user)
             if result == "break": break
 
@@ -101,7 +104,11 @@ class ProductView:
 
         print("\nНалични категории:")
         for i, c in enumerate(categories):
-            print(f"{i}. {c.name}")
+            # Показваме дали е подкатегория за яснота
+            parent_info = ""
+            if hasattr(c, 'parent_id') and c.parent_id:
+                parent_info = f" (Подкатегория на {c.parent_id})"
+            print(f"{i}. {c.name}{parent_info}")
 
         cat_idx = _read_int("Изберете категория (номер): ")
         if cat_idx is None or not (0 <= cat_idx < len(categories)):
@@ -123,11 +130,13 @@ class ProductView:
         location_id = locations[loc_idx].location_id
 
         try:
+            # Използваме user.user_id (или user.id според твоя модел)
+            u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
             self.product_controller.add(
                 name=name, description=description, price=price,
                 quantity=quantity, unit=unit, category_ids=[category_id],
                 location_id=location_id,
-                supplier_id=None, user_id=user.id
+                supplier_id=None, user_id=u_id
             )
             print(f"[Успех] Продуктът е зачислен в {location_id}.")
         except ValueError as e:
@@ -141,9 +150,8 @@ class ProductView:
 
         print("\n=== Списък с продукти ===")
         print(f"{'ID':<3} | {'Име':<15} | {'Склад':<6} | {'Наличност':<10} | {'Цена'}")
-        print("-" * 60)
+        print("-" * 65)
         for p in products:
-            # Директен достъп до p.location_id
             print(
                 f"{p.product_id:<3} | {p.name[:15]:<15} | {p.location_id:<6} | {p.quantity:>5} {p.unit:<4} | {format_lv(p.price)}")
 
@@ -155,7 +163,8 @@ class ProductView:
         print("\n=== Премахване на продукт ===")
         pid = input("ID на продукт: ").strip()
         try:
-            self.product_controller.remove_by_id(pid, user.id)
+            u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
+            self.product_controller.remove_by_id(pid, u_id)
             print("Продуктът е премахнат.")
         except ValueError as e:
             print("Грешка:", e)
@@ -211,19 +220,40 @@ class ProductView:
 
     def filter_by_category(self, _):
         categories = self.category_controller.get_all()
-        for i, c in enumerate(categories): print(f"{i}. {c.name}")
+        if not categories:
+            print("Няма категории.")
+            return
+
+        for i, c in enumerate(categories):
+            print(f"{i}. {c.name}")
+
         idx = _read_int("Изберете категория (номер): ")
         if idx is not None and 0 <= idx < len(categories):
-            results = self.product_controller.filter_by_multiple_category_ids([categories[idx].category_id])
+            selected_cat = categories[idx]
+
+            # НАДГРАЖДАНЕ: Намираме всички подкатегории, за да филтрираме по цялото "дърво"
+            target_ids = [selected_cat.category_id]
+            for c in categories:
+                if hasattr(c, 'parent_id') and c.parent_id == selected_cat.category_id:
+                    target_ids.append(c.category_id)
+
+            results = self.product_controller.filter_by_multiple_category_ids(target_ids)
+
+            if not results:
+                print(f"Няма продукти в категория '{selected_cat.name}' (и нейните подкатегории).")
+                return
+
+            print(f"\n--- Продукти в {selected_cat.name} ---")
             for p in results:
-                print(f"{p.name} | Склад: {p.location_id} | {format_lv(p.price)}")
+                print(f"{p.name} | Склад: {p.location_id} | {format_lv(p.price)} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount = _read_float("Количество за добавяне: ")
         if amount:
             try:
-                self.product_controller.increase_quantity(pid, amount, user.id)
+                u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
+                self.product_controller.increase_quantity(pid, amount, u_id)
                 print("Количеството е увеличено.")
             except ValueError as e:
                 print("Грешка:", e)
@@ -233,7 +263,8 @@ class ProductView:
         amount = _read_float("Количество за изваждане: ")
         if amount:
             try:
-                self.product_controller.decrease_quantity(pid, amount, user.id)
+                u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
+                self.product_controller.decrease_quantity(pid, amount, u_id)
                 print("Количеството е намалено.")
             except ValueError as e:
                 print("Грешка:", e)

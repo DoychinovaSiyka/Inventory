@@ -41,3 +41,9 @@ class CategoryValidator:
 
         if len(description) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
+
+    @staticmethod
+    def validate_parent_id(parent_id, category_id):
+        """Проверява дали категорията не се опитва да бъде родител на самата себе си."""
+        if parent_id and category_id and str(parent_id) == str(category_id):
+            raise ValueError("Една категория не може да бъде подкатегория на самата себе си!")

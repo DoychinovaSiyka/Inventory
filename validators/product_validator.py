@@ -63,3 +63,19 @@ class ProductValidator:
         # Валидираме локацията само ако е подадена
         if location_id:
             ProductValidator.validate_location(location_id)
+
+    @staticmethod
+    def validate_categories(category_ids, category_controller=None):
+        if not category_ids:
+            raise ValueError("Трябва да изберете поне една категория.")
+
+        for cid in category_ids:
+            if not isinstance(cid, str) or len(cid.strip()) == 0:
+                raise ValueError("Невалидна категория.")
+
+            # --- НОВА ЛОГИКА (ОПЦИОНАЛНО) ---
+            if category_controller:
+                # Проверяваме дали тази категория съществува
+                cat = category_controller.get_by_id(cid)
+                if not cat:
+                    raise ValueError(f"Категория с ID {cid} не съществува.")

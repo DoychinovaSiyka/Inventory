@@ -1,3 +1,4 @@
+import uuid
 from typing import Optional, List
 from datetime import datetime
 from storage.json_repository import Repository
@@ -14,13 +15,28 @@ class CategoryController:
         # с които контролерът може да работи.
         self.categories: List[Category] = [Category.from_dict(c) for c in self.repo.load()]
 
-    def add(self, name: str, description: str = "") -> Category:
+    def add(self, name: str, description: str = "", parent_id: Optional[str] = None) -> Category:
+        """Добавя нова категория или подкатегория (с parent_id)."""
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
 
+        # ДОБАВКА: Проверка дали родителят съществува
+        if parent_id and not self.get_by_id(parent_id):
+            raise ValueError("Родителската категория не съществува.")
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        category = Category(name=name, description=description, created=now, modified=now)
+
+        # Тук използваме uuid за category_id, за да е сигурно уникално при йерархия
+        category = Category(
+            category_id=str(uuid.uuid4()),
+            name=name,
+            description=description,
+            parent_id=parent_id,  # ДОБАВКА
+            created=now,
+            modified=now
+        )
+
         self.categories.append(category)
         self.save_changes()
         return category
@@ -29,7 +45,23 @@ class CategoryController:
         return self.categories
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
-        return next((c for c in self.categories if c.category_id == category_id), None)
+        # Подсигуряваме сравнението като стрингове
+        return next((c for c in self.categories if str(c.category_id) == str(category_id)), None)
+
+    # ДОБАВКА: Метод за намиране на подкатегории
+    def get_subcategories(self, parent_id: str) -> List[Category]:
+        return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
+
+    # ДОБАВКА: Метод за йерархично дърво (за менюто)
+    def get_category_tree(self) -> List[dict]:
+        tree = []
+        main_categories = [c for c in self.categories if c.parent_id is None]
+        for main in main_categories:
+            tree.append({"category": main, "level": 0})
+            children = self.get_subcategories(main.category_id)
+            for child in children:
+                tree.append({"category": child, "level": 1})
+        return tree
 
     def update_name(self, category_id: str, new_name: str) -> bool:
         category = self.get_by_id(category_id)
@@ -39,7 +71,7 @@ class CategoryController:
         CategoryValidator.validate_update_name(new_name)
         # Проверяваме уникалност, но изключваме текущата категория
         CategoryValidator.validate_unique(new_name, [c for c in self.categories
-                                                    if c.category_id != category_id])
+                                                     if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()
@@ -58,14 +90,23 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, product_controller=None) -> bool:
+        # ДОБАВКА: Не трием категория, ако тя самата е родител на други
+        has_children = any(str(c.parent_id) == str(category_id) for c in self.categories)
+        if has_children:
+            raise ValueError("Не може да изтриете категория, която има подкатегории!")
+
         # Проверка дали има продукти, свързани с тази категория, преди да я изтрием
         if product_controller:
-            has_products = any(p.category_id == category_id for p in product_controller.get_all())
+            # Тук проверяваме в продуктите (поддържаме и стария и новия формат на запис)
+            has_products = any(
+                str(category_id) in [str(getattr(cat, 'category_id', cat)) for cat in p.categories]
+                for p in product_controller.get_all()
+            )
             if has_products:
                 raise ValueError("Не може да изтриете категория с налични продукти в нея!")
 
         original_len = len(self.categories)
-        self.categories = [c for c in self.categories if c.category_id != category_id]
+        self.categories = [c for c in self.categories if str(c.category_id) != str(category_id)]
 
         if len(self.categories) < original_len:
             self.save_changes()

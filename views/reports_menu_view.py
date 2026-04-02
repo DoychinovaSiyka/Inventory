@@ -5,7 +5,20 @@ from models.user import User
 from controllers.location_controller import LocationController
 
 
+def format_lv(value):
+    """Помощна функция за форматиране на суми в лева."""
+    try:
+        val = float(value)
+        return f"{val:.2f} лв."
+    except (ValueError, TypeError):
+        return str(value)
+
+
 def get_unit(product_name: str):
+    """Определя мерна единица на база име на продукта."""
+    if not product_name:
+        return "бр."
+
     name = product_name.lower()
 
     if any(x in name for x in ["домати", "ябъл", "картоф", "диня",
@@ -22,6 +35,7 @@ def get_unit(product_name: str):
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
+        # Използваме подадения контролер, за да вземем локациите
         self.location_controller = controller.location_controller
 
     def show_menu(self, user: User):
@@ -47,10 +61,12 @@ class ReportsView:
 
         rows = []
         for item in report.data:
+            # Тук ползваме get_unit за динамично определяне (кг/бр)
+            unit = get_unit(item["product"])
             rows.append([
                 item["product"],
-                f"{item['quantity']} {get_unit(item['product'])}",
-                f"{item['price']} лв."
+                f"{item['quantity']} {unit}",
+                format_lv(item['price'])
             ])
 
         print(format_table(["Продукт", "Количество", "Цена"], rows))
@@ -73,9 +89,21 @@ class ReportsView:
                 loc = self.location_controller.get_by_id(item["location"])
                 location_name = loc.name if loc else "—"
 
-                price = f"{item['price']} лв." if item["type"] == "OUT" else item["price"]
+                price_val = format_lv(item['price']) if item["price"] else "—"
 
-                rows.append([item["date"],item["type"],item["product_id"],f"{item['quantity']} бр.",price,location_name])
+                # Тъй като в движенията често имаме само ID,
+                # се опитваме да вземем името за мерната единица
+                p_name = item.get("product_name", f"ID: {item['product_id']}")
+                unit = get_unit(p_name)
+
+                rows.append([
+                    item["date"],
+                    item["type"],
+                    item["product_id"],
+                    f"{item['quantity']} {unit}",
+                    price_val,
+                    location_name
+                ])
 
             print(format_table(["Дата", "Тип", "Продукт ID", "Количество", "Цена", "Локация"], rows))
 
@@ -83,9 +111,18 @@ class ReportsView:
         elif sub == "2":
             keyword = input("Име на продукт: ")
             report = self.controller.report_movements_by_product(keyword)
-            rows = [
-                [ item["date"],item["type"],f"{item['quantity']} бр.",f"{item['price']} лв."
-                if item["type"] == "OUT" else item["price"]] for item in report.data ]
+            rows = []
+            unit = get_unit(keyword)
+
+            for item in report.data:
+                price_display = format_lv(item['price']) if item['price'] else "—"
+                rows.append([
+                    item["date"],
+                    item["type"],
+                    f"{item['quantity']} {unit}",
+                    price_display
+                ])
+
             print(format_table(["Дата", "Тип", "Количество", "Цена"], rows))
 
         # 2.3 По тип движение
@@ -102,7 +139,10 @@ class ReportsView:
         elif sub == "4":
             date_str = input("Дата (ГГГГ-ММ-ДД): ")
             report = self.controller.report_movements_by_date(date_str)
-            rows = [ [item["date"], item["type"], f"{item['quantity']} бр."] for item in report.data]
+            rows = [
+                [item["date"], item["type"], f"{item['quantity']} бр."]
+                for item in report.data
+            ]
             print(format_table(["Дата", "Тип", "Количество"], rows))
 
         else:
@@ -111,30 +151,59 @@ class ReportsView:
     # 3. Продажби (общо)
     def report_sales(self, _):
         report = self.controller.report_sales()
-        rows = [[ item["date"],item["product"],f"{item['quantity']} бр.",f"{item['total_price']} лв.",item["customer"]]
-            for item in report.data]
+        rows = []
+        for item in report.data:
+            unit = get_unit(item["product"])
+            rows.append([
+                item["date"],
+                item["product"],
+                f"{item['quantity']} {unit}",
+                format_lv(item['total_price']),
+                item["customer"]
+            ])
         print(format_table(["Дата", "Продукт", "Количество", "Общо", "Клиент"], rows))
 
     # 4. Продажби по клиент
     def report_sales_by_customer(self, _):
         customer = input("Име на клиент: ")
         report = self.controller.report_sales_by_customer(customer)
-        rows = [
-            [item["date"],item["product"], f"{item['quantity']} бр.", f"{item['total_price']} лв."] for item in report.data ]
+        rows = []
+        for item in report.data:
+            unit = get_unit(item["product"])
+            rows.append([
+                item["date"],
+                item["product"],
+                f"{item['quantity']} {unit}",
+                format_lv(item['total_price'])
+            ])
         print(format_table(["Дата", "Продукт", "Количество", "Общо"], rows))
 
     # 5. Продажби по продукт
     def report_sales_by_product(self, _):
         product = input("Име на продукт: ")
         report = self.controller.report_sales_by_product(product)
-        rows = [[item["date"], item["customer"], f"{item['quantity']} бр.", f"{item['total_price']} лв."]
-            for item in report.data ]
+        rows = []
+        unit = get_unit(product)
+        for item in report.data:
+            rows.append([
+                item["date"],
+                item["customer"],
+                f"{item['quantity']} {unit}",
+                format_lv(item['total_price'])
+            ])
         print(format_table(["Дата", "Клиент", "Количество", "Общо"], rows))
 
     # 6. Продажби по дата
     def report_sales_by_date(self, _):
         date_str = input("Дата (ГГГГ-ММ-ДД): ")
         report = self.controller.report_sales_by_date(date_str)
-        rows = [[ item["product"],item["customer"],f"{item['quantity']} бр.", f"{item['total_price']} лв."]
-            for item in report.data]
+        rows = []
+        for item in report.data:
+            unit = get_unit(item["product"])
+            rows.append([
+                item["product"],
+                item["customer"],
+                f"{item['quantity']} {unit}",
+                format_lv(item['total_price'])
+            ])
         print(format_table(["Продукт", "Клиент", "Количество", "Общо"], rows))
