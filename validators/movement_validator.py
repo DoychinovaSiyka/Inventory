@@ -25,8 +25,8 @@ class MovementValidator:
         При MOVE -> price може да е 0 или празно
         """
 
+        # MOVE няма цена
         if movement_type == MovementType.MOVE:
-            # MOVE няма цена → позволяваме празно или 0
             if not price.strip():
                 return 0.0
             try:
@@ -34,7 +34,7 @@ class MovementValidator:
             except ValueError:
                 raise ValueError("Цената трябва да е число.")
 
-        # IN / OUT  - задължителна цена
+        # IN / OUT
         if not price.strip():
             raise ValueError("Цената е задължителна.")
 
@@ -56,7 +56,6 @@ class MovementValidator:
         """
 
         if movement_type == MovementType.MOVE:
-            # MOVE може да е без описание
             return
 
         if not description or not description.strip():
@@ -94,6 +93,7 @@ class MovementValidator:
             raise ValueError("Началната локация трябва да е текст (код).")
         if to_id and not isinstance(to_id, str):
             raise ValueError("Крайната локация трябва да е текст (код).")
+
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():

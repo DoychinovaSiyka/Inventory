@@ -9,8 +9,6 @@ class InvoiceController:
         self.repo = repo
         self.activity_log = activity_log_controller
         self.invoices: List[Invoice] = [Invoice.from_dict(i) for i in self.repo.load()]
-        # зареждаме всички фактури от json файла чрез хранилището
-        # invoice.from_dict преобразува речниците в реални invoice обекти
 
     # id generator
     def _generate_id(self) -> int:
@@ -20,37 +18,48 @@ class InvoiceController:
 
     # create
     def add(self, invoice: Invoice) -> Invoice:
-        # добавя вече създадена фактура (използва се от movementcontroller)
         self.invoices.append(invoice)
         self.save_changes()
 
-        # логване
         if self.activity_log:
             self.activity_log.add_log(invoice.customer, "GENERATE_INVOICE",
                                       f"Invoice created for movement {invoice.movement_id}")
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
-        # генерира фактура при out движение
         if movement.movement_type.name != "OUT":
             raise ValueError("фактура може да се генерира само при OUT движение.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        invoice = Invoice(invoice_id=self._generate_id(), movement_id=movement.movement_id,
-                          product=product.name, quantity=movement.quantity,
-                          unit=movement.unit,
-                          unit_price=movement.price, total_price=movement.quantity * movement.price,
-                          customer=customer, date=now, created=now, modified=now)
+        # --- КРИТИЧНО: НОРМАЛИЗАЦИЯ НА ЧИСЛАТА ---
+        qty = float(movement.quantity)
+        unit_price = round(float(movement.price), 2)
+        total_price = round(qty * unit_price, 2)
+
+        invoice = Invoice(
+            invoice_id=self._generate_id(),
+            movement_id=movement.movement_id,
+            product=product.name,
+            quantity=qty,
+            unit=movement.unit,
+            unit_price=unit_price,
+            total_price=total_price,
+            customer=customer,
+            date=now,
+            created=now,
+            modified=now
+        )
 
         self.invoices.append(invoice)
         self.save_changes()
 
-        # логване
         if self.activity_log:
-            self.activity_log.add_log(movement.user_id, "GENERATE_INVOICE",
-                                      f"Invoice generated for movement {movement.movement_id}, "
-                                      f"customer={customer}")
+            self.activity_log.add_log(
+                movement.user_id,
+                "GENERATE_INVOICE",
+                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
+            )
         return invoice
 
     # read
@@ -98,7 +107,6 @@ class InvoiceController:
         inv.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_changes()
 
-        # логване
         if self.activity_log:
             self.activity_log.add_log(new_customer, "EDIT_INVOICE",
                                       f"Updated customer for invoice {invoice_id}")
@@ -112,7 +120,6 @@ class InvoiceController:
         if len(self.invoices) < original_len:
             self.save_changes()
 
-            # логване
             if self.activity_log:
                 self.activity_log.add_log("system", "DELETE_INVOICE",
                                           f"Deleted invoice {invoice_id}")
@@ -120,7 +127,7 @@ class InvoiceController:
 
         return False
 
-    # advanced search and filtering
+    # advanced search
     def advanced_search(self, customer: Optional[str] = None, product: Optional[str] = None,
                         start_date: Optional[str] = None, end_date: Optional[str] = None,
                         min_total: Optional[float] = None,
@@ -128,17 +135,14 @@ class InvoiceController:
 
         results = self.invoices
 
-        # 1) филтър по клиент
         if customer:
             kw = customer.lower()
             results = [inv for inv in results if kw in inv.customer.lower()]
 
-        # 2) филтър по продукт
         if product:
             kw = product.lower()
             results = [inv for inv in results if kw in inv.product.lower()]
 
-        # 3) филтър по дата (диапазон)
         def parse_date(d):
             try:
                 return datetime.strptime(d, "%Y-%m-%d")
@@ -156,7 +160,6 @@ class InvoiceController:
             results = [inv for inv in results
                        if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
 
-        # 4) филтър по обща стойност
         if min_total is not None:
             results = [inv for inv in results if inv.total_price >= min_total]
 
@@ -164,7 +167,6 @@ class InvoiceController:
             results = [inv for inv in results if inv.total_price <= max_total]
 
         return results
-
 
     def save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])

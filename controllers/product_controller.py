@@ -159,7 +159,7 @@ class ProductController:
             raise ValueError("Продуктът не е намерен.")
 
         ProductValidator.validate_price(new_price)
-        p.price = new_price
+        p.price = round(float(new_price), 2)  # ⭐ НОВО
         p.update_modified()
         self.save_changes()
 
@@ -175,12 +175,13 @@ class ProductController:
         if amount < 0:
             raise ValueError("Количество трябва да е положително.")
 
-        p.quantity += float(amount)
+        p.quantity = round(p.quantity + float(amount), 2)  # ⭐ НОВО
         p.update_modified()
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(user_id, "INCREASE_QUANTITY", f"Added {amount} units to product ID {product_id}")
+            self.activity_log.add_log(user_id, "INCREASE_QUANTITY",
+                                      f"Added {amount} units to product ID {product_id}")
         return True
 
     def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
@@ -192,7 +193,7 @@ class ProductController:
         if p.quantity < amount:
             raise ValueError("Недостатъчна наличност.")
 
-        p.quantity -= float(amount)
+        p.quantity = round(p.quantity - float(amount), 2)  # ⭐ НОВО
         p.update_modified()
         self.save_changes()
 
@@ -259,7 +260,7 @@ class ProductController:
         return [p for p in self.products if p.quantity < threshold]
 
     def total_values(self) -> float:
-        return sum(p.price * p.quantity for p in self.products)
+        return round(sum(p.price * p.quantity for p in self.products), 2)
 
     def most_expensive(self) -> Optional[Product]:
         return max(self.products, key=lambda p: p.price, default=None)

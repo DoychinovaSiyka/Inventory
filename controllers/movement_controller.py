@@ -22,7 +22,8 @@ class MovementController:
         self.movements: List[Movement] = [Movement.from_dict(m) for m in self.repo.load()]
 
     def _generate_id(self) -> int:
-        if not self.movements: return 1
+        if not self.movements:
+            return 1
         return max(m.movement_id for m in self.movements) + 1
 
     def add(self, product_id: str, user_id: str, location_id: str, movement_type,
@@ -32,66 +33,94 @@ class MovementController:
         # Валидации
         MovementValidator.validate_movement_type(movement_type)
         MovementValidator.validate_description(description)
+
+        # Парсване + нормализиране на числата
         quantity = MovementValidator.parse_quantity(quantity)
         price = MovementValidator.parse_price(price)
 
+        quantity = round(float(quantity), 2)
+        price = round(float(price), 2)
+
         # Проверка за потребител
         user = self.user_controller.get_by_id(user_id)
-        if not user: raise ValueError(f"Потребител с ID {user_id} не съществува.")
+        if not user:
+            raise ValueError(f"Потребител с ID {user_id} не съществува.")
 
         # Проверка за продукт
         product = self.product_controller.get_by_id(product_id)
-        if not product: raise ValueError(f"Продукт с ID {product_id} не съществува.")
+        if not product:
+            raise ValueError(f"Продукт с ID {product_id} не съществува.")
 
         # Преобразуване на movement_type
         if isinstance(movement_type, int):
             mapping = {0: MovementType.IN, 1: MovementType.OUT, 2: MovementType.MOVE}
             movement_type = mapping.get(movement_type)
-            if not movement_type: raise ValueError("Невалиден тип движение.")
+            if not movement_type:
+                raise ValueError("Невалиден тип движение.")
 
         if movement_type == MovementType.MOVE:
             raise ValueError("MOVE може да се извършва само чрез move_product().")
 
-        # --- КРИТИЧНА КОРЕКЦИЯ ТУК ---
+        # Логика за IN / OUT
         if movement_type == MovementType.IN:
             product.quantity += quantity
-            # Актуализираме локацията на продукта спрямо последната доставка
             product.location_id = location_id
-            if supplier_id is None: raise ValueError("При IN движение трябва да има доставчик.")
+            if supplier_id is None:
+                raise ValueError("При IN движение трябва да има доставчик.")
             action = "add"
 
         elif movement_type == MovementType.OUT:
-            if product.quantity < quantity: raise ValueError("Недостатъчна наличност.")
+            if product.quantity < quantity:
+                raise ValueError("Недостатъчна наличност.")
             product.quantity -= quantity
-            if not customer: raise ValueError("При OUT движение трябва да има клиент.")
+            if not customer:
+                raise ValueError("При OUT движение трябва да има клиент.")
             action = "remove"
 
-        # Обновяване на продукта в базата
+        # Обновяване на продукта
         product.update_modified()
         self.product_controller.save_changes()
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         movement = Movement(
-            movement_id=self._generate_id(), product_id=product_id, user_id=user_id,
-            location_id=location_id, movement_type=movement_type, quantity=quantity,
-            unit=product.unit, description=description, price=price, supplier_id=supplier_id,
-            customer=customer, date=now, created=now, modified=now)
+            movement_id=self._generate_id(),
+            product_id=product_id,
+            user_id=user_id,
+            location_id=location_id,
+            movement_type=movement_type,
+            quantity=quantity,
+            unit=product.unit,
+            description=description,
+            price=price,
+            supplier_id=supplier_id,
+            customer=customer,
+            date=now,
+            created=now,
+            modified=now
+        )
 
         self.movements.append(movement)
         self.save_changes()
 
-        # Логване
+        # Логване в stocklog
         self.stocklog_controller.add_log(product_id, location_id, quantity, product.unit, action)
 
+        # Логване в activity log
         if self.activity_log:
             log_msg = f"{movement_type.name} movement: product {product.name}, qty={quantity}, loc={location_id}"
             self.activity_log.add_log(user_id, f"{movement_type.name}_MOVEMENT", log_msg)
 
+        # Генериране на фактура при OUT
         if movement_type == MovementType.OUT:
-            invoice = Invoice(movement_id=movement.movement_id, product=product.name,
-                              quantity=quantity, unit=product.unit, unit_price=price,
-                              customer=customer)
+            invoice = Invoice(
+                movement_id=movement.movement_id,
+                product=product.name,
+                quantity=quantity,
+                unit=product.unit,
+                unit_price=price,
+                customer=customer
+            )
             self.invoice_controller.add(invoice)
 
         return movement
@@ -103,26 +132,38 @@ class MovementController:
             raise ValueError("MOVE трябва да е между различни локации.")
 
         product = self.product_controller.get_by_id(product_id)
-        if not product: raise ValueError(f"Продукт {product_id} не съществува.")
+        if not product:
+            raise ValueError(f"Продукт {product_id} не съществува.")
+
+        # Нормализиране на quantity и проверка
+        quantity = round(float(quantity), 2)
 
         if product.quantity < quantity:
             raise ValueError("Недостатъчна наличност за преместване.")
 
-        # При преместване актуализираме локацията в самия продукт
         product.location_id = to_location_id
         product.update_modified()
         self.product_controller.save_changes()
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Създаваме записи за движението
         m_id = self._generate_id()
         move_entry = Movement(
-            movement_id=m_id, product_id=product_id, user_id=user_id,
-            location_id=to_location_id, movement_type=MovementType.MOVE,
-            quantity=quantity, unit=product.unit,
+            movement_id=m_id,
+            product_id=product_id,
+            user_id=user_id,
+            location_id=to_location_id,
+            movement_type=MovementType.MOVE,
+            quantity=quantity,
+            unit=product.unit,
             description=f"Преместване от {from_location_id} към {to_location_id}. {description}",
-            price=0, customer=None, supplier_id=None, date=now)
+            price=0,
+            customer=None,
+            supplier_id=None,
+            date=now,
+            created=now,
+            modified=now
+        )
 
         self.movements.append(move_entry)
         self.save_changes()

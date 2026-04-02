@@ -25,12 +25,17 @@ class Invoice:
         self.movement_id = int(movement_id) if movement_id is not None else None
 
         self.product = product
-        self.quantity = quantity
-        self.unit = unit
-        self.unit_price = unit_price
 
-        # ако не е подадена обща цена - изчисляваме я
-        self.total_price = total_price if total_price is not None else quantity * unit_price
+        # ⭐ НОРМАЛИЗАЦИЯ НА ЧИСЛАТА
+        self.quantity = round(float(quantity), 2)
+        self.unit = unit
+        self.unit_price = round(float(unit_price), 2)
+
+        # ⭐ КРИТИЧНО: total_price винаги е закръглено
+        if total_price is None:
+            self.total_price = round(self.quantity * self.unit_price, 2)
+        else:
+            self.total_price = round(float(total_price), 2)
 
         self.customer = customer
 
@@ -67,18 +72,33 @@ class Invoice:
 
     def to_dict(self):
         # конвертиране към dict за json
-        return {"invoice_id": self.invoice_id,
-            "movement_id": self.movement_id,"product": self.product,"quantity": self.quantity,
-            "unit": self.unit,"unit_price": self.unit_price,
-            "total_price": self.total_price,
-            "customer": self.customer,"date": self.date,"created": self.created,
-            "modified": self.modified}
+        return {
+            "invoice_id": self.invoice_id,
+            "movement_id": self.movement_id,
+            "product": self.product,
+            "quantity": self.quantity,
+            "unit": self.unit,
+            "unit_price": self.unit_price,
+            "total_price": self.total_price,  # ⭐ ВЕЧЕ Е ЧИСТО
+            "customer": self.customer,
+            "date": self.date,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):
         # създаване на invoice от json речник
-        return Invoice( invoice_id=data.get("invoice_id"),movement_id=data.get("movement_id"),
-            product=data.get("product"),quantity=data.get("quantity"),
-            unit=data.get("unit", "бр."),unit_price=data.get("unit_price"),
-            total_price=data.get("total_price"),customer=data.get("customer"),
-            date=data.get("date"),created=data.get("created"),modified=data.get("modified"))
+        return Invoice(
+            invoice_id=data.get("invoice_id"),
+            movement_id=data.get("movement_id"),
+            product=data.get("product"),
+            quantity=data.get("quantity"),
+            unit=data.get("unit", "бр."),
+            unit_price=data.get("unit_price"),
+            total_price=data.get("total_price"),
+            customer=data.get("customer"),
+            date=data.get("date"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
