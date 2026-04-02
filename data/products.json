@@ -53,7 +53,7 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 20.0,
+        "quantity": 8.0,
         "unit": "кг",
         "description": "зеленчук съдържащ много нишесте и има висока хранителна стойност",
         "price": 2.21,
@@ -61,7 +61,7 @@
         "tags": [],
         "location_id": "W1",
         "created": "2026-03-14 21:47:49.788604",
-        "modified": "2026-03-14 21:56:29"
+        "modified": "2026-04-02 16:04:18"
     },
     {
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",

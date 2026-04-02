@@ -7663,5 +7663,91 @@
                 "total_price": 11.88
             }
         ]
+    },
+    {
+        "report_id": 137,
+        "report_type": "stock",
+        "generated_on": "2026-04-02 14:45:45",
+        "parameters": {},
+        "data": [
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 77.0,
+                "price": 9.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "картофи",
+                "quantity": 20.0,
+                "price": 2.21,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 37.22,
+                "price": 4.89,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 90.0,
+                "price": 3.21,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": "Склад Варна (W3)"
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 100.0,
+                "price": 2.19,
+                "location": "Склад Варна (W3)"
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "шоколад \"Милка\"",
+                "quantity": 100.0,
+                "price": 3.34,
+                "location": "Склад София (W1)"
+            }
+        ]
     }
 ]

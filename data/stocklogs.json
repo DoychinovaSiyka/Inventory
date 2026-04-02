@@ -358,5 +358,14 @@
         "unit": "бр.",
         "action": "remove",
         "timestamp": "2026-04-01 19:53:53"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 12.0,
+        "unit": "кг",
+        "action": "remove",
+        "timestamp": "2026-04-02 16:04:18"
     }
 ]
