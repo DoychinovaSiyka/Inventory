@@ -76,18 +76,11 @@ class ReportsView:
             else:
                 price = round(float(raw_price), 2)
 
-            rows.append([
-                row_id,
-                p_name,
-                format_qty(qty, p_name),
-                format_lv(price),
-                format_lv(total),
-                clean_none(item.get('customer')),
-                clean_none(item.get('date'))
-            ])
+            rows.append([row_id,p_name, format_qty(qty, p_name),format_lv(price),
+                format_lv(total), clean_none(item.get('customer')),clean_none(item.get('date'))])
         return rows
 
-    #  СПРАВКИ
+    # СПРАВКИ
 
     def report_sales(self, _):
         data = self.controller.report_sales().data
@@ -134,12 +127,8 @@ class ReportsView:
         for i in data:
             loc = self.location_controller.get_by_id(i.get('location'))
             p_name = i.get('product_name', 'Продукт')
-            rows.append([
-                clean_none(i.get('date')),
+            rows.append([clean_none(i.get('date')),
                 clean_none(i.get('type')),
-                clean_none(i.get('product_id')),
-                format_qty(i.get('quantity', 0), p_name),
-                format_lv(i.get('price', 0)),
-                (loc.name if loc else "—")
-            ])
+                clean_none(i.get('product_id')),format_qty(i.get('quantity', 0), p_name),
+                format_lv(i.get('price', 0)),(loc.name if loc else "—")])
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))

@@ -1048,5 +1048,33 @@
         "action": "VIEW_INVOICES",
         "details": "Viewed all invoices",
         "timestamp": "2026-04-03 09:37:24"
+    },
+    {
+        "log_id": "bc743d71-f49f-4848-b07d-3f41beadba7a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-03 22:26:15"
+    },
+    {
+        "log_id": "2631a06f-906d-49eb-9bb5-562357e16b45",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: пица",
+        "timestamp": "2026-04-03 22:28:03"
+    },
+    {
+        "log_id": "95510739-a1cb-4c10-95d0-e5ae47027d92",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-03 22:34:38"
+    },
+    {
+        "log_id": "4b17ecf9-6c55-4b77-aee5-8a21ccb364a1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 6.0 units from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "timestamp": "2026-04-03 22:38:16"
     }
 ]

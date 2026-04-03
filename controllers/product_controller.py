@@ -302,24 +302,62 @@ class ProductController:
     def sort_by_price_desc(self) -> List[Product]:
         return sorted(self.products, key=lambda p: p.price, reverse=True)
 
-    def bubble_sort(self) -> List[Product]:
+    def bubble_sort(self, criteria: str = "price", reverse: bool = False) -> List[Product]:
+        """
+        Универсален bubble sort за продукти.
+        criteria: поле за сортиране ("price", "quantity", "name", ...)
+        reverse: True = низходящ ред, False = възходящ ред
+        """
         sorted_products = self.products[:]
         n = len(sorted_products)
-        for i in range(n):
+
+        for i in range(n - 1):
             for j in range(0, n - i - 1):
-                if sorted_products[j].price < sorted_products[j + 1].price:
-                    sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
+                a = getattr(sorted_products[j], criteria)
+                b = getattr(sorted_products[j + 1], criteria)
+
+                if isinstance(a, str):
+                    a = a.lower()
+                    b = b.lower()
+
+                if reverse:
+                    if a < b:
+                        sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
+                else:
+                    if a > b:
+                        sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
+
         return sorted_products
 
-    def selection_sort(self) -> List[Product]:
+    def selection_sort(self, criteria: str = "price", reverse: bool = True) -> List[Product]:
+        """
+        Универсален selection sort за продукти.
+        criteria: поле за сортиране
+        reverse: True = низходящ ред, False = възходящ ред
+        """
         sorted_products = self.products[:]
         n = len(sorted_products)
+
         for i in range(n):
-            max_idx = i
+            idx = i
             for j in range(i + 1, n):
-                if sorted_products[j].price > sorted_products[max_idx].price:
-                    max_idx = j
-            sorted_products[i], sorted_products[max_idx] = sorted_products[max_idx], sorted_products[i]
+                a = getattr(sorted_products[j], criteria)
+                b = getattr(sorted_products[idx], criteria)
+
+                if isinstance(a, str):
+                    a = a.lower()
+                    b = b.lower()
+
+                if reverse:
+                    if a > b:
+                        idx = j
+                else:
+                    if a < b:
+                        idx = j
+
+            if idx != i:
+                sorted_products[i], sorted_products[idx] = sorted_products[idx], sorted_products[i]
+
         return sorted_products
 
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:

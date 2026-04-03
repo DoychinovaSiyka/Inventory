@@ -21,21 +21,15 @@ class CategoryController:
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
 
-        # ДОБАВКА: Проверка дали родителят съществува
+        #  Проверка дали родителят съществува
         if parent_id and not self.get_by_id(parent_id):
             raise ValueError("Родителската категория не съществува.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Тук използваме uuid за category_id, за да е сигурно уникално при йерархия
-        category = Category(
-            category_id=str(uuid.uuid4()),
-            name=name,
-            description=description,
-            parent_id=parent_id,  # ДОБАВКА
-            created=now,
-            modified=now
-        )
+        category = Category(category_id=str(uuid.uuid4()),name=name,description=description,
+            parent_id=parent_id, created=now, modified=now)
 
         self.categories.append(category)
         self.save_changes()
@@ -69,7 +63,7 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_update_name(new_name)
-        # Проверяваме уникалност, но изключваме текущата категория
+        # Проверявам уникалност, но изключваме текущата категория
         CategoryValidator.validate_unique(new_name, [c for c in self.categories
                                                      if c.category_id != category_id])
 
@@ -117,5 +111,5 @@ class CategoryController:
                 if keyword in c.name.lower() or keyword in (c.description or "").lower()]
 
     def save_changes(self) -> None:
-        # Записваме промените обратно в JSON файла чрез репозиторито
+        # Записвам промените обратно в JSON файла чрез репозиторито
         self.repo.save([c.to_dict() for c in self.categories])

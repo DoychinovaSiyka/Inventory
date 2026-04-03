@@ -133,7 +133,7 @@ class MovementView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # MOVE – вътрешно преместване между локации
+    # MOVE  вътрешно преместване между локации
     def move_between_locations(self, user):
         print("\n   Преместване между локации (MOVE)   ")
 

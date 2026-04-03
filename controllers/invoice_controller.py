@@ -59,11 +59,8 @@ class InvoiceController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                movement.user_id,
-                "GENERATE_INVOICE",
-                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
-            )
+            self.activity_log.add_log(movement.user_id,"GENERATE_INVOICE",
+                f"Invoice generated for movement {movement.movement_id}, customer={customer}")
         return invoice
 
     # read
