@@ -39,12 +39,12 @@ class OperatorMenuView:
             if result == "break":
                 break
 
-    # 1. Продукти - КОРЕКЦИЯ: Добавен location контролер
+    # 1. Продукти: Добавен location контролер
     def open_products(self, user):
         ProductView(
             self.controllers["product"],
             self.controllers["category"],
-            self.controllers["location"],  # ТАЗИ ДОБАВКА Е ЗАДЪЛЖИТЕЛНА
+            self.controllers["location"],
             self.controllers["activity_log"]
         ).show_menu(user)
 

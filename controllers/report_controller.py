@@ -23,12 +23,8 @@ class ReportController:
     def _create_report(self, report_type, parameters, data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         report = Report(
-            report_id=self._generate_id(),
-            report_type=report_type,
-            generated_on=now,
-            parameters=parameters,
-            data=data
-        )
+            report_id=self._generate_id(),report_type=report_type,
+            generated_on=now,parameters=parameters,data=data)
         self.reports.append(report)
         self.save_changes()
         return report

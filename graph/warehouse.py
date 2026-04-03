@@ -5,5 +5,4 @@ class Warehouse:
         self.location = location  # Добавяме град или адрес за реализъм
 
     def __repr__(self):
-        # Това е за теб (програмиста), за да виждаш по-ясно обектите в конзолата
         return f"Warehouse(ID: {self.warehouse_id}, Име: {self.name}, Град: {self.location})"

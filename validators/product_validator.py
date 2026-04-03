@@ -13,7 +13,7 @@ class ProductValidator:
             if not isinstance(cid, str) or len(cid.strip()) == 0:
                 raise ValueError("Невалидна категория.")
 
-    # --- НОВ МЕТОД ЗА ЛОКАЦИЯТА ---
+
     @staticmethod
     def validate_location(location_id):
         if not location_id or not str(location_id).strip():
@@ -73,7 +73,7 @@ class ProductValidator:
             if not isinstance(cid, str) or len(cid.strip()) == 0:
                 raise ValueError("Невалидна категория.")
 
-            # --- НОВА ЛОГИКА (ОПЦИОНАЛНО) ---
+
             if category_controller:
                 # Проверяваме дали тази категория съществува
                 cat = category_controller.get_by_id(cid)

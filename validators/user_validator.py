@@ -59,7 +59,7 @@ class UserValidator:
 
         return True
 
-    #   ПЪЛНА ВАЛИДАЦИЯ НА ПОТРЕБИТЕЛ
+
     @staticmethod
     def validate_user_data(username, password, email, role, status):
         UserValidator.validate_username(username)

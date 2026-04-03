@@ -48,11 +48,11 @@ class CategoryController:
         # Подсигуряваме сравнението като стрингове
         return next((c for c in self.categories if str(c.category_id) == str(category_id)), None)
 
-    # ДОБАВКА: Метод за намиране на подкатегории
+    # Метод за намиране на подкатегории
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
 
-    # ДОБАВКА: Метод за йерархично дърво (за менюто)
+    # Метод за йерархично дърво (за менюто)
     def get_category_tree(self) -> List[dict]:
         tree = []
         main_categories = [c for c in self.categories if c.parent_id is None]
@@ -90,7 +90,7 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, product_controller=None) -> bool:
-        # ДОБАВКА: Не трием категория, ако тя самата е родител на други
+        #  Не трием категория, ако тя самата е родител на други
         has_children = any(str(c.parent_id) == str(category_id) for c in self.categories)
         if has_children:
             raise ValueError("Не може да изтриете категория, която има подкатегории!")
@@ -98,10 +98,8 @@ class CategoryController:
         # Проверка дали има продукти, свързани с тази категория, преди да я изтрием
         if product_controller:
             # Тук проверяваме в продуктите (поддържаме и стария и новия формат на запис)
-            has_products = any(
-                str(category_id) in [str(getattr(cat, 'category_id', cat)) for cat in p.categories]
-                for p in product_controller.get_all()
-            )
+            has_products = any(str(category_id) in [str(getattr(cat, 'category_id', cat)) for cat in p.categories]
+                for p in product_controller.get_all())
             if has_products:
                 raise ValueError("Не може да изтриете категория с налични продукти в нея!")
 

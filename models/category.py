@@ -8,11 +8,11 @@ class Category:
         self.category_id = category_id or str(uuid.uuid4())
         self.name = name
         self.description = description
-        self.parent_id = parent_id  # ТОВА Е НОВОТО ПОЛЕ за подкатегориите
+        self.parent_id = parent_id
         self.created = created if created else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.modified = modified if modified else datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Валидация
+
         CategoryValidator.validate_name(self.name)
         CategoryValidator.validate_description(self.description)
 
@@ -26,7 +26,7 @@ class Category:
             'category_id': self.category_id,
             'name': self.name,
             'description': self.description,
-            'parent_id': self.parent_id,  # Добавяме го тук
+            'parent_id': self.parent_id,
             'created': self.created,
             'modified': self.modified
         }
@@ -38,7 +38,7 @@ class Category:
             category_id=data.get("category_id"),
             name=data.get("name"),
             description=data.get("description"),
-            parent_id=data.get("parent_id"),  # И тук го зареждаме
+            parent_id=data.get("parent_id"),
             created=data.get("created"),
             modified=data.get("modified")
         )

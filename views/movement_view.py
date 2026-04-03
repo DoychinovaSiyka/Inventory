@@ -6,8 +6,8 @@ from models.movement import MovementType
 
 
 class MovementView:
-    def __init__(self, product_controller: ProductController,movement_controller: MovementController,
-                 user_controller: UserController,activity_log_controller=None):
+    def __init__(self, product_controller: ProductController, movement_controller: MovementController,
+                 user_controller: UserController, activity_log_controller=None):
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.user_controller = user_controller
@@ -20,7 +20,6 @@ class MovementView:
             print("Трябва да сте логнат, за да правите доставки/продажби.")
             return
 
-        # Опция за вътрешно преместване (MOVE)
         menu = Menu("Меню за Доставки/Продажби/Премествания", [
             MenuItem("1", "Създаване на доставка/продажба (IN/OUT)", self.create_movement),
             MenuItem("2", "Преместване между локации (MOVE)", self.move_between_locations),
@@ -75,7 +74,7 @@ class MovementView:
 
         # Тип движение
         try:
-            movement_type_num = int(input("0 = Доставка (IN), 1 = Продажба (OUT): "))
+            movement_type_num = int(input("0  Доставка (IN), 1  Продажба (OUT): "))
             if movement_type_num == 0:
                 movement_type = MovementType.IN
             elif movement_type_num == 1:
@@ -123,10 +122,11 @@ class MovementView:
 
         # Създаване на движение
         try:
-            self.movement_controller.add(product_id=product_id,
-                user_id=user.user_id,location_id=location_id,
-                movement_type=movement_type,quantity=quantity,description=description,
-                price=price,customer=customer,supplier_id=supplier_id)
+            self.movement_controller.add(
+                product_id=product_id, user_id=user.user_id,
+                location_id=location_id, movement_type=movement_type,
+                quantity=quantity, description=description,
+                price=price, customer=customer, supplier_id=supplier_id)
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
 
@@ -135,7 +135,7 @@ class MovementView:
 
     # MOVE – вътрешно преместване между локации
     def move_between_locations(self, user):
-        print("\n=== Преместване между локации (MOVE) ===")
+        print("\n   Преместване между локации (MOVE)   ")
 
         # Избор на продукт
         products = self.product_controller.get_all()
@@ -191,9 +191,14 @@ class MovementView:
 
         # Извършване на преместването
         try:
-            self.movement_controller.move_product(product_id=product.product_id,
-                user_id=user.user_id,from_location_id=from_location_id,to_location_id=to_location_id,
-                quantity=float(quantity),description=description)
+            self.movement_controller.move_product(
+                product_id=product.product_id,
+                user_id=user.user_id,
+                from_location_id=from_location_id,
+                to_location_id=to_location_id,
+                quantity=float(quantity),
+                description=description
+            )
             print("\nПреместването е извършено успешно!")
 
         except ValueError as e:
@@ -264,12 +269,12 @@ class MovementView:
 
     # Разширено филтриране
     def advanced_filter(self, _):
-        print("\n=== Разширено филтриране на движения ===")
+        print("\n   Разширено филтриране на движения   ")
 
         print("Тип движение:")
-        print("0 = IN (доставка)")
-        print("1 = OUT (продажба)")
-        print("2 = MOVE (преместване)")
+        print("0  IN (доставка)")
+        print("1  OUT (продажба)")
+        print("2  MOVE (преместване)")
         raw_type = input("Изберете тип или Enter за пропуск: ").strip()
         movement_type = None
         if raw_type.isdigit():
@@ -316,6 +321,6 @@ class MovementView:
             print("\nНяма движения, които отговарят на критериите.")
             return
 
-        print("\n=== Резултати ===")
+        print("\n   Резултати   ")
         for m in results:
             self._print_movement(m)

@@ -8,16 +8,31 @@ class InvoiceController:
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
-        self.invoices: List[Invoice] = [Invoice.from_dict(i) for i in self.repo.load()]
+
+        raw = self.repo.load()
+        self.invoices: List[Invoice] = []
+
+
+        for inv in raw:
+            if inv.get("invoice_id") is None:
+                inv["invoice_id"] = self._generate_id()
+            self.invoices.append(Invoice.from_dict(inv))
+
+        self.save_changes()
 
     # id generator
     def _generate_id(self) -> int:
         if not self.invoices:
             return 1
-        return max(inv.invoice_id for inv in self.invoices) + 1
+        return max(inv.invoice_id for inv in self.invoices if inv.invoice_id is not None) + 1
 
     # create
     def add(self, invoice: Invoice) -> Invoice:
+
+        # ако ID липсва, генерираме
+        if invoice.invoice_id is None:
+            invoice.invoice_id = self._generate_id()
+
         self.invoices.append(invoice)
         self.save_changes()
 
@@ -32,24 +47,13 @@ class InvoiceController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # --- КРИТИЧНО: НОРМАЛИЗАЦИЯ НА ЧИСЛАТА ---
         qty = float(movement.quantity)
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
 
-        invoice = Invoice(
-            invoice_id=self._generate_id(),
-            movement_id=movement.movement_id,
-            product=product.name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            date=now,
-            created=now,
-            modified=now
-        )
+        invoice = Invoice(invoice_id=self._generate_id(), movement_id=movement.movement_id,
+            product=product.name,quantity=qty,unit=movement.unit,unit_price=unit_price,total_price=total_price,
+            customer=customer,date=now,created=now,modified=now)
 
         self.invoices.append(invoice)
         self.save_changes()

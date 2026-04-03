@@ -105,20 +105,11 @@ class Movement:
     @staticmethod
     def from_dict(data):
         return Movement(
-            movement_id=data.get("movement_id"),
-            product_id=data.get("product_id"),
-            user_id=data.get("user_id"),
-            location_id=data.get("location_id"),
+            movement_id=data.get("movement_id"), product_id=data.get("product_id"),
+            user_id=data.get("user_id"), location_id=data.get("location_id"),
             movement_type=MovementType[data.get("movement_type")],
             quantity=data.get("quantity"),
-            unit=data.get("unit"),
-            description=data.get("description"),
-            price=data.get("price", 0.0),
-            supplier_id=data.get("supplier_id"),
-            customer=data.get("customer"),
-            from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"),
-            date=data.get("date"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+            unit=data.get("unit"), description=data.get("description"), price=data.get("price", 0.0),
+            supplier_id=data.get("supplier_id"), customer=data.get("customer"), from_location_id=data.get("from_location_id"),
+            to_location_id=data.get("to_location_id"), date=data.get("date"), created=data.get("created"),
+            modified=data.get("modified"))

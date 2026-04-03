@@ -22,7 +22,7 @@ def dijkstra(graph, start: NodeType, end: NodeType):
 
         unvisited.remove(current)
 
-        # Обхождане на съседите (използваме .get() за безопасност)
+        # Обхождане на съседите (използвам .get() за безопасност)
         for neighbor, weight in graph.edges.get(current, {}).items():
             new_distance = dist[current] + weight
             if new_distance < dist[neighbor]:

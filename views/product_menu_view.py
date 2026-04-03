@@ -299,8 +299,6 @@ class ProductView:
         min_p = _read_float("Мин. цена: ")
         max_p = _read_float("Макс. цена: ")
 
-        results = self.product_controller.search_combined(
-            name_keyword=keyword, min_price=min_p, max_price=max_p
-        )
+        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p, max_price=max_p)
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {format_lv(p.price)}")

@@ -65,12 +65,7 @@ class ProductSortView:
         # Добавяме p.location_id в редовете, за да виждаме в кой склад е стоката
         rows = []
         for p in products:
-            rows.append([
-                p.name.ljust(20),
-                p.location_id,           # Новата добавка
-                f"{p.price:.2f} лв.",
-                f"{p.quantity} {p.unit}"
-            ])
+            rows.append([p.name.ljust(20), p.location_id, f"{p.price:.2f} лв.",f"{p.quantity} {p.unit}"])
 
         # Обновяваме заглавията на колоните
         print(format_table(["Име", "Склад", "Цена", "Количество"], rows))

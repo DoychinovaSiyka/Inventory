@@ -26,12 +26,12 @@ class Invoice:
 
         self.product = product
 
-        # ⭐ НОРМАЛИЗАЦИЯ НА ЧИСЛАТА
+
         self.quantity = round(float(quantity), 2)
         self.unit = unit
         self.unit_price = round(float(unit_price), 2)
 
-        # ⭐ КРИТИЧНО: total_price винаги е закръглено
+
         if total_price is None:
             self.total_price = round(self.quantity * self.unit_price, 2)
         else:
@@ -79,7 +79,7 @@ class Invoice:
             "quantity": self.quantity,
             "unit": self.unit,
             "unit_price": self.unit_price,
-            "total_price": self.total_price,  # ⭐ ВЕЧЕ Е ЧИСТО
+            "total_price": self.total_price,
             "customer": self.customer,
             "date": self.date,
             "created": self.created,

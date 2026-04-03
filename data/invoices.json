@@ -3,7 +3,7 @@
         "invoice_id": 1,
         "movement_id": 1,
         "product": "Мляко",
-        "quantity": 2,
+        "quantity": 2.0,
         "unit": "бр.",
         "unit_price": 2.0,
         "total_price": 4.0,
@@ -16,7 +16,7 @@
         "invoice_id": 2,
         "movement_id": 2,
         "product": "Мляко",
-        "quantity": 2,
+        "quantity": 2.0,
         "unit": "бр.",
         "unit_price": 2.75,
         "total_price": 5.5,
@@ -104,7 +104,7 @@
         "modified": "2026-02-13 19:42:03"
     },
     {
-        "invoice_id": null,
+        "invoice_id": 9,
         "movement_id": 8,
         "product": "бира",
         "quantity": 56.0,
@@ -117,7 +117,7 @@
         "modified": "2026-03-14 17:43:19"
     },
     {
-        "invoice_id": null,
+        "invoice_id": 10,
         "movement_id": 9,
         "product": "кафе \"Lavazza\"",
         "quantity": 5.0,
@@ -130,16 +130,42 @@
         "modified": "2026-04-01 19:53:53"
     },
     {
-        "invoice_id": null,
+        "invoice_id": 11,
         "movement_id": 10,
         "product": "картофи",
         "quantity": 12.0,
         "unit": "кг",
-        "unit_price": 2.099,
+        "unit_price": 2.1,
         "total_price": 25.18,
         "customer": "Стамен Стаменов",
         "date": "2026-04-02 16:04:18",
         "created": "2026-04-02 16:04:18",
         "modified": "2026-04-02 16:04:18"
+    },
+    {
+        "invoice_id": 12,
+        "movement_id": 11,
+        "product": "кафе 3 в 1",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 3.99,
+        "total_price": 47.88,
+        "customer": "Sonq",
+        "date": "2026-04-02 21:13:59",
+        "created": "2026-04-02 21:13:59",
+        "modified": "2026-04-02 21:13:59"
+    },
+    {
+        "invoice_id": 13,
+        "movement_id": 12,
+        "product": "Ананас",
+        "quantity": 3.0,
+        "unit": "бр.",
+        "unit_price": 5.99,
+        "total_price": 17.97,
+        "customer": "Калин Красимиров",
+        "date": "2026-04-03 09:37:13",
+        "created": "2026-04-03 09:37:13",
+        "modified": "2026-04-03 09:37:13"
     }
 ]

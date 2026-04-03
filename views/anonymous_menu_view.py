@@ -24,12 +24,8 @@ class AnonymousMenuView:
 
     # Гостът може да вижда продуктите (ProductView автоматично крие админ бутоните за роли различни от Admin/Operator)
     def open_products(self, user):
-        ProductView(
-            self.controllers["product"],
-            self.controllers["category"],
-            self.controllers["location"],
-            self.controllers["activity_log"]
-        ).show_menu(user)
+        ProductView(self.controllers["product"],self.controllers["category"],self.controllers["location"],
+                    self.controllers["activity_log"]).show_menu(user)
 
     # Гостът може да вижда категориите
     def open_categories(self, user):

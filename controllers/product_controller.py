@@ -23,9 +23,13 @@ class ProductController:
 
             fixed_categories = []
             for cid in product.categories:
+
                 # cid може да е обект или ID (string/int)
-                c_id = cid.category_id if hasattr(cid, "category_id") else cid
-                c = self.category_controller.get_by_id(c_id)
+                if isinstance(cid, str):
+                    c = self.category_controller.get_by_id(cid)
+                else:
+                    c = self.category_controller.get_by_id(cid.category_id)
+
                 if c:
                     fixed_categories.append(c)
 
@@ -62,17 +66,29 @@ class ProductController:
                 raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
         now = str(datetime.now())
+
         # Промяна: добавен location_id в конструктора
-        product = Product(product_id=self._generate_id(), name=name, categories=categories,
-                          quantity=float(quantity), unit=unit, description=description,
-                          price=price, supplier_id=supplier_id, location_id=location_id,
-                          tags=tags or [], created=now, modified=now)
+        product = Product(
+            product_id=self._generate_id(),
+            name=name,
+            categories=categories,
+            quantity=float(quantity),
+            unit=unit,
+            description=description,
+            price=price,
+            supplier_id=supplier_id,
+            location_id=location_id,
+            tags=tags or [],
+            created=now,
+            modified=now
+        )
 
         self.products.append(product)
         self.save_changes()
 
         if self.activity_log:
             self.activity_log.add_log(user_id, "ADD_PRODUCT", f"Added product: {product.name}")
+
         return product
 
     def get_all(self) -> List[Product]:
@@ -159,7 +175,7 @@ class ProductController:
             raise ValueError("Продуктът не е намерен.")
 
         ProductValidator.validate_price(new_price)
-        p.price = round(float(new_price), 2)  # ⭐ НОВО
+        p.price = round(float(new_price), 2)
         p.update_modified()
         self.save_changes()
 
@@ -175,7 +191,7 @@ class ProductController:
         if amount < 0:
             raise ValueError("Количество трябва да е положително.")
 
-        p.quantity = round(p.quantity + float(amount), 2)  # ⭐ НОВО
+        p.quantity = round(p.quantity + float(amount), 2)
         p.update_modified()
         self.save_changes()
 
@@ -193,7 +209,7 @@ class ProductController:
         if p.quantity < amount:
             raise ValueError("Недостатъчна наличност.")
 
-        p.quantity = round(p.quantity - float(amount), 2)  # ⭐ НОВО
+        p.quantity = round(p.quantity - float(amount), 2)
         p.update_modified()
         self.save_changes()
 
@@ -227,18 +243,22 @@ class ProductController:
 
     def search(self, keyword: str) -> List[Product]:
         keyword = (keyword or "").lower().strip()
-        if not keyword: return []
+        if not keyword:
+            return []
+
         results = []
+
         for p in self.products:
-            # Търсене в име и описание
             if keyword in p.name.lower() or keyword in (p.description or "").lower():
                 results.append(p)
                 continue
-            # Търсене в имената на категориите (за поддръжка на подкатегории)
+
+            # Търсене в категории
             for cat in p.categories:
                 if keyword in cat.name.lower():
                     results.append(p)
                     break
+
         return results
 
     def filter_by_multiple_category_ids(self, category_ids: List[str]) -> List[Product]:
@@ -246,14 +266,14 @@ class ProductController:
         target_ids = [str(cid) for cid in category_ids]
         for p in self.products:
             for c in p.categories:
-                cid = c.category_id if hasattr(c, "category_id") else c
-                if str(cid) in target_ids:
+                if str(c.category_id) in target_ids:
                     filtered.append(p)
                     break
         return filtered
 
     def average_price(self) -> float:
-        if not self.products: return 0.0
+        if not self.products:
+            return 0.0
         return sum(p.price for p in self.products) / len(self.products)
 
     def check_low_stock(self, threshold: float = 5) -> List[Product]:
@@ -291,7 +311,6 @@ class ProductController:
                     sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
         return sorted_products
 
-
     def selection_sort(self) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
@@ -303,17 +322,20 @@ class ProductController:
             sorted_products[i], sorted_products[max_idx] = sorted_products[max_idx], sorted_products[i]
         return sorted_products
 
-    # Всички методи за разширено търсене са запазени
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
         results = self.products
-        if min_price is not None: results = [p for p in results if p.price >= min_price]
-        if max_price is not None: results = [p for p in results if p.price <= max_price]
+        if min_price is not None:
+            results = [p for p in results if p.price >= min_price]
+        if max_price is not None:
+            results = [p for p in results if p.price <= max_price]
         return results
 
     def search_by_quantity_range(self, min_qty: float = None, max_qty: float = None) -> List[Product]:
         results = self.products
-        if min_qty is not None: results = [p for p in results if p.quantity >= min_qty]
-        if max_qty is not None: results = [p for p in results if p.quantity <= max_qty]
+        if min_qty is not None:
+            results = [p for p in results if p.quantity >= min_qty]
+        if max_qty is not None:
+            results = [p for p in results if p.quantity <= max_qty]
         return results
 
     def search_by_category(self, category_id: str) -> List[Product]:
@@ -325,22 +347,31 @@ class ProductController:
     def search_combined(self, name_keyword: str = None, category_id: str = None,
                         min_price: float = None, max_price: float = None,
                         min_qty: float = None, max_qty: float = None, supplier_id: str = None) -> List[Product]:
+
         results = self.products
+
         if name_keyword:
             kw = name_keyword.lower()
             results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
+
         if category_id is not None:
             results = [p for p in results if any(str(c.category_id) == str(category_id) for c in p.categories)]
+
         if supplier_id is not None:
             results = [p for p in results if str(p.supplier_id) == str(supplier_id)]
+
         if min_price is not None:
             results = [p for p in results if p.price >= min_price]
+
         if max_price is not None:
             results = [p for p in results if p.price <= max_price]
+
         if min_qty is not None:
             results = [p for p in results if p.quantity >= min_qty]
+
         if max_qty is not None:
             results = [p for p in results if p.quantity <= max_qty]
+
         return results
 
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
@@ -348,7 +379,7 @@ class ProductController:
         warehouses = []
         for p in self.products:
             if p.name.lower() == product_name and p.quantity > 0:
-                loc_id = p.location_id  # Директен достъп до атрибута
+                loc_id = p.location_id
                 if loc_id and loc_id not in warehouses:
                     warehouses.append(loc_id)
         return warehouses

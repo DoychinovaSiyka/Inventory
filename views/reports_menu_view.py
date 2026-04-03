@@ -5,7 +5,7 @@ from models.user import User
 from controllers.location_controller import LocationController
 
 
-# --- ПОМОЩНИ ФУНКЦИИ ---
+# ПОМОЩНИ ФУНКЦИИ
 
 def clean_none(value, replacement="—"):
     return replacement if value is None else str(value)
@@ -64,11 +64,11 @@ class ReportsView:
             p_name = item.get('product', '—')
             qty = float(item.get('quantity', 0) or 0)
 
-            # --- КРИТИЧНО: total_price ВИНАГИ става float ---
+            #  total_price ВИНАГИ става float ---
             raw_total = item.get('total_price', item.get('total', 0))
             total = float(raw_total or 0)
 
-            # --- Единична цена ---
+            #  Единична цена
             raw_price = item.get('price')
 
             if raw_price is None or raw_price == 0:
@@ -87,7 +87,7 @@ class ReportsView:
             ])
         return rows
 
-    # --- СПРАВКИ ---
+    #  СПРАВКИ
 
     def report_sales(self, _):
         data = self.controller.report_sales().data

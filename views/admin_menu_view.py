@@ -40,12 +40,12 @@ class AdminMenuView:
             if result == "break":
                 break
 
-    # Продукти - КРИТИЧНА КОРЕКЦИЯ: добавен location controller за работа със складове
+    # Продукти: добавен location controller за работа със складове
     def open_products(self, user):
         ProductView(
             self.controllers["product"],
             self.controllers["category"],
-            self.controllers["location"], # ТАЗИ ДОБАВКА Е ВАЖНА ЗА СКЛАДОВЕТЕ
+            self.controllers["location"],
             self.controllers["activity_log"]
         ).show_menu(user)
 

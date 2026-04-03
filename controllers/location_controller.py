@@ -10,7 +10,7 @@ class LocationController:
         # Зареждаме локациите
         self.locations: List[Location] = [Location.from_dict(l) for l in self.repo.load()]
 
-    # КОРИГИРАН ID GENERATOR: Трябва да поддържаме консистентност с "W" префикса
+    # ID GENERATOR: Трябва да поддържаме консистентност с "W" префикса
     def _generate_id(self) -> str:
         if not self.locations:
             return "W1"
@@ -42,14 +42,8 @@ class LocationController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генерираме ID от типа "W1", "W2"...
-        location = Location(
-            location_id=self._generate_id(),
-            name=name,
-            zone=zone,
-            capacity=capacity,
-            created=now,
-            modified=now
-        )
+        location = Location(location_id=self._generate_id(),name=name,
+            zone=zone, capacity=capacity, created=now, modified=now)
 
         self.locations.append(location)
         self.save_changes()
@@ -58,7 +52,7 @@ class LocationController:
     def get_all(self) -> List[Location]:
         return self.locations
 
-    # КОРИГИРАНО: Търсим по стринг (W1), защото така са в графа
+    # Търсим по стринг (W1), защото така са в графа
     def get_by_id(self, location_id: str) -> Optional[Location]:
         return next((l for l in self.locations if str(l.location_id) == str(location_id)), None)
 

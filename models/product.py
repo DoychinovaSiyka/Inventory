@@ -35,7 +35,7 @@ class Product:
         # Премахваме празни записи (None)
         self.categories = [c for c in self.categories if c is not None]
 
-        # ⭐ НОРМАЛИЗАЦИЯ НА ЧИСЛАТА
+
         try:
             self.quantity = round(float(quantity), 2)
         except (ValueError, TypeError):

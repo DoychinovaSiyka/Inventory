@@ -12,7 +12,7 @@ from controllers.user_activity_log_controller import UserActivityLogController
 from views.admin_menu_view import AdminMenuView
 from views.operator_menu_view import OperatorMenuView
 from views.anonymous_menu_view import AnonymousMenuView
-# Използваме правилното име на файла за логистичния изглед
+
 from views.graph_menu_view import GraphView
 
 from storage.json_repository import JSONRepository
@@ -47,7 +47,7 @@ def main():
     except ValueError:
         pass
 
-    # Важно: ProductController се нуждае от категории и доставчици за филтриране
+    #  ProductController се нуждае от категории и доставчици за филтриране
     product_controller = ProductController(
         product_repo,
         category_controller,
@@ -74,7 +74,7 @@ def main():
         "product": product_controller,
         "category": category_controller,
         "supplier": supplier_controller,
-        "location": location_controller, # Добавено: нужно за избора на склад в ProductView
+        "location": location_controller, # нужно за избора на склад в ProductView
         "movement": movement_controller,
         "invoice": invoice_controller,
         "report": report_controller,

@@ -85,7 +85,7 @@
         "categories": [
             "sub-bezalko-002"
         ],
-        "quantity": 90.0,
+        "quantity": 78.0,
         "unit": "бр.",
         "description": "напитка кофеинова",
         "price": 3.21,
@@ -93,7 +93,7 @@
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-13 19:25:25.693245",
-        "modified": "2026-02-13 19:25:25.693245"
+        "modified": "2026-04-02 21:13:59"
     },
     {
         "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
@@ -206,5 +206,21 @@
         "location_id": "W1",
         "created": "2026-02-06 19:52:09.452077",
         "modified": "2026-02-06 23:14:25.701255"
+    },
+    {
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "name": "Ананас",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 16.0,
+        "unit": "бр.",
+        "description": "екзотичен плод",
+        "price": 5.66,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-03 09:26:25.251575",
+        "modified": "2026-04-03 09:37:13"
     }
 ]

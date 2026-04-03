@@ -18,8 +18,7 @@ class CategoryView:
             menu_items.extend([
                 MenuItem("2", "Добавяне на категория", self.add_category),
                 MenuItem("3", "Редактиране на категория", self.edit_category),
-                MenuItem("4", "Изтриване на категория", self.delete_category)
-            ])
+                MenuItem("4", "Изтриване на категория", self.delete_category)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
 

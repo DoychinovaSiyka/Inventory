@@ -936,5 +936,117 @@
         "action": "VIEW_INVOICES",
         "details": "Viewed all invoices",
         "timestamp": "2026-04-02 16:15:22"
+    },
+    {
+        "log_id": "c8ed0d77-15e3-45ff-b45d-fc9fadbbee91",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-02 21:12:15"
+    },
+    {
+        "log_id": "098299f3-87b1-40d3-b7a0-5bef663ba14e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-02 21:12:24"
+    },
+    {
+        "log_id": "231ebcbd-9630-4aae-890e-dc2620f33e29",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product кафе 3 в 1, qty=12.0, loc=W2",
+        "timestamp": "2026-04-02 21:13:59"
+    },
+    {
+        "log_id": "dfd7113a-1839-42bc-859a-379e30714fc4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-02 21:14:11"
+    },
+    {
+        "log_id": "12fe320f-f14c-47a5-b45c-b413d660e964",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-02 21:31:20"
+    },
+    {
+        "log_id": "20492b87-b684-41e4-a070-31012bc4b600",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-02 21:32:00"
+    },
+    {
+        "log_id": "288f90ba-ab58-4ba1-8381-6d6d561e69a6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-02 21:32:36"
+    },
+    {
+        "log_id": "d35b83d9-20e4-49f5-a170-135f8c633bcb",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-02 21:35:59"
+    },
+    {
+        "log_id": "57894c0d-6f1e-479f-96d7-264418b42deb",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-02 21:36:12"
+    },
+    {
+        "log_id": "16d1d800-7037-4251-b9ac-216a850a0431",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-02 21:36:17"
+    },
+    {
+        "log_id": "47f4e559-05ef-4cc9-af13-328b708ef940",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-03 09:25:15"
+    },
+    {
+        "log_id": "b7bf63f9-6941-44b8-a4ca-3243f93b0eed",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: ананас",
+        "timestamp": "2026-04-03 09:26:25"
+    },
+    {
+        "log_id": "3ffe3690-3b62-4645-a60e-bfc17a77fa73",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-03 09:31:11"
+    },
+    {
+        "log_id": "63db44a4-26b3-4cd2-93bf-d59541fe2d29",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-03 09:31:16"
+    },
+    {
+        "log_id": "cc8cf4a9-b36b-4ee1-9fe7-ab275a6e3203",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=3.0, loc=W4",
+        "timestamp": "2026-04-03 09:37:13"
+    },
+    {
+        "log_id": "2c4f3e00-5e26-47fa-b9ce-47dddd72bf8c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-03 09:37:24"
     }
 ]
