@@ -7,26 +7,36 @@ from models.user import User
 class CategoryView:
     def __init__(self, controller: CategoryController):
         self.controller = controller
+        self.menu = None  # менюто ще се създава динамично според ролята
 
+    # Основно меню
     def show_menu(self, user: User):
         is_admin = (user is not None and user.role == "Admin")
+        self.menu = self._build_menu(is_admin)
 
-        menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
+        while True:
+            choice = self.menu.show()
+            result = self.menu.execute(choice, user)
+            if result == "break":
+                break
+
+    # Създаване на менюто отделно
+    def _build_menu(self, is_admin: bool):
+        menu_items = [
+            MenuItem("1", "Списък с категории (Йерархия)", self.show_all)
+        ]
 
         if is_admin:
-            menu_items.append(MenuItem("2", "Добавяне на категория", self.add_category))
-            menu_items.append(MenuItem("3", "Редактиране на категория", self.edit_category))
-            menu_items.append(MenuItem("4", "Изтриване на категория", self.delete_category))
+            menu_items.extend([
+                MenuItem("2", "Добавяне на категория", self.add_category),
+                MenuItem("3", "Редактиране на категория", self.edit_category),
+                MenuItem("4", "Изтриване на категория", self.delete_category)
+            ])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
 
-        menu = Menu("Меню Категории", menu_items)
+        return Menu("Меню Категории", menu_items)
 
-        while True:
-            choice = menu.show()
-            result = menu.execute(choice, user)
-            if result == "break":
-                break
 
     # Показване на дървовидна структура
     def show_all(self, _):
@@ -49,7 +59,10 @@ class CategoryView:
             print(f"- {root.name} (ID: {root.category_id})")
 
             # Подкатегории
-            children = [c for c in categories if hasattr(c, "parent_id") and c.parent_id == root.category_id]
+            children = [
+                c for c in categories
+                if hasattr(c, "parent_id") and c.parent_id == root.category_id
+            ]
 
             for child in children:
                 print(f"  * {child.name} (ID: {child.category_id})")
@@ -89,6 +102,7 @@ class CategoryView:
             print("Категорията е добавена успешно!")
         except ValueError as e:
             print("Грешка:", e)
+
 
     # Редактиране на категория
     def edit_category(self, _):
@@ -155,6 +169,7 @@ class CategoryView:
         except Exception as e:
             print("Грешка:", e)
 
+
     # Изтриване на категория
     def delete_category(self, _):
         categories = self.controller.get_all()
@@ -175,7 +190,10 @@ class CategoryView:
         cat_name = category.name
 
         # Проверка за подкатегории
-        has_children = any(hasattr(c, "parent_id") and c.parent_id == category_id for c in categories)
+        has_children = any(
+            hasattr(c, "parent_id") and c.parent_id == category_id
+            for c in categories
+        )
 
         if has_children:
             print(f"Грешка: '{cat_name}' има подкатегории! Изтрийте или преместете тях първо.")

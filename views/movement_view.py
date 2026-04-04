@@ -6,21 +6,22 @@ from models.movement import MovementType
 
 
 class MovementView:
-    def __init__(self, product_controller: ProductController, movement_controller: MovementController,
-                 user_controller: UserController, activity_log_controller=None):
+    def __init__(self, product_controller: ProductController,
+                 movement_controller: MovementController,
+                 user_controller: UserController,
+                 activity_log_controller=None):
+
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.user_controller = user_controller
         self.activity_log = activity_log_controller
 
-    def show_menu(self):
-        user = self.user_controller.logged_user
+        self.menu = self._build_menu()
 
-        if not user:
-            print("Трябва да сте логнат, за да правите доставки/продажби.")
-            return
 
-        menu = Menu("Меню за Доставки/Продажби/Премествания", [
+    # Меню
+    def _build_menu(self):
+        return Menu("Меню за Доставки/Продажби/Премествания", [
             MenuItem("1", "Създаване на доставка/продажба (IN/OUT)", self.create_movement),
             MenuItem("2", "Преместване между локации (MOVE)", self.move_between_locations),
             MenuItem("3", "Търсене на движения", self.search_movements),
@@ -29,50 +30,62 @@ class MovementView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
+    def show_menu(self):
+        user = self.user_controller.logged_user
+        if not user:
+            print("Трябва да сте логнат, за да правите доставки/продажби.")
+            return
+
         while True:
-            choice = menu.show()
-            result = menu.execute(choice, user)
-            if result == "break":
+            choice = self.menu.show()
+            if self.menu.execute(choice, user) == "break":
                 break
 
-    # създаване на IN/OUT движение
-    def create_movement(self, user):
-        products = self.product_controller.get_all()
 
+    # Помощни методи
+    def _select_product(self):
+        products = self.product_controller.get_all()
         if not products:
             print("Няма продукти.")
-            return
+            return None
 
         print("\nИзберете продукт:")
         for i, p in enumerate(products):
             print(f"{i}. {p.name} ({p.quantity} {p.unit})")
 
         try:
-            product_idx = int(input("Избор: "))
-            product = products[product_idx]
-            product_id = product.product_id
+            return products[int(input("Избор: "))]
         except (ValueError, IndexError):
             print("Невалиден избор.")
-            return
+            return None
 
-        # Избор на локация
+    def _select_location(self, label="локация"):
         locations = self.movement_controller.location_controller.get_all()
         if not locations:
             print("Няма налични локации.")
-            return
+            return None
 
-        print("\nИзберете локация:")
+        print(f"\nИзберете {label}:")
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
 
         try:
-            loc_idx = int(input("Локация: "))
-            location_id = locations[loc_idx].location_id
+            return locations[int(input("Избор: "))]
         except (ValueError, IndexError):
-            print("Невалиден избор за локация.")
+            print("Невалиден избор.")
+            return None
+
+
+    # Създаване на IN/OUT движение
+    def create_movement(self, user):
+        product = self._select_product()
+        if not product:
             return
 
-        # Тип движение
+        location = self._select_location("локация")
+        if not location:
+            return
+
         try:
             movement_type_num = int(input("0  Доставка (IN), 1  Продажба (OUT): "))
             if movement_type_num == 0:
@@ -86,7 +99,6 @@ class MovementView:
             print("Невалиден избор.")
             return
 
-        # Количество, цена, описание
         print(f"Мерна единица на продукта: {product.unit}")
         quantity = input("Количество: ")
         price = input("Цена: ")
@@ -96,7 +108,6 @@ class MovementView:
         supplier_id = None
         if movement_type == MovementType.IN:
             suppliers = self.product_controller.supplier_controller.get_all()
-
             if not suppliers:
                 print("Няма доставчици. Добавете доставчик първо.")
                 return
@@ -106,8 +117,7 @@ class MovementView:
                 print(f"{i}. {s.name} (ID: {s.supplier_id})")
 
             try:
-                sup_idx = int(input("Доставчик: "))
-                supplier_id = suppliers[sup_idx].supplier_id
+                supplier_id = suppliers[int(input("Доставчик: "))].supplier_id
             except (ValueError, IndexError):
                 print("Невалиден избор за доставчик.")
                 return
@@ -120,82 +130,50 @@ class MovementView:
                 print("Не е въведено име на клиент. Ще се използва потребителското име.")
                 customer = None
 
-        # Създаване на движение
         try:
             self.movement_controller.add(
-                product_id=product_id, user_id=user.user_id,
-                location_id=location_id, movement_type=movement_type,
-                quantity=quantity, description=description,
-                price=price, customer=customer, supplier_id=supplier_id)
+                product_id=product.product_id,
+                user_id=user.user_id,
+                location_id=location.location_id,
+                movement_type=movement_type,
+                quantity=quantity,
+                description=description,
+                price=price,
+                customer=customer,
+                supplier_id=supplier_id
+            )
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
 
         except ValueError as e:
             print("Грешка:", e)
 
-    # MOVE  вътрешно преместване между локации
+
+    # MOVE – вътрешно преместване
     def move_between_locations(self, user):
         print("\n   Преместване между локации (MOVE)   ")
 
-        # Избор на продукт
-        products = self.product_controller.get_all()
-        if not products:
-            print("Няма продукти.")
+        product = self._select_product()
+        if not product:
             return
 
-        print("\nИзберете продукт:")
-        for i, p in enumerate(products):
-            print(f"{i}. {p.name} ({p.quantity} {p.unit})")
-
-        try:
-            product_idx = int(input("Избор: "))
-            product = products[product_idx]
-        except (ValueError, IndexError):
-            print("Невалиден избор.")
+        from_loc = self._select_location("ИЗХОДНА локация")
+        if not from_loc:
             return
 
-        # Избор на изходна локация
-        locations = self.movement_controller.location_controller.get_all()
-        if not locations:
-            print("Няма налични локации.")
+        to_loc = self._select_location("ЦЕЛЕВА локация")
+        if not to_loc:
             return
 
-        print("\nИзберете ИЗХОДНА локация:")
-        for i, loc in enumerate(locations):
-            print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
-        try:
-            from_idx = int(input("Избор: "))
-            from_location_id = locations[from_idx].location_id
-        except (ValueError, IndexError):
-            print("Невалиден избор.")
-            return
-
-        # Избор на целева локация
-        print("\nИзберете ЦЕЛЕВА локация:")
-        for i, loc in enumerate(locations):
-            print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
-        try:
-            to_idx = int(input("Избор: "))
-            to_location_id = locations[to_idx].location_id
-        except (ValueError, IndexError):
-            print("Невалиден избор.")
-            return
-
-        # Количество
         quantity = input("Количество за преместване: ")
-
-        # Описание
         description = input("Описание (по избор): ")
 
-        # Извършване на преместването
         try:
             self.movement_controller.move_product(
                 product_id=product.product_id,
                 user_id=user.user_id,
-                from_location_id=from_location_id,
-                to_location_id=to_location_id,
+                from_location_id=from_loc.location_id,
+                to_location_id=to_loc.location_id,
                 quantity=float(quantity),
                 description=description
             )
@@ -216,6 +194,7 @@ class MovementView:
         for m in results:
             self._print_movement(m)
 
+
     # Показване на всички движения
     def show_all(self, _):
         all_movements = self.movement_controller.get_all()
@@ -226,6 +205,7 @@ class MovementView:
 
         for m in all_movements:
             self._print_movement(m)
+
 
     # Принтиране на движение
     def _print_movement(self, m):
@@ -244,7 +224,6 @@ class MovementView:
         print(f"Тип: {m.movement_type.name}")
         print(f"Количество: {m.quantity} {m.unit}")
 
-        # MOVE не е финансова операция → няма цена
         if m.movement_type == MovementType.MOVE:
             print("Цена: няма (вътрешно преместване)")
         else:
@@ -267,6 +246,7 @@ class MovementView:
         print(f"ID: {m.movement_id}")
         print("----------------------------------------")
 
+
     # Разширено филтриране
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
@@ -276,6 +256,7 @@ class MovementView:
         print("1  OUT (продажба)")
         print("2  MOVE (преместване)")
         raw_type = input("Изберете тип или Enter за пропуск: ").strip()
+
         movement_type = None
         if raw_type.isdigit():
             raw_type = int(raw_type)
@@ -288,11 +269,12 @@ class MovementView:
 
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
         end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
-        start_date = start_date if start_date else None
-        end_date = end_date if end_date else None
+
+        start_date = start_date or None
+        end_date = end_date or None
 
         raw_pid = input("ID на продукт или Enter: ").strip()
-        product_id = raw_pid if raw_pid else None
+        product_id = raw_pid or None
 
         raw_loc = input("ID на локация или Enter: ").strip()
         location_id = int(raw_loc) if raw_loc.isdigit() else None

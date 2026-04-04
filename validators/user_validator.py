@@ -2,6 +2,7 @@ import re
 
 class UserValidator:
 
+    # USERNAME
     @staticmethod
     def validate_username(username: str):
         if not username:
@@ -16,7 +17,7 @@ class UserValidator:
         return True
 
 
-    #   PASSWORD (минимум 6 символа, хеширана)
+    # PASSWORD (минимум 6 символа)
     @staticmethod
     def validate_password(password: str):
         if not password:
@@ -27,8 +28,7 @@ class UserValidator:
 
         return True
 
-
-    #   EMAIL (валиден формат )
+    # EMAIL (валиден формат)
     @staticmethod
     def validate_email(email: str):
         if not email:
@@ -41,7 +41,7 @@ class UserValidator:
         return True
 
 
-    #   ROLE (Admin, Operator, Anonymous)
+    # ROLE (Admin, Operator, Anonymous)
     @staticmethod
     def validate_role(role: str):
         valid_roles = ["Admin", "Operator", "Anonymous"]
@@ -50,7 +50,8 @@ class UserValidator:
 
         return True
 
-    #   STATUS (Active, Disabled)
+
+    # STATUS (Active, Disabled)
     @staticmethod
     def validate_status(status: str):
         valid_status = ["Active", "Disabled"]
@@ -59,7 +60,7 @@ class UserValidator:
 
         return True
 
-
+    # FULL VALIDATION
     @staticmethod
     def validate_user_data(username, password, email, role, status):
         UserValidator.validate_username(username)

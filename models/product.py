@@ -17,11 +17,11 @@ class Product:
     def __init__(self, product_id, name, categories, quantity, unit, description, price,
                  supplier_id=None, tags=None, created=None, modified=None, location_id="W1"):
 
-        # Основна идентификация
+        # ОСНОВНА ИДЕНТИФИКАЦИЯ
         self.product_id = validate_uuid(product_id)
         self.name = name
 
-        # ОБРАБОТКА НА КАТЕГОРИИ (винаги списък от стрингове)
+        # КАТЕГОРИИ (винаги списък от стрингове)
         self.categories = []
         if isinstance(categories, list):
             for c in categories:
@@ -35,7 +35,7 @@ class Product:
         # Премахваме празни записи (None)
         self.categories = [c for c in self.categories if c is not None]
 
-
+        # КОЛИЧЕСТВО И ЦЕНА
         try:
             self.quantity = round(float(quantity), 2)
         except (ValueError, TypeError):
@@ -46,14 +46,14 @@ class Product:
         except (ValueError, TypeError):
             self.price = 0.0
 
-        # Други полета
+        # ДРУГИ ПОЛЕТА
         self.unit = unit if unit else "бр."
         self.description = description
         self.supplier_id = validate_uuid(supplier_id)
         self.tags = tags if isinstance(tags, list) else []
         self.location_id = str(location_id)
 
-        # Дати
+        # ДАТИ
         self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -68,6 +68,7 @@ class Product:
             cat_obj = category_controller.get_by_id(my_cat_id)
             if cat_obj and str(cat_obj.parent_id) == search_id:
                 return True
+
         return False
 
     def update_modified(self):

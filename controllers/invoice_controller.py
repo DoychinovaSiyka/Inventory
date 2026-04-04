@@ -8,9 +8,11 @@ class InvoiceController:
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
+
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
 
+        # Зареждаме фактурите от JSON и гарантираме, че всяка има ID
         for inv in raw:
             if inv.get("invoice_id") is None:
                 inv["invoice_id"] = self._generate_id()
@@ -18,13 +20,16 @@ class InvoiceController:
 
         self.save_changes()
 
-    # id generator
+
+    # ID generator
     def _generate_id(self) -> int:
         if not self.invoices:
             return 1
         return max(inv.invoice_id for inv in self.invoices if inv.invoice_id is not None) + 1
 
-    # create
+    # ---------------------------------------------------------
+    # CREATE
+    # ---------------------------------------------------------
     def add(self, invoice: Invoice) -> Invoice:
         # ако ID липсва, генерираме
         if invoice.invoice_id is None:
@@ -34,8 +39,11 @@ class InvoiceController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(invoice.customer, "GENERATE_INVOICE",
-                                      f"Invoice created for movement {invoice.movement_id}")
+            self.activity_log.add_log(
+                invoice.customer,
+                "GENERATE_INVOICE",
+                f"Invoice created for movement {invoice.movement_id}"
+            )
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
@@ -48,19 +56,34 @@ class InvoiceController:
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
 
-        invoice = Invoice(invoice_id=self._generate_id(), movement_id=movement.movement_id,
-            product=product.name,quantity=qty,unit=movement.unit,unit_price=unit_price,total_price=total_price,
-            customer=customer,date=now,created=now,modified=now)
+        invoice = Invoice(
+            invoice_id=self._generate_id(),
+            movement_id=movement.movement_id,
+            product=product.name,
+            quantity=qty,
+            unit=movement.unit,
+            unit_price=unit_price,
+            total_price=total_price,
+            customer=customer,
+            date=now,
+            created=now,
+            modified=now
+        )
 
         self.invoices.append(invoice)
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(movement.user_id,"GENERATE_INVOICE",
-                f"Invoice generated for movement {movement.movement_id}, customer={customer}")
+            self.activity_log.add_log(
+                movement.user_id,
+                "GENERATE_INVOICE",
+                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
+            )
         return invoice
 
-    # read
+    # ---------------------------------------------------------
+    # READ
+    # ---------------------------------------------------------
     def get_all(self) -> List[Invoice]:
         return self.invoices
 
@@ -70,7 +93,9 @@ class InvoiceController:
     def get_by_movement_id(self, movement_id: int) -> Optional[Invoice]:
         return next((inv for inv in self.invoices if inv.movement_id == movement_id), None)
 
-    # search
+    # ---------------------------------------------------------
+    # SEARCH
+    # ---------------------------------------------------------
     def search_by_customer(self, keyword: str) -> List[Invoice]:
         keyword = keyword.lower()
         return [inv for inv in self.invoices if keyword in inv.customer.lower()]
@@ -95,7 +120,9 @@ class InvoiceController:
 
         return results
 
-    # update
+    # ---------------------------------------------------------
+    # UPDATE
+    # ---------------------------------------------------------
     def update_customer(self, invoice_id: int, new_customer: str) -> bool:
         inv = self.get_by_id(invoice_id)
         if not inv:
@@ -106,11 +133,15 @@ class InvoiceController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(new_customer, "EDIT_INVOICE",
-                                      f"Updated customer for invoice {invoice_id}")
+            self.activity_log.add_log(
+                new_customer,
+                "EDIT_INVOICE",
+                f"Updated customer for invoice {invoice_id}"
+            )
         return True
 
-    # delete
+
+    # DELETE
     def remove(self, invoice_id: int) -> bool:
         original_len = len(self.invoices)
         self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
@@ -119,13 +150,18 @@ class InvoiceController:
             self.save_changes()
 
             if self.activity_log:
-                self.activity_log.add_log("system", "DELETE_INVOICE",
-                                          f"Deleted invoice {invoice_id}")
+                self.activity_log.add_log(
+                    "system",
+                    "DELETE_INVOICE",
+                    f"Deleted invoice {invoice_id}"
+                )
             return True
 
         return False
 
-    # advanced search
+    # ---------------------------------------------------------
+    # ADVANCED SEARCH
+    # ---------------------------------------------------------
     def advanced_search(self, customer: Optional[str] = None, product: Optional[str] = None,
                         start_date: Optional[str] = None, end_date: Optional[str] = None,
                         min_total: Optional[float] = None,
@@ -133,14 +169,17 @@ class InvoiceController:
 
         results = self.invoices
 
+        # customer
         if customer:
             kw = customer.lower()
             results = [inv for inv in results if kw in inv.customer.lower()]
 
+        # product
         if product:
             kw = product.lower()
             results = [inv for inv in results if kw in inv.product.lower()]
 
+        # date parsing helper
         def parse_date(d):
             try:
                 return datetime.strptime(d, "%Y-%m-%d")
@@ -150,14 +189,20 @@ class InvoiceController:
         start = parse_date(start_date) if start_date else None
         end = parse_date(end_date) if end_date else None
 
+        # date filtering
         if start:
-            results = [inv for inv in results
-                       if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start]
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start
+            ]
 
         if end:
-            results = [inv for inv in results
-                       if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end
+            ]
 
+        # total price filtering
         if min_total is not None:
             results = [inv for inv in results if inv.total_price >= min_total]
 
@@ -166,5 +211,7 @@ class InvoiceController:
 
         return results
 
+
+    # SAVE
     def save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])

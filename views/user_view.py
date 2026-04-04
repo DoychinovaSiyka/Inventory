@@ -6,27 +6,36 @@ from views.menu import Menu, MenuItem
 class UserView:
     def __init__(self, controller: UserController):
         self.controller = controller
+        self.menu = None  # менюто ще се създава динамично според ролята
 
+    # Основно меню (мега ООП)
     def show_menu(self, user: User):
         if user.role != "Admin":
             print("Само администратор може да управлява потребители.")
             return
 
-        menu = Menu(
-            "МЕНЮ ПОТРЕБИТЕЛИ",
-            [ MenuItem("1", "Списък на потребители", lambda u: self.show_users(u)),
-                MenuItem("2", "Добавяне на потребител", lambda u: self.add_user(u)),
-                MenuItem("3", "Промяна на роля", lambda u: self.change_role(u)),
-                MenuItem("4", "Деактивиране на потребител", lambda u: self.deactivate_user(u)),
-                MenuItem("5", "Активиране на потребител", lambda u: self.activate_user(u)),
-                MenuItem("6", "Премахване на потребител", lambda u: self.delete_user(u)),
-                MenuItem("0", "Назад", lambda u: "break"),])
+        self.menu = self._build_menu()
 
         while True:
-            choice = menu.show()
-            result = menu.execute(choice, user)
+            choice = self.menu.show()
+            result = self.menu.execute(choice, user)
             if result == "break":
                 break
+
+    # Създаване на менюто отделно (ООП)
+    def _build_menu(self):
+        return Menu(
+            "МЕНЮ ПОТРЕБИТЕЛИ",
+            [
+                MenuItem("1", "Списък на потребители", self.show_users),
+                MenuItem("2", "Добавяне на потребител", self.add_user),
+                MenuItem("3", "Промяна на роля", self.change_role),
+                MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+                MenuItem("5", "Активиране на потребител", self.activate_user),
+                MenuItem("6", "Премахване на потребител", self.delete_user),
+                MenuItem("0", "Назад", lambda u: "break"),
+            ]
+        )
 
     # Показване на всички потребители
     def show_users(self, _):

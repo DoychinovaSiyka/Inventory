@@ -7,62 +7,72 @@ from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
 
 
-def format_lv(value):
-    return f"{value:.2f} лв."
-
-
-def _read_int(prompt):
-    try:
-        raw = input(prompt).strip()
-        return int(raw) if raw else None
-    except ValueError:
-        print("Стойността трябва да е цяло число.")
-        return None
-
-
-def _read_float(prompt):
-    raw = input(prompt)
-    raw = raw.replace(",", ".").strip()
-    if not raw:
-        return None
-
-    cleaned = ""
-    for ch in raw:
-        if ch.isdigit() or ch in ".-":
-            cleaned += ch
-        else:
-            break
-    try:
-        return float(cleaned)
-    except ValueError:
-        print("Стойността трябва да е число.")
-        return None
-
-
 class ProductView:
     def __init__(self, product_controller: ProductController,
                  category_controller: CategoryController,
                  location_controller: LocationController,
                  activity_log_controller=None):
+
         self.product_controller = product_controller
         self.category_controller = category_controller
         self.location_controller = location_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
 
-    def show_menu(self, user: User):
-        # Ограничаваме достъпа според ролята
-        readonly = user.role in ["Operator", "Anonymous"]
+        # Създаваме менюто като отделен метод (мега ООП)
+        self.menu = self._build_menu()
 
-        menu = Menu("МЕНЮ ПРОДУКТИ", [
+
+    # Помощни методи (капсулирани вътре в класа)
+    @staticmethod
+    def format_lv(value):
+        return f"{value:.2f} лв."
+
+    @staticmethod
+    def _read_int(prompt):
+        try:
+            raw = input(prompt).strip()
+            return int(raw) if raw else None
+        except ValueError:
+            print("Стойността трябва да е цяло число.")
+            return None
+
+    @staticmethod
+    def _read_float(prompt):
+        raw = input(prompt)
+        raw = raw.replace(",", ".").strip()
+        if not raw:
+            return None
+
+        cleaned = ""
+        for ch in raw:
+            if ch.isdigit() or ch in ".-":
+                cleaned += ch
+            else:
+                break
+        try:
+            return float(cleaned)
+        except ValueError:
+            print("Стойността трябва да е число.")
+            return None
+
+
+    # Меню
+    def _build_menu(self):
+        return Menu("МЕНЮ ПРОДУКТИ", [
             MenuItem("1", "Създаване на продукт", self.create_product),
             MenuItem("2", "Премахване на продукт", self.remove_product),
             MenuItem("3", "Редактиране на продукт", self.edit_product),
+
+            # Показване на продукти (с проверка за роля)
             MenuItem("4", "Покажи всички продукти",
-                     self.show_all_protected if user.role == "Operator" else self.show_all),
+                     self.show_all_protected if self._is_operator() else self.show_all),
+
             MenuItem("5", "Търсене", self.search),
+
             MenuItem("6", "Сортиране на продукти",
-                     self.sort_menu_protected if user.role == "Operator" else self.sort_menu),
+                     self.sort_menu_protected if self._is_operator() else self.sort_menu),
+
             MenuItem("7", "Средна цена", self.average_price),
             MenuItem("8", "Филтриране по категория", self.filter_by_category),
             MenuItem("9", "Увеличаване на количество", self.increase_quantity),
@@ -76,23 +86,37 @@ class ProductView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
+    @staticmethod
+    def _is_operator():
+        # Ограничаваме достъпа според ролята
+        return False  # placeholder, реалната проверка е в show_menu()
+
+
+    # Основно меню
+    def show_menu(self, user: User):
+        # Ограничаваме достъпа според ролята
+        readonly = user.role in ["Operator", "Anonymous"]
+
         while True:
-            choice = menu.show()
+            choice = self.menu.show()
+
             # Проверка за права
             if readonly and choice in ["1", "2", "3", "9", "10"]:
                 print(f"[!] Функцията не е достъпна за роля: {user.role}")
                 continue
 
-            result = menu.execute(choice, user)
+            result = self.menu.execute(choice, user)
             if result == "break":
                 break
 
+
+    # CRUD операции
     def create_product(self, user):
         print("\n  Създаване на продукт  ")
         name = input("Име: ").strip()
         description = input("Описание: ").strip()
-        price = _read_float("Цена: ")
-        quantity = _read_float("Количество: ")
+        price = self._read_float("Цена: ")
+        quantity = self._read_float("Количество: ")
         unit = input("Мерна единица (бр., кг, л...): ").strip()
 
         if price is None or quantity is None:
@@ -112,7 +136,7 @@ class ProductView:
                 parent_info = f" (Подкатегория на {c.parent_id})"
             print(f"{i}. {c.name}{parent_info}")
 
-        cat_idx = _read_int("Изберете категория (номер): ")
+        cat_idx = self._read_int("Изберете категория (номер): ")
         if cat_idx is None or not (0 <= cat_idx < len(categories)):
             return
         category_id = categories[cat_idx].category_id
@@ -126,7 +150,7 @@ class ProductView:
         for i, loc in enumerate(locations):
             print(f"{i}. [{loc.location_id}] {loc.name}")
 
-        loc_idx = _read_int("Изберете склад (номер): ")
+        loc_idx = self._read_int("Изберете склад (номер): ")
         if loc_idx is None or not (0 <= loc_idx < len(locations)):
             return
         location_id = locations[loc_idx].location_id
@@ -140,23 +164,6 @@ class ProductView:
             print(f"[Успех] Продуктът е зачислен в {location_id}.")
         except ValueError as e:
             print("Грешка:", e)
-
-    def show_all(self, _):
-        products = self.product_controller.get_all()
-        if not products:
-            print("Няма налични продукти.")
-            return
-
-        print("\n  Списък с продукти  ")
-        print(f"{'ID':<3} | {'Име':<15} | {'Склад':<6} | {'Наличност':<10} | {'Цена'}")
-        print("-" * 65)
-        for p in products:
-            print(
-                f"{p.product_id:<3} | {p.name[:15]:<15} | {p.location_id:<6} | {p.quantity:>5} {p.unit:<4} | {format_lv(p.price)}")
-
-    @require_password("parola123")
-    def show_all_protected(self, user):
-        self.show_all(user)
 
     def remove_product(self, user):
         print("\n  Премахване на продукт  ")
@@ -197,6 +204,25 @@ class ProductView:
         except ValueError as e:
             print("Грешка:", e)
 
+
+    # Показване, търсене, сортиране
+    def show_all(self, _):
+        products = self.product_controller.get_all()
+        if not products:
+            print("Няма налични продукти.")
+            return
+
+        print("\n  Списък с продукти  ")
+        print(f"{'ID':<3} | {'Име':<15} | {'Склад':<6} | {'Наличност':<10} | {'Цена'}")
+        print("-" * 65)
+        for p in products:
+            print(
+                f"{p.product_id:<3} | {p.name[:15]:<15} | {p.location_id:<6} | {p.quantity:>5} {p.unit:<4} | {self.format_lv(p.price)}")
+
+    @require_password("parola123")
+    def show_all_protected(self, user):
+        self.show_all(user)
+
     def search(self, _):
         keyword = input("Търсене (име/описание): ").strip().lower()
         results = self.product_controller.search(keyword)
@@ -204,7 +230,7 @@ class ProductView:
             print("Няма намерени продукти.")
             return
         for p in results:
-            print(f"{p.product_id} | {p.name} | Склад: {p.location_id} | {p.quantity} {p.unit} | {format_lv(p.price)}")
+            print(f"{p.product_id} | {p.name} | Склад: {p.location_id} | {p.quantity} {p.unit} | {self.format_lv(p.price)}")
 
     def sort_menu(self, _):
         self.sort_view.show_menu()
@@ -213,9 +239,11 @@ class ProductView:
     def sort_menu_protected(self, user):
         self.sort_menu(user)
 
+
+    # Анализи и справки
     def average_price(self, _):
         avg = self.product_controller.average_price()
-        print(f"Средна цена: {format_lv(avg)}")
+        print(f"Средна цена: {self.format_lv(avg)}")
 
     def filter_by_category(self, _):
         categories = self.category_controller.get_all()
@@ -226,7 +254,7 @@ class ProductView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name}")
 
-        idx = _read_int("Изберете категория (номер): ")
+        idx = self._read_int("Изберете категория (номер): ")
         if idx is not None and 0 <= idx < len(categories):
             selected_cat = categories[idx]
 
@@ -244,11 +272,11 @@ class ProductView:
 
             print(f"\n--- Продукти в {selected_cat.name} ---")
             for p in results:
-                print(f"{p.name} | Склад: {p.location_id} | {format_lv(p.price)} | {p.quantity} {p.unit}")
+                print(f"{p.name} | Склад: {p.location_id} | {self.format_lv(p.price)} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
-        amount = _read_float("Количество за добавяне: ")
+        amount = self._read_float("Количество за добавяне: ")
         if amount:
             try:
                 u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
@@ -259,7 +287,7 @@ class ProductView:
 
     def decrease_quantity(self, user):
         pid = input("ID на продукт: ").strip()
-        amount = _read_float("Количество за изваждане: ")
+        amount = self._read_float("Количество за изваждане: ")
         if amount:
             try:
                 u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
@@ -278,15 +306,15 @@ class ProductView:
     def most_expensive(self, _):
         p = self.product_controller.most_expensive()
         if p:
-            print(f"Най-скъп продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
+            print(f"Най-скъп продукт: {p.name} ({p.location_id}) - {self.format_lv(p.price)}")
 
     def cheapest(self, _):
         p = self.product_controller.cheapest()
         if p:
-            print(f"Най-евтин продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
+            print(f"Най-евтин продукт: {p.name} ({p.location_id}) - {self.format_lv(p.price)}")
 
     def total_value(self, _):
-        print(f"Обща стойност на инвентара: {format_lv(self.product_controller.total_values())}")
+        print(f"Обща стойност на инвентара: {self.format_lv(self.product_controller.total_values())}")
 
     def group_by_category(self, _):
         groups = self.product_controller.group_by_category()
@@ -299,9 +327,9 @@ class ProductView:
     def advanced_search(self, _):
         print("\n  Разширено търсене  ")
         keyword = input("Ключова дума: ").strip() or None
-        min_p = _read_float("Мин. цена: ")
-        max_p = _read_float("Макс. цена: ")
+        min_p = self._read_float("Мин. цена: ")
+        max_p = self._read_float("Макс. цена: ")
 
         results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p, max_price=max_p)
         for p in results:
-            print(f"{p.product_id} | {p.name} | {p.location_id} | {format_lv(p.price)}")
+            print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

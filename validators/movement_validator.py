@@ -3,6 +3,7 @@ from models.movement import MovementType
 
 class MovementValidator:
 
+    # QUANTITY PARSING
     @staticmethod
     def parse_quantity(quantity):
         if not quantity.strip():
@@ -18,6 +19,8 @@ class MovementValidator:
 
         return quantity
 
+
+    # PRICE PARSING
     @staticmethod
     def parse_price(price, movement_type=None):
         """
@@ -48,6 +51,8 @@ class MovementValidator:
 
         return price
 
+
+    # DESCRIPTION VALIDATION
     @staticmethod
     def validate_description(description, movement_type=None):
         """
@@ -64,11 +69,15 @@ class MovementValidator:
         if len(description.strip()) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
+
+    # MOVEMENT TYPE VALIDATION
     @staticmethod
     def validate_movement_type(movement_type):
         if not isinstance(movement_type, MovementType):
             raise ValueError("movement_type трябва да бъде MovementType Enum.")
 
+
+    # PRODUCT ID VALIDATION
     @staticmethod
     def validate_product_id(product_id):
         if not isinstance(product_id, str):
@@ -77,11 +86,14 @@ class MovementValidator:
         if not product_id.strip():
             raise ValueError("product_id не може да бъде празен.")
 
+
+    # LOCATION VALIDATION
     @staticmethod
     def validate_locations(from_id, to_id, movement_type):
         """
         Проверява локациите спрямо типа движение.
         """
+
         if movement_type == MovementType.MOVE:
             if not from_id or not to_id:
                 raise ValueError("За преместване (MOVE) са нужни начална и крайна локация.")
@@ -91,16 +103,18 @@ class MovementValidator:
         # Проверка дали ID-тата са текст (заради твоите "W1", "W2")
         if from_id and not isinstance(from_id, str):
             raise ValueError("Началната локация трябва да е текст (код).")
+
         if to_id and not isinstance(to_id, str):
             raise ValueError("Крайната локация трябва да е текст (код).")
 
+
+    # UNIT VALIDATION
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():
             raise ValueError("Мерната единица е задължителна.")
 
         allowed_units = ["бр.", "кг", "г", "л", "мл", "стек", "кашон"]
-
         if unit not in allowed_units:
             raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
 

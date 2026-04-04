@@ -8,6 +8,8 @@ class SupplierValidator:
     # Регулярен израз за телефон - международен формат
     phone_regex = re.compile(r"^\+?\d{7,15}$")
 
+
+    # NAME VALIDATION
     @staticmethod
     def validate_name(name):
         if not name or not name.strip():
@@ -16,6 +18,8 @@ class SupplierValidator:
         if len(name.strip()) < 2:
             raise ValueError("Името на доставчика трябва да съдържа поне 2 символа.")
 
+
+    # CONTACT VALIDATION (email или телефон)
     @staticmethod
     def validate_contact(contact):
         if not contact or not contact.strip():
@@ -27,11 +31,14 @@ class SupplierValidator:
         if SupplierValidator.email_regex.match(contact):
             return True
 
+        # Валиден телефон
         if SupplierValidator.phone_regex.match(contact):
             return True
 
         raise ValueError("Контактът трябва да бъде валиден имейл или телефон.")
 
+
+    # ADDRESS VALIDATION
     @staticmethod
     def validate_address(address):
         if not address or not address.strip():
@@ -40,12 +47,16 @@ class SupplierValidator:
         if len(address.strip()) < 3:
             raise ValueError("Адресът трябва да съдържа поне 3 символа.")
 
+
+    # UNIQUE NAME VALIDATION
     @staticmethod
     def validate_unique(name, suppliers):
         for s in suppliers:
             if s.name.lower() == name.lower():
                 raise ValueError("Доставчик с това име вече съществува.")
 
+
+    # FULL VALIDATION
     @staticmethod
     def validate_all(name, contact, address):
         SupplierValidator.validate_name(name)

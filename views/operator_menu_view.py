@@ -10,70 +10,85 @@ from views.password_utils import require_password
 
 class OperatorMenuView:
     def __init__(self, controllers):
-        self.controllers = controllers
+        # Запазваме контролерите като отделни атрибути
+        self.product_controller = controllers["product"]
+        self.category_controller = controllers["category"]
+        self.location_controller = controllers["location"]
+        self.movement_controller = controllers["movement"]
+        self.invoice_controller = controllers["invoice"]
+        self.report_controller = controllers["report"]
+        self.user_controller = controllers["user"]
+        self.activity_log = controllers["activity_log"]
 
-    def show_menu(self, user):
-        # Проверка за достъп (по твоя оригинал)
-        if user.role.lower() == "guest":
-            print("Нямате достъп до операторското меню.")
-            return
+        # Създаваме менюто като отделен метод
+        self.menu = self._build_menu()
 
-        menu = Menu("Операторско меню", [
+    # Създаваме менюто отделно
+    def _build_menu(self):
+        return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти", self.open_products),
+
             # Управление на категории е административна функция → защитаваме
             MenuItem("2", "Управление на категории", self.open_categories),
-            MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
 
+            MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
             # Справките съдържат финансови данни - защитаваме
             MenuItem("4", "Справки", self.open_reports),
 
             # Фактурите съдържат чувствителни данни - защитаваме
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break") ])
+
+    # Основно меню
+    def show_menu(self, user):
+        # Проверка за достъп (по твоя оригинал)
+        if user.role.lower() == "guest":
+            print("Нямате достъп до операторското меню.")
+            return
 
         while True:
-            choice = menu.show()
-            result = menu.execute(choice, user)
+            choice = self.menu.show()
+            result = self.menu.execute(choice, user)
             if result == "break":
                 break
 
-    # 1. Продукти: Добавен location контролер
-    def open_products(self, user):
-        ProductView(
-            self.controllers["product"],
-            self.controllers["category"],
-            self.controllers["location"],
-            self.controllers["activity_log"]
-        ).show_menu(user)
+    # Помощен метод за отваряне на View (козметично подобрение)
+    @staticmethod
+    def _open_view(view_class, *args):
+        return view_class(*args)
 
-    # 2. Категории — операторът може само да ги гледа - защитаваме менюто
+    #  Продукти: Добавен location контролер
+    def open_products(self, user):
+        view = self._open_view( ProductView,self.product_controller, self.category_controller,
+                                self.location_controller, self.activity_log)
+        view.show_menu(user)
+
+    #  Категории — операторът може само да ги гледа - защитаваме менюто
     @require_password("parola123")
     def open_categories(self, user):
-        CategoryView(self.controllers["category"]).show_menu(user)
+        view = self._open_view(CategoryView, self.category_controller)
+        view.show_menu(user)
 
-    # 3. Движения — операторът трябва да има достъп - НЕ защитаваме
-    # Надградено: добавихме нужните контролери за правилната работа на движенията
+    #  Движения — операторът трябва да има достъп - НЕ защитаваме
     def open_movements(self, _):
-        MovementView(
-            self.controllers["product"],
-            self.controllers["movement"],
-            self.controllers["user"],
-            self.controllers["activity_log"]
-        ).show_menu()
+        view = self._open_view(MovementView,self.product_controller, self.movement_controller, self.user_controller,
+                                self.activity_log)
+        view.show_menu()
 
-    # 4. Справки — съдържат финансови данни - защитаваме
+    #  Справки — съдържат финансови данни - защитаваме
     @require_password("parola123")
     def open_reports(self, user):
-        ReportsView(self.controllers["report"]).show_menu(user)
+        view = self._open_view(ReportsView, self.report_controller)
+        view.show_menu(user)
 
-    # 5. Фактури — съдържат чувствителни данни - защитаваме
+    #  Фактури — съдържат чувствителни данни - защитаваме
     @require_password("parola123")
     def open_invoices(self, user):
-        InvoiceView(self.controllers["invoice"], self.controllers["activity_log"]).show_menu(user)
+        view = self._open_view(InvoiceView, self.invoice_controller, self.activity_log)
+        view.show_menu(user)
 
-    # 6. Информация за системата — публична - НЕ защитаваме
+    #  Информация за системата — публична - НЕ защитаваме
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()

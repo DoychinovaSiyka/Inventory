@@ -2,9 +2,7 @@ from datetime import datetime
 
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp=None, log_id=None):
-        # log_id е int
-        self.log_id = log_id
-
+        self.log_id = log_id   # log_id е int
         self.product_id = product_id
         self.location_id = location_id
         self.quantity = quantity

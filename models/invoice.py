@@ -1,4 +1,5 @@
 from datetime import datetime
+from validators.invoice_validator import InvoiceValidator
 
 
 def generate_next_invoice_id(existing_items):
@@ -25,12 +26,9 @@ class Invoice:
         self.movement_id = int(movement_id) if movement_id is not None else None
 
         self.product = product
-
-
         self.quantity = round(float(quantity), 2)
         self.unit = unit
         self.unit_price = round(float(unit_price), 2)
-
 
         if total_price is None:
             self.total_price = round(self.quantity * self.unit_price, 2)
@@ -44,31 +42,20 @@ class Invoice:
         self.created = created or now
         self.modified = modified or now
 
-        self.validate()
+        # Валидацията вече е отделена
+        InvoiceValidator.validate_all(
+            self.product,
+            self.customer,
+            self.quantity,
+            self.unit,
+            self.unit_price,
+            self.movement_id
+        )
 
     def assign_new_id(self, existing_items):
         # извиква се от контролера, ако id липсва
         if self.invoice_id is None:
             self.invoice_id = generate_next_invoice_id(existing_items)
-
-    def validate(self):
-        if not self.product:
-            raise ValueError("продуктът е задължителен.")
-
-        if not self.customer:
-            raise ValueError("клиентът е задължителен.")
-
-        if self.quantity <= 0:
-            raise ValueError("quantity трябва да е > 0.")
-
-        if not self.unit or not self.unit.strip():
-            raise ValueError("мерната единица е задължителна.")
-
-        if self.unit_price <= 0:
-            raise ValueError("unit price трябва да е > 0.")
-
-        if self.movement_id is None:
-            raise ValueError("movement_id е задължителен.")
 
     def to_dict(self):
         # конвертиране към dict за json
