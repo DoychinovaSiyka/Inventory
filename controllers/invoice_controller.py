@@ -8,10 +8,8 @@ class InvoiceController:
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
-
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
-
 
         for inv in raw:
             if inv.get("invoice_id") is None:
@@ -28,7 +26,6 @@ class InvoiceController:
 
     # create
     def add(self, invoice: Invoice) -> Invoice:
-
         # ако ID липсва, генерираме
         if invoice.invoice_id is None:
             invoice.invoice_id = self._generate_id()

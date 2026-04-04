@@ -28,7 +28,7 @@ class SupplierView:
             if result == "break":
                 break
 
-    # 1. списък с доставчици
+    #  списък с доставчици
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
 
@@ -41,7 +41,7 @@ class SupplierView:
 
         print("\n" + format_table(columns, rows))
 
-    # 2. добавяне на доставчик (admin only)
+    #  добавяне на доставчик (admin only)
     def add_supplier(self, _):
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()

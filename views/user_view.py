@@ -14,16 +14,13 @@ class UserView:
 
         menu = Menu(
             "МЕНЮ ПОТРЕБИТЕЛИ",
-            [
-                MenuItem("1", "Списък на потребители", lambda u: self.show_users(u)),
+            [ MenuItem("1", "Списък на потребители", lambda u: self.show_users(u)),
                 MenuItem("2", "Добавяне на потребител", lambda u: self.add_user(u)),
                 MenuItem("3", "Промяна на роля", lambda u: self.change_role(u)),
                 MenuItem("4", "Деактивиране на потребител", lambda u: self.deactivate_user(u)),
                 MenuItem("5", "Активиране на потребител", lambda u: self.activate_user(u)),
                 MenuItem("6", "Премахване на потребител", lambda u: self.delete_user(u)),
-                MenuItem("0", "Назад", lambda u: "break"),
-            ]
-        )
+                MenuItem("0", "Назад", lambda u: "break"),])
 
         while True:
             choice = menu.show()
