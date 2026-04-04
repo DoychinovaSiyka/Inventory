@@ -67,20 +67,9 @@ class ProductController:
 
         now = str(datetime.now())
 
-        product = Product(
-            product_id=self._generate_id(),
-            name=name,
-            categories=categories,
-            quantity=float(quantity),
-            unit=unit,
-            description=description,
-            price=price,
-            supplier_id=supplier_id,
-            location_id=location_id,
-            tags=tags or [],
-            created=now,
-            modified=now
-        )
+        product = Product(product_id=self._generate_id(),name=name,
+                          categories=categories,quantity=float(quantity),unit=unit,description=description,price=price,
+                          supplier_id=supplier_id,location_id=location_id,tags=tags or [],created=now,modified=now)
 
         self.products.append(product)
         self.save_changes()
@@ -315,44 +304,51 @@ class ProductController:
     def sort_by_price_desc(self) -> List[Product]:
         return sorted(self.products, key=lambda p: p.price, reverse=True)
 
-    def bubble_sort(self) -> List[Product]:
+    def bubble_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
 
         for i in range(n):
             for j in range(0, n - i - 1):
-                a = sorted_products[j].price
-                b = sorted_products[j + 1].price
+                a = key(sorted_products[j])
+                b = key(sorted_products[j + 1])
 
-                if a > b:
-                    continue
-                if a < b:
-                    sorted_products[j], sorted_products[j + 1] = (
-                        sorted_products[j + 1],
-                        sorted_products[j]
-                    )
+                # Запазена логика от твоя файл (низходящ ред по подразбиране)
+                if reverse:
+                    if a < b:
+                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1],sorted_products[j])
+                else:
+                    if a > b:
+                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1],sorted_products[j])
 
         return sorted_products
 
-    def selection_sort(self) -> List[Product]:
+    def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
 
-        for i in range(n):
-            max_idx = i
+        i = 0
+        while i < n:
+            best_idx = i
 
-            for j in range(i + 1, n):
-                a = sorted_products[j].price
-                b = sorted_products[max_idx].price
+            j = i + 1
+            while j < n:
+                a = key(sorted_products[j])
+                b = key(sorted_products[best_idx])
 
-                if a > b:
-                    max_idx = j
+                # Запазена логика от твоя файл (намираме най-големия елемент)
+                if reverse:
+                    if a > b:
+                        best_idx = j
+                else:
+                    if a < b:
+                        best_idx = j
 
-            if max_idx != i:
-                sorted_products[i], sorted_products[max_idx] = (
-                    sorted_products[max_idx],
-                    sorted_products[i]
-                )
+                j += 1
+
+            sorted_products[i], sorted_products[best_idx] = (sorted_products[best_idx],sorted_products[i])
+
+            i += 1
 
         return sorted_products
 
