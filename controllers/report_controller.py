@@ -12,6 +12,8 @@ class ReportController:
         self.location_controller = location_controller
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
+
+
     def _generate_id(self):
         if not self.reports:
             return 1
