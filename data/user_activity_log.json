@@ -1076,5 +1076,103 @@
         "action": "DECREASE_QUANTITY",
         "details": "Removed 6.0 units from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "timestamp": "2026-04-03 22:38:16"
+    },
+    {
+        "log_id": "e77276ad-111d-458c-a6fa-a0f5b0822aa1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 09:24:13"
+    },
+    {
+        "log_id": "df1cfd75-321e-4010-b0e7-a0ad7f0ed5b7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 09:26:40"
+    },
+    {
+        "log_id": "2f792d6d-b627-48ea-a66c-af8b0ca02659",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: Портокали \"Мерлин\"",
+        "timestamp": "2026-04-04 09:28:15"
+    },
+    {
+        "log_id": "d45ec831-ebc3-446a-b347-5244ad937c9e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 09:37:54"
+    },
+    {
+        "log_id": "90e78cf7-ee93-4579-8641-8acf4ba4d233",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: Кисело мляко \"Родопея\" 3.6%",
+        "timestamp": "2026-04-04 09:39:46"
+    },
+    {
+        "log_id": "0afacec3-fceb-4a96-9d55-e02bef975705",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 09:50:57"
+    },
+    {
+        "log_id": "0d14a2fa-683d-4054-9a2b-abfd6d2ab8c9",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 10:07:28"
+    },
+    {
+        "log_id": "124b0ba8-40f5-4604-b3ae-ce4aad350767",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 10:15:42"
+    },
+    {
+        "log_id": "0e0a976b-652d-41a2-bc03-de19d06c5844",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-04 10:23:28"
+    },
+    {
+        "log_id": "231df2e0-f7d2-471b-9e2c-ee485301c9f3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: кори за баница \"Bella\"",
+        "timestamp": "2026-04-04 10:24:39"
+    },
+    {
+        "log_id": "90ebf68f-40d2-4276-b2a4-f279515d1635",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Deleted product ID 8515bff7-56ea-4c02-bd5b-24867ff8523d",
+        "timestamp": "2026-04-04 10:25:03"
+    },
+    {
+        "log_id": "474d0b18-47c1-4283-848d-ce81b0662400",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "INCREASE_QUANTITY",
+        "details": "Added 100.0 units to product ID a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
+        "timestamp": "2026-04-04 10:27:23"
+    },
+    {
+        "log_id": "afc02123-61ba-47f5-9a26-a919e4d6687c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 1.0 units from product ID a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
+        "timestamp": "2026-04-04 10:28:02"
+    },
+    {
+        "log_id": "2f00d638-f5a8-4a43-a3e4-69eed657da5f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Removed 1.0 units from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "timestamp": "2026-04-04 10:28:43"
     }
 ]

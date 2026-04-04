@@ -7841,5 +7841,352 @@
                 "location": "Склад София (W1)"
             }
         ]
+    },
+    {
+        "report_id": 139,
+        "report_type": "stock",
+        "generated_on": "2026-04-04 10:37:20",
+        "parameters": {},
+        "data": [
+            {
+                "product": "Ананас",
+                "quantity": 16.0,
+                "price": 5.66,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "бира \"Siyka\"",
+                "quantity": 70.0,
+                "price": 9.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "вафла \"Боровец\"",
+                "quantity": 31.0,
+                "price": 0.89,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 20.0,
+                "price": 0.34,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "картофи",
+                "quantity": 8.0,
+                "price": 2.21,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кафе \"Lavazza\"",
+                "quantity": 37.22,
+                "price": 4.89,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кафе 3 в 1",
+                "quantity": 78.0,
+                "price": 3.21,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "киви",
+                "quantity": 3.0,
+                "price": 1.0,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "кокоши и пъдпъдъчи яйца",
+                "quantity": 117.0,
+                "price": 6.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "пица",
+                "quantity": 56.0,
+                "price": 3.09,
+                "location": "Магазин Смолян (W5)"
+            },
+            {
+                "product": "Подправки микс",
+                "quantity": 12.0,
+                "price": 1.95,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "Прясно мляко",
+                "quantity": 17.0,
+                "price": 4.01,
+                "location": "Склад Варна (W3)"
+            },
+            {
+                "product": "Розови домати",
+                "quantity": 199.0,
+                "price": 2.19,
+                "location": "Склад Варна (W3)"
+            },
+            {
+                "product": "сладолед \"Family\" с вкус на шоколад",
+                "quantity": 400.0,
+                "price": 9.99,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "шоколад \"Kinder\"",
+                "quantity": 134.0,
+                "price": 3.34,
+                "location": "Склад София (W1)"
+            },
+            {
+                "product": "Портокали \"Мерлин\"",
+                "quantity": 45.0,
+                "price": 3.47,
+                "location": "Склад Варна (W3)"
+            },
+            {
+                "product": "кори за баница \"Bella\"",
+                "quantity": 45.0,
+                "price": 3.01,
+                "location": "Склад Пловдив (W2)"
+            }
+        ]
+    },
+    {
+        "report_id": 140,
+        "report_type": "movements_all",
+        "generated_on": "2026-04-04 10:37:21",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0.0,
+                "location": "2",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:36:33",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 13.0,
+                "price": 0.0,
+                "location": "5",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0.0,
+                "location": "3",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:47:04",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0.0,
+                "location": "5",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0.0,
+                "location": "2",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-02-13 21:53:10",
+                "type": "MOVE",
+                "product_id": "8f3c2c3e-1a4b-4b8e-9c2e-1f4a9c2d20aa",
+                "quantity": 50.0,
+                "price": 0.0,
+                "location": "5",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0.0,
+                "location": "5",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:38:52",
+                "type": "MOVE",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 1.0,
+                "price": 0.0,
+                "location": "1",
+                "supplier_id": null,
+                "customer": null
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "type": "OUT",
+                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+                "quantity": 56.0,
+                "price": 3.99,
+                "location": "2",
+                "supplier_id": null,
+                "customer": "Сийка Дойчинова"
+            },
+            {
+                "date": "2026-04-01 19:53:53",
+                "type": "OUT",
+                "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
+                "quantity": 5.0,
+                "price": 2.22,
+                "location": "1",
+                "supplier_id": null,
+                "customer": "Стоян"
+            },
+            {
+                "date": "2026-04-02 16:04:18",
+                "type": "OUT",
+                "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+                "quantity": 12.0,
+                "price": 2.1,
+                "location": "Склад Пловдив (W2)",
+                "supplier_id": null,
+                "customer": "Стамен Стаменов"
+            },
+            {
+                "date": "2026-04-02 21:13:59",
+                "type": "OUT",
+                "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
+                "quantity": 12.0,
+                "price": 3.99,
+                "location": "Склад Пловдив (W2)",
+                "supplier_id": null,
+                "customer": "Sonq"
+            },
+            {
+                "date": "2026-04-03 09:37:13",
+                "type": "OUT",
+                "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+                "quantity": 3.0,
+                "price": 5.99,
+                "location": "Склад Бургас (W4)",
+                "supplier_id": null,
+                "customer": "Калин Красимирон"
+            }
+        ]
+    },
+    {
+        "report_id": 141,
+        "report_type": "sales_all",
+        "generated_on": "2026-04-04 10:37:25",
+        "parameters": {},
+        "data": [
+            {
+                "date": "2026-02-03 22:23:22",
+                "product": "Мляко",
+                "quantity": 2.0,
+                "total_price": 4.0,
+                "customer": "Siyka"
+            },
+            {
+                "date": "2026-02-04 11:55:37",
+                "product": "Мляко",
+                "quantity": 2.0,
+                "total_price": 5.5,
+                "customer": "Елена Иванова"
+            },
+            {
+                "date": "2026-02-04 23:37:43",
+                "product": "брашно",
+                "quantity": 4.0,
+                "total_price": 18.0,
+                "customer": "Ивана Петрова Асенова"
+            },
+            {
+                "date": "2026-02-06 20:15:00",
+                "product": "вафла \"Боровец\"",
+                "quantity": 55.0,
+                "total_price": 57.75,
+                "customer": "Златомир"
+            },
+            {
+                "date": "2026-02-06 23:02:14",
+                "product": "вафла \"Боровец\"",
+                "quantity": 12.0,
+                "total_price": 11.88,
+                "customer": "Нора"
+            },
+            {
+                "date": "2026-02-13 17:10:04",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Антон"
+            },
+            {
+                "date": "2026-02-13 17:11:16",
+                "product": "бира",
+                "quantity": 12.0,
+                "total_price": 27.96,
+                "customer": "Кирил"
+            },
+            {
+                "date": "2026-02-13 19:42:03",
+                "product": "вафла \"Боровец\"",
+                "quantity": 2.0,
+                "total_price": 1.78,
+                "customer": "Ирина Петрова"
+            },
+            {
+                "date": "2026-03-14 17:43:19",
+                "product": "бира",
+                "quantity": 56.0,
+                "total_price": 223.44,
+                "customer": "Сийка Дойчинова"
+            },
+            {
+                "date": "2026-04-01 19:53:53",
+                "product": "кафе \"Lavazza\"",
+                "quantity": 5.0,
+                "total_price": 11.1,
+                "customer": "Стоян"
+            },
+            {
+                "date": "2026-04-02 16:04:18",
+                "product": "картофи",
+                "quantity": 12.0,
+                "total_price": 25.18,
+                "customer": "Стамен Стаменов"
+            },
+            {
+                "date": "2026-04-02 21:13:59",
+                "product": "кафе 3 в 1",
+                "quantity": 12.0,
+                "total_price": 47.88,
+                "customer": "Sonq"
+            },
+            {
+                "date": "2026-04-03 09:37:13",
+                "product": "Ананас",
+                "quantity": 3.0,
+                "total_price": 17.97,
+                "customer": "Калин Красимиров"
+            }
+        ]
     }
 ]

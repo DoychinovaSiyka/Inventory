@@ -7,7 +7,7 @@ class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
 
-    # паролата се контролира само от productview.sort_menu_protected
+    # Меню за избор на метод за сортиране
     def show_menu(self, _=None):
         menu = Menu("Сортиране на продукти", [
             MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
@@ -15,7 +15,8 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска → висока) – bubble sort", self.sort_price_asc),
             MenuItem("4", "По количество (високо → ниско) – bubble sort", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско → високо) – selection sort", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
         while True:
             choice = menu.show()
@@ -23,49 +24,49 @@ class ProductSortView:
             if result == "break":
                 break
 
-    # 1. по име
+    # 1. Сортиране по име (A–Z)
     def sort_by_name(self, _):
-        products = self.controller.sort_by_name()
+        products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-    # 2. цена (DESC)
+    # 2. Цена (висока → ниска) – Selection Sort
     def sort_price_desc(self, _):
-        # Използваме selection_sort от контролера с параметри
-        products = self.controller.selection_sort(criteria="price", reverse=True)
+        products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
 
-    # 3. цена (ASC)
+    # 3. Цена (ниска → висока) – Bubble Sort
     def sort_price_asc(self, _):
-        # Използваме bubble_sort от контролера с параметри
-        products = self.controller.bubble_sort(criteria="price", reverse=False)
+        products = self.controller.bubble_sort()
+        products.reverse()  # bubble sort ти връща DESC, обръщаме го
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
-    # 4. количество (DESC)
+    # 4. Количество (високо → ниско)
     def sort_qty_desc(self, _):
-        # Вече не ползваме .sort() тук, а директно алгоритъма от контролера
-        products = self.controller.bubble_sort(criteria="quantity", reverse=True)
+        products = sorted(self.controller.get_all(), key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
-    # 5. количество (ASC)
+    # 5. Количество (ниско → високо)
     def sort_qty_asc(self, _):
-        # Вече не ползваме .sort() тук, а директно алгоритъма от контролера
-        products = self.controller.selection_sort(criteria="quantity", reverse=False)
+        products = sorted(self.controller.get_all(), key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
-    # общ метод за печат - ДОБАВЕНА КОЛОНА "СКЛАД"
+    # Общ метод за визуализация на резултатите
     @staticmethod
     def _print_sorted(products, title, algorithm):
         if not products:
             print("\n[!] Няма продукти за показване.")
             return
 
-        print(f"\n=== Сортиране по: {title} ===")
+        print(f"\nСортиране по: {title}")
         print(f"Алгоритъм: {algorithm}\n")
 
-        # Добавяме p.location_id в редовете, за да виждаме в кой склад е стоката
         rows = []
         for p in products:
-            rows.append([p.name.ljust(20), p.location_id, f"{p.price:.2f} лв.",f"{p.quantity} {p.unit}"])
+            rows.append([
+                p.name,
+                p.location_id,
+                f"{p.price:.2f} лв.",
+                f"{p.quantity} {p.unit}"
+            ])
 
-        # Обновяваме заглавията на колоните
         print(format_table(["Име", "Склад", "Цена", "Количество"], rows))

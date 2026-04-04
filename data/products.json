@@ -21,7 +21,7 @@
         "categories": [
             "sub-alko-001"
         ],
-        "quantity": 71.0,
+        "quantity": 70.0,
         "unit": "бр.",
         "description": "Тя е едно от най‑старите и най‑разпространени алкохолни питиета в света, като съчетава характерна горчивина от хмела, аромат от малца и различни вкусови профили според стила.",
         "price": 9.99,
@@ -29,7 +29,7 @@
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-13 16:43:38.646315",
-        "modified": "2026-04-03 22:38:16"
+        "modified": "2026-04-04 10:28:43"
     },
     {
         "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
@@ -197,7 +197,7 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 100.0,
+        "quantity": 199.0,
         "unit": "бр.",
         "description": "домашни розови домати",
         "price": 2.19,
@@ -205,7 +205,7 @@
         "tags": [],
         "location_id": "W3",
         "created": "2026-02-03 09:11:34.418148",
-        "modified": "2026-02-13 19:27:31.058911"
+        "modified": "2026-04-04 10:28:02"
     },
     {
         "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -225,18 +225,50 @@
     },
     {
         "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
-        "name": "шоколад \"Милка\"",
+        "name": "шоколад \"Kinder\"",
         "categories": [
             "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
         ],
-        "quantity": 100.0,
+        "quantity": 134.0,
         "unit": "бр.",
-        "description": "повишава енергията ",
+        "description": "за деца над 7 годишно възраст",
         "price": 3.34,
         "supplier_id": null,
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-06 19:52:09.452077",
-        "modified": "2026-02-06 23:14:25.701255"
+        "modified": "2026-04-04 10:26:19"
+    },
+    {
+        "product_id": "ac1e582c-c606-46f3-a669-a836098a1a6e",
+        "name": "Портокали \"Мерлин\"",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 45.0,
+        "unit": "кг",
+        "description": "сладки портокали, сорт \"Мерлин\", внос Гърция",
+        "price": 3.47,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W3",
+        "created": "2026-04-04 09:28:15.964641",
+        "modified": "2026-04-04 09:28:15.964641"
+    },
+    {
+        "product_id": "4374c1a6-de5f-48ae-a0e8-0d029d4f97a6",
+        "name": "кори за баница \"Bella\"",
+        "categories": [
+            "80e92038-6cec-4286-a14d-60432c76ba97"
+        ],
+        "quantity": 45.0,
+        "unit": "бр.",
+        "description": "съставени от брашно",
+        "price": 3.01,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W2",
+        "created": "2026-04-04 10:24:39.818566",
+        "modified": "2026-04-04 10:24:39.818566"
     }
 ]

@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
+
 from storage.json_repository import Repository
 from models.product import Product
 from validators.product_validator import ProductValidator
@@ -11,6 +12,7 @@ from controllers.supplier_controller import SupplierController
 class ProductController:
     def __init__(self, repo: Repository, category_controller: CategoryController,
                  supplier_controller: SupplierController, activity_log_controller=None):
+
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
@@ -23,12 +25,11 @@ class ProductController:
 
             fixed_categories = []
             for cid in product.categories:
-
-                # cid може да е обект или ID (string/int)
                 if isinstance(cid, str):
                     c = self.category_controller.get_by_id(cid)
                 else:
-                    c = self.category_controller.get_by_id(cid.category_id)
+                    c_id = getattr(cid, 'category_id', cid)
+                    c = self.category_controller.get_by_id(c_id)
 
                 if c:
                     fixed_categories.append(c)
@@ -43,14 +44,13 @@ class ProductController:
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-    # ДОБАВЕНО: location_id в аргументите, за да поддържаме складовете
+    # location_id в аргументите, за да поддържаме складовете
     def add(self, name: str, category_ids: List[str], quantity: float, unit: str,
             description: str, price: float, supplier_id: Optional[str], user_id: str,
             location_id: str = "W1", tags: Optional[List[str]] = None) -> Product:
 
         ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
 
-        # Проверка за уникалност в рамките на конкретния склад (location_id)
         if any(p.name.lower() == name.lower() and p.location_id == location_id for p in self.products):
             raise ValueError(f"Продукт с име '{name}' вече съществува в склад {location_id}.")
 
@@ -67,7 +67,6 @@ class ProductController:
 
         now = str(datetime.now())
 
-        # Промяна: добавен location_id в конструктора
         product = Product(
             product_id=self._generate_id(),
             name=name,
@@ -129,7 +128,8 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(user_id, "EDIT_PRODUCT", f"Updated description of product ID {product_id}")
+            self.activity_log.add_log(user_id, "EDIT_PRODUCT",
+                                      f"Updated description of product ID {product_id}")
         return True
 
     def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:
@@ -149,7 +149,8 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(user_id, "EDIT_PRODUCT", f"Updated categories of product ID {product_id}")
+            self.activity_log.add_log(user_id, "EDIT_PRODUCT",
+                                      f"Updated categories of product ID {product_id}")
         return True
 
     def update_supplier(self, product_id: str, supplier_id: str, user_id: str) -> bool:
@@ -166,7 +167,8 @@ class ProductController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(user_id, "EDIT_PRODUCT", f"Updated supplier of product ID {product_id}")
+            self.activity_log.add_log(user_id, "EDIT_PRODUCT",
+                                      f"Updated supplier of product ID {product_id}")
         return True
 
     def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:
@@ -225,7 +227,8 @@ class ProductController:
         if len(self.products) < original_len:
             self.save_changes()
             if self.activity_log:
-                self.activity_log.add_log(user_id, "DELETE_PRODUCT", f"Deleted product ID {product_id}")
+                self.activity_log.add_log(user_id, "DELETE_PRODUCT",
+                                          f"Deleted product ID {product_id}")
             return True
         return False
 
@@ -237,7 +240,8 @@ class ProductController:
         if len(self.products) < original_len:
             self.save_changes()
             if self.activity_log:
-                self.activity_log.add_log(user_id, "DELETE_PRODUCT", f"Deleted product '{name}'")
+                self.activity_log.add_log(user_id, "DELETE_PRODUCT",
+                                          f"Deleted product '{name}'")
             return True
         return False
 
@@ -253,9 +257,14 @@ class ProductController:
                 results.append(p)
                 continue
 
-            # Търсене в категории
             for cat in p.categories:
-                if keyword in cat.name.lower():
+                if isinstance(cat, str):
+                    cat_obj = self.category_controller.get_by_id(cat)
+                    cat_name = cat_obj.name.lower() if cat_obj else ""
+                else:
+                    cat_name = cat.name.lower()
+
+                if keyword in cat_name:
                     results.append(p)
                     break
 
@@ -264,11 +273,14 @@ class ProductController:
     def filter_by_multiple_category_ids(self, category_ids: List[str]) -> List[Product]:
         filtered = []
         target_ids = [str(cid) for cid in category_ids]
+
         for p in self.products:
             for c in p.categories:
-                if str(c.category_id) in target_ids:
+                c_id = getattr(c, 'category_id', c)
+                if str(c_id) in target_ids:
                     filtered.append(p)
                     break
+
         return filtered
 
     def average_price(self) -> float:
@@ -292,7 +304,8 @@ class ProductController:
         grouped = {}
         for p in self.products:
             for c in p.categories:
-                grouped.setdefault(c.category_id, []).append(p)
+                c_id = getattr(c, 'category_id', c)
+                grouped.setdefault(c_id, []).append(p)
         return grouped
 
     def sort_by_name(self) -> List[Product]:
@@ -302,98 +315,97 @@ class ProductController:
     def sort_by_price_desc(self) -> List[Product]:
         return sorted(self.products, key=lambda p: p.price, reverse=True)
 
-    def bubble_sort(self, criteria: str = "price", reverse: bool = False) -> List[Product]:
-        """
-        Универсален bubble sort за продукти.
-        criteria: поле за сортиране ("price", "quantity", "name", ...)
-        reverse: True = низходящ ред, False = възходящ ред
-        """
-        sorted_products = self.products[:]
-        n = len(sorted_products)
-
-        for i in range(n - 1):
-            for j in range(0, n - i - 1):
-                a = getattr(sorted_products[j], criteria)
-                b = getattr(sorted_products[j + 1], criteria)
-
-                if isinstance(a, str):
-                    a = a.lower()
-                    b = b.lower()
-
-                if reverse:
-                    if a < b:
-                        sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
-                else:
-                    if a > b:
-                        sorted_products[j], sorted_products[j + 1] = sorted_products[j + 1], sorted_products[j]
-
-        return sorted_products
-
-    def selection_sort(self, criteria: str = "price", reverse: bool = True) -> List[Product]:
-        """
-        Универсален selection sort за продукти.
-        criteria: поле за сортиране
-        reverse: True = низходящ ред, False = възходящ ред
-        """
+    def bubble_sort(self) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
 
         for i in range(n):
-            idx = i
+            for j in range(0, n - i - 1):
+                a = sorted_products[j].price
+                b = sorted_products[j + 1].price
+
+                if a > b:
+                    continue
+                if a < b:
+                    sorted_products[j], sorted_products[j + 1] = (
+                        sorted_products[j + 1],
+                        sorted_products[j]
+                    )
+
+        return sorted_products
+
+    def selection_sort(self) -> List[Product]:
+        sorted_products = self.products[:]
+        n = len(sorted_products)
+
+        for i in range(n):
+            max_idx = i
+
             for j in range(i + 1, n):
-                a = getattr(sorted_products[j], criteria)
-                b = getattr(sorted_products[idx], criteria)
+                a = sorted_products[j].price
+                b = sorted_products[max_idx].price
 
-                if isinstance(a, str):
-                    a = a.lower()
-                    b = b.lower()
+                if a > b:
+                    max_idx = j
 
-                if reverse:
-                    if a > b:
-                        idx = j
-                else:
-                    if a < b:
-                        idx = j
-
-            if idx != i:
-                sorted_products[i], sorted_products[idx] = sorted_products[idx], sorted_products[i]
+            if max_idx != i:
+                sorted_products[i], sorted_products[max_idx] = (
+                    sorted_products[max_idx],
+                    sorted_products[i]
+                )
 
         return sorted_products
 
     def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
         results = self.products
+
         if min_price is not None:
             results = [p for p in results if p.price >= min_price]
+
         if max_price is not None:
             results = [p for p in results if p.price <= max_price]
+
         return results
 
     def search_by_quantity_range(self, min_qty: float = None, max_qty: float = None) -> List[Product]:
         results = self.products
+
         if min_qty is not None:
             results = [p for p in results if p.quantity >= min_qty]
+
         if max_qty is not None:
             results = [p for p in results if p.quantity <= max_qty]
+
         return results
 
     def search_by_category(self, category_id: str) -> List[Product]:
-        return [p for p in self.products if any(str(c.category_id) == str(category_id) for c in p.categories)]
+        return [
+            p for p in self.products
+            if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)
+        ]
 
     def search_by_supplier(self, supplier_id: str) -> List[Product]:
         return [p for p in self.products if str(p.supplier_id) == str(supplier_id)]
 
     def search_combined(self, name_keyword: str = None, category_id: str = None,
                         min_price: float = None, max_price: float = None,
-                        min_qty: float = None, max_qty: float = None, supplier_id: str = None) -> List[Product]:
+                        min_qty: float = None, max_qty: float = None,
+                        supplier_id: str = None) -> List[Product]:
 
         results = self.products
 
         if name_keyword:
             kw = name_keyword.lower()
-            results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
+            results = [
+                p for p in results
+                if kw in p.name.lower() or kw in p.description.lower()
+            ]
 
         if category_id is not None:
-            results = [p for p in results if any(str(c.category_id) == str(category_id) for c in p.categories)]
+            results = [
+                p for p in results
+                if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)
+            ]
 
         if supplier_id is not None:
             results = [p for p in results if str(p.supplier_id) == str(supplier_id)]
@@ -415,11 +427,13 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         product_name = product_name.lower()
         warehouses = []
+
         for p in self.products:
             if p.name.lower() == product_name and p.quantity > 0:
                 loc_id = p.location_id
                 if loc_id and loc_id not in warehouses:
                     warehouses.append(loc_id)
+
         return warehouses
 
     def save_changes(self) -> None:
