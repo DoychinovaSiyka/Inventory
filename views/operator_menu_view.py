@@ -71,10 +71,7 @@ class OperatorMenuView:
     # 5. Фактури — съдържат чувствителни данни - защитаваме
     @require_password("parola123")
     def open_invoices(self, user):
-        InvoiceView(
-            self.controllers["invoice"],
-            self.controllers["activity_log"]
-        ).show_menu(user)
+        InvoiceView(self.controllers["invoice"], self.controllers["activity_log"]).show_menu(user)
 
     # 6. Информация за системата — публична - НЕ защитаваме
     @staticmethod

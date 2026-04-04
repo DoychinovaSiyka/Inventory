@@ -10,13 +10,8 @@ class GraphView:
         self._setup_network()
 
     def _setup_network(self):
-        warehouses = [
-            Warehouse("W1", "София"),
-            Warehouse("W2", "Пловдив"),
-            Warehouse("W3", "Варна"),
-            Warehouse("W4", "Бургас"),
-            Warehouse("W5", "Русе")
-        ]
+        warehouses = [Warehouse("W1", "София"),Warehouse("W2", "Пловдив"),
+            Warehouse("W3", "Варна"),Warehouse("W4", "Бургас"),Warehouse("W5", "Русе")]
         for w in warehouses:
             self.graph.add_warehouse(w)
 
@@ -27,10 +22,8 @@ class GraphView:
         self.graph.add_edge("W5", "W3", 190)
 
     def show_menu(self, user):
-        menu = Menu("Логистичен Модул", [
-            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        menu = Menu("Логистичен Модул", [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+                                         MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
             choice = menu.show()

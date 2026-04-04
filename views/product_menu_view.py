@@ -23,7 +23,8 @@ def _read_int(prompt):
 def _read_float(prompt):
     raw = input(prompt)
     raw = raw.replace(",", ".").strip()
-    if not raw: return None
+    if not raw:
+        return None
 
     cleaned = ""
     for ch in raw:
@@ -83,10 +84,11 @@ class ProductView:
                 continue
 
             result = menu.execute(choice, user)
-            if result == "break": break
+            if result == "break":
+                break
 
     def create_product(self, user):
-        print("\n=== Създаване на продукт ===")
+        print("\n  Създаване на продукт  ")
         name = input("Име: ").strip()
         description = input("Описание: ").strip()
         price = _read_float("Цена: ")
@@ -133,11 +135,8 @@ class ProductView:
             # Използваме user.user_id (или user.id според твоя модел)
             u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
             self.product_controller.add(
-                name=name, description=description, price=price,
-                quantity=quantity, unit=unit, category_ids=[category_id],
-                location_id=location_id,
-                supplier_id=None, user_id=u_id
-            )
+                name=name, description=description, price=price, quantity=quantity, unit=unit,
+                category_ids=[category_id], location_id=location_id, supplier_id=None, user_id=u_id)
             print(f"[Успех] Продуктът е зачислен в {location_id}.")
         except ValueError as e:
             print("Грешка:", e)
@@ -148,7 +147,7 @@ class ProductView:
             print("Няма налични продукти.")
             return
 
-        print("\n=== Списък с продукти ===")
+        print("\n  Списък с продукти  ")
         print(f"{'ID':<3} | {'Име':<15} | {'Склад':<6} | {'Наличност':<10} | {'Цена'}")
         print("-" * 65)
         for p in products:
@@ -160,7 +159,7 @@ class ProductView:
         self.show_all(user)
 
     def remove_product(self, user):
-        print("\n=== Премахване на продукт ===")
+        print("\n  Премахване на продукт  ")
         pid = input("ID на продукт: ").strip()
         try:
             u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
@@ -170,7 +169,7 @@ class ProductView:
             print("Грешка:", e)
 
     def edit_product(self, _):
-        print("\n=== Редактиране на продукт ===")
+        print("\n  Редактиране на продукт  ")
         pid = input("ID на продукт: ").strip()
         product = self.product_controller.get_by_id(pid)
         if not product:
@@ -271,16 +270,20 @@ class ProductView:
 
     def low_stock(self, _):
         low = self.product_controller.check_low_stock()
-        if not low: print("Няма продукти с критична наличност.")
-        for p in low: print(f"ВНИМАНИЕ: {p.name} ({p.quantity} {p.unit}) в склад {p.location_id}")
+        if not low:
+            print("Няма продукти с критична наличност.")
+        for p in low:
+            print(f"ВНИМАНИЕ: {p.name} ({p.quantity} {p.unit}) в склад {p.location_id}")
 
     def most_expensive(self, _):
         p = self.product_controller.most_expensive()
-        if p: print(f"Най-скъп продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
+        if p:
+            print(f"Най-скъп продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
 
     def cheapest(self, _):
         p = self.product_controller.cheapest()
-        if p: print(f"Най-евтин продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
+        if p:
+            print(f"Най-евтин продукт: {p.name} ({p.location_id}) - {format_lv(p.price)}")
 
     def total_value(self, _):
         print(f"Обща стойност на инвентара: {format_lv(self.product_controller.total_values())}")
@@ -294,7 +297,7 @@ class ProductView:
                 print(f"  {p.name} (Склад: {p.location_id}) - {p.quantity} {p.unit}")
 
     def advanced_search(self, _):
-        print("\n=== Разширено търсене ===")
+        print("\n  Разширено търсене  ")
         keyword = input("Ключова дума: ").strip() or None
         min_p = _read_float("Мин. цена: ")
         max_p = _read_float("Макс. цена: ")

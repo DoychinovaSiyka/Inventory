@@ -9,12 +9,10 @@ class AnonymousMenuView:
         self.controllers = controllers
 
     def show_menu(self, user=None):
-        menu = Menu("Меню за анонимен потребител", [
-            MenuItem("1", "Разглеждане на продукти", self.open_products),
-            MenuItem("2", "Разглеждане на категории", self.open_categories),
-            MenuItem("3", "Информация за системата", self.show_system_info),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        menu = Menu("Меню за анонимен потребител", [MenuItem("1", "Разглеждане на продукти", self.open_products),
+                                                    MenuItem("2", "Разглеждане на категории", self.open_categories),
+                                                    MenuItem("3", "Информация за системата", self.show_system_info),
+                                                    MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
             choice = menu.show()
