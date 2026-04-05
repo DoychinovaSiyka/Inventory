@@ -37,15 +37,12 @@ class SupplierController:
     # UPDATE
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
-
         supplier = self.get_by_id(supplier_id)
         if not supplier:
             raise ValueError("доставчикът не е намерен.")
-
         if name is not None:
             SupplierValidator.validate_name(name)
             supplier.name = name
-
         if contact is not None:
             SupplierValidator.validate_contact(contact)
             supplier.contact = contact

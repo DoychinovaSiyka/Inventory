@@ -8,8 +8,7 @@ class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
         self.location_controller = controller.location_controller
-
-        # Създаваме менюто отделно (мега ООП)
+        # Създаваме менюто отделно
         self.menu = self._build_menu()
 
     # Основно меню
@@ -64,10 +63,8 @@ class ReportsView:
             row_id = self._clean_none(item.get('id'))
             p_name = item.get('product', '—')
             qty = float(item.get('quantity', 0) or 0)
-
             raw_total = item.get('total_price', item.get('total', 0))
             total = float(raw_total or 0)
-
             raw_price = item.get('price')
             if raw_price is None or raw_price == 0:
                 price = round(total / qty, 2) if qty > 0 else 0
@@ -80,31 +77,23 @@ class ReportsView:
 
     # Справки
     def report_sales(self, _):
-        print(format_table(
-            ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(self.controller.report_sales().data)
-        ))
+        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
+                           self._process_data(self.controller.report_sales().data)))
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
-        print(format_table(
-            ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(self.controller.report_sales_by_customer(customer).data)
-        ))
+        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
+                           self._process_data(self.controller.report_sales_by_customer(customer).data)))
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
-        print(format_table(
-            ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(self.controller.report_sales_by_product(product).data)
-        ))
+        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
+            self._process_data(self.controller.report_sales_by_product(product).data)))
 
     def report_sales_by_date(self, _):
         date = input("Дата: ")
-        print(format_table(
-            ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(self.controller.report_sales_by_date(date).data)
-        ))
+        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
+                           self._process_data(self.controller.report_sales_by_date(date).data)))
 
     def report_stock(self, _):
         data = self.controller.report_stock().data
@@ -114,11 +103,8 @@ class ReportsView:
 
     def report_movements(self, _):
         data = self.controller.report_movements().data
-        rows = [[
-            self._clean_none(i.get('date')), self._clean_none(i.get('type')), self._clean_none(i.get('product_id')),
-            self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')),
-            self._format_lv(i.get('price', 0)),
+        rows = [[ self._clean_none(i.get('date')), self._clean_none(i.get('type')), self._clean_none(i.get('product_id')),
+            self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')), self._format_lv(i.get('price', 0)),
             (self.location_controller.get_by_id(i.get('location')).name if self.location_controller.get_by_id(
-                i.get('location')) else "—")
-        ] for i in data]
+                i.get('location')) else "—")] for i in data]
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))

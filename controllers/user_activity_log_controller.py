@@ -10,7 +10,6 @@ class UserActivityLogController:
         # което е по‑професионално и следва SOLID принципите.
         self.repo = JSONRepository(filepath)
 
-
     # CREATE
     def add_log(self, user_id, action, details=""):
         log = UserActivityLog(user_id, action, details).to_dict()

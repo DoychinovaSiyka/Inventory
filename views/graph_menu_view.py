@@ -8,10 +8,8 @@ class GraphView:
     def __init__(self, inventory_controller):
         self.inventory_controller = inventory_controller
         self.graph = WarehouseGraph()
-
         # Създаваме мрежата от складове
         self._setup_network()
-
         # Създаваме менюто отделно (мега ООП)
         self.menu = self._build_menu()
 
@@ -20,8 +18,6 @@ class GraphView:
         return Menu("Логистичен Модул", [
             MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
             MenuItem("0", "Назад", lambda u: "break") ])
-
-
     # Основно меню
     def show_menu(self, user):
         while True:

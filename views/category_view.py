@@ -83,7 +83,6 @@ class CategoryView:
                     parent_id = categories[index].category_id
             except ValueError:
                 print("Невалиден избор. Категорията ще бъде главна.")
-
         try:
             if parent_id:
                 exists = self.controller.get_by_id(parent_id)
@@ -105,7 +104,6 @@ class CategoryView:
             print(f"{i}. {cat.name}")
 
         choice = input("\nВъведете номер на категория за редактиране: ").strip()
-
         try:
             index = int(choice) - 1
             category = categories[index]
@@ -171,7 +169,6 @@ class CategoryView:
             print(f"{i}. {cat.name}")
 
         choice = input("\nВъведете номер на категория за изтриване: ").strip()
-
         try:
             index = int(choice) - 1
             category = categories[index]

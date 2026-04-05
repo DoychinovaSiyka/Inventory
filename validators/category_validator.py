@@ -7,7 +7,6 @@ class CategoryValidator:
             raise ValueError("Името на категорията трябва да е текст.")
 
         cleaned_name = name.strip()
-
         if not cleaned_name:
             raise ValueError("Името на категорията е задължително.")
 
@@ -34,10 +33,8 @@ class CategoryValidator:
     def validate_description(description):
         if description is None or description == "":
             return
-
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
-
         if len(description) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 

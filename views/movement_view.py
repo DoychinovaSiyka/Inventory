@@ -114,12 +114,9 @@ class MovementView:
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            self.movement_controller.add(
-                product_id=product.product_id, user_id=user.user_id,
-                location_id=location.location_id, movement_type=movement_type,
-                quantity=quantity, description=description, price=price,
-                customer=customer, supplier_id=supplier_id
-            )
+            self.movement_controller.add(product_id=product.product_id, user_id=user.user_id, location_id=location.location_id,
+                                         movement_type=movement_type, quantity=quantity, description=description, price=price,
+                                         customer=customer, supplier_id=supplier_id)
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
         except ValueError as e:
@@ -145,11 +142,8 @@ class MovementView:
         description = input("Описание (по избор): ")
 
         try:
-            self.movement_controller.move_product(
-                product_id=product.product_id, user_id=user.user_id,
-                from_location_id=from_loc.location_id, to_location_id=to_loc.location_id,
-                quantity=float(quantity), description=description
-            )
+            self.movement_controller.move_product( product_id=product.product_id, user_id=user.user_id, from_location_id=from_loc.location_id,
+                                                   to_location_id=to_loc.location_id, quantity=float(quantity), description=description)
             print("\nПреместването е извършено успешно!")
         except ValueError as e:
             print("Грешка:", e)

@@ -6,7 +6,7 @@ from controllers.product_controller import ProductController
 class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
-        self.menu = self._build_menu()   # Създаваме менюто отделно (мега ООП)
+        self.menu = self._build_menu()   # Създаваме менюто отделно
 
 
     # Меню за избор на метод за сортиране
@@ -70,5 +70,4 @@ class ProductSortView:
         rows = []
         for p in products:
             rows.append([ p.name, p.location_id, f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}"])
-
         print(format_table(["Име", "Склад", "Цена", "Количество"], rows))

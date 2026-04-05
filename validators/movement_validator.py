@@ -8,15 +8,12 @@ class MovementValidator:
     def parse_quantity(quantity):
         if not quantity.strip():
             raise ValueError("Количеството е задължително.")
-
         try:
             quantity = float(quantity)
         except ValueError:
             raise ValueError("Количеството трябва да е число.")
-
         if quantity <= 0:
             raise ValueError("Количеството трябва да е положително.")
-
         return quantity
 
     # PRICE PARSING
@@ -26,7 +23,6 @@ class MovementValidator:
         При IN/OUT -> price > 0
         При MOVE -> price може да е 0 или празно
         """
-
         # MOVE няма цена
         if movement_type == MovementType.MOVE:
             if not price.strip():
@@ -50,7 +46,6 @@ class MovementValidator:
 
         return price
 
-
     # DESCRIPTION VALIDATION
     @staticmethod
     def validate_description(description, movement_type=None):
@@ -68,13 +63,11 @@ class MovementValidator:
         if len(description.strip()) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-
     # MOVEMENT TYPE VALIDATION
     @staticmethod
     def validate_movement_type(movement_type):
         if not isinstance(movement_type, MovementType):
             raise ValueError("movement_type трябва да бъде MovementType Enum.")
-
 
     # PRODUCT ID VALIDATION
     @staticmethod
@@ -92,7 +85,6 @@ class MovementValidator:
         """
         Проверява локациите спрямо типа движение.
         """
-
         if movement_type == MovementType.MOVE:
             if not from_id or not to_id:
                 raise ValueError("За преместване (MOVE) са нужни начална и крайна локация.")
@@ -105,7 +97,6 @@ class MovementValidator:
 
         if to_id and not isinstance(to_id, str):
             raise ValueError("Крайната локация трябва да е текст (код).")
-
 
     # UNIT VALIDATION
     @staticmethod
