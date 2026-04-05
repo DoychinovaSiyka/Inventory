@@ -8,21 +8,6 @@ class MovementType(Enum):
     MOVE = "MOVE"
 
 
-def generate_next_id(existing_items):
-    if not existing_items:
-        return 1
-    try:
-        # movement_id остава число (ID на самия запис в базата)
-        ids = [
-            int(item["movement_id"])
-            for item in existing_items
-            if "movement_id" in item and str(item["movement_id"]).isdigit()
-        ]
-        return max(ids) + 1 if ids else 1
-    except:
-        return 1
-
-
 class Movement:
     def __init__(
             self, movement_id=None, product_id=None, user_id=None,
@@ -31,18 +16,13 @@ class Movement:
             from_location_id=None, to_location_id=None,
             date=None, created=None, modified=None):
 
-        # Техническото ID на записа остава int
-        # но вече НЕ насилваме UUID/стринг да става int → пазим го като стринг
-        if movement_id is None:
-            self.movement_id = None
-        else:
-            # ако е чисто число → пазим го като int, иначе като стринг (UUID/код)
-            self.movement_id = int(movement_id) if str(movement_id).isdigit() else str(movement_id)
+        #  movement_id вече е  UUID  винаги string
+        self.movement_id = str(movement_id) if movement_id is not None else None
 
         self.product_id = product_id
         self.user_id = user_id
 
-        # Всички локации превръщаме в str, за да работят с "W1", "W2" и т.н.
+        #  Локациите винаги са str (W1, W2, ...)
         self.location_id = str(location_id) if location_id is not None else None
         self.from_location_id = str(from_location_id) if from_location_id is not None else None
         self.to_location_id = str(to_location_id) if to_location_id is not None else None
@@ -62,9 +42,6 @@ class Movement:
 
         self.validate()
 
-    def assign_new_id(self, existing_items):
-        if self.movement_id is None:
-            self.movement_id = generate_next_id(existing_items)
 
     def validate(self):
         if self.product_id is None:
@@ -114,11 +91,20 @@ class Movement:
     @staticmethod
     def from_dict(data):
         return Movement(
-            movement_id=data.get("movement_id"), product_id=data.get("product_id"),
-            user_id=data.get("user_id"), location_id=data.get("location_id"),
+            movement_id=data.get("movement_id"),
+            product_id=data.get("product_id"),
+            user_id=data.get("user_id"),
+            location_id=data.get("location_id"),
             movement_type=MovementType[data.get("movement_type")],
             quantity=data.get("quantity"),
-            unit=data.get("unit"), description=data.get("description"), price=data.get("price", 0.0),
-            supplier_id=data.get("supplier_id"), customer=data.get("customer"), from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"), date=data.get("date"), created=data.get("created"),
-            modified=data.get("modified"))
+            unit=data.get("unit"),
+            description=data.get("description"),
+            price=data.get("price", 0.0),
+            supplier_id=data.get("supplier_id"),
+            customer=data.get("customer"),
+            from_location_id=data.get("from_location_id"),
+            to_location_id=data.get("to_location_id"),
+            date=data.get("date"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )

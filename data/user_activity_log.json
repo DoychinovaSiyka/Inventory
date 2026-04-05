@@ -76,8 +76,6 @@
         "details": "Removed 10.0 units from product ID c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "timestamp": "2026-03-14 17:31:11"
     },
-
-
     {
         "log_id": "e168ad64-b345-41a2-b4b3-e9502f7385a4",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -106,7 +104,6 @@
         "details": "Added 4.0 to product ID 9321b4fb-b9f5-43d9-ab10-e574b15960c8",
         "timestamp": "2026-03-14 21:56:29"
     },
-
     {
         "log_id": "a0667b64-a443-4e2e-9f50-1bff032306cc",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -128,7 +125,6 @@
         "details": "admin logged in",
         "timestamp": "2026-03-14 22:02:53"
     },
-
     {
         "log_id": "eb2b9b7b-9195-4eba-841e-d759c5ca6a16",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -150,7 +146,6 @@
         "details": "Used advanced invoice search",
         "timestamp": "2026-03-14 22:44:47"
     },
-
     {
         "log_id": "fad8a596-fd21-4eee-b4a6-033b0c131513",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -333,7 +328,6 @@
         "details": "Viewed all invoices",
         "timestamp": "2026-04-02 08:53:50"
     },
-
     {
         "log_id": "a26eb646-b9b4-4660-9e43-e450a2ed6593",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -446,7 +440,6 @@
         "details": "Потребител admin излезе.",
         "timestamp": "2026-04-02 14:56:41"
     },
-
     {
         "log_id": "ad91d1cc-8643-4936-923e-48e79eb0d22f",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -1062,7 +1055,334 @@
         "action": "VIEW_INVOICES",
         "details": "Viewed all invoices",
         "timestamp": "2026-04-05 17:14:07"
+    },
+    {
+        "log_id": "5c00c2bc-4c18-4e60-a879-951187b34244",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:08:53"
+    },
+    {
+        "log_id": "10eb8a33-7642-468f-ad30-91f2a307a1d9",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Added product: череши",
+        "timestamp": "2026-04-05 18:10:52"
+    },
+    {
+        "log_id": "7c7fd769-aa9f-4b24-bc52-70fd55752c41",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product Ананас, qty=56.0, loc=W4",
+        "timestamp": "2026-04-05 18:13:55"
+    },
+    {
+        "log_id": "692ff238-b42a-4f3e-8a02-91ea53a6efce",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product бира \"Siyka\", qty=10.0, loc=W4",
+        "timestamp": "2026-04-05 18:15:28"
+    },
+    {
+        "log_id": "a9f3e971-0402-4e4b-a2be-eca0b7e4d8ae",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:16:39"
+    },
+    {
+        "log_id": "91a11f46-05cc-4650-8687-739e7a886fa6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:22:54"
+    },
+    {
+        "log_id": "a2c20560-e025-4113-9374-745568f1800b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:31:35"
+    },
+    {
+        "log_id": "4edb9fa8-379a-4580-9a16-cc6af15b8c39",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:32:24"
+    },
+    {
+        "log_id": "083e9ae5-96e9-4220-b259-ee3895fdd726",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:33:48"
+    },
+    {
+        "log_id": "4a256a71-0473-4d89-9ca5-9fa35cd5f499",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:35:09"
+    },
+    {
+        "log_id": "d12f3de5-23df-4888-bcaa-5967f3b7556a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:35:31"
+    },
+    {
+        "log_id": "045e9f68-14e4-4cf4-9d68-a756293d79bd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:38:12"
+    },
+    {
+        "log_id": "792c4013-ca6a-47be-ab64-5958e385e999",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:39:14"
+    },
+    {
+        "log_id": "42a5a68e-ee7a-4055-87f1-fbd0fdde548d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICE",
+        "details": "Viewed invoice a208a082-83ac-45cc-9e5e-4d8e9c198a43",
+        "timestamp": "2026-04-05 18:39:19"
+    },
+    {
+        "log_id": "36bffc65-f68c-4f62-9678-88b0a225f2f1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "SEARCH_INVOICE",
+        "details": "Searched invoices by customer 'Александър Тонев'",
+        "timestamp": "2026-04-05 18:39:44"
+    },
+    {
+        "log_id": "75a8478e-c6c3-4b52-a0f4-57ab25b3da68",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 18:45:36"
+    },
+    {
+        "log_id": "5faa31ba-5700-4aa2-a4c2-8608b65bfaba",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=13.0, loc=W2",
+        "timestamp": "2026-04-05 18:46:51"
+    },
+    {
+        "log_id": "3cff2cf3-ccd0-4c8a-9522-dc96f2aa0866",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product бира \"Siyka\", qty=20.0, loc=W5",
+        "timestamp": "2026-04-05 18:47:55"
+    },
+    {
+        "log_id": "06a28e83-4d52-4b4b-a42f-e117420464be",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:48:26"
+    },
+    {
+        "log_id": "2e83e8a2-4c8a-48b7-b6fb-1f8b382425a7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:48:40"
+    },
+    {
+        "log_id": "b8dfe25f-ff89-4f24-b664-77c27b18edaf",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:48:42"
+    },
+    {
+        "log_id": "7e00a769-15aa-4221-8438-600b79e21316",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 18:48:43"
+    },
+    {
+        "log_id": "927414bd-c139-4c19-9f2e-d9256b2f628b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:42:11"
+    },
+    {
+        "log_id": "6a6c19cd-d4c7-4338-97bb-e5f7b8178328",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=10.0, loc=W2",
+        "timestamp": "2026-04-05 19:44:08"
+    },
+    {
+        "log_id": "58932db0-2ae2-4fb6-ba80-d166f99044f3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:45:25"
+    },
+    {
+        "log_id": "5cb94df6-9d32-4bec-b1e9-769946e6523f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=20.0, loc=W2",
+        "timestamp": "2026-04-05 19:46:30"
+    },
+    {
+        "log_id": "c56ccbbe-0611-47d6-b2dc-8883f24d3784",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:49:08"
+    },
+    {
+        "log_id": "f519a0ad-26c3-4e9e-8426-3777e3e87f51",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:53:27"
+    },
+    {
+        "log_id": "0553b6c8-0a8e-4d7c-b0d6-60d608dcfc68",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=25.0, loc=W2",
+        "timestamp": "2026-04-05 19:54:41"
+    },
+    {
+        "log_id": "47020ca6-4219-4745-a58a-b6065ac66d27",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:57:22"
+    },
+    {
+        "log_id": "0ea2c018-6560-4ea2-b89e-d5c3e813055f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 19:59:31"
+    },
+    {
+        "log_id": "4251b5ff-c6c0-4bbf-9e29-ccbd0fd36b95",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=28.0, loc=W2",
+        "timestamp": "2026-04-05 20:00:04"
+    },
+    {
+        "log_id": "d349e2f0-08cd-4c76-9e86-122d76b28f5c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 20:03:48"
+    },
+    {
+        "log_id": "a9e63df2-8f00-4811-8110-4dfe59920cc3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=28.0, loc=W3",
+        "timestamp": "2026-04-05 20:04:33"
+    },
+    {
+        "log_id": "c316d482-4279-45b2-90a4-1c62ca54c188",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product бира \"Siyka\", qty=10.0, loc=W5",
+        "timestamp": "2026-04-05 20:06:40"
+    },
+    {
+        "log_id": "7356dc00-0ca9-422f-a1a4-593d5601dea4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 20:11:21"
+    },
+    {
+        "log_id": "86c0f441-6ba1-48a8-8104-a5c1d365213d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=28.0, loc=W1",
+        "timestamp": "2026-04-05 20:12:20"
+    },
+    {
+        "log_id": "08096df0-2970-4483-b7ea-dfc3a368dc57",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product бира \"Siyka\", qty=10.0, loc=W4",
+        "timestamp": "2026-04-05 20:13:03"
+    },
+    {
+        "log_id": "44afc29c-0357-4e73-8527-d1cc24689c05",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved картофи to W1",
+        "timestamp": "2026-04-05 20:14:12"
+    },
+    {
+        "log_id": "d0fd0eba-608f-46fc-971c-f8b20cc47bff",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 20:17:08"
+    },
+    {
+        "log_id": "84aff22a-07a7-4785-b123-68894ff7bdbc",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 20:34:26"
+    },
+    {
+        "log_id": "1e041a1c-a4c4-4c7b-adb9-6a5850295b71",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=28.0, loc=W2",
+        "timestamp": "2026-04-05 20:35:52"
+    },
+    {
+        "log_id": "bdc70bb2-abab-4e91-98be-340ecf225de6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product бира \"Siyka\", qty=15.0, loc=W5",
+        "timestamp": "2026-04-05 20:36:41"
+    },
+    {
+        "log_id": "df916415-5376-4749-8f47-b2d41d4f28a0",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved картофи to W5",
+        "timestamp": "2026-04-05 20:37:55"
+    },
+    {
+        "log_id": "69c0917c-ccfb-4e87-8450-936451756f9c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 20:39:04"
+    },
+    {
+        "log_id": "f3512211-ce2b-43b0-b534-6849620192b5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-05 20:53:47"
+    },
+    {
+        "log_id": "78f4365f-b75c-4ed2-ae60-fd5d957cec92",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-05 20:54:19"
     }
-
-
 ]

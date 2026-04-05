@@ -12,8 +12,7 @@ class InvoiceController:
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
 
-        # Зареждаме фактурите от JSON
-        # Ако някоя няма UUID → генерираме нов
+        # Зареждаме фактурите от JSON Ако някоя няма UUID → генерираме нов
         for inv in raw:
             if not inv.get("invoice_id"):
                 # нов UUID се генерира от самия модел Invoice
@@ -82,8 +81,10 @@ class InvoiceController:
         # UUID е string → сравняваме като string
         return next((inv for inv in self.invoices if inv.invoice_id == invoice_id), None)
 
-    def get_by_movement_id(self, movement_id: int) -> Optional[Invoice]:
-        return next((inv for inv in self.invoices if inv.movement_id == movement_id), None)
+    def get_by_movement_id(self, movement_id: str) -> Optional[Invoice]:
+        # UUID е string → сравняваме като string
+        movement_id = str(movement_id)
+        return next((inv for inv in self.invoices if str(inv.movement_id) == movement_id), None)
 
     # SEARCH
     def search_by_customer(self, keyword: str) -> List[Invoice]:

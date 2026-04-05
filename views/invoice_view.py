@@ -39,19 +39,8 @@ class InvoiceView:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICES", "Viewed all invoices")
 
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
-        rows = [
-            [
-                inv.invoice_id,
-                inv.product,
-                f"{inv.quantity} {inv.unit}",
-                f"{inv.unit_price} лв.",
-                f"{inv.total_price} лв.",
-                inv.customer,
-                inv.date
-            ]
-            for inv in invoices
-        ]
-
+        rows = [[inv.invoice_id, inv.product, f"{inv.quantity} {inv.unit}", f"{inv.unit_price} лв.", f"{inv.total_price} лв.",
+                 inv.customer, inv.date] for inv in invoices]
         print("\n" + format_table(columns, rows))
 
     # 2. Преглед по ID
@@ -62,7 +51,6 @@ class InvoiceView:
         if not invoice:
             print("Фактурата не е намерена.")
             return
-
         if self.activity_log:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICE", f"Viewed invoice {invoice_id}")
 

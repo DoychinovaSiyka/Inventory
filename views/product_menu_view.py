@@ -5,6 +5,7 @@ from controllers.location_controller import LocationController
 from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
+from views.password_utils import format_table
 
 
 class ProductView:
@@ -16,7 +17,7 @@ class ProductView:
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
 
-        # Създаваме менюто като отделен метод (мега ООП)
+        # Създаваме менюто като отделен метод
         self.menu = self._build_menu()
 
 
@@ -131,7 +132,6 @@ class ProductView:
         if cat_idx is None or not (0 <= cat_idx < len(categories)):
             return
         category_id = categories[cat_idx].category_id
-
         locations = self.location_controller.get_all()
         if not locations:
             print("Грешка: Няма налични складове!")
@@ -147,11 +147,10 @@ class ProductView:
         location_id = locations[loc_idx].location_id
 
         try:
-            # Използваме user.user_id (или user.id според твоя модел)
+            # Използваме user.user_id (или user.id )
             u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
-            self.product_controller.add(
-                name=name, description=description, price=price, quantity=quantity, unit=unit,
-                category_ids=[category_id], location_id=location_id, supplier_id=None, user_id=u_id)
+            self.product_controller.add(name=name, description=description, price=price, quantity=quantity, unit=unit, category_ids=[category_id],
+                                        location_id=location_id, supplier_id=None, user_id=u_id)
             print(f"[Успех] Продуктът е зачислен в {location_id}.")
         except ValueError as e:
             print("Грешка:", e)
@@ -204,11 +203,24 @@ class ProductView:
             return
 
         print("\n  Списък с продукти  ")
-        print(f"{'ID':<3} | {'Име':<15} | {'Склад':<6} | {'Наличност':<10} | {'Цена'}")
-        print("-" * 65)
+
+        # Колони за таблицата
+        columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
+
+        # Редове за таблицата
+        rows = []
         for p in products:
-            print(
-                f"{p.product_id:<3} | {p.name[:15]:<15} | {p.location_id:<6} | {p.quantity:>5} {p.unit:<4} | {self.format_lv(p.price)}")
+            qty = f"{p.quantity} {p.unit}"
+            rows.append([
+                p.product_id,
+                p.name,
+                p.location_id,
+                qty,
+                self.format_lv(p.price)
+            ])
+
+        # Използваме format_table от password_utils.py
+        print(format_table(columns, rows))
 
     @require_password("parola123")
     def show_all_protected(self, user):

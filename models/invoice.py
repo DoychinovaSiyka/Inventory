@@ -15,8 +15,8 @@ class Invoice:
         # Ако ID липсва → генерираме нов UUID
         self.invoice_id = str(invoice_id) if invoice_id else str(uuid.uuid4())
 
-        # movement ID остава int (както при теб)
-        self.movement_id = int(movement_id) if movement_id is not None else None
+        #  movement_id вече е UUID → пазим го като string, НЕ като int
+        self.movement_id = str(movement_id) if movement_id is not None else None
 
         self.product = product
         self.quantity = round(float(quantity), 2)
@@ -34,14 +34,11 @@ class Invoice:
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация (твоя логика)
-        InvoiceValidator.validate_all(
-            self.product, self.customer, self.quantity,
-            self.unit, self.unit_price, self.movement_id
-        )
+        # Валидация
+        InvoiceValidator.validate_all(self.product, self.customer, self.quantity, self.unit, self.unit_price, self.movement_id)
 
-    # UUID не се генерира тук — вече е в конструктора
-    def assign_new_id(self, existing_items):
+    # UUID  е в конструктора
+    def assign_new_id(self,_):
         """Запазваме метода за съвместимост, но UUID не се прегенерира."""
         if not self.invoice_id:
             self.invoice_id = str(uuid.uuid4())

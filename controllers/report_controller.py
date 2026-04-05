@@ -3,6 +3,17 @@ from models.report import Report
 from storage.json_repository import JSONRepository
 
 
+def _invoice_to_dict(inv):
+    return {
+        "invoice_id": inv.invoice_id,   # ← ТОВА Е НОВОТО И ВАЖНОТО
+        "date": inv.date,
+        "product": inv.product,
+        "quantity": round(float(inv.quantity), 2),
+        "total_price": round(float(inv.total_price), 2),
+        "customer": getattr(inv, "customer", None)
+    }
+
+
 class ReportController:
     def __init__(self, repo: JSONRepository, product_controller, movement_controller,
                  invoice_controller, location_controller):
@@ -42,29 +53,40 @@ class ReportController:
         return f"{loc.name} ({loc_id})" if loc else str(loc_id)
 
     # Унифициран метод за движение → dict
+    #  връщаме истински location_id + име на склада
     def _movement_to_dict(self, m):
+        loc_id = m.location_id
+        loc = self.location_controller.get_by_id(loc_id)
+        loc_name = loc.name if loc else None
+
+        product = self.product_controller.get_by_id(m.product_id)
+        product_name = product.name if product else "Неизвестен продукт"
+
         return {
+            "movement_id": m.movement_id,  # ← ТОВА Е ID-то, което искаш
             "date": m.date,
             "type": m.movement_type.name,
-            "product_id": m.product_id,   # ИСТИНСКО ID
+            "product_id": m.product_id,
+            "product_name": product_name,
             "quantity": round(float(m.quantity), 2),
             "price": round(float(m.price), 2),
-            "location": self._get_location_display(m.location_id),
+            "location_id": loc_id,
+            "location_name": loc_name,
             "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
             "customer": m.customer if m.movement_type.name == "OUT" else None
         }
 
     # Унифициран метод за фактура → dict
-    # ⭐ ДОБАВИХМЕ invoice_id → истинското ID на фактурата
-    def _invoice_to_dict(self, inv):
-        return {
-            "invoice_id": inv.invoice_id,   # ← ТОВА Е НОВОТО И ВАЖНОТО
-            "date": inv.date,
-            "product": inv.product,
-            "quantity": round(float(inv.quantity), 2),
-            "total_price": round(float(inv.total_price), 2),
-            "customer": getattr(inv, "customer", None)
-        }
+    #  ДОБАВИХ invoice_id → истинското ID на фактурата
+
+    #  Филтър → само фактури от OUT движения
+    def _filter_out_invoices(self):
+        out_invoices = []
+        for inv in self.invoice_controller.invoices:
+            movement = self.movement_controller.get_by_id(inv.movement_id)
+            if movement and movement.movement_type.name == "OUT":
+                out_invoices.append(inv)
+        return out_invoices
 
     #  СПРАВКИ
     # Справка за наличности
@@ -116,22 +138,26 @@ class ReportController:
         ]
         return self._create_report("movements_by_date", {"date": date_str}, data)
 
-    # Продажби → ВЕЧЕ С ИСТИНСКО ID
+    #  ПРОДАЖБИ → САМО OUT
     def report_sales(self):
-        data = [self._invoice_to_dict(inv) for inv in self.invoice_controller.invoices]
+        invoices = self._filter_out_invoices()
+        data = [_invoice_to_dict(inv) for inv in invoices]
         return self._create_report("sales_all", {}, data)
 
     def report_sales_by_customer(self, customer):
-        invoices = self.invoice_controller.search_by_customer(customer)
-        data = [self._invoice_to_dict(inv) for inv in invoices]
+        invoices = self._filter_out_invoices()
+        invoices = [inv for inv in invoices if customer.lower() in inv.customer.lower()]
+        data = [_invoice_to_dict(inv) for inv in invoices]
         return self._create_report("sales_by_customer", {"customer": customer}, data)
 
     def report_sales_by_product(self, product):
-        invoices = self.invoice_controller.search_by_product(product)
-        data = [self._invoice_to_dict(inv) for inv in invoices]
+        invoices = self._filter_out_invoices()
+        invoices = [inv for inv in invoices if product.lower() in inv.product.lower()]
+        data = [_invoice_to_dict(inv) for inv in invoices]
         return self._create_report("sales_by_product", {"product": product}, data)
 
     def report_sales_by_date(self, date_str):
-        invoices = self.invoice_controller.search_by_date(date_str)
-        data = [self._invoice_to_dict(inv) for inv in invoices]
+        invoices = self._filter_out_invoices()
+        invoices = [inv for inv in invoices if inv.date.startswith(date_str)]
+        data = [_invoice_to_dict(inv) for inv in invoices]
         return self._create_report("sales_by_date", {"date": date_str}, data)
