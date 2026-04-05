@@ -8,7 +8,7 @@ class UserView:
         self.controller = controller
         self.menu = None  # менюто ще се създава динамично според ролята
 
-    # Основно меню (мега ООП)
+    # Основно меню
     def show_menu(self, user: User):
         if user.role != "Admin":
             print("Само администратор може да управлява потребители.")
@@ -22,7 +22,7 @@ class UserView:
             if result == "break":
                 break
 
-    # Създаване на менюто отделно (ООП)
+    # Създаване на менюто отделно
     def _build_menu(self):
         return Menu(
             "МЕНЮ ПОТРЕБИТЕЛИ",

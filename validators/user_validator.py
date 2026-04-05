@@ -16,7 +16,6 @@ class UserValidator:
 
         return True
 
-
     # PASSWORD (минимум 6 символа)
     @staticmethod
     def validate_password(password: str):

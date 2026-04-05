@@ -7,7 +7,6 @@ from storage.json_repository import JSONRepository
 class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-
         # Зареждаме локациите
         self.locations: List[Location] = [ Location.from_dict(l) for l in self.repo.load()]
 
@@ -15,7 +14,6 @@ class LocationController:
     def _generate_id(self) -> str:
         if not self.locations:
             return "W1"
-
         try:
             ids = []
             for l in self.locations:
@@ -73,10 +71,7 @@ class LocationController:
         if name is not None:
             if len(name.strip()) == 0:
                 raise ValueError("Името не може да бъде празно.")
-            if any(
-                l.name.lower() == name.lower() and l.location_id != location_id
-                for l in self.locations
-            ):
+            if any(l.name.lower() == name.lower() and l.location_id != location_id for l in self.locations):
                 raise ValueError("Локация с това име вече съществува.")
             location.name = name
 

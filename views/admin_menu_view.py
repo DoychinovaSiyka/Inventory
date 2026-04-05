@@ -9,8 +9,7 @@ from views.supplier_view import SupplierView
 from views.system_info_view import SystemInfoView
 
 
-# Вече няма нужда да импортираме класа GraphView тук,
-# защото ще ползваме готовия обект от контролерите.
+# Няма нужда да импортираме класа GraphView тук, защото ще ползваме готовия обект от контролерите.
 
 class AdminMenuView:
     def __init__(self, controllers):
@@ -20,12 +19,8 @@ class AdminMenuView:
         self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
                                         controllers["activity_log"])
         self.category_view = CategoryView(controllers["category"])
-        self.movement_view = MovementView(
-            controllers["product"],
-            controllers["movement"],
-            controllers["user"],
-            controllers["activity_log"]
-        )
+        self.movement_view = MovementView(controllers["product"], controllers["movement"], controllers["user"],
+                                          controllers["activity_log"])
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
         self.invoice_view = InvoiceView(controllers["invoice"], controllers["activity_log"])
@@ -34,12 +29,11 @@ class AdminMenuView:
 
         # Вземаме инстанцията на GraphView, която е в main.py
         self.graph_view = controllers.get("logistic")
-
-        # Създаваме менюто отделно (мега ООП)
+        # Създаваме менюто отделно
         self.menu = self._build_menu()
 
 
-    # Създаване на меню (ООП)
+    # Създаване на меню
     def _build_menu(self):
         return Menu("Администраторско меню", [
             MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
@@ -60,7 +54,6 @@ class AdminMenuView:
         if user.role.lower() != "admin":
             print("Само администратор има достъп до това меню.")
             return
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)

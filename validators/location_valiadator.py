@@ -23,7 +23,7 @@ class LocationValidator:
 
         if capacity < 0:
             raise ValueError("Капацитетът трябва да е >= 0.")
-    # FULL VALIDATION
+
     @staticmethod
     def validate_all(name, zone, capacity):
         LocationValidator.validate_name(name)

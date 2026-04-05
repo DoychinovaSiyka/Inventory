@@ -18,10 +18,8 @@ class Movement:
 
         #  movement_id вече е  UUID  винаги string
         self.movement_id = str(movement_id) if movement_id is not None else None
-
         self.product_id = product_id
         self.user_id = user_id
-
         #  Локациите винаги са str (W1, W2, ...)
         self.location_id = str(location_id) if location_id is not None else None
         self.from_location_id = str(from_location_id) if from_location_id is not None else None

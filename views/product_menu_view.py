@@ -16,7 +16,6 @@ class ProductView:
         self.location_controller = location_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
-
         # Създаваме менюто като отделен метод
         self.menu = self._build_menu()
 
@@ -100,7 +99,6 @@ class ProductView:
             result = self.menu.execute(choice, user)
             if result == "break":
                 break
-
 
     # CRUD операции
     def create_product(self, user):

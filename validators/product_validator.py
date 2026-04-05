@@ -74,6 +74,5 @@ class ProductValidator:
         ProductValidator.validate_unit(unit)
         ProductValidator.validate_description(description)
         ProductValidator.validate_price(price)
-
         if location_id:
             ProductValidator.validate_location(location_id)

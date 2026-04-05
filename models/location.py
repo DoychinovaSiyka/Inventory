@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 
 class Location:
-    # Променяме анотацията на location_id да бъде Union[str, int, None],
+    # Анотацията на location_id да бъде Union[str, int, None],
     # но в логиката ще го превръщаме в str за консистентност с "W1", "W2"...
     def __init__(self, location_id: Optional[str] = None, name: str = "",
                  zone: str = "", capacity: int = 0,

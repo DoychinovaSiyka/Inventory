@@ -15,7 +15,6 @@ class CategoryController:
         # с които контролерът може да работи.
         self.categories: List[Category] = [Category.from_dict(c) for c in self.repo.load()]
 
-
     # CRUD операции
     def add(self, name: str, description: str = "", parent_id: Optional[str] = None) -> Category:
         """Добавя нова категория или подкатегория (с parent_id)."""
@@ -23,14 +22,13 @@ class CategoryController:
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
-
         #  Проверка дали родителят съществува
         if parent_id and not self.get_by_id(parent_id):
             raise ValueError("Родителската категория не съществува.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Тук използваме uuid за category_id, за да е сигурно уникално при йерархия
+        # Използваме uuid за category_id, за да е сигурно уникално при йерархия
         category = Category(category_id=str(uuid.uuid4()),name=name,description=description,parent_id=parent_id,created=now,modified=now)
         self.categories.append(category)
         self.save_changes()
@@ -118,7 +116,6 @@ class CategoryController:
     def search(self, keyword: str) -> List[Category]:
         keyword = keyword.lower()
         return [ c for c in self.categories if keyword in c.name.lower() or keyword in (c.description or "").lower()]
-
 
     # Запис
     def save_changes(self) -> None:

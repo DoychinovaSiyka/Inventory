@@ -5,7 +5,7 @@ from storage.json_repository import JSONRepository
 
 def _invoice_to_dict(inv):
     return {
-        "invoice_id": inv.invoice_id,   # ← ТОВА Е НОВОТО И ВАЖНОТО
+        "invoice_id": inv.invoice_id,
         "date": inv.date,
         "product": inv.product,
         "quantity": round(float(inv.quantity), 2),
@@ -23,9 +23,7 @@ class ReportController:
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
-
         # Зареждаме всички справки от JSON
-        # Вече няма report_id → чисто зареждане
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
     # Записване на справките
@@ -88,8 +86,7 @@ class ReportController:
                 out_invoices.append(inv)
         return out_invoices
 
-    #  СПРАВКИ
-    # Справка за наличности
+    #  СПРАВКИ - Справка за наличности
     def report_stock(self):
         data = []
         for p in self.product_controller.products:

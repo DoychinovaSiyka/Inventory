@@ -79,7 +79,7 @@ class ReportsView:
         return rows, has_id
 
     # СПРАВКИ
-    # 1) ПРОДАЖБИ → ИМАТ ID (ако JSON съдържа ID)
+    # ПРОДАЖБИ → ИМАТ ID (ако JSON съдържа ID)
     def _print_sales(self, data):
         rows, has_id = self._process_data(data)
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
@@ -120,7 +120,7 @@ class ReportsView:
             return
         self._print_sales(data)
 
-    # 2) НАЛИЧНОСТИ → БЕЗ ID
+    # НАЛИЧНОСТИ → БЕЗ ID
     def report_stock(self, _):
         data = self.controller.report_stock().data
         if not data:
@@ -129,7 +129,7 @@ class ReportsView:
         rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])] for i in data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
-    # 3) ДВИЖЕНИЯ → ИМАТ ID (movement_id)
+    # ДВИЖЕНИЯ → ИМАТ ID (movement_id)
     def report_movements(self, _):
         data = self.controller.report_movements().data
 

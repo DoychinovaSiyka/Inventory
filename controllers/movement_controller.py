@@ -19,17 +19,15 @@ class MovementController:
         self.stocklog_controller = stocklog_controller
         self.invoice_controller = invoice_controller
         self.activity_log = activity_log_controller
-
         # Зареждаме движенията от JSON
         raw = self.repo.load()
         self.movements: List[Movement] = []
 
-        # Поправка: гарантираме, че всяко движение има UUID
+        # гарантираме, че всяко движение има UUID
         for m in raw:
             if not m.get("movement_id"):
                 m["movement_id"] = self._generate_id()
             self.movements.append(Movement.from_dict(m))
-
         # Записваме поправените ID обратно
         self.save_changes()
 

@@ -28,7 +28,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # 1. Списък с всички фактури
+    #  Списък с всички фактури
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -43,7 +43,7 @@ class InvoiceView:
                  inv.customer, inv.date] for inv in invoices]
         print("\n" + format_table(columns, rows))
 
-    # 2. Преглед по ID
+    # Преглед по ID
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
         invoice = self.invoice_controller.get_by_id(invoice_id)
@@ -68,7 +68,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 3. Търсене по клиент
+    #  Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ")
         results = self.invoice_controller.search_by_customer(keyword)
@@ -84,7 +84,7 @@ class InvoiceView:
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
         rows = [
             [
-                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.invoice_id,
                 inv.product,
                 f"{inv.quantity} {inv.unit}",
                 f"{inv.total_price} лв.",

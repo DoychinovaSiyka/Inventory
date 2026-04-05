@@ -14,7 +14,6 @@ def input_password(prompt="Парола: "):
 
     while True:
         ch = msvcrt.getch()
-
         # enter
         if ch in {b"\r", b"\n"}:
             print()

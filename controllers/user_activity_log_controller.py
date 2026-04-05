@@ -16,7 +16,6 @@ class UserActivityLogController:
         data = self.repo.get_all()
         data.append(log)
         self.repo.save(data)
-
     # READ
     def get_all_logs(self):
         return self.repo.get_all()

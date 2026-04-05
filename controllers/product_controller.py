@@ -12,12 +12,10 @@ from controllers.supplier_controller import SupplierController
 class ProductController:
     def __init__(self, repo: Repository, category_controller: CategoryController,
                  supplier_controller: SupplierController, activity_log_controller=None):
-
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
-
         # Зареждане на продуктите
         self.products: List[Product] = []
         self._load_products()

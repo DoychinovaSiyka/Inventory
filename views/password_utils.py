@@ -42,11 +42,7 @@ def input_password(prompt="Въведете парола: "):
 
 
 def format_table(columns, rows):
-    """
-    Форматира таблица в текстов вид.
-    Гарантира, че rows винаги е списък, дори ако е None.
-    """
-    # --- FIX: rows може да е None → правим го празен списък ---
+    """ Форматира таблица в текстов вид. Гарантира, че rows винаги е списък, дори ако е None. """
     if rows is None:
         rows = []
 
@@ -58,7 +54,6 @@ def format_table(columns, rows):
         bottom_border = top_border
         return "\n".join([top_border, header, bottom_border])
 
-    # --- Нормална логика ---
     all_rows = [columns] + rows
     col_widths = [max(len(str(row[i])) for row in all_rows) + 2 for i in range(len(columns))]
 

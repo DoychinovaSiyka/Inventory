@@ -138,11 +138,7 @@ class InvoiceController:
             self.save_changes()
 
             if self.activity_log:
-                self.activity_log.add_log(
-                    "system",
-                    "DELETE_INVOICE",
-                    f"Deleted invoice {invoice_id}"
-                )
+                self.activity_log.add_log("system", "DELETE_INVOICE", f"Deleted invoice {invoice_id}")
             return True
 
         return False
@@ -152,14 +148,11 @@ class InvoiceController:
                         start_date: Optional[str] = None, end_date: Optional[str] = None,
                         min_total: Optional[float] = None,
                         max_total: Optional[float] = None) -> List[Invoice]:
-
         results = self.invoices
-
         # customer
         if customer:
             kw = customer.lower()
             results = [inv for inv in results if kw in inv.customer.lower()]
-
         # product
         if product:
             kw = product.lower()

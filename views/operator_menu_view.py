@@ -19,7 +19,6 @@ class OperatorMenuView:
         self.report_controller = controllers["report"]
         self.user_controller = controllers["user"]
         self.activity_log = controllers["activity_log"]
-
         # Създаваме менюто като отделен метод
         self.menu = self._build_menu()
 
@@ -27,7 +26,6 @@ class OperatorMenuView:
     def _build_menu(self):
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти", self.open_products),
-
             # Управление на категории е административна функция → защитаваме
             MenuItem("2", "Управление на категории", self.open_categories),
             MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
@@ -44,7 +42,6 @@ class OperatorMenuView:
         if user.role.lower() == "guest":
             print("Нямате достъп до операторското меню.")
             return
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)

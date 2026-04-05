@@ -10,7 +10,7 @@ class GraphView:
         self.graph = WarehouseGraph()
         # Създаваме мрежата от складове
         self._setup_network()
-        # Създаваме менюто отделно (мега ООП)
+        # Създаваме менюто отделно
         self.menu = self._build_menu()
 
     # Създаване на меню

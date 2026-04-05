@@ -37,7 +37,6 @@ class StockLogController:
 
         # Генериране на уникално ID за лога (ако моделът ти го изисква)
         # Ако StockLog няма автоматично ID, можеш да добавиш логика тук
-
         # Създаване на лог запис
         # Уверяваме се, че location_id се записва точно (напр. "W1")
         log = StockLog(product_id=str(product_id), location_id=str(location_id), quantity=float(quantity),
@@ -63,6 +62,6 @@ class StockLogController:
         keyword = keyword.lower()
         return [ log for log in self.logs if keyword in log.action.lower() or keyword in log.timestamp.lower()]
 
-    # SAVE
+
     def save_changes(self):
         self.repo.save([l.to_dict() for l in self.logs])

@@ -20,7 +20,6 @@ class Product:
         # ОСНОВНА ИДЕНТИФИКАЦИЯ
         self.product_id = validate_uuid(product_id)
         self.name = name
-
         # КАТЕГОРИИ (винаги списък от стрингове)
         self.categories = []
         if isinstance(categories, list):
@@ -60,7 +59,6 @@ class Product:
     def is_in_category(self, search_category_id, category_controller):
         """Проверява дали продуктът е в дадена категория или нейните подкатегории."""
         search_id = str(search_category_id)
-
         if search_id in self.categories:
             return True
 

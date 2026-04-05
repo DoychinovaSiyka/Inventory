@@ -99,7 +99,6 @@ class LocationView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-
     # Изтриване
     def delete_location(self, _):
         print("\n--- ИЗТРИВАНЕ НА ЛОКАЦИЯ ---")
