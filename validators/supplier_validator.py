@@ -55,7 +55,6 @@ class SupplierValidator:
             if s.name.lower() == name.lower():
                 raise ValueError("Доставчик с това име вече съществува.")
 
-
     # FULL VALIDATION
     @staticmethod
     def validate_all(name, contact, address):

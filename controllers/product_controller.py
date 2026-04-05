@@ -84,20 +84,9 @@ class ProductController:
 
         now = str(datetime.now())
 
-        product = Product(
-            product_id=self._generate_id(),
-            name=name,
-            categories=categories,
-            quantity=float(quantity),
-            unit=unit,
-            description=description,
-            price=price,
-            supplier_id=supplier_id,
-            location_id=location_id,
-            tags=tags or [],
-            created=now,
-            modified=now
-        )
+        product = Product(product_id=self._generate_id(), name=name, categories=categories, quantity=float(quantity),
+                          unit=unit, description=description, price=price, supplier_id=supplier_id,
+                          location_id=location_id, tags=tags or [], created=now, modified=now)
 
         self.products.append(product)
         self.save_changes()
@@ -328,14 +317,10 @@ class ProductController:
 
                 if reverse:
                     if a < b:
-                        sorted_products[j], sorted_products[j + 1] = (
-                            sorted_products[j + 1], sorted_products[j]
-                        )
+                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1], sorted_products[j])
                 else:
                     if a > b:
-                        sorted_products[j], sorted_products[j + 1] = (
-                            sorted_products[j + 1], sorted_products[j]
-                        )
+                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1], sorted_products[j])
 
         return sorted_products
 
@@ -361,9 +346,7 @@ class ProductController:
 
                 j += 1
 
-            sorted_products[i], sorted_products[best_idx] = (
-                sorted_products[best_idx], sorted_products[i]
-            )
+            sorted_products[i], sorted_products[best_idx] = (sorted_products[best_idx], sorted_products[i])
 
             i += 1
 
@@ -411,16 +394,10 @@ class ProductController:
 
         if name_keyword:
             kw = name_keyword.lower()
-            results = [
-                p for p in results
-                if kw in p.name.lower() or kw in p.description.lower()
-            ]
+            results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
 
         if category_id is not None:
-            results = [
-                p for p in results
-                if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)
-            ]
+            results = [p for p in results if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)]
 
         if supplier_id is not None:
             results = [p for p in results if str(p.supplier_id) == str(supplier_id)]

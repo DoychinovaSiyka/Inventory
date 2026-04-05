@@ -12,7 +12,6 @@ class ReportsView:
         # Създаваме менюто отделно (мега ООП)
         self.menu = self._build_menu()
 
-
     # Основно меню
     def show_menu(self, user: User):
         while True:
@@ -32,7 +31,7 @@ class ReportsView:
         ])
 
 
-    # Помощни методи (ООП капсулация)
+    # Помощни методи
     @staticmethod
     def _clean_none(value, replacement="—"):
         return replacement if value is None else str(value)
@@ -50,17 +49,13 @@ class ReportsView:
         try:
             if value is None:
                 return "0 бр."
-
             val = float(value)
             display_val = int(val) if val.is_integer() else round(val, 2)
-
             name = str(product_name).lower()
             unit = "кг" if any(x in name for x in ["брашно", "захар", "домати", "кг"]) else "бр."
-
             return f"{display_val} {unit}"
         except:
             return str(value)
-
 
     # Обработка на данни за таблица
     def _process_data(self, data):
@@ -79,77 +74,51 @@ class ReportsView:
             else:
                 price = round(float(raw_price), 2)
 
-            rows.append([
-                row_id,
-                p_name,
-                self._format_qty(qty, p_name),
-                self._format_lv(price),
-                self._format_lv(total),
-                self._clean_none(item.get('customer')),
-                self._clean_none(item.get('date'))
-            ])
-        return rows
-
+            rows.append([row_id, p_name, self._format_qty(qty, p_name), self._format_lv(price), self._format_lv(total),
+                         self._clean_none(item.get('customer')), self._clean_none(item.get('date'))])
+            return rows
 
     # Справки
     def report_sales(self, _):
-        data = self.controller.report_sales().data
         print(format_table(
             ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(data)
+            self._process_data(self.controller.report_sales().data)
         ))
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
-        data = self.controller.report_sales_by_customer(customer).data
         print(format_table(
             ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(data)
+            self._process_data(self.controller.report_sales_by_customer(customer).data)
         ))
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
-        data = self.controller.report_sales_by_product(product).data
         print(format_table(
             ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(data)
+            self._process_data(self.controller.report_sales_by_product(product).data)
         ))
 
     def report_sales_by_date(self, _):
         date = input("Дата: ")
-        data = self.controller.report_sales_by_date(date).data
         print(format_table(
             ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(data)
+            self._process_data(self.controller.report_sales_by_date(date).data)
         ))
 
     def report_stock(self, _):
         data = self.controller.report_stock().data
-        rows = [
-            [
-                i['product'],
-                self._format_qty(i['quantity'], i['product']),
-                self._format_lv(i['price'])
-            ]
-            for i in data
-        ]
+        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
+                for i in data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
     def report_movements(self, _):
         data = self.controller.report_movements().data
-        rows = []
-
-        for item in data:
-            loc = self.location_controller.get_by_id(item.get('location'))
-            p_name = item.get('product_name', 'Продукт')
-
-            rows.append([
-                self._clean_none(item.get('date')),
-                self._clean_none(item.get('type')),
-                self._clean_none(item.get('product_id')),
-                self._format_qty(item.get('quantity', 0), p_name),
-                self._format_lv(item.get('price', 0)),
-                loc.name if loc else "—"
-            ])
-
+        rows = [[
+            self._clean_none(i.get('date')), self._clean_none(i.get('type')), self._clean_none(i.get('product_id')),
+            self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')),
+            self._format_lv(i.get('price', 0)),
+            (self.location_controller.get_by_id(i.get('location')).name if self.location_controller.get_by_id(
+                i.get('location')) else "—")
+        ] for i in data]
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))

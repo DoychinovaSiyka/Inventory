@@ -3,9 +3,7 @@ from datetime import datetime
 class Report:
     def __init__(self, report_id=None, report_type="", generated_on=None,
                  parameters=None, data=None):
-        # report_id е int
-        self.report_id = report_id
-
+        self.report_id = report_id  # report_id е int
         self.report_type = report_type
         self.generated_on = generated_on or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.parameters = parameters if parameters else {}

@@ -58,28 +58,22 @@ class UserController:
     def _create_default_admin_and_operator(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        admin = User(
-            first_name="Admin", last_name="User", email="admin@example.com",
-            username="admin", password=self._hash_password("admin123"),
-            role="Admin", status="Active", created=now, modified=now
-        )
+        admin = User(first_name="Admin", last_name="User", email="admin@example.com",
+                     username="admin", password=self._hash_password("admin123"),
+                     role="Admin", status="Active", created=now, modified=now)
 
-        operator = User(
-            first_name="Operator", last_name="User", email="operator@example.com",
-            username="operator", password=self._hash_password("operator123"),
-            role="Operator", status="Active", created=now, modified=now
-        )
+        operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+                        username="operator", password=self._hash_password("operator123"),
+                        role="Operator", status="Active", created=now, modified=now)
 
         self.users.extend([admin, operator])
         self.save_changes()
 
     def _create_default_operator(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        operator = User(
-            first_name="Operator", last_name="User", email="operator@example.com",
-            username="operator", password=self._hash_password("operator123"),
-            role="Operator", status="Active", created=now, modified=now
-        )
+        operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+                        username="operator", password=self._hash_password("operator123"),
+                        role="Operator", status="Active", created=now, modified=now)
         self.users.append(operator)
         self.save_changes()
 
@@ -108,17 +102,14 @@ class UserController:
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        new_user = User(
-            first_name=first_name, last_name=last_name, email=email,
-            username=username, password=self._hash_password(password),
-            role=role, status="Active", created=now, modified=now
-        )
+        new_user = User(first_name=first_name, last_name=last_name, email=email,
+                        username=username, password=self._hash_password(password),
+                        role=role, status="Active", created=now, modified=now)
 
         self.users.append(new_user)
         self.save_changes()
         return new_user
 
-    # LOGIN
     # login — скрито въвеждане на парола (със звездички)
     def login(self, username: str, password: Optional[str] = None) -> Optional[User]:
         # ако паролата не е подадена от main.py → искаме я тук

@@ -33,7 +33,7 @@ class Movement:
         self.product_id = product_id
         self.user_id = user_id
 
-        # ВАЖНО: Всички локации превръщаме в str, за да работят с "W1", "W2" и т.н.
+        # Всички локации превръщаме в str, за да работят с "W1", "W2" и т.н.
         self.location_id = str(location_id) if location_id is not None else None
         self.from_location_id = str(from_location_id) if from_location_id is not None else None
         self.to_location_id = str(to_location_id) if to_location_id is not None else None

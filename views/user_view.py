@@ -26,16 +26,13 @@ class UserView:
     def _build_menu(self):
         return Menu(
             "МЕНЮ ПОТРЕБИТЕЛИ",
-            [
-                MenuItem("1", "Списък на потребители", self.show_users),
-                MenuItem("2", "Добавяне на потребител", self.add_user),
-                MenuItem("3", "Промяна на роля", self.change_role),
-                MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
-                MenuItem("5", "Активиране на потребител", self.activate_user),
-                MenuItem("6", "Премахване на потребител", self.delete_user),
-                MenuItem("0", "Назад", lambda u: "break"),
-            ]
-        )
+            [MenuItem("1", "Списък на потребители", self.show_users),
+             MenuItem("2", "Добавяне на потребител", self.add_user),
+             MenuItem("3", "Промяна на роля", self.change_role),
+             MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+             MenuItem("5", "Активиране на потребител", self.activate_user),
+             MenuItem("6", "Премахване на потребител", self.delete_user),
+            MenuItem("0", "Назад", lambda u: "break"),])
 
     # Показване на всички потребители
     def show_users(self, _):
@@ -86,7 +83,6 @@ class UserView:
     # Активиране на потребител
     def activate_user(self, user):
         username = input("Потребителско име: ")
-
         try:
             if self.controller.activate_user(user, username):
                 print("Потребителят е активиран.")
@@ -98,7 +94,6 @@ class UserView:
     # Премахване на потребител
     def delete_user(self, user):
         username = input("Потребителско име за изтриване: ")
-
         try:
             if self.controller.delete_user(user, username):
                 print("Потребителят е изтрит.")

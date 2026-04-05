@@ -57,7 +57,6 @@ class ProductSortView:
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
-
     # Общ метод за визуализация на резултатите
     @staticmethod
     def _print_sorted(products, title, algorithm):

@@ -63,22 +63,9 @@ class MovementController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        movement = Movement(
-            movement_id=self._generate_id(),
-            product_id=product_id,
-            user_id=user_id,
-            location_id=location_id,
-            movement_type=movement_type,
-            quantity=quantity,
-            unit=unit,
-            description=description,
-            price=price,
-            supplier_id=supplier_id,
-            customer=customer,
-            date=now,
-            created=now,
-            modified=now
-        )
+        movement = Movement(movement_id=self._generate_id(), product_id=product_id, user_id=user_id, location_id=location_id,
+                            movement_type=movement_type, quantity=quantity, unit=unit, description=description,
+                            price=price, supplier_id=supplier_id, customer=customer, date=now, created=now, modified=now)
 
         self.movements.append(movement)
         self.save_changes()
@@ -140,14 +127,8 @@ class MovementController:
 
         # Генериране на фактура при OUT
         if movement_type == MovementType.OUT:
-            invoice = Invoice(
-                movement_id=movement.movement_id,
-                product=product.name,
-                quantity=quantity,
-                unit=product.unit,
-                unit_price=price,
-                customer=customer
-            )
+            invoice = Invoice(movement_id=movement.movement_id, product=product.name, quantity=quantity, unit=product.unit,
+                              unit_price=price, customer=customer)
             self.invoice_controller.add(invoice)
 
         return movement
@@ -187,10 +168,7 @@ class MovementController:
         self.stocklog_controller.add_log(product_id, to_location_id, quantity, product.unit, "move_in")
 
         if self.activity_log:
-            self.activity_log.add_log(
-                user_id, "MOVE_PRODUCT",
-                f"Moved {product.name} to {to_location_id}"
-            )
+            self.activity_log.add_log(user_id, "MOVE_PRODUCT", f"Moved {product.name} to {to_location_id}")
 
         return move_entry
 
@@ -198,8 +176,6 @@ class MovementController:
     # SAVE
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
-
-
     # GET
     def get_all(self) -> List[Movement]:
         return self.movements

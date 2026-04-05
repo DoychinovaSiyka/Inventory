@@ -15,9 +15,7 @@ class MovementView:
         self.movement_controller = movement_controller
         self.user_controller = user_controller
         self.activity_log = activity_log_controller
-
         self.menu = self._build_menu()
-
 
     # Меню
     def _build_menu(self):
@@ -37,10 +35,8 @@ class MovementView:
             return
 
         while True:
-            choice = self.menu.show()
-            if self.menu.execute(choice, user) == "break":
+            if self.menu.execute(self.menu.show(), user) == "break":
                 break
-
 
     # Помощни методи
     def _select_product(self):
@@ -75,7 +71,6 @@ class MovementView:
             print("Невалиден избор.")
             return None
 
-
     # Създаване на IN/OUT движение
     def create_movement(self, user):
         product = self._select_product()
@@ -87,14 +82,7 @@ class MovementView:
             return
 
         try:
-            movement_type_num = int(input("0  Доставка (IN), 1  Продажба (OUT): "))
-            if movement_type_num == 0:
-                movement_type = MovementType.IN
-            elif movement_type_num == 1:
-                movement_type = MovementType.OUT
-            else:
-                print("Невалиден тип движение.")
-                return
+            movement_type = MovementType.IN if int(input("0  Доставка (IN), 1  Продажба (OUT): ")) == 0 else MovementType.OUT
         except ValueError:
             print("Невалиден избор.")
             return
@@ -104,7 +92,6 @@ class MovementView:
         price = input("Цена: ")
         description = input("Описание: ")
 
-        # Доставчик при IN
         supplier_id = None
         if movement_type == MovementType.IN:
             suppliers = self.product_controller.supplier_controller.get_all()
@@ -122,32 +109,21 @@ class MovementView:
                 print("Невалиден избор за доставчик.")
                 return
 
-        # Клиент при OUT
         customer = None
         if movement_type == MovementType.OUT:
-            customer = input("Име на клиент: ").strip()
-            if not customer:
-                print("Не е въведено име на клиент. Ще се използва потребителското име.")
-                customer = None
+            customer = input("Име на клиент: ").strip() or None
 
         try:
             self.movement_controller.add(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                location_id=location.location_id,
-                movement_type=movement_type,
-                quantity=quantity,
-                description=description,
-                price=price,
-                customer=customer,
-                supplier_id=supplier_id
+                product_id=product.product_id, user_id=user.user_id,
+                location_id=location.location_id, movement_type=movement_type,
+                quantity=quantity, description=description, price=price,
+                customer=customer, supplier_id=supplier_id
             )
             print("Движението е добавено успешно!")
             print("Ако е OUT → фактурата е генерирана автоматично.")
-
         except ValueError as e:
             print("Грешка:", e)
-
 
     # MOVE – вътрешно преместване
     def move_between_locations(self, user):
@@ -170,15 +146,11 @@ class MovementView:
 
         try:
             self.movement_controller.move_product(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                from_location_id=from_loc.location_id,
-                to_location_id=to_loc.location_id,
-                quantity=float(quantity),
-                description=description
+                product_id=product.product_id, user_id=user.user_id,
+                from_location_id=from_loc.location_id, to_location_id=to_loc.location_id,
+                quantity=float(quantity), description=description
             )
             print("\nПреместването е извършено успешно!")
-
         except ValueError as e:
             print("Грешка:", e)
 
@@ -190,10 +162,8 @@ class MovementView:
         if not results:
             print("Няма намерени движения.")
             return
-
         for m in results:
             self._print_movement(m)
-
 
     # Показване на всички движения
     def show_all(self, _):
@@ -205,7 +175,6 @@ class MovementView:
 
         for m in all_movements:
             self._print_movement(m)
-
 
     # Принтиране на движение
     def _print_movement(self, m):
@@ -245,7 +214,6 @@ class MovementView:
         print(f"Дата: {m.date}")
         print(f"ID: {m.movement_id}")
         print("----------------------------------------")
-
 
     # Разширено филтриране
     def advanced_filter(self, _):

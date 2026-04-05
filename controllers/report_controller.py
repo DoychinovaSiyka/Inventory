@@ -104,20 +104,12 @@ class ReportController:
     # Движения по тип
     def report_movements_by_type(self, movement_type):
         movement_type = movement_type.upper()
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.movement_type.name == movement_type
-        ]
+        data = [self._movement_to_dict(m) for m in self.movement_controller.movements if m.movement_type.name == movement_type]
         return self._create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.date.startswith(date_str)
-        ]
+        data = [self._movement_to_dict(m) for m in self.movement_controller.movements if m.date.startswith(date_str)]
         return self._create_report("movements_by_date", {"date": date_str}, data)
 
     # Продажби

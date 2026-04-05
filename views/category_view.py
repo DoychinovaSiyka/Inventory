@@ -22,9 +22,7 @@ class CategoryView:
 
     # Създаване на менюто отделно
     def _build_menu(self, is_admin: bool):
-        menu_items = [
-            MenuItem("1", "Списък с категории (Йерархия)", self.show_all)
-        ]
+        menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
 
         if is_admin:
             menu_items.extend([
@@ -34,9 +32,7 @@ class CategoryView:
             ])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
-
         return Menu("Меню Категории", menu_items)
-
 
     # Показване на дървовидна структура
     def show_all(self, _):
@@ -59,10 +55,7 @@ class CategoryView:
             print(f"- {root.name} (ID: {root.category_id})")
 
             # Подкатегории
-            children = [
-                c for c in categories
-                if hasattr(c, "parent_id") and c.parent_id == root.category_id
-            ]
+            children = [c for c in categories if hasattr(c, "parent_id") and c.parent_id == root.category_id]
 
             for child in children:
                 print(f"  * {child.name} (ID: {child.category_id})")
@@ -190,17 +183,12 @@ class CategoryView:
         cat_name = category.name
 
         # Проверка за подкатегории
-        has_children = any(
-            hasattr(c, "parent_id") and c.parent_id == category_id
-            for c in categories
-        )
-
+        has_children = any(hasattr(c, "parent_id") and c.parent_id == category_id for c in categories)
         if has_children:
             print(f"Грешка: '{cat_name}' има подкатегории! Изтрийте или преместете тях първо.")
             return
 
         confirm = input(f"Наистина ли искате да изтриете '{cat_name}'? (y/n): ").strip().lower()
-
         if confirm == "y":
             removed = self.controller.remove(category_id)
             if removed:

@@ -105,17 +105,7 @@ class Product:
     @staticmethod
     def from_dict(data):
         """Безопасно зареждане на данни от JSON."""
-        return Product(
-            product_id=data.get("product_id"),
-            name=data.get("name", "Неизвестен"),
-            categories=data.get("categories", []),
-            quantity=data.get("quantity", 0),
-            unit=data.get("unit", "бр."),
-            description=data.get("description", ""),
-            price=data.get("price", 0),
-            supplier_id=data.get("supplier_id"),
-            tags=data.get("tags", []),
-            location_id=data.get("location_id", "W1"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"), categories=data.get("categories", []),
+            quantity=data.get("quantity", 0), unit=data.get("unit", "бр."), description=data.get("description", ""),
+            price=data.get("price", 0), supplier_id=data.get("supplier_id"), tags=data.get("tags", []),
+            location_id=data.get("location_id", "W1"), created=data.get("created"), modified=data.get("modified"))

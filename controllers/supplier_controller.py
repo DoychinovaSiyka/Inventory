@@ -11,26 +11,16 @@ class SupplierController:
         # Зареждаме доставчиците
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
-
     # ID GENERATOR
     @staticmethod
     def _generate_id() -> str:
         return str(uuid.uuid4())
 
-
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        supplier = Supplier(
-            supplier_id=self._generate_id(),
-            name=name,
-            contact=contact,
-            address=address,
-            created=now,
-            modified=now
-        )
+        supplier = Supplier(supplier_id=self._generate_id(), name=name, contact=contact, address=address, created=now, modified=now)
 
         self.suppliers.append(supplier)
         self.save_changes()
@@ -43,7 +33,6 @@ class SupplierController:
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         return next((s for s in self.suppliers if s.supplier_id == supplier_id), None)
-
 
     # UPDATE
     def update(self, supplier_id: str, name: Optional[str] = None,
@@ -68,7 +57,6 @@ class SupplierController:
         supplier.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_changes()
         return supplier
-
 
     # DELETE
     def remove(self, supplier_id: str) -> bool:

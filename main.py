@@ -82,7 +82,7 @@ class Application:
             "product": self.product_controller,
             "category": self.category_controller,
             "supplier": self.supplier_controller,
-            "location": self.location_controller,  # нужно за избора на склад в ProductView
+            "location": self.location_controller,  # за избора на склад в ProductView
             "movement": self.movement_controller,
             "invoice": self.invoice_controller,
             "report": self.report_controller, "activity_log": self.activity_log_controller, "logistic": self.logistic_service }
@@ -142,7 +142,6 @@ class Application:
             print("0. Изход")
 
             choice = input("\nИзбор: ").strip()
-
             if choice == "1":
                 self._login_flow()
             elif choice == "2":

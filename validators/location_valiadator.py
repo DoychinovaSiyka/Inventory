@@ -1,7 +1,6 @@
 class LocationValidator:
 
 
-    # NAME VALIDATION
     @staticmethod
     def validate_name(name):
         if not name or not name.strip():

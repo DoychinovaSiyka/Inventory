@@ -107,6 +107,8 @@ def show_products_menu(product_controller):
     print("\n" + format_table(columns, rows))
 
 
+
+
 # Кодовете на специалните клавиши не са ASCII или Unicode.
 # Те идват от хардуерните scan codes на клавиатурата.
 # Windows Console API ги превежда в два байта – първо \x00 или \xE0, което е сигнал, че клавишът е специален,

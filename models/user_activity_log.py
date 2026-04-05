@@ -15,13 +15,8 @@ class UserActivityLog:
         self.timestamp = timestamp or datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
-        return {
-            "log_id": self.log_id,
-            "user_id": self.user_id,
-            "action": self.action,
-            "details": self.details,
-            "timestamp": self.timestamp
-        }
+        return {"log_id": self.log_id, "user_id": self.user_id, "action": self.action, "details": self.details,
+                "timestamp": self.timestamp}
 
     @staticmethod
     def from_dict(data):

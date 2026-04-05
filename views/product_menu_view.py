@@ -56,23 +56,18 @@ class ProductView:
             print("Стойността трябва да е число.")
             return None
 
-
     # Меню
     def _build_menu(self):
         return Menu("МЕНЮ ПРОДУКТИ", [
             MenuItem("1", "Създаване на продукт", self.create_product),
             MenuItem("2", "Премахване на продукт", self.remove_product),
             MenuItem("3", "Редактиране на продукт", self.edit_product),
-
             # Показване на продукти (с проверка за роля)
             MenuItem("4", "Покажи всички продукти",
                      self.show_all_protected if self._is_operator() else self.show_all),
-
             MenuItem("5", "Търсене", self.search),
-
             MenuItem("6", "Сортиране на продукти",
                      self.sort_menu_protected if self._is_operator() else self.sort_menu),
-
             MenuItem("7", "Средна цена", self.average_price),
             MenuItem("8", "Филтриране по категория", self.filter_by_category),
             MenuItem("9", "Увеличаване на количество", self.increase_quantity),
@@ -90,7 +85,6 @@ class ProductView:
     def _is_operator():
         # Ограничаваме достъпа според ролята
         return False  # placeholder, реалната проверка е в show_menu()
-
 
     # Основно меню
     def show_menu(self, user: User):
@@ -265,11 +259,9 @@ class ProductView:
                     target_ids.append(c.category_id)
 
             results = self.product_controller.filter_by_multiple_category_ids(target_ids)
-
             if not results:
                 print(f"Няма продукти в категория '{selected_cat.name}' (и нейните подкатегории).")
                 return
-
             print(f"\n--- Продукти в {selected_cat.name} ---")
             for p in results:
                 print(f"{p.name} | Склад: {p.location_id} | {self.format_lv(p.price)} | {p.quantity} {p.unit}")

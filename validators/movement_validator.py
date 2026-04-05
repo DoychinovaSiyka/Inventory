@@ -19,7 +19,6 @@ class MovementValidator:
 
         return quantity
 
-
     # PRICE PARSING
     @staticmethod
     def parse_price(price, movement_type=None):
@@ -117,5 +116,4 @@ class MovementValidator:
         allowed_units = ["бр.", "кг", "г", "л", "мл", "стек", "кашон"]
         if unit not in allowed_units:
             raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
-
         return unit

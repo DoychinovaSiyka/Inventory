@@ -8,8 +8,6 @@ class SupplierView:
     def __init__(self, controller: SupplierController):
         self.controller = controller
         self.menu = None  # ще се създаде динамично според ролята
-
-
     # Основно меню
     def show_menu(self, user: User):
         self.menu = self._build_menu(user)
@@ -19,40 +17,27 @@ class SupplierView:
             result = self.menu.execute(choice, user)
             if result == "break":
                 break
-
-
     # Създаване на менюто отделно
     def _build_menu(self, user: User):
         is_admin = user.role == "Admin"
-
-        menu_items = [
-            MenuItem("1", "Списък с доставчици", self.show_suppliers)
-        ]
-
+        menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
         # admin-only функции
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на доставчик", self.add_supplier),
-                MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)
-            ])
-
+            menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
+                               MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
+                               MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
-
         return Menu("Меню Доставчици", menu_items)
 
 
     # списък с доставчици
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
-
         if not suppliers:
             print("Няма налични доставчици.")
             return
-
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
-
         print("\n" + format_table(columns, rows))
 
     # добавяне на доставчик (admin only)
@@ -60,7 +45,6 @@ class SupplierView:
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()
         address = input("Адрес: ").strip()
-
         try:
             self.controller.add(name=name, contact=contact, address=address)
             print("Доставчикът е добавен успешно!")
@@ -72,16 +56,13 @@ class SupplierView:
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
         supplier = self.controller.get_by_id(supplier_id)
-
         if not supplier:
             print("Доставчикът не е намерен.")
             return
-
         print("\nОставете празно, ако не искате да променяте полето.")
         new_name = input(f"Ново име ({supplier.name}): ").strip()
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
-
         try:
             self.controller.update( supplier_id=supplier_id, name=new_name or supplier.name,
                                     contact=new_contact or supplier.contact, address=new_address or supplier.address)
@@ -93,7 +74,6 @@ class SupplierView:
     # изтриване на доставчик (admin only)
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-
         try:
             if self.controller.remove(supplier_id):
                 print("Доставчикът е изтрит успешно!")

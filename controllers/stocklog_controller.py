@@ -10,16 +10,19 @@ class StockLogController:
         self.logs = [StockLog.from_dict(l) for l in self.repo.load()]
 
     # Помощни методи (валидации)
-    def _validate_quantity(self, quantity):
+    @staticmethod
+    def _validate_quantity(quantity):
         # Валидация на количеството
         if quantity <= 0:
             raise ValueError("Количеството трябва да е по-голямо от 0.")
 
-    def _validate_unit(self, unit):
+    @staticmethod
+    def _validate_unit(unit):
         if not unit or not unit.strip():
             raise ValueError("Мерната единица е задължителна.")
 
-    def _validate_action(self, action):
+    @staticmethod
+    def _validate_action(action):
         # РАЗШИРЕНИ позволени действия за по-добра отчетност
         # Добавяме move_in и move_out за нуждите на логистиката
         allowed_actions = ["add", "remove", "move", "move_in", "move_out"]
@@ -37,14 +40,8 @@ class StockLogController:
 
         # Създаване на лог запис
         # Уверяваме се, че location_id се записва точно (напр. "W1")
-        log = StockLog(
-            product_id=str(product_id),
-            location_id=str(location_id),
-            quantity=float(quantity),
-            unit=unit,
-            action=action,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        )
+        log = StockLog(product_id=str(product_id), location_id=str(location_id), quantity=float(quantity),
+                       unit=unit, action=action, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         self.logs.append(log)
         self.save_changes()
@@ -64,10 +61,7 @@ class StockLogController:
 
     def search(self, keyword):
         keyword = keyword.lower()
-        return [
-            log for log in self.logs
-            if keyword in log.action.lower() or keyword in log.timestamp.lower()
-        ]
+        return [ log for log in self.logs if keyword in log.action.lower() or keyword in log.timestamp.lower()]
 
     # SAVE
     def save_changes(self):

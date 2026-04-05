@@ -18,10 +18,8 @@ class User:
 
         # Роля: Admin / Operator / Anonymous
         self.role = role
-
         # Статус: Active / Disabled
         self.status = status
-
         # Метаданни
         self.created = created or datetime.now().isoformat()
         self.modified = modified or datetime.now().isoformat()

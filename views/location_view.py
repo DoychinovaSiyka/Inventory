@@ -7,7 +7,6 @@ from models.user import User
 class LocationView:
     def __init__(self, location_controller: LocationController):
         self.location_controller = location_controller
-
     # Основно меню
     def show_menu(self, user: User):
         menu = self._build_menu(user)
@@ -18,7 +17,6 @@ class LocationView:
 
     def _build_menu(self, user):
         is_admin = user.role == "Admin"
-
         items = [MenuItem("1", "Списък с локации", self.show_all)]
 
         if is_admin:
@@ -56,7 +54,6 @@ class LocationView:
         if not locations:
             print("\n[!] Няма налични локации в системата.")
             return
-
         columns = ["Код (ID)", "Име на обект", "Зона", "Капацитет"]
         rows = [[loc.location_id, loc.name, loc.zone, loc.capacity] for loc in locations]
 
@@ -73,7 +70,6 @@ class LocationView:
         capacity = self._input_capacity("Капацитет (число): ")
         if capacity is None:
             return
-
         try:
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity)
             print(f"[Успех] Локацията е добавена с автоматичен код: {new_loc.location_id}")
@@ -97,7 +93,6 @@ class LocationView:
         new_capacity = self._input_capacity(f"Нов капацитет ({location.capacity}): ",default=location.capacity)
         if new_capacity is None:
             return
-
         try:
             self.location_controller.update( loc_id,name=new_name,zone=new_zone,capacity=new_capacity)
             print(f"[Успех] Данните за '{loc_id}' бяха обновени успешно!")
@@ -114,7 +109,6 @@ class LocationView:
         if confirm != 'y':
             print("Операцията е отказана.")
             return
-
         try:
             if self.location_controller.remove(loc_id):
                 print(f"[Успех] Локация {loc_id} беше премахната от системата.")

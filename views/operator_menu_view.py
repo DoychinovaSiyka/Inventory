@@ -30,11 +30,9 @@ class OperatorMenuView:
 
             # Управление на категории е административна функция → защитаваме
             MenuItem("2", "Управление на категории", self.open_categories),
-
             MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
             # Справките съдържат финансови данни - защитаваме
             MenuItem("4", "Справки", self.open_reports),
-
             # Фактурите съдържат чувствителни данни - защитаваме
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
@@ -53,7 +51,7 @@ class OperatorMenuView:
             if result == "break":
                 break
 
-    # Помощен метод за отваряне на View (козметично подобрение)
+    # Помощен метод за отваряне на View
     @staticmethod
     def _open_view(view_class, *args):
         return view_class(*args)
