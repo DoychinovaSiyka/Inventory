@@ -8,11 +8,8 @@ from views.password_utils import require_password
 
 
 class ProductView:
-    def __init__(self, product_controller: ProductController,
-                 category_controller: CategoryController,
-                 location_controller: LocationController,
+    def __init__(self, product_controller: ProductController,category_controller: CategoryController, location_controller: LocationController,
                  activity_log_controller=None):
-
         self.product_controller = product_controller
         self.category_controller = category_controller
         self.location_controller = location_controller

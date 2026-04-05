@@ -119,9 +119,8 @@ class Application:
     # Анонимен достъп
     def _anonymous_flow(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        guest_user = User( user_id="guest-0000", first_name="Anonymous", last_name="", email="", username="guest",
+        guest_user = User(user_id="guest-0000", first_name="Anonymous", last_name="", email="", username="guest",
                            password="", role="Anonymous", status="Active", created=now, modified=now )
-
         self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN",
                                              "Анонимен достъп.")
         self.anonymous_menu.show_menu(guest_user)

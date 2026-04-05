@@ -51,7 +51,6 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
 
-
     # редактиране на доставчик (admin only)
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
@@ -69,7 +68,6 @@ class SupplierView:
             print("Доставчикът е обновен успешно!")
         except ValueError as e:
             print("Грешка:", e)
-
 
     # изтриване на доставчик (admin only)
     def delete_supplier(self, _):
