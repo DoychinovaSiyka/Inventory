@@ -1,8 +1,6 @@
 from models.stock_log import StockLog
 from storage.json_repository import JSONRepository
 from datetime import datetime
-from validators.stock_log_validator import StockLogValidator
-
 
 class StockLogController:
     def __init__(self, repo: JSONRepository):

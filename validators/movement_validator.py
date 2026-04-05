@@ -1,7 +1,6 @@
-from models.movement import MovementType
-
-
 class MovementValidator:
+
+    ALLOWED_TYPES = ["IN", "OUT", "MOVE"]
 
     # QUANTITY PARSING
     @staticmethod
@@ -19,7 +18,9 @@ class MovementValidator:
     # PRICE PARSING
     @staticmethod
     def parse_price(price, movement_type=None):
-        if movement_type == MovementType.MOVE:
+        movement_type = str(movement_type).upper()
+
+        if movement_type == "MOVE":
             if not price.strip():
                 return 0.0
             try:
@@ -41,26 +42,32 @@ class MovementValidator:
     # DESCRIPTION VALIDATION
     @staticmethod
     def validate_description(description, movement_type=None):
-        if movement_type == MovementType.MOVE:
+        movement_type = str(movement_type).upper()
+
+        if movement_type == "MOVE":
             return
         if not description or not description.strip():
             raise ValueError("Описанието е задължително.")
         if len(description.strip()) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-
     # MOVEMENT TYPE VALIDATION
     @staticmethod
     def validate_movement_type(movement_type):
-        if not isinstance(movement_type, MovementType):
-            raise ValueError("movement_type трябва да бъде MovementType Enum.")
+        # Ако е Enum → взимаме името му (IN, OUT, MOVE)
+        if hasattr(movement_type, "name"):
+            movement_type = movement_type.name
+
+        movement_type = str(movement_type).upper()
+
+        if movement_type not in MovementValidator.ALLOWED_TYPES:
+            raise ValueError("movement_type трябва да бъде IN, OUT или MOVE.")
 
     # PRODUCT ID VALIDATION
     @staticmethod
     def validate_product_id(product_id):
         if not isinstance(product_id, str):
             raise ValueError("product_id трябва да бъде текст (UUID).")
-
         if not product_id.strip():
             raise ValueError("product_id не може да бъде празен.")
 
@@ -73,7 +80,9 @@ class MovementValidator:
     # LOCATION VALIDATION
     @staticmethod
     def validate_locations(from_id, to_id, movement_type):
-        if movement_type == MovementType.MOVE:
+        movement_type = str(movement_type).upper()
+
+        if movement_type == "MOVE":
             if not from_id or not to_id:
                 raise ValueError("MOVE движението изисква начална и крайна локация.")
             if from_id == to_id:
@@ -88,9 +97,11 @@ class MovementValidator:
     # PRICE VALIDATION FOR IN/OUT
     @staticmethod
     def validate_price_for_type(price, movement_type):
-        if movement_type in [MovementType.IN, MovementType.OUT]:
+        movement_type = str(movement_type).upper()
+
+        if movement_type in ["IN", "OUT"]:
             if price <= 0:
-                raise ValueError(f"{movement_type.name} движение трябва да има цена > 0.")
+                raise ValueError(f"{movement_type} движение трябва да има цена > 0.")
 
     # UNIT VALIDATION
     @staticmethod
@@ -110,8 +121,12 @@ class MovementValidator:
         MovementValidator.validate_user_id(movement.user_id)
         MovementValidator.validate_movement_type(movement.movement_type)
         MovementValidator.validate_unit(movement.unit)
-        MovementValidator.validate_locations(movement.from_location_id, movement.to_location_id,
-                                             movement.movement_type)
+        MovementValidator.validate_locations(
+            movement.from_location_id,
+            movement.to_location_id,
+            movement.movement_type
+        )
         MovementValidator.validate_price_for_type(movement.price, movement.movement_type)
+
         if movement.quantity <= 0:
             raise ValueError("quantity трябва да е > 0.")

@@ -1,6 +1,5 @@
 from datetime import datetime
-from validators.validators import StockLogValidator
-
+from validators.stock_log_validator import StockLogValidator
 
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp=None, log_id=None):

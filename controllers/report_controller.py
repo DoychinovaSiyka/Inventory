@@ -23,20 +23,24 @@ class ReportController:
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
-        # Зареждаме всички справки от JSON
+
+        # Зареждаме всички справки от JSON (история)
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
-    # Записване на справките
+    # Записване на всички справки
     def save_changes(self):
         self.repo.save([r.to_dict() for r in self.reports])
 
-    # Създаване на нов отчет
-    def _create_report(self, report_type, parameters, data):
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        report = Report(report_type=report_type, generated_on=now, parameters=parameters, data=data)
+    # Запазване на конкретен отчет
+    def save_report(self, report):
         self.reports.append(report)
         self.save_changes()
-        return report
+
+    # Създаване на нов отчет (НЕ го записва автоматично)
+    def _create_report(self, report_type, parameters, data):
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        return Report(report_type=report_type, generated_on=now,
+                      parameters=parameters, data=data)
 
     # Превръща ID (W1) в име (София)
     def _get_location_display(self, loc_id):
@@ -46,7 +50,6 @@ class ReportController:
         return f"{loc.name} ({loc_id})" if loc else str(loc_id)
 
     # Унифициран метод за движение → dict
-    #  връщаме истински location_id + име на склада
     def _movement_to_dict(self, m):
         loc_id = m.location_id
         loc = self.location_controller.get_by_id(loc_id)
@@ -69,10 +72,7 @@ class ReportController:
             "customer": m.customer if m.movement_type.name == "OUT" else None
         }
 
-    # Унифициран метод за фактура → dict
-    #  invoice_id - истинското ID на фактурата
-
-    #  Филтър → само фактури от OUT движения
+    # Филтър → само фактури от OUT движения
     def _filter_out_invoices(self):
         out_invoices = []
         for inv in self.invoice_controller.invoices:
@@ -81,7 +81,7 @@ class ReportController:
                 out_invoices.append(inv)
         return out_invoices
 
-    #  СПРАВКИ - Справка за наличности
+    # СПРАВКИ - Справка за наличности
     def report_stock(self):
         data = []
         for p in self.product_controller.products:
@@ -114,17 +114,23 @@ class ReportController:
     # Движения по тип
     def report_movements_by_type(self, movement_type):
         movement_type = movement_type.upper()
-        data = [self._movement_to_dict(m) for m in self.movement_controller.movements
-                 if m.movement_type.name == movement_type]
+        data = [
+            self._movement_to_dict(m)
+            for m in self.movement_controller.movements
+            if m.movement_type.name == movement_type
+        ]
         return self._create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
-        data = [self._movement_to_dict(m) for m in self.movement_controller.movements
-                if m.date.startswith(date_str)]
+        data = [
+            self._movement_to_dict(m)
+            for m in self.movement_controller.movements
+            if m.date.startswith(date_str)
+        ]
         return self._create_report("movements_by_date", {"date": date_str}, data)
 
-    #  ПРОДАЖБИ → САМО OUT
+    # ПРОДАЖБИ → САМО OUT
     def report_sales(self):
         invoices = self._filter_out_invoices()
         data = [_invoice_to_dict(inv) for inv in invoices]
@@ -147,3 +153,23 @@ class ReportController:
         invoices = [inv for inv in invoices if inv.date.startswith(date_str)]
         data = [_invoice_to_dict(inv) for inv in invoices]
         return self._create_report("sales_by_date", {"date": date_str}, data)
+
+
+    #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ САМО ВЕДНЪЖ
+    def generate_all_reports(self):
+        """Генерира всички основни отчети при стартиране."""
+        return [
+            self.report_stock(),
+            self.report_movements(),
+            self.report_sales()
+        ]
+
+    def save_reports_once(self, reports):
+        """Записва отчетите само ако не съществуват вече в JSON файла."""
+        existing_ids = {r.report_id for r in self.reports}
+
+        for r in reports:
+            if r.report_id not in existing_ids:
+                self.reports.append(r)
+
+        self.save_changes()

@@ -1,7 +1,6 @@
 from enum import Enum
 from datetime import datetime
-from validators.validators import MovementValidator
-
+from validators.movement_validator import MovementValidator
 
 class MovementType(Enum):
     IN = "IN"

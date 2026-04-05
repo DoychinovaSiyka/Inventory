@@ -4,7 +4,6 @@ from models.category import Category
 from validators.product_validator import ProductValidator
 
 
-
 def validate_uuid(value):
     """Връща валиден UUID като string или None. Хвърля грешка при невалиден формат."""
     if value is None:
@@ -23,23 +22,31 @@ class Product:
         # ОСНОВНА ИДЕНТИФИКАЦИЯ
         self.product_id = validate_uuid(product_id)
         self.name = name
+
         # КАТЕГОРИИ (винаги списък от стрингове)
+        # ВАЖНО: Категориите НЕ са UUID → НЕ ги валидираме като UUID
         self.categories = []
         if isinstance(categories, list):
             for c in categories:
                 if isinstance(c, Category):
-                    self.categories.append(validate_uuid(c.category_id))
+                    # Category обект → взимаме category_id като string
+                    self.categories.append(str(c.category_id))
                 elif isinstance(c, dict):
-                    self.categories.append(validate_uuid(c.get("category_id")))
+                    # dict → взимаме category_id
+                    self.categories.append(str(c.get("category_id")))
                 else:
-                    self.categories.append(validate_uuid(c))
-        # Премахваме празни записи (None)
-        self.categories = [c for c in self.categories if c is not None]
+                    # string → директно добавяме
+                    self.categories.append(str(c))
+
+        # Премахваме празни записи (None, "", и т.н.)
+        self.categories = [c for c in self.categories if c]
+
         # КОЛИЧЕСТВО И ЦЕНА
         try:
             self.quantity = round(float(quantity), 2)
         except (ValueError, TypeError):
             self.quantity = 0.0
+
         try:
             self.price = round(float(price), 2)
         except (ValueError, TypeError):
@@ -51,13 +58,21 @@ class Product:
         self.supplier_id = validate_uuid(supplier_id)
         self.tags = tags if isinstance(tags, list) else []
         self.location_id = str(location_id)
+
         # ДАТИ
         self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # ВАЛИДАЦИЯ
-        ProductValidator.validate_all(self.name, self.categories, self.quantity, self.unit,
-                                      self.description, self.price, self.location_id)
+        ProductValidator.validate_all(
+            self.name,
+            self.categories,
+            self.quantity,
+            self.unit,
+            self.description,
+            self.price,
+            self.location_id
+        )
 
     def is_in_category(self, search_category_id, category_controller):
         """Проверява дали продуктът е в дадена категория или нейните подкатегории."""
@@ -88,11 +103,17 @@ class Product:
                 final_categories.append(str(c))
 
         return {
-            "product_id": str(self.product_id), "name": self.name, "categories": final_categories,
-            "quantity": self.quantity, "unit": self.unit,
-            "description": self.description, "price": self.price,
+            "product_id": str(self.product_id),
+            "name": self.name,
+            "categories": final_categories,
+            "quantity": self.quantity,
+            "unit": self.unit,
+            "description": self.description,
+            "price": self.price,
             "supplier_id": str(self.supplier_id) if self.supplier_id else None,
-            "tags": self.tags, "location_id": self.location_id, "created": self.created,
+            "tags": self.tags,
+            "location_id": self.location_id,
+            "created": self.created,
             "modified": self.modified
         }
 
