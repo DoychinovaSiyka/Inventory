@@ -13,8 +13,12 @@ def generate_next_id(existing_items):
         return 1
     try:
         # movement_id остава число (ID на самия запис в базата)
-        ids = [int(item["movement_id"]) for item in existing_items if "movement_id" in item]
-        return max(ids) + 1
+        ids = [
+            int(item["movement_id"])
+            for item in existing_items
+            if "movement_id" in item and str(item["movement_id"]).isdigit()
+        ]
+        return max(ids) + 1 if ids else 1
     except:
         return 1
 
@@ -28,7 +32,12 @@ class Movement:
             date=None, created=None, modified=None):
 
         # Техническото ID на записа остава int
-        self.movement_id = int(movement_id) if movement_id is not None else None
+        # но вече НЕ насилваме UUID/стринг да става int → пазим го като стринг
+        if movement_id is None:
+            self.movement_id = None
+        else:
+            # ако е чисто число → пазим го като int, иначе като стринг (UUID/код)
+            self.movement_id = int(movement_id) if str(movement_id).isdigit() else str(movement_id)
 
         self.product_id = product_id
         self.user_id = user_id

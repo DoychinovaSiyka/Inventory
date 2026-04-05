@@ -1,52 +1,53 @@
+import uuid
 from datetime import datetime
 from validators.invoice_validator import InvoiceValidator
 
 
-def generate_next_invoice_id(existing_items):
-    # ако няма фактури - започваме от 1
-    if not existing_items:
-        return 1
-
-    try:
-        ids = [int(item.get("invoice_id", 0)) for item in existing_items]
-        return max(ids) + 1
-    except:
-        return 1
-
 class Invoice:
+    """
+    Модел за фактура с истински UUID вместо авто-инкремент ID.
+    Запазва твоята логика, но я прави по-сигурна и реалистична.
+    """
     def __init__(self, invoice_id=None, movement_id=None, product="",
-                     quantity=0, unit="", unit_price=0.0, total_price=None,
-                     customer="", date=None, created=None, modified=None):
-            # id на фактурата (auto increment)
-            self.invoice_id = int(invoice_id) if invoice_id is not None else None
+                 quantity=0, unit="", unit_price=0.0, total_price=None,
+                 customer="", date=None, created=None, modified=None):
 
-            # връзка към movement (1:1)
-            self.movement_id = int(movement_id) if movement_id is not None else None
+        # Ако ID липсва → генерираме нов UUID
+        self.invoice_id = str(invoice_id) if invoice_id else str(uuid.uuid4())
 
-            self.product = product
-            self.quantity = round(float(quantity), 2)
-            self.unit = unit
-            self.unit_price = round(float(unit_price), 2)
+        # movement ID остава int (както при теб)
+        self.movement_id = int(movement_id) if movement_id is not None else None
 
-            self.total_price = round(self.quantity * self.unit_price, 2) if total_price is None \
-                else round(float(total_price), 2)
+        self.product = product
+        self.quantity = round(float(quantity), 2)
+        self.unit = unit
+        self.unit_price = round(float(unit_price), 2)
 
-            self.customer = customer
+        # total_price може да е подадено или да се изчисли
+        self.total_price = round(self.quantity * self.unit_price, 2) \
+            if total_price is None else round(float(total_price), 2)
 
-            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            self.date = date or now
-            self.created = created or now
-            self.modified = modified or now
+        self.customer = customer
 
-            InvoiceValidator.validate_all(self.product, self.customer, self.quantity, self.unit, self.unit_price, self.movement_id)
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.date = date or now
+        self.created = created or now
+        self.modified = modified or now
 
+        # Валидация (твоя логика)
+        InvoiceValidator.validate_all(
+            self.product, self.customer, self.quantity,
+            self.unit, self.unit_price, self.movement_id
+        )
+
+    # UUID не се генерира тук — вече е в конструктора
     def assign_new_id(self, existing_items):
-        # извиква се от контролера, ако id липсва
-        if self.invoice_id is None:
-            self.invoice_id = generate_next_invoice_id(existing_items)
+        """Запазваме метода за съвместимост, но UUID не се прегенерира."""
+        if not self.invoice_id:
+            self.invoice_id = str(uuid.uuid4())
 
     def to_dict(self):
-        # конвертиране към dict за json
+        """Конвертиране към dict за JSON."""
         return {
             "invoice_id": self.invoice_id,
             "movement_id": self.movement_id,
@@ -63,10 +64,17 @@ class Invoice:
 
     @staticmethod
     def from_dict(data):
-        # създаване на invoice от json речник
-        return Invoice(invoice_id=data.get("invoice_id"), movement_id=data.get("movement_id"),
-                       product=data.get("product"), quantity=data.get("quantity"),
-                       unit=data.get("unit", "бр."), unit_price=data.get("unit_price"),
-                       total_price=data.get("total_price"), customer=data.get("customer"),
-                       date=data.get("date"), created=data.get("created"),
-                       modified=data.get("modified"))
+        """Създаване на Invoice от JSON речник."""
+        return Invoice(
+            invoice_id=data.get("invoice_id"),
+            movement_id=data.get("movement_id"),
+            product=data.get("product"),
+            quantity=data.get("quantity"),
+            unit=data.get("unit", "бр."),
+            unit_price=data.get("unit_price"),
+            total_price=data.get("total_price"),
+            customer=data.get("customer"),
+            date=data.get("date"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )

@@ -14,22 +14,17 @@ class ReportController:
         self.location_controller = location_controller
 
         # Зареждаме всички справки от JSON
+        # Вече няма report_id → чисто зареждане
         self.reports = [Report.from_dict(r) for r in self.repo.load()]
 
-
-    # Помощни методи
-    def _generate_id(self):
-        if not self.reports:
-            return 1
-        return max(r.report_id for r in self.reports) + 1
-
+    # Записване на справките
     def save_changes(self):
         self.repo.save([r.to_dict() for r in self.reports])
 
+    # Създаване на нов отчет (без ID)
     def _create_report(self, report_type, parameters, data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         report = Report(
-            report_id=self._generate_id(),
             report_type=report_type,
             generated_on=now,
             parameters=parameters,
@@ -51,7 +46,7 @@ class ReportController:
         return {
             "date": m.date,
             "type": m.movement_type.name,
-            "product_id": m.product_id,
+            "product_id": m.product_id,   # ИСТИНСКО ID
             "quantity": round(float(m.quantity), 2),
             "price": round(float(m.price), 2),
             "location": self._get_location_display(m.location_id),
@@ -60,8 +55,10 @@ class ReportController:
         }
 
     # Унифициран метод за фактура → dict
+    # ⭐ ДОБАВИХМЕ invoice_id → истинското ID на фактурата
     def _invoice_to_dict(self, inv):
         return {
+            "invoice_id": inv.invoice_id,   # ← ТОВА Е НОВОТО И ВАЖНОТО
             "date": inv.date,
             "product": inv.product,
             "quantity": round(float(inv.quantity), 2),
@@ -69,8 +66,7 @@ class ReportController:
             "customer": getattr(inv, "customer", None)
         }
 
-
-    # Справки
+    #  СПРАВКИ
     # Справка за наличности
     def report_stock(self):
         data = []
@@ -104,15 +100,23 @@ class ReportController:
     # Движения по тип
     def report_movements_by_type(self, movement_type):
         movement_type = movement_type.upper()
-        data = [self._movement_to_dict(m) for m in self.movement_controller.movements if m.movement_type.name == movement_type]
+        data = [
+            self._movement_to_dict(m)
+            for m in self.movement_controller.movements
+            if m.movement_type.name == movement_type
+        ]
         return self._create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
-        data = [self._movement_to_dict(m) for m in self.movement_controller.movements if m.date.startswith(date_str)]
+        data = [
+            self._movement_to_dict(m)
+            for m in self.movement_controller.movements
+            if m.date.startswith(date_str)
+        ]
         return self._create_report("movements_by_date", {"date": date_str}, data)
 
-    # Продажби
+    # Продажби → ВЕЧЕ С ИСТИНСКО ID
     def report_sales(self):
         data = [self._invoice_to_dict(inv) for inv in self.invoice_controller.invoices]
         return self._create_report("sales_all", {}, data)

@@ -12,36 +12,36 @@ class InvoiceController:
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
 
-        # Зареждаме фактурите от JSON и гарантираме, че всяка има ID
+        # Зареждаме фактурите от JSON
+        # Ако някоя няма UUID → генерираме нов
         for inv in raw:
-            if inv.get("invoice_id") is None:
-                inv["invoice_id"] = self._generate_id()
-            self.invoices.append(Invoice.from_dict(inv))
+            if not inv.get("invoice_id"):
+                # нов UUID се генерира от самия модел Invoice
+                invoice = Invoice.from_dict(inv)
+            else:
+                invoice = Invoice.from_dict(inv)
+
+            self.invoices.append(invoice)
 
         self.save_changes()
 
-    # ID generator
-    def _generate_id(self) -> int:
-        if not self.invoices:
-            return 1
-        return max(inv.invoice_id for inv in self.invoices if inv.invoice_id is not None) + 1
-
     # CREATE
     def add(self, invoice: Invoice) -> Invoice:
-        # ако ID липсва, генерираме
-        if invoice.invoice_id is None:
-            invoice.invoice_id = self._generate_id()
-
+        # UUID вече се генерира в конструктора на Invoice
         self.invoices.append(invoice)
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log( invoice.customer, "GENERATE_INVOICE",f"Invoice created for movement {invoice.movement_id}")
+            self.activity_log.add_log(
+                invoice.customer,
+                "GENERATE_INVOICE",
+                f"Invoice created for movement {invoice.movement_id}"
+            )
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
         if movement.movement_type.name != "OUT":
-            raise ValueError("фактура може да се генерира само при OUT движение.")
+            raise ValueError("Фактура може да се генерира само при OUT движение.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -49,23 +49,37 @@ class InvoiceController:
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
 
-        invoice = Invoice(invoice_id=self._generate_id(), movement_id=movement.movement_id, product=product.name,
-                          quantity=qty, unit=movement.unit, unit_price=unit_price, total_price=total_price, customer=customer,
-                          date=now, created=now, modified=now)
+        # UUID се генерира автоматично от Invoice()
+        invoice = Invoice(
+            movement_id=movement.movement_id,
+            product=product.name,
+            quantity=qty,
+            unit=movement.unit,
+            unit_price=unit_price,
+            total_price=total_price,
+            customer=customer,
+            date=now,
+            created=now,
+            modified=now
+        )
 
         self.invoices.append(invoice)
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(movement.user_id, "GENERATE_INVOICE",
-                                      f"Invoice generated for movement {movement.movement_id}, customer={customer}")
+            self.activity_log.add_log(
+                movement.user_id,
+                "GENERATE_INVOICE",
+                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
+            )
         return invoice
 
     # READ
     def get_all(self) -> List[Invoice]:
         return self.invoices
 
-    def get_by_id(self, invoice_id: int) -> Optional[Invoice]:
+    def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
+        # UUID е string → сравняваме като string
         return next((inv for inv in self.invoices if inv.invoice_id == invoice_id), None)
 
     def get_by_movement_id(self, movement_id: int) -> Optional[Invoice]:
@@ -97,21 +111,25 @@ class InvoiceController:
         return results
 
     # UPDATE
-    def update_customer(self, invoice_id: int, new_customer: str) -> bool:
+    def update_customer(self, invoice_id: str, new_customer: str) -> bool:
         inv = self.get_by_id(invoice_id)
         if not inv:
-            raise ValueError("фактурата не е намерена.")
+            raise ValueError("Фактурата не е намерена.")
 
         inv.customer = new_customer
         inv.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(new_customer, "EDIT_INVOICE", f"Updated customer for invoice {invoice_id}")
+            self.activity_log.add_log(
+                new_customer,
+                "EDIT_INVOICE",
+                f"Updated customer for invoice {invoice_id}"
+            )
         return True
 
     # DELETE
-    def remove(self, invoice_id: int) -> bool:
+    def remove(self, invoice_id: str) -> bool:
         original_len = len(self.invoices)
         self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
 
@@ -161,7 +179,7 @@ class InvoiceController:
             results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start]
 
         if end:
-            results = [ inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
+            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
 
         # total price filtering
         if min_total is not None:

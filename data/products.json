@@ -2,9 +2,7 @@
     {
         "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
         "name": "Ананас",
-        "categories": [
-            "2ed81812-7f7e-48bb-a446-4c96da251856"
-        ],
+        "categories": ["2ed81812-7f7e-48bb-a446-4c96da251856"],
         "quantity": 16.0,
         "unit": "бр.",
         "description": "екзотичен плод",
@@ -18,12 +16,10 @@
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "name": "бира \"Siyka\"",
-        "categories": [
-            "sub-alko-001"
-        ],
+        "categories": ["sub-alko-001"],
         "quantity": 70.0,
         "unit": "бр.",
-        "description": "Тя е едно от най‑старите и най‑разпространени алкохолни питиета в света, като съчетава характерна горчивина от хмела, аромат от малца и различни вкусови профили според стила.",
+        "description": "алкохолна напитка",
         "price": 9.99,
         "supplier_id": null,
         "tags": [],
@@ -34,9 +30,7 @@
     {
         "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
         "name": "вафла \"Боровец\"",
-        "categories": [
-            "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
-        ],
+        "categories": ["new-biscuits-001"],
         "quantity": 31.0,
         "unit": "бр.",
         "description": "без оцветители и консерванти",
@@ -50,9 +44,7 @@
     {
         "product_id": "a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44",
         "name": "зелен лук",
-        "categories": [
-            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
-        ],
+        "categories": ["f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"],
         "quantity": 20.0,
         "unit": "кг",
         "description": "зелен лук",
@@ -66,12 +58,10 @@
     {
         "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
         "name": "картофи",
-        "categories": [
-            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
-        ],
+        "categories": ["f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"],
         "quantity": 8.0,
         "unit": "кг",
-        "description": "зеленчук съдържащ много нишесте и има висока хранителна стойност",
+        "description": "зеленчук съдържащ много нишесте",
         "price": 2.21,
         "supplier_id": null,
         "tags": [],
@@ -82,12 +72,10 @@
     {
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
         "name": "кафе \"Lavazza\"",
-        "categories": [
-            "sub-bezalko-002"
-        ],
+        "categories": ["sub-bezalko-002"],
         "quantity": 37.22,
         "unit": "бр.",
-        "description": "Италианско кафе - плътен вкус, богат аромат и перрфектен баланс за всякакъв тип приготвяне",
+        "description": "кафе напитка",
         "price": 4.89,
         "supplier_id": null,
         "tags": [],
@@ -98,12 +86,10 @@
     {
         "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
         "name": "кафе 3 в 1",
-        "categories": [
-            "sub-bezalko-002"
-        ],
+        "categories": ["sub-bezalko-002"],
         "quantity": 78.0,
         "unit": "бр.",
-        "description": "напитка кофеинова",
+        "description": "разтворима напитка",
         "price": 3.21,
         "supplier_id": null,
         "tags": [],
@@ -114,9 +100,7 @@
     {
         "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
         "name": "киви",
-        "categories": [
-            "2ed81812-7f7e-48bb-a446-4c96da251856"
-        ],
+        "categories": ["2ed81812-7f7e-48bb-a446-4c96da251856"],
         "quantity": 3.0,
         "unit": "кг",
         "description": "плод",
@@ -130,12 +114,10 @@
     {
         "product_id": "d9c3b7a5-1e4f-4a9c-8b2d-5f7a1c3e8b77",
         "name": "кокоши и пъдпъдъчи яйца",
-        "categories": [
-            "47a393b7-2385-43cd-812c-5eb5d00964dc"
-        ],
+        "categories": ["47a393b7-2385-43cd-812c-5eb5d00964dc"],
         "quantity": 117.0,
         "unit": "бр.",
-        "description": "от свободно отглеждани кокошки",
+        "description": "яйца от свободно отглеждани кокошки",
         "price": 6.99,
         "supplier_id": "00000000-0000-0000-0000-000000000001",
         "tags": [],
@@ -146,12 +128,10 @@
     {
         "product_id": "e1568d65-c481-4b52-8fb8-5c6a45870fe5",
         "name": "пица",
-        "categories": [
-            "80e92038-6cec-4286-a14d-60432c76ba97"
-        ],
+        "categories": ["new-pastry-001"],
         "quantity": 56.0,
         "unit": "бр.",
-        "description": "тестено изделие, произведено в Италия",
+        "description": "тестено изделие",
         "price": 3.09,
         "supplier_id": null,
         "tags": [],
@@ -162,12 +142,10 @@
     {
         "product_id": "c1e7f9a3-4b2d-4e0f-9c8a-3d5f7b1a6c88",
         "name": "Подправки микс",
-        "categories": [
-            "22c76763-e708-49a3-9e3b-199e9d70a7f3"
-        ],
+        "categories": ["22c76763-e708-49a3-9e3b-199e9d70a7f3"],
         "quantity": 12.0,
         "unit": "бр.",
-        "description": "Ароматен микс от подправки – подходящ за месни, зеленчукови и традиционни български ястия.",
+        "description": "микс от подправки",
         "price": 1.95,
         "supplier_id": null,
         "tags": [],
@@ -178,12 +156,10 @@
     {
         "product_id": "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99",
         "name": "Прясно мляко",
-        "categories": [
-            "sub-dairy-002"
-        ],
+        "categories": ["sub-dairy-002"],
         "quantity": 17.0,
         "unit": "бр.",
-        "description": "Прясно краве мляко 3.2% масленост – 1 литър.",
+        "description": "прясно краве мляко",
         "price": 4.01,
         "supplier_id": null,
         "tags": [],
@@ -194,9 +170,7 @@
     {
         "product_id": "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
         "name": "Розови домати",
-        "categories": [
-            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
-        ],
+        "categories": ["f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"],
         "quantity": 199.0,
         "unit": "бр.",
         "description": "домашни розови домати",
@@ -209,13 +183,11 @@
     },
     {
         "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "name": "сладолед \"Family\" с вкус на шоколад",
-        "categories": [
-            "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
-        ],
+        "name": "сладолед \"Family\"",
+        "categories": ["new-sugar-001"],
         "quantity": 400.0,
         "unit": "бр.",
-        "description": "с вкус на шоколад и какао",
+        "description": "сладолед с вкус на шоколад",
         "price": 9.99,
         "supplier_id": "00000000-0000-0000-0000-000000000003",
         "tags": [],
@@ -226,12 +198,10 @@
     {
         "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
         "name": "шоколад \"Kinder\"",
-        "categories": [
-            "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
-        ],
+        "categories": ["new-choco-001"],
         "quantity": 134.0,
         "unit": "бр.",
-        "description": "за деца над 7 годишно възраст",
+        "description": "шоколадов десерт",
         "price": 3.34,
         "supplier_id": null,
         "tags": [],
@@ -242,12 +212,10 @@
     {
         "product_id": "ac1e582c-c606-46f3-a669-a836098a1a6e",
         "name": "Портокали \"Мерлин\"",
-        "categories": [
-            "2ed81812-7f7e-48bb-a446-4c96da251856"
-        ],
+        "categories": ["2ed81812-7f7e-48bb-a446-4c96da251856"],
         "quantity": 45.0,
         "unit": "кг",
-        "description": "сладки портокали, сорт \"Мерлин\", внос Гърция",
+        "description": "портокали сорт Мерлин",
         "price": 3.47,
         "supplier_id": null,
         "tags": [],
@@ -258,12 +226,10 @@
     {
         "product_id": "4374c1a6-de5f-48ae-a0e8-0d029d4f97a6",
         "name": "кори за баница \"Bella\"",
-        "categories": [
-            "80e92038-6cec-4286-a14d-60432c76ba97"
-        ],
+        "categories": ["new-pastry-001"],
         "quantity": 45.0,
         "unit": "бр.",
-        "description": "съставени от брашно",
+        "description": "кори за баница",
         "price": 3.01,
         "supplier_id": null,
         "tags": [],

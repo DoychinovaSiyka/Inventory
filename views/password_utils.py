@@ -41,8 +41,24 @@ def input_password(prompt="Въведете парола: "):
     return password
 
 
-
 def format_table(columns, rows):
+    """
+    Форматира таблица в текстов вид.
+    Гарантира, че rows винаги е списък, дори ако е None.
+    """
+    # --- FIX: rows може да е None → правим го празен списък ---
+    if rows is None:
+        rows = []
+
+    # Ако няма редове – връщаме само заглавна таблица
+    if not rows:
+        col_widths = [len(col) + 2 for col in columns]
+        top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
+        header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"
+        bottom_border = top_border
+        return "\n".join([top_border, header, bottom_border])
+
+    # --- Нормална логика ---
     all_rows = [columns] + rows
     col_widths = [max(len(str(row[i])) for row in all_rows) + 2 for i in range(len(columns))]
 
@@ -105,8 +121,6 @@ def show_products_menu(product_controller):
             p.name,p.price,p.quantity,categories])
 
     print("\n" + format_table(columns, rows))
-
-
 
 
 # Кодовете на специалните клавиши не са ASCII или Unicode.

@@ -4,14 +4,17 @@ from controllers.report_controller import ReportController
 from models.user import User
 
 
+def short_id(uuid_str: str) -> str:
+    """Връща първите 8 символа от UUID за по-красиви таблици."""
+    return uuid_str[:8] if uuid_str else None   # ВАЖНО: връщаме None, за да знаем че няма ID
+
+
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
         self.location_controller = controller.location_controller
-        # Създаваме менюто отделно
         self.menu = self._build_menu()
 
-    # Основно меню
     def show_menu(self, user: User):
         while True:
             choice = self.menu.show()
@@ -29,8 +32,6 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-
-    # Помощни методи
     @staticmethod
     def _clean_none(value, replacement="—"):
         return replacement if value is None else str(value)
@@ -56,55 +57,94 @@ class ReportsView:
         except:
             return str(value)
 
-    # Обработка на данни за таблица
+    # ПРОДАЖБИ (ИМАТ ID)
     def _process_data(self, data):
         rows = []
+        has_id = False
+
         for item in data:
-            row_id = self._clean_none(item.get('id'))
+            # ПЪЛЕН UUID, без short_id()
+            row_id = item.get('invoice_id')
+
+            if row_id:
+                has_id = True
+
             p_name = item.get('product', '—')
             qty = float(item.get('quantity', 0) or 0)
+
             raw_total = item.get('total_price', item.get('total', 0))
             total = float(raw_total or 0)
+
             raw_price = item.get('price')
             if raw_price is None or raw_price == 0:
                 price = round(total / qty, 2) if qty > 0 else 0
             else:
                 price = round(float(raw_price), 2)
 
-            rows.append([row_id, p_name, self._format_qty(qty, p_name), self._format_lv(price), self._format_lv(total),
-                         self._clean_none(item.get('customer')), self._clean_none(item.get('date'))])
-            return rows
+            rows.append([
+                row_id,  # ПЪЛЕН UUID
+                p_name,
+                self._format_qty(qty, p_name),
+                self._format_lv(price),
+                self._format_lv(total),
+                self._clean_none(item.get('customer')),
+                self._clean_none(item.get('date'))
+            ])
 
-    # Справки
+        return rows, has_id
+
+    # СПРАВКИ
+    # 1) ПРОДАЖБИ → ИМАТ ID (ако JSON съдържа ID)
+    def _print_sales(self, data):
+        rows, has_id = self._process_data(data)
+
+        columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
+
+        #  Ако НЯМА ID → махаме колоната
+        if not has_id:
+            columns = columns[1:]  # махаме ID
+            rows = [row[1:] for row in rows]
+
+        print(format_table(columns, rows))
+
     def report_sales(self, _):
-        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-                           self._process_data(self.controller.report_sales().data)))
+        self._print_sales(self.controller.report_sales().data)
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
-        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-                           self._process_data(self.controller.report_sales_by_customer(customer).data)))
+        self._print_sales(self.controller.report_sales_by_customer(customer).data)
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
-        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-            self._process_data(self.controller.report_sales_by_product(product).data)))
+        self._print_sales(self.controller.report_sales_by_product(product).data)
 
     def report_sales_by_date(self, _):
         date = input("Дата: ")
-        print(format_table(["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"],
-                           self._process_data(self.controller.report_sales_by_date(date).data)))
+        self._print_sales(self.controller.report_sales_by_date(date).data)
 
+    # 2) НАЛИЧНОСТИ → БЕЗ ID
     def report_stock(self, _):
         data = self.controller.report_stock().data
-        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
-                for i in data]
+        rows = [
+            [i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
+            for i in data
+        ]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
+    # 3) ДВИЖЕНИЯ → ИМАТ ID
     def report_movements(self, _):
         data = self.controller.report_movements().data
-        rows = [[ self._clean_none(i.get('date')), self._clean_none(i.get('type')), self._clean_none(i.get('product_id')),
-            self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')), self._format_lv(i.get('price', 0)),
-            (self.location_controller.get_by_id(i.get('location')).name if self.location_controller.get_by_id(
-                i.get('location')) else "—")] for i in data]
+
+        rows = [[
+            self._clean_none(i.get('date')),
+            self._clean_none(i.get('type')),
+            i.get('product_id'),
+            self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')),
+            self._format_lv(i.get('price', 0)),
+
+
+            (self.location_controller.get_by_id(i.get('location_id')).name
+             if self.location_controller.get_by_id(i.get('location_id')) else "Няма склад")
+        ] for i in data]
+
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))

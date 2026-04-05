@@ -10,7 +10,6 @@ class InvoiceView:
         self.activity_log = activity_log_controller
         self.menu = self._build_menu()
 
-    # Основно меню
     def show_menu(self, user: User):
         while True:
             choice = self.menu.show()
@@ -18,7 +17,6 @@ class InvoiceView:
             if result == "break":
                 break
 
-    # Създаване на менюто отделно
     def _build_menu(self):
         return Menu("Меню Фактури", [
             MenuItem("1", "Списък с всички фактури", self.show_all),
@@ -30,7 +28,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Списък с всички фактури
+    # 1. Списък с всички фактури
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -41,15 +39,24 @@ class InvoiceView:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICES", "Viewed all invoices")
 
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
-        rows = [[inv.invoice_id, inv.product, f"{inv.quantity} {inv.unit}",
-                 f"{inv.unit_price} лв.", f"{inv.total_price} лв.",
-                 inv.customer, inv.date] for inv in invoices]
+        rows = [
+            [
+                inv.invoice_id,
+                inv.product,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.unit_price} лв.",
+                f"{inv.total_price} лв.",
+                inv.customer,
+                inv.date
+            ]
+            for inv in invoices
+        ]
 
         print("\n" + format_table(columns, rows))
 
-    # Преглед на фактура по ID
+    # 2. Преглед по ID
     def view_by_id(self, user):
-        invoice_id = input("Въведете ID на фактура: ")
+        invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
         invoice = self.invoice_controller.get_by_id(invoice_id)
 
         if not invoice:
@@ -60,14 +67,20 @@ class InvoiceView:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICE", f"Viewed invoice {invoice_id}")
 
         columns = ["Поле", "Стойност"]
-        rows = [["ID", invoice.invoice_id], ["Movement ID", invoice.movement_id],
-                ["Продукт", invoice.product], ["Количество", f"{invoice.quantity} {invoice.unit}"],
-                ["Единична цена", f"{invoice.unit_price} лв."],
-                ["Обща цена", f"{invoice.total_price} лв."], ["Клиент", invoice.customer], ["Дата", invoice.date]]
+        rows = [
+            ["ID", invoice.invoice_id],
+            ["Movement ID", invoice.movement_id],
+            ["Продукт", invoice.product],
+            ["Количество", f"{invoice.quantity} {invoice.unit}"],
+            ["Единична цена", f"{invoice.unit_price} лв."],
+            ["Обща цена", f"{invoice.total_price} лв."],
+            ["Клиент", invoice.customer],
+            ["Дата", invoice.date]
+        ]
 
         print("\n" + format_table(columns, rows))
 
-    # Търсене по клиент
+    # 3. Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ")
         results = self.invoice_controller.search_by_customer(keyword)
@@ -81,12 +94,20 @@ class InvoiceView:
                                       f"Searched invoices by customer '{keyword}'")
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
-        rows = [[inv.invoice_id, inv.product, f"{inv.quantity} {inv.unit}",
-                 f"{inv.total_price} лв.", inv.date] for inv in results]
+        rows = [
+            [
+                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.product,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв.",
+                inv.date
+            ]
+            for inv in results
+        ]
 
         print("\n" + format_table(columns, rows))
 
-    # Търсене по продукт
+    # 4. Търсене по продукт
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ")
         results = self.invoice_controller.search_by_product(keyword)
@@ -100,12 +121,20 @@ class InvoiceView:
                                       f"Searched invoices by product '{keyword}'")
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [[inv.invoice_id, inv.customer, f"{inv.quantity} {inv.unit}",
-                 f"{inv.total_price} лв.", inv.date] for inv in results]
+        rows = [
+            [
+                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв.",
+                inv.date
+            ]
+            for inv in results
+        ]
 
         print("\n" + format_table(columns, rows))
 
-    # Търсене по дата
+    # 5. Търсене по дата
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ")
         results = self.invoice_controller.search_by_date(date_str)
@@ -119,13 +148,20 @@ class InvoiceView:
                                       f"Searched invoices by date '{date_str}'")
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
-        rows = [[inv.invoice_id, inv.product, inv.customer,
-                 f"{inv.quantity} {inv.unit}", f"{inv.total_price} лв."]
-                for inv in results]
+        rows = [
+            [
+                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.product,
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв."
+            ]
+            for inv in results
+        ]
 
         print("\n" + format_table(columns, rows))
 
-    # Разширено търсене
+    # 6. Разширено търсене
     def advanced_search(self, user):
         print("\n=== Разширено търсене на фактури ===")
 
@@ -143,16 +179,31 @@ class InvoiceView:
             print("Невалидна стойност за цена.")
             return
 
-        results = self.invoice_controller.advanced_search(customer=customer, product=product, start_date=start_date, end_date=end_date,
-                                                          min_total=min_total, max_total=max_total)
+        results = self.invoice_controller.advanced_search(
+            customer=customer,
+            product=product,
+            start_date=start_date,
+            end_date=end_date,
+            min_total=min_total,
+            max_total=max_total
+        )
+
         if not results:
             print("\nНяма фактури, които отговарят на критериите.")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [[inv.invoice_id, inv.product, inv.customer,
-                 f"{inv.quantity} {inv.unit}", f"{inv.total_price} лв.",
-                 inv.date] for inv in results]
+        rows = [
+            [
+                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.product,
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв.",
+                inv.date
+            ]
+            for inv in results
+        ]
 
         print("\n" + format_table(columns, rows))
 
