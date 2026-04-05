@@ -29,7 +29,6 @@ class Application:
         #  Инициализация на менютата
         self._init_menus()
 
-
     # Инициализация на хранилищата
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
@@ -41,7 +40,6 @@ class Application:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
-
 
     # Инициализация на контролерите
     def _init_controllers(self):
@@ -69,7 +67,6 @@ class Application:
 
         self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
                                                   self.invoice_controller, self.location_controller)
-
         # Инициализация на логистичния модул (Dijkstra)
         self.logistic_service = GraphView(self.product_controller)
 
