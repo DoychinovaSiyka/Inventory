@@ -4,10 +4,6 @@ from controllers.report_controller import ReportController
 from models.user import User
 
 
-def short_id(uuid_str: str) -> str:
-    """Връща първите 8 символа от UUID за по-красиви таблици."""
-    return uuid_str[:8] if uuid_str else None   # ВАЖНО: връщаме None, за да знаем че няма ID
-
 
 class ReportsView:
     def __init__(self, controller: ReportController):
@@ -126,7 +122,8 @@ class ReportsView:
         if not data:
             print("\nНяма налични продукти.\n")
             return
-        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])] for i in data]
+        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
+                for i in data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
     # ДВИЖЕНИЯ → ИМАТ ID (movement_id)
@@ -140,7 +137,8 @@ class ReportsView:
         rows = []
         for i in data:
             # устойчиво извличане на ID на локацията
-            loc_id = ( i.get('location_id') or i.get('location') or i.get('loc') or i.get('warehouse') or i.get('warehouse_id'))
+            loc_id = ( i.get('location_id') or i.get('location') or i.get('loc')
+                       or i.get('warehouse') or i.get('warehouse_id'))
 
             # Намиране на склада
             location = self.location_controller.get_by_id(loc_id) if loc_id else None

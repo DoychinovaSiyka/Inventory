@@ -8,7 +8,7 @@ class SupplierView:
     def __init__(self, controller: SupplierController):
         self.controller = controller
         self.menu = None  # ще се създаде динамично според ролята
-    # Основно меню
+
     def show_menu(self, user: User):
         self.menu = self._build_menu(user)
 

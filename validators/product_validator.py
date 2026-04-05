@@ -48,7 +48,6 @@ class ProductValidator:
         if unit not in allowed_units:
             raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
 
-
     # DESCRIPTION
     @staticmethod
     def validate_description(description):
@@ -57,7 +56,6 @@ class ProductValidator:
         if len(description) > 255:
             raise ValueError("Описанието не може да бъде повече от 255 символа.")
 
-    # PRICE
     @staticmethod
     def validate_price(price):
         if not isinstance(price, (int, float)):
@@ -67,7 +65,8 @@ class ProductValidator:
 
     # FULL VALIDATION
     @staticmethod
-    def validate_all(name, category_ids, quantity, unit, description, price, location_id=None, category_controller=None):
+    def validate_all(name, category_ids, quantity, unit, description, price,
+                     location_id=None, category_controller=None):
         ProductValidator.validate_name(name)
         ProductValidator.validate_categories(category_ids, category_controller)
         ProductValidator.validate_quantity(quantity)

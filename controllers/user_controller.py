@@ -104,7 +104,6 @@ class UserController:
         new_user = User(first_name=first_name, last_name=last_name, email=email,
                         username=username, password=self._hash_password(password),
                         role=role, status="Active", created=now, modified=now)
-
         self.users.append(new_user)
         self.save_changes()
         return new_user

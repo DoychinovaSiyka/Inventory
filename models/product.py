@@ -1,16 +1,19 @@
 from datetime import datetime
 import uuid
 from models.category import Category
+from validators.product_validator import ProductValidator
+
 
 
 def validate_uuid(value):
-    """Валидира и превръща стойността в стринг. Справя се с UUID обекти и None."""
+    """Връща валиден UUID като string или None. Хвърля грешка при невалиден формат."""
     if value is None:
         return None
     try:
+        uuid.UUID(str(value))
         return str(value)
-    except:
-        return str(value)
+    except ValueError:
+        raise ValueError(f"Невалиден UUID формат: {value}")
 
 
 class Product:
@@ -30,16 +33,13 @@ class Product:
                     self.categories.append(validate_uuid(c.get("category_id")))
                 else:
                     self.categories.append(validate_uuid(c))
-
         # Премахваме празни записи (None)
         self.categories = [c for c in self.categories if c is not None]
-
         # КОЛИЧЕСТВО И ЦЕНА
         try:
             self.quantity = round(float(quantity), 2)
         except (ValueError, TypeError):
             self.quantity = 0.0
-
         try:
             self.price = round(float(price), 2)
         except (ValueError, TypeError):
@@ -51,10 +51,13 @@ class Product:
         self.supplier_id = validate_uuid(supplier_id)
         self.tags = tags if isinstance(tags, list) else []
         self.location_id = str(location_id)
-
         # ДАТИ
         self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # ВАЛИДАЦИЯ
+        ProductValidator.validate_all(self.name, self.categories, self.quantity, self.unit,
+                                      self.description, self.price, self.location_id)
 
     def is_in_category(self, search_category_id, category_controller):
         """Проверява дали продуктът е в дадена категория или нейните подкатегории."""
@@ -66,7 +69,6 @@ class Product:
             cat_obj = category_controller.get_by_id(my_cat_id)
             if cat_obj and str(cat_obj.parent_id) == search_id:
                 return True
-
         return False
 
     def update_modified(self):
@@ -86,24 +88,28 @@ class Product:
                 final_categories.append(str(c))
 
         return {
-            "product_id": str(self.product_id),
-            "name": self.name,
-            "categories": final_categories,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
+            "product_id": str(self.product_id), "name": self.name, "categories": final_categories,
+            "quantity": self.quantity, "unit": self.unit,
+            "description": self.description, "price": self.price,
             "supplier_id": str(self.supplier_id) if self.supplier_id else None,
-            "tags": self.tags,
-            "location_id": self.location_id,
-            "created": self.created,
+            "tags": self.tags, "location_id": self.location_id, "created": self.created,
             "modified": self.modified
         }
 
     @staticmethod
     def from_dict(data):
         """Безопасно зареждане на данни от JSON."""
-        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"), categories=data.get("categories", []),
-            quantity=data.get("quantity", 0), unit=data.get("unit", "бр."), description=data.get("description", ""),
-            price=data.get("price", 0), supplier_id=data.get("supplier_id"), tags=data.get("tags", []),
-            location_id=data.get("location_id", "W1"), created=data.get("created"), modified=data.get("modified"))
+        return Product(
+            product_id=data.get("product_id"),
+            name=data.get("name", "Неизвестен"),
+            categories=data.get("categories", []),
+            quantity=data.get("quantity", 0),
+            unit=data.get("unit", "бр."),
+            description=data.get("description", ""),
+            price=data.get("price", 0),
+            supplier_id=data.get("supplier_id"),
+            tags=data.get("tags", []),
+            location_id=data.get("location_id", "W1"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )

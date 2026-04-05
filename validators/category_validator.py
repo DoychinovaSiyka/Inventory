@@ -4,14 +4,11 @@ class CategoryValidator:
     def validate_name(name):
         if not isinstance(name, str):
             raise ValueError("Името на категорията трябва да е текст.")
-
         cleaned_name = name.strip()
         if not cleaned_name:
             raise ValueError("Името на категорията е задължително.")
-
         if len(cleaned_name) < 2:
             raise ValueError("Името е твърде кратко (минимум 2 символа).")
-
         if len(cleaned_name) > 50:
             raise ValueError("Името на категорията не може да надвишава 50 символа.")
 

@@ -18,7 +18,6 @@ class LocationView:
     def _build_menu(self, user):
         is_admin = user.role == "Admin"
         items = [MenuItem("1", "Списък с локации", self.show_all)]
-
         if is_admin:
             items.extend([ MenuItem("2", "Добавяне на нова локация", self.add_location),
                            MenuItem("3", "Редактиране на съществуваща локация", self.edit_location),
@@ -90,11 +89,12 @@ class LocationView:
         new_name = input(f"Ново име ({location.name}): ").strip() or location.name
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or location.zone
 
-        new_capacity = self._input_capacity(f"Нов капацитет ({location.capacity}): ",default=location.capacity)
+        new_capacity = self._input_capacity(f"Нов капацитет ({location.capacity}): ",
+                                            default=location.capacity)
         if new_capacity is None:
             return
         try:
-            self.location_controller.update( loc_id,name=new_name,zone=new_zone,capacity=new_capacity)
+            self.location_controller.update(loc_id, name=new_name, zone=new_zone, capacity=new_capacity)
             print(f"[Успех] Данните за '{loc_id}' бяха обновени успешно!")
         except ValueError as e:
             print(f"[Грешка] {e}")

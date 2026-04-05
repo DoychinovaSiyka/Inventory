@@ -33,10 +33,8 @@ class ProductController:
                 else:
                     c_id = getattr(cid, 'category_id', cid)
                     c = self.category_controller.get_by_id(c_id)
-
                 if c:
                     fixed_categories.append(c)
-
             product.categories = fixed_categories
             self.products.append(product)
 
@@ -234,14 +232,11 @@ class ProductController:
         keyword = (keyword or "").lower().strip()
         if not keyword:
             return []
-
         results = []
-
         for p in self.products:
             if keyword in p.name.lower() or keyword in (p.description or "").lower():
                 results.append(p)
                 continue
-
             for cat in p.categories:
                 if isinstance(cat, str):
                     cat_obj = self.category_controller.get_by_id(cat)
@@ -345,7 +340,6 @@ class ProductController:
                 j += 1
 
             sorted_products[i], sorted_products[best_idx] = (sorted_products[best_idx], sorted_products[i])
-
             i += 1
 
         return sorted_products

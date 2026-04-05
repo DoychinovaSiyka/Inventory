@@ -15,7 +15,6 @@ class LocationValidator:
         if zone is not None and len(zone) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
 
-    # CAPACITY VALIDATION
     @staticmethod
     def validate_capacity(capacity):
         if not isinstance(capacity, int):

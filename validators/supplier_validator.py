@@ -24,14 +24,12 @@ class SupplierValidator:
             raise ValueError("Контактната информация е задължителна.")
 
         contact = contact.strip()
-
         # Валиден имейл
         if SupplierValidator.email_regex.match(contact):
             return True
         # Валиден телефон
         if SupplierValidator.phone_regex.match(contact):
             return True
-
         raise ValueError("Контактът трябва да бъде валиден имейл или телефон.")
 
     # ADDRESS VALIDATION

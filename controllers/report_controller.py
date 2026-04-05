@@ -30,15 +30,10 @@ class ReportController:
     def save_changes(self):
         self.repo.save([r.to_dict() for r in self.reports])
 
-    # Създаване на нов отчет (без ID)
+    # Създаване на нов отчет
     def _create_report(self, report_type, parameters, data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        report = Report(
-            report_type=report_type,
-            generated_on=now,
-            parameters=parameters,
-            data=data
-        )
+        report = Report(report_type=report_type, generated_on=now, parameters=parameters, data=data)
         self.reports.append(report)
         self.save_changes()
         return report
@@ -61,7 +56,7 @@ class ReportController:
         product_name = product.name if product else "Неизвестен продукт"
 
         return {
-            "movement_id": m.movement_id,  # ← ТОВА Е ID-то, което искаш
+            "movement_id": m.movement_id,
             "date": m.date,
             "type": m.movement_type.name,
             "product_id": m.product_id,
@@ -75,7 +70,7 @@ class ReportController:
         }
 
     # Унифициран метод за фактура → dict
-    #  ДОБАВИХ invoice_id → истинското ID на фактурата
+    #  invoice_id - истинското ID на фактурата
 
     #  Филтър → само фактури от OUT движения
     def _filter_out_invoices(self):
@@ -119,20 +114,14 @@ class ReportController:
     # Движения по тип
     def report_movements_by_type(self, movement_type):
         movement_type = movement_type.upper()
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.movement_type.name == movement_type
-        ]
+        data = [self._movement_to_dict(m) for m in self.movement_controller.movements
+                 if m.movement_type.name == movement_type]
         return self._create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.date.startswith(date_str)
-        ]
+        data = [self._movement_to_dict(m) for m in self.movement_controller.movements
+                if m.date.startswith(date_str)]
         return self._create_report("movements_by_date", {"date": date_str}, data)
 
     #  ПРОДАЖБИ → САМО OUT

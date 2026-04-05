@@ -13,9 +13,7 @@ class UserView:
         if user.role != "Admin":
             print("Само администратор може да управлява потребители.")
             return
-
         self.menu = self._build_menu()
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
@@ -48,7 +46,6 @@ class UserView:
         username = input("Потребителско име: ")
         password = input("Парола: ")
         role = input("Роля (Admin/Operator): ")
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("Потребителят е добавен!")
@@ -59,7 +56,6 @@ class UserView:
     def change_role(self, user):
         username = input("Потребителско име: ")
         new_role = input("Нова роля (Admin/Operator): ")
-
         try:
             if self.controller.change_role(user, username, new_role):
                 print("Ролята е променена.")
@@ -71,7 +67,6 @@ class UserView:
     # Деактивиране на потребител
     def deactivate_user(self, user):
         username = input("Потребителско име: ")
-
         try:
             if self.controller.deactivate_user(user, username):
                 print("Потребителят е деактивиран.")

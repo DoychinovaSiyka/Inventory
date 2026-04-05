@@ -7,14 +7,13 @@ from storage.repository import Repository
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 
-
 class JSONRepository(Repository):
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
-
         if not self.filepath.exists():
             self.save([])
+
 
     def load(self):
         with open(self.filepath, "r", encoding="utf-8") as f:

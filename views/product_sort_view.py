@@ -11,8 +11,7 @@ class ProductSortView:
 
     # Меню за избор на метод за сортиране
     def _build_menu(self):
-        return Menu("Сортиране на продукти", [
-            MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
+        return Menu("Сортиране на продукти", [MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
             MenuItem("2", "По цена (висока → ниска) – selection sort", self.sort_price_desc),
             MenuItem("3", "По цена (ниска → висока) – bubble sort", self.sort_price_asc),
             MenuItem("4", "По количество (високо → ниско) – bubble sort", self.sort_qty_desc),
@@ -27,7 +26,6 @@ class ProductSortView:
             if result == "break":
                 break
 
-
     #  Сортиране по име (A–Z)
     def sort_by_name(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
@@ -37,7 +35,6 @@ class ProductSortView:
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
-
 
     #  Цена (ниска → висока) – Bubble Sort
     def sort_price_asc(self, _):

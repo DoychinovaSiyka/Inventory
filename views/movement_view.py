@@ -33,7 +33,6 @@ class MovementView:
         if not user:
             print("Трябва да сте логнат, за да правите доставки/продажби.")
             return
-
         while True:
             if self.menu.execute(self.menu.show(), user) == "break":
                 break
@@ -44,11 +43,9 @@ class MovementView:
         if not products:
             print("Няма продукти.")
             return None
-
         print("\nИзберете продукт:")
         for i, p in enumerate(products):
             print(f"{i}. {p.name} ({p.quantity} {p.unit})")
-
         try:
             return products[int(input("Избор: "))]
         except (ValueError, IndexError):
@@ -82,7 +79,8 @@ class MovementView:
             return
 
         try:
-            movement_type = MovementType.IN if int(input("0  Доставка (IN), 1  Продажба (OUT): ")) == 0 else MovementType.OUT
+            movement_type = MovementType.IN if int(input("0  Доставка (IN), 1  Продажба (OUT): ")) == 0 \
+                else MovementType.OUT
         except ValueError:
             print("Невалиден избор.")
             return
@@ -114,17 +112,10 @@ class MovementView:
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            movement = self.movement_controller.add(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                location_id=location.location_id,
-                movement_type=movement_type,
-                quantity=quantity,
-                description=description,
-                price=price,
-                customer=customer,
-                supplier_id=supplier_id
-            )
+            movement = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
+                                                    location_id=location.location_id, movement_type=movement_type,
+                                                    quantity=quantity, description=description, price=price,
+                                                    customer=customer, supplier_id=supplier_id)
 
             print("\nДвижението е добавено успешно!")
             print(f"ID на движението: {movement.movement_id}")
@@ -158,15 +149,10 @@ class MovementView:
         description = input("Описание (по избор): ")
 
         try:
-            movement = self.movement_controller.move_product(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                from_location_id=from_loc.location_id,
-                to_location_id=to_loc.location_id,
-                quantity=float(quantity),
-                description=description
-            )
-
+            movement = self.movement_controller.move_product(product_id=product.product_id, user_id=user.user_id,
+                                                             from_location_id=from_loc.location_id,
+                                                             to_location_id=to_loc.location_id,
+                                                             quantity=float(quantity), description=description)
             print("\nПреместването е извършено успешно!")
             print(f"От {from_loc.location_id} → към {to_loc.location_id}")
             print(f"ID на движението: {movement.movement_id}")

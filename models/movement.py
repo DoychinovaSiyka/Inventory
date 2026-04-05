@@ -1,5 +1,6 @@
 from enum import Enum
 from datetime import datetime
+from validators.validators import MovementValidator
 
 
 class MovementType(Enum):
@@ -16,7 +17,7 @@ class Movement:
             from_location_id=None, to_location_id=None,
             date=None, created=None, modified=None):
 
-        #  movement_id вече е  UUID  винаги string
+        #  movement_id  е  UUID  винаги string
         self.movement_id = str(movement_id) if movement_id is not None else None
         self.product_id = product_id
         self.user_id = user_id
@@ -24,7 +25,6 @@ class Movement:
         self.location_id = str(location_id) if location_id is not None else None
         self.from_location_id = str(from_location_id) if from_location_id is not None else None
         self.to_location_id = str(to_location_id) if to_location_id is not None else None
-
         self.movement_type = movement_type
         self.quantity = quantity
         self.unit = unit
@@ -32,39 +32,12 @@ class Movement:
         self.price = float(price)
         self.supplier_id = supplier_id
         self.customer = customer
-
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
-
-        self.validate()
-
-
-    def validate(self):
-        if self.product_id is None:
-            raise ValueError("product_id е задължително поле.")
-
-        if self.user_id is None:
-            raise ValueError("user_id е задължително поле.")
-
-        if not isinstance(self.movement_type, MovementType):
-            raise ValueError("movement_type трябва да е IN, OUT или MOVE.")
-
-        if self.quantity <= 0:
-            raise ValueError("quantity трябва да е > 0.")
-
-        # Проверка за локации при MOVE
-        if self.movement_type == MovementType.MOVE:
-            if not self.from_location_id or not self.to_location_id:
-                raise ValueError("MOVE движението изисква начална и крайна локация.")
-            if self.from_location_id == self.to_location_id:
-                raise ValueError("Началната и крайната локация не могат да бъдат еднакви.")
-
-        # Валидация за цени
-        if self.movement_type in [MovementType.IN, MovementType.OUT]:
-            if self.price <= 0:
-                raise ValueError(f"{self.movement_type.name} движение трябва да има цена > 0.")
+        # Централизирана валидация
+        MovementValidator.validate_all(self)
 
     def to_dict(self):
         return {

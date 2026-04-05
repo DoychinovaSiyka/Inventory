@@ -20,7 +20,8 @@ class SupplierController:
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        supplier = Supplier(supplier_id=self._generate_id(), name=name, contact=contact, address=address, created=now, modified=now)
+        supplier = Supplier(supplier_id=self._generate_id(), name=name, contact=contact, address=address, created=now,
+                            modified=now)
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier

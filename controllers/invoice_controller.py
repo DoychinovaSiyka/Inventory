@@ -8,10 +8,8 @@ class InvoiceController:
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
-
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
-
         # Зареждаме фактурите от JSON Ако някоя няма UUID → генерираме нов
         for inv in raw:
             if not inv.get("invoice_id"):
@@ -19,58 +17,36 @@ class InvoiceController:
                 invoice = Invoice.from_dict(inv)
             else:
                 invoice = Invoice.from_dict(inv)
-
             self.invoices.append(invoice)
-
         self.save_changes()
 
     # CREATE
     def add(self, invoice: Invoice) -> Invoice:
-        # UUID вече се генерира в конструктора на Invoice
+        # UUID се генерира в конструктора на Invoice
         self.invoices.append(invoice)
         self.save_changes()
-
         if self.activity_log:
-            self.activity_log.add_log(
-                invoice.customer,
-                "GENERATE_INVOICE",
-                f"Invoice created for movement {invoice.movement_id}"
-            )
+            self.activity_log.add_log(invoice.customer, "GENERATE_INVOICE", f"Invoice created for movement {invoice.movement_id}")
         return invoice
+
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
         if movement.movement_type.name != "OUT":
             raise ValueError("Фактура може да се генерира само при OUT движение.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         qty = float(movement.quantity)
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
-
         # UUID се генерира автоматично от Invoice()
-        invoice = Invoice(
-            movement_id=movement.movement_id,
-            product=product.name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            date=now,
-            created=now,
-            modified=now
-        )
-
+        invoice = Invoice(movement_id=movement.movement_id, product=product.name, quantity=qty, unit=movement.unit,
+                          unit_price=unit_price, total_price=total_price, customer=customer, date=now, created=now, modified=now)
         self.invoices.append(invoice)
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                movement.user_id,
-                "GENERATE_INVOICE",
-                f"Invoice generated for movement {movement.movement_id}, customer={customer}"
-            )
+            self.activity_log.add_log(movement.user_id, "GENERATE_INVOICE",
+                                      f"Invoice generated for movement {movement.movement_id}, "f"customer={customer}")
         return invoice
 
     # READ
@@ -100,15 +76,11 @@ class InvoiceController:
 
     def search_by_total_price(self, min_value: Optional[float] = None,
                               max_value: Optional[float] = None) -> List[Invoice]:
-
         results = self.invoices
-
         if min_value is not None:
             results = [inv for inv in results if inv.total_price >= min_value]
-
         if max_value is not None:
             results = [inv for inv in results if inv.total_price <= max_value]
-
         return results
 
     # UPDATE
@@ -122,11 +94,7 @@ class InvoiceController:
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.add_log(
-                new_customer,
-                "EDIT_INVOICE",
-                f"Updated customer for invoice {invoice_id}"
-            )
+            self.activity_log.add_log(new_customer, "EDIT_INVOICE", f"Updated customer for invoice {invoice_id}")
         return True
 
     # DELETE
@@ -136,7 +104,6 @@ class InvoiceController:
 
         if len(self.invoices) < original_len:
             self.save_changes()
-
             if self.activity_log:
                 self.activity_log.add_log("system", "DELETE_INVOICE", f"Deleted invoice {invoice_id}")
             return True
@@ -171,17 +138,14 @@ class InvoiceController:
         # date filtering
         if start:
             results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start]
-
         if end:
             results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
 
         # total price filtering
         if min_total is not None:
             results = [inv for inv in results if inv.total_price >= min_total]
-
         if max_total is not None:
             results = [inv for inv in results if inv.total_price <= max_total]
-
         return results
 
     # SAVE

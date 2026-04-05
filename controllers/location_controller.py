@@ -44,13 +44,10 @@ class LocationController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генерираме ID от типа "W1", "W2"...
-        location = Location(
-            location_id=self._generate_id(), name=name, zone=zone, capacity=capacity, created=now, modified=now)
-
+        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity, created=now, modified=now)
         self.locations.append(location)
         self.save_changes()
         return location
-
 
     # READ
     def get_all(self) -> List[Location]:
@@ -63,7 +60,6 @@ class LocationController:
     # UPDATE
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity: Optional[int] = None) -> bool:
-
         location = self.get_by_id(location_id)
         if not location:
             raise ValueError("Локацията не е намерена.")
@@ -74,21 +70,17 @@ class LocationController:
             if any(l.name.lower() == name.lower() and l.location_id != location_id for l in self.locations):
                 raise ValueError("Локация с това име вече съществува.")
             location.name = name
-
         if zone is not None:
             location.zone = zone
-
         if capacity is not None:
             if capacity < 0:
                 raise ValueError("Капацитетът трябва да бъде >= 0.")
             location.capacity = capacity
-
         location.update_modified()
         self.save_changes()
         return True
 
 
-    # DELETE
     def remove(self, location_id: str) -> bool:
         original_len = len(self.locations)
 
@@ -96,7 +88,6 @@ class LocationController:
         if len(self.locations) < original_len:
             self.save_changes()
             return True
-
         return False
 
     # SAVE

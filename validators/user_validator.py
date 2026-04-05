@@ -24,7 +24,6 @@ class UserValidator:
 
         if len(password) < 6:
             raise ValueError("Паролата трябва да е поне 6 символа.")
-
         return True
 
     # EMAIL (валиден формат)
@@ -36,7 +35,6 @@ class UserValidator:
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not re.match(pattern, email):
             raise ValueError("Невалиден имейл адрес.")
-
         return True
 
 
@@ -56,7 +54,6 @@ class UserValidator:
         valid_status = ["Active", "Disabled"]
         if status not in valid_status:
             raise ValueError("Статусът трябва да бъде 'Active' или 'Disabled'.")
-
         return True
 
     # FULL VALIDATION
