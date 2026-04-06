@@ -21,8 +21,6 @@ class UserActivityLog:
 
     @staticmethod
     def from_dict(data):
-        return UserActivityLog(
-            log_id=data.get("log_id"),
-            user_id=data["user_id"],
-            action=data["action"],
-            details=data.get("details", ""),timestamp=data.get("timestamp"))
+        return UserActivityLog(log_id=data.get("log_id"), user_id=data["user_id"],
+            action=data["action"], details=data.get("details", ""),
+                               timestamp=data.get("timestamp"))
