@@ -5,10 +5,6 @@ import uuid
 class Report:
     def __init__(self, report_type="", generated_on=None,
                  parameters=None, data=None, report_id=None):
-        """
-        Модел за отчет.
-        Добавено: report_id – уникален идентификатор за всеки отчет.
-        """
 
         # Уникален идентификатор на отчета (генерира се само ако липсва)
         self.report_id = report_id or str(uuid.uuid4())

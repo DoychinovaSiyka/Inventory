@@ -81,7 +81,7 @@ class ReportsView:
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
         #  Ако НЯМА ID → махаме колоната
         if not has_id:
-            columns = columns[1:]  # махаме ID
+            columns = columns[1:]
             rows = [row[1:] for row in rows]
         print(format_table(columns, rows))
 

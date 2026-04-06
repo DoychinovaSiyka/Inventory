@@ -115,11 +115,14 @@ class InvoiceController:
                         start_date: Optional[str] = None, end_date: Optional[str] = None,
                         min_total: Optional[float] = None,
                         max_total: Optional[float] = None) -> List[Invoice]:
+
         results = self.invoices
+
         # customer
         if customer:
             kw = customer.lower()
             results = [inv for inv in results if kw in inv.customer.lower()]
+
         # product
         if product:
             kw = product.lower()
@@ -132,21 +135,40 @@ class InvoiceController:
             except:
                 return None
 
+        # parse start/end dates safely
         start = parse_date(start_date) if start_date else None
         end = parse_date(end_date) if end_date else None
 
         # date filtering
         if start:
-            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start]
-        if end:
-            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start
+            ]
 
-        # total price filtering
+        if end:
+            results = [
+                inv for inv in results
+                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end
+            ]
+
+        # total price filtering — FIXED (convert to float safely)
         if min_total is not None:
-            results = [inv for inv in results if inv.total_price >= min_total]
+            try:
+                min_total = float(min_total)
+                results = [inv for inv in results if inv.total_price >= min_total]
+            except:
+                pass  # игнорира невалидни стойности
+
         if max_total is not None:
-            results = [inv for inv in results if inv.total_price <= max_total]
+            try:
+                max_total = float(max_total)
+                results = [inv for inv in results if inv.total_price <= max_total]
+            except:
+                pass  # игнорира невалидни стойности
+
         return results
+
 
     # SAVE
     def save_changes(self) -> None:

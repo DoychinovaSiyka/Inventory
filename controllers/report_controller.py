@@ -14,6 +14,12 @@ def _invoice_to_dict(inv):
     }
 
 
+def _create_report(report_type, parameters, data):
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return Report(report_type=report_type, generated_on=now,
+                  parameters=parameters, data=data)
+
+
 class ReportController:
     def __init__(self, repo: JSONRepository, product_controller, movement_controller,
                  invoice_controller, location_controller):
@@ -37,10 +43,6 @@ class ReportController:
         self.save_changes()
 
     # Създаване на нов отчет (НЕ го записва автоматично)
-    def _create_report(self, report_type, parameters, data):
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        return Report(report_type=report_type, generated_on=now,
-                      parameters=parameters, data=data)
 
     # Превръща ID (W1) в име (София)
     def _get_location_display(self, loc_id):
@@ -92,12 +94,12 @@ class ReportController:
                 "price": round(float(p.price), 2),
                 "location": self._get_location_display(loc_id)
             })
-        return self._create_report("stock", {}, data)
+        return _create_report("stock", {}, data)
 
     # Всички движения
     def report_movements(self):
         data = [self._movement_to_dict(m) for m in self.movement_controller.movements]
-        return self._create_report("movements_all", {}, data)
+        return _create_report("movements_all", {}, data)
 
     # Движения по продукт
     def report_movements_by_product(self, keyword):
@@ -109,7 +111,7 @@ class ReportController:
             if product and keyword in product.name.lower():
                 data.append(self._movement_to_dict(m))
 
-        return self._create_report("movements_by_product", {"keyword": keyword}, data)
+        return _create_report("movements_by_product", {"keyword": keyword}, data)
 
     # Движения по тип
     def report_movements_by_type(self, movement_type):
@@ -119,7 +121,7 @@ class ReportController:
             for m in self.movement_controller.movements
             if m.movement_type.name == movement_type
         ]
-        return self._create_report("movements_by_type", {"type": movement_type}, data)
+        return _create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
@@ -128,31 +130,31 @@ class ReportController:
             for m in self.movement_controller.movements
             if m.date.startswith(date_str)
         ]
-        return self._create_report("movements_by_date", {"date": date_str}, data)
+        return _create_report("movements_by_date", {"date": date_str}, data)
 
     # ПРОДАЖБИ → САМО OUT
     def report_sales(self):
         invoices = self._filter_out_invoices()
         data = [_invoice_to_dict(inv) for inv in invoices]
-        return self._create_report("sales_all", {}, data)
+        return _create_report("sales_all", {}, data)
 
     def report_sales_by_customer(self, customer):
         invoices = self._filter_out_invoices()
         invoices = [inv for inv in invoices if customer.lower() in inv.customer.lower()]
         data = [_invoice_to_dict(inv) for inv in invoices]
-        return self._create_report("sales_by_customer", {"customer": customer}, data)
+        return _create_report("sales_by_customer", {"customer": customer}, data)
 
     def report_sales_by_product(self, product):
         invoices = self._filter_out_invoices()
         invoices = [inv for inv in invoices if product.lower() in inv.product.lower()]
         data = [_invoice_to_dict(inv) for inv in invoices]
-        return self._create_report("sales_by_product", {"product": product}, data)
+        return _create_report("sales_by_product", {"product": product}, data)
 
     def report_sales_by_date(self, date_str):
         invoices = self._filter_out_invoices()
         invoices = [inv for inv in invoices if inv.date.startswith(date_str)]
         data = [_invoice_to_dict(inv) for inv in invoices]
-        return self._create_report("sales_by_date", {"date": date_str}, data)
+        return _create_report("sales_by_date", {"date": date_str}, data)
 
 
     #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ САМО ВЕДНЪЖ

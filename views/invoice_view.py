@@ -28,7 +28,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    #  Списък с всички фактури
+    # 1. Списък с всички фактури
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -39,11 +39,11 @@ class InvoiceView:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICES", "Viewed all invoices")
 
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
-        rows = [[inv.invoice_id, inv.product, f"{inv.quantity} {inv.unit}", f"{inv.unit_price} лв.", f"{inv.total_price} лв.",
-                 inv.customer, inv.date] for inv in invoices]
+        rows = [[inv.invoice_id, inv.product, f"{inv.quantity} {inv.unit}", f"{inv.unit_price} лв.",
+                 f"{inv.total_price} лв.", inv.customer, inv.date] for inv in invoices]
         print("\n" + format_table(columns, rows))
 
-    # Преглед по ID
+    # 2. Преглед по ID
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
         invoice = self.invoice_controller.get_by_id(invoice_id)
@@ -51,6 +51,7 @@ class InvoiceView:
         if not invoice:
             print("Фактурата не е намерена.")
             return
+
         if self.activity_log:
             self.activity_log.add_log(user.user_id, "VIEW_INVOICE", f"Viewed invoice {invoice_id}")
 
@@ -68,7 +69,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    #  Търсене по клиент
+    # 3. Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ")
         results = self.invoice_controller.search_by_customer(keyword)
@@ -111,7 +112,7 @@ class InvoiceView:
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
         rows = [
             [
-                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.invoice_id,
                 inv.customer,
                 f"{inv.quantity} {inv.unit}",
                 f"{inv.total_price} лв.",
@@ -138,7 +139,7 @@ class InvoiceView:
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
         rows = [
             [
-                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.invoice_id,
                 inv.product,
                 inv.customer,
                 f"{inv.quantity} {inv.unit}",
@@ -157,12 +158,14 @@ class InvoiceView:
         product = input("Продукт (или Enter за пропуск): ").strip() or None
         start_date = input("Начална дата (ГГГГ-ММ-ДД) или Enter: ").strip() or None
         end_date = input("Крайна дата (ГГГГ-ММ-ДД) или Enter: ").strip() or None
-        min_total = input("Минимална обща стойност или Enter: ").strip()
-        max_total = input("Максимална обща стойност или Enter: ").strip()
+
+        # Ценови филтри — поправено преобразуване
+        min_total_raw = input("Минимална обща стойност или Enter: ").strip()
+        max_total_raw = input("Максимална обща стойност или Enter: ").strip()
 
         try:
-            min_total = float(min_total) if min_total else None
-            max_total = float(max_total) if max_total else None
+            min_total = float(min_total_raw) if min_total_raw else None
+            max_total = float(max_total_raw) if max_total_raw else None
         except ValueError:
             print("Невалидна стойност за цена.")
             return
@@ -183,7 +186,7 @@ class InvoiceView:
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
         rows = [
             [
-                inv.invoice_id,  # ПЪЛЕН UUID
+                inv.invoice_id,
                 inv.product,
                 inv.customer,
                 f"{inv.quantity} {inv.unit}",
