@@ -221,7 +221,8 @@ class ProductView:
             print("Няма намерени продукти.")
             return
         for p in results:
-            print(f"{p.product_id} | {p.name} | Склад: {p.location_id} | {p.quantity} {p.unit} | {self.format_lv(p.price)}")
+            print(f"{p.product_id} | {p.name} "
+                  f"| Склад: {p.location_id} | {p.quantity} {p.unit} | {self.format_lv(p.price)}")
 
     def sort_menu(self, _):
         self.sort_view.show_menu()
@@ -318,7 +319,8 @@ class ProductView:
         keyword = input("Ключова дума: ").strip() or None
         min_p = self._read_float("Мин. цена: ")
         max_p = self._read_float("Макс. цена: ")
-        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p,
+        results = self.product_controller.search_combined(name_keyword=keyword,
+                                                          min_price=min_p,
                                                           max_price=max_p)
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

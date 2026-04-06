@@ -109,7 +109,6 @@ class InvoiceController:
             if self.activity_log:
                 self.activity_log.add_log("system", "DELETE_INVOICE", f"Deleted invoice {invoice_id}")
             return True
-
         return False
 
     # ADVANCED SEARCH
@@ -117,7 +116,6 @@ class InvoiceController:
                         start_date: Optional[str] = None, end_date: Optional[str] = None,
                         min_total: Optional[float] = None,
                         max_total: Optional[float] = None) -> List[Invoice]:
-
         results = self.invoices
         # customer
         if customer:
@@ -138,12 +136,10 @@ class InvoiceController:
         # parse start/end dates safely
         start = parse_date(start_date) if start_date else None
         end = parse_date(end_date) if end_date else None
-
         # date filtering
         if start:
             results = [inv for inv in results if parse_date(inv.date[:10])
                        and parse_date(inv.date[:10]) >= start]
-
         if end:
             results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
 
@@ -154,14 +150,12 @@ class InvoiceController:
                 results = [inv for inv in results if inv.total_price >= min_total]
             except:
                 pass  # игнорира невалидни стойности
-
         if max_total is not None:
             try:
                 max_total = float(max_total)
                 results = [inv for inv in results if inv.total_price <= max_total]
             except:
                 pass  # игнорира невалидни стойности
-
         return results
 
     # SAVE

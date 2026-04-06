@@ -141,7 +141,6 @@ class MovementView:
         to_loc = self._select_location("ЦЕЛЕВА локация")
         if not to_loc:
             return
-
         quantity = input("Количество за преместване: ")
         description = input("Описание (по избор): ")
 

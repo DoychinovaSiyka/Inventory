@@ -85,7 +85,8 @@ class CategoryController:
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
         # Подсигуряваме сравнението като стрингове
-        return next((c for c in self.categories if str(c.category_id) == str(category_id)),None)
+        return next((c for c in self.categories
+                     if str(c.category_id) == str(category_id)),None)
 
     # Метод за намиране на подкатегории
     def get_subcategories(self, parent_id: str) -> List[Category]:
