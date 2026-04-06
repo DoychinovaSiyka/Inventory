@@ -164,12 +164,13 @@ class ReportController:
             self.report_sales()
         ]
 
+
     def save_reports_once(self, reports):
-        """Записва отчетите само ако не съществуват вече в JSON файла."""
-        existing_ids = {r.report_id for r in self.reports}
+        """Записва отчетите само ако такъв тип още не съществува."""
+        existing_types = {r.report_type for r in self.reports}
 
         for r in reports:
-            if r.report_id not in existing_ids:
+            if r.report_type not in existing_types:
                 self.reports.append(r)
 
         self.save_changes()

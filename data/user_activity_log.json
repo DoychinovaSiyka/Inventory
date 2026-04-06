@@ -1433,5 +1433,26 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-06 00:38:51"
+    },
+    {
+        "log_id": "62793c5f-63af-4759-af20-c10e0651d100",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-06 07:51:06"
+    },
+    {
+        "log_id": "f4848757-c8dc-4199-ae93-8a6cb5d3976e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-06 07:51:57"
+    },
+    {
+        "log_id": "7e9ebe5d-de29-4c70-9eb1-ef08eea14ffd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-06 07:52:14"
     }
 ]
