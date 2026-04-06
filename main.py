@@ -30,9 +30,8 @@ class Application:
         #  Инициализация на менютата
         self._init_menus()
 
-    # ---------------------------------------------------------
+
     #  Инициализация на хранилищата
-    # ---------------------------------------------------------
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -44,9 +43,8 @@ class Application:
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
 
-    # ---------------------------------------------------------
+
     #  Инициализация на контролерите
-    # ---------------------------------------------------------
     def _init_controllers(self):
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
         self.user_controller = UserController(self.user_repo)
@@ -91,18 +89,16 @@ class Application:
             self.location_controller
         )
 
-        # ---------------------------------------------------------
+
         #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ НА ОТЧЕТИ САМО ВЕДНЪЖ
-        # ---------------------------------------------------------
         initial_reports = self.report_controller.generate_all_reports()
         self.report_controller.save_reports_once(initial_reports)
 
         # Инициализация на логистичния модул (Dijkstra)
         self.logistic_service = GraphView(self.product_controller)
 
-    # ---------------------------------------------------------
+
     #  Инициализация на менютата
-    # ---------------------------------------------------------
     def _init_menus(self):
         #  Речник с контролери (Dependency Injection за менютата)
         self.controllers = {
@@ -122,9 +118,8 @@ class Application:
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
-    # ---------------------------------------------------------
+
     #  Процес на вход
-    # ---------------------------------------------------------
     def _login_flow(self):
         username = input("Потребителско име: ")
         user = self.user_controller.login(username)
@@ -154,9 +149,8 @@ class Application:
             f"Потребител {user.username} излезе."
         )
 
-    # ---------------------------------------------------------
+
     #  Анонимен достъп
-    # ---------------------------------------------------------
     def _anonymous_flow(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         guest_user = User(
@@ -184,9 +178,8 @@ class Application:
             "Анонимен изход."
         )
 
-    # ---------------------------------------------------------
+
     #  Главен цикъл
-    # ---------------------------------------------------------
     def run(self):
         while True:
             print("\n" + "=" * 30)
@@ -209,9 +202,7 @@ class Application:
                 print("[!] Невалиден избор. Опитайте отново.")
 
 
-# ---------------------------------------------------------
 #  Стартиране на приложението
-# ---------------------------------------------------------
 if __name__ == "__main__":
     app = Application()
     app.run()

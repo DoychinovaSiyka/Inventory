@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "1a914293-b94e-4425-94ac-617e6fe1d120",
+        "report_id": "4ff3e5d4-dd26-4ffc-86b8-fc386257cd18",
         "report_type": "stock",
-        "generated_on": "2026-04-06 08:00:24",
+        "generated_on": "2026-04-06 08:10:11",
         "parameters": {},
         "data": [
             {
@@ -116,9 +116,9 @@
         ]
     },
     {
-        "report_id": "4de4e970-31a2-4637-823e-e4267f5aa51d",
+        "report_id": "d7e0867b-35f3-4f6c-8652-40f495b32db1",
         "report_type": "movements_all",
-        "generated_on": "2026-04-06 08:00:24",
+        "generated_on": "2026-04-06 08:10:11",
         "parameters": {},
         "data": [
             {
@@ -163,9 +163,9 @@
         ]
     },
     {
-        "report_id": "fba9de65-f197-4f40-a66a-af7810c8a8e1",
+        "report_id": "34c39dba-356d-4eaf-af26-c699f7ac8271",
         "report_type": "sales_all",
-        "generated_on": "2026-04-06 08:00:24",
+        "generated_on": "2026-04-06 08:10:11",
         "parameters": {},
         "data": [
             {
