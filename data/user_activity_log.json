@@ -1454,5 +1454,68 @@
         "action": "VIEW_INVOICES",
         "details": "Viewed all invoices",
         "timestamp": "2026-04-06 07:52:14"
+    },
+    {
+        "log_id": "6bc9f3ea-38ac-44b1-a1df-53edcccc7971",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-06 07:56:49"
+    },
+    {
+        "log_id": "fedfcba5-7bba-41d2-81e6-0613b009eb40",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-06 07:57:39"
+    },
+    {
+        "log_id": "99bbccf9-2357-486f-b1e5-bacc9afa6a98",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICE",
+        "details": "Viewed invoice 2458b945-621f-4524-86ec-1a53d38f70d6",
+        "timestamp": "2026-04-06 07:57:55"
+    },
+    {
+        "log_id": "883dda06-b7e0-41e4-b26d-4f9bdc2ac035",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "SEARCH_INVOICE",
+        "details": "Searched invoices by customer 'Ирина'",
+        "timestamp": "2026-04-06 07:58:06"
+    },
+    {
+        "log_id": "10ed7f4d-bdd7-445d-8570-df1b45104c69",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "SEARCH_INVOICE",
+        "details": "Searched invoices by product 'Ананас'",
+        "timestamp": "2026-04-06 07:58:16"
+    },
+    {
+        "log_id": "4836b552-e95b-47c5-bca9-6899e3e38701",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "SEARCH_INVOICE",
+        "details": "Searched invoices by date '2026-04-05'",
+        "timestamp": "2026-04-06 07:58:33"
+    },
+    {
+        "log_id": "4438ecd4-4684-4e68-86cd-af9724cc35c6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADVANCED_SEARCH_INVOICE",
+        "details": "Used advanced invoice search",
+        "timestamp": "2026-04-06 07:58:58"
+    },
+    {
+        "log_id": "27e61492-f704-49eb-a350-f33ff3102875",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-06 08:00:15"
+    },
+    {
+        "log_id": "cd65d922-feed-41cc-bbf3-f528508a00f5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-06 08:00:35"
     }
 ]

@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "db68a336-bf08-43d0-b4bc-5b72c42b453a",
+        "report_id": "1a914293-b94e-4425-94ac-617e6fe1d120",
         "report_type": "stock",
-        "generated_on": "2026-04-06 00:38:43",
+        "generated_on": "2026-04-06 08:00:24",
         "parameters": {},
         "data": [
             {
@@ -116,9 +116,9 @@
         ]
     },
     {
-        "report_id": "2c78373f-84eb-4866-8312-f1299a7fc6ad",
+        "report_id": "4de4e970-31a2-4637-823e-e4267f5aa51d",
         "report_type": "movements_all",
-        "generated_on": "2026-04-06 00:38:43",
+        "generated_on": "2026-04-06 08:00:24",
         "parameters": {},
         "data": [
             {
@@ -163,188 +163,9 @@
         ]
     },
     {
-        "report_id": "1833b7ae-7d4d-45bb-bb9c-ac71faac0bf9",
+        "report_id": "fba9de65-f197-4f40-a66a-af7810c8a8e1",
         "report_type": "sales_all",
-        "generated_on": "2026-04-06 00:38:43",
-        "parameters": {},
-        "data": [
-            {
-                "invoice_id": "2458b945-621f-4524-86ec-1a53d38f70d6",
-                "date": "2026-04-05 20:35:52",
-                "product": "Ананас",
-                "quantity": 28.0,
-                "total_price": 223.72,
-                "customer": "Ирина Петрова"
-            }
-        ]
-    },
-    {
-        "report_id": "8f6185b5-a64a-44f0-89bf-fe8f2cfd5bef",
-        "report_type": "stock",
-        "generated_on": "2026-04-06 07:50:59",
-        "parameters": {},
-        "data": [
-            {
-                "product": "Ананас",
-                "quantity": 61.0,
-                "price": 5.66,
-                "location": "Склад Бургас (W4)"
-            },
-            {
-                "product": "бира \"Siyka\"",
-                "quantity": 105.0,
-                "price": 9.99,
-                "location": "Магазин Смолян (W5)"
-            },
-            {
-                "product": "вафла \"Боровец\"",
-                "quantity": 31.0,
-                "price": 0.89,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "зелен лук",
-                "quantity": 20.0,
-                "price": 0.34,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "картофи",
-                "quantity": 8.0,
-                "price": 2.21,
-                "location": "Магазин Смолян (W5)"
-            },
-            {
-                "product": "кафе \"Lavazza\"",
-                "quantity": 37.22,
-                "price": 4.89,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "кафе 3 в 1",
-                "quantity": 78.0,
-                "price": 3.21,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "киви",
-                "quantity": 3.0,
-                "price": 1.0,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "кокоши и пъдпъдъчи яйца",
-                "quantity": 117.0,
-                "price": 6.99,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "пица",
-                "quantity": 56.0,
-                "price": 3.09,
-                "location": "Магазин Смолян (W5)"
-            },
-            {
-                "product": "Подправки микс",
-                "quantity": 12.0,
-                "price": 1.95,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "Прясно мляко",
-                "quantity": 17.0,
-                "price": 4.01,
-                "location": "Склад Варна (W3)"
-            },
-            {
-                "product": "Розови домати",
-                "quantity": 199.0,
-                "price": 2.19,
-                "location": "Склад Варна (W3)"
-            },
-            {
-                "product": "сладолед \"Family\"",
-                "quantity": 400.0,
-                "price": 9.99,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "шоколад \"Kinder\"",
-                "quantity": 134.0,
-                "price": 3.34,
-                "location": "Склад София (W1)"
-            },
-            {
-                "product": "Портокали \"Мерлин\"",
-                "quantity": 45.0,
-                "price": 3.47,
-                "location": "Склад Варна (W3)"
-            },
-            {
-                "product": "кори за баница \"Bella\"",
-                "quantity": 45.0,
-                "price": 3.01,
-                "location": "Склад Пловдив (W2)"
-            },
-            {
-                "product": "череши",
-                "quantity": 34.0,
-                "price": 4.54,
-                "location": "Склад Варна (W3)"
-            }
-        ]
-    },
-    {
-        "report_id": "d0982f12-ccb4-499b-b820-2823876ab626",
-        "report_type": "movements_all",
-        "generated_on": "2026-04-06 07:50:59",
-        "parameters": {},
-        "data": [
-            {
-                "movement_id": "67810d44-d2c6-430a-84e6-168606c5cec9",
-                "date": "2026-04-05 20:35:52",
-                "type": "OUT",
-                "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
-                "product_name": "Ананас",
-                "quantity": 28.0,
-                "price": 7.99,
-                "location_id": "W2",
-                "location_name": "Склад Пловдив",
-                "supplier_id": null,
-                "customer": "Ирина Петрова"
-            },
-            {
-                "movement_id": "b750888b-98e4-4f9f-b49c-b8395fbb5ec1",
-                "date": "2026-04-05 20:36:41",
-                "type": "IN",
-                "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
-                "product_name": "бира \"Siyka\"",
-                "quantity": 15.0,
-                "price": 4.03,
-                "location_id": "W5",
-                "location_name": "Магазин Смолян",
-                "supplier_id": "f67b64a1-dd96-4d36-a972-7119816ecdac",
-                "customer": null
-            },
-            {
-                "movement_id": "bc97759d-c984-4f4c-9cfe-90f269233828",
-                "date": "2026-04-05 20:37:55",
-                "type": "MOVE",
-                "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
-                "product_name": "картофи",
-                "quantity": 3.0,
-                "price": 0.0,
-                "location_id": "W5",
-                "location_name": "Магазин Смолян",
-                "supplier_id": null,
-                "customer": null
-            }
-        ]
-    },
-    {
-        "report_id": "2d7341f1-574a-4ee5-b110-d30d51903fb6",
-        "report_type": "sales_all",
-        "generated_on": "2026-04-06 07:50:59",
+        "generated_on": "2026-04-06 08:00:24",
         "parameters": {},
         "data": [
             {
