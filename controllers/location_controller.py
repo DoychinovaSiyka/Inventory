@@ -10,14 +10,14 @@ class LocationController:
         # Зареждаме локациите
         self.locations: List[Location] = [ Location.from_dict(l) for l in self.repo.load()]
 
-    # ID GENERATOR - Трябва да поддържаме консистентност с "W" префикса
+    # ID GENERATOR - поддържам консистентност с "W" префикса
     def _generate_id(self) -> str:
         if not self.locations:
             return "W1"
         try:
             ids = []
             for l in self.locations:
-                # Вземаме числото след 'W'
+                # Вземам числото след 'W'
                 num_part = str(l.location_id).replace("W", "")
                 if num_part.isdigit():
                     ids.append(int(num_part))
@@ -42,9 +42,9 @@ class LocationController:
             raise ValueError("Локация с това име вече съществува.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         # Генерираме ID от типа "W1", "W2"...
-        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity, created=now, modified=now)
+        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity,
+                            created=now, modified=now)
         self.locations.append(location)
         self.save_changes()
         return location
@@ -90,6 +90,5 @@ class LocationController:
             return True
         return False
 
-    # SAVE
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

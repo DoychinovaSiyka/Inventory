@@ -48,7 +48,7 @@ class ProductValidator:
         if unit not in allowed_units:
             raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
 
-    # DESCRIPTION
+
     @staticmethod
     def validate_description(description):
         if not description or not description.strip():

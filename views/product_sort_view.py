@@ -43,13 +43,12 @@ class ProductSortView:
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
 
-    #  Количество (високо → ниско)
+    #  Количество (високо - ниско)
     def sort_qty_desc(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
 
-
-    #  Количество (ниско → високо)
+    #  Количество (ниско - високо)
     def sort_qty_asc(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity)
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
@@ -60,10 +59,8 @@ class ProductSortView:
         if not products:
             print("\n[!] Няма продукти за показване.")
             return
-
         print(f"\nСортиране по: {title}")
         print(f"Алгоритъм: {algorithm}\n")
-
         rows = []
         for p in products:
             rows.append([ p.name, p.location_id, f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}"])

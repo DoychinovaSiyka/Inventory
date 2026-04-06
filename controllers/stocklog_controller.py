@@ -19,8 +19,10 @@ class StockLogController:
         # Ако StockLog няма автоматично ID, можеш да добавиш логика тук
         # Създаване на лог запис
         # Уверяваме се, че location_id се записва точно (напр. "W1")
-        log = StockLog(product_id=str(product_id), location_id=str(location_id), quantity=float(quantity),
-                       unit=unit, action=action, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        log = StockLog(product_id=str(product_id), location_id=str(location_id),
+                       quantity=float(quantity),
+                       unit=unit, action=action,
+                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         self.logs.append(log)
         self.save_changes()
         return log
@@ -29,7 +31,6 @@ class StockLogController:
     def get_by_location(self, location_id):
         return [log for log in self.logs if str(log.location_id) == str(location_id)]
 
-    # Другите методи остават същите
     def get_all(self):
         return self.logs
 

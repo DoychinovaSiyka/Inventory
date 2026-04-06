@@ -16,7 +16,7 @@ class Movement:
             from_location_id=None, to_location_id=None,
             date=None, created=None, modified=None):
 
-        #  movement_id  е  UUID  винаги string
+
         self.movement_id = str(movement_id) if movement_id is not None else None
         self.product_id = product_id
         self.user_id = user_id
@@ -38,24 +38,17 @@ class Movement:
         # Централизирана валидация
         MovementValidator.validate_all(self)
 
+
     def to_dict(self):
         return {
-            "movement_id": self.movement_id,
-            "product_id": self.product_id,
-            "user_id": self.user_id,
-            "location_id": self.location_id,
-            "movement_type": self.movement_type.name,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "supplier_id": self.supplier_id,
-            "customer": self.customer,
-            "from_location_id": self.from_location_id,
-            "to_location_id": self.to_location_id,
-            "date": self.date,
-            "created": self.created,
-            "modified": self.modified
+            "movement_id": self.movement_id, "product_id": self.product_id,
+            "user_id": self.user_id, "location_id": self.location_id,
+            "movement_type": self.movement_type.name, "quantity": self.quantity,
+            "unit": self.unit, "description": self.description,
+            "price": self.price, "supplier_id": self.supplier_id,
+            "customer": self.customer, "from_location_id": self.from_location_id,
+            "to_location_id": self.to_location_id, "date": self.date,
+            "created": self.created, "modified": self.modified
         }
 
     @staticmethod

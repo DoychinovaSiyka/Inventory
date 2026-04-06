@@ -19,14 +19,12 @@ from datetime import datetime
 from models.user import User
 
 
-class Application:
+class InventoryApplication:
     def __init__(self):
         #  Инициализация на хранилищата (Repositories)
         self._init_repositories()
-
         #  Инициализация на контролерите
         self._init_controllers()
-
         #  Инициализация на менютата
         self._init_menus()
 
@@ -58,36 +56,23 @@ class Application:
         try:
             self.user_controller.register(
                 "Ivan", "Petrov", "ivan@example.com",
-                "ivan", "test123", "Operator"
-            )
+                "ivan", "test123", "Operator")
         except ValueError:
             pass
 
         # ProductController се нуждае от категории и доставчици за филтриране
-        self.product_controller = ProductController(
-            self.product_repo,
-            self.category_controller,
-            self.supplier_controller,
-            self.activity_log_controller
-        )
+        self.product_controller = ProductController(self.product_repo, self.category_controller,
+                                                    self.supplier_controller,
+                                                    self.activity_log_controller)
 
-        self.movement_controller = MovementController(
-            self.movement_repo,
-            self.product_controller,
-            self.user_controller,
-            self.location_controller,
-            self.stocklog_controller,
-            self.invoice_controller,
-            self.activity_log_controller
-        )
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
+                                                      self.user_controller, self.location_controller,
+                                                      self.stocklog_controller, self.invoice_controller,
+                                                      self.activity_log_controller)
 
-        self.report_controller = ReportController(
-            self.report_repo,
-            self.product_controller,
-            self.movement_controller,
-            self.invoice_controller,
-            self.location_controller
-        )
+        self.report_controller = ReportController(self.report_repo, self.product_controller,
+                                                  self.movement_controller, self.invoice_controller,
+                                                  self.location_controller)
 
 
         #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ НА ОТЧЕТИ САМО ВЕДНЪЖ
@@ -123,16 +108,13 @@ class Application:
     def _login_flow(self):
         username = input("Потребителско име: ")
         user = self.user_controller.login(username)
-
         if not user:
             print("[!] Грешно потребителско име или несъществуващ потребител.")
             return
 
         # Записваме лог за влизане
-        self.activity_log_controller.add_log(
-            user.user_id, "LOGIN",
-            f"Потребител {user.username} влезе."
-        )
+        self.activity_log_controller.add_log(user.user_id, "LOGIN",
+                                             f"Потребител {user.username} влезе.")
 
         # Избор на меню според ролята
         if user.role == "Admin":
@@ -144,39 +126,22 @@ class Application:
             return
 
         # Записваме лог за излизане
-        self.activity_log_controller.add_log(
-            user.user_id, "LOGOUT",
-            f"Потребител {user.username} излезе."
-        )
+        self.activity_log_controller.add_log(user.user_id, "LOGOUT",
+                                             f"Потребител {user.username} излезе.")
 
 
     #  Анонимен достъп
     def _anonymous_flow(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        guest_user = User(
-            user_id="guest-0000",
-            first_name="Anonymous",
-            last_name="",
-            email="",
-            username="guest",
-            password="",
-            role="Anonymous",
-            status="Active",
-            created=now,
-            modified=now
-        )
+        guest_user = User(user_id="guest-0000", first_name="Anonymous",
+                          last_name="", email="", username="guest",
+                          password="", role="Anonymous", status="Active", created=now, modified=now)
 
-        self.activity_log_controller.add_log(
-            guest_user.user_id, "ANONYMOUS_LOGIN",
-            "Анонимен достъп."
-        )
-
+        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN",
+                                             "Анонимен достъп.")
         self.anonymous_menu.show_menu(guest_user)
-
-        self.activity_log_controller.add_log(
-            guest_user.user_id, "ANONYMOUS_LOGOUT",
-            "Анонимен изход."
-        )
+        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT",
+                                             "Анонимен изход.")
 
 
     #  Главен цикъл
@@ -188,9 +153,7 @@ class Application:
             print("1. Вход с потребител")
             print("2. Вход като анонимен потребител (разглеждане)")
             print("0. Изход")
-
             choice = input("\nИзбор: ").strip()
-
             if choice == "1":
                 self._login_flow()
             elif choice == "2":
@@ -204,5 +167,5 @@ class Application:
 
 #  Стартиране на приложението
 if __name__ == "__main__":
-    app = Application()
+    app = InventoryApplication()
     app.run()

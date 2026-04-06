@@ -52,16 +52,15 @@ class MovementView:
             print("Невалиден избор.")
             return None
 
+
     def _select_location(self, label="локация"):
         locations = self.movement_controller.location_controller.get_all()
         if not locations:
             print("Няма налични локации.")
             return None
-
         print(f"\nИзберете {label}:")
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
         try:
             return locations[int(input("Избор: "))]
         except (ValueError, IndexError):
@@ -73,11 +72,9 @@ class MovementView:
         product = self._select_product()
         if not product:
             return
-
         location = self._select_location("локация")
         if not location:
             return
-
         try:
             movement_type = MovementType.IN if int(input("0  Доставка (IN), 1  Продажба (OUT): ")) == 0 \
                 else MovementType.OUT
@@ -89,18 +86,15 @@ class MovementView:
         quantity = input("Количество: ")
         price = input("Цена: ")
         description = input("Описание: ")
-
         supplier_id = None
         if movement_type == MovementType.IN:
             suppliers = self.product_controller.supplier_controller.get_all()
             if not suppliers:
                 print("Няма доставчици. Добавете доставчик първо.")
                 return
-
             print("\nИзберете доставчик:")
             for i, s in enumerate(suppliers):
                 print(f"{i}. {s.name} (ID: {s.supplier_id})")
-
             try:
                 supplier_id = suppliers[int(input("Доставчик: "))].supplier_id
             except (ValueError, IndexError):
@@ -112,19 +106,22 @@ class MovementView:
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            movement = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
-                                                    location_id=location.location_id, movement_type=movement_type,
-                                                    quantity=quantity, description=description, price=price,
+            movement = self.movement_controller.add(product_id=product.product_id,
+                                                    user_id=user.user_id,
+                                                    location_id=location.location_id,
+                                                    movement_type=movement_type,
+                                                    quantity=quantity, description=description,
+                                                    price=price,
                                                     customer=customer, supplier_id=supplier_id)
 
             print("\nДвижението е добавено успешно!")
             print(f"ID на движението: {movement.movement_id}")
 
-            # Само при OUT → фактура
+            # Само при OUT - фактура
             if movement_type == MovementType.OUT:
                 print("Фактурата е генерирана автоматично.")
 
-            # Само при IN → доставка
+            # Само при IN - доставка
             elif movement_type == MovementType.IN:
                 print("Доставката е регистрирана успешно.")
 
@@ -149,10 +146,12 @@ class MovementView:
         description = input("Описание (по избор): ")
 
         try:
-            movement = self.movement_controller.move_product(product_id=product.product_id, user_id=user.user_id,
+            movement = self.movement_controller.move_product(product_id=product.product_id,
+                                                             user_id=user.user_id,
                                                              from_location_id=from_loc.location_id,
                                                              to_location_id=to_loc.location_id,
-                                                             quantity=float(quantity), description=description)
+                                                             quantity=float(quantity),
+                                                             description=description)
             print("\nПреместването е извършено успешно!")
             print(f"От {from_loc.location_id} → към {to_loc.location_id}")
             print(f"ID на движението: {movement.movement_id}")
@@ -178,7 +177,6 @@ class MovementView:
         if not all_movements:
             print("Няма движения.")
             return
-
         for m in all_movements:
             self._print_movement(m)
 
@@ -224,13 +222,11 @@ class MovementView:
     # Разширено филтриране
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
-
         print("Тип движение:")
         print("0  IN (доставка)")
         print("1  OUT (продажба)")
         print("2  MOVE (преместване)")
         raw_type = input("Изберете тип или Enter за пропуск: ").strip()
-
         movement_type = None
         if raw_type.isdigit():
             raw_type = int(raw_type)
@@ -243,33 +239,24 @@ class MovementView:
 
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
         end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
-
         start_date = start_date or None
         end_date = end_date or None
-
         raw_pid = input("ID на продукт или Enter: ").strip()
         product_id = raw_pid or None
-
         raw_loc = input("ID на локация или Enter: ").strip()
         location_id = int(raw_loc) if raw_loc.isdigit() else None
-
         raw_uid = input("ID на потребител или Enter: ").strip()
         user_id = int(raw_uid) if raw_uid.isdigit() else None
-
         results = self.movement_controller.movements
 
         if movement_type:
             results = self.movement_controller.filter_by_type(movement_type)
-
         if start_date or end_date:
             results = self.movement_controller.filter_by_date_range(start_date, end_date)
-
         if product_id:
             results = [m for m in results if m.product_id == product_id]
-
         if location_id is not None:
             results = [m for m in results if m.location_id == location_id]
-
         if user_id is not None:
             results = [m for m in results if m.user_id == user_id]
 

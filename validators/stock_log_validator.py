@@ -5,10 +5,12 @@ class StockLogValidator:
         if quantity <= 0:
             raise ValueError("Количеството трябва да е по-голямо от 0.")
 
+
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():
             raise ValueError("Мерната единица е задължителна.")
+
 
     @staticmethod
     def validate_action(action):

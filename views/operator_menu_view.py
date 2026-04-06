@@ -67,7 +67,8 @@ class OperatorMenuView:
 
     #  Движения — операторът трябва да има достъп - НЕ защитаваме
     def open_movements(self, _):
-        view = self._open_view(MovementView,self.product_controller, self.movement_controller, self.user_controller,
+        view = self._open_view(MovementView,self.product_controller,
+                               self.movement_controller, self.user_controller,
                                 self.activity_log)
         view.show_menu()
 

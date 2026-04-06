@@ -9,7 +9,8 @@ from views.password_utils import format_table
 
 
 class ProductView:
-    def __init__(self, product_controller: ProductController,category_controller: CategoryController, location_controller: LocationController,
+    def __init__(self, product_controller: ProductController,category_controller: CategoryController,
+                 location_controller: LocationController,
                  activity_log_controller=None):
         self.product_controller = product_controller
         self.category_controller = category_controller
@@ -83,7 +84,6 @@ class ProductView:
         # Ограничаваме достъпа според ролята
         return False  # placeholder, реалната проверка е в show_menu()
 
-    # Основно меню
     def show_menu(self, user: User):
         # Ограничаваме достъпа според ролята
         readonly = user.role in ["Operator", "Anonymous"]
@@ -112,12 +112,10 @@ class ProductView:
         if price is None or quantity is None:
             print("Невалидни стойности.")
             return
-
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма налични категории.")
             return
-
         print("\nНалични категории:")
         for i, c in enumerate(categories):
             # Показваме дали е подкатегория за яснота
@@ -143,7 +141,6 @@ class ProductView:
         if loc_idx is None or not (0 <= loc_idx < len(locations)):
             return
         location_id = locations[loc_idx].location_id
-
         try:
             # Използваме user.user_id (или user.id )
             u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
@@ -173,13 +170,14 @@ class ProductView:
 
         print(f"Редактиране на: {product.name} (в склад {product.location_id})")
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
-        new_description = input(f"Ново описание ({product.description}): ").strip() or product.description
-
+        new_description = (input(f"Ново описание ({product.description}): ").strip()
+                           or product.description)
         price_input = input(f"Нова цена ({product.price}): ").strip()
-        new_price = float(price_input.replace(",", ".")) if price_input else product.price
-
+        new_price = float(price_input.replace(",", ".")) if price_input\
+            else product.price
         qty_input = input(f"Ново количество ({product.quantity}): ").strip()
-        new_quantity = float(qty_input.replace(",", ".")) if qty_input else product.quantity
+        new_quantity = float(qty_input.replace(",", ".")) if qty_input \
+            else product.quantity
 
         try:
             product.name = new_name
@@ -204,20 +202,12 @@ class ProductView:
 
         # Колони за таблицата
         columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
-
         # Редове за таблицата
         rows = []
         for p in products:
             qty = f"{p.quantity} {p.unit}"
-            rows.append([
-                p.product_id,
-                p.name,
-                p.location_id,
-                qty,
-                self.format_lv(p.price)
-            ])
+            rows.append([p.product_id, p.name, p.location_id, qty, self.format_lv(p.price)])
 
-        # Използваме format_table от password_utils.py
         print(format_table(columns, rows))
 
     @require_password("parola123")
@@ -328,7 +318,7 @@ class ProductView:
         keyword = input("Ключова дума: ").strip() or None
         min_p = self._read_float("Мин. цена: ")
         max_p = self._read_float("Макс. цена: ")
-
-        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p, max_price=max_p)
+        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p,
+                                                          max_price=max_p)
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

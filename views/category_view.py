@@ -48,7 +48,8 @@ class CategoryView:
         for root in roots:
             print(f"- {root.name} (ID: {root.category_id})")
             # Подкатегории
-            children = [c for c in categories if hasattr(c, "parent_id") and c.parent_id == root.category_id]
+            children = [c for c in categories if hasattr(c, "parent_id")
+                        and c.parent_id == root.category_id]
             for child in children:
                 print(f"  * {child.name} (ID: {child.category_id})")
         print()

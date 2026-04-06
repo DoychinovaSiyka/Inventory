@@ -4,8 +4,10 @@ from storage.json_repository import JSONRepository
 
 class UserActivityLogController:
     def __init__(self, filepath="data/user_activity_log.json"):
-        # UserActivityLogController е единственият контролер, който не използва dependency injection.
-        # Това е умишлено, защото той винаги работи само с един конкретен лог файл и е напълно самостоятелен.
+        # UserActivityLogController е единственият контролер, който не използва
+        # dependency injection.
+        # Това е умишлено, защото той винаги работи само с един конкретен лог файл и е
+        # напълно самостоятелен.
         # Всички останали контролери получават JSONRepository отвън,
         # което е по‑професионално и следва SOLID принципите.
         self.repo = JSONRepository(filepath)
@@ -16,12 +18,14 @@ class UserActivityLogController:
         data = self.repo.get_all()
         data.append(log)
         self.repo.save(data)
+
     # READ
     def get_all_logs(self):
         return self.repo.get_all()
 
 
 # UserActivityLogController е единственият контролер, който не използва dependency injection.
-# Това е умишлено, защото той винаги работи само с един конкретен лог файл и е напълно самостоятелен.
+# Това е умишлено, защото той винаги работи само с един конкретен лог файл и е
+# напълно самостоятелен.
 # Всички останали контролери получават JSONRepository отвън,
 # което е по‑професионално и следва SOLID принципите.

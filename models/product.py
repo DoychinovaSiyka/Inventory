@@ -24,7 +24,6 @@ class Product:
         self.name = name
 
         # КАТЕГОРИИ (винаги списък от стрингове)
-        # ВАЖНО: Категориите НЕ са UUID → НЕ ги валидираме като UUID
         self.categories = []
         if isinstance(categories, list):
             for c in categories:
@@ -64,15 +63,8 @@ class Product:
         self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # ВАЛИДАЦИЯ
-        ProductValidator.validate_all(
-            self.name,
-            self.categories,
-            self.quantity,
-            self.unit,
-            self.description,
-            self.price,
-            self.location_id
-        )
+        ProductValidator.validate_all(self.name, self.categories, self.quantity, self.unit,
+                                      self.description, self.price, self.location_id)
 
     def is_in_category(self, search_category_id, category_controller):
         """Проверява дали продуктът е в дадена категория или нейните подкатегории."""

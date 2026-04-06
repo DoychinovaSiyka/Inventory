@@ -8,8 +8,6 @@ class User:
         # Уникален идентификатор на потребителя (UUID)
         self.user_id = user_id or str(uuid.uuid4())
         self.id = self.user_id   # за съвместимост с user.id
-
-
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -36,7 +34,6 @@ class User:
             password=data["password"],role=data.get("role", "Operator"),
             status=data.get("status", "Active"),user_id=data.get("user_id"),
             created=data.get("created"),modified=data.get("modified"))
-
         user.id = user.user_id
         return user
 

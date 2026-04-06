@@ -15,6 +15,7 @@ class InvoiceValidator:
         if quantity <= 0:
             raise ValueError("quantity трябва да е > 0.")
 
+
     @staticmethod
     def validate_unit(unit):
         if not unit or not unit.strip():

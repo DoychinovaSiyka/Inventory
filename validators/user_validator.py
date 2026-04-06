@@ -7,13 +7,10 @@ class UserValidator:
     def validate_username(username: str):
         if not username:
             raise ValueError("Потребителското име е задължително.")
-
         if len(username) < 3 or len(username) > 20:
             raise ValueError("Потребителското име трябва да е между 3 и 20 символа.")
-
         if " " in username:
             raise ValueError("Потребителското име не може да съдържа интервали.")
-
         return True
 
     # PASSWORD (минимум 6 символа)
@@ -44,7 +41,6 @@ class UserValidator:
         valid_roles = ["Admin", "Operator", "Anonymous"]
         if role not in valid_roles:
             raise ValueError(f"Невалидна роля. Позволени роли: {valid_roles}")
-
         return True
 
 
@@ -56,7 +52,7 @@ class UserValidator:
             raise ValueError("Статусът трябва да бъде 'Active' или 'Disabled'.")
         return True
 
-    # FULL VALIDATION
+
     @staticmethod
     def validate_user_data(username, password, email, role, status):
         UserValidator.validate_username(username)

@@ -8,16 +8,12 @@ class Report:
 
         # Уникален идентификатор на отчета (генерира се само ако липсва)
         self.report_id = report_id or str(uuid.uuid4())
-
         # Тип на отчета (stock, movements, sales и т.н.)
         self.report_type = report_type
-
         # Дата на генериране
         self.generated_on = generated_on or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         # Параметри на отчета (филтри)
         self.parameters = parameters if parameters else {}
-
         # Данни на отчета (списък от записи)
         self.data = data if data else []
 

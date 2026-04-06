@@ -10,7 +10,7 @@ class InvoiceController:
         self.activity_log = activity_log_controller
         raw = self.repo.load()
         self.invoices: List[Invoice] = []
-        # Зареждаме фактурите от JSON Ако някоя няма UUID → генерираме нов
+        # Зареждам фактурите от JSON Ако някоя няма UUID - генерирам нов
         for inv in raw:
             if not inv.get("invoice_id"):
                 # нов UUID се генерира от самия модел Invoice
@@ -26,7 +26,8 @@ class InvoiceController:
         self.invoices.append(invoice)
         self.save_changes()
         if self.activity_log:
-            self.activity_log.add_log(invoice.customer, "GENERATE_INVOICE", f"Invoice created for movement {invoice.movement_id}")
+            self.activity_log.add_log(invoice.customer, "GENERATE_INVOICE",
+                                      f"Invoice created for movement {invoice.movement_id}")
         return invoice
 
 
@@ -40,7 +41,8 @@ class InvoiceController:
         total_price = round(qty * unit_price, 2)
         # UUID се генерира автоматично от Invoice()
         invoice = Invoice(movement_id=movement.movement_id, product=product.name, quantity=qty, unit=movement.unit,
-                          unit_price=unit_price, total_price=total_price, customer=customer, date=now, created=now, modified=now)
+                          unit_price=unit_price, total_price=total_price, customer=customer, date=now,
+                          created=now, modified=now)
         self.invoices.append(invoice)
         self.save_changes()
 
@@ -117,12 +119,10 @@ class InvoiceController:
                         max_total: Optional[float] = None) -> List[Invoice]:
 
         results = self.invoices
-
         # customer
         if customer:
             kw = customer.lower()
             results = [inv for inv in results if kw in inv.customer.lower()]
-
         # product
         if product:
             kw = product.lower()
@@ -141,16 +141,11 @@ class InvoiceController:
 
         # date filtering
         if start:
-            results = [
-                inv for inv in results
-                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start
-            ]
+            results = [inv for inv in results if parse_date(inv.date[:10])
+                       and parse_date(inv.date[:10]) >= start]
 
         if end:
-            results = [
-                inv for inv in results
-                if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end
-            ]
+            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
 
         # total price filtering — FIXED (convert to float safely)
         if min_total is not None:
@@ -168,7 +163,6 @@ class InvoiceController:
                 pass  # игнорира невалидни стойности
 
         return results
-
 
     # SAVE
     def save_changes(self) -> None:

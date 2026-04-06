@@ -61,7 +61,6 @@ class ReportsView:
                 has_id = True
             p_name = item.get('product', '—')
             qty = float(item.get('quantity', 0) or 0)
-
             raw_total = item.get('total_price', item.get('total', 0))
             total = float(raw_total or 0)
             raw_price = item.get('price')
@@ -70,7 +69,8 @@ class ReportsView:
             else:
                 price = round(float(raw_price), 2)
 
-            rows.append([row_id, p_name, self._format_qty(qty, p_name), self._format_lv(price), self._format_lv(total),
+            rows.append([row_id, p_name, self._format_qty(qty, p_name), self._format_lv(price),
+                         self._format_lv(total),
                          self._clean_none(item.get('customer')), self._clean_none(item.get('date'))])
         return rows, has_id
 
@@ -116,24 +116,23 @@ class ReportsView:
             return
         self._print_sales(data)
 
-    # НАЛИЧНОСТИ → БЕЗ ID
+    # НАЛИЧНОСТИ - БЕЗ ID
     def report_stock(self, _):
         data = self.controller.report_stock().data
         if not data:
             print("\nНяма налични продукти.\n")
             return
-        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
+        rows = [[i['product'], self._format_qty(i['quantity'], i['product']),
+                 self._format_lv(i['price'])]
                 for i in data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
-    # ДВИЖЕНИЯ → ИМАТ ID (movement_id)
+    # ДВИЖЕНИЯ - ИМАТ ID (movement_id)
     def report_movements(self, _):
         data = self.controller.report_movements().data
-
         if not data:
             print("\nНяма налични движения.\n")
             return
-
         rows = []
         for i in data:
             # устойчиво извличане на ID на локацията
@@ -144,7 +143,9 @@ class ReportsView:
             location = self.location_controller.get_by_id(loc_id) if loc_id else None
             location_name = location.name if location else "Няма склад"
 
-            rows.append([self._clean_none(i.get('date')), self._clean_none(i.get('type')), i.get('movement_id'),
-                         self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')), self._format_lv(i.get('price', 0)),
+            rows.append([self._clean_none(i.get('date')), self._clean_none(i.get('type')),
+                         i.get('movement_id'),
+                         self._format_qty(i.get('quantity', 0), i.get('product_name', 'Продукт')),
+                         self._format_lv(i.get('price', 0)),
                          location_name])
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))

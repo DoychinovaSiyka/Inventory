@@ -27,7 +27,7 @@ class CategoryController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Използваме uuid за category_id, за да е сигурно уникално при йерархия
+        # Използвам uuid за category_id, за да е сигурно уникално при йерархия
         category = Category(category_id=str(uuid.uuid4()),name=name, description=description,
                             parent_id=parent_id,created=now,modified=now)
         self.categories.append(category)
@@ -95,7 +95,6 @@ class CategoryController:
     def get_category_tree(self) -> List[dict]:
         tree = []
         main_categories = [c for c in self.categories if c.parent_id is None]
-
         for main in main_categories:
             tree.append({"category": main, "level": 0})
             children = self.get_subcategories(main.category_id)

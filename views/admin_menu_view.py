@@ -16,10 +16,12 @@ class AdminMenuView:
         self.controllers = controllers
 
         # Създаваме view обектите
-        self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
+        self.product_view = ProductView(controllers["product"], controllers["category"],
+                                        controllers["location"],
                                         controllers["activity_log"])
         self.category_view = CategoryView(controllers["category"])
-        self.movement_view = MovementView(controllers["product"], controllers["movement"], controllers["user"],
+        self.movement_view = MovementView(controllers["product"], controllers["movement"],
+                                          controllers["user"],
                                           controllers["activity_log"])
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])

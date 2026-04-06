@@ -5,7 +5,8 @@ from typing import Optional
 
 
 class Category:
-    def __init__(self, name, description="", category_id=None, parent_id=None, created=None, modified=None):
+    def __init__(self, name, description="", category_id=None, parent_id=None, created=None,
+                 modified=None):
         self.category_id = category_id or str(uuid.uuid4())
         self.name = name
         self.description = description

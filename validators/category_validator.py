@@ -24,6 +24,7 @@ class CategoryValidator:
         CategoryValidator.validate_name(new_name)
 
 
+
     # DESCRIPTION VALIDATION
     @staticmethod
     def validate_description(description):

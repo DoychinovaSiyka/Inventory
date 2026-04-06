@@ -7,7 +7,7 @@ from models.user import User
 class LocationView:
     def __init__(self, location_controller: LocationController):
         self.location_controller = location_controller
-    # Основно меню
+
     def show_menu(self, user: User):
         menu = self._build_menu(user)
         while True:
@@ -65,7 +65,6 @@ class LocationView:
 
         name = input("Име на локация (град/склад): ").strip()
         zone = input("Зона/Сектор: ").strip()
-
         capacity = self._input_capacity("Капацитет (число): ")
         if capacity is None:
             return
@@ -83,12 +82,10 @@ class LocationView:
         location = self._get_location(loc_id)
         if not location:
             return
-
         print("\n* Оставете празно, ако не желаете промяна на текущата стойност.")
 
         new_name = input(f"Ново име ({location.name}): ").strip() or location.name
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or location.zone
-
         new_capacity = self._input_capacity(f"Нов капацитет ({location.capacity}): ",
                                             default=location.capacity)
         if new_capacity is None:
@@ -99,7 +96,6 @@ class LocationView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Изтриване
     def delete_location(self, _):
         print("\n--- ИЗТРИВАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID за изтриване (напр. W1): ").strip()

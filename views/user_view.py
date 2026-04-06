@@ -86,7 +86,7 @@ class UserView:
         except Exception as e:
             print("Грешка:", e)
 
-    # Премахване на потребител
+
     def delete_user(self, user):
         username = input("Потребителско име за изтриване: ")
         try:

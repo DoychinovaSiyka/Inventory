@@ -13,7 +13,6 @@ class Location:
         self.name = name
         self.zone = zone
         self.capacity = capacity
-
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now

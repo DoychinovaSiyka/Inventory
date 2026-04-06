@@ -106,7 +106,6 @@ def show_products_menu(product_controller):
     if not products:
         print("Няма продукти.")
         return
-
     columns = ["ID", "Име", "Цена", "Количество", "Категории"]
 
     rows = []

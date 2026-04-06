@@ -43,11 +43,11 @@ class UserController:
         self.repo = repo
         self.users = [User.from_dict(u) for u in self.repo.load()]
 
-        # ако няма потребители → създаваме администратор
+        # ако няма потребители - създаваме администратор
         if not self.users:
             self._create_default_admin_and_operator()
 
-        # ако няма оператор → създаваме един
+        # ако няма оператор - създаваме един
         if not any(u.role == "Operator" for u in self.users):
             self._create_default_operator()
 
@@ -61,7 +61,8 @@ class UserController:
                      username="admin", password=self._hash_password("admin123"),
                      role="Admin", status="Active", created=now, modified=now)
 
-        operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+        operator = User(first_name="Operator", last_name="User",
+                        email="operator@example.com",
                         username="operator", password=self._hash_password("operator123"),
                         role="Operator", status="Active", created=now, modified=now)
 
@@ -125,14 +126,12 @@ class UserController:
                     return None
                 self.logged_user = user
                 return user
-
         return None
 
     # ROLE MANAGEMENT (ADMIN ONLY)
     def change_role(self, acting_user: User, username: str, new_role: str):
         if acting_user.role != "Admin":
             raise PermissionError("Само администратор може да променя роли.")
-
         UserValidator.validate_role(new_role)
 
         for user in self.users:
@@ -141,7 +140,6 @@ class UserController:
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self.save_changes()
                 return True
-
         return False
 
     # STATUS MANAGEMENT (ADMIN ONLY)
@@ -155,7 +153,6 @@ class UserController:
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self.save_changes()
                 return True
-
         return False
 
     def activate_user(self, acting_user: User, username: str):
@@ -168,7 +165,6 @@ class UserController:
                 user.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self.save_changes()
                 return True
-
         return False
 
     # DELETE USER (ADMIN ONLY)
@@ -184,7 +180,6 @@ class UserController:
                 self.users.remove(user)
                 self.save_changes()
                 return True
-
         return False
 
     # LIST USERS

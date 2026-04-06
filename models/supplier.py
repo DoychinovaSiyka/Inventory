@@ -13,16 +13,12 @@ class Supplier:
 
     def to_dict(self):
         return {
-            "supplier_id": self.supplier_id,
-            "name": self.name,
-            "contact": self.contact,
-            "address": self.address,
-            "created": self.created,
-            "modified": self.modified,
+            "supplier_id": self.supplier_id, "name": self.name, "contact": self.contact,
+            "address": self.address, "created": self.created, "modified": self.modified
         }
 
     @staticmethod
     def from_dict(data):
-        return Supplier( supplier_id=data.get("supplier_id"), name=data["name"],contact=data["contact"],
-            address=data["address"],created=data.get("created"),
-            modified=data.get("modified"))
+        return Supplier(supplier_id=data.get("supplier_id"), name=data.get("name"),
+            contact=data.get("contact"), address=data.get("address"),
+            created=data.get("created"), modified=data.get("modified"))

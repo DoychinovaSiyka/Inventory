@@ -9,7 +9,7 @@ class LocationValidator:
         if len(name) > 100:
             raise ValueError("Името на локацията е твърде дълго.")
 
-    # ZONE VALIDATION
+
     @staticmethod
     def validate_zone(zone):
         if zone is not None and len(zone) > 50:

@@ -12,15 +12,11 @@ class StockLog:
         self.timestamp = timestamp or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self):
-        return {
-            "log_id": self.log_id,
-            "product_id": self.product_id,
-            "location_id": self.location_id,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "action": self.action,
-            "timestamp": self.timestamp
-        }
+        return {"log_id": self.log_id,
+                "product_id": self.product_id,
+                "location_id": self.location_id, "quantity": self.quantity,
+                "unit": self.unit, "action": self.action,
+                "timestamp": self.timestamp}
 
     @staticmethod
     def from_dict(data):

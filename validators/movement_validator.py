@@ -121,12 +121,8 @@ class MovementValidator:
         MovementValidator.validate_user_id(movement.user_id)
         MovementValidator.validate_movement_type(movement.movement_type)
         MovementValidator.validate_unit(movement.unit)
-        MovementValidator.validate_locations(
-            movement.from_location_id,
-            movement.to_location_id,
-            movement.movement_type
-        )
+        MovementValidator.validate_locations(movement.from_location_id, movement.to_location_id,
+                                             movement.movement_type)
         MovementValidator.validate_price_for_type(movement.price, movement.movement_type)
-
         if movement.quantity <= 0:
             raise ValueError("quantity трябва да е > 0.")

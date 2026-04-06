@@ -11,7 +11,6 @@ class SupplierView:
 
     def show_menu(self, user: User):
         self.menu = self._build_menu(user)
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
@@ -64,7 +63,8 @@ class SupplierView:
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
         try:
             self.controller.update( supplier_id=supplier_id, name=new_name or supplier.name,
-                                    contact=new_contact or supplier.contact, address=new_address or supplier.address)
+                                    contact=new_contact or supplier.contact,
+                                    address=new_address or supplier.address)
             print("Доставчикът е обновен успешно!")
         except ValueError as e:
             print("Грешка:", e)

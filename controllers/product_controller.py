@@ -25,7 +25,6 @@ class ProductController:
     def _load_products(self):
         for p_data in self.repo.load():
             product = Product.from_dict(p_data)
-
             fixed_categories = []
             for cid in product.categories:
                 if isinstance(cid, str):
@@ -38,12 +37,10 @@ class ProductController:
             product.categories = fixed_categories
             self.products.append(product)
 
-
     # Генериране на ID
     @staticmethod
     def _generate_id() -> str:
         return str(uuid.uuid4())
-
 
     # Помощни методи
     def _validate_supplier(self, supplier_id):
@@ -64,7 +61,6 @@ class ProductController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-
     # CREATE
     def add(self, name: str, category_ids: List[str], quantity: float, unit: str,
             description: str, price: float, supplier_id: Optional[str], user_id: str,
@@ -72,7 +68,8 @@ class ProductController:
 
         ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
 
-        if any(p.name.lower() == name.lower() and p.location_id == location_id for p in self.products):
+        if any(p.name.lower() == name.lower() and p.location_id == location_id
+               for p in self.products):
             raise ValueError(f"Продукт с име '{name}' вече съществува в склад {location_id}.")
 
         categories = self._validate_categories(category_ids)
@@ -80,9 +77,12 @@ class ProductController:
 
         now = str(datetime.now())
 
-        product = Product(product_id=self._generate_id(), name=name, categories=categories, quantity=float(quantity),
-                          unit=unit, description=description, price=price, supplier_id=supplier_id,
-                          location_id=location_id, tags=tags or [], created=now, modified=now)
+        product = Product(product_id=self._generate_id(), name=name, categories=categories,
+                          quantity=float(quantity),
+                          unit=unit, description=description, price=price,
+                          supplier_id=supplier_id,
+                          location_id=location_id, tags=tags or [], created=now,
+                          modified=now)
 
         self.products.append(product)
         self.save_changes()
@@ -110,12 +110,10 @@ class ProductController:
 
         if self.exists_by_name(new_name) and new_name != p.name:
             raise ValueError("Продукт с това име вече съществува.")
-
         ProductValidator.validate_name(new_name)
         p.name = new_name
         p.update_modified()
         self.save_changes()
-
         self._log(user_id, "EDIT_PRODUCT", f"Updated name of product ID {product_id} to '{new_name}'")
         return True
 
@@ -128,8 +126,8 @@ class ProductController:
         p.description = new_description
         p.update_modified()
         self.save_changes()
-
-        self._log(user_id, "EDIT_PRODUCT", f"Updated description of product ID {product_id}")
+        self._log(user_id, "EDIT_PRODUCT",
+                  f"Updated description of product ID {product_id}")
         return True
 
     def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:
@@ -141,34 +139,32 @@ class ProductController:
         p.categories = categories
         p.update_modified()
         self.save_changes()
-
-        self._log(user_id, "EDIT_PRODUCT", f"Updated categories of product ID {product_id}")
+        self._log(user_id, "EDIT_PRODUCT",
+                  f"Updated categories of product ID {product_id}")
         return True
 
     def update_supplier(self, product_id: str, supplier_id: str, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
-
         self._validate_supplier(supplier_id)
         p.supplier_id = supplier_id
         p.update_modified()
         self.save_changes()
-
-        self._log(user_id, "EDIT_PRODUCT", f"Updated supplier of product ID {product_id}")
+        self._log(user_id, "EDIT_PRODUCT",
+                  f"Updated supplier of product ID {product_id}")
         return True
 
     def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if not p:
             raise ValueError("Продуктът не е намерен.")
-
         ProductValidator.validate_price(new_price)
         p.price = round(float(new_price), 2)
         p.update_modified()
         self.save_changes()
-
-        self._log(user_id, "EDIT_PRODUCT", f"Updated price of product ID {product_id} to {new_price}")
+        self._log(user_id, "EDIT_PRODUCT",
+                  f"Updated price of product ID {product_id} to {new_price}")
         return True
 
 
@@ -183,8 +179,8 @@ class ProductController:
         p.quantity = round(p.quantity + float(amount), 2)
         p.update_modified()
         self.save_changes()
-
-        self._log(user_id, "INCREASE_QUANTITY", f"Added {amount} units to product ID {product_id}")
+        self._log(user_id, "INCREASE_QUANTITY",
+                  f"Added {amount} units to product ID {product_id}")
         return True
 
     def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
@@ -200,7 +196,8 @@ class ProductController:
         p.update_modified()
         self.save_changes()
 
-        self._log(user_id, "DECREASE_QUANTITY", f"Removed {amount} units from product ID {product_id}")
+        self._log(user_id, "DECREASE_QUANTITY",
+                  f"Removed {amount} units from product ID {product_id}")
         return True
 
 
@@ -211,7 +208,8 @@ class ProductController:
 
         if len(self.products) < original_len:
             self.save_changes()
-            self._log(user_id, "DELETE_PRODUCT", f"Deleted product ID {product_id}")
+            self._log(user_id, "DELETE_PRODUCT",
+                      f"Deleted product ID {product_id}")
             return True
         return False
 
@@ -222,7 +220,8 @@ class ProductController:
 
         if len(self.products) < original_len:
             self.save_changes()
-            self._log(user_id, "DELETE_PRODUCT", f"Deleted product '{name}'")
+            self._log(user_id, "DELETE_PRODUCT",
+                      f"Deleted product '{name}'")
             return True
         return False
 
@@ -243,17 +242,14 @@ class ProductController:
                     cat_name = cat_obj.name.lower() if cat_obj else ""
                 else:
                     cat_name = cat.name.lower()
-
                 if keyword in cat_name:
                     results.append(p)
                     break
-
         return results
 
     def filter_by_multiple_category_ids(self, category_ids: List[str]) -> List[Product]:
         filtered = []
         target_ids = [str(cid) for cid in category_ids]
-
         for p in self.products:
             for c in p.categories:
                 c_id = getattr(c, 'category_id', c)
@@ -302,34 +298,31 @@ class ProductController:
     def bubble_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
-
         for i in range(n):
             for j in range(0, n - i - 1):
                 a = key(sorted_products[j])
                 b = key(sorted_products[j + 1])
-
                 if reverse:
                     if a < b:
-                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1], sorted_products[j])
+                        sorted_products[j], sorted_products[j + 1] = \
+                            (sorted_products[j + 1], sorted_products[j])
                 else:
                     if a > b:
-                        sorted_products[j], sorted_products[j + 1] = (sorted_products[j + 1], sorted_products[j])
+                        sorted_products[j], sorted_products[j + 1] = \
+                            (sorted_products[j + 1], sorted_products[j])
 
         return sorted_products
 
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         sorted_products = self.products[:]
         n = len(sorted_products)
-
         i = 0
         while i < n:
             best_idx = i
-
             j = i + 1
             while j < n:
                 a = key(sorted_products[j])
                 b = key(sorted_products[best_idx])
-
                 if reverse:
                     if a > b:
                         best_idx = j
@@ -338,7 +331,6 @@ class ProductController:
                         best_idx = j
 
                 j += 1
-
             sorted_products[i], sorted_products[best_idx] = (sorted_products[best_idx], sorted_products[i])
             i += 1
 
@@ -369,10 +361,9 @@ class ProductController:
         return results
 
     def search_by_category(self, category_id: str) -> List[Product]:
-        return [
-            p for p in self.products
-            if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)
-        ]
+        return [p for p in self.products
+                if any(str(getattr(c, 'category_id', c)) == str(category_id)
+                       for c in p.categories)]
 
     def search_by_supplier(self, supplier_id: str) -> List[Product]:
         return [p for p in self.products if str(p.supplier_id) == str(supplier_id)]
@@ -389,7 +380,9 @@ class ProductController:
             results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
 
         if category_id is not None:
-            results = [p for p in results if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)]
+            results = [p for p in results
+                       if any(str(getattr(c, 'category_id', c)) == str(category_id)
+                              for c in p.categories)]
 
         if supplier_id is not None:
             results = [p for p in results if str(p.supplier_id) == str(supplier_id)]
@@ -422,6 +415,5 @@ class ProductController:
 
         return warehouses
 
-    # SAVE
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])
