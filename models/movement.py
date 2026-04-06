@@ -16,7 +16,6 @@ class Movement:
             from_location_id=None, to_location_id=None,
             date=None, created=None, modified=None):
 
-
         self.movement_id = str(movement_id) if movement_id is not None else None
         self.product_id = product_id
         self.user_id = user_id
