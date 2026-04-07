@@ -82,7 +82,6 @@ class InventoryApplication:
         # Инициализация на логистичния модул (Dijkstra)
         self.logistic_service = GraphView(self.product_controller)
 
-
     #  Инициализация на менютата
     def _init_menus(self):
         #  Речник с контролери (Dependency Injection за менютата)
@@ -102,7 +101,6 @@ class InventoryApplication:
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
-
 
     #  Процес на вход
     def _login_flow(self):
