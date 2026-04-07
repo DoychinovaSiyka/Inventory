@@ -151,7 +151,6 @@ class MovementController:
             raise ValueError(f"Продукт {product_id} не съществува.")
 
         quantity = round(float(quantity), 2)
-
         if product.quantity < quantity:
             raise ValueError("Недостатъчна наличност за преместване.")
 

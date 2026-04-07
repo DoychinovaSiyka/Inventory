@@ -28,13 +28,13 @@ class Product:
         if isinstance(categories, list):
             for c in categories:
                 if isinstance(c, Category):
-                    # Category обект → взимаме category_id като string
+                    # Category обект - взимам category_id като string
                     self.categories.append(str(c.category_id))
                 elif isinstance(c, dict):
-                    # dict → взимаме category_id
+                    # dict - взимам category_id
                     self.categories.append(str(c.get("category_id")))
                 else:
-                    # string → директно добавяме
+                    # string - директно добавям
                     self.categories.append(str(c))
 
         # Премахваме празни записи (None, "", и т.н.)

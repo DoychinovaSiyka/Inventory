@@ -31,7 +31,6 @@ class Invoice:
                                       self.unit_price,
                                       self.movement_id)
 
-
     def to_dict(self):
         """Конвертирам към dict за JSON."""
         return {

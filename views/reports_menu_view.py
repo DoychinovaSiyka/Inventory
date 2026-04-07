@@ -75,7 +75,7 @@ class ReportsView:
         return rows, has_id
 
     # СПРАВКИ
-    # ПРОДАЖБИ → ИМАТ ID (ако JSON съдържа ID)
+    # ПРОДАЖБИ - ИМАТ ID (ако JSON съдържа ID)
     def _print_sales(self, data):
         rows, has_id = self._process_data(data)
         columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
