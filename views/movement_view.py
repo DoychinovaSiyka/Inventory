@@ -263,6 +263,10 @@ class MovementView:
             print("\nНяма движения, които отговарят на критериите.")
             return
 
+
         print("\n   Резултати   ")
         for m in results:
             self._print_movement(m)
+
+
+

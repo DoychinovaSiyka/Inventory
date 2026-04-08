@@ -177,7 +177,6 @@ class ProductView:
         qty_input = input(f"Ново количество ({product.quantity}): ").strip()
         new_quantity = float(qty_input.replace(",", ".")) if qty_input \
             else product.quantity
-
         try:
             product.name = new_name
             product.description = new_description
@@ -190,13 +189,13 @@ class ProductView:
             print("Грешка:", e)
 
 
+
     # Показване, търсене, сортиране
     def show_all(self, _):
         products = self.product_controller.get_all()
         if not products:
             print("Няма налични продукти.")
             return
-
         print("\n  Списък с продукти  ")
 
         # Колони за таблицата
