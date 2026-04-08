@@ -124,5 +124,26 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-06 22:11:54"
+    },
+    {
+        "log_id": "5d2d8c32-d7c7-43f2-a9a4-782bbab6d4c0",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-07 19:41:39"
+    },
+    {
+        "log_id": "b3f67279-bd91-4875-814f-c226f09c65a3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-07 19:51:12"
+    },
+    {
+        "log_id": "12924444-de3e-43f4-a6df-2c98cb6d103c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-08 21:57:25"
     }
 ]

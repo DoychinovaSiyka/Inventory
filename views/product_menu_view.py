@@ -90,7 +90,6 @@ class ProductView:
 
         while True:
             choice = self.menu.show()
-
             # Проверка за права
             if readonly and choice in ["1", "2", "3", "9", "10"]:
                 print(f"[!] Функцията не е достъпна за роля: {user.role}")

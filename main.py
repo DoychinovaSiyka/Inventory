@@ -60,6 +60,7 @@ class InventoryApplication:
         except ValueError:
             pass
 
+
         # ProductController се нуждае от категории и доставчици за филтриране
         self.product_controller = ProductController(self.product_repo, self.category_controller,
                                                     self.supplier_controller,
