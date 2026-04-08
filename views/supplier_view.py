@@ -69,6 +69,7 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
 
+
     # изтриване на доставчик (admin only)
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()

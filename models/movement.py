@@ -50,6 +50,7 @@ class Movement:
             "created": self.created, "modified": self.modified
         }
 
+
     @staticmethod
     def from_dict(data):
         return Movement(
