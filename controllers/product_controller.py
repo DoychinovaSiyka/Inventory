@@ -412,7 +412,6 @@ class ProductController:
                 loc_id = p.location_id
                 if loc_id and loc_id not in warehouses:
                     warehouses.append(loc_id)
-
         return warehouses
 
     def save_changes(self) -> None:

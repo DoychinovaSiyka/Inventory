@@ -164,7 +164,7 @@ class InventoryApplication:
                 print("[!] Невалиден избор. Опитайте отново.")
 
 
-#  Стартиране на приложението
+
 if __name__ == "__main__":
     app = InventoryApplication()
     app.run()
