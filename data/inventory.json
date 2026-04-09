@@ -1,0 +1,178 @@
+[
+    {
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "product": "Ананас",
+        "warehouse": "W4",
+        "quantity": 61.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "product": "бира \"Siyka\"",
+        "warehouse": "W5",
+        "quantity": 105.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
+        "product": "вафла \"Боровец\"",
+        "warehouse": "W1",
+        "quantity": 31.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44",
+        "product": "зелен лук",
+        "warehouse": "W1",
+        "quantity": 20.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "product": "картофи",
+        "warehouse": "W5",
+        "quantity": 1.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:22:30"
+    },
+    {
+        "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
+        "product": "кафе \"Lavazza\"",
+        "warehouse": "W1",
+        "quantity": 37.22,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
+        "product": "кафе 3 в 1",
+        "warehouse": "W1",
+        "quantity": 78.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
+        "product": "киви",
+        "warehouse": "W1",
+        "quantity": 3.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "d9c3b7a5-1e4f-4a9c-8b2d-5f7a1c3e8b77",
+        "product": "кокоши и пъдпъдъчи яйца",
+        "warehouse": "W1",
+        "quantity": 117.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "e1568d65-c481-4b52-8fb8-5c6a45870fe5",
+        "product": "пица",
+        "warehouse": "W5",
+        "quantity": 56.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "c1e7f9a3-4b2d-4e0f-9c8a-3d5f7b1a6c88",
+        "product": "Подправки микс",
+        "warehouse": "W1",
+        "quantity": 12.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99",
+        "product": "Прясно мляко",
+        "warehouse": "W5",
+        "quantity": 17.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
+        "product": "Розови домати",
+        "warehouse": "W5",
+        "quantity": 199.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "product": "сладолед \"Family\"",
+        "warehouse": "W1",
+        "quantity": 400.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "product": "шоколад \"Kinder\"",
+        "warehouse": "W1",
+        "quantity": 134.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "ac1e582c-c606-46f3-a669-a836098a1a6e",
+        "product": "Портокали \"Мерлин\"",
+        "warehouse": "W3",
+        "quantity": 45.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "4374c1a6-de5f-48ae-a0e8-0d029d4f97a6",
+        "product": "кори за баница \"Bella\"",
+        "warehouse": "W2",
+        "quantity": 45.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "b74e9d24-f831-434b-86b3-8451ee3cd737",
+        "product": "череши",
+        "warehouse": "W3",
+        "quantity": 34.0,
+        "created": "2026-04-09 12:16:50",
+        "modified": "2026-04-09 12:16:50"
+    },
+    {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "product": "картофи",
+        "warehouse": "W2",
+        "quantity": 2.0,
+        "created": "2026-04-09 12:20:17",
+        "modified": "2026-04-09 12:20:17"
+    },
+    {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "product": "картофи",
+        "warehouse": "W3",
+        "quantity": 1.0,
+        "created": "2026-04-09 12:21:27",
+        "modified": "2026-04-09 12:23:07"
+    },
+    {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "product": "картофи",
+        "warehouse": "W4",
+        "quantity": 2.0,
+        "created": "2026-04-09 12:22:03",
+        "modified": "2026-04-09 12:22:03"
+    },
+    {
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "product": "картофи",
+        "warehouse": "W1",
+        "quantity": 2.0,
+        "created": "2026-04-09 12:22:30",
+        "modified": "2026-04-09 12:23:07"
+    }
+]

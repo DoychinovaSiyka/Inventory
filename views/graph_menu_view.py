@@ -17,7 +17,9 @@ class GraphView:
     def _build_menu(self):
         return Menu("Логистичен Модул", [
             MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-            MenuItem("0", "Назад", lambda u: "break") ])
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
+
     # Основно меню
     def show_menu(self, user):
         while True:
@@ -25,24 +27,23 @@ class GraphView:
             if self.menu.execute(choice, user) == "break":
                 break
 
-
     # Създаване на графа от складове
     def _setup_network(self):
         warehouses = [Warehouse("W1", "София"),
                       Warehouse("W2", "Пловдив"),
-                       Warehouse("W3", "Варна"),
+                      Warehouse("W3", "Варна"),
                       Warehouse("W4", "Бургас"),
-                       Warehouse("W5", "Русе")]
+                      Warehouse("W5", "Магазин Смолян")]
+
         for w in warehouses:
             self.graph.add_warehouse(w)
 
-        # Добавяме пътища между складовете
+        # Разстояния
         self.graph.add_edge("W1", "W2", 150)
         self.graph.add_edge("W2", "W4", 250)
         self.graph.add_edge("W4", "W3", 130)
-        self.graph.add_edge("W1", "W5", 310)
-        self.graph.add_edge("W5", "W3", 190)
-
+        self.graph.add_edge("W1", "W5", 250)
+        self.graph.add_edge("W5", "W3", 350)
 
     # Намиране на най-близка наличност
     def calculate_best_delivery(self, _):

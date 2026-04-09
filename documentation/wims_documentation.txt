@@ -52,6 +52,7 @@ controllers/
 init.py
 category_controller.py
 invoice_controller.py
+inventory_controller.py
 location_controller.py
 movement_controller.py
 product_controller.py
@@ -66,6 +67,7 @@ data/
 categories.json
 invoices.json
 locations.json
+inventory.json
 movements.json
 products.json
 reports.json

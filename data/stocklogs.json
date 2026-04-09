@@ -160,5 +160,203 @@
         "unit": "кг",
         "action": "move_in",
         "timestamp": "2026-04-05 20:37:55"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 10:48:27"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 10:48:27"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 11:17:45"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 11:17:45"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 11:41:13"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 11:41:13"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 11:48:36"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 11:48:36"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 11:59:25"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W3",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 11:59:25"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:11:32"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:11:32"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:20:17"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W2",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:20:17"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:21:27"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W3",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:21:27"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:22:03"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W4",
+        "quantity": 2.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:22:03"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W5",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:22:30"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W1",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:22:30"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W3",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_out",
+        "timestamp": "2026-04-09 12:23:07"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W1",
+        "quantity": 1.0,
+        "unit": "кг",
+        "action": "move_in",
+        "timestamp": "2026-04-09 12:23:07"
     }
 ]

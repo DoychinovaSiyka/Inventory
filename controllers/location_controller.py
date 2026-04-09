@@ -8,7 +8,7 @@ class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
         # Зареждаме локациите
-        self.locations: List[Location] = [ Location.from_dict(l) for l in self.repo.load()]
+        self.locations: List[Location] = [Location.from_dict(l) for l in self.repo.load()]
 
     # ID GENERATOR - поддържам консистентност с "W" префикса
     def _generate_id(self) -> str:
@@ -26,7 +26,7 @@ class LocationController:
             return f"W{next_id}"
 
         except:
-            # Ако по някаква причина не са във формат W1, генерираме по стария начин, но като стринг
+            # Ако по не са във формат W1, генерираме по стария начин, но като стринг
             return str(len(self.locations) + 1)
 
 

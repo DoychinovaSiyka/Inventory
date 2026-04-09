@@ -107,12 +107,10 @@ class MovementView:
 
         try:
             movement = self.movement_controller.add(product_id=product.product_id,
-                                                    user_id=user.user_id,
-                                                    location_id=location.location_id,
+                                                    user_id=user.user_id, location_id=location.location_id,
                                                     movement_type=movement_type,
                                                     quantity=quantity, description=description,
-                                                    price=price,
-                                                    customer=customer, supplier_id=supplier_id)
+                                                    price=price, customer=customer, supplier_id=supplier_id)
 
             print("\nДвижението е добавено успешно!")
             print(f"ID на движението: {movement.movement_id}")
@@ -160,9 +158,10 @@ class MovementView:
 
     # Търсене по описание
     def search_movements(self, _):
-        keyword = input("Търси по описание: ")
-        results = self.movement_controller.search(keyword)
+        keyword = input("Търси по описание: ").strip().lower()
 
+        # Търсим САМО по описание
+        results = [m for m in self.movement_controller.get_all() if keyword in (m.description or "").lower()]
         if not results:
             print("Няма намерени движения.")
             return

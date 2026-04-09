@@ -77,7 +77,7 @@
         "tags": [],
         "location_id": "W5",
         "created": "2026-03-14 21:47:49.788604",
-        "modified": "2026-04-05 20:37:55"
+        "modified": "2026-04-09 11:17:45"
     },
     {
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",
@@ -173,7 +173,7 @@
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-02 12:15:03",
-        "modified": "2026-02-03 09:13:00.725537"
+        "modified": "2026-04-09 10:25:18"
     },
     {
         "product_id": "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99",
@@ -187,9 +187,9 @@
         "price": 4.01,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
+        "location_id": "W5",
         "created": "2026-02-02 12:15:03",
-        "modified": "2026-02-06 19:54:05.485710"
+        "modified": "2026-04-09 10:58:01"
     },
     {
         "product_id": "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
@@ -203,9 +203,9 @@
         "price": 2.19,
         "supplier_id": "00000000-0000-0000-0000-000000000002",
         "tags": [],
-        "location_id": "W3",
+        "location_id": "W5",
         "created": "2026-02-03 09:11:34.418148",
-        "modified": "2026-04-05 20:08:43"
+        "modified": "2026-04-09 10:42:18"
     },
     {
         "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",

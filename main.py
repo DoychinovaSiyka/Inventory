@@ -8,6 +8,7 @@ from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
 from controllers.user_activity_log_controller import UserActivityLogController
+from controllers.inventory_controller import InventoryController
 
 from views.admin_menu_view import AdminMenuView
 from views.operator_menu_view import OperatorMenuView
@@ -28,7 +29,6 @@ class InventoryApplication:
         #  Инициализация на менютата
         self._init_menus()
 
-
     #  Инициализация на хранилищата
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
@@ -40,6 +40,7 @@ class InventoryApplication:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
+        self.inventory_repo = JSONRepository("data/inventory.json")
 
 
     #  Инициализация на контролерите
@@ -60,44 +61,50 @@ class InventoryApplication:
         except ValueError:
             pass
 
-
-        # ProductController се нуждае от категории и доставчици за филтриране
         self.product_controller = ProductController(self.product_repo, self.category_controller,
-                                                    self.supplier_controller,
-                                                    self.activity_log_controller)
+                                                    self.supplier_controller, self.activity_log_controller)
 
+        # създаваме InventoryController
+        self.inventory_controller = InventoryController(self.inventory_repo)
+
+        #  Ако inventory.json е празен – инициализираме го от продуктите
+        if not self.inventory_controller.stock:
+            products = self.product_controller.get_all()
+            for p in products:
+                if p.location_id and p.quantity > 0:
+                    self.inventory_controller.create_initial_stock(product_id=p.product_id,
+                                                                   product_name=p.name,warehouse_id=p.location_id,
+                                                                   qty=p.quantity)
+
+        # MovementController получава inventory_controller
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
-                                                      self.user_controller, self.location_controller,
-                                                      self.stocklog_controller, self.invoice_controller,
-                                                      self.activity_log_controller)
+            self.user_controller, self.location_controller, self.stocklog_controller, self.invoice_controller,
+                                                      self.activity_log_controller, self.inventory_controller)
+
 
         self.report_controller = ReportController(self.report_repo, self.product_controller,
-                                                  self.movement_controller, self.invoice_controller,
+                                                  self.movement_controller,self.invoice_controller,
                                                   self.location_controller)
-
 
         #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ НА ОТЧЕТИ САМО ВЕДНЪЖ
         initial_reports = self.report_controller.generate_all_reports()
         self.report_controller.save_reports_once(initial_reports)
 
         # Инициализация на логистичния модул (Dijkstra)
-        self.logistic_service = GraphView(self.product_controller)
+        self.logistic_service = GraphView(self.inventory_controller)
 
     #  Инициализация на менютата
     def _init_menus(self):
-        #  Речник с контролери (Dependency Injection за менютата)
-        self.controllers = {
-            "user": self.user_controller,
-            "product": self.product_controller,
-            "category": self.category_controller,
-            "supplier": self.supplier_controller,
-            "location": self.location_controller,
-            "movement": self.movement_controller,
-            "invoice": self.invoice_controller,
-            "report": self.report_controller,
-            "activity_log": self.activity_log_controller,
-            "logistic": self.logistic_service
-        }
+        self.controllers = {"user": self.user_controller,
+                            "product": self.product_controller,
+                            "category": self.category_controller,
+                            "supplier": self.supplier_controller,
+                            "location": self.location_controller,
+                            "movement": self.movement_controller,
+                            "invoice": self.invoice_controller,
+                            "report": self.report_controller,
+                            "activity_log": self.activity_log_controller,
+                            "logistic": self.logistic_service}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -111,11 +118,9 @@ class InventoryApplication:
             print("[!] Грешно потребителско име или несъществуващ потребител.")
             return
 
-        # Записваме лог за влизане
-        self.activity_log_controller.add_log(user.user_id, "LOGIN",
-                                             f"Потребител {user.username} влезе.")
+        self.activity_log_controller.add_log(user.user_id,
+                                             "LOGIN",f"Потребител {user.username} влезе.")
 
-        # Избор на меню според ролята
         if user.role == "Admin":
             self.admin_menu.show_menu(user)
         elif user.role == "Operator":
@@ -124,23 +129,19 @@ class InventoryApplication:
             print("[!] Невалидна роля на потребителя.")
             return
 
-        # Записваме лог за излизане
-        self.activity_log_controller.add_log(user.user_id, "LOGOUT",
-                                             f"Потребител {user.username} излезе.")
-
+        self.activity_log_controller.add_log(user.user_id,
+                                             "LOGOUT",f"Потребител {user.username} излезе.")
 
     #  Анонимен достъп
     def _anonymous_flow(self):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        guest_user = User(user_id="guest-0000", first_name="Anonymous",
-                          last_name="", email="", username="guest",
-                          password="", role="Anonymous", status="Active", created=now, modified=now)
+        guest_user = User(user_id="guest-0000", first_name="Anonymous", last_name="", email="",
+                          username="guest", password="", role="Anonymous",
+                          status="Active", created=now, modified=now)
 
-        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN",
-                                             "Анонимен достъп.")
+        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN","Анонимен достъп.")
         self.anonymous_menu.show_menu(guest_user)
-        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT",
-                                             "Анонимен изход.")
+        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT","Анонимен изход.")
 
 
     #  Главен цикъл
@@ -162,7 +163,6 @@ class InventoryApplication:
                 break
             else:
                 print("[!] Невалиден избор. Опитайте отново.")
-
 
 
 if __name__ == "__main__":
