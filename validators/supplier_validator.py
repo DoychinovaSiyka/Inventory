@@ -8,6 +8,7 @@ class SupplierValidator:
     # Регулярен израз за телефон - международен формат
     phone_regex = re.compile(r"^\+?\d{7,15}$")
 
+
     @staticmethod
     def validate_name(name):
         if not name or not name.strip():
