@@ -1,5 +1,6 @@
 import re
 
+
 class SupplierValidator:
 
     # Регулярен израз за имейл
