@@ -60,4 +60,5 @@ class UserValidator:
         UserValidator.validate_email(email)
         UserValidator.validate_role(role)
         UserValidator.validate_status(status)
+
         return True
