@@ -49,11 +49,12 @@ class GraphView:
     def calculate_best_delivery(self, _):
         product_name = input("Име на стока: ").strip()
         my_location = input("Вашето ID (напр. W1): ").strip()
+
         if my_location not in self.graph.nodes:
             print("Грешка: Невалидна локация!")
             return
 
-        # Намираме складовете, в които има наличност
+        # Складове, които имат стоката
         possible_sources = self.inventory_controller.get_warehouses_with_product(product_name)
         possible_sources = [s for s in possible_sources if s != my_location]
 
@@ -61,24 +62,25 @@ class GraphView:
             print(f"Стоката '{product_name}' не е налична другаде.")
             return
 
-        best_dist = float('inf')
-        best_path = []
-        best_source = None
+        # Пускаме Дейкстра само веднъж – от моята локация
+        dist, prev = self.graph.dijkstra(my_location)
 
-        # Търсим най-краткия път с Dijkstra
-        for source_id in possible_sources:
-            dist, path = dijkstra(self.graph, source_id, my_location)
-            if dist < best_dist:
-                best_dist = dist
-                best_path = path
-                best_source = source_id
+        # Намираме най-близкия склад с наличност
+        best_source = min(possible_sources, key=lambda w: dist[w])
+        best_dist = dist[best_source]
+
+        # Възстановяване на пътя
+        path = []
+        curr = best_source
+        while curr != my_location:
+            path.append(curr)
+            curr = prev[curr]
+        path.append(my_location)
+        path.reverse()
 
         # Показваме резултата
-        if best_source:
-            source_name = self.graph.nodes[best_source].name
-            print("\nОПТИМАЛНО РЕШЕНИЕ")
-            print(f"Склад: {source_name} ({best_source})")
-            print(f"Разстояние: {best_dist} км")
-            print(f"Маршрут: {' -> '.join(best_path)}")
-        else:
-            print("Няма открит маршрут.")
+        source_name = self.graph.nodes[best_source].name
+        print("\nОПТИМАЛНО РЕШЕНИЕ")
+        print(f"Склад: {source_name} ({best_source})")
+        print(f"Разстояние: {best_dist} км")
+        print(f"Маршрут: {' -> '.join(path)}")
