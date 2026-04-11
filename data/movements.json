@@ -322,5 +322,23 @@
         "date": "2026-04-09 12:23:07",
         "created": "2026-04-09 12:23:07",
         "modified": "2026-04-09 12:23:07"
+    },
+    {
+        "movement_id": "53540b20-eddd-4c7d-a8b1-246fadc25cd6",
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W5",
+        "movement_type": "MOVE",
+        "quantity": 34.0,
+        "unit": "бр.",
+        "description": "Преместване от W4 към W5. сочен ананас",
+        "price": 0.0,
+        "supplier_id": null,
+        "customer": null,
+        "from_location_id": "W4",
+        "to_location_id": "W5",
+        "date": "2026-04-11 20:54:18",
+        "created": "2026-04-11 20:54:18",
+        "modified": "2026-04-11 20:54:18"
     }
 ]

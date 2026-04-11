@@ -1,7 +1,6 @@
 from views.menu import Menu, MenuItem
 from graph.warehouse import Warehouse
 from graph.warehouse_graph import WarehouseGraph
-from graph.dijkstra import dijkstra
 
 
 class GraphView:

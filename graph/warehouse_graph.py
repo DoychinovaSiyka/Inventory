@@ -1,10 +1,19 @@
-class WarehouseGraph:
+from graph.dijkstra import Graph
+
+class WarehouseGraph(Graph):
     def __init__(self):
-        self.nodes = {}  # Складове по ID
-        self.edges = {}  # Съседни складове и разстояния
+        # Инициализираме базовия граф (алгоритмичната структура)
+        super().__init__(nodes=[], edges=[])
+
+        # Презаписваме nodes и edges, за да пазим реални складове
+        self.nodes = {}   # Складове по ID → Warehouse обекти
+        self.edges = {}   # Съседни складове и разстояния
 
     def add_warehouse(self, warehouse):
+        # Добавяме склад по неговото ID
         self.nodes[warehouse.warehouse_id] = warehouse
+
+        # Ако няма запис за ребра – създаваме празен речник
         if warehouse.warehouse_id not in self.edges:
             self.edges[warehouse.warehouse_id] = {}
 

@@ -358,5 +358,23 @@
         "unit": "кг",
         "action": "move_in",
         "timestamp": "2026-04-09 12:23:07"
+    },
+    {
+        "log_id": null,
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "location_id": "W4",
+        "quantity": 34.0,
+        "unit": "бр.",
+        "action": "move_out",
+        "timestamp": "2026-04-11 20:54:18"
+    },
+    {
+        "log_id": null,
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "location_id": "W5",
+        "quantity": 34.0,
+        "unit": "бр.",
+        "action": "move_in",
+        "timestamp": "2026-04-11 20:54:18"
     }
 ]

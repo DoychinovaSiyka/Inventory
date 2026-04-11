@@ -383,5 +383,47 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-09 13:07:41"
+    },
+    {
+        "log_id": "0d74b03e-2656-45b1-b981-a37dad3bad52",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-11 20:38:51"
+    },
+    {
+        "log_id": "f3325a4c-47a5-4d06-ab24-6e15b9bff570",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-11 20:42:37"
+    },
+    {
+        "log_id": "9d9f331e-8247-4cc2-ad95-03cc25181027",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved Ананас to W5",
+        "timestamp": "2026-04-11 20:54:18"
+    },
+    {
+        "log_id": "a921c040-7679-44f1-a789-1ca36d63b8f4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-11 20:56:52"
+    },
+    {
+        "log_id": "8e84ff3f-6499-4dd1-82ef-6f7e3c6511d2",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-11 20:56:59"
+    },
+    {
+        "log_id": "1c7e66b5-303b-43d3-95d2-6f4439f93902",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-11 20:57:18"
     }
 ]

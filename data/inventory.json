@@ -3,9 +3,9 @@
         "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
         "product": "Ананас",
         "warehouse": "W4",
-        "quantity": 61.0,
+        "quantity": 27.0,
         "created": "2026-04-09 12:16:50",
-        "modified": "2026-04-09 12:16:50"
+        "modified": "2026-04-11 20:54:18"
     },
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
@@ -174,5 +174,13 @@
         "quantity": 2.0,
         "created": "2026-04-09 12:22:30",
         "modified": "2026-04-09 12:23:07"
+    },
+    {
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "product": "Ананас",
+        "warehouse": "W5",
+        "quantity": 34.0,
+        "created": "2026-04-11 20:54:18",
+        "modified": "2026-04-11 20:54:18"
     }
 ]
