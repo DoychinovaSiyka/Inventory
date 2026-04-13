@@ -34,8 +34,7 @@ class Movement:
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
-        # Централизирана валидация
-        MovementValidator.validate_all(self)
+
 
 
     def to_dict(self):

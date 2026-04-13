@@ -1,6 +1,7 @@
 from models.user import User
 from controllers.user_controller import UserController
 from views.menu import Menu, MenuItem
+from views.password_utils import input_password # скрито въвеждане на парола
 
 
 class UserView:
@@ -49,7 +50,7 @@ class UserView:
         ln = input("Фамилия: ")
         email = input("Email: ")
         username = input("Потребителско име: ")
-        password = input("Парола: ")
+        password = ask_password("Парола: ")  # скрито въвеждане
         role = input("Роля (Admin/Operator): ")
 
         try:

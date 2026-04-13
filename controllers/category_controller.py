@@ -18,16 +18,13 @@ class CategoryController:
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
-
-        # Проверка за валиден родител
-        if parent_id and not self.get_by_id(parent_id):
-            raise ValueError("Родителската категория не съществува.")
+        CategoryValidator.validate_parent_exists(parent_id, self.categories)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генериране на уникално ID
-        category = Category(category_id=str(uuid.uuid4()), name=name, description=description,
-                            parent_id=parent_id, created=now, modified=now)
+        category = Category(category_id=str(uuid.uuid4()), name=name,
+                            description=description, parent_id=parent_id, created=now, modified=now)
 
         self.categories.append(category)
         self.save_changes()
@@ -40,10 +37,7 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_update_name(new_name)
-
-        # Проверка за уникално име
-        CategoryValidator.validate_unique(new_name,
-                                          [c for c in self.categories if c.category_id != category_id])
+        CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()
@@ -57,6 +51,7 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_description(new_description)
+
         category.description = new_description
         category.update_modified()
         self.save_changes()
@@ -68,11 +63,7 @@ class CategoryController:
         if not category:
             raise ValueError("Категорията не е намерена.")
 
-        # Проверка дали новият родител съществува
-        if parent_id and not self.get_by_id(parent_id):
-            raise ValueError("Новият родител не съществува.")
-
-        # Проверка дали не става собствен родител
+        CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_parent_id(parent_id, category_id)
 
         category.parent_id = parent_id
@@ -81,22 +72,7 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, product_controller=None) -> bool:
-        # Забрана за изтриване, ако има подкатегории
-        has_children = any(str(c.parent_id) == str(category_id) for c in self.categories)
-        if has_children:
-            raise ValueError("Не може да изтриете категория с подкатегории!")
-
-        # Забрана за изтриване, ако има продукти в категорията
-        if product_controller:
-            has_products = any(
-                str(category_id) in [
-                    str(cat.category_id) if isinstance(cat, Category) else str(cat)
-                    for cat in p.categories
-                ]
-                for p in product_controller.get_all()
-            )
-            if has_products:
-                raise ValueError("Не може да изтриете категория с налични продукти!")
+        CategoryValidator.validate_can_delete(category_id, self.categories, product_controller)
 
         original_len = len(self.categories)
         self.categories = [c for c in self.categories if str(c.category_id) != str(category_id)]

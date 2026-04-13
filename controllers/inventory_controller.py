@@ -1,6 +1,7 @@
 from typing import List, Dict
 from datetime import datetime
 from storage.json_repository import JSONRepository
+from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
@@ -26,6 +27,8 @@ class InventoryController:
 
     # Създаване на продукт
     def create_initial_stock(self, product_id, product_name, warehouse_id, qty):
+        InventoryValidator.validate_initial_stock(product_id, product_name, warehouse_id, qty)
+
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.stock.append({
             "product_id": product_id,
@@ -39,6 +42,8 @@ class InventoryController:
 
     # IN движение
     def increase_stock(self, product_id, product_name, warehouse_id, qty):
+        InventoryValidator.validate_increase(product_id, product_name, warehouse_id, qty)
+
         record = self._find(product_id, warehouse_id)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -58,13 +63,9 @@ class InventoryController:
 
     # OUT движение
     def decrease_stock(self, product_id, warehouse_id, qty):
+        InventoryValidator.validate_decrease(product_id, warehouse_id, qty, self.stock)
+
         record = self._find(product_id, warehouse_id)
-        if not record:
-            raise ValueError("Няма такава наличност в този склад.")
-
-        if record["quantity"] < qty:
-            raise ValueError("Недостатъчна наличност.")
-
         record["quantity"] -= qty
         record["modified"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -75,6 +76,7 @@ class InventoryController:
 
     # MOVE движение
     def move_stock(self, product_id, product_name, from_wh, to_wh, qty):
+        InventoryValidator.validate_move(product_id, product_name, from_wh, to_wh, qty)
         self.decrease_stock(product_id, from_wh, qty)
         self.increase_stock(product_id, product_name, to_wh, qty)
 
@@ -91,6 +93,7 @@ class InventoryController:
         self.stock = []  # изчистваме текущия инвентар
 
         movements = sorted(movements, key=lambda m: m["date"])
+        InventoryValidator.validate_movements(movements)
 
         for m in movements:
             pid = m["product_id"]

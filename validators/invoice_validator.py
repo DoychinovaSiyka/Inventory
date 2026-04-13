@@ -1,5 +1,6 @@
 class InvoiceValidator:
 
+    # PRODUCT
     @staticmethod
     def validate_product(product):
         if not product or not isinstance(product, str):
@@ -46,7 +47,6 @@ class InvoiceValidator:
     # DATE VALIDATION
     @staticmethod
     def validate_date(date_str):
-        """Приема само формата от JSON: YYYY-MM-DD HH:MM:SS"""
         from datetime import datetime
         if not date_str:
             raise ValueError("датата е задължителна.")
@@ -68,7 +68,6 @@ class InvoiceValidator:
     # ADVANCED SEARCH FILTERS
     @staticmethod
     def validate_search_filters(start_date, end_date, min_total, max_total):
-        """Валидации за разширено търсене (View вече не ги прави)."""
         from datetime import datetime
 
         if start_date:
@@ -112,3 +111,55 @@ class InvoiceValidator:
 
         if total_price is not None:
             InvoiceValidator.validate_total_price(total_price)
+
+    # MOVEMENT VALIDATION FOR INVOICE CREATION
+    @staticmethod
+    def validate_movement_for_invoice(movement):
+        if movement.movement_type.name != "OUT":
+            raise ValueError("Фактура може да се генерира само при OUT движение.")
+
+    # INVOICE EXISTS
+    @staticmethod
+    def validate_invoice_exists(invoice_id, invoices):
+        exists = any(inv.invoice_id == invoice_id for inv in invoices)
+        if not exists:
+            raise ValueError("Фактурата не е намерена.")
+
+    # DATE RANGE FILTERING
+    @staticmethod
+    def filter_by_date_range(invoices, start_date, end_date):
+        from datetime import datetime
+
+        def parse(d):
+            try:
+                return datetime.strptime(d, "%Y-%m-%d")
+            except:
+                return None
+
+        start = parse(start_date) if start_date else None
+        end = parse(end_date) if end_date else None
+
+        results = invoices
+
+        if start:
+            results = [inv for inv in results if parse(inv.date[:10]) and parse(inv.date[:10]) >= start]
+
+        if end:
+            results = [inv for inv in results if parse(inv.date[:10]) and parse(inv.date[:10]) <= end]
+
+        return results
+
+    # TOTAL RANGE FILTERING
+    @staticmethod
+    def filter_by_total_range(invoices, min_total, max_total):
+        results = invoices
+
+        if min_total is not None:
+            min_total = float(min_total)
+            results = [inv for inv in results if inv.total_price >= min_total]
+
+        if max_total is not None:
+            max_total = float(max_total)
+            results = [inv for inv in results if inv.total_price <= max_total]
+
+        return results

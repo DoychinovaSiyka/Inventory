@@ -8,6 +8,10 @@ from validators.product_validator import ProductValidator
 from controllers.category_controller import CategoryController
 from controllers.supplier_controller import SupplierController
 
+from filters.product_filters import (filter_search, filter_by_multiple_category_ids,
+                                     filter_by_category, filter_by_supplier, filter_by_price_range,
+                                     filter_by_quantity_range, filter_low_stock, filter_warehouses, filter_combined)
+
 
 class ProductController:
     def __init__(self, repo: Repository, category_controller: CategoryController,
@@ -189,7 +193,7 @@ class ProductController:
         self._log(user_id, "DECREASE_QUANTITY", f"Removed {amount} units from product ID {product_id}")
         return True
 
-
+    # DELETE
     def remove_by_id(self, product_id: str, user_id: str) -> bool:
         original_len = len(self.products)
         self.products = [p for p in self.products if str(p.product_id) != str(product_id)]
@@ -211,47 +215,39 @@ class ProductController:
             return True
         return False
 
-
+    #  FILTERS (вече използват product_filters.py)
     def search(self, keyword: str) -> List[Product]:
-        keyword = (keyword or "").lower().strip()
-        if not keyword:
-            return []
-
-        results = []
-        for p in self.products:
-            if keyword in p.name.lower() or keyword in (p.description or "").lower():
-                results.append(p)
-                continue
-
-            for cat in p.categories:
-                cat_name = cat.name.lower()
-                if keyword in cat_name:
-                    results.append(p)
-                    break
-
-        return results
+        return filter_search(self.products, keyword)
 
     def filter_by_multiple_category_ids(self, category_ids: List[str]) -> List[Product]:
-        target_ids = [str(cid) for cid in category_ids]
-        filtered = []
+        return filter_by_multiple_category_ids(self.products, category_ids)
 
-        for p in self.products:
-            for c in p.categories:
-                c_id = getattr(c, 'category_id', c)
-                if str(c_id) in target_ids:
-                    filtered.append(p)
-                    break
+    def check_low_stock(self, threshold: float = 5) -> List[Product]:
+        return filter_low_stock(self.products, threshold)
 
-        return filtered
+    def search_by_price_range(self, min_price=None, max_price=None):
+        return filter_by_price_range(self.products, min_price, max_price)
+
+    def search_by_quantity_range(self, min_qty=None, max_qty=None):
+        return filter_by_quantity_range(self.products, min_qty, max_qty)
+
+    def search_by_category(self, category_id: str):
+        return filter_by_category(self.products, category_id)
+
+    def search_by_supplier(self, supplier_id: str):
+        return filter_by_supplier(self.products, supplier_id)
+
+    def search_combined(self, *args, **kwargs):
+        return filter_combined(self.products, *args, **kwargs)
+
+    def get_warehouses_with_product(self, product_name: str):
+        return filter_warehouses(self.products, product_name)
 
     #  STATISTICS
     def average_price(self) -> float:
         if not self.products:
             return 0.0
         return sum(p.price for p in self.products) / len(self.products)
-
-    def check_low_stock(self, threshold: float = 5) -> List[Product]:
-        return [p for p in self.products if p.quantity < threshold]
 
     def total_values(self) -> float:
         return round(sum(p.price * p.quantity for p in self.products), 2)
@@ -310,81 +306,6 @@ class ProductController:
             sorted_products[i], sorted_products[best_idx] = sorted_products[best_idx], sorted_products[i]
 
         return sorted_products
-
-    #  ADVANCED SEARCH
-    def search_by_price_range(self, min_price: float = None, max_price: float = None) -> List[Product]:
-        results = self.products
-        if min_price is not None:
-            results = [p for p in results if p.price >= min_price]
-        if max_price is not None:
-            results = [p for p in results if p.price <= max_price]
-
-        return results
-
-    def search_by_quantity_range(self, min_qty: float = None, max_qty: float = None) -> List[Product]:
-        results = self.products
-        if min_qty is not None:
-            results = [p for p in results if p.quantity >= min_qty]
-        if max_qty is not None:
-            results = [p for p in results if p.quantity <= max_qty]
-
-        return results
-
-    def search_by_category(self, category_id: str) -> List[Product]:
-        return [p for p in self.products
-                if any(str(getattr(c, 'category_id', c)) == str(category_id) for c in p.categories)]
-
-    def search_by_supplier(self, supplier_id: str) -> List[Product]:
-        return [p for p in self.products if str(p.supplier_id) == str(supplier_id)]
-
-    def search_combined(self, name_keyword: str = None, category_id: str = None,
-                        min_price: float = None, max_price: float = None,
-                        min_qty: float = None, max_qty: float = None,
-                        supplier_id: str = None) -> List[Product]:
-
-        results = self.products
-
-        if name_keyword:
-            kw = name_keyword.lower()
-            results = [p for p in results if kw in p.name.lower() or kw in p.description.lower()]
-
-        if category_id is not None:
-            filtered = []
-            for p in results:
-                for c in p.categories:
-                    c_id = c.category_id if hasattr(c, "category_id") else c
-                    if str(c_id) == str(category_id):
-                        filtered.append(p)
-                        break
-            results = filtered
-
-        if supplier_id is not None:
-            results = [p for p in results if str(p.supplier_id) == str(supplier_id)]
-
-        if min_price is not None:
-            results = [p for p in results if p.price >= min_price]
-        if max_price is not None:
-            results = [p for p in results if p.price <= max_price]
-
-        if min_qty is not None:
-            results = [p for p in results if p.quantity >= min_qty]
-        if max_qty is not None:
-            results = [p for p in results if p.quantity <= max_qty]
-
-        return results
-
-    #  WAREHOUSE LOOKUP
-    def get_warehouses_with_product(self, product_name: str) -> List[str]:
-        product_name = product_name.lower()
-        warehouses = []
-
-        for p in self.products:
-            if p.name.lower() == product_name and p.quantity > 0:
-                loc_id = p.location_id
-                if loc_id and loc_id not in warehouses:
-                    warehouses.append(loc_id)
-
-        return warehouses
 
     #  SAVE
     def save_changes(self) -> None:

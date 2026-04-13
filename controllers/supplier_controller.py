@@ -22,13 +22,8 @@ class SupplierController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         supplier = Supplier(
-            supplier_id=self._generate_id(),
-            name=name,
-            contact=contact,
-            address=address,
-            created=now,
-            modified=now
-        )
+            supplier_id=self._generate_id(), name=name, contact=contact,
+            address=address, created=now, modified=now)
 
         self.suppliers.append(supplier)
         self.save_changes()
@@ -73,6 +68,5 @@ class SupplierController:
         self.save_changes()
         return True
 
-    # SAVE
     def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

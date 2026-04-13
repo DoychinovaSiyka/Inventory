@@ -4,6 +4,9 @@ from models.invoice import Invoice
 from storage.json_repository import JSONRepository
 from validators.invoice_validator import InvoiceValidator
 
+from filters.invoice_filters import (filter_by_customer, filter_by_product, filter_by_date,
+                                     filter_by_total_range, filter_advanced)
+
 
 class InvoiceController:
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
@@ -21,7 +24,6 @@ class InvoiceController:
 
     # CREATE
     def add(self, invoice: Invoice) -> Invoice:
-        # Валидация на данните на фактурата
         InvoiceValidator.validate_all(
             product=invoice.product,
             customer=invoice.customer,
@@ -43,8 +45,7 @@ class InvoiceController:
         return invoice
 
     def create_from_movement(self, movement, product, customer: str) -> Invoice:
-        if movement.movement_type.name != "OUT":
-            raise ValueError("Фактура може да се генерира само при OUT движение.")
+        InvoiceValidator.validate_movement_for_invoice(movement)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         qty = float(movement.quantity)
@@ -64,7 +65,6 @@ class InvoiceController:
             modified=now
         )
 
-        # Валидация
         InvoiceValidator.validate_all(
             product=invoice.product,
             customer=invoice.customer,
@@ -101,41 +101,25 @@ class InvoiceController:
 
     # SEARCH
     def search_by_customer(self, keyword: str) -> List[Invoice]:
-        keyword = keyword.lower()
-        return [inv for inv in self.invoices if keyword in inv.customer.lower()]
+        return filter_by_customer(self.invoices, keyword)
 
     def search_by_product(self, keyword: str) -> List[Invoice]:
-        keyword = keyword.lower()
-        return [inv for inv in self.invoices if keyword in inv.product.lower()]
+        return filter_by_product(self.invoices, keyword)
 
     def search_by_date(self, date_str: str) -> List[Invoice]:
-        # Валидация на дата
         InvoiceValidator.validate_date(date_str)
-        return [inv for inv in self.invoices if inv.date.startswith(date_str)]
+        return filter_by_date(self.invoices, date_str)
 
     def search_by_total_price(self, min_value: Optional[float] = None,
                               max_value: Optional[float] = None) -> List[Invoice]:
-
-        results = self.invoices
-
-        if min_value is not None:
-            min_value = float(min_value)
-            results = [inv for inv in results if inv.total_price >= min_value]
-
-        if max_value is not None:
-            max_value = float(max_value)
-            results = [inv for inv in results if inv.total_price <= max_value]
-
-        return results
+        return filter_by_total_range(self.invoices, min_value, max_value)
 
     # UPDATE
     def update_customer(self, invoice_id: str, new_customer: str) -> bool:
-        inv = self.get_by_id(invoice_id)
-        if not inv:
-            raise ValueError("Фактурата не е намерена.")
-
+        InvoiceValidator.validate_invoice_exists(invoice_id, self.invoices)
         InvoiceValidator.validate_customer(new_customer)
 
+        inv = self.get_by_id(invoice_id)
         inv.customer = new_customer
         inv.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_changes()
@@ -166,48 +150,17 @@ class InvoiceController:
                         min_total: Optional[float] = None,
                         max_total: Optional[float] = None) -> List[Invoice]:
 
-        # Валидация на филтрите
         InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
 
-        results = self.invoices
-
-        # customer
-        if customer:
-            kw = customer.lower()
-            results = [inv for inv in results if kw in inv.customer.lower()]
-
-        # product
-        if product:
-            kw = product.lower()
-            results = [inv for inv in results if kw in inv.product.lower()]
-
-        # date parsing helper
-        def parse_date(d):
-            try:
-                return datetime.strptime(d, "%Y-%m-%d")
-            except:
-                return None
-
-        start = parse_date(start_date) if start_date else None
-        end = parse_date(end_date) if end_date else None
-
-        # date filtering
-        if start:
-            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) >= start]
-
-        if end:
-            results = [inv for inv in results if parse_date(inv.date[:10]) and parse_date(inv.date[:10]) <= end]
-
-        # total price filtering
-        if min_total is not None:
-            min_total = float(min_total)
-            results = [inv for inv in results if inv.total_price >= min_total]
-
-        if max_total is not None:
-            max_total = float(max_total)
-            results = [inv for inv in results if inv.total_price <= max_total]
-
-        return results
+        return filter_advanced(
+            self.invoices,
+            customer=customer,
+            product=product,
+            start_date=start_date,
+            end_date=end_date,
+            min_total=min_total,
+            max_total=max_total
+        )
 
     # SAVE
     def save_changes(self) -> None:

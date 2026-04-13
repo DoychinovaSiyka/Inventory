@@ -5,6 +5,8 @@ from models.movement import Movement, MovementType
 from storage.json_repository import JSONRepository
 from validators.movement_validator import MovementValidator
 
+from filters.movement_filters import (filter_by_description, filter_advanced)
+
 
 class MovementController:
     def __init__(self, repo: JSONRepository, product_controller, user_controller,
@@ -23,6 +25,7 @@ class MovementController:
         raw = self.repo.load()
         self.movements: List[Movement] = []
 
+        # Зареждам движенията от JSON
         for m in raw:
             if not m.get("movement_id"):
                 m["movement_id"] = self._generate_id()
@@ -35,16 +38,13 @@ class MovementController:
     def _generate_id() -> str:
         return str(uuid.uuid4())
 
-    # Проверка за валидни потребител и продукт
+    # Проверка за валидни потребител и продукт (валидаторът проверява, контролерът само извиква)
     def _validate_user_and_product(self, user_id, product_id):
+        MovementValidator.validate_user_exists(user_id, self.user_controller)
+        MovementValidator.validate_product_exists(product_id, self.product_controller)
+
         user = self.user_controller.get_by_id(user_id)
-        if not user:
-            raise ValueError(f"Потребител с ID {user_id} не съществува.")
-
         product = self.product_controller.get_by_id(product_id)
-        if not product:
-            raise ValueError(f"Продукт с ID {product_id} не съществува.")
-
         return user, product
 
     # Логване на активност
@@ -91,32 +91,24 @@ class MovementController:
             quantity, description: str, price, customer: Optional[str] = None,
             supplier_id: Optional[str] = None) -> Movement:
 
+        # Валидации (всичко е изнесено)
         MovementValidator.validate_movement_type(movement_type)
         MovementValidator.validate_description(description)
-
-        quantity = round(float(MovementValidator.parse_quantity(quantity)), 2)
-        price = round(float(MovementValidator.parse_price(price)), 2)
+        quantity = MovementValidator.parse_quantity(quantity)
+        price = MovementValidator.parse_price(price)
 
         user, product = self._validate_user_and_product(user_id, product_id)
+        movement_type = MovementValidator.normalize_movement_type(movement_type)
 
-        if isinstance(movement_type, int):
-            mapping = {0: MovementType.IN, 1: MovementType.OUT, 2: MovementType.MOVE}
-            movement_type = mapping.get(movement_type)
-            if not movement_type:
-                raise ValueError("Невалиден тип движение.")
-
-        if movement_type == MovementType.MOVE:
-            raise ValueError("MOVE може да се извършва само чрез move_product().")
+        # Бизнес правила за IN/OUT (валидаторът ги проверява)
+        MovementValidator.validate_in_out_rules(
+            movement_type, product, quantity, supplier_id, customer
+        )
 
         # IN
         if movement_type == MovementType.IN:
             product.quantity += quantity
             product.location_id = location_id
-
-            if supplier_id is None:
-                raise ValueError("При IN движение трябва да има доставчик.")
-
-            action = "add"
 
             if self.inventory_controller:
                 self.inventory_controller.increase_stock(
@@ -125,18 +117,11 @@ class MovementController:
                     warehouse_id=location_id,
                     qty=quantity
                 )
+            action = "add"
 
         # OUT
         elif movement_type == MovementType.OUT:
-            if product.quantity < quantity:
-                raise ValueError("Недостатъчна наличност.")
-
             product.quantity -= quantity
-
-            if not customer:
-                raise ValueError("При OUT движение трябва да има клиент.")
-
-            action = "remove"
 
             if self.inventory_controller:
                 self.inventory_controller.decrease_stock(
@@ -144,6 +129,7 @@ class MovementController:
                     warehouse_id=location_id,
                     qty=quantity
                 )
+            action = "remove"
 
         product.update_modified()
         self.product_controller.save_changes()
@@ -166,18 +152,15 @@ class MovementController:
     def move_product(self, product_id: str, user_id: str, from_location_id: str,
                      to_location_id: str, quantity: float, description: str = ""):
 
-        if from_location_id == to_location_id:
-            raise ValueError("MOVE трябва да е между различни локации.")
+        # Валидации (всичко е изнесено)
+        MovementValidator.validate_move_locations(from_location_id, to_location_id)
+        MovementValidator.validate_product_exists(product_id, self.product_controller)
+        quantity = MovementValidator.parse_quantity(quantity)
+        MovementValidator.validate_move_stock(
+            product_id, from_location_id, quantity, self.inventory_controller
+        )
 
         product = self.product_controller.get_by_id(product_id)
-        if not product:
-            raise ValueError(f"Продукт {product_id} не съществува.")
-
-        quantity = round(float(quantity), 2)
-
-        record = self.inventory_controller._find(product_id, from_location_id)
-        if not record or record["quantity"] < quantity:
-            raise ValueError("Недостатъчна наличност в този склад.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -221,131 +204,20 @@ class MovementController:
 
     # Търсене по описание
     def search_by_description(self, keyword):
-        keyword = keyword.lower().strip()
-        return [m for m in self.movements if keyword in (m.description or "").lower()]
+        return filter_by_description(self.movements, keyword)
 
     # Разширено филтриране
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None):
 
-        results = self.movements
-
-        if movement_type:
-            results = [m for m in results if m.movement_type == movement_type]
-
-        if start_date or end_date:
-            results = self.filter_by_date_range(start_date, end_date)
-
-        if product_id:
-            results = [m for m in results if m.product_id == product_id]
-
-        if location_id is not None:
-            results = [m for m in results if m.location_id == location_id]
-
-        if user_id is not None:
-            results = [m for m in results if m.user_id == user_id]
-
-        return results
-
-    # Избор на продукт
-    def select_product(self):
-        products = self.product_controller.get_all()
-        if not products:
-            print("Няма продукти.")
-            return None
-
-        print("\nИзберете продукт:")
-        for i, p in enumerate(products):
-            print(f"{i}. {p.name} ({p.quantity} {p.unit})")
-
-        raw = input("Избор: ")
-        try:
-            index = MovementValidator.validate_index(raw, len(products), "продукт")
-            return products[index]
-        except ValueError as e:
-            print(e)
-            return None
-
-    # Избор на локация
-    def select_location(self, label="локация"):
-        locations = self.location_controller.get_all()
-        if not locations:
-            print("Няма налични локации.")
-            return None
-
-        print(f"\nИзберете {label}:")
-        for i, loc in enumerate(locations):
-            print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
-        raw = input("Избор: ")
-        try:
-            index = MovementValidator.validate_index(raw, len(locations), label)
-            return locations[index]
-        except ValueError as e:
-            print(e)
-            return None
-
-    # Избор на доставчик
-    def select_supplier(self):
-        suppliers = self.product_controller.supplier_controller.get_all()
-        if not suppliers:
-            print("Няма доставчици.")
-            return None
-
-        print("\nИзберете доставчик:")
-        for i, s in enumerate(suppliers):
-            print(f"{i}. {s.name}")
-
-        raw = input("Доставчик: ")
-        try:
-            index = MovementValidator.validate_index(raw, len(suppliers), "доставчик")
-            return suppliers[index].supplier_id
-        except ValueError as e:
-            print(e)
-            return None
-
-    # Данни за печат
-    def get_display_data(self, movement):
-        product = self.product_controller.get_by_id(movement.product_id)
-        user = self.user_controller.get_by_id(movement.user_id)
-        location = self.location_controller.get_by_id(movement.location_id)
-
-        supplier = None
-        if movement.supplier_id:
-            supplier = self.product_controller.supplier_controller.get_by_id(movement.supplier_id)
-
-        return {
-            "product": product.name if product else f"ID: {movement.product_id}",
-            "user": user.username if user else f"ID: {movement.user_id}",
-            "location": location.name if location else "—",
-            "movement_type": movement.movement_type,
-            "quantity": movement.quantity,
-            "unit": movement.unit,
-            "price": movement.price,
-            "description": movement.description,
-            "supplier": supplier.name if supplier else "—",
-            "customer": movement.customer,
-            "date": movement.date,
-            "id": movement.movement_id
-        }
-
-    # Форматиране за печат
-    def format_movement(self, movement):
-        data = self.get_display_data(movement)
-
-        return (
-            f"Продукт: {data['product']}\n"
-            f"Потребител: {data['user']}\n"
-            f"Локация: {data['location']}\n"
-            f"Тип: {data['movement_type']}\n"
-            f"Количество: {data['quantity']} {data['unit']}\n"
-            f"Цена: {data['price']}\n"
-            f"Описание: {data['description']}\n"
-            f"Доставчик: {data['supplier']}\n"
-            f"Клиент: {data['customer']}\n"
-            f"Дата: {data['date']}\n"
-            f"ID: {data['id']}\n"
-            "----------------------------------------"
+        return filter_advanced(
+            self.movements,
+            movement_type=movement_type,
+            start_date=start_date,
+            end_date=end_date,
+            product_id=product_id,
+            location_id=location_id,
+            user_id=user_id
         )
 
     # Записване

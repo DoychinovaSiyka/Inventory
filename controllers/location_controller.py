@@ -31,11 +31,7 @@ class LocationController:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
         capacity = LocationValidator.validate_capacity(capacity)
-
-        # Проверка за дублиране
-        for l in self.locations:
-            if l.name.lower() == name.lower():
-                raise ValueError("Локация с това име вече съществува.")
+        LocationValidator.validate_unique_name(name, self.locations)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -58,12 +54,11 @@ class LocationController:
 
     def get_by_id(self, location_id: str) -> Location:
         # Търсим локацията по най‑ясния и човешки начин
+        LocationValidator.validate_exists(location_id, self.locations)
+
         for loc in self.locations:
             if str(loc.location_id) == str(location_id):
                 return loc
-
-        # Ако не е намерена → хвърляме грешка
-        raise ValueError(f"Локация с код '{location_id}' не съществува.")
 
     # UPDATE
     def update(self, location_id: str, name: Optional[str] = None,
@@ -74,10 +69,7 @@ class LocationController:
         # Ако полето е None → значи View не иска да го променя
         if name is not None:
             name = LocationValidator.validate_name(name)
-            # Проверка за дублиране
-            for l in self.locations:
-                if l.name.lower() == name.lower() and l.location_id != location_id:
-                    raise ValueError("Локация с това име вече съществува.")
+            LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
             location.name = name
 
         if zone is not None:
@@ -94,12 +86,13 @@ class LocationController:
 
     # DELETE
     def remove(self, location_id: str) -> bool:
-        location = self.get_by_id(location_id)
+        LocationValidator.validate_exists(location_id, self.locations)
+
         # Премахване
         self.locations = [l for l in self.locations if l.location_id != location_id]
         self.save_changes()
         return True
 
-    # SAVE
+
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

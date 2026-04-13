@@ -2,6 +2,10 @@ from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
 
+from filters.report_filters import (filter_out_invoices, filter_movements_by_product,
+                                    filter_movements_by_type, filter_movements_by_date, filter_sales_by_customer,
+                                    filter_sales_by_product, filter_sales_by_date)
+
 
 # Унифицирано преобразуване на фактура към dict
 def _invoice_to_dict(inv):
@@ -74,15 +78,6 @@ class ReportController:
             "customer": m.customer if m.movement_type.name == "OUT" else None
         }
 
-    # Филтър – само фактури от OUT движения
-    def _filter_out_invoices(self):
-        out_invoices = []
-        for inv in self.invoice_controller.invoices:
-            movement = self.movement_controller.get_by_id(inv.movement_id)
-            if movement and movement.movement_type.name == "OUT":
-                out_invoices.append(inv)
-        return out_invoices
-
     # СПРАВКИ – Наличности
     def report_stock(self):
         data = []
@@ -103,61 +98,66 @@ class ReportController:
 
     # Движения по продукт
     def report_movements_by_product(self, keyword):
-        keyword = keyword.lower()
-        data = []
-        for m in self.movement_controller.movements:
-            product = self.product_controller.get_by_id(m.product_id)
-            if product and keyword in product.name.lower():
-                data.append(self._movement_to_dict(m))
+        filtered = filter_movements_by_product(
+            self.movement_controller.movements,
+            self.product_controller,
+            keyword
+        )
+        data = [self._movement_to_dict(m) for m in filtered]
         return _create_report("movements_by_product", {"keyword": keyword}, data)
 
     # Движения по тип
     def report_movements_by_type(self, movement_type):
-        movement_type = movement_type.upper()
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.movement_type.name == movement_type
-        ]
+        filtered = filter_movements_by_type(
+            self.movement_controller.movements,
+            movement_type
+        )
+        data = [self._movement_to_dict(m) for m in filtered]
         return _create_report("movements_by_type", {"type": movement_type}, data)
 
     # Движения по дата
     def report_movements_by_date(self, date_str):
-        data = [
-            self._movement_to_dict(m)
-            for m in self.movement_controller.movements
-            if m.date.startswith(date_str)
-        ]
+        filtered = filter_movements_by_date(
+            self.movement_controller.movements,
+            date_str
+        )
+        data = [self._movement_to_dict(m) for m in filtered]
         return _create_report("movements_by_date", {"date": date_str}, data)
 
     # ПРОДАЖБИ – само OUT
     def report_sales(self):
-        invoices = self._filter_out_invoices()
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
         data = [_invoice_to_dict(inv) for inv in invoices]
         return _create_report("sales_all", {}, data)
 
     def report_sales_by_customer(self, customer):
-        invoices = [
-            inv for inv in self._filter_out_invoices()
-            if customer.lower() in inv.customer.lower()
-        ]
-        data = [_invoice_to_dict(inv) for inv in invoices]
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
+        filtered = filter_sales_by_customer(invoices, customer)
+        data = [_invoice_to_dict(inv) for inv in filtered]
         return _create_report("sales_by_customer", {"customer": customer}, data)
 
     def report_sales_by_product(self, product):
-        invoices = [
-            inv for inv in self._filter_out_invoices()
-            if product.lower() in inv.product.lower()
-        ]
-        data = [_invoice_to_dict(inv) for inv in invoices]
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
+        filtered = filter_sales_by_product(invoices, product)
+        data = [_invoice_to_dict(inv) for inv in filtered]
         return _create_report("sales_by_product", {"product": product}, data)
 
     def report_sales_by_date(self, date_str):
-        invoices = [
-            inv for inv in self._filter_out_invoices()
-            if inv.date.startswith(date_str)
-        ]
-        data = [_invoice_to_dict(inv) for inv in invoices]
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
+        filtered = filter_sales_by_date(invoices, date_str)
+        data = [_invoice_to_dict(inv) for inv in filtered]
         return _create_report("sales_by_date", {"date": date_str}, data)
 
     # Генерира всички основни отчети при стартиране
@@ -167,6 +167,7 @@ class ReportController:
             self.report_movements(),
             self.report_sales()
         ]
+
     # ПРОДАЖБИ – обработка на данни (НЕ е View логика)
     def _process_data(self, data):
         rows = []
@@ -200,7 +201,7 @@ class ReportController:
 
         return rows, has_id
 
-    # ДВИЖЕНИЯ – нормализиране на данни (НЕ е View логика)
+    # ДВИЖЕНИЯ – нормализиране на данни
     def _normalize_movement_row(self, item):
         loc_id = (
             item.get('location_id') or item.get('location') or
