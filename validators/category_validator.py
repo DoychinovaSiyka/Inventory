@@ -1,43 +1,96 @@
 class CategoryValidator:
 
+    # NAME VALIDATION
     @staticmethod
     def validate_name(name):
         if not isinstance(name, str):
             raise ValueError("Името на категорията трябва да е текст.")
-        cleaned_name = name.strip()
-        if not cleaned_name:
+
+        cleaned = name.strip()
+        if not cleaned:
             raise ValueError("Името на категорията е задължително.")
-        if len(cleaned_name) < 2:
+
+        if len(cleaned) < 2:
             raise ValueError("Името е твърде кратко (минимум 2 символа).")
-        if len(cleaned_name) > 50:
-            raise ValueError("Името на категорията не може да надвишава 50 символа.")
+
+        if len(cleaned) > 50:
+            raise ValueError("Името не може да надвишава 50 символа.")
 
     @staticmethod
     def validate_unique(name, existing_categories):
-        target_name = name.strip().lower()
+        """Проверява дали името вече съществува в списъка от категории."""
+        target = name.strip().lower()
         for c in existing_categories:
-            if c.name.strip().lower() == target_name:
+            if c.name.strip().lower() == target:
                 raise ValueError(f"Категория с име '{name.strip()}' вече съществува.")
 
     @staticmethod
     def validate_update_name(new_name):
         CategoryValidator.validate_name(new_name)
 
-
-
     # DESCRIPTION VALIDATION
     @staticmethod
     def validate_description(description):
         if description is None or description == "":
-            return
+            return  # описанието е по избор
+
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
+
         if len(description) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
     # PARENT VALIDATION
     @staticmethod
     def validate_parent_id(parent_id, category_id):
-        """Проверява дали категорията не се опитва да бъде родител на самата себе си."""
+        """Проверява дали категорията не е родител сама на себе си."""
         if parent_id and category_id and str(parent_id) == str(category_id):
-            raise ValueError("Една категория не може да бъде подкатегория на самата себе си!")
+            raise ValueError("Категория не може да бъде подкатегория на самата себе си.")
+
+    @staticmethod
+    def validate_parent_choice(choice):
+        """Проверява дали изборът за родител е валидно число или празно."""
+        if choice is None or choice.strip() == "":
+            return None
+        if not choice.isdigit():
+            raise ValueError("Изборът за родител трябва да е число.")
+
+        return int(choice)
+
+    @staticmethod
+    def validate_category_choice(choice):
+        """Проверява дали изборът на категория е валидно число."""
+        if not choice.isdigit():
+            raise ValueError("Изборът трябва да е число.")
+
+        return int(choice)
+
+    # CYCLE VALIDATION
+    @staticmethod
+    def validate_no_cycle(category_id, parent_id, all_categories):
+        """Проверява за циклична зависимост (дете → родител → дете)."""
+        if parent_id is None:
+            return
+
+        current = parent_id
+        while current:
+            parent = next((c for c in all_categories if c.category_id == current), None)
+            if not parent:
+                break
+            if parent.category_id == category_id:
+                raise ValueError("Открита циклична зависимост между категориите.")
+            current = parent.parent_id
+
+    # DELETE VALIDATION
+    @staticmethod
+    def validate_can_delete(category_id, all_categories, products):
+        """Проверява дали категорията може да бъде изтрита."""
+        # Има подкатегории?
+        for c in all_categories:
+            if c.parent_id == category_id:
+                raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
+
+        # Има продукти?
+        for p in products:
+            if p.category_id == category_id:
+                raise ValueError("Категорията съдържа продукти и не може да бъде изтрита.")

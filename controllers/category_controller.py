@@ -26,8 +26,9 @@ class CategoryController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генериране на уникално ID
-        category = Category(category_id=str(uuid.uuid4()), name=name,description=description,
+        category = Category(category_id=str(uuid.uuid4()), name=name, description=description,
                             parent_id=parent_id, created=now, modified=now)
+
         self.categories.append(category)
         self.save_changes()
         return category
@@ -39,8 +40,11 @@ class CategoryController:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_update_name(new_name)
+
         # Проверка за уникално име
-        CategoryValidator.validate_unique(new_name,[c for c in self.categories if c.category_id != category_id])
+        CategoryValidator.validate_unique(new_name,
+                                          [c for c in self.categories if c.category_id != category_id])
+
         category.name = new_name
         category.update_modified()
         self.save_changes()
@@ -58,6 +62,24 @@ class CategoryController:
         self.save_changes()
         return True
 
+    def update_parent(self, category_id: str, parent_id: Optional[str]) -> bool:
+        """Промяна на родителската категория."""
+        category = self.get_by_id(category_id)
+        if not category:
+            raise ValueError("Категорията не е намерена.")
+
+        # Проверка дали новият родител съществува
+        if parent_id and not self.get_by_id(parent_id):
+            raise ValueError("Новият родител не съществува.")
+
+        # Проверка дали не става собствен родител
+        CategoryValidator.validate_parent_id(parent_id, category_id)
+
+        category.parent_id = parent_id
+        category.update_modified()
+        self.save_changes()
+        return True
+
     def remove(self, category_id: str, product_controller=None) -> bool:
         # Забрана за изтриване, ако има подкатегории
         has_children = any(str(c.parent_id) == str(category_id) for c in self.categories)
@@ -66,8 +88,13 @@ class CategoryController:
 
         # Забрана за изтриване, ако има продукти в категорията
         if product_controller:
-            has_products = any(str(category_id) in [str(cat.category_id) if isinstance(cat, Category) else str(cat)
-                                                    for cat in p.categories] for p in product_controller.get_all())
+            has_products = any(
+                str(category_id) in [
+                    str(cat.category_id) if isinstance(cat, Category) else str(cat)
+                    for cat in p.categories
+                ]
+                for p in product_controller.get_all()
+            )
             if has_products:
                 raise ValueError("Не може да изтриете категория с налични продукти!")
 
@@ -77,6 +104,7 @@ class CategoryController:
         if len(self.categories) < original_len:
             self.save_changes()
             return True
+
         return False
 
     # Методи за достъп
@@ -100,12 +128,23 @@ class CategoryController:
             tree.append({"category": main, "level": 0})
             for child in self.get_subcategories(main.category_id):
                 tree.append({"category": child, "level": 1})
+
         return tree
 
     def search(self, keyword: str) -> List[Category]:
         # Търсене по име или описание
         keyword = keyword.lower()
-        return [c for c in self.categories if keyword in c.name.lower() or keyword in (c.description or "").lower()]
+        return [c for c in self.categories
+                if keyword in c.name.lower() or keyword in (c.description or "").lower()]
+
+    def select_category(self, raw_index):
+        index = int(raw_index)
+        categories = self.get_all()
+
+        if index < 0 or index >= len(categories):
+            raise ValueError("Невалиден избор на категория.")
+
+        return categories[index]
 
     def save_changes(self) -> None:
         # Записване на категориите обратно в JSON файла

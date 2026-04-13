@@ -2,49 +2,52 @@ from typing import Optional, List
 from datetime import datetime
 from models.location import Location
 from storage.json_repository import JSONRepository
+from validators.location_validator import LocationValidator
 
 
 class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-        # Зареждаме локациите
+        # Зареждам всички локации от JSON и ги преобразувам в Location обекти
         self.locations: List[Location] = [Location.from_dict(l) for l in self.repo.load()]
 
     # ID GENERATOR - поддържам консистентност с "W" префикса
     def _generate_id(self) -> str:
         if not self.locations:
             return "W1"
-        try:
-            ids = []
-            for l in self.locations:
-                # Вземам числото след 'W'
-                num_part = str(l.location_id).replace("W", "")
-                if num_part.isdigit():
-                    ids.append(int(num_part))
 
-            next_id = max(ids) + 1 if ids else 1
-            return f"W{next_id}"
+        ids = []
+        for l in self.locations:
+            num_part = str(l.location_id).replace("W", "")
+            if num_part.isdigit():
+                ids.append(int(num_part))
 
-        except:
-            # Ако по не са във формат W1, генерираме по стария начин, но като стринг
-            return str(len(self.locations) + 1)
-
+        next_id = max(ids) + 1 if ids else 1
+        return f"W{next_id}"
 
     # CREATE
-    def add(self, name: str, zone: str = "", capacity: int = 0) -> Location:
-        if not name or len(name.strip()) == 0:
-            raise ValueError("Името на локацията е задължително.")
+    def add(self, name: str, zone: str = "", capacity=None) -> Location:
+        # Валидации
+        name = LocationValidator.validate_name(name)
+        zone = LocationValidator.validate_zone(zone)
+        capacity = LocationValidator.validate_capacity(capacity)
 
-        if capacity < 0:
-            raise ValueError("Капацитетът трябва да бъде >= 0.")
-
-        if any(l.name.lower() == name.lower() for l in self.locations):
-            raise ValueError("Локация с това име вече съществува.")
+        # Проверка за дублиране
+        for l in self.locations:
+            if l.name.lower() == name.lower():
+                raise ValueError("Локация с това име вече съществува.")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # Генерираме ID от типа "W1", "W2"...
-        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity,
-                            created=now, modified=now)
+
+        location = Location(
+            location_id=self._generate_id(),
+            name=name,
+            zone=zone,
+            capacity=capacity,
+            created=now,
+            modified=now
+        )
+
         self.locations.append(location)
         self.save_changes()
         return location
@@ -53,42 +56,50 @@ class LocationController:
     def get_all(self) -> List[Location]:
         return self.locations
 
-    # Търсим по стринг (W1), защото така са в графа
-    def get_by_id(self, location_id: str) -> Optional[Location]:
-        return next((l for l in self.locations if str(l.location_id) == str(location_id)),None)
+    def get_by_id(self, location_id: str) -> Location:
+        # Търсим локацията по най‑ясния и човешки начин
+        for loc in self.locations:
+            if str(loc.location_id) == str(location_id):
+                return loc
+
+        # Ако не е намерена → хвърляме грешка
+        raise ValueError(f"Локация с код '{location_id}' не съществува.")
 
     # UPDATE
     def update(self, location_id: str, name: Optional[str] = None,
-               zone: Optional[str] = None, capacity: Optional[int] = None) -> bool:
-        location = self.get_by_id(location_id)
-        if not location:
-            raise ValueError("Локацията не е намерена.")
+               zone: Optional[str] = None, capacity=None) -> bool:
 
+        location = self.get_by_id(location_id)
+
+        # Ако полето е None → значи View не иска да го променя
         if name is not None:
-            if len(name.strip()) == 0:
-                raise ValueError("Името не може да бъде празно.")
-            if any(l.name.lower() == name.lower() and l.location_id != location_id for l in self.locations):
-                raise ValueError("Локация с това име вече съществува.")
+            name = LocationValidator.validate_name(name)
+            # Проверка за дублиране
+            for l in self.locations:
+                if l.name.lower() == name.lower() and l.location_id != location_id:
+                    raise ValueError("Локация с това име вече съществува.")
             location.name = name
+
         if zone is not None:
+            zone = LocationValidator.validate_zone(zone)
             location.zone = zone
+
         if capacity is not None:
-            if capacity < 0:
-                raise ValueError("Капацитетът трябва да бъде >= 0.")
+            capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
+
         location.update_modified()
         self.save_changes()
         return True
 
-
+    # DELETE
     def remove(self, location_id: str) -> bool:
-        original_len = len(self.locations)
+        location = self.get_by_id(location_id)
+        # Премахване
+        self.locations = [l for l in self.locations if l.location_id != location_id]
+        self.save_changes()
+        return True
 
-        self.locations = [ l for l in self.locations if str(l.location_id) != str(location_id)]
-        if len(self.locations) < original_len:
-            self.save_changes()
-            return True
-        return False
-
+    # SAVE
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

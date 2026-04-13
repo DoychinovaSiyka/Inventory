@@ -3,7 +3,6 @@ from datetime import datetime
 from storage.json_repository import JSONRepository
 
 
-
 class InventoryController:
     """ Управлява наличностите по складове. Работи автоматично с IN / OUT / MOVE движения.
     Данните се пазят в inventory.json."""
@@ -21,12 +20,21 @@ class InventoryController:
                 return item
         return None
 
+    #  ПУБЛИЧЕН МЕТОД – използва се от MovementController
+    def get_stock(self, product_id, warehouse_id):
+        return self._find(product_id, warehouse_id)
+
     # Създаване на продукт
     def create_initial_stock(self, product_id, product_name, warehouse_id, qty):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.stock.append({"product_id": product_id, "product": product_name,
-                           "warehouse": warehouse_id, "quantity": qty, "created": now,
-                           "modified": now})
+        self.stock.append({
+            "product_id": product_id,
+            "product": product_name,
+            "warehouse": warehouse_id,
+            "quantity": qty,
+            "created": now,
+            "modified": now
+        })
         self.save()
 
     # IN движение
@@ -38,8 +46,14 @@ class InventoryController:
             record["quantity"] += qty
             record["modified"] = now
         else:
-            self.stock.append({"product_id": product_id, "product": product_name,
-                               "warehouse": warehouse_id, "quantity": qty, "created": now, "modified": now})
+            self.stock.append({
+                "product_id": product_id,
+                "product": product_name,
+                "warehouse": warehouse_id,
+                "quantity": qty,
+                "created": now,
+                "modified": now
+            })
         self.save()
 
     # OUT движение
@@ -56,6 +70,7 @@ class InventoryController:
 
         if record["quantity"] == 0:
             self.stock.remove(record)
+
         self.save()
 
     # MOVE движение
@@ -71,11 +86,10 @@ class InventoryController:
                 result.append(item["warehouse"])
         return result
 
-
     # Преизчислява инвентара от списък с движения
     def rebuild_from_movements(self, movements):
         self.stock = []  # изчистваме текущия инвентар
-        # Подреждаме движенията по дата
+
         movements = sorted(movements, key=lambda m: m["date"])
 
         for m in movements:
@@ -100,5 +114,5 @@ class InventoryController:
                 except:
                     pass
                 self.increase_stock(pid, pname, to_loc, qty)
-        self.save()
 
+        self.save()

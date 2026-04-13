@@ -28,7 +28,7 @@ class StockLogController:
         self.save_changes()
         return log
 
-    # READ - Филтриране по локация (за проверка на складовете поотделно)
+    # READ - Филтриране по локация - за проверка на складовете поотделно
     def get_by_location(self, location_id):
         return [log for log in self.logs if str(log.location_id) == str(location_id)]
 

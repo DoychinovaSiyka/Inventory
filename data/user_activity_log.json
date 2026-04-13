@@ -425,5 +425,40 @@
         "action": "VIEW_INVOICES",
         "details": "Viewed all invoices",
         "timestamp": "2026-04-11 20:57:18"
+    },
+    {
+        "log_id": "69470d3d-75c5-47e8-930f-0a5d125a291a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-12 11:45:19"
+    },
+    {
+        "log_id": "a6d11e14-4c93-450d-8a86-445a3c7645dc",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 14:57:17"
+    },
+    {
+        "log_id": "6830ebb3-4267-48be-9b85-335ec618a556",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "VIEW_INVOICES",
+        "details": "Viewed all invoices",
+        "timestamp": "2026-04-13 14:58:03"
+    },
+    {
+        "log_id": "e92a16c2-8c1f-4cb6-8253-45eae9c7d2c7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 16:26:16"
+    },
+    {
+        "log_id": "9651e199-637d-4970-98d6-f0c69d54be8e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 16:41:03"
     }
 ]

@@ -1,14 +1,11 @@
 class LocationValidator:
 
-
     @staticmethod
     def validate_name(name):
         if not name or not name.strip():
             raise ValueError("Името на локацията е задължително.")
-
         if len(name) > 100:
             raise ValueError("Името на локацията е твърде дълго.")
-
 
     @staticmethod
     def validate_zone(zone):
@@ -17,14 +14,22 @@ class LocationValidator:
 
     @staticmethod
     def validate_capacity(capacity):
+        # Позволяваме capacity да идва като текст от input()
+        if isinstance(capacity, str):
+            if not capacity.strip().isdigit():
+                raise ValueError("Капацитетът трябва да е цяло число.")
+            capacity = int(capacity)
+
         if not isinstance(capacity, int):
             raise ValueError("Капацитетът трябва да е цяло число.")
 
         if capacity < 0:
             raise ValueError("Капацитетът трябва да е >= 0.")
 
+        return capacity  # връщаме нормализирана стойност
+
     @staticmethod
     def validate_all(name, zone, capacity):
         LocationValidator.validate_name(name)
         LocationValidator.validate_zone(zone)
-        LocationValidator.validate_capacity(capacity)
+        return LocationValidator.validate_capacity(capacity)

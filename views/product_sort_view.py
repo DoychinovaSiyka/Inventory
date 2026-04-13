@@ -31,12 +31,12 @@ class ProductSortView:
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-    #  Цена (висока → ниска) – Selection Sort
+    #  Цена (висока - ниска) – Selection Sort
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
 
-    #  Цена (ниска → висока) – Bubble Sort
+    #  Цена (ниска - висока) – Bubble Sort
     def sort_price_asc(self, _):
         products = self.controller.bubble_sort()
         products.reverse()  # bubble sort ти връща DESC, обръщаме го
@@ -63,5 +63,5 @@ class ProductSortView:
         print(f"Алгоритъм: {algorithm}\n")
         rows = []
         for p in products:
-            rows.append([ p.name, p.location_id, f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}"])
+            rows.append([p.name, p.location_id, f"{p.price:.2f} лв.", f"{p.quantity} {p.unit}"])
         print(format_table(["Име", "Склад", "Цена", "Количество"], rows))

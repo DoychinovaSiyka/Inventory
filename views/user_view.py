@@ -13,7 +13,9 @@ class UserView:
         if user.role != "Admin":
             print("Само администратор може да управлява потребители.")
             return
+
         self.menu = self._build_menu()
+
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
@@ -24,13 +26,16 @@ class UserView:
     def _build_menu(self):
         return Menu(
             "МЕНЮ ПОТРЕБИТЕЛИ",
-            [MenuItem("1", "Списък на потребители", self.show_users),
-             MenuItem("2", "Добавяне на потребител", self.add_user),
-             MenuItem("3", "Промяна на роля", self.change_role),
-             MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
-             MenuItem("5", "Активиране на потребител", self.activate_user),
-             MenuItem("6", "Премахване на потребител", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break"),])
+            [
+                MenuItem("1", "Списък на потребители", self.show_users),
+                MenuItem("2", "Добавяне на потребител", self.add_user),
+                MenuItem("3", "Промяна на роля", self.change_role),
+                MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+                MenuItem("5", "Активиране на потребител", self.activate_user),
+                MenuItem("6", "Премахване на потребител", self.delete_user),
+                MenuItem("0", "Назад", lambda u: "break"),
+            ]
+        )
 
     # Показване на всички потребители
     def show_users(self, _):
@@ -46,6 +51,7 @@ class UserView:
         username = input("Потребителско име: ")
         password = input("Парола: ")
         role = input("Роля (Admin/Operator): ")
+
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("Потребителят е добавен!")
@@ -56,43 +62,39 @@ class UserView:
     def change_role(self, user):
         username = input("Потребителско име: ")
         new_role = input("Нова роля (Admin/Operator): ")
+
         try:
-            if self.controller.change_role(user, username, new_role):
-                print("Ролята е променена.")
-            else:
-                print("Потребителят не е намерен.")
-        except Exception as e:
+            self.controller.change_role(user, username, new_role)
+            print("Ролята е променена.")
+        except ValueError as e:
             print("Грешка:", e)
 
     # Деактивиране на потребител
     def deactivate_user(self, user):
         username = input("Потребителско име: ")
+
         try:
-            if self.controller.deactivate_user(user, username):
-                print("Потребителят е деактивиран.")
-            else:
-                print("Потребителят не е намерен.")
-        except Exception as e:
+            self.controller.deactivate_user(user, username)
+            print("Потребителят е деактивиран.")
+        except ValueError as e:
             print("Грешка:", e)
 
     # Активиране на потребител
     def activate_user(self, user):
         username = input("Потребителско име: ")
+
         try:
-            if self.controller.activate_user(user, username):
-                print("Потребителят е активиран.")
-            else:
-                print("Потребителят не е намерен.")
-        except Exception as e:
+            self.controller.activate_user(user, username)
+            print("Потребителят е активиран.")
+        except ValueError as e:
             print("Грешка:", e)
 
-
+    # Изтриване на потребител
     def delete_user(self, user):
         username = input("Потребителско име за изтриване: ")
+
         try:
-            if self.controller.delete_user(user, username):
-                print("Потребителят е изтрит.")
-            else:
-                print("Потребителят не е намерен.")
-        except Exception as e:
+            self.controller.delete_user(user, username)
+            print("Потребителят е изтрит.")
+        except ValueError as e:
             print("Грешка:", e)

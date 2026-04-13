@@ -14,13 +14,21 @@ class UserActivityLogController:
 
     # CREATE
     def add_log(self, user_id, action, details=""):
-        log = UserActivityLog(user_id, action, details).to_dict()
+        # Създаваме лог записа чрез модела
+        log_entry = UserActivityLog(user_id, action, details).to_dict()
+
+        # Зареждаме текущите записи
         data = self.repo.get_all()
-        data.append(log)
+
+        # Добавяме новия запис
+        data.append(log_entry)
+
+        # Записваме обратно в JSON файла
         self.repo.save(data)
 
     # READ
     def get_all_logs(self):
+        # Връща всички логове от JSON файла
         return self.repo.get_all()
 
 

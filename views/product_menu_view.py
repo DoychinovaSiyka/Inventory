@@ -6,61 +6,31 @@ from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
 from views.password_utils import format_table
+from validators.product_validator import ProductValidator
 
 
 class ProductView:
-    def __init__(self, product_controller: ProductController,category_controller: CategoryController,
+    def __init__(self, product_controller: ProductController,
+                 category_controller: CategoryController,
                  location_controller: LocationController,
                  activity_log_controller=None):
+
         self.product_controller = product_controller
         self.category_controller = category_controller
         self.location_controller = location_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
-        # Създаваме менюто като отделен метод
         self.menu = self._build_menu()
 
-
-    # Помощни методи (капсулирани вътре в класа)
     @staticmethod
     def format_lv(value):
         return f"{value:.2f} лв."
 
-    @staticmethod
-    def _read_int(prompt):
-        try:
-            raw = input(prompt).strip()
-            return int(raw) if raw else None
-        except ValueError:
-            print("Стойността трябва да е цяло число.")
-            return None
-
-    @staticmethod
-    def _read_float(prompt):
-        raw = input(prompt)
-        raw = raw.replace(",", ".").strip()
-        if not raw:
-            return None
-
-        cleaned = ""
-        for ch in raw:
-            if ch.isdigit() or ch in ".-":
-                cleaned += ch
-            else:
-                break
-        try:
-            return float(cleaned)
-        except ValueError:
-            print("Стойността трябва да е число.")
-            return None
-
-    # Меню
     def _build_menu(self):
         return Menu("МЕНЮ ПРОДУКТИ", [
             MenuItem("1", "Създаване на продукт", self.create_product),
             MenuItem("2", "Премахване на продукт", self.remove_product),
             MenuItem("3", "Редактиране на продукт", self.edit_product),
-            # Показване на продукти (с проверка за роля)
             MenuItem("4", "Покажи всички продукти",
                      self.show_all_protected if self._is_operator() else self.show_all),
             MenuItem("5", "Търсене", self.search),
@@ -81,130 +51,125 @@ class ProductView:
 
     @staticmethod
     def _is_operator():
-        # Ограничаваме достъпа според ролята
-        return False  # placeholder, реалната проверка е в show_menu()
+        return False
 
     def show_menu(self, user: User):
-        # Ограничаваме достъпа според ролята
         readonly = user.role in ["Operator", "Anonymous"]
 
         while True:
             choice = self.menu.show()
-            # Проверка за права
+
             if readonly and choice in ["1", "2", "3", "9", "10"]:
                 print(f"[!] Функцията не е достъпна за роля: {user.role}")
                 continue
 
-            result = self.menu.execute(choice, user)
-            if result == "break":
+            if self.menu.execute(choice, user) == "break":
                 break
 
-    # CRUD операции
+    #  CRUD
     def create_product(self, user):
         print("\n  Създаване на продукт  ")
+
         name = input("Име: ").strip()
         description = input("Описание: ").strip()
-        price = self._read_float("Цена: ")
-        quantity = self._read_float("Количество: ")
-        unit = input("Мерна единица (бр., кг, л...): ").strip()
+        price_raw = input("Цена: ")
+        quantity_raw = input("Количество: ")
+        unit = input("Мерна единица: ").strip()
 
-        if price is None or quantity is None:
-            print("Невалидни стойности.")
+        try:
+            price = ProductValidator.parse_float(price_raw, "Цена")
+            quantity = ProductValidator.parse_float(quantity_raw, "Количество")
+        except ValueError as e:
+            print(e)
             return
+
         categories = self.category_controller.get_all()
         if not categories:
-            print("Няма налични категории.")
+            print("Няма категории.")
             return
-        print("\nНалични категории:")
-        for i, c in enumerate(categories):
-            # Показваме дали е подкатегория за яснота
-            parent_info = ""
-            if hasattr(c, 'parent_id') and c.parent_id:
-                parent_info = f" (Подкатегория на {c.parent_id})"
-            print(f"{i}. {c.name}{parent_info}")
 
-        cat_idx = self._read_int("Изберете категория (номер): ")
-        if cat_idx is None or not (0 <= cat_idx < len(categories)):
+        print("\nКатегории:")
+        for i, c in enumerate(categories):
+            print(f"{i}. {c.name}")
+
+        cat_raw = input("Изберете категория: ")
+        try:
+            cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
+            category_id = categories[cat_idx].category_id
+        except Exception as e:
+            print(e)
             return
-        category_id = categories[cat_idx].category_id
+
         locations = self.location_controller.get_all()
         if not locations:
-            print("Грешка: Няма налични складове!")
+            print("Няма складове.")
             return
 
-        print("\nНалични локации (складове):")
+        print("\nЛокации:")
         for i, loc in enumerate(locations):
-            print(f"{i}. [{loc.location_id}] {loc.name}")
+            print(f"{i}. {loc.name}")
 
-        loc_idx = self._read_int("Изберете склад (номер): ")
-        if loc_idx is None or not (0 <= loc_idx < len(locations)):
-            return
-        location_id = locations[loc_idx].location_id
+        loc_raw = input("Изберете локация: ")
         try:
-            # Използваме user.user_id (или user.id )
-            u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
-            self.product_controller.add(name=name, description=description, price=price, quantity=quantity, unit=unit, category_ids=[category_id],
-                                        location_id=location_id, supplier_id=None, user_id=u_id)
-            print(f"[Успех] Продуктът е зачислен в {location_id}.")
+            loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
+            location_id = locations[loc_idx].location_id
+        except Exception as e:
+            print(e)
+            return
+
+        try:
+            if hasattr(user, "user_id"):
+                u_id = user.user_id
+            else:
+                u_id = user.id
+
+            self.product_controller.add(name=name, category_ids=[category_id],
+                                        quantity=quantity,
+                                        unit=unit, description=description, price=price,
+                                        supplier_id=None, user_id=u_id, location_id=location_id)
+
+            print("Продуктът е създаден успешно.")
         except ValueError as e:
             print("Грешка:", e)
 
     def remove_product(self, user):
-        print("\n  Премахване на продукт  ")
         pid = input("ID на продукт: ").strip()
         try:
-            u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
+            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
             self.product_controller.remove_by_id(pid, u_id)
             print("Продуктът е премахнат.")
         except ValueError as e:
             print("Грешка:", e)
 
     def edit_product(self, _):
-        print("\n  Редактиране на продукт  ")
         pid = input("ID на продукт: ").strip()
         product = self.product_controller.get_by_id(pid)
         if not product:
             print("Няма такъв продукт.")
             return
-
-        print(f"Редактиране на: {product.name} (в склад {product.location_id})")
+        print(f"Редактиране на {product.name}")
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
-        new_description = (input(f"Ново описание ({product.description}): ").strip()
-                           or product.description)
-        price_input = input(f"Нова цена ({product.price}): ").strip()
-        new_price = float(price_input.replace(",", ".")) if price_input\
-            else product.price
-        qty_input = input(f"Ново количество ({product.quantity}): ").strip()
-        new_quantity = float(qty_input.replace(",", ".")) if qty_input \
-            else product.quantity
+        new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
+        new_price_raw = input(f"Нова цена ({product.price}): ").strip()
+        new_qty_raw = input(f"Ново количество ({product.quantity}): ").strip()
+
         try:
-            product.name = new_name
-            product.description = new_description
-            product.price = new_price
-            product.quantity = new_quantity
-            product.update_modified()
-            self.product_controller.save_changes()
-            print("Продуктът е обновен успешно.")
+            new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
+            new_qty = ProductValidator.parse_float(new_qty_raw, "Количество") if new_qty_raw else product.quantity
+            self.product_controller.update_product(pid, new_name, new_desc, new_price, new_qty)
+            print("Продуктът е обновен.")
         except ValueError as e:
             print("Грешка:", e)
 
-
-
-    # Показване, търсене, сортиране
+    #  DISPLAY
     def show_all(self, _):
         products = self.product_controller.get_all()
         if not products:
-            print("Няма налични продукти.")
+            print("Няма продукти.")
             return
-        print("\n  Списък с продукти  ")
-
-        # Колони за таблицата
         columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
-        # Редове за таблицата
-        rows = []
-        for p in products:
-            qty = f"{p.quantity} {p.unit}"
-            rows.append([p.product_id, p.name, p.location_id, qty, self.format_lv(p.price)])
+        rows = [[p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)]
+                for p in products]
 
         print(format_table(columns, rows))
 
@@ -213,14 +178,14 @@ class ProductView:
         self.show_all(user)
 
     def search(self, _):
-        keyword = input("Търсене (име/описание): ").strip().lower()
+        keyword = input("Търсене: ").strip().lower()
         results = self.product_controller.search(keyword)
         if not results:
-            print("Няма намерени продукти.")
+            print("Няма резултати.")
             return
+
         for p in results:
-            print(f"{p.product_id} | {p.name} "
-                  f"| Склад: {p.location_id} | {p.quantity} {p.unit} | {self.format_lv(p.price)}")
+            print(f"{p.product_id} | {p.name} | {p.location_id} | {p.quantity} {p.unit} | {self.format_lv(p.price)}")
 
     def sort_menu(self, _):
         self.sort_view.show_menu()
@@ -229,8 +194,7 @@ class ProductView:
     def sort_menu_protected(self, user):
         self.sort_menu(user)
 
-
-    # Анализи и справки
+    #  REPORTS
     def average_price(self, _):
         avg = self.product_controller.average_price()
         print(f"Средна цена: {self.format_lv(avg)}")
@@ -240,85 +204,88 @@ class ProductView:
         if not categories:
             print("Няма категории.")
             return
-
         for i, c in enumerate(categories):
             print(f"{i}. {c.name}")
 
-        idx = self._read_int("Изберете категория (номер): ")
-        if idx is not None and 0 <= idx < len(categories):
-            selected_cat = categories[idx]
+        raw = input("Изберете категория: ")
+        try:
+            idx = ProductValidator.parse_int(raw, "Категория")
+            selected = categories[idx]
+        except Exception as e:
+            print(e)
+            return
 
-            # НАДГРАЖДАНЕ: Намираме всички подкатегории, за да филтрираме по цялото "дърво"
-            target_ids = [selected_cat.category_id]
-            for c in categories:
-                if hasattr(c, 'parent_id') and c.parent_id == selected_cat.category_id:
-                    target_ids.append(c.category_id)
-
-            results = self.product_controller.filter_by_multiple_category_ids(target_ids)
-            if not results:
-                print(f"Няма продукти в категория '{selected_cat.name}' (и нейните подкатегории).")
-                return
-            print(f"\n--- Продукти в {selected_cat.name} ---")
-            for p in results:
-                print(f"{p.name} | Склад: {p.location_id} | {self.format_lv(p.price)} | {p.quantity} {p.unit}")
+        results = self.product_controller.filter_by_category_tree(selected.category_id)
+        if not results:
+            print("Няма продукти.")
+            return
+        for p in results:
+            print(f"{p.name} | {p.location_id} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
-        amount = self._read_float("Количество за добавяне: ")
-        if amount:
-            try:
-                u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
-                self.product_controller.increase_quantity(pid, amount, u_id)
-                print("Количеството е увеличено.")
-            except ValueError as e:
-                print("Грешка:", e)
+        amount_raw = input("Количество за добавяне: ")
+        try:
+            amount = ProductValidator.parse_float(amount_raw, "Количество")
+            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
+            self.product_controller.increase_quantity(pid, amount, u_id)
+            print("Увеличено.")
+        except ValueError as e:
+            print(e)
 
     def decrease_quantity(self, user):
         pid = input("ID на продукт: ").strip()
-        amount = self._read_float("Количество за изваждане: ")
-        if amount:
-            try:
-                u_id = getattr(user, 'user_id', getattr(user, 'id', 'unknown'))
-                self.product_controller.decrease_quantity(pid, amount, u_id)
-                print("Количеството е намалено.")
-            except ValueError as e:
-                print("Грешка:", e)
+        amount_raw = input("Количество за изваждане: ")
+
+        try:
+            amount = ProductValidator.parse_float(amount_raw, "Количество")
+            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
+            self.product_controller.decrease_quantity(pid, amount, u_id)
+            print("Намалено.")
+        except ValueError as e:
+            print(e)
 
     def low_stock(self, _):
         low = self.product_controller.check_low_stock()
         if not low:
-            print("Няма продукти с критична наличност.")
+            print("Няма критични продукти.")
+            return
+
         for p in low:
-            print(f"ВНИМАНИЕ: {p.name} ({p.quantity} {p.unit}) в склад {p.location_id}")
+            print(f"ВНИМАНИЕ: {p.name} ({p.quantity} {p.unit}) в {p.location_id}")
 
     def most_expensive(self, _):
         p = self.product_controller.most_expensive()
         if p:
-            print(f"Най-скъп продукт: {p.name} ({p.location_id}) - {self.format_lv(p.price)}")
+            print(f"Най-скъп: {p.name} - {self.format_lv(p.price)}")
 
     def cheapest(self, _):
         p = self.product_controller.cheapest()
         if p:
-            print(f"Най-евтин продукт: {p.name} ({p.location_id}) - {self.format_lv(p.price)}")
+            print(f"Най-евтин: {p.name} - {self.format_lv(p.price)}")
 
     def total_value(self, _):
-        print(f"Обща стойност на инвентара: {self.format_lv(self.product_controller.total_values())}")
+        print(f"Обща стойност: {self.format_lv(self.product_controller.total_values())}")
 
     def group_by_category(self, _):
-        groups = self.product_controller.group_by_category()
-        for cat_id, prods in groups.items():
+        groups = self.product_controller.group_by_category_display()
+
+        for cat_id, items in groups.items():
             cat = self.category_controller.get_by_id(cat_id)
             print(f"\n--- {cat.name if cat else cat_id} ---")
-            for p in prods:
-                print(f"  {p.name} (Склад: {p.location_id}) - {p.quantity} {p.unit}")
+            for p in items:
+                print(f"{p['name']} ({p['location']}) - {p['quantity']} {p['unit']}")
 
     def advanced_search(self, _):
-        print("\n  Разширено търсене  ")
         keyword = input("Ключова дума: ").strip() or None
-        min_p = self._read_float("Мин. цена: ")
-        max_p = self._read_float("Макс. цена: ")
-        results = self.product_controller.search_combined(name_keyword=keyword,
-                                                          min_price=min_p,
-                                                          max_price=max_p)
+        min_raw = input("Мин. цена: ")
+        max_raw = input("Макс. цена: ")
+        try:
+            min_p = ProductValidator.parse_float(min_raw, "Мин. цена")
+            max_p = ProductValidator.parse_float(max_raw, "Макс. цена")
+        except ValueError as e:
+            print(e)
+            return
+        results = self.product_controller.search_combined(keyword, min_p, max_p)
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

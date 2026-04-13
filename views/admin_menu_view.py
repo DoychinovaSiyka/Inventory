@@ -9,7 +9,6 @@ from views.supplier_view import SupplierView
 from views.system_info_view import SystemInfoView
 
 
-# Няма нужда да импортираме класа GraphView тук, защото ще ползваме готовия обект от контролерите.
 
 class AdminMenuView:
     def __init__(self, controllers):
@@ -29,7 +28,7 @@ class AdminMenuView:
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
 
-        # Вземаме инстанцията на GraphView, която е в main.py
+        # Вземаме инстанцията на GraphView
         self.graph_view = controllers.get("logistic")
         # Създаваме менюто отделно
         self.menu = self._build_menu()
@@ -51,7 +50,6 @@ class AdminMenuView:
         ])
 
 
-    # Основно меню
     def show_menu(self, user):
         if user.role.lower() != "admin":
             print("Само администратор има достъп до това меню.")
@@ -64,13 +62,18 @@ class AdminMenuView:
 
     # Dijkstra – най-кратък път
     def open_graph(self, user):
-        # Вземаме инстанцията на GraphView, която създадохме в main.py
+        # Вземаме инстанцията на GraphView
         if self.graph_view:
             self.graph_view.show_menu(user)
         else:
             print("\nГрешка: Логистичният модул (Dijkstra) не е инициализиран.")
 
+
+
+
 #  Чрез речника 'controllers' постигаме Dependency Injection.
 # В метода open_graph вече не създаваме нов обект, а използваме
 # съществуващия, който вече има достъп до всички данни.
+# Няма нужда да импортираме класа GraphView тук, защото ще ползваме
+# # готовия обект от контролерите.
 

@@ -2,10 +2,10 @@ from graph.dijkstra import Graph
 
 class WarehouseGraph(Graph):
     def __init__(self):
-        # Инициализираме базовия граф (алгоритмичната структура)
+        # Инициализирам базовия граф (алгоритмичната структура)
         super().__init__(nodes=[], edges=[])
 
-        # Презаписваме nodes и edges, за да пазим реални складове
+        # Презаписвам nodes и edges, за да пазим реални складове
         self.nodes = {}   # Складове по ID → Warehouse обекти
         self.edges = {}   # Съседни складове и разстояния
 
