@@ -1,6 +1,5 @@
 class InvoiceValidator:
 
-    # PRODUCT
     @staticmethod
     def validate_product(product):
         if not product or not isinstance(product, str):
@@ -49,10 +48,8 @@ class InvoiceValidator:
     def validate_date(date_str):
         """Приема само формата от JSON: YYYY-MM-DD HH:MM:SS"""
         from datetime import datetime
-
         if not date_str:
             raise ValueError("датата е задължителна.")
-
         try:
             datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
         except:
