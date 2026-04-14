@@ -46,12 +46,12 @@ class ProductSortView:
     #  Количество (високо - ниско)
     def sort_qty_desc(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity, reverse=True)
-        self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
+        self._print_sorted(products, "Количество (високо - ниско)", "Bubble Sort")
 
-    #  Количество (ниско - високо)
+    #  Количество
     def sort_qty_asc(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity)
-        self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
+        self._print_sorted(products, "Количество (ниско - високо)", "Selection Sort")
 
     # Общ метод за визуализация на резултатите
     @staticmethod

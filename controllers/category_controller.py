@@ -14,7 +14,7 @@ class CategoryController:
         self.repo = repo
         self.activity_log = activity_log_controller
         self.categories: List[Category] = []
-        # Зареждане на категориите от JSON файла (Контролерът само нарежда зареждането)
+        # Зареждане на категориите от JSON файла - Контролерът нарежда зареждането
         self._load_categories()
 
     def _load_categories(self):
@@ -41,14 +41,8 @@ class CategoryController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генериране на уникално ID
-        category = Category(
-            category_id=str(uuid.uuid4()),
-            name=name,
-            description=description,
-            parent_id=parent_id,
-            created=now,
-            modified=now
-        )
+        category = Category(category_id=str(uuid.uuid4()), name=name, description=description,
+                            parent_id=parent_id, created=now, modified=now)
 
         self.categories.append(category)
         self.save_changes()
@@ -119,7 +113,7 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
 
-    # Контролерът  не строи дървото, а само го вика
+    # Контролерът  не строи дървото, а го вика
     def get_category_tree(self) -> List[dict]:
         """Изграждане на йерархия за менюто чрез външна логика."""
         return build_category_tree(self.categories)

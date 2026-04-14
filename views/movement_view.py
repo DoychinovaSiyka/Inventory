@@ -41,11 +41,11 @@ class MovementView:
 
         choice = input("Номер или ID (Enter = отказ): ").strip()
 
-        # --- Enter = отказ ---
+        #  Enter = отказ
         if choice == "":
             return None
 
-        # --- избор по номер ---
+        #  избор по номер
         if choice.isdigit():
             idx = int(choice) - 1
             if 0 <= idx < len(items):
@@ -53,7 +53,7 @@ class MovementView:
             print("Невалиден номер.")
             return None
 
-        # --- избор по ID ---
+        #  избор по ID
         for item in items:
             if (
                 getattr(item, "product_id", None) == choice or
@@ -81,7 +81,6 @@ class MovementView:
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
-
         # Текущ склад на продукта
         current_location = self.location_controller.get_by_id(product.location_id)
 
@@ -90,12 +89,12 @@ class MovementView:
         movement_type_choice = input("Избор: ").strip()
         movement_type = "IN" if movement_type_choice == "0" else "OUT"
 
-        # --- Продажба: винаги от текущия склад ---
+        # Продажба: винаги от текущия склад
         if movement_type == "OUT":
             location = current_location
             print(f"\nПродажбата ще бъде извършена от склада, в който е продуктът: {location.name}")
 
-        # --- Доставка: избор на склад ---
+        #  Доставка: избор на склад
         else:
             location = self._select_item(self.location_controller.get_all(), "локация")
             if not location:
@@ -119,7 +118,7 @@ class MovementView:
         supplier_id = None
         customer = None
 
-        # --- Доставка (IN) изисква доставчик ---
+        #  Доставка (IN) изисква доставчик
         if movement_type == "IN":
             if self.supplier_controller:
                 supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
@@ -131,7 +130,7 @@ class MovementView:
                 print("Грешка: Липсва контролер за доставчици.")
                 return
 
-        # --- Продажба (OUT) изисква клиент ---
+        # Продажба (OUT) изисква клиент
         if movement_type == "OUT":
             customer = input("Име на клиент: ").strip() or None
 
@@ -169,7 +168,7 @@ class MovementView:
         if not to_loc:
             return
 
-        # --- Забрана: не може да премества в същия склад ---
+        # не може да премества в същия склад
         if from_loc.location_id == to_loc.location_id:
             print("\nГрешка: Не може да преместите продукта в същия склад!")
             return

@@ -55,10 +55,8 @@ class ProductView:
 
     def show_menu(self, user: User):
         readonly = user.role in ["Operator", "Anonymous"]
-
         while True:
             choice = self.menu.show()
-
             if readonly and choice in ["1", "2", "3", "9", "10"]:
                 print(f"[!] Функцията не е достъпна за роля: {user.role}")
                 continue

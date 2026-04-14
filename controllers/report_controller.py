@@ -1,8 +1,6 @@
 from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
-
-# Филтри – изнесени в отделен пакет
 from filters.report_filters import (
     filter_out_invoices, filter_movements_by_product,
     group_turnover_by_day, group_top_products

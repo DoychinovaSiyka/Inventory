@@ -59,8 +59,8 @@ class InventoryApplication:
         )
 
         # Създаваме InventoryController
-        self.inventory_controller = InventoryController(self.inventory_repo)
         #  Ако inventory.json е празен – инициализираме го от продуктите
+        self.inventory_controller = InventoryController(self.inventory_repo)
         if not self.inventory_controller.stock:
             products = self.product_controller.get_all()
             for p in products:
@@ -69,8 +69,7 @@ class InventoryApplication:
                         product_id=p.product_id,
                         product_name=p.name,
                         warehouse_id=p.location_id,
-                        qty=p.quantity
-                    )
+                        qty=p.quantity)
 
         # MovementController получава inventory_controller
         self.movement_controller = MovementController(

@@ -10,7 +10,7 @@ from views.password_utils import require_password
 
 class OperatorMenuView:
     def __init__(self, controllers):
-        # Запазваме контролерите като отделни атрибути
+        # Запазвам контролерите като отделни атрибути
         self.product_controller = controllers["product"]
         self.category_controller = controllers["category"]
         self.location_controller = controllers["location"]
@@ -19,7 +19,7 @@ class OperatorMenuView:
         self.report_controller = controllers["report"]
         self.user_controller = controllers["user"]
         self.activity_log = controllers["activity_log"]
-        # Създаваме менюто като отделен метод
+        # Създавам менюто като отделен метод
         self.menu = self._build_menu()
 
     # Създаваме менюто отделно

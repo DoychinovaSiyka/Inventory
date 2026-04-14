@@ -71,15 +71,7 @@ class MovementValidator:
         # Връща string, за да няма нужда от импорт на MovementType
         mt = str(movement_type).upper()
 
-        mapping = {
-            "0": "IN",
-            "1": "OUT",
-            "2": "MOVE",
-            "IN": "IN",
-            "OUT": "OUT",
-            "MOVE": "MOVE"
-        }
-
+        mapping = {"0": "IN", "1": "OUT", "2": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
         if mt not in mapping:
             raise ValueError("Невалиден тип движение.")
 

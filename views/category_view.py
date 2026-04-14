@@ -117,7 +117,7 @@ class CategoryView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # Помощен метод за избор на категория (UI логика)
+    # Помощен метод за избор на категория
     def select_category(self):
         categories = self.controller.get_all()
         if not categories:

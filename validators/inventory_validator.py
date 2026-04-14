@@ -1,6 +1,5 @@
 import uuid
 
-
 class InventoryValidator:
 
     @staticmethod

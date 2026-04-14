@@ -159,6 +159,6 @@ class ProductValidator:
         ProductValidator.validate_price(price)
         ProductValidator.validate_description(description)
 
-        # Tags
+
         if tags is not None and not isinstance(tags, list):
             raise ValueError("Tags трябва да са списък.")

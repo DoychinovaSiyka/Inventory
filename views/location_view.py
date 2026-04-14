@@ -58,7 +58,6 @@ class LocationView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Редактиране
     def edit_location(self, _):
         print("\n--- РЕДАКТИРАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID на локацията (напр. W1): ").strip()
@@ -86,7 +85,7 @@ class LocationView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Изтриване
+
     def delete_location(self, _):
         print("\n--- ИЗТРИВАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID за изтриване (напр. W1): ").strip()

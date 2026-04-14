@@ -8,19 +8,11 @@ from controllers.category_controller import CategoryController
 from controllers.supplier_controller import SupplierController
 
 # Филтри – изнесени в отделен пакет
-from filters.product_filters import (
-    filter_search, filter_by_multiple_category_ids, filter_by_category,
-    filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
-    filter_low_stock, filter_warehouses, filter_combined
-)
+from filters.product_filters import (filter_search, filter_by_multiple_category_ids, filter_by_category,
+                                     filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
+                                     filter_low_stock, filter_warehouses, filter_combined)
 
-# Сортиране – изнесено в отделен пакет
-from sorting.product_sorters import (
-    sort_by_name_logic, sort_by_price_desc_logic,
-    bubble_sort_logic, selection_sort_logic
-)
-
-# Аналитика – изнесена в отделен пакет
+from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic, bubble_sort_logic, selection_sort_logic)
 from analytics.product_analytics import (
     calculate_average_price, calculate_total_inventory_value,
     get_most_expensive_product, get_cheapest_product,
