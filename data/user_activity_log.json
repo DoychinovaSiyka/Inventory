@@ -481,5 +481,306 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-13 21:13:28"
+    },
+    {
+        "log_id": "42015172-8f4b-47f1-afeb-0d6716e35f8c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:20:45"
+    },
+    {
+        "log_id": "924b5475-64a8-4feb-965f-9cd4b59700b4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:25:10"
+    },
+    {
+        "log_id": "24abeb45-1669-4067-8842-44e1abf36fe4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:28:02"
+    },
+    {
+        "log_id": "e828ee20-0adc-418d-aa16-3ead245da9aa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:32:55"
+    },
+    {
+        "log_id": "52ff2e22-5b56-4a56-98a2-48519bdc365b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:45:09"
+    },
+    {
+        "log_id": "e60e6a73-d152-4b37-b53c-1350eeba6cd5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:46:15"
+    },
+    {
+        "log_id": "2bfcb14f-4a7b-4473-948f-4294ce871847",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:52:10"
+    },
+    {
+        "log_id": "cc17a5be-e92e-45bb-b1a3-9f5958ec0ecd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 21:58:44"
+    },
+    {
+        "log_id": "f8d2737e-e7de-48ff-b0f3-ae63cb94d24e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:08:38"
+    },
+    {
+        "log_id": "26cfa93f-2ae4-4d67-ae3c-03086d24c0fd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:09:30"
+    },
+    {
+        "log_id": "d4257414-b9a2-4a0b-98da-00fd5af29ade",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:13:24"
+    },
+    {
+        "log_id": "c0d90298-7e2a-4af1-8cd6-bb25362b4100",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:20:39"
+    },
+    {
+        "log_id": "9535ea4d-25aa-44be-ab40-4f7396a334aa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:24:41"
+    },
+    {
+        "log_id": "db50ac1d-3caa-406f-9f93-143079e7343d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:30:05"
+    },
+    {
+        "log_id": "aedfdf0c-52af-4ccc-872a-2d2e799964fa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:35:57"
+    },
+    {
+        "log_id": "d1dbb887-cdff-4a48-91ce-dcefd0acee0f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:42:26"
+    },
+    {
+        "log_id": "fce8ab5a-fc13-4091-a6b2-20caa6861066",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:45:46"
+    },
+    {
+        "log_id": "2d6d9fe0-fba5-46a8-b427-b0e99f09cb08",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:53:03"
+    },
+    {
+        "log_id": "fe594d11-1974-4d59-ad82-809a976d4f0e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 22:54:03"
+    },
+    {
+        "log_id": "fc1bde8e-711a-42b1-8798-0e9ad8553edc",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:02:03"
+    },
+    {
+        "log_id": "368b2ba5-9bd6-465e-b729-8cd94c1d381c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:07:12"
+    },
+    {
+        "log_id": "820aa690-af4b-4960-aff4-c66be600b50f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:12:08"
+    },
+    {
+        "log_id": "d9e9b924-9da1-44a0-b657-c9c2a772dd07",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-13 23:12:24"
+    },
+    {
+        "log_id": "51188f48-beac-4cfe-8a52-6ef497992e83",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:12:31"
+    },
+    {
+        "log_id": "85e373ca-fe08-4bab-8dcd-a96189d3caaa",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:15:40"
+    },
+    {
+        "log_id": "e36a88d1-c4d4-4035-884d-13583e50a1d3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=12.0, loc=W4",
+        "timestamp": "2026-04-13 23:17:05"
+    },
+    {
+        "log_id": "ee83a514-a235-4790-9bb8-11d834fb3acd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:21:47"
+    },
+    {
+        "log_id": "d2be80c5-465c-4287-8dce-53b050d42776",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "OUT movement: product Ананас, qty=12.0, loc=W4",
+        "timestamp": "2026-04-13 23:23:43"
+    },
+    {
+        "log_id": "b718f4b1-ccb6-4c1e-8922-9492209eb14f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "IN movement: product картофи, qty=12.0, loc=W2",
+        "timestamp": "2026-04-13 23:25:41"
+    },
+    {
+        "log_id": "8f9ea404-bc62-4e9d-9cae-8c172df2198a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_PRODUCT",
+        "details": "Moved бира \"Siyka\" to W2",
+        "timestamp": "2026-04-13 23:27:02"
+    },
+    {
+        "log_id": "a2d06448-7883-4bce-94b0-8eb1789ef41b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:27:39"
+    },
+    {
+        "log_id": "c5619c50-b0cc-4f5a-8d2a-c7d95ffeacd1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:30:00"
+    },
+    {
+        "log_id": "4192d43b-d6fc-4446-a329-6a41ea951b26",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:35:52"
+    },
+    {
+        "log_id": "67506c2b-af56-42d7-8e16-654a1cb0a91e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:48:52"
+    },
+    {
+        "log_id": "0b34c67a-c8c4-41ae-b5e3-d78b2a19a21d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-13 23:58:11"
+    },
+    {
+        "log_id": "0ddb2047-7550-44d3-90c7-26c8ffb8b2dd",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 00:05:57"
+    },
+    {
+        "log_id": "dec17d17-fe1c-4c52-8579-9b6d24c087a5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 00:21:22"
+    },
+    {
+        "log_id": "f3a11eeb-8afe-47d8-9cbc-c8c87d5f936e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 00:40:53"
+    },
+    {
+        "log_id": "6057dc1a-bc02-46f0-b3be-ddea94d73b5f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 00:44:09"
+    },
+    {
+        "log_id": "6ecbe53e-23bf-4a26-b8e1-5efff24f02a1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 00:50:41"
+    },
+    {
+        "log_id": "925e6c8b-b22a-46e8-8673-8e40fd764109",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-14 01:06:27"
+    },
+    {
+        "log_id": "99200adb-f354-428f-9ba8-a2f6ad364cb2",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 01:06:38"
+    },
+    {
+        "log_id": "ddb27c29-7e30-40d2-bc1b-eaec4d0b4335",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 08:19:38"
     }
 ]

@@ -118,15 +118,19 @@ class ProductView:
             return
 
         try:
-            if hasattr(user, "user_id"):
-                u_id = user.user_id
-            else:
-                u_id = user.id
+            u_id = user.user_id if hasattr(user, "user_id") else user.id
 
-            self.product_controller.add(name=name, category_ids=[category_id],
-                                        quantity=quantity,
-                                        unit=unit, description=description, price=price,
-                                        supplier_id=None, user_id=u_id, location_id=location_id)
+            self.product_controller.add(
+                name=name,
+                category_ids=[category_id],
+                quantity=quantity,
+                unit=unit,
+                description=description,
+                price=price,
+                supplier_id=None,
+                user_id=u_id,
+                location_id=location_id
+            )
 
             print("Продуктът е създаден успешно.")
         except ValueError as e:
@@ -135,7 +139,7 @@ class ProductView:
     def remove_product(self, user):
         pid = input("ID на продукт: ").strip()
         try:
-            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
+            u_id = user.user_id if hasattr(user, "user_id") else user.id
             self.product_controller.remove_by_id(pid, u_id)
             print("Продуктът е премахнат.")
         except ValueError as e:
@@ -147,7 +151,9 @@ class ProductView:
         if not product:
             print("Няма такъв продукт.")
             return
+
         print(f"Редактиране на {product.name}")
+
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
@@ -167,9 +173,12 @@ class ProductView:
         if not products:
             print("Няма продукти.")
             return
+
         columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
-        rows = [[p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)]
-                for p in products]
+        rows = [
+            [p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)]
+            for p in products
+        ]
 
         print(format_table(columns, rows))
 
@@ -180,6 +189,7 @@ class ProductView:
     def search(self, _):
         keyword = input("Търсене: ").strip().lower()
         results = self.product_controller.search(keyword)
+
         if not results:
             print("Няма резултати.")
             return
@@ -204,6 +214,7 @@ class ProductView:
         if not categories:
             print("Няма категории.")
             return
+
         for i, c in enumerate(categories):
             print(f"{i}. {c.name}")
 
@@ -215,19 +226,23 @@ class ProductView:
             print(e)
             return
 
-        results = self.product_controller.filter_by_category_tree(selected.category_id)
+        # ✔ Поправено — използваме реалния метод
+        results = self.product_controller.search_by_category(selected.category_id)
+
         if not results:
             print("Няма продукти.")
             return
+
         for p in results:
             print(f"{p.name} | {p.location_id} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount_raw = input("Количество за добавяне: ")
+
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
-            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
+            u_id = user.user_id if hasattr(user, "user_id") else user.id
             self.product_controller.increase_quantity(pid, amount, u_id)
             print("Увеличено.")
         except ValueError as e:
@@ -239,7 +254,7 @@ class ProductView:
 
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
-            u_id = getattr(user, 'user_id', getattr(user, 'id', None))
+            u_id = user.user_id if hasattr(user, "user_id") else user.id
             self.product_controller.decrease_quantity(pid, amount, u_id)
             print("Намалено.")
         except ValueError as e:
@@ -280,12 +295,15 @@ class ProductView:
         keyword = input("Ключова дума: ").strip() or None
         min_raw = input("Мин. цена: ")
         max_raw = input("Макс. цена: ")
+
         try:
             min_p = ProductValidator.parse_float(min_raw, "Мин. цена")
             max_p = ProductValidator.parse_float(max_raw, "Макс. цена")
         except ValueError as e:
             print(e)
             return
+
         results = self.product_controller.search_combined(keyword, min_p, max_p)
+
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

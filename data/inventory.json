@@ -3,17 +3,17 @@
         "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
         "product": "Ананас",
         "warehouse": "W4",
-        "quantity": 27.0,
+        "quantity": 3.0,
         "created": "2026-04-09 12:16:50",
-        "modified": "2026-04-11 20:54:18"
+        "modified": "2026-04-13 23:23:43"
     },
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
         "product": "бира \"Siyka\"",
         "warehouse": "W5",
-        "quantity": 105.0,
+        "quantity": 71.0,
         "created": "2026-04-09 12:16:50",
-        "modified": "2026-04-09 12:16:50"
+        "modified": "2026-04-13 23:27:02"
     },
     {
         "product_id": "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33",
@@ -147,9 +147,9 @@
         "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
         "product": "картофи",
         "warehouse": "W2",
-        "quantity": 2.0,
+        "quantity": 14.0,
         "created": "2026-04-09 12:20:17",
-        "modified": "2026-04-09 12:20:17"
+        "modified": "2026-04-13 23:25:41"
     },
     {
         "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
@@ -182,5 +182,13 @@
         "quantity": 34.0,
         "created": "2026-04-11 20:54:18",
         "modified": "2026-04-11 20:54:18"
+    },
+    {
+        "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
+        "product": "бира \"Siyka\"",
+        "warehouse": "W2",
+        "quantity": 34.0,
+        "created": "2026-04-13 23:27:02",
+        "modified": "2026-04-13 23:27:02"
     }
 ]

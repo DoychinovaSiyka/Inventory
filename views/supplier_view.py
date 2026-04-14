@@ -60,7 +60,13 @@ class SupplierView:
     # редактиране на доставчик (admin only)
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-        supplier = self.controller.get_by_id(supplier_id)
+
+        # ✔️ Прихващаме грешката от контролера
+        try:
+            supplier = self.controller.get_by_id(supplier_id)
+        except ValueError as e:
+            print("Грешка:", e)
+            return
 
         if not supplier:
             print("Доставчикът не е намерен.")
@@ -86,7 +92,7 @@ class SupplierView:
     # изтриване на доставчик (admin only)
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-
+        # ️ Прихващаме грешката от контролера
         try:
             if self.controller.remove(supplier_id):
                 print("Доставчикът е изтрит успешно!")

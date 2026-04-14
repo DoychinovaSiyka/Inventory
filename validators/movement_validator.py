@@ -15,6 +15,20 @@ class MovementValidator:
         if mt not in ("IN", "OUT", "MOVE"):
             raise ValueError("Невалиден тип движение.")
 
+    # ✔️ ДОБАВЕНО — методът, който липсваше и причиняваше грешката
+    @staticmethod
+    def parse_movement_type(raw_type: str):
+        raw_type = raw_type.strip()
+
+        if raw_type == "0":
+            return "IN"
+        elif raw_type == "1":
+            return "OUT"
+        elif raw_type == "2":
+            return "MOVE"
+
+        raise ValueError("Невалиден тип движение. Използвайте 0=IN, 1=OUT, 2=MOVE.")
+
     @staticmethod
     def validate_description(description):
         if description is None:

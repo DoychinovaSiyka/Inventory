@@ -1,5 +1,4 @@
 from views.menu import Menu, MenuItem
-from validators.movement_validator import MovementValidator
 
 
 class MovementView:
@@ -27,8 +26,10 @@ class MovementView:
         if not user:
             print("Трябва да сте логнат, за да правите доставки/продажби.")
             return
+
         while True:
-            if self.menu.execute(self.menu.show(), user) == "break":
+            choice = self.menu.show()
+            if self.menu.execute(choice, user) == "break":
                 break
 
     # IN/OUT движение
@@ -43,35 +44,37 @@ class MovementView:
         if not location:
             return
 
-        raw_type = input("0  Доставка (IN), 1  Продажба (OUT): ").strip()
+        # Тип движение
+        movement_type = input("0  Доставка (IN), 1  Продажба (OUT): ").strip()
+
+        # ❗ РАННА ПРОВЕРКА (контролерът решава, не View)
         try:
-            movement_type = MovementValidator.parse_movement_type(raw_type)
+            self.movement_controller.check_movement_allowed(
+                product_id=product.product_id,
+                location_id=location.location_id,
+                movement_type=movement_type
+            )
         except ValueError as e:
-            print(e)
+            print("Грешка:", e)
             return
 
-        quantity_raw = input("Количество: ")
-        price_raw = input("Цена: ")
+        # Въвеждане на данни
+        quantity = input("Количество: ")
+        price = input("Цена: ")
         description = input("Описание: ")
 
-        try:
-            quantity = MovementValidator.parse_quantity(quantity_raw)
-            price = MovementValidator.parse_price(price_raw, movement_type)
-            MovementValidator.validate_description(description, movement_type)
-        except ValueError as e:
-            print(e)
-            return
-
         supplier_id = None
-        if movement_type == "IN":
+        customer = None
+
+        if movement_type == "0":  # IN
             supplier_id = self.movement_controller.select_supplier()
             if supplier_id is None:
                 return
 
-        customer = None
-        if movement_type == "OUT":
+        if movement_type == "1":  # OUT
             customer = input("Име на клиент: ").strip() or None
 
+        # Извикване на контролера
         try:
             movement = self.movement_controller.add(
                 product_id=product.product_id,
@@ -106,15 +109,8 @@ class MovementView:
         if not to_loc:
             return
 
-        quantity_raw = input("Количество за преместване: ")
+        quantity = input("Количество за преместване: ")
         description = input("Описание (по избор): ")
-
-        try:
-            quantity = MovementValidator.parse_quantity(quantity_raw)
-            MovementValidator.validate_locations(from_loc.location_id, to_loc.location_id, "MOVE")
-        except ValueError as e:
-            print(e)
-            return
 
         try:
             movement = self.movement_controller.move_product(
@@ -138,6 +134,7 @@ class MovementView:
         if not results:
             print("Няма намерени движения.")
             return
+
         for m in results:
             print(self.movement_controller.format_movement(m))
 
@@ -147,6 +144,7 @@ class MovementView:
         if not movements:
             print("Няма движения.")
             return
+
         for m in movements:
             print(self.movement_controller.format_movement(m))
 
@@ -154,39 +152,12 @@ class MovementView:
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
 
-        raw_type = input("Тип движение (0=IN, 1=OUT, 2=MOVE) или Enter: ").strip()
-        movement_type = None
-        if raw_type:
-            try:
-                movement_type = MovementValidator.parse_movement_type(raw_type)
-            except ValueError as e:
-                print(e)
-                return
-
-        start_date_raw = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
-        end_date_raw = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
-        try:
-            start_date = MovementValidator.validate_date(start_date_raw)
-            end_date = MovementValidator.validate_date(end_date_raw)
-        except ValueError as e:
-            print(e)
-            return
-
+        movement_type = input("Тип движение (0=IN, 1=OUT, 2=MOVE) или Enter: ").strip() or None
+        start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
+        end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
         product_id = input("ID на продукт или Enter: ").strip() or None
-
-        raw_loc = input("ID на локация или Enter: ").strip()
-        try:
-            location_id = MovementValidator.parse_optional_int(raw_loc, "ID на локация")
-        except ValueError as e:
-            print(e)
-            return
-
-        raw_uid = input("ID на потребител или Enter: ").strip()
-        try:
-            user_id = MovementValidator.parse_optional_int(raw_uid, "ID на потребител")
-        except ValueError as e:
-            print(e)
-            return
+        location_id = input("ID на локация или Enter: ").strip() or None
+        user_id = input("ID на потребител или Enter: ").strip() or None
 
         results = self.movement_controller.advanced_filter(
             movement_type=movement_type,

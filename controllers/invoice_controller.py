@@ -114,6 +114,28 @@ class InvoiceController:
                               max_value: Optional[float] = None) -> List[Invoice]:
         return filter_by_total_range(self.invoices, min_value, max_value)
 
+
+    # Търсене на фактури по обща сума.
+    # Приема минимална и/или максимална стойност като текст (от потребителя).
+    # Празен вход или невалидно число се игнорират и се третират като None.
+    # Преобразува въведените стойности към float, ако е възможно.
+    # Връща всички фактури, чиито total_price попадат в зададения диапазон.
+    def search_by_total(self, min_total: Optional[str] = None,
+                        max_total: Optional[str] = None) -> List[Invoice]:
+
+        # Преобразуваме входа към числа или None
+        try:
+            min_val = float(min_total) if min_total not in (None, "", " ") else None
+        except:
+            min_val = None
+
+        try:
+            max_val = float(max_total) if max_total not in (None, "", " ") else None
+        except:
+            max_val = None
+
+        return filter_by_total_range(self.invoices, min_val, max_val)
+
     # UPDATE
     def update_customer(self, invoice_id: str, new_customer: str) -> bool:
         InvoiceValidator.validate_invoice_exists(invoice_id, self.invoices)

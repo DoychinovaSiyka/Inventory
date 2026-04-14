@@ -95,6 +95,9 @@ class InventoryApplication:
             self.inventory_controller
         )
 
+        # ❗ ДОБАВЕНО — MovementController вече получава supplier_controller
+        self.movement_controller.attach_supplier_controller(self.supplier_controller)
+
         self.report_controller = ReportController(
             self.report_repo,
             self.product_controller,

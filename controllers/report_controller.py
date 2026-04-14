@@ -2,9 +2,12 @@ from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
 
-from filters.report_filters import (filter_out_invoices, filter_movements_by_product,
-                                    filter_movements_by_type, filter_movements_by_date, filter_sales_by_customer,
-                                    filter_sales_by_product, filter_sales_by_date)
+from filters.report_filters import (
+    filter_out_invoices, filter_movements_by_product,
+    filter_movements_by_type, filter_movements_by_date,
+    filter_sales_by_customer, filter_sales_by_product,
+    filter_sales_by_date
+)
 
 
 # Унифицирано преобразуване на фактура към dict
@@ -77,6 +80,8 @@ class ReportController:
             "supplier_id": m.supplier_id if m.movement_type.name == "IN" else None,
             "customer": m.customer if m.movement_type.name == "OUT" else None
         }
+
+
 
     # СПРАВКИ – Наличности
     def report_stock(self):
@@ -160,6 +165,56 @@ class ReportController:
         data = [_invoice_to_dict(inv) for inv in filtered]
         return _create_report("sales_by_date", {"date": date_str}, data)
 
+    # --- ДОБАВЕНО: СПРАВКА ЗА ВСИЧКИ ДОСТАВКИ (IN) ---
+    def report_all_deliveries(self):
+        deliveries = self.movement_controller.get_all_deliveries()
+        data = []
+
+        for d in deliveries:
+            product = self.product_controller.get_by_id(d.product_id)
+            loc = self.location_controller.get_by_id(d.location_id)
+
+            # ВЗИМАМЕ ИМЕТО НА ДОСТАВЧИКА
+            supplier = None
+            if d.supplier_id and self.movement_controller.supplier_controller:
+                supplier = self.movement_controller.supplier_controller.get_by_id(d.supplier_id)
+
+            data.append({
+                "date": d.date,
+                "movement_id": d.movement_id,
+                "product": product.name if product else "Неизвестен продукт",
+                "quantity": round(float(d.quantity), 2),
+                "supplier": supplier.name if supplier else "—",
+                "location_name": loc.name if loc else "Неизвестен склад"
+            })
+
+        return _create_report("deliveries_all", {}, data)
+
+    # --- ДОБАВЕНО: ТЪРСЕНЕ НА ДОСТАВКА ---
+    def search_delivery(self, keyword):
+        deliveries = self.movement_controller.search_delivery(keyword)
+        data = []
+
+        for d in deliveries:
+            product = self.product_controller.get_by_id(d.product_id)
+            loc = self.location_controller.get_by_id(d.location_id)
+
+            # ВЗИМАМЕ ИМЕТО НА ДОСТАВЧИКА
+            supplier = None
+            if d.supplier_id and self.movement_controller.supplier_controller:
+                supplier = self.movement_controller.supplier_controller.get_by_id(d.supplier_id)
+
+            data.append({
+                "date": d.date,
+                "movement_id": d.movement_id,
+                "product": product.name if product else "Неизвестен продукт",
+                "quantity": round(float(d.quantity), 2),
+                "supplier": supplier.name if supplier else "—",
+                "location_name": loc.name if loc else "Неизвестен склад"
+            })
+
+        return _create_report("deliveries_search", {"keyword": keyword}, data)
+
     # Генерира всички основни отчети при стартиране
     def generate_all_reports(self):
         return [
@@ -167,6 +222,70 @@ class ReportController:
             self.report_movements(),
             self.report_sales()
         ]
+        # Добавяме: Справка „Оборот по дни“
+        # Тази справка групира всички продажби (OUT фактури) по дата и изчислява:
+        # общ оборот за деня брой продажби
+
+    def report_turnover_by_day(self):
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
+
+        turnover = {}
+
+        for inv in invoices:
+            date_only = inv.date.split(" ")[0]  # 2026-04-05
+            total = float(inv.total_price)
+
+            if date_only not in turnover:
+                turnover[date_only] = {"total": 0.0, "count": 0}
+
+            turnover[date_only]["total"] += total
+            turnover[date_only]["count"] += 1
+
+        data = [
+            {
+                "date": d,
+                "total": round(v["total"], 2),
+                "count": v["count"]
+            }
+            for d, v in turnover.items()
+        ]
+
+        return _create_report("turnover_by_day", {}, data)
+        # Добавяме: „Най‑продавани продукти“
+        # Групира продажбите по продукт:
+
+    def report_top_products(self):
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
+
+        stats = {}
+
+        for inv in invoices:
+            name = inv.product
+            qty = float(inv.quantity)
+            total = float(inv.total_price)
+
+            if name not in stats:
+                stats[name] = {"qty": 0.0, "total": 0.0}
+
+            stats[name]["qty"] += qty
+            stats[name]["total"] += total
+
+        data = [
+            {
+                "product": p,
+                "quantity": round(v["qty"], 2),
+                "total": round(v["total"], 2)
+            }
+            for p, v in stats.items()
+        ]
+
+        return _create_report("top_products", {}, data)
 
     # ПРОДАЖБИ – обработка на данни (НЕ е View логика)
     def _process_data(self, data):

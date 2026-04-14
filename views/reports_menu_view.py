@@ -24,6 +24,10 @@ class ReportsView:
             MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
             MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
             MenuItem("6", "Търсене по дата", self.report_sales_by_date),
+            MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
+            MenuItem("8", "Търсене на доставка", self.search_delivery),
+            MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
+            MenuItem("10", "Най-продавани продукти", self.report_top_products),
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
@@ -67,7 +71,9 @@ class ReportsView:
         if not result.data:
             print("\nНяма налични фактури или продажби.\n")
             return
-        self._print_sales(result.rows, result.has_id)
+
+        rows, has_id = self.controller._process_data(result.data)
+        self._print_sales(rows, has_id)
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
@@ -75,7 +81,9 @@ class ReportsView:
         if not result.data:
             print(f"\nНяма резултати за клиент: {customer}\n")
             return
-        self._print_sales(result.rows, result.has_id)
+
+        rows, has_id = self.controller._process_data(result.data)
+        self._print_sales(rows, has_id)
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
@@ -83,7 +91,9 @@ class ReportsView:
         if not result.data:
             print(f"\nНяма резултати за продукт: {product}\n")
             return
-        self._print_sales(result.rows, result.has_id)
+
+        rows, has_id = self.controller._process_data(result.data)
+        self._print_sales(rows, has_id)
 
     def report_sales_by_date(self, _):
         date = input("Дата: ")
@@ -91,7 +101,9 @@ class ReportsView:
         if not result.data:
             print(f"\nНяма резултати за дата: {date}\n")
             return
-        self._print_sales(result.rows, result.has_id)
+
+        rows, has_id = self.controller._process_data(result.data)
+        self._print_sales(rows, has_id)
 
     # СПРАВКА – НАЛИЧНОСТИ
     def report_stock(self, _):
@@ -113,7 +125,95 @@ class ReportsView:
             print("\nНяма налични движения.\n")
             return
 
+        rows = [
+            [
+                item.get("date"),
+                item.get("type"),
+                item.get("movement_id"),
+                item.get("quantity"),
+                item.get("price"),
+                item.get("location_name")
+            ]
+            for item in result.data
+        ]
+
         print(format_table(
             ["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"],
-            result.rows
+            rows
         ))
+
+    # --- ДОБАВЕНО: СПРАВКА ЗА ВСИЧКИ ДОСТАВКИ ---
+    def report_all_deliveries(self, _):
+        result = self.controller.report_all_deliveries()
+        if not result.data:
+            print("\nНяма доставки.\n")
+            return
+
+        rows = [
+            [
+                item.get("date"),
+                item.get("movement_id"),
+                item.get("product"),
+                item.get("quantity"),
+                item.get("supplier"),
+                item.get("location_name")
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"],
+            rows
+        ))
+
+    # --- ДОБАВЕНО: ТЪРСЕНЕ НА ДОСТАВКА ---
+    def search_delivery(self, _):
+        keyword = input("Търсене (ID, продукт, доставчик, дата): ").strip()
+        result = self.controller.search_delivery(keyword)
+
+        if not result.data:
+            print("\nНяма намерени доставки.\n")
+            return
+
+        rows = [
+            [
+                item.get("date"),
+                item.get("movement_id"),
+                item.get("product"),
+                item.get("quantity"),
+                item.get("supplier"),
+                item.get("location_name")
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"],
+            rows
+        ))
+
+    def report_turnover_by_day(self, _):
+        result = self.controller.report_turnover_by_day()
+        if not result.data:
+            print("\nНяма продажби за показване.\n")
+            return
+
+        rows = [
+            [item["date"], item["count"], f"{item['total']:.2f} лв."]
+            for item in result.data
+        ]
+
+        print(format_table(["Дата", "Брой продажби", "Оборот"], rows))
+
+    def report_top_products(self, _):
+        result = self.controller.report_top_products()
+        if not result.data:
+            print("\nНяма продажби.\n")
+            return
+
+        rows = [
+            [item["product"], item["quantity"], f"{item['total']:.2f} лв."]
+            for item in result.data
+        ]
+
+        print(format_table(["Продукт", "Продадено количество", "Оборот"], rows))

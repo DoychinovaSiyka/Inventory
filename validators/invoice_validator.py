@@ -1,3 +1,4 @@
+from datetime import datetime
 class InvoiceValidator:
 
     # PRODUCT
@@ -48,12 +49,20 @@ class InvoiceValidator:
     @staticmethod
     def validate_date(date_str):
         from datetime import datetime
-        if not date_str:
-            raise ValueError("датата е задължителна.")
+        # Приемаме само дата: YYYY-MM-DD
+        try:
+            datetime.strptime(date_str, "%Y-%m-%d")
+            return
+        except ValueError:
+            pass
         try:
             datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-        except:
-            raise ValueError("Невалидна дата. Форматът трябва да е YYYY-MM-DD HH:MM:SS.")
+            return
+        except ValueError:
+            pass
+
+        # Ако и двата формата са невалидни → грешка
+        raise ValueError("Невалидна дата. Позволени формати: YYYY-MM-DD или YYYY-MM-DD HH:MM:SS.")
 
     # TOTAL PRICE VALIDATION
     @staticmethod
@@ -128,7 +137,7 @@ class InvoiceValidator:
     # DATE RANGE FILTERING
     @staticmethod
     def filter_by_date_range(invoices, start_date, end_date):
-        from datetime import datetime
+
 
         def parse(d):
             try:

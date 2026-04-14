@@ -1,5 +1,7 @@
 class ProductValidator:
 
+    # ---------- BASIC FIELD VALIDATION ----------
+
     @staticmethod
     def validate_name(name):
         if not name or not isinstance(name, str):
@@ -63,8 +65,28 @@ class ProductValidator:
             if not isinstance(t, str):
                 raise ValueError("Всеки tag трябва да е string.")
 
+    # ---------- PARSERS (използват се от VIEW и CONTROLLER) ----------
+
     @staticmethod
-    def validate_all(name, categories, quantity, unit, description, price, location_id, supplier_id, tags):
+    def parse_int(value, field_name="Стойност"):
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            raise ValueError(f"{field_name} трябва да е цяло число.")
+
+    @staticmethod
+    def parse_float(value, field_name="Стойност"):
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            raise ValueError(f"{field_name} трябва да е число.")
+
+    # ---------- FULL VALIDATION FOR PRODUCT CREATION ----------
+
+    @staticmethod
+    def validate_all(name, categories, quantity, unit, description, price,
+                     location_id, supplier_id, tags):
+
         ProductValidator.validate_name(name)
         ProductValidator.validate_categories(categories)
         ProductValidator.validate_quantity(quantity)

@@ -5,7 +5,7 @@
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "quantity": 61.0,
+        "quantity": 37.0,
         "unit": "бр.",
         "description": "екзотичен плод",
         "price": 5.66,
@@ -13,7 +13,7 @@
         "tags": [],
         "location_id": "W4",
         "created": "2026-04-03 09:26:25.251575",
-        "modified": "2026-04-05 20:35:52"
+        "modified": "2026-04-13 23:23:43"
     },
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
@@ -69,15 +69,15 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 8.0,
+        "quantity": 20.0,
         "unit": "кг",
         "description": "зеленчук съдържащ много нишесте",
         "price": 2.21,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W5",
+        "location_id": "W2",
         "created": "2026-03-14 21:47:49.788604",
-        "modified": "2026-04-09 11:17:45"
+        "modified": "2026-04-13 23:25:41"
     },
     {
         "product_id": "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55",

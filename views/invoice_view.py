@@ -25,6 +25,7 @@ class InvoiceView:
             MenuItem("4", "Търсене по продукт", self.search_by_product),
             MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
             MenuItem("6", "Разширено търсене", self.advanced_search),
+            MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
@@ -126,7 +127,13 @@ class InvoiceView:
     # 5. Търсене по дата
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
-        results = self.invoice_controller.search_by_date(date_str)
+
+        # ✔️ Добавено: прихващане на грешна дата, за да не гърми програмата
+        try:
+            results = self.invoice_controller.search_by_date(date_str)
+        except ValueError as e:
+            print(f"\nГрешка: {e}\n")
+            return
 
         if not results:
             print("Няма фактури за тази дата.")
@@ -169,6 +176,34 @@ class InvoiceView:
 
         if not results:
             print("\nНяма фактури, които отговарят на критериите.")
+            return
+
+        columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
+        rows = [
+            [
+                inv.invoice_id,
+                inv.product,
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{inv.total_price} лв.",
+                inv.date
+            ]
+            for inv in results
+        ]
+
+        print("\n" + format_table(columns, rows))
+
+    # --- ДОБАВЕНО: Търсене по сума / диапазон ---
+    def search_by_total(self, user):
+        print("   Търсене по сума / диапазон   ")
+
+        min_total = input("Минимална сума (или Enter): ").strip() or None
+        max_total = input("Максимална сума (или Enter): ").strip() or None
+
+        results = self.invoice_controller.search_by_total(min_total, max_total)
+
+        if not results:
+            print("\nНяма фактури в този диапазон.\n")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]

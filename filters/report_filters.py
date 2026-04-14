@@ -40,10 +40,17 @@ def filter_movements_by_date(movements: List[Movement], date_str: str):
 
 
 #  Продажби по клиент
-def filter_sales_by_customer(invoices: List[Invoice], customer: str):
-    customer = customer.lower()
-    return [inv for inv in invoices if customer in inv.customer.lower()]
+def filter_sales_by_customer(invoices, keyword):
+    keyword = keyword.strip().lower()
 
+    # Минимум 3 букви за да избегнем грешни съвпадения
+    if len(keyword) < 3:
+        return []
+
+    return [
+        inv for inv in invoices
+        if keyword in inv.customer.lower()
+    ]
 
 #  Продажби по продукт
 def filter_sales_by_product(invoices: List[Invoice], product: str):
