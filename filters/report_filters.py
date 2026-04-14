@@ -3,7 +3,7 @@ from models.movement import Movement
 from models.invoice import Invoice
 
 
-# --- Помощни вътрешни функции (за вътрешна употреба) ---
+# Помощни вътрешни функции (за вътрешна употреба)
 
 def _match_string(target: str, keyword: str) -> bool:
     """ Унифицирано търсене: малки букви и премахване на интервали. """
@@ -17,15 +17,11 @@ def _match_date(date_val: str, date_str: str) -> bool:
     return date_val.startswith(date_str.strip())
 
 
-# --- Филтри за Фактури и Движения ---
-
+# Филтри за Фактури и Движения
 def filter_out_invoices(invoices: List[Invoice], movements: List[Movement]) -> List[Invoice]:
     """ Филтър: само OUT фактури чрез мапване на движенията. """
     movement_map = {m.movement_id: m for m in movements}
-    return [
-        inv for inv in invoices
-        if (m := movement_map.get(inv.movement_id)) and m.movement_type.name == "OUT"
-    ]
+    return [inv for inv in invoices if (m := movement_map.get(inv.movement_id)) and m.movement_type.name == "OUT"]
 
 
 def filter_movements_by_product(movements: List[Movement], product_controller, keyword: str):
@@ -48,8 +44,7 @@ def filter_movements_by_date(movements: List[Movement], date_str: str):
     return [m for m in movements if _match_date(m.date, date_str)]
 
 
-# --- Филтри за Продажби ---
-
+# Филтри за Продажби
 def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
     """ Продажби по клиент (мин. 3 символа). """
     if len(keyword.strip()) < 3: return []
@@ -62,12 +57,10 @@ def filter_sales_by_product(invoices: List[Invoice], product_name: str):
 
 
 def filter_sales_by_date(invoices: List[Invoice], date_str: str):
-    """ Продажби по дата. """
     return [inv for inv in invoices if _match_date(inv.date, date_str)]
 
 
-# --- Логика за Групиране (Справки) ---
-
+#  Логика за Групиране - Справки
 def group_turnover_by_day(invoices: List[Invoice]):
     """ Групира оборот по дни. """
     turnover = {}

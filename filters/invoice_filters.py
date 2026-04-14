@@ -51,7 +51,7 @@ def filter_by_total_range(invoices: List[Invoice],
     return results
 
 
-# Филтър по дата диапазон (коригиран)
+# Филтър по дата диапазон
 def filter_by_date_range(invoices: List[Invoice],
                          start_date: Optional[str],
                          end_date: Optional[str]) -> List[Invoice]:
@@ -68,9 +68,9 @@ def filter_by_date_range(invoices: List[Invoice],
 
         if start and inv_date < start:
             continue
-        # Ако end_date е само ден (напр. 2023-10-10), искаме да включим целия ден до 23:59:59
+        # Ако end_date е само ден (напр. 2023-10-10), да включим целия ден до 23:59:59
         if end:
-            # Ако end е подаден без час, го вдигаме до края на деня за коректно сравнение
+            # Ако end е подаден без час, го вдигам до края на деня за коректно сравнение
             if len(end_date.strip()) <= 10:
                 inv_date_only = inv_date.replace(hour=0, minute=0, second=0, microsecond=0)
                 if inv_date_only > end:
@@ -82,7 +82,7 @@ def filter_by_date_range(invoices: List[Invoice],
     return filtered
 
 
-# Комбиниран филтър (advanced_search)
+# Комбиниран филтър - advanced_search
 def filter_advanced(invoices: List[Invoice],
                     customer: Optional[str] = None,
                     product: Optional[str] = None,
@@ -90,14 +90,14 @@ def filter_advanced(invoices: List[Invoice],
                     end_date: Optional[str] = None,
                     min_total: Optional[float] = None,
                     max_total: Optional[float] = None) -> List[Invoice]:
-    results = invoices
 
+    results = invoices
     if customer:
         results = filter_by_customer(results, customer)
     if product:
         results = filter_by_product(results, product)
 
-    # Прилагаме времевия и ценовия филтър
+    # Прилагам времевия и ценовия филтър
     results = filter_by_date_range(results, start_date, end_date)
     results = filter_by_total_range(results, min_total, max_total)
 

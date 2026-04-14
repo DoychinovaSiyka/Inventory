@@ -19,19 +19,19 @@ class UserActivityLogController:
 
     # CREATE
     def add_log(self, user_id, action, details=""):
-        # Създаваме лог записа чрез модела
+        # Създавам лог записа чрез модела
         log_entry = UserActivityLog(user_id, action, details).to_dict()
         # Добавяме уникално log_id
         log_entry["log_id"] = self._generate_log_id()
 
-        # Зареждаме текущите записи
+        # Зареждам текущите записи
         data = self.repo.get_all()
         if not isinstance(data, list):
             data = []  # защита при повреден или празен JSON
 
-        # Добавяме новия запис
+        # Добавям новия запис
         data.append(log_entry)
-        # Записваме обратно в JSON файла
+        # Записвам обратно в JSON файла
         self.repo.save(data)
 
     # READ

@@ -15,8 +15,6 @@ class User:
 
         # Съвместимост със стар код, който използва user.id
         self.id = self.user_id
-
-        # Основни данни
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -25,10 +23,8 @@ class User:
 
         # Роля: Admin / Operator / Anonymous
         self.role = role
-
         # Статус: Active / Disabled / Blocked
         self.status = status
-
         # Дати – подават се от контролера или се генерират при нужда
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
@@ -57,7 +53,6 @@ class User:
             modified=data.get("modified")
         )
 
-        # Съвместимост със стар код
         user.id = user.user_id
         return user
 

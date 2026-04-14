@@ -27,7 +27,6 @@ class LocationController:
 
     # CREATE
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
-        # Валидации
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
         capacity = LocationValidator.validate_capacity(capacity)
@@ -47,7 +46,6 @@ class LocationController:
     def get_by_id(self, location_id: str) -> Location:
         # Търсим локацията
         LocationValidator.validate_exists(location_id, self.locations)
-
         for loc in self.locations:
             if str(loc.location_id) == str(location_id):
                 return loc
@@ -65,7 +63,6 @@ class LocationController:
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
-
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity

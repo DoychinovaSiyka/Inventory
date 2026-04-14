@@ -41,7 +41,7 @@ class SupplierController:
         sid = str(supplier_id)
         return next((s for s in self.suppliers if s.supplier_id == sid), None)
 
-    # UPDATE
+
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
 
@@ -65,7 +65,7 @@ class SupplierController:
         self.save_changes()
         return supplier
 
-    # DELETE
+
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
         if supplier:

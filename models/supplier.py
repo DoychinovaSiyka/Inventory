@@ -1,18 +1,12 @@
 class Supplier:
     def __init__(self, supplier_id, name, contact, address, created, modified):
-        """
-        Модел за доставчик.
-        Датите (created/modified) идват от контролера.
-        """
+        """ Модел за доставчик. Датите (created/modified) идват от контролера."""
 
-        # ID-то винаги е текст
+
         self.supplier_id = str(supplier_id)
-
-        # Основни данни
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
-
         # Дати – подават се от контролера
         self.created = created
         self.modified = modified

@@ -8,7 +8,6 @@ class CategoryView:
         self.controller = controller
         self.menu = None  # менюто ще се създава динамично според ролята
 
-    # Основно меню
     def show_menu(self, user: User):
         is_admin = (user is not None and user.role == "Admin")
         self.menu = self._build_menu(is_admin)

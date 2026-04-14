@@ -8,7 +8,6 @@ from filters.category_filters import filter_categories
 from analytics.category_analytics import build_category_tree
 
 
-
 class CategoryController:
     def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
@@ -16,6 +15,7 @@ class CategoryController:
         self.categories: List[Category] = []
         # Зареждане на категориите от JSON файла - Контролерът нарежда зареждането
         self._load_categories()
+
 
     def _load_categories(self):
         raw_data = self.repo.load()
@@ -93,7 +93,6 @@ class CategoryController:
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
         # Валидаторът проверява всичко преди триене
         CategoryValidator.validate_can_delete(category_id, self.categories, product_controller)
-
         original_len = len(self.categories)
         self.categories = [c for c in self.categories if str(c.category_id) != str(category_id)]
 
@@ -118,7 +117,7 @@ class CategoryController:
         """Изграждане на йерархия за менюто чрез външна логика."""
         return build_category_tree(self.categories)
 
-    # Търсенето е изнесено във филтрите
+    # Търсенето е във филтрите
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез външен филтър."""
         return filter_categories(self.categories, keyword)

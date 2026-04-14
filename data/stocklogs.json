@@ -502,5 +502,14 @@
         "unit": "кг",
         "action": "remove",
         "timestamp": "2026-04-14 22:21:27"
+    },
+    {
+        "log_id": null,
+        "product_id": "ac1e582c-c606-46f3-a669-a836098a1a6e",
+        "location_id": "W4",
+        "quantity": 12.0,
+        "unit": "кг",
+        "action": "add",
+        "timestamp": "2026-04-14 23:53:30"
     }
 ]

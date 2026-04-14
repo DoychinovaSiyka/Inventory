@@ -13,7 +13,6 @@ from views.system_info_view import SystemInfoView
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-
         # Създаваме view обектите
         self.product_view = ProductView(controllers["product"], controllers["category"],
                                         controllers["location"],
@@ -33,9 +32,9 @@ class AdminMenuView:
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
 
-        # Вземаме инстанцията на GraphView
+        # Вземам инстанцията на GraphView
         self.graph_view = controllers.get("logistic")
-        # Създаваме менюто отделно
+        # Създавам менюто отделно
         self.menu = self._build_menu()
 
 
@@ -67,7 +66,7 @@ class AdminMenuView:
 
     # Dijkstra – най-кратък път
     def open_graph(self, user):
-        # Вземаме инстанцията на GraphView
+        # Вземам инстанцията на GraphView
         if self.graph_view:
             self.graph_view.show_menu(user)
         else:

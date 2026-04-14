@@ -229,15 +229,15 @@
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "quantity": 45.0,
+        "quantity": 57.0,
         "unit": "кг",
         "description": "портокали сорт Мерлин",
         "price": 3.47,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
+        "location_id": "W4",
         "created": "2026-04-04 09:28:15.964641",
-        "modified": "2026-04-04 09:28:15.964641"
+        "modified": "2026-04-14 23:53:30"
     },
     {
         "product_id": "4374c1a6-de5f-48ae-a0e8-0d029d4f97a6",

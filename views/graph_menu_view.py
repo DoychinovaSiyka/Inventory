@@ -19,7 +19,6 @@ class GraphView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Основно меню
     def show_menu(self, user):
         while True:
             choice = self.menu.show()

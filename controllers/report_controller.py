@@ -1,10 +1,8 @@
 from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
-from filters.report_filters import (
-    filter_out_invoices, filter_movements_by_product,
-    group_turnover_by_day, group_top_products
-)
+from filters.report_filters import (filter_out_invoices, filter_movements_by_product,
+                                    group_turnover_by_day, group_top_products)
 
 
 class ReportController:

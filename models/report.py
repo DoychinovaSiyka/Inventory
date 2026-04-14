@@ -3,7 +3,6 @@ import uuid
 
 class Report:
     def __init__(self, report_type, generated_on, parameters=None, data=None, report_id=None):
-        # Моделът вече не генерира датата сам – той я получава от контролера
         self.report_id = str(report_id) if report_id else str(uuid.uuid4())
         self.report_type = report_type
         self.generated_on = generated_on

@@ -1,4 +1,5 @@
 from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 
 
 class MovementView:
@@ -203,11 +204,16 @@ class MovementView:
         if not results:
             print("Няма намерени движения.")
             return
-        for m in results:
-            print(f"[{m.date}] {m.movement_type.name} - {m.quantity} {m.unit}")
-            print("Описание:")
-            print(m.description)
-            print("-" * 45)
+
+        # ТАБЛИЦА
+        columns = ["Дата", "Тип", "Количество", "Единица", "Описание"]
+        rows = [
+            [m.date, m.movement_type.name, m.quantity, m.unit, m.description]
+            for m in results
+        ]
+
+        print(format_table(columns, rows))
+        print()  # <-- това оправя грозното залепване
 
     # Всички движения
     def show_all(self, _):
@@ -216,8 +222,13 @@ class MovementView:
             print("Няма движения.")
             return
 
-        for m in movements:
-            print(f"ID: {m.movement_id} | {m.date} | {m.movement_type.name} | {m.quantity} {m.unit}")
+        columns = ["ID", "Дата", "Тип", "Количество", "Единица"]
+        rows = [
+            [m.movement_id, m.date, m.movement_type.name, m.quantity, m.unit]
+            for m in movements
+        ]
+
+        print(format_table(columns, rows))
 
     # Разширено филтриране
     def advanced_filter(self, _):
@@ -252,9 +263,22 @@ class MovementView:
             print("\nНяма движения, които отговарят на критериите.")
             return
 
-        for m in results:
-            if m.movement_type.name == "MOVE":
-                print(f"[{m.date}] MOVE | Продукт: {m.product_id}")
-            else:
-                print(f"[{m.date}] {m.movement_type.name} | Продукт: {m.product_id} | Сума: {m.price}")
+        # Проверяваме дали има поне едно IN/OUT
+        has_price = any(m.movement_type.name in ("IN", "OUT") for m in results)
+        if has_price:
+            # Таблица с колона Сума
+            columns = ["Дата", "Тип", "Продукт", "Количество", "Единица", "Сума"]
+            rows = []
+            for m in results:
+                if m.movement_type.name == "MOVE":
+                    rows.append([m.date, "MOVE", m.product_id, m.quantity, m.unit, ""])
+                else:
+                    rows.append([m.date, m.movement_type.name, m.product_id, m.quantity, m.unit, m.price])
+        else:
+            # Таблица БЕЗ колона Сума
+            columns = ["Дата", "Тип", "Продукт", "Количество", "Единица"]
+            rows = []
+            for m in results:
+                rows.append([m.date, m.movement_type.name, m.product_id, m.quantity, m.unit])
 
+        print(format_table(columns, rows))

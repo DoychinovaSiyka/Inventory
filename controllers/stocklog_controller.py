@@ -15,12 +15,12 @@ class StockLogController:
     def add_log(self, product_id, location_id, quantity, unit, action):
         """ Добавя лог запис след валидация и нормализация. """
 
-        #  Валидация и Нормализация (Валидаторът връща чисти данни)
+        #  Валидация и Нормализация - Валидаторът връща чисти данни
         qty = StockLogValidator.validate_quantity(quantity)
         StockLogValidator.validate_unit(unit)
         StockLogValidator.validate_action(action)
 
-        # Създаване на обекта (Датата се генерира тук и се подава на модела)
+        # Създаване на обекта - Датата се генерира тук и се подава на модела
         log = StockLog(
             product_id=str(product_id),
             location_id=str(location_id),

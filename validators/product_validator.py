@@ -27,7 +27,7 @@ class ProductValidator:
     def validate_description(description):
         """Проверява описанието на продукта."""
         if description is None:
-            return  # Описанието може да е незадължително
+            return
 
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да бъде текстово поле.")
@@ -84,7 +84,6 @@ class ProductValidator:
         except (ValueError, TypeError):
             raise ValueError("Цената трябва да е положително число.")
 
-    # централна функция за парсване на дробни числа
     @staticmethod
     def _parse_float_internal(value, field_name="стойност"):
         """Вътрешен метод – парсва число, позволява запетая, връща float."""
@@ -100,7 +99,6 @@ class ProductValidator:
 
     @staticmethod
     def parse_float(value, field_name="стойност"):
-        """Задължително число (за цена, количество, създаване/редакция)."""
         f = ProductValidator._parse_float_internal(value, field_name)
         if f < 0:
             raise ValueError(f"{field_name} не може да е отрицателна.")
@@ -108,10 +106,8 @@ class ProductValidator:
 
     @staticmethod
     def parse_optional_float(value: str, field_name="стойност"):
-        """Позволява празно → None (за филтри и разширено търсене)."""
         if value is None:
             return None
-
         value = value.strip()
         if value == "":
             return None
@@ -144,10 +140,12 @@ class ProductValidator:
         # UUID проверки
         if product_id:
             ProductValidator.validate_uuid(product_id, "Product ID")
-        if supplier_id:
+        if supplier_id is not None:
+            if isinstance(supplier_id, str) and supplier_id.strip() == "":
+                raise ValueError("Supplier ID не може да бъде празен.")
             ProductValidator.validate_uuid(supplier_id, "Supplier ID")
 
-        # Локациите НЕ са UUID → само проверяваме дали е текст
+        # Локациите НЕ са UUID - само проверяваме дали е текст
         if location_id and not isinstance(location_id, str):
             raise ValueError("Location ID трябва да е текст.")
 
@@ -158,7 +156,5 @@ class ProductValidator:
         ProductValidator.validate_unit(unit)
         ProductValidator.validate_price(price)
         ProductValidator.validate_description(description)
-
-
         if tags is not None and not isinstance(tags, list):
             raise ValueError("Tags трябва да са списък.")

@@ -859,5 +859,61 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-14 22:46:15"
+    },
+    {
+        "log_id": "64b1968e-9c67-452d-9e2c-3ce49018b49b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:23:32"
+    },
+    {
+        "log_id": "30d3dc59-8359-45fa-8c8c-d8549f9830a4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:25:16"
+    },
+    {
+        "log_id": "cdf6966d-d7a9-46d8-91ab-91b52f8ee876",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:29:02"
+    },
+    {
+        "log_id": "fe6cc1d2-c134-4905-beb8-ba895a9b85d1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:31:33"
+    },
+    {
+        "log_id": "dd56e986-9cf6-47af-ae97-16f87ea1af91",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:44:02"
+    },
+    {
+        "log_id": "b49729bc-68ca-4234-94a4-c4f6eeb8ee4d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:51:52"
+    },
+    {
+        "log_id": "baa15f81-b463-466e-9837-1603ab7d9f82",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Портокали \"Мерлин\", Qty: 12.0",
+        "timestamp": "2026-04-14 23:53:30"
+    },
+    {
+        "log_id": "e7f6b47d-09b1-4077-919d-a4761a47e2d1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-14 23:55:46"
     }
 ]

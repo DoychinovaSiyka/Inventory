@@ -22,18 +22,15 @@ class Movement:
         self.location_id = str(location_id) if location_id else None
         # Тип движение (Enum или String)
         self.movement_type = movement_type
-        # Количества и описание
         self.quantity = quantity
         self.unit = unit
         self.description = description
         self.price = float(price)
-        # Допълнителни участници
         self.supplier_id = supplier_id
         self.customer = customer
         # MOVE специфични локации
         self.from_location_id = str(from_location_id) if from_location_id else None
         self.to_location_id = str(to_location_id) if to_location_id else None
-        # Дати – подават се от контролера като готови стрингове
         self.date = date
         self.created = created or date
         self.modified = modified or date

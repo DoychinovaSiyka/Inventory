@@ -4,13 +4,11 @@ from validators.category_validator import CategoryValidator
 
 class Category:
     def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
-        # Не генерираме UUID - получавам го от Контролера
+        #  UUID - получавам го от Контролера
         self.category_id = str(category_id) if category_id else None
         self.name = name
         self.description = description
         self.parent_id = str(parent_id) if parent_id else None
-
-        # Дати - стандартен формат
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now

@@ -7,23 +7,18 @@ from validators.product_validator import ProductValidator
 from controllers.category_controller import CategoryController
 from controllers.supplier_controller import SupplierController
 
-# Филтри – изнесени в отделен пакет
 from filters.product_filters import (filter_search, filter_by_multiple_category_ids, filter_by_category,
                                      filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
                                      filter_low_stock, filter_warehouses, filter_combined)
 
 from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic, bubble_sort_logic, selection_sort_logic)
-from analytics.product_analytics import (
-    calculate_average_price, calculate_total_inventory_value,
-    get_most_expensive_product, get_cheapest_product,
-    group_products_by_category
-)
+from analytics.product_analytics import (calculate_average_price, calculate_total_inventory_value,
+                                         get_most_expensive_product, get_cheapest_product, group_products_by_category)
 
 
 class ProductController:
     def __init__(self, repo: Repository, category_controller: CategoryController,
                  supplier_controller: SupplierController, activity_log_controller=None):
-
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
@@ -31,7 +26,7 @@ class ProductController:
         self.products: List[Product] = []
         self._load_products()
 
-    #  INTERNAL HELPERS
+    # INTERNAL HELPERS
     @staticmethod
     def _generate_id() -> str:
         return str(uuid.uuid4())
@@ -52,23 +47,20 @@ class ProductController:
             if category is None:
                 raise ValueError(f"Категория с ID {cid} не съществува.")
             categories.append(category)
+
         return categories
 
     def _log(self, user_id, action, message):
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    #  ЗАРЕЖДАНЕ НА ПРОДУКТИТЕ ОТ JSON
+    # ЗАРЕЖДАНЕ НА ПРОДУКТИТЕ ОТ JSON
     def _load_products(self):
-        """ Контролерът не се интересува от вътрешната структура."""
         raw_data = self.repo.load()
         self.products = [Product.from_dict(p_data, self.category_controller) for p_data in raw_data]
 
     # CREATE PRODUCT
     def add(self, product_data: dict, user_id: str) -> Product:
-        # Контролерът само дирижира процеса.
-
-        # 1. Валидация (чрез външен компонент)
         ProductValidator.validate_all(
             product_id=None,
             name=product_data['name'],
@@ -82,15 +74,12 @@ class ProductController:
             tags=product_data.get('tags', [])
         )
 
-        # 2. Бизнес логика (Проверка за уникалност)
         if self._is_duplicate(product_data['name'], product_data.get('location_id', 'W1')):
             raise ValueError("Продуктът вече съществува в този склад.")
 
-        # 3. Подготовка на зависимости (Categories & Supplier)
         categories = self._validate_categories(product_data['category_ids'])
         self._validate_supplier(product_data.get('supplier_id'))
 
-        # 4. Създаване на модела
         now = datetime.now().isoformat()
         product = Product(
             product_id=self._generate_id(),
@@ -107,7 +96,6 @@ class ProductController:
             modified=now
         )
 
-        # 5. Персистиране и Логване
         self.products.append(product)
         self.save_changes()
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
@@ -115,13 +103,12 @@ class ProductController:
         return product
 
     def _is_duplicate(self, name: str, location: str) -> bool:
-        """ Помощен метод за бизнес логика """
         for p in self.products:
             if p.name.lower() == name.lower() and p.location_id == location:
                 return True
         return False
 
-    #  READ
+    # READ
     def get_all(self) -> List[Product]:
         return self.products
 
@@ -137,134 +124,37 @@ class ProductController:
                 return True
         return False
 
-    # UPDATE
-    def update_product(self, product_id: str, new_name: str, new_description: str, new_price: float,
-                       new_quantity: float, user_id: str = "system"):
-        """ Цялостно обновяване на продукт (Коригира липсващия метод за View-то). """
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        # Проверка за уникалност на името (само ако името се променя)
-        if new_name.lower() != p.name.lower() and self.exists_by_name(new_name):
-            raise ValueError("Продукт с това име вече съществува.")
-
-        # Валидация на новите данни
-        ProductValidator.validate_name(new_name)
-        ProductValidator.validate_description(new_description)
-        ProductValidator.validate_price(new_price)
-        if float(new_quantity) < 0:
-            raise ValueError("Количеството не може да бъде отрицателно.")
-
-        # Обновяване на стойностите
-        p.name = new_name
-        p.description = new_description
-        p.price = round(float(new_price), 2)
-        p.quantity = round(float(new_quantity), 2)
-
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {p.name} (ID: {product_id})")
-        return True
-
-    def update_name(self, product_id: str, new_name: str, user_id: str) -> bool:
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        if new_name.lower() != p.name.lower() and self.exists_by_name(new_name):
-            raise ValueError("Продукт с това име вече съществува.")
-
-        ProductValidator.validate_name(new_name)
-        p.name = new_name
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Updated name of product ID {product_id} to '{new_name}'")
-        return True
-
-    def update_description(self, product_id: str, new_description: str, user_id: str) -> bool:
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        ProductValidator.validate_description(new_description)
-        p.description = new_description
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Updated description of product ID {product_id}")
-        return True
-
-    def update_categories(self, product_id: str, new_category_ids: List[str], user_id: str) -> bool:
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        categories = self._validate_categories(new_category_ids)
-        p.categories = categories
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Updated categories of product ID {product_id}")
-        return True
-
-    def update_supplier(self, product_id: str, supplier_id: str, user_id: str) -> bool:
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        self._validate_supplier(supplier_id)
-        p.supplier_id = supplier_id
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Updated supplier of product ID {product_id}")
-        return True
-
-    def update_price(self, product_id: str, new_price: float, user_id: str) -> bool:
-        p = self.get_by_id(product_id)
-        if p is None:
-            raise ValueError("Продуктът не е намерен.")
-
-        ProductValidator.validate_price(new_price)
-        p.price = round(float(new_price), 2)
-        p.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Updated price of product ID {product_id} to {new_price}")
-        return True
 
     def update_product(self, product_id: str, new_name: str, new_description: str,
-                       new_price: float, new_quantity: float) -> bool:
-        """Комбинирано обновяване на основните полета на продукта."""
+                       new_price: float, new_quantity: float, user_id: str = "system") -> bool:
 
         product = self.get_by_id(product_id)
         if product is None:
             raise ValueError("Продуктът не е намерен.")
 
-        # Име
-        if new_name and new_name != product.name:
+        if new_name and new_name.lower() != product.name.lower():
+            if self.exists_by_name(new_name):
+                raise ValueError("Продукт с това име вече съществува.")
             ProductValidator.validate_name(new_name)
             product.name = new_name
 
-        # Описание
         if new_description and new_description != product.description:
             ProductValidator.validate_description(new_description)
             product.description = new_description
 
-        # Цена
         ProductValidator.validate_price(new_price)
         product.price = round(float(new_price), 2)
 
-        # Количество
         ProductValidator.validate_quantity(new_quantity)
         product.quantity = round(float(new_quantity), 2)
 
-        # Обновяване на дата
         product.update_modified()
-
-        # Записване
         self.save_changes()
+        self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
 
         return True
 
-    #  QUANTITY
+    # QUANTITY
     def increase_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if p is None:
@@ -276,7 +166,7 @@ class ProductController:
         p.quantity = round(p.quantity + float(amount), 2)
         p.update_modified()
         self.save_changes()
-        self._log(user_id, "INCREASE_QUANTITY", f"Added {amount} units to product ID {product_id}")
+        self._log(user_id, "INCREASE_QUANTITY", f"Добавени {amount} единици към продукт ID {product_id}")
         return True
 
     def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
@@ -293,17 +183,16 @@ class ProductController:
         p.quantity = round(p.quantity - float(amount), 2)
         p.update_modified()
         self.save_changes()
-        self._log(user_id, "DECREASE_QUANTITY", f"Removed {amount} units from product ID {product_id}")
+        self._log(user_id, "DECREASE_QUANTITY", f"Премахнати {amount} единици от продукт ID {product_id}")
         return True
 
-    # DELETE
     def remove_by_id(self, product_id: str, user_id: str) -> bool:
         before = len(self.products)
         self.products = [p for p in self.products if str(p.product_id) != str(product_id)]
 
         if len(self.products) < before:
             self.save_changes()
-            self._log(user_id, "DELETE_PRODUCT", f"Deleted product ID {product_id}")
+            self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт ID {product_id}")
             return True
 
         return False
@@ -315,12 +204,13 @@ class ProductController:
 
         if len(self.products) < before:
             self.save_changes()
-            self._log(user_id, "DELETE_PRODUCT", f"Deleted product '{name}'")
+            self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт '{name}'")
             return True
+
         return False
 
+    # GROUPING FOR VIEW
     def group_by_category_display(self):
-        """Връща данни във формат, удобен за визуализация във View."""
         groups = self.group_by_category()
         result = {}
 
@@ -337,7 +227,7 @@ class ProductController:
 
         return result
 
-    #  FILTERS
+    # FILTERS
     def search(self, keyword: str) -> List[Product]:
         return filter_search(self.products, keyword)
 
@@ -365,7 +255,7 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
 
-    #  STATISTICS
+    # STATISTICS
     def average_price(self) -> float:
         return calculate_average_price(self.products)
 
@@ -381,7 +271,6 @@ class ProductController:
     def group_by_category(self) -> dict:
         return group_products_by_category(self.products)
 
-    # SORTING
     def sort_by_name(self) -> List[Product]:
         return sort_by_name_logic(self.products)
 
@@ -394,6 +283,5 @@ class ProductController:
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
 
-    #  SAVE
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

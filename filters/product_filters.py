@@ -27,7 +27,6 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
                 results.append(p)
                 break
 
-        # тагове
         for t in tags:
             if keyword in t.lower():
                 results.append(p)
@@ -118,7 +117,7 @@ def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
     return warehouses
 
 
-# COMBINED SEARCH (ОПРАВЕНА ВЕРСИЯ)
+# COMBINED SEARCH
 def filter_combined(products: List[Product],
                     name_keyword: Optional[str] = None,
                     category_id: Optional[str] = None,
@@ -130,7 +129,7 @@ def filter_combined(products: List[Product],
 
     results = [p for p in products if p.name]
 
-    # ключова дума → име + описание + категории + тагове
+    # ключова дума -> име + описание + категории + тагове
     if name_keyword:
         kw = name_keyword.lower().strip()
         filtered = []

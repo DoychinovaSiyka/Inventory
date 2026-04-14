@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "808aaaa9-96eb-410b-a20f-23d03bf91019",
+        "report_id": "a8efc1f2-531e-457f-a84b-0d5ba7bc2d9e",
         "report_type": "stock",
-        "generated_on": "2026-04-14 22:46:07",
+        "generated_on": "2026-04-14 23:55:38",
         "parameters": {},
         "data": [
             {
@@ -91,9 +91,9 @@
             },
             {
                 "product": "Портокали \"Мерлин\"",
-                "quantity": 45.0,
+                "quantity": 57.0,
                 "price": 3.47,
-                "location": "Склад Варна"
+                "location": "Склад Бургас"
             },
             {
                 "product": "кори за баница \"Bella\"",
@@ -116,9 +116,9 @@
         ]
     },
     {
-        "report_id": "acc1e82b-0f27-4a99-8c94-26356e1fe754",
+        "report_id": "3802f9ba-5215-43cb-af84-35182be4c344",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-14 22:46:07",
+        "generated_on": "2026-04-14 23:55:38",
         "parameters": {},
         "data": [
             {
@@ -139,9 +139,9 @@
         ]
     },
     {
-        "report_id": "2811bc55-df7f-4bea-8d2e-417a2ba6e636",
+        "report_id": "0cde7beb-d262-4363-87ac-b71594139147",
         "report_type": "top_products",
-        "generated_on": "2026-04-14 22:46:07",
+        "generated_on": "2026-04-14 23:55:38",
         "parameters": {},
         "data": [
             {

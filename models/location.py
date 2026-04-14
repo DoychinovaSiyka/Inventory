@@ -9,14 +9,14 @@ class Location:
                  zone: str = "", capacity: int = 0,
                  created: Optional[str] = None, modified: Optional[str] = None):
 
-        # Уверяваме се, че ID-то винаги е текст (ако не е None)
+        # ID-то винаги е текст ако не е None
         self.location_id = str(location_id) if location_id is not None else None
 
         self.name = name
         self.zone = zone
         self.capacity = capacity
 
-        # Дати – синхронизирани с останалите модели
+        # Дати
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now

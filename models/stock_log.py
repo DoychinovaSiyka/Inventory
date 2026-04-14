@@ -1,20 +1,13 @@
 class StockLog:
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp, log_id=None):
-        """
-        Модел за лог запис.
-        timestamp се подава винаги отвън (Controller), за да има синхрон.
-        """
-
+        """ Модел за лог запис. timestamp се подава винаги отвън (Controller), за да има синхрон."""
         # ID-то идва от контролера (или JSON)
         self.log_id = str(log_id) if log_id else None
-
-        # Основни данни – винаги в правилен тип
         self.product_id = str(product_id)
         self.location_id = str(location_id)
         self.quantity = float(quantity)
         self.unit = str(unit).strip()
         self.action = str(action).lower()
-
         # Датата винаги идва отвън
         self.timestamp = timestamp
 

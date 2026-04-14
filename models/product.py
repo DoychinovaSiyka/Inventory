@@ -10,7 +10,6 @@ class Product:
         # Просто си пълним данните
         self.product_id = str(product_id) if product_id else None
         self.name = name
-
         # Категориите винаги са списък
         self.categories = categories if isinstance(categories, list) else []
 
@@ -21,14 +20,11 @@ class Product:
 
         # Доставчик
         self.supplier_id = str(supplier_id) if supplier_id else None
-
         # Тагове
         self.tags = tags if isinstance(tags, list) else []
-
         # Локация (винаги текст)
         self.location_id = str(location_id)
-
-        # Дати – синхронизирани с останалите модели
+        # Дати
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now

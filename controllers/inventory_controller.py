@@ -29,7 +29,7 @@ class InventoryController:
     def get_stock(self, product_id, warehouse_id):
         return self._find(product_id, warehouse_id)
 
-    # Добавен параметър should_save, за да оптимизираме масовите операции
+    # Добавен параметър should_save, за да оптимизирам масовите операции
     def increase_stock(self, product_id, product_name, warehouse_id, qty, should_save=True):
         InventoryValidator.validate_increase(product_id, product_name, warehouse_id, qty)
 
@@ -68,7 +68,7 @@ class InventoryController:
 
     def move_stock(self, product_id, product_name, from_wh, to_wh, qty):
         InventoryValidator.validate_move(product_id, product_name, from_wh, to_wh, qty)
-        # Тук използваме should_save=False за първата стъпка, за да запишем само веднъж
+        # Тук използвам should_save=False за първата стъпка, за да запишем само веднъж
         self.decrease_stock(product_id, from_wh, qty, should_save=False)
         self.increase_stock(product_id, product_name, to_wh, qty, should_save=True)
 
@@ -81,7 +81,7 @@ class InventoryController:
         """ Оптимизирано преизчисляване - записва само веднъж накрая! """
         self.stock = []
 
-        # Сортиране по дата
+        # Сортиран по дата
         movements = sorted(movements, key=lambda m: m.get("date", ""))
         InventoryValidator.validate_movements(movements)
 
