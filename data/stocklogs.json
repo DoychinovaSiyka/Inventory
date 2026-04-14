@@ -421,5 +421,41 @@
         "unit": "бр.",
         "action": "move_in",
         "timestamp": "2026-04-13 23:27:02"
+    },
+    {
+        "log_id": null,
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W1",
+        "quantity": 3.0,
+        "unit": "бр.",
+        "action": "move_out",
+        "timestamp": "2026-04-14 13:05:12"
+    },
+    {
+        "log_id": null,
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W4",
+        "quantity": 3.0,
+        "unit": "бр.",
+        "action": "move_in",
+        "timestamp": "2026-04-14 13:05:12"
+    },
+    {
+        "log_id": null,
+        "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "location_id": "W2",
+        "quantity": 89.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-04-14 13:10:31"
+    },
+    {
+        "log_id": null,
+        "product_id": "b74e9d24-f831-434b-86b3-8451ee3cd737",
+        "location_id": "W2",
+        "quantity": 6.0,
+        "unit": "кг",
+        "action": "add",
+        "timestamp": "2026-04-14 13:12:45"
     }
 ]

@@ -3,32 +3,27 @@ from storage.json_repository import JSONRepository
 from validators.stock_log_validator import StockLogValidator
 from datetime import datetime
 
-# импорт към филтрите
-from filters.stocklog_filters import (
-    filter_by_location,
-    filter_by_product,
-    filter_search
-)
+from filters.stocklog_filters import (filter_by_location, filter_by_product, filter_search)
 
 
 class StockLogController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-        # Зареждаме съществуващите логове
         self.logs = [StockLog.from_dict(l) for l in self.repo.load()]
 
-    # CREATE
     def add_log(self, product_id, location_id, quantity, unit, action):
-        # Валидации
-        StockLogValidator.validate_quantity(quantity)
+        """ Добавя лог запис след валидация и нормализация. """
+
+        # 1. Валидация и Нормализация (Валидаторът връща чисти данни)
+        qty = StockLogValidator.validate_quantity(quantity)
         StockLogValidator.validate_unit(unit)
         StockLogValidator.validate_action(action)
 
-        # Създаване на лог запис
+        # 2. Създаване на обекта (Датата се генерира тук и се подава на модела)
         log = StockLog(
             product_id=str(product_id),
             location_id=str(location_id),
-            quantity=float(quantity),
+            quantity=qty,
             unit=unit,
             action=action,
             timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -38,15 +33,15 @@ class StockLogController:
         self.save_changes()
         return log
 
-    # READ - Филтриране по локация - за проверка на складовете поотделно
+    # READ операциите ползват чисти филтри
     def get_by_location(self, location_id):
-        return filter_by_location(self.logs, location_id)
+        return filter_by_location(self.logs, str(location_id))
 
     def get_all(self):
         return self.logs
 
     def get_by_product(self, product_id):
-        return filter_by_product(self.logs, product_id)
+        return filter_by_product(self.logs, str(product_id))
 
     def search(self, keyword):
         return filter_search(self.logs, keyword)

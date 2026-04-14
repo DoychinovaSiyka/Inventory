@@ -32,10 +32,18 @@ class MovementValidator:
     @staticmethod
     def validate_description(description):
         if description is None:
-            return
+            raise ValueError("Описанието е задължително.")
+
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
-        if len(description.strip()) > 500:
+
+        desc = description.strip()
+
+        # ✔️ НОВО — минимум 3 символа
+        if len(desc) < 3:
+            raise ValueError("Описанието трябва да е поне 3 символа.")
+
+        if len(desc) > 500:
             raise ValueError("Описанието е твърде дълго.")
 
     @staticmethod

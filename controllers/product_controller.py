@@ -1,18 +1,21 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
-
 from storage.json_repository import Repository
 from models.product import Product
 from validators.product_validator import ProductValidator
 from controllers.category_controller import CategoryController
 from controllers.supplier_controller import SupplierController
 
-from filters.product_filters import (
-    filter_search, filter_by_multiple_category_ids, filter_by_category,
-    filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
-    filter_low_stock, filter_warehouses, filter_combined
-)
+from filters.product_filters import (filter_search, filter_by_multiple_category_ids,
+                                     filter_by_category, filter_by_supplier,
+                                     filter_by_price_range, filter_by_quantity_range,
+                                     filter_low_stock, filter_warehouses, filter_combined)
+
+from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic, bubble_sort_logic,
+                                     selection_sort_logic)
+from analytics.product_analytics import (calculate_average_price, calculate_total_inventory_value,
+                                         get_most_expensive_product, get_cheapest_product, group_products_by_category)
 
 
 class ProductController:
@@ -23,7 +26,6 @@ class ProductController:
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
-
         self.products: List[Product] = []
         self._load_products()
 
@@ -53,66 +55,57 @@ class ProductController:
 
     #  ЗАРЕЖДАНЕ НА ПРОДУКТИТЕ ОТ JSON
     def _load_products(self):
-        for p_data in self.repo.load():
-            product = Product.from_dict(p_data)
-
-            # Поправка: зареждаме Category обекти, а не стрингове
-            fixed_categories = []
-            for cid in product.categories:
-
-                # Ако е string → търсим категорията по ID
-                if isinstance(cid, str):
-                    category = self.category_controller.get_by_id(cid)
-                    if category:
-                        fixed_categories.append(category)
-
-                # Ако е dict или Category → взимаме category_id
-                else:
-                    if hasattr(cid, "category_id"):
-                        category = self.category_controller.get_by_id(cid.category_id)
-                        if category:
-                            fixed_categories.append(category)
-
-            product.categories = fixed_categories
-            self.products.append(product)
+        """ Контролерът не се интересува от вътрешната структура."""
+        raw_data = self.repo.load()
+        self.products = [Product.from_dict(p_data, self.category_controller) for p_data in raw_data]
 
     # CREATE PRODUCT
-    def add(self, name: str, category_ids: List[str], quantity: float, unit: str,
-            description: str, price: float, supplier_id: Optional[str], user_id: str,
-            location_id: str = "W1", tags: Optional[List[str]] = None) -> Product:
+    def add(self, product_data: dict, user_id: str) -> Product:
+        # Контролерът само дирижира процеса.
+        # 1. Валидация (чрез външен компонент)
+        ProductValidator.validate_all(
+            product_data['name'],
+            product_data['category_ids'],
+            product_data['quantity'],
+            product_data['unit'],
+            product_data['description'],
+            product_data['price']
+        )
 
-        ProductValidator.validate_all(name, category_ids, quantity, unit, description, price)
+        # 2. Бизнес логика (Проверка за уникалност)
+        if self._is_duplicate(product_data['name'], product_data.get('location_id', 'W1')):
+            raise ValueError(f"Продуктът вече съществува в този склад.")
+        # 3. Подготовка на зависимости (Categories & Supplier)
+        categories = self._validate_categories(product_data['category_ids'])
+        self._validate_supplier(product_data.get('supplier_id'))
 
-        # Проверка за дублиране в същия склад
-        for p in self.products:
-            if p.name.lower() == name.lower() and p.location_id == location_id:
-                raise ValueError(f"Продукт с име '{name}' вече съществува в склад {location_id}.")
-
-        categories = self._validate_categories(category_ids)
-        self._validate_supplier(supplier_id)
-
-        now = str(datetime.now())
-
+        # 4. Създаване на модела (Използваме datetime.now().isoformat() за професионализъм)
+        now = datetime.now().isoformat()
         product = Product(
             product_id=self._generate_id(),
-            name=name,
+            name=product_data['name'],
             categories=categories,
-            quantity=float(quantity),
-            unit=unit,
-            description=description,
-            price=price,
-            supplier_id=supplier_id,
-            location_id=location_id,
-            tags=tags or [],
+            quantity=float(product_data['quantity']),
+            unit=product_data['unit'],
+            description=product_data['description'],
+            price=product_data['price'],
+            supplier_id=product_data.get('supplier_id'),
+            location_id=product_data.get('location_id', 'W1'),
+            tags=product_data.get('tags', []),
             created=now,
             modified=now
         )
 
+        # 5. Персистиране и Логване
         self.products.append(product)
         self.save_changes()
-        self._log(user_id, "ADD_PRODUCT", f"Added product: {product.name}")
+        self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
 
         return product
+
+    def _is_duplicate(self, name: str, location: str) -> bool:
+        """ Помощен метод за бизнес логика """
+        return any(p.name.lower() == name.lower() and p.location_id == location for p in self.products)
 
     #  READ
     def get_all(self) -> List[Product]:
@@ -247,7 +240,6 @@ class ProductController:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Deleted product '{name}'")
             return True
-
         return False
 
     #  FILTERS
@@ -280,74 +272,35 @@ class ProductController:
 
     #  STATISTICS
     def average_price(self) -> float:
-        if not self.products:
-            return 0.0
-        total = 0
-        for p in self.products:
-            total += p.price
-        return total / len(self.products)
+        return calculate_average_price(self.products)
 
     def total_values(self) -> float:
-        total = 0
-        for p in self.products:
-            total += p.price * p.quantity
-        return round(total, 2)
+        return calculate_total_inventory_value(self.products)
 
     def most_expensive(self) -> Optional[Product]:
-        if not self.products:
-            return None
-        return max(self.products, key=lambda p: p.price)
+        return get_most_expensive_product(self.products)
 
     def cheapest(self) -> Optional[Product]:
-        if not self.products:
-            return None
-        return min(self.products, key=lambda p: p.price)
+        return get_cheapest_product(self.products)
 
     def group_by_category(self) -> dict:
-        grouped = {}
-        for p in self.products:
-            for c in p.categories:
-                cid = c.category_id
-                if cid not in grouped:
-                    grouped[cid] = []
-                grouped[cid].append(p)
-        return grouped
+        return group_products_by_category(self.products)
 
-    # SORTING
+    # SORTING - Сортира продуктите по име (променя оригиналния списък).
     def sort_by_name(self) -> List[Product]:
-        self.products.sort(key=lambda p: p.name.lower())
-        return self.products
+        return sort_by_name_logic(self.products)
 
     def sort_by_price_desc(self) -> List[Product]:
-        return sorted(self.products, key=lambda p: p.price, reverse=True)
+        """Връща нов списък, сортиран по цена (низходящо)."""
+        return sort_by_price_desc_logic(self.products)
 
     def bubble_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
-        arr = self.products[:]
-        n = len(arr)
-        for i in range(n):
-            for j in range(0, n - i - 1):
-                a = key(arr[j])
-                b = key(arr[j + 1])
-                if reverse and a < b:
-                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                elif not reverse and a > b:
-                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
-        return arr
+        """Извиква Bubble Sort логиката от външния пакет."""
+        return bubble_sort_logic(self.products, key, reverse)
 
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
-        arr = self.products[:]
-        n = len(arr)
-        for i in range(n):
-            best = i
-            for j in range(i + 1, n):
-                a = key(arr[j])
-                b = key(arr[best])
-                if reverse and a > b:
-                    best = j
-                elif not reverse and a < b:
-                    best = j
-            arr[i], arr[best] = arr[best], arr[i]
-        return arr
+        """Извиква Selection Sort логиката от външния пакет."""
+        return selection_sort_logic(self.products, key, reverse)
 
     #  SAVE
     def save_changes(self) -> None:

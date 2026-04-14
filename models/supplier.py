@@ -1,24 +1,33 @@
-import uuid
-from datetime import datetime
-
 class Supplier:
-    def __init__(self, name, contact, address, supplier_id=None, created=None, modified=None):
-        # Ако няма подадено ID - генерираме UUID
-        self.supplier_id = supplier_id or str(uuid.uuid4())
-        self.name = name.strip().title()
-        self.contact = contact.strip()
-        self.address = address.strip()
-        self.created = created or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.modified = modified or datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    def __init__(self, supplier_id, name, contact, address, created, modified):
+        """
+        Модел за доставчик.
+        Датите (created/modified) идват от контролера.
+        """
+        self.supplier_id = str(supplier_id)
+        self.name = str(name).strip()
+        self.contact = str(contact).strip()
+        self.address = str(address).strip()
+        self.created = created
+        self.modified = modified
 
     def to_dict(self):
         return {
-            "supplier_id": self.supplier_id, "name": self.name, "contact": self.contact,
-            "address": self.address, "created": self.created, "modified": self.modified
+            "supplier_id": self.supplier_id,
+            "name": self.name,
+            "contact": self.contact,
+            "address": self.address,
+            "created": self.created,
+            "modified": self.modified
         }
 
     @staticmethod
-    def from_dict(data):
-        return Supplier(supplier_id=data.get("supplier_id"), name=data.get("name"),
-            contact=data.get("contact"), address=data.get("address"),
-            created=data.get("created"), modified=data.get("modified"))
+    def from_dict(d):
+        return Supplier(
+            supplier_id=d.get("supplier_id"),
+            name=d.get("name", ""),
+            contact=d.get("contact", ""),
+            address=d.get("address", ""),
+            created=d.get("created"),
+            modified=d.get("modified")
+        )

@@ -8,22 +8,25 @@ from validators.supplier_validator import SupplierValidator
 class SupplierController:
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме доставчиците
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
-    # ID GENERATOR
-    @staticmethod
-    def _generate_id() -> str:
-        return str(uuid.uuid4())
+    def _get_now(self) -> str:
+        """ Помощен метод за централизирано време. """
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
 
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now = self._get_now()
         supplier = Supplier(
-            supplier_id=self._generate_id(), name=name, contact=contact,
-            address=address, created=now, modified=now)
+            supplier_id=str(uuid.uuid4()),
+            name=name.strip(),
+            contact=contact.strip(),
+            address=address.strip(),
+            created=now,
+            modified=now
+        )
 
         self.suppliers.append(supplier)
         self.save_changes()
@@ -33,40 +36,41 @@ class SupplierController:
     def get_all(self) -> List[Supplier]:
         return self.suppliers
 
-    def get_by_id(self, supplier_id: str) -> Supplier:
-        supplier = next((s for s in self.suppliers if s.supplier_id == supplier_id), None)
-        if not supplier:
-            raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
-        return supplier
+    def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
+        """ Търсене с кастване към стринг за безопасност. """
+        sid = str(supplier_id)
+        return next((s for s in self.suppliers if s.supplier_id == sid), None)
 
     # UPDATE
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
 
         supplier = self.get_by_id(supplier_id)
+        if not supplier:
+            raise ValueError(f"Доставчик с ID {supplier_id} не е намерен.")
 
         if name is not None:
             SupplierValidator.validate_name(name)
-            supplier.name = name
-
+            supplier.name = name.strip()
         if contact is not None:
             SupplierValidator.validate_contact(contact)
-            supplier.contact = contact
-
+            supplier.contact = contact.strip()
         if address is not None:
             SupplierValidator.validate_address(address)
-            supplier.address = address
+            supplier.address = address.strip()
 
-        supplier.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        supplier.modified = self._get_now()
         self.save_changes()
         return supplier
 
     # DELETE
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
-        self.suppliers.remove(supplier)
-        self.save_changes()
-        return True
+        if supplier:
+            self.suppliers.remove(supplier)
+            self.save_changes()
+            return True
+        return False
 
     def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

@@ -30,9 +30,9 @@
         "email": "ivan@example.com",
         "username": "ivan",
         "password": "116101115116495051",
-        "role": "Operator",
+        "role": "Admin",
         "status": "Active",
         "created": "2026-03-14 16:04:53",
-        "modified": "2026-03-14 16:04:53"
+        "modified": "2026-04-14 13:59:22"
     }
 ]

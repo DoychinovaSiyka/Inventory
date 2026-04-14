@@ -19,9 +19,14 @@ class AdminMenuView:
                                         controllers["location"],
                                         controllers["activity_log"])
         self.category_view = CategoryView(controllers["category"])
-        self.movement_view = MovementView(controllers["product"], controllers["movement"],
-                                          controllers["user"],
-                                          controllers["activity_log"])
+        self.movement_view = MovementView(
+            controllers["product"],
+            controllers["movement"],
+            controllers["user"],  # user_controller
+            controllers["location"],  # location_controller
+            controllers["supplier"]  # supplier_controller (по избор)
+        )
+
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
         self.invoice_view = InvoiceView(controllers["invoice"], controllers["activity_log"])

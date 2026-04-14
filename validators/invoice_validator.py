@@ -1,174 +1,94 @@
+import uuid
 from datetime import datetime
+
+
 class InvoiceValidator:
 
-    # PRODUCT
+    @staticmethod
+    def parse_float(value, field_name):
+        """Превръща текст в число безопасно. Използва се в контролера."""
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            raise ValueError(f"Полето '{field_name}' трябва да бъде валидно число.")
+
+    @staticmethod
+    def validate_uuid(value, field_name="ID"):
+        if value is None: return
+        try:
+            uuid.UUID(str(value))
+        except:
+            raise ValueError(f"Невалиден UUID формат за {field_name}: {value}")
+
     @staticmethod
     def validate_product(product):
         if not product or not isinstance(product, str):
-            raise ValueError("продуктът е задължителен.")
+            raise ValueError("Името на продукта е задължително.")
 
-    # CUSTOMER
     @staticmethod
     def validate_customer(customer):
         if not customer or not isinstance(customer, str):
-            raise ValueError("клиентът е задължителен.")
+            raise ValueError("Клиентът е задължителен.")
 
-    # QUANTITY
     @staticmethod
     def validate_quantity(quantity):
-        if quantity is None:
-            raise ValueError("quantity е задължително поле.")
-        if not isinstance(quantity, (int, float)):
-            raise ValueError("quantity трябва да е число.")
-        if quantity <= 0:
-            raise ValueError("quantity трябва да е > 0.")
+        if quantity is None or not isinstance(quantity, (int, float)) or quantity <= 0:
+            raise ValueError("Количеството трябва да е положително число.")
 
-    # UNIT
-    @staticmethod
-    def validate_unit(unit):
-        if not unit or not isinstance(unit, str) or not unit.strip():
-            raise ValueError("мерната единица е задължителна.")
-
-    # UNIT PRICE
     @staticmethod
     def validate_unit_price(unit_price):
-        if unit_price is None:
-            raise ValueError("unit price е задължително поле.")
-        if not isinstance(unit_price, (int, float)):
-            raise ValueError("unit price трябва да е число.")
-        if unit_price <= 0:
-            raise ValueError("unit price трябва да е > 0.")
+        if unit_price is None or not isinstance(unit_price, (int, float)) or unit_price <= 0:
+            raise ValueError("Единичната цена трябва да е положително число.")
 
-    # MOVEMENT ID
     @staticmethod
-    def validate_movement_id(movement_id):
-        if movement_id is None or movement_id == "":
-            raise ValueError("movement_id е задължителен.")
+    def validate_total_price(total_price, quantity, unit_price):
+        """Проверява дали сметката е вярна."""
+        if total_price is None:
+            raise ValueError("Общата сума е задължителна.")
 
-    # DATE VALIDATION
+        # Проверка за математическа точност (до 2-рия знак)
+        expected_total = round(float(quantity) * float(unit_price), 2)
+        if abs(float(total_price) - expected_total) > 0.01:
+            raise ValueError(f"Грешка в сметката! Очаквано: {expected_total}, Получено: {total_price}")
+
     @staticmethod
     def validate_date(date_str):
-        from datetime import datetime
-        # Приемаме само дата: YYYY-MM-DD
-        try:
-            datetime.strptime(date_str, "%Y-%m-%d")
-            return
-        except ValueError:
-            pass
-        try:
-            datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-            return
-        except ValueError:
-            pass
+        if not date_str:
+            raise ValueError("Дадата е задължителна.")
+        formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]
+        for fmt in formats:
+            try:
+                datetime.strptime(date_str, fmt)
+                return
+            except ValueError:
+                continue
+        raise ValueError("Невалидна дата. Използвайте YYYY-MM-DD.")
 
-        # Ако и двата формата са невалидни → грешка
-        raise ValueError("Невалидна дата. Позволени формати: YYYY-MM-DD или YYYY-MM-DD HH:MM:SS.")
-
-    # TOTAL PRICE VALIDATION
     @staticmethod
-    def validate_total_price(total_price):
-        if total_price is None:
-            raise ValueError("total price е задължително поле.")
-        if not isinstance(total_price, (int, float)):
-            raise ValueError("total price трябва да е число.")
-        if total_price < 0:
-            raise ValueError("total price не може да е отрицателно.")
-
-    # ADVANCED SEARCH FILTERS
-    @staticmethod
-    def validate_search_filters(start_date, end_date, min_total, max_total):
-        from datetime import datetime
-
-        if start_date:
-            try:
-                datetime.strptime(start_date, "%Y-%m-%d")
-            except:
-                raise ValueError("Невалидна начална дата.")
-
-        if end_date:
-            try:
-                datetime.strptime(end_date, "%Y-%m-%d")
-            except:
-                raise ValueError("Невалидна крайна дата.")
-
-        if min_total is not None:
-            try:
-                float(min_total)
-            except:
-                raise ValueError("Минималната стойност трябва да е число.")
-
-        if max_total is not None:
-            try:
-                float(max_total)
-            except:
-                raise ValueError("Максималната стойност трябва да е число.")
-
-    # MASTER VALIDATION
-    @staticmethod
-    def validate_all(product, customer, quantity, unit, unit_price,
-                     movement_id, date=None, total_price=None):
-
+    def validate_all(product, customer, quantity, unit, unit_price, movement_id, total_price, date=None):
+        """Главен метод за проверка на всички полета."""
         InvoiceValidator.validate_product(product)
         InvoiceValidator.validate_customer(customer)
         InvoiceValidator.validate_quantity(quantity)
-        InvoiceValidator.validate_unit(unit)
         InvoiceValidator.validate_unit_price(unit_price)
-        InvoiceValidator.validate_movement_id(movement_id)
+        InvoiceValidator.validate_total_price(total_price, quantity, unit_price)
+        InvoiceValidator.validate_uuid(movement_id, "Movement ID")
 
-        if date is not None:
-            InvoiceValidator.validate_date(date)
+        if not unit: raise ValueError("Мерната единица е задължителна.")
+        if date: InvoiceValidator.validate_date(date)
 
-        if total_price is not None:
-            InvoiceValidator.validate_total_price(total_price)
-
-    # MOVEMENT VALIDATION FOR INVOICE CREATION
     @staticmethod
     def validate_movement_for_invoice(movement):
-        if movement.movement_type.name != "OUT":
-            raise ValueError("Фактура може да се генерира само при OUT движение.")
+        """Проверява дали стоковото движение е изходящо."""
+        # Проверка дали типът е "OUT" (в зависимост от вашата имплементация)
+        m_type = str(movement.movement_type).upper()
+        if "OUT" not in m_type:
+            raise ValueError("Фактура може да се генерира само при продажба (OUT).")
 
-    # INVOICE EXISTS
     @staticmethod
-    def validate_invoice_exists(invoice_id, invoices):
-        exists = any(inv.invoice_id == invoice_id for inv in invoices)
-        if not exists:
-            raise ValueError("Фактурата не е намерена.")
-
-    # DATE RANGE FILTERING
-    @staticmethod
-    def filter_by_date_range(invoices, start_date, end_date):
-
-
-        def parse(d):
-            try:
-                return datetime.strptime(d, "%Y-%m-%d")
-            except:
-                return None
-
-        start = parse(start_date) if start_date else None
-        end = parse(end_date) if end_date else None
-
-        results = invoices
-
-        if start:
-            results = [inv for inv in results if parse(inv.date[:10]) and parse(inv.date[:10]) >= start]
-
-        if end:
-            results = [inv for inv in results if parse(inv.date[:10]) and parse(inv.date[:10]) <= end]
-
-        return results
-
-    # TOTAL RANGE FILTERING
-    @staticmethod
-    def filter_by_total_range(invoices, min_total, max_total):
-        results = invoices
-
-        if min_total is not None:
-            min_total = float(min_total)
-            results = [inv for inv in results if inv.total_price >= min_total]
-
-        if max_total is not None:
-            max_total = float(max_total)
-            results = [inv for inv in results if inv.total_price <= max_total]
-
-        return results
+    def validate_search_filters(start_date, end_date, min_total, max_total):
+        """Валидира параметрите за разширено търсене."""
+        if start_date: InvoiceValidator.validate_date(start_date)
+        if end_date: InvoiceValidator.validate_date(end_date)
+        if min_total is not None: InvoiceValidator.parse_float(min_total, "Минимална сума")
+        if max_total is not None: InvoiceValidator.parse_float(max_total, "Максимална сума")

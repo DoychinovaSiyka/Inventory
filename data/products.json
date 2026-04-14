@@ -229,15 +229,15 @@
         "categories": [
             "new-choco-001"
         ],
-        "quantity": 134.0,
+        "quantity": 223.0,
         "unit": "бр.",
         "description": "шоколадов десерт",
         "price": 3.34,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W1",
+        "location_id": "W2",
         "created": "2026-02-06 19:52:09.452077",
-        "modified": "2026-04-04 10:26:19"
+        "modified": "2026-04-14 13:10:31"
     },
     {
         "product_id": "ac1e582c-c606-46f3-a669-a836098a1a6e",
@@ -277,14 +277,14 @@
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "quantity": 34.0,
+        "quantity": 40.0,
         "unit": "кг",
         "description": "свежи сезонни череши",
         "price": 4.54,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
+        "location_id": "W2",
         "created": "2026-04-05 18:10:52.152002",
-        "modified": "2026-04-05 18:10:52.152002"
+        "modified": "2026-04-14 13:12:45"
     }
 ]

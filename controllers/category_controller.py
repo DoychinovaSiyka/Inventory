@@ -5,16 +5,35 @@ from storage.json_repository import Repository
 from models.category import Category
 from validators.category_validator import CategoryValidator
 
+# Изнасяме логиката навън, за да не тежи тук
+from filters.category_filters import filter_categories
+from analytics.category_analytics import build_category_tree
+
 
 class CategoryController:
-    def __init__(self, repo: Repository):
+    def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
-        # Зареждане на категориите от JSON файла
-        self.categories: List[Category] = [Category.from_dict(c) for c in self.repo.load()]
+        self.activity_log = activity_log_controller
+        self.categories: List[Category] = []
+        # Зареждане на категориите от JSON файла (Контролерът само нарежда зареждането)
+        self._load_categories()
+
+    def _load_categories(self):
+        raw_data = self.repo.load()
+        self.categories = [Category.from_dict(c) for c in raw_data]
+
+    def _log(self, user_id, action, message):
+        if self.activity_log:
+            self.activity_log.add_log(user_id, action, message)
 
     # CRUD операции
-    def add(self, name: str, description: str = "", parent_id: Optional[str] = None) -> Category:
+    def add(self, category_data: dict, user_id: str) -> Category:
         """Добавя нова категория или подкатегория."""
+        name = category_data.get('name')
+        description = category_data.get('description', "")
+        parent_id = category_data.get('parent_id')
+
+        # Валидацията викаме от външния пакет
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
@@ -23,15 +42,21 @@ class CategoryController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # Генериране на уникално ID
-        category = Category(category_id=str(uuid.uuid4()), name=name,
-                            description=description, parent_id=parent_id, created=now, modified=now)
+        category = Category(
+            category_id=str(uuid.uuid4()),
+            name=name,
+            description=description,
+            parent_id=parent_id,
+            created=now,
+            modified=now
+        )
 
         self.categories.append(category)
         self.save_changes()
+        self._log(user_id, "ADD_CATEGORY", f"Успешно добавена категория: {name}")
         return category
 
-    def update_name(self, category_id: str, new_name: str) -> bool:
-        # Намиране на категорията
+    def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = self.get_by_id(category_id)
         if not category:
             raise ValueError("Категорията не е намерена.")
@@ -42,22 +67,22 @@ class CategoryController:
         category.name = new_name
         category.update_modified()
         self.save_changes()
+        self._log(user_id, "EDIT_CATEGORY", f"Името на категория {category_id} променено на {new_name}")
         return True
 
-    def update_description(self, category_id: str, new_description: str) -> bool:
-        # Намиране на категорията
+    def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
         category = self.get_by_id(category_id)
         if not category:
             raise ValueError("Категорията не е намерена.")
 
         CategoryValidator.validate_description(new_description)
-
         category.description = new_description
         category.update_modified()
         self.save_changes()
+        self._log(user_id, "EDIT_CATEGORY", f"Описанието на категория {category_id} е обновено")
         return True
 
-    def update_parent(self, category_id: str, parent_id: Optional[str]) -> bool:
+    def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         """Промяна на родителската категория."""
         category = self.get_by_id(category_id)
         if not category:
@@ -69,9 +94,11 @@ class CategoryController:
         category.parent_id = parent_id
         category.update_modified()
         self.save_changes()
+        self._log(user_id, "EDIT_CATEGORY", f"Родителят на категория {category_id} е променен")
         return True
 
-    def remove(self, category_id: str, product_controller=None) -> bool:
+    def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
+        # Валидаторът проверява всичко преди триене
         CategoryValidator.validate_can_delete(category_id, self.categories, product_controller)
 
         original_len = len(self.categories)
@@ -79,8 +106,8 @@ class CategoryController:
 
         if len(self.categories) < original_len:
             self.save_changes()
+            self._log(user_id, "DELETE_CATEGORY", f"Изтрита категория ID {category_id}")
             return True
-
         return False
 
     # Методи за достъп
@@ -88,39 +115,31 @@ class CategoryController:
         return self.categories
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
-        # Търсене по ID
         return next((c for c in self.categories if str(c.category_id) == str(category_id)), None)
 
     def get_subcategories(self, parent_id: str) -> List[Category]:
-        # Връща подкатегориите на даден родител
         return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
 
+    # Контролерът вече не строи дървото, а само го вика
     def get_category_tree(self) -> List[dict]:
-        # Изграждане на йерархия за менюто
-        tree = []
-        main_categories = [c for c in self.categories if c.parent_id is None]
+        """Изграждане на йерархия за менюто чрез външна логика."""
+        return build_category_tree(self.categories)
 
-        for main in main_categories:
-            tree.append({"category": main, "level": 0})
-            for child in self.get_subcategories(main.category_id):
-                tree.append({"category": child, "level": 1})
-
-        return tree
-
+    # Търсенето е изнесено във филтрите
     def search(self, keyword: str) -> List[Category]:
-        # Търсене по име или описание
-        keyword = keyword.lower()
-        return [c for c in self.categories
-                if keyword in c.name.lower() or keyword in (c.description or "").lower()]
+        """Търсене по име или описание чрез външен филтър."""
+        return filter_categories(self.categories, keyword)
 
     def select_category(self, raw_index):
-        index = int(raw_index)
-        categories = self.get_all()
-
-        if index < 0 or index >= len(categories):
+        # Помощен метод за стабилност на входа
+        try:
+            index = int(raw_index)
+            categories = self.get_all()
+            if 0 <= index < len(categories):
+                return categories[index]
+            raise ValueError
+        except (ValueError, TypeError):
             raise ValueError("Невалиден избор на категория.")
-
-        return categories[index]
 
     def save_changes(self) -> None:
         # Записване на категориите обратно в JSON файла

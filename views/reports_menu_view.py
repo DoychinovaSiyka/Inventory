@@ -57,23 +57,28 @@ class ReportsView:
         except:
             return str(value)
 
-    # ПЕЧАТ НА ПРОДАЖБИ (View логика)
-    def _print_sales(self, rows, has_id):
-        columns = ["ID", "Продукт", "Количество", "Ед. Цена", "Общо", "Клиент", "Дата"]
-        if not has_id:
-            columns = columns[1:]
-            rows = [row[1:] for row in rows]
-        print(format_table(columns, rows))
-
-    # СПРАВКИ – ПРОДАЖБИ
+    # СПРАВКИ – ПРОДАЖБИ (НОВ ФОРМАТ, БЕЗ _process_data)
     def report_sales(self, _):
         result = self.controller.report_sales()
         if not result.data:
             print("\nНяма налични фактури или продажби.\n")
             return
 
-        rows, has_id = self.controller._process_data(result.data)
-        self._print_sales(rows, has_id)
+        rows = [
+            [
+                item.get("invoice_number"),
+                item.get("date"),
+                item.get("client"),
+                item.get("product"),
+                self._format_lv(item.get("total_amount"))
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows
+        ))
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
@@ -82,8 +87,21 @@ class ReportsView:
             print(f"\nНяма резултати за клиент: {customer}\n")
             return
 
-        rows, has_id = self.controller._process_data(result.data)
-        self._print_sales(rows, has_id)
+        rows = [
+            [
+                item.get("invoice_number"),
+                item.get("date"),
+                item.get("client"),
+                item.get("product"),
+                self._format_lv(item.get("total_amount"))
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows
+        ))
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
@@ -92,8 +110,21 @@ class ReportsView:
             print(f"\nНяма резултати за продукт: {product}\n")
             return
 
-        rows, has_id = self.controller._process_data(result.data)
-        self._print_sales(rows, has_id)
+        rows = [
+            [
+                item.get("invoice_number"),
+                item.get("date"),
+                item.get("client"),
+                item.get("product"),
+                self._format_lv(item.get("total_amount"))
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows
+        ))
 
     def report_sales_by_date(self, _):
         date = input("Дата: ")
@@ -102,8 +133,21 @@ class ReportsView:
             print(f"\nНяма резултати за дата: {date}\n")
             return
 
-        rows, has_id = self.controller._process_data(result.data)
-        self._print_sales(rows, has_id)
+        rows = [
+            [
+                item.get("invoice_number"),
+                item.get("date"),
+                item.get("client"),
+                item.get("product"),
+                self._format_lv(item.get("total_amount"))
+            ]
+            for item in result.data
+        ]
+
+        print(format_table(
+            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows
+        ))
 
     # СПРАВКА – НАЛИЧНОСТИ
     def report_stock(self, _):

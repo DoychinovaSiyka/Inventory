@@ -21,7 +21,6 @@ class LocationController:
             num_part = str(l.location_id).replace("W", "")
             if num_part.isdigit():
                 ids.append(int(num_part))
-
         next_id = max(ids) + 1 if ids else 1
         return f"W{next_id}"
 
@@ -34,15 +33,8 @@ class LocationController:
         LocationValidator.validate_unique_name(name, self.locations)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        location = Location(
-            location_id=self._generate_id(),
-            name=name,
-            zone=zone,
-            capacity=capacity,
-            created=now,
-            modified=now
-        )
+        location = Location(location_id=self._generate_id(), name=name, zone=zone,
+                            capacity=capacity, created=now, modified=now)
 
         self.locations.append(location)
         self.save_changes()
@@ -60,13 +52,11 @@ class LocationController:
             if str(loc.location_id) == str(location_id):
                 return loc
 
-    # UPDATE
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
 
         location = self.get_by_id(location_id)
-
-        # Ако полето е None → значи View не иска да го променя
+        # Ако полето е None - значи View не иска да го променя
         if name is not None:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
@@ -84,15 +74,12 @@ class LocationController:
         self.save_changes()
         return True
 
-    # DELETE
     def remove(self, location_id: str) -> bool:
         LocationValidator.validate_exists(location_id, self.locations)
-
         # Премахване
         self.locations = [l for l in self.locations if l.location_id != location_id]
         self.save_changes()
         return True
-
 
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

@@ -68,7 +68,8 @@ class UserView:
         new_role = input("Нова роля (Admin/Operator): ")
 
         try:
-            self.controller.change_role(user, username, new_role)
+            # ✔️ поправено — премахнат е грешният параметър "user"
+            self.controller.change_role(username, new_role)
             print("Ролята е променена.")
         except ValueError as e:
             print("Грешка:", e)
@@ -78,7 +79,7 @@ class UserView:
         username = input("Потребителско име: ")
 
         try:
-            self.controller.deactivate_user(user, username)
+            self.controller.change_status(user, username, "Inactive")
             print("Потребителят е деактивиран.")
         except ValueError as e:
             print("Грешка:", e)
@@ -88,7 +89,7 @@ class UserView:
         username = input("Потребителско име: ")
 
         try:
-            self.controller.activate_user(user, username)
+            self.controller.change_status(user, username, "Active")
             print("Потребителят е активиран.")
         except ValueError as e:
             print("Грешка:", e)

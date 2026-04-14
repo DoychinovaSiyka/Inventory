@@ -107,9 +107,9 @@
         "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "product": "сладолед \"Family\"",
         "warehouse": "W1",
-        "quantity": 400.0,
+        "quantity": 397.0,
         "created": "2026-04-09 12:16:50",
-        "modified": "2026-04-09 12:16:50"
+        "modified": "2026-04-14 13:05:12"
     },
     {
         "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
@@ -190,5 +190,29 @@
         "quantity": 34.0,
         "created": "2026-04-13 23:27:02",
         "modified": "2026-04-13 23:27:02"
+    },
+    {
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "product": "сладолед \"Family\"",
+        "warehouse": "W4",
+        "quantity": 3.0,
+        "created": "2026-04-14 13:05:12",
+        "modified": "2026-04-14 13:05:12"
+    },
+    {
+        "product_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "product": "шоколад \"Kinder\"",
+        "warehouse": "W2",
+        "quantity": 89.0,
+        "created": "2026-04-14 13:10:31",
+        "modified": "2026-04-14 13:10:31"
+    },
+    {
+        "product_id": "b74e9d24-f831-434b-86b3-8451ee3cd737",
+        "product": "череши",
+        "warehouse": "W2",
+        "quantity": 6.0,
+        "created": "2026-04-14 13:12:45",
+        "modified": "2026-04-14 13:12:45"
     }
 ]

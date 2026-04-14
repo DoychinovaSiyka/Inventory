@@ -90,12 +90,21 @@ class ProductView:
 
         print("\nКатегории:")
         for i, c in enumerate(categories):
-            print(f"{i}. {c.name}")
+            # показваме и индекс, и истинския ID – както в реални системи
+            print(f"{i}. {c.name} (ID: {c.category_id})")
 
-        cat_raw = input("Изберете категория: ")
+        cat_raw = input("Изберете категория (номер или Category ID): ").strip()
         try:
-            cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
-            category_id = categories[cat_idx].category_id
+            # позволяваме или индекс, или директно UUID
+            if cat_raw.isdigit():
+                cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
+                if cat_idx < 0 or cat_idx >= len(categories):
+                    raise ValueError("Невалиден избор за Категория.")
+                category_id = categories[cat_idx].category_id
+            else:
+                # директно въвеждане на Category ID
+                ProductValidator.validate_uuid(cat_raw, "Category ID")
+                category_id = cat_raw
         except Exception as e:
             print(e)
             return
@@ -107,12 +116,18 @@ class ProductView:
 
         print("\nЛокации:")
         for i, loc in enumerate(locations):
-            print(f"{i}. {loc.name}")
+            print(f"{i}. {loc.name} (ID: {loc.location_id})")
 
-        loc_raw = input("Изберете локация: ")
+        loc_raw = input("Изберете локация (номер или Location ID): ").strip()
         try:
-            loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
-            location_id = locations[loc_idx].location_id
+            if loc_raw.isdigit():
+                loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
+                if loc_idx < 0 or loc_idx >= len(locations):
+                    raise ValueError("Невалиден избор за Локация.")
+                location_id = locations[loc_idx].location_id
+            else:
+                ProductValidator.validate_uuid(loc_raw, "Location ID")
+                location_id = loc_raw
         except Exception as e:
             print(e)
             return
@@ -215,19 +230,25 @@ class ProductView:
             print("Няма категории.")
             return
 
+        print("\nКатегории:")
         for i, c in enumerate(categories):
-            print(f"{i}. {c.name}")
+            print(f"{i}. {c.name} (ID: {c.category_id})")
 
-        raw = input("Изберете категория: ")
+        raw = input("Изберете категория (номер или Category ID): ").strip()
         try:
-            idx = ProductValidator.parse_int(raw, "Категория")
-            selected = categories[idx]
+            if raw.isdigit():
+                idx = ProductValidator.parse_int(raw, "Категория")
+                if idx < 0 or idx >= len(categories):
+                    raise ValueError("Невалиден избор за Категория.")
+                selected_id = categories[idx].category_id
+            else:
+                ProductValidator.validate_uuid(raw, "Category ID")
+                selected_id = raw
         except Exception as e:
             print(e)
             return
 
-        # ✔ Поправено — използваме реалния метод
-        results = self.product_controller.search_by_category(selected.category_id)
+        results = self.product_controller.search_by_category(selected_id)
 
         if not results:
             print("Няма продукти.")

@@ -1,36 +1,63 @@
+import uuid
+
+
 class InventoryValidator:
 
     @staticmethod
+    def _validate_number(qty, field_name="Количество"):
+        """Помощен метод за проверка на число."""
+        try:
+            val = float(qty)
+            if val < 0:
+                raise ValueError(f"{field_name} не може да бъде отрицателно.")
+            return val
+        except (ValueError, TypeError):
+            raise ValueError(f"{field_name} трябва да бъде валидно число.")
+
+    @staticmethod
     def validate_initial_stock(product_id, product_name, warehouse_id, qty):
-        if qty < 0:
-            raise ValueError("Началното количество не може да е отрицателно.")
+        InventoryValidator._validate_number(qty, "Началното количество")
+        if not product_id or not warehouse_id:
+            raise ValueError("ID на продукт и склад са задължителни.")
 
     @staticmethod
     def validate_increase(product_id, product_name, warehouse_id, qty):
-        if qty <= 0:
-            raise ValueError("Количество за IN трябва да е > 0.")
+        val = InventoryValidator._validate_number(qty, "Количеството за IN")
+        if val == 0:
+            raise ValueError("Количеството за IN трябва да бъде по-голямо от 0.")
 
     @staticmethod
     def validate_decrease(product_id, warehouse_id, qty, stock):
-        if qty <= 0:
-            raise ValueError("Количество за OUT трябва да е > 0.")
+        val = InventoryValidator._validate_number(qty, "Количеството за OUT")
+        if val == 0:
+            raise ValueError("Количеството за OUT трябва да бъде по-голямо от 0.")
 
-        record = next((i for i in stock if i["product_id"] == product_id and i["warehouse"] == warehouse_id), None)
+        # Намиране на записа (кастваме към str за сигурност при търсенето)
+        record = next((i for i in stock
+                       if str(i["product_id"]) == str(product_id)
+                       and str(i["warehouse"]) == str(warehouse_id)), None)
+
         if not record:
-            raise ValueError("Няма такава наличност в този склад.")
+            raise ValueError(f"Продуктът не е намерен в склад {warehouse_id}.")
 
-        if record["quantity"] < qty:
-            raise ValueError("Недостатъчна наличност.")
+        if record["quantity"] < val:
+            raise ValueError(f"Недостатъчна наличност! Налично: {record['quantity']}, Заявка: {val}")
 
     @staticmethod
     def validate_move(product_id, product_name, from_wh, to_wh, qty):
-        if from_wh == to_wh:
-            raise ValueError("MOVE изисква различни складове.")
-        if qty <= 0:
-            raise ValueError("Количество за MOVE трябва да е > 0.")
+        if str(from_wh) == str(to_wh):
+            raise ValueError("Изходният и целевият склад не могат да бъдат еднакви.")
+        InventoryValidator._validate_number(qty, "Количеството за MOVE")
 
     @staticmethod
     def validate_movements(movements):
+        """Проверка при rebuild на целия склад."""
+        if not isinstance(movements, list):
+            raise ValueError("Списъкът с движения е невалиден.")
+
+        valid_types = {"IN", "OUT", "MOVE"}
         for m in movements:
-            if m["movement_type"] not in ("IN", "OUT", "MOVE"):
-                raise ValueError("Невалиден тип движение.")
+            if m.get("movement_type") not in valid_types:
+                raise ValueError(f"Невалиден тип движение в историята: {m.get('movement_type')}")
+            if "product_id" not in m or "quantity" not in m:
+                raise ValueError("Липсващи задължителни данни в историята на движенията.")

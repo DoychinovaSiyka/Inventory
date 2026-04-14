@@ -2,18 +2,29 @@ class StockLogValidator:
 
     @staticmethod
     def validate_quantity(quantity):
-        if quantity <= 0:
-            raise ValueError("Количеството трябва да е по-голямо от 0.")
-
+        """Проверява дали е число и дали е положително. Връща float."""
+        try:
+            val = float(quantity)
+            if val <= 0:
+                raise ValueError("Количеството трябва да е положително число.")
+            return val
+        except (ValueError, TypeError):
+            raise ValueError(f"Невалиден формат за количество: {quantity}")
 
     @staticmethod
     def validate_unit(unit):
-        if not unit or not unit.strip():
+        """Проверява за празна мерна единица и премахва интервалите."""
+        if not unit or not str(unit).strip():
             raise ValueError("Мерната единица е задължителна.")
-
+        return unit.strip()
 
     @staticmethod
     def validate_action(action):
-        allowed_actions = ["add", "remove", "move", "move_in", "move_out"]
-        if action not in allowed_actions:
+        """Проверява дали действието е в позволения списък."""
+        # Можеш да добавиш "in", "out", "move" за консистенция
+        allowed_actions = ["add", "remove", "move", "move_in", "move_out", "in", "out"]
+        clean_action = str(action).strip().lower()
+
+        if clean_action not in allowed_actions:
             raise ValueError(f"Невалидно действие '{action}'. Позволени: {allowed_actions}")
+        return clean_action

@@ -1,36 +1,29 @@
-import uuid
 from datetime import datetime
 from validators.invoice_validator import InvoiceValidator
 
 
 class Invoice:
-    def __init__(self, invoice_id=None, movement_id=None, product="",
-                 quantity=0, unit="", unit_price=0.0, total_price=None,
-                 customer="", date=None, created=None, modified=None):
+    def __init__(self, invoice_id, movement_id, product, quantity, unit,
+                 unit_price, total_price, customer, date, created=None, modified=None):
+        # 1. Присвояване на стойности (Чист контейнер)
+        # Вече не генерираме UUID тук - контролерът ни го подава
+        self.invoice_id = str(invoice_id) if invoice_id else None
+        self.movement_id = str(movement_id) if movement_id else None
 
-        # Генериране на UUID ако липсва
-        self.invoice_id = str(invoice_id) if invoice_id else str(uuid.uuid4())
-
-        # movement_id е UUID - пазим го като string
-        self.movement_id = str(movement_id) if movement_id is not None else None
-
-        # Основни полета
         self.product = product
         self.customer = customer
         self.quantity = quantity
         self.unit = unit
         self.unit_price = unit_price
+        self.total_price = total_price
 
-        # Автоматично изчисляване на total_price ако не е подадено
-        self.total_price = total_price if total_price is not None else (quantity * unit_price)
-
-        # Автоматично генериране на дата
+        # Дати - синхронизирани с останалите модели
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация
+        # 2. Валидация (Викаме съдията)
         InvoiceValidator.validate_all(
             product=self.product,
             customer=self.customer,
@@ -42,8 +35,12 @@ class Invoice:
             total_price=self.total_price
         )
 
+    def update_modified(self):
+        """Обновява датата на последна промяна."""
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     def to_dict(self):
-        """Конвертирам към dict за JSON."""
+        """Конвертиране към речник за JSON."""
         return {
             "invoice_id": self.invoice_id,
             "movement_id": self.movement_id,
@@ -60,17 +57,20 @@ class Invoice:
 
     @staticmethod
     def from_dict(data):
-        """Създавам на Invoice от JSON речник."""
+        """Създаване на Invoice от JSON речник."""
         return Invoice(
             invoice_id=data.get("invoice_id"),
             movement_id=data.get("movement_id"),
-            product=data.get("product"),
-            quantity=data.get("quantity"),
+            product=data.get("product", "Неизвестен"),
+            quantity=data.get("quantity", 0),
             unit=data.get("unit", "бр."),
-            unit_price=data.get("unit_price"),
-            total_price=data.get("total_price"),
-            customer=data.get("customer"),
+            unit_price=data.get("unit_price", 0.0),
+            total_price=data.get("total_price", 0.0),
+            customer=data.get("customer", "Неизвестен"),
             date=data.get("date"),
             created=data.get("created"),
             modified=data.get("modified")
         )
+
+    def __str__(self):
+        return f"Фактура {self.invoice_id} | Клиент: {self.customer} | Общо: {self.total_price} лв."

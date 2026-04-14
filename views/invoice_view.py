@@ -128,13 +128,14 @@ class InvoiceView:
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
 
-        # ✔️ Добавено: прихващане на грешна дата, за да не гърми програмата
-        try:
-            results = self.invoice_controller.search_by_date(date_str)
-        except ValueError as e:
-            print(f"\nГрешка: {e}\n")
+        results = self.invoice_controller.search_by_date(date_str)
+
+        # ✔️ Невалидна дата
+        if results == "INVALID_DATE":
+            print("\nНевалидна дата. Моля използвайте формат ГГГГ-ММ-ДД.\n")
             return
 
+        # ✔️ Валидна дата, но няма фактури
         if not results:
             print("Няма фактури за тази дата.")
             return
@@ -193,7 +194,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # --- ДОБАВЕНО: Търсене по сума / диапазон ---
+    # 7. Търсене по сума / диапазон
     def search_by_total(self, user):
         print("   Търсене по сума / диапазон   ")
 

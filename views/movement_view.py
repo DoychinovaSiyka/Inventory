@@ -2,12 +2,13 @@ from views.menu import Menu, MenuItem
 
 
 class MovementView:
-    def __init__(self, product_controller, movement_controller, user_controller, activity_log_controller=None):
-
+    def __init__(self, product_controller, movement_controller, user_controller, location_controller,
+                 supplier_controller=None):
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.user_controller = user_controller
-        self.activity_log = activity_log_controller
+        self.location_controller = location_controller
+        self.supplier_controller = supplier_controller
         self.menu = self._build_menu()
 
     # Меню
@@ -20,6 +21,23 @@ class MovementView:
             MenuItem("5", "Разширено филтриране", self.advanced_filter),
             MenuItem("0", "Назад", lambda u: "break")
         ])
+
+    # Помощен метод за избор (преместен от контролера тук)
+    def _select_item(self, items, label):
+        if not items:
+            print(f"Няма налични {label}.")
+            return None
+        print(f"\nИзберете {label}:")
+        for i, item in enumerate(items, start=1):
+            name = getattr(item, 'name', 'N/A')
+            id_val = getattr(item, f'{label}_id', 'ID')
+            print(f"{i}. {name} (ID: {id_val})")
+
+        choice = input("Номер: ").strip()
+        if not choice.isdigit() or not (1 <= int(choice) <= len(items)):
+            print("Невалиден избор.")
+            return None
+        return items[int(choice) - 1]
 
     def show_menu(self):
         user = self.user_controller.logged_user
@@ -34,20 +52,19 @@ class MovementView:
 
     # IN/OUT движение
     def create_movement(self, user):
-        # Изборът на продукт е в контролера
-        product = self.movement_controller.select_product()
+        product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
 
-        # Изборът на локация е в контролера
-        location = self.movement_controller.select_location("локация")
+        location = self._select_item(self.location_controller.get_all(), "локация")
         if not location:
             return
 
-        # Тип движение
-        movement_type = input("0  Доставка (IN), 1  Продажба (OUT): ").strip()
+        print("\n0 - Доставка (IN)")
+        print("1 - Продажба (OUT)")
+        movement_type_choice = input("Избор: ").strip()
+        movement_type = "IN" if movement_type_choice == "0" else "OUT"
 
-        # ❗ РАННА ПРОВЕРКА (контролерът решава, не View)
         try:
             self.movement_controller.check_movement_allowed(
                 product_id=product.product_id,
@@ -58,7 +75,6 @@ class MovementView:
             print("Грешка:", e)
             return
 
-        # Въвеждане на данни
         quantity = input("Количество: ")
         price = input("Цена: ")
         description = input("Описание: ")
@@ -66,15 +82,18 @@ class MovementView:
         supplier_id = None
         customer = None
 
-        if movement_type == "0":  # IN
-            supplier_id = self.movement_controller.select_supplier()
-            if supplier_id is None:
+        if movement_type == "IN":
+            if self.supplier_controller:
+                supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
+                if supplier:
+                    supplier_id = supplier.supplier_id
+            else:
+                print("Грешка: Липсва контролер за доставчици.")
                 return
 
-        if movement_type == "1":  # OUT
+        if movement_type == "OUT":
             customer = input("Име на клиент: ").strip() or None
 
-        # Извикване на контролера
         try:
             movement = self.movement_controller.add(
                 product_id=product.product_id,
@@ -97,15 +116,15 @@ class MovementView:
     def move_between_locations(self, user):
         print("\n   Преместване между локации (MOVE)   ")
 
-        product = self.movement_controller.select_product()
+        product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
 
-        from_loc = self.movement_controller.select_location("ИЗХОДНА локация")
+        from_loc = self._select_item(self.location_controller.get_all(), "ИЗХОДНА локация")
         if not from_loc:
             return
 
-        to_loc = self.movement_controller.select_location("ЦЕЛЕВА локация")
+        to_loc = self._select_item(self.location_controller.get_all(), "ЦЕЛЕВА локация")
         if not to_loc:
             return
 
@@ -116,8 +135,8 @@ class MovementView:
             movement = self.movement_controller.move_product(
                 product_id=product.product_id,
                 user_id=user.user_id,
-                from_location_id=from_loc.location_id,
-                to_location_id=to_loc.location_id,
+                from_loc=from_loc.location_id,
+                to_loc=to_loc.location_id,
                 quantity=quantity,
                 description=description
             )
@@ -129,14 +148,23 @@ class MovementView:
 
     # Търсене
     def search_movements(self, _):
-        keyword = input("Търси по описание: ").strip().lower()
+        keyword = input("Търси по описание (мин. 3 символа): ").strip()
+
+        # ✔ Проверка за минимум 3 символа
+        if len(keyword) < 3:
+            print("Моля, въведете поне 3 символа за търсене.")
+            return
+
         results = self.movement_controller.search_by_description(keyword)
         if not results:
             print("Няма намерени движения.")
             return
 
         for m in results:
-            print(self.movement_controller.format_movement(m))
+            print(f"[{m.date}] {m.movement_type.name} - {m.quantity} {m.unit}")
+            print("Описание:")
+            print(m.description)
+            print("-" * 45)
 
     # Всички движения
     def show_all(self, _):
@@ -146,15 +174,25 @@ class MovementView:
             return
 
         for m in movements:
-            print(self.movement_controller.format_movement(m))
+            print(f"ID: {m.movement_id} | {m.date} | {m.movement_type.name} | {m.quantity} {m.unit}")
 
     # Разширено филтриране
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
 
-        movement_type = input("Тип движение (0=IN, 1=OUT, 2=MOVE) или Enter: ").strip() or None
-        start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip()
-        end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip()
+        print("0=IN, 1=OUT, 2=MOVE")
+        m_type_input = input("Тип движение или Enter: ").strip() or None
+
+        movement_type = None
+        if m_type_input == "0":
+            movement_type = "IN"
+        elif m_type_input == "1":
+            movement_type = "OUT"
+        elif m_type_input == "2":
+            movement_type = "MOVE"
+
+        start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip() or None
+        end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip() or None
         product_id = input("ID на продукт или Enter: ").strip() or None
         location_id = input("ID на локация или Enter: ").strip() or None
         user_id = input("ID на потребител или Enter: ").strip() or None
@@ -173,4 +211,4 @@ class MovementView:
             return
 
         for m in results:
-            print(self.movement_controller.format_movement(m))
+            print(f"[{m.date}] {m.movement_type.name} | Продукт: {m.product_id} | Сума: {m.price}")
