@@ -211,8 +211,32 @@
         "product_id": "b74e9d24-f831-434b-86b3-8451ee3cd737",
         "product": "череши",
         "warehouse": "W2",
-        "quantity": 6.0,
+        "quantity": 5.0,
         "created": "2026-04-14 13:12:45",
-        "modified": "2026-04-14 13:12:45"
+        "modified": "2026-04-14 22:21:27"
+    },
+    {
+        "product_id": "d8effa46-27b6-454b-b8a9-e7bafe66e85c",
+        "product": "био ягоди",
+        "warehouse": "W1",
+        "quantity": 9.0,
+        "created": "2026-04-14 21:58:45",
+        "modified": "2026-04-14 21:58:45"
+    },
+    {
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "product": "Ананас",
+        "warehouse": "W1",
+        "quantity": 11.0,
+        "created": "2026-04-14 22:16:35",
+        "modified": "2026-04-14 22:19:09"
+    },
+    {
+        "product_id": "3bab61f1-cad2-4391-93b7-0047a82322dd",
+        "product": "Ананас",
+        "warehouse": "W3",
+        "quantity": 1.0,
+        "created": "2026-04-14 22:19:09",
+        "modified": "2026-04-14 22:19:09"
     }
 ]

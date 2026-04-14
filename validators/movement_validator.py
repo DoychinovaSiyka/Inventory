@@ -15,7 +15,7 @@ class MovementValidator:
         if mt not in ("IN", "OUT", "MOVE"):
             raise ValueError("Невалиден тип движение.")
 
-    # ✔️ ДОБАВЕНО — методът, който липсваше и причиняваше грешката
+
     @staticmethod
     def parse_movement_type(raw_type: str):
         raw_type = raw_type.strip()
@@ -39,7 +39,7 @@ class MovementValidator:
 
         desc = description.strip()
 
-        # ✔️ НОВО — минимум 3 символа
+
         if len(desc) < 3:
             raise ValueError("Описанието трябва да е поне 3 символа.")
 

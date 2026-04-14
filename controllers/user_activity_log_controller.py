@@ -21,23 +21,24 @@ class UserActivityLogController:
     def add_log(self, user_id, action, details=""):
         # Създаваме лог записа чрез модела
         log_entry = UserActivityLog(user_id, action, details).to_dict()
-
-        # Добавяме уникално log_id (преди беше null)
+        # Добавяме уникално log_id
         log_entry["log_id"] = self._generate_log_id()
 
         # Зареждаме текущите записи
         data = self.repo.get_all()
+        if not isinstance(data, list):
+            data = []  # защита при повреден или празен JSON
 
         # Добавяме новия запис
         data.append(log_entry)
-
         # Записваме обратно в JSON файла
         self.repo.save(data)
 
     # READ
     def get_all_logs(self):
         # Връща всички логове от JSON файла
-        return self.repo.get_all()
+        data = self.repo.get_all()
+        return data if isinstance(data, list) else []
 
 
 # UserActivityLogController е единственият контролер, който не използва dependency injection.

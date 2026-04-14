@@ -5,15 +5,15 @@
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "quantity": 37.0,
+        "quantity": 47.0,
         "unit": "бр.",
         "description": "екзотичен плод",
         "price": 5.66,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W4",
+        "location_id": "W1",
         "created": "2026-04-03 09:26:25.251575",
-        "modified": "2026-04-13 23:23:43"
+        "modified": "2026-04-14 22:16:35"
     },
     {
         "product_id": "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11",
@@ -53,7 +53,7 @@
         "categories": [
             "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
         ],
-        "quantity": 20.0,
+        "quantity": 15.0,
         "unit": "кг",
         "description": "зелен лук",
         "price": 0.34,
@@ -61,7 +61,7 @@
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-07 09:21:59.794094",
-        "modified": "2026-03-14 17:31:45"
+        "modified": "2026-04-14 20:54:16"
     },
     {
         "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
@@ -97,19 +97,19 @@
     },
     {
         "product_id": "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66",
-        "name": "кафе 3 в 1",
+        "name": "кафе \"Нова Бразилия\"",
         "categories": [
             "sub-bezalko-002"
         ],
-        "quantity": 78.0,
+        "quantity": 80.0,
         "unit": "бр.",
-        "description": "разтворима напитка",
-        "price": 3.21,
+        "description": "Кафе „Нова Бразилия“ е плътно, ароматно и добре балансирано кафе с наситен вкус, подходящо за ежедневна консумация и приготвяне на различни топли напитки.",
+        "price": 4.09,
         "supplier_id": null,
         "tags": [],
         "location_id": "W1",
         "created": "2026-02-13 19:25:25.693245",
-        "modified": "2026-04-02 21:13:59"
+        "modified": "2026-04-14 20:47:52"
     },
     {
         "product_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
@@ -142,22 +142,6 @@
         "location_id": "W1",
         "created": "2026-02-02 12:15:03",
         "modified": "2026-02-06 16:24:32.947563"
-    },
-    {
-        "product_id": "e1568d65-c481-4b52-8fb8-5c6a45870fe5",
-        "name": "пица",
-        "categories": [
-            "new-pastry-001"
-        ],
-        "quantity": 56.0,
-        "unit": "бр.",
-        "description": "тестено изделие",
-        "price": 3.09,
-        "supplier_id": null,
-        "tags": [],
-        "location_id": "W5",
-        "created": "2026-04-03 22:28:03.346406",
-        "modified": "2026-04-03 22:28:03.346406"
     },
     {
         "product_id": "c1e7f9a3-4b2d-4e0f-9c8a-3d5f7b1a6c88",
@@ -277,7 +261,7 @@
         "categories": [
             "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "quantity": 40.0,
+        "quantity": 29.0,
         "unit": "кг",
         "description": "свежи сезонни череши",
         "price": 4.54,
@@ -285,6 +269,22 @@
         "tags": [],
         "location_id": "W2",
         "created": "2026-04-05 18:10:52.152002",
-        "modified": "2026-04-14 13:12:45"
+        "modified": "2026-04-14 22:21:27"
+    },
+    {
+        "product_id": "d8effa46-27b6-454b-b8a9-e7bafe66e85c",
+        "name": "био ягоди",
+        "categories": [
+            "b5ad5404-91e5-42e2-99c4-508bed75024c"
+        ],
+        "quantity": 24.0,
+        "unit": "кг.",
+        "description": "Био ягодите са свежи, ароматни плодове, отглеждани без пестициди и изкуствени торове. Те имат естествено сладко-кисел вкус, високо съдържание на витамини и антиоксиданти и са подходящи за здравословно хранене.",
+        "price": 5.99,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-14T20:50:01.339123",
+        "modified": "2026-04-14 21:58:45"
     }
 ]

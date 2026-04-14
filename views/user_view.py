@@ -51,7 +51,7 @@ class UserView:
         email = input("Email: ")
         username = input("Потребителско име: ")
 
-        # ✔️ поправено — използва се input_password, което е импортирано
+        #  използва се input_password, което е импортирано
         password = input_password("Парола: ")  # скрито въвеждане
 
         role = input("Роля (Admin/Operator): ")
@@ -68,7 +68,6 @@ class UserView:
         new_role = input("Нова роля (Admin/Operator): ")
 
         try:
-            # ✔️ поправено — премахнат е грешният параметър "user"
             self.controller.change_role(username, new_role)
             print("Ролята е променена.")
         except ValueError as e:
@@ -77,7 +76,6 @@ class UserView:
     # Деактивиране на потребител
     def deactivate_user(self, user):
         username = input("Потребителско име: ")
-
         try:
             self.controller.change_status(user, username, "Inactive")
             print("Потребителят е деактивиран.")
@@ -87,7 +85,6 @@ class UserView:
     # Активиране на потребител
     def activate_user(self, user):
         username = input("Потребителско име: ")
-
         try:
             self.controller.change_status(user, username, "Active")
             print("Потребителят е активиран.")
@@ -97,7 +94,6 @@ class UserView:
     # Изтриване на потребител
     def delete_user(self, user):
         username = input("Потребителско име за изтриване: ")
-
         try:
             self.controller.delete_user(user, username)
             print("Потребителят е изтрит.")

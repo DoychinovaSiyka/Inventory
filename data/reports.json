@@ -1,15 +1,15 @@
 [
     {
-        "report_id": "0f6145eb-b6d9-4af1-a29c-755776da5973",
+        "report_id": "808aaaa9-96eb-410b-a20f-23d03bf91019",
         "report_type": "stock",
-        "generated_on": "2026-04-14 13:58:56",
+        "generated_on": "2026-04-14 22:46:07",
         "parameters": {},
         "data": [
             {
                 "product": "Ананас",
-                "quantity": 37.0,
+                "quantity": 47.0,
                 "price": 5.66,
-                "location": "Склад Бургас"
+                "location": "Склад София"
             },
             {
                 "product": "бира \"Siyka\"",
@@ -25,7 +25,7 @@
             },
             {
                 "product": "зелен лук",
-                "quantity": 20.0,
+                "quantity": 15.0,
                 "price": 0.34,
                 "location": "Склад София"
             },
@@ -42,9 +42,9 @@
                 "location": "Склад София"
             },
             {
-                "product": "кафе 3 в 1",
-                "quantity": 78.0,
-                "price": 3.21,
+                "product": "кафе \"Нова Бразилия\"",
+                "quantity": 80.0,
+                "price": 4.09,
                 "location": "Склад София"
             },
             {
@@ -58,12 +58,6 @@
                 "quantity": 117.0,
                 "price": 6.99,
                 "location": "Склад София"
-            },
-            {
-                "product": "пица",
-                "quantity": 56.0,
-                "price": 3.09,
-                "location": "Магазин Смолян"
             },
             {
                 "product": "Подправки микс",
@@ -109,16 +103,22 @@
             },
             {
                 "product": "череши",
-                "quantity": 40.0,
+                "quantity": 29.0,
                 "price": 4.54,
                 "location": "Склад Пловдив"
+            },
+            {
+                "product": "био ягоди",
+                "quantity": 24.0,
+                "price": 5.99,
+                "location": "Склад София"
             }
         ]
     },
     {
-        "report_id": "f2613fcf-3993-42b1-9ded-cb1bf1672247",
+        "report_id": "acc1e82b-0f27-4a99-8c94-26356e1fe754",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-14 13:58:56",
+        "generated_on": "2026-04-14 22:46:07",
         "parameters": {},
         "data": [
             {
@@ -130,19 +130,29 @@
                 "date": "2026-04-13",
                 "total": 85.08,
                 "count": 1
+            },
+            {
+                "date": "2026-04-14",
+                "total": 3.99,
+                "count": 1
             }
         ]
     },
     {
-        "report_id": "28c83f56-1075-4a0c-b9cf-c994e831d785",
+        "report_id": "2811bc55-df7f-4bea-8d2e-417a2ba6e636",
         "report_type": "top_products",
-        "generated_on": "2026-04-14 13:58:56",
+        "generated_on": "2026-04-14 22:46:07",
         "parameters": {},
         "data": [
             {
                 "product": "Ананас",
                 "quantity": 40.0,
                 "total": 308.8
+            },
+            {
+                "product": "череши",
+                "quantity": 1.0,
+                "total": 3.99
             }
         ]
     }

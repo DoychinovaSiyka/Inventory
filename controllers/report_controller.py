@@ -2,15 +2,17 @@ from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
 
-# Всички функции за преработка на данни
+# Филтри – изнесени в отделен пакет
 from filters.report_filters import (
     filter_out_invoices, filter_movements_by_product,
     group_turnover_by_day, group_top_products
 )
 
+
 class ReportController:
     def __init__(self, repo: JSONRepository, product_controller,
                  movement_controller, invoice_controller, location_controller):
+
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -40,6 +42,7 @@ class ReportController:
     def report_stock(self):
         data = []
         products = self.product_controller.get_all()
+
         for p in products:
             loc = self.location_controller.get_by_id(p.location_id)
             data.append({
@@ -48,6 +51,7 @@ class ReportController:
                 "price": round(float(p.price), 2),
                 "location": loc.name if loc else "Няма склад"
             })
+
         return self._create_report("stock", {}, data)
 
     # СПРАВКА 2: Движения
@@ -55,28 +59,40 @@ class ReportController:
         """ Генерира отчет за всички движения в склада. """
         movements = self.movement_controller.get_all()
         data = []
+
         for m in movements:
             product = self.product_controller.get_by_id(m.product_id)
+            product_name = product.name if product else "Неизвестен продукт"
+
+            loc = self.location_controller.get_by_id(m.location_id)
+            location_name = loc.name if loc else "Неизвестен склад"
+
             data.append({
                 "date": m.date,
                 "type": m.movement_type.name,
-                "product": product.name if product else "N/A",
+                "movement_id": m.movement_id,
                 "quantity": m.quantity,
-                "description": m.description
+                "price": getattr(m, "price", None),
+                "location_name": location_name
             })
+
         return self._create_report("movements_history", {}, data)
 
     # СПРАВКА 3: Обороти
     def report_turnover_by_day(self):
-        invoices = filter_out_invoices(self.invoice_controller.invoices,
-                                       self.movement_controller.movements)
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
         data = group_turnover_by_day(invoices)
         return self._create_report("turnover_by_day", {}, data)
 
     # СПРАВКА 4: Топ продукти
     def report_top_products(self):
-        invoices = filter_out_invoices(self.invoice_controller.invoices,
-                                       self.movement_controller.movements)
+        invoices = filter_out_invoices(
+            self.invoice_controller.invoices,
+            self.movement_controller.movements
+        )
         data = group_top_products(invoices)
         return self._create_report("top_products", {}, data)
 
@@ -88,19 +104,19 @@ class ReportController:
 
         for inv in invoices:
             movement = self.movement_controller.get_by_id(inv.movement_id)
+
             product_name = "N/A"
             if movement:
                 product = self.product_controller.get_by_id(movement.product_id)
                 product_name = product.name if product else "Изтрит продукт"
 
-            # Безопасно взимане на номер на фактура
-            inv_num = getattr(inv, 'invoice_id', getattr(inv, 'number', getattr(inv, 'invoice_number', 'N/A')))
+            inv_num = getattr(inv, 'invoice_id',
+                       getattr(inv, 'number',
+                       getattr(inv, 'invoice_number', 'N/A')))
 
-            # ПРОВЕРКА ЗА ИМЕ НА КЛИЕНТ
-            client = getattr(inv, 'customer_name', getattr(inv, 'customer', 'Неизвестен'))
+            client = getattr(inv, 'customer_name',
+                      getattr(inv, 'customer', 'Неизвестен'))
 
-            # ✔ КОРЕКЦИЯ: total_amount → total_price
-            # ✔ КОРЕКЦИЯ: tax_amount → 0 (нямаш данъци в модела)
             total = round(float(getattr(inv, "total_price", 0)), 2)
 
             data.append({
@@ -120,25 +136,17 @@ class ReportController:
         data = []
 
         for inv in self.invoice_controller.invoices:
-            # директно име на клиент
             client_name = inv.customer.lower() if inv.customer else ""
-
             if customer not in client_name:
                 continue
-
-            # директно име на продукт
-            product_name = inv.product
-
-            # директно номер на фактура
-            inv_num = inv.invoice_id
 
             total = round(float(inv.total_price), 2)
 
             data.append({
-                "invoice_number": inv_num,
+                "invoice_number": inv.invoice_id,
                 "date": inv.date,
                 "client": inv.customer,
-                "product": product_name,
+                "product": inv.product,
                 "total_amount": total
             })
 
@@ -153,11 +161,10 @@ class ReportController:
             if product_name not in inv.product.lower():
                 continue
 
-            inv_num = inv.invoice_id
             total = round(float(inv.total_price), 2)
 
             data.append({
-                "invoice_number": inv_num,
+                "invoice_number": inv.invoice_id,
                 "date": inv.date,
                 "client": inv.customer,
                 "product": inv.product,
@@ -174,11 +181,10 @@ class ReportController:
             if not inv.date.startswith(date_str):
                 continue
 
-            inv_num = inv.invoice_id
             total = round(float(inv.total_price), 2)
 
             data.append({
-                "invoice_number": inv_num,
+                "invoice_number": inv.invoice_id,
                 "date": inv.date,
                 "client": inv.customer,
                 "product": inv.product,
@@ -191,20 +197,16 @@ class ReportController:
     def report_all_deliveries(self):
         data = []
 
-        # взимаме всички движения
         for m in self.movement_controller.movements:
             if m.movement_type.name != "IN":
                 continue
 
-            # продукт
             product = self.product_controller.get_by_id(m.product_id)
             product_name = product.name if product else "Неизвестен продукт"
 
-            # склад
             loc = self.location_controller.get_by_id(m.location_id)
             location_name = loc.name if loc else "Неизвестен склад"
 
-            # доставчик (ако имаш supplier_controller)
             supplier_name = "-"
             if hasattr(self.movement_controller, "supplier_controller"):
                 if m.supplier_id:
@@ -228,28 +230,21 @@ class ReportController:
         data = []
 
         for m in self.movement_controller.movements:
-            # взимаме само доставки
             if m.movement_type.name != "IN":
                 continue
-            # продукт
+
             product = self.product_controller.get_by_id(m.product_id)
-            if product:
-                product_name = product.name
-            else:
-                product_name = "Неизвестен продукт"
-            # склад
+            product_name = product.name if product else "Неизвестен продукт"
+
             loc = self.location_controller.get_by_id(m.location_id)
-            if loc:
-                location_name = loc.name
-            else:
-                location_name = "Неизвестен склад"
-            # доставчик
+            location_name = loc.name if loc else "Неизвестен склад"
+
             supplier_name = "-"
             if hasattr(m, "supplier_id") and m.supplier_id:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
                 if supplier:
                     supplier_name = supplier.name
-            # филтър по ID, продукт, доставчик, дата
+
             if (keyword in m.movement_id.lower() or
                 keyword in product_name.lower() or
                 keyword in supplier_name.lower() or

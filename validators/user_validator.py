@@ -2,92 +2,47 @@ import re
 
 
 class UserValidator:
-
-    # USERNAME
     @staticmethod
-    def validate_username(username: str):
-        if not username or not str(username).strip():
-            raise ValueError("Потребителското име е задължително.")
+    def validate_user_data(username: str, password: str, email: str, role: str, status: str):
+        """ Основна валидация при регистрация или редакция. """
+        if not username or len(username.strip()) < 3:
+            raise ValueError("Потребителското име трябва да е поне 3 символа.")
 
-        clean_username = str(username).strip()
-        if len(clean_username) < 3 or len(clean_username) > 20:
-            raise ValueError("Потребителското име трябва да е между 3 и 20 символа.")
+        # Проверка за сила на паролата
+        if len(password) < 6:
+            raise ValueError("Паролата трябва да бъде поне 6 символа.")
+        if password.isdigit() or password.isalpha():
+            raise ValueError("Паролата трябва да съдържа и букви, и цифри.")
 
-        if " " in clean_username:
-            raise ValueError("Потребителското име не може да съдържа интервали.")
+        # Проверка на имейл формат
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not re.match(email_regex, email):
+            raise ValueError(f"Невалиден формат на имейл: {email}")
 
-        return clean_username
+        # Проверка за валидна роля и статус
+        if role not in ["Admin", "Operator", "Anonymous"]:
+            raise ValueError("Невалидна роля на потребител.")
 
-    # PASSWORD (минимум 6 символа)
-    @staticmethod
-    def validate_password(password: str):
-        if not password:
-            raise ValueError("Паролата е задължителна.")
+        allowed_statuses = ["Active", "Inactive", "Blocked"]
+        if status not in allowed_statuses:
+            raise ValueError(f"Невалиден статус. Позволени: {', '.join(allowed_statuses)}")
 
-        if len(str(password)) < 6:
-            raise ValueError("Паролата трябва да е поне 6 символа.")
-
-        return password  # Паролата не я тримваме, защото интервалите може да са част от нея
-
-    # EMAIL (валиден формат)
-    @staticmethod
-    def validate_email(email: str):
-        if not email:
-            raise ValueError("Имейлът е задължителен.")
-
-        clean_email = str(email).strip().lower()
-        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-
-        if not re.match(pattern, clean_email):
-            raise ValueError("Невалиден имейл адрес.")
-
-        return clean_email
-
-    # ROLE (Admin, Operator, Anonymous)
-    @staticmethod
-    def validate_role(role: str):
-        valid_roles = ["Admin", "Operator", "Anonymous"]
-        clean_role = str(role).strip()
-
-        if clean_role not in valid_roles:
-            raise ValueError(f"Невалидна роля. Позволени роли: {valid_roles}")
-
-        return clean_role
-
-    # STATUS (Active, Disabled, Inactive)
-    @staticmethod
-    def validate_status(status: str):
-        # Добавихме 'Inactive', тъй като го ползваш в контролера
-        valid_status = ["Active", "Disabled", "Inactive"]
-        clean_status = str(status).strip()
-
-        if clean_status not in valid_status:
-            raise ValueError(f"Невалиден статус. Позволени: {valid_status}")
-
-        return clean_status
-
-    # ГРУПОВА ВАЛИДАЦИЯ
-    @staticmethod
-    def validate_user_data(username, password, email, role, status):
-        UserValidator.validate_username(username)
-        UserValidator.validate_password(password)
-        UserValidator.validate_email(email)
-        UserValidator.validate_role(role)
-        UserValidator.validate_status(status)
-        return True
-
-    # ПРОВЕРКА ЗА АДМИН
     @staticmethod
     def confirm_admin(user):
-        """ Проверява дали потребителят има администраторски права. """
-        if not user or str(user.role) != "Admin":
-            raise PermissionError("Тази операция е достъпна само за администратори.")
-        return True
+        """ Проверка дали потребителят има права за административни действия. """
+        if not user or user.role != "Admin":
+            raise PermissionError("Действието изисква администраторски права!")
 
-    # ЗАЩИТА ОТ САМОУНИЩОЖЕНИЕ
     @staticmethod
-    def validate_not_self(acting_username, target_username):
-        """ Предотвратява админ да деактивира/изтрие себе си. """
-        if str(acting_username) == str(target_username):
-            raise ValueError("Не можете да извършите тази операция върху собствения си акаунт.")
-        return True
+    def validate_not_self(current_user_username: str, target_username: str):
+        """ Предотвратява самонараняване (триене на собствения профил). """
+        if current_user_username == target_username:
+            raise ValueError("Не можете да извършите това действие върху собствения си профил!")
+
+    @staticmethod
+    def validate_not_last_admin(target_user, all_users):
+        """ Критична проверка: Предотвратява премахването на последния админ. """
+        if target_user.role == "Admin":
+            admins = [u for u in all_users if u.role == "Admin"]
+            if len(admins) <= 1:
+                raise ValueError("Критична грешка: Не можете да премахнете последния администратор в системата!")

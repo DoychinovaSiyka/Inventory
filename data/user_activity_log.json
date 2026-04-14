@@ -819,185 +819,45 @@
         "timestamp": "2026-04-14 12:20:33"
     },
     {
-        "log_id": "979bd626-ec8e-42d4-b691-6196b8ad40d7",
+        "log_id": "b395aa75-4c31-446a-9574-5ebe70bbc9c7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "Product: био ягоди, Qty: 9.0",
+        "timestamp": "2026-04-14 21:58:45"
+    },
+    {
+        "log_id": "1f290a95-741d-4575-9c00-876afd747f7f",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:21:46"
+        "timestamp": "2026-04-14 22:09:02"
     },
     {
-        "log_id": "ca38dff2-7720-4be8-8790-e637289e90a0",
+        "log_id": "a2c540ad-91e6-4c91-a94f-95c139dd92f5",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:23:56"
+        "action": "IN_MOVEMENT",
+        "details": "Product: Ананас, Qty: 12.0",
+        "timestamp": "2026-04-14 22:16:35"
     },
     {
-        "log_id": "e0b996ee-e1dd-4641-9137-28ca26399fac",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:26:02"
-    },
-    {
-        "log_id": "93eb235e-4513-446b-a458-85e33b27569d",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:31:07"
-    },
-    {
-        "log_id": "e23d73ec-3c4f-4651-987d-983c33f2dc21",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:36:38"
-    },
-    {
-        "log_id": "2554e519-361d-483d-a7d5-b291280dbfbd",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 12:40:44"
-    },
-    {
-        "log_id": "5d6c05db-b64a-4546-acd7-18b3a7c911a1",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:00:50"
-    },
-    {
-        "log_id": "5f500171-8f64-41f4-84df-d4b2e11558d2",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:03:54"
-    },
-    {
-        "log_id": "385ed0b6-46eb-41a2-8709-5877fb6ff9a7",
+        "log_id": "9097bedf-de3a-4ace-b659-9a05b764afd5",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "action": "MOVE_PRODUCT",
-        "details": "Moved сладолед \"Family\" from W1 to W4",
-        "timestamp": "2026-04-14 13:05:12"
+        "details": "Moved Ананас from W1 to W3",
+        "timestamp": "2026-04-14 22:19:09"
     },
     {
-        "log_id": "d70bf83e-f750-4531-9e75-d1a0674e4da2",
+        "log_id": "353e3a1b-0939-4807-b165-5dabe78b6d34",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: череши, Qty: 1.0",
+        "timestamp": "2026-04-14 22:21:27"
+    },
+    {
+        "log_id": "d637c770-a0b9-4914-a806-ff486a020407",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:09:14"
-    },
-    {
-        "log_id": "7256aa3b-b27d-4222-b330-dfc87dcdf28e",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "IN_MOVEMENT",
-        "details": "Product: шоколад \"Kinder\", Qty: 89.0",
-        "timestamp": "2026-04-14 13:10:31"
-    },
-    {
-        "log_id": "06f1dada-317f-49b9-b364-509344fac8cb",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "IN_MOVEMENT",
-        "details": "Product: череши, Qty: 6.0",
-        "timestamp": "2026-04-14 13:12:45"
-    },
-    {
-        "log_id": "b70a0719-8266-48bd-b783-ca93295cd238",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:19:58"
-    },
-    {
-        "log_id": "d809889d-2d0e-4671-8b95-b5d8e1185be4",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:23:26"
-    },
-    {
-        "log_id": "113ac3c3-a40f-4eea-abda-6010f5ad84c0",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:34:12"
-    },
-    {
-        "log_id": "603a04cb-7aeb-4a80-9515-200c0be67b00",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGOUT",
-        "details": "Потребител admin излезе.",
-        "timestamp": "2026-04-14 13:40:02"
-    },
-    {
-        "log_id": "44f98000-8840-4c54-b7c0-593a5672bf80",
-        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
-        "action": "LOGIN",
-        "details": "Потребител operator влезе.",
-        "timestamp": "2026-04-14 13:40:39"
-    },
-    {
-        "log_id": "b1c5f857-6929-457a-ab69-d8a6986c37f0",
-        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
-        "action": "LOGOUT",
-        "details": "Потребител operator излезе.",
-        "timestamp": "2026-04-14 13:41:02"
-    },
-    {
-        "log_id": "6e88a53d-ed1e-492c-a59d-89aafa82c557",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:47:27"
-    },
-    {
-        "log_id": "d9fc52f8-0cde-4ca0-a384-60a48b58a4e9",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGOUT",
-        "details": "Потребител admin излезе.",
-        "timestamp": "2026-04-14 13:51:12"
-    },
-    {
-        "log_id": "b82cab50-41d9-4dd3-b4fd-5317cb5e13db",
-        "user_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
-        "action": "LOGIN",
-        "details": "Потребител ivan влезе.",
-        "timestamp": "2026-04-14 13:51:21"
-    },
-    {
-        "log_id": "8c934a06-1a1e-4078-9330-56c2090a0bbd",
-        "user_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
-        "action": "LOGOUT",
-        "details": "Потребител ivan излезе.",
-        "timestamp": "2026-04-14 13:51:32"
-    },
-    {
-        "log_id": "82a7370a-318d-4405-bfe0-9879c6c90e28",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:51:38"
-    },
-    {
-        "log_id": "7a959368-a54e-4412-ba07-eadc6eeac9a5",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:53:46"
-    },
-    {
-        "log_id": "3fb4465b-e05f-4809-8742-f95341170562",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:56:54"
-    },
-    {
-        "log_id": "e200523b-8c12-4a4e-b267-041267157327",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-14 13:59:04"
+        "timestamp": "2026-04-14 22:46:15"
     }
 ]

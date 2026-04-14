@@ -4,10 +4,16 @@ class Supplier:
         Модел за доставчик.
         Датите (created/modified) идват от контролера.
         """
+
+        # ID-то винаги е текст
         self.supplier_id = str(supplier_id)
+
+        # Основни данни
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
+
+        # Дати – подават се от контролера
         self.created = created
         self.modified = modified
 
@@ -23,6 +29,9 @@ class Supplier:
 
     @staticmethod
     def from_dict(d):
+        if not d:
+            return None
+
         return Supplier(
             supplier_id=d.get("supplier_id"),
             name=d.get("name", ""),
@@ -31,3 +40,6 @@ class Supplier:
             created=d.get("created"),
             modified=d.get("modified")
         )
+
+    def __str__(self):
+        return f"Доставчик: {self.name} | Контакт: {self.contact}"

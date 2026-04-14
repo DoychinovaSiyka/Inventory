@@ -6,7 +6,6 @@ from validators.inventory_validator import InventoryValidator
 
 class InventoryController:
     """ Управлява наличностите по складове. """
-
     def __init__(self, repo: JSONRepository):
         self.repo = repo
         self.stock: List[Dict] = self.repo.load() or []
@@ -106,4 +105,4 @@ class InventoryController:
                 except:
                     pass
 
-        self.save()  # Записваме финалния резултат само веднъж!
+        self.save()  # Записваме финалния резултат веднъж

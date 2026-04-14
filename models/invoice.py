@@ -4,20 +4,19 @@ from validators.invoice_validator import InvoiceValidator
 
 class Invoice:
     def __init__(self, invoice_id, movement_id, product, quantity, unit,
-                 unit_price, total_price, customer, date, created=None, modified=None):
-        # 1. Присвояване на стойности (Чист контейнер)
-        # Вече не генерираме UUID тук - контролерът ни го подава
+                 unit_price, total_price, customer, date,
+                 created=None, modified=None):
+
+        # 1. Присвояване на стойности (Чист контейнер) няма UUID тук – Контролерът ни го подава
         self.invoice_id = str(invoice_id) if invoice_id else None
         self.movement_id = str(movement_id) if movement_id else None
-
         self.product = product
         self.customer = customer
         self.quantity = quantity
         self.unit = unit
         self.unit_price = unit_price
         self.total_price = total_price
-
-        # Дати - синхронизирани с останалите модели
+        # Дати – синхронизирани с останалите модели
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
@@ -58,6 +57,9 @@ class Invoice:
     @staticmethod
     def from_dict(data):
         """Създаване на Invoice от JSON речник."""
+        if not data:
+            return None
+
         return Invoice(
             invoice_id=data.get("invoice_id"),
             movement_id=data.get("movement_id"),

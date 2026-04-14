@@ -60,7 +60,6 @@ def filter_by_date_range(invoices: List[Invoice],
 
     start = _parse_invoice_date(start_date) if start_date else None
     end = _parse_invoice_date(end_date) if end_date else None
-
     filtered = []
     for inv in invoices:
         inv_date = _parse_invoice_date(inv.date)

@@ -66,7 +66,7 @@ class OperatorMenuView:
         view = self._open_view(CategoryView, self.category_controller)
         view.show_menu(user)
 
-    #  Движения — операторът трябва да има достъп - НЕ защитаваме
+    #  Движения — операторът трябва да има достъп - не защитаваме
     def open_movements(self, user):
         view = self._open_view(MovementView,self.product_controller,
                                self.movement_controller, self.user_controller,
@@ -85,7 +85,7 @@ class OperatorMenuView:
         view = self._open_view(InvoiceView, self.invoice_controller, self.activity_log)
         view.show_menu(user)
 
-    #  Информация за системата — публична - НЕ защитаваме
+    #  Информация за системата — публична - не защитаваме
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()

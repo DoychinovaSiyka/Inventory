@@ -130,12 +130,12 @@ class InvoiceView:
 
         results = self.invoice_controller.search_by_date(date_str)
 
-        # ✔️ Невалидна дата
+        # ️ Невалидна дата
         if results == "INVALID_DATE":
             print("\nНевалидна дата. Моля използвайте формат ГГГГ-ММ-ДД.\n")
             return
 
-        # ✔️ Валидна дата, но няма фактури
+        #  Валидна дата, но няма фактури
         if not results:
             print("Няма фактури за тази дата.")
             return

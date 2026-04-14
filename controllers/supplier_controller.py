@@ -52,9 +52,11 @@ class SupplierController:
         if name is not None:
             SupplierValidator.validate_name(name)
             supplier.name = name.strip()
+
         if contact is not None:
             SupplierValidator.validate_contact(contact)
             supplier.contact = contact.strip()
+
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()

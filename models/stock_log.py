@@ -4,13 +4,18 @@ class StockLog:
         Модел за лог запис.
         timestamp се подава винаги отвън (Controller), за да има синхрон.
         """
-        self.log_id = log_id
-        # Подсигуряваме типовете данни още при създаване
+
+        # ID-то идва от контролера (или JSON)
+        self.log_id = str(log_id) if log_id else None
+
+        # Основни данни – винаги в правилен тип
         self.product_id = str(product_id)
         self.location_id = str(location_id)
         self.quantity = float(quantity)
         self.unit = str(unit).strip()
         self.action = str(action).lower()
+
+        # Датата винаги идва отвън
         self.timestamp = timestamp
 
     def to_dict(self):
@@ -28,6 +33,9 @@ class StockLog:
     @staticmethod
     def from_dict(data):
         """Възстановява обекта от речник (JSON)."""
+        if not data:
+            return None
+
         return StockLog(
             log_id=data.get("log_id"),
             product_id=data.get("product_id"),
@@ -37,3 +45,6 @@ class StockLog:
             action=data.get("action"),
             timestamp=data.get("timestamp")
         )
+
+    def __str__(self):
+        return f"[{self.timestamp}] {self.action.upper()} | {self.product_id} @ {self.location_id} | {self.quantity} {self.unit}"

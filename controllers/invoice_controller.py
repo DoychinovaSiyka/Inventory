@@ -5,13 +5,8 @@ from storage.json_repository import JSONRepository
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
 
-from filters.invoice_filters import (
-    filter_by_customer,
-    filter_by_product,
-    filter_by_date,
-    filter_by_total_range,
-    filter_advanced
-)
+from filters.invoice_filters import (filter_by_customer, filter_by_product,
+                                     filter_by_date, filter_by_total_range, filter_advanced)
 
 
 class InvoiceController:
@@ -87,13 +82,8 @@ class InvoiceController:
         return filter_by_customer(self.invoices, keyword)
 
     def search_by_product(self, keyword: str) -> List[Invoice]:
-        """ Търсене по продукт — чисто, без getter-и. """
-        keyword = keyword.lower()
-        results = []
-        for inv in self.invoices:
-            if keyword in inv.product.lower():
-                results.append(inv)
-        return results
+        """ Търсене по продукт чрез външен филтър (консистентно с архитектурата). """
+        return filter_by_product(self.invoices, keyword)
 
     def search_by_date(self, date_str: str):
         """
@@ -101,13 +91,11 @@ class InvoiceController:
         - ако датата е невалидна → връща "INVALID_DATE"
         - ако е валидна → връща списък с фактури
         """
-        # Проверка за валидна дата
         try:
             datetime.strptime(date_str, "%Y-%m-%d")
         except ValueError:
             return "INVALID_DATE"
 
-        # Нормално търсене
         results = []
         for inv in self.invoices:
             if inv.date.startswith(date_str):
@@ -138,17 +126,16 @@ class InvoiceController:
         self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {invoice_id}")
         return True
 
-    # DELETE
+
     def remove(self, invoice_id: str, user_id: str) -> bool:
         original_len = len(self.invoices)
         self.invoices = [inv for inv in self.invoices if str(inv.invoice_id) != str(invoice_id)]
-
         if len(self.invoices) < original_len:
             self.save_changes()
             self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {invoice_id}")
             return True
         return False
 
-    # SAVE
+
     def save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])

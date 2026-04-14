@@ -3,6 +3,7 @@ from models.category import Category
 
 
 class ProductValidator:
+
     @staticmethod
     def validate_uuid(value, field_name="ID"):
         """Проверява дали стойността е валиден UUID."""
@@ -23,13 +24,31 @@ class ProductValidator:
             raise ValueError("Името на продукта трябва да съдържа поне 3 символа.")
 
     @staticmethod
+    def validate_description(description):
+        """Проверява описанието на продукта."""
+        if description is None:
+            return  # Описанието може да е незадължително
+
+        if not isinstance(description, str):
+            raise ValueError("Описанието трябва да бъде текстово поле.")
+
+        desc = description.strip()
+        if len(desc) < 3:
+            raise ValueError("Описанието трябва да съдържа поне 3 символа.")
+
+        if len(desc) > 1000:
+            raise ValueError("Описанието не може да надвишава 1000 символа.")
+
+    @staticmethod
     def validate_categories(categories):
         """Проверява списъка, като се оправя и с обекти, и със стрингове."""
         if not isinstance(categories, list):
             raise ValueError("Категориите трябва да са списък.")
 
+        if len(categories) == 0:
+            raise ValueError("Продуктът трябва да има поне една категория.")
+
         for c in categories:
-            # Тук е логиката, която махнахме от модела
             if isinstance(c, Category):
                 cid = str(c.category_id)
             else:
@@ -42,44 +61,104 @@ class ProductValidator:
     def validate_quantity(quantity):
         try:
             q = float(quantity)
-            if q < 0: raise ValueError()
-        except:
+            if q < 0:
+                raise ValueError()
+        except (ValueError, TypeError):
             raise ValueError("Количеството трябва да е положително число.")
 
     @staticmethod
     def validate_unit(unit):
+        """Мерната единица е задължителна."""
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
+
+        if len(unit.strip()) < 1:
+            raise ValueError("Мерната единица не може да бъде празна.")
 
     @staticmethod
     def validate_price(price):
         try:
             p = float(price)
-            if p < 0: raise ValueError()
-        except:
+            if p < 0:
+                raise ValueError()
+        except (ValueError, TypeError):
             raise ValueError("Цената трябва да е положително число.")
+
+    # централна функция за парсване на дробни числа
+    @staticmethod
+    def _parse_float_internal(value, field_name="стойност"):
+        """Вътрешен метод – парсва число, позволява запетая, връща float."""
+        if isinstance(value, str):
+            value = value.replace(",", ".").strip()
+
+        try:
+            f = float(value)
+        except (ValueError, TypeError):
+            raise ValueError(f"{field_name} трябва да е число.")
+
+        return round(f, 2)
+
+    @staticmethod
+    def parse_float(value, field_name="стойност"):
+        """Задължително число (за цена, количество, създаване/редакция)."""
+        f = ProductValidator._parse_float_internal(value, field_name)
+        if f < 0:
+            raise ValueError(f"{field_name} не може да е отрицателна.")
+        return f
+
+    @staticmethod
+    def parse_optional_float(value: str, field_name="стойност"):
+        """Позволява празно → None (за филтри и разширено търсене)."""
+        if value is None:
+            return None
+
+        value = value.strip()
+        if value == "":
+            return None
+
+        f = ProductValidator._parse_float_internal(value, field_name)
+        if f < 0:
+            raise ValueError(f"{field_name} не може да е отрицателна.")
+        return f
 
     @staticmethod
     def parse_int(value, field_name="стойност"):
         if value is None:
             raise ValueError(f"{field_name} е задължително поле.")
 
-        value = value.strip()
-        if not value.isdigit():
-            raise ValueError(f"{field_name} трябва да е цяло число.")
+        if isinstance(value, str):
+            value = value.strip()
+            if not value.isdigit():
+                raise ValueError(f"{field_name} трябва да е цяло число.")
 
-        return int(value)
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            raise ValueError(f"{field_name} трябва да е цяло число.")
 
     @staticmethod
     def validate_all(product_id, name, categories, quantity, unit, description, price,
                      location_id, supplier_id, tags):
         """Вика всички проверки подред."""
-        ProductValidator.validate_uuid(product_id, "Product ID")
-        ProductValidator.validate_uuid(supplier_id, "Supplier ID")
+
+        # UUID проверки
+        if product_id:
+            ProductValidator.validate_uuid(product_id, "Product ID")
+        if supplier_id:
+            ProductValidator.validate_uuid(supplier_id, "Supplier ID")
+
+        # Локациите НЕ са UUID → само проверяваме дали е текст
+        if location_id and not isinstance(location_id, str):
+            raise ValueError("Location ID трябва да е текст.")
+
+        # Основни полета
         ProductValidator.validate_name(name)
         ProductValidator.validate_categories(categories)
         ProductValidator.validate_quantity(quantity)
         ProductValidator.validate_unit(unit)
         ProductValidator.validate_price(price)
-        if not isinstance(location_id, str): raise ValueError("Локацията трябва да е текст.")
-        if not isinstance(tags, list): raise ValueError("Tags трябва да са списък.")
+        ProductValidator.validate_description(description)
+
+        # Tags
+        if tags is not None and not isinstance(tags, list):
+            raise ValueError("Tags трябва да са списък.")

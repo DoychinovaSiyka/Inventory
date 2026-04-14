@@ -4,8 +4,6 @@ from datetime import datetime
 from models.movement import Movement, MovementType
 from storage.json_repository import JSONRepository
 from validators.movement_validator import MovementValidator
-
-# Всички филтри отиват тук
 from filters.movement_filters import (filter_by_description, filter_advanced, filter_deliveries)
 
 
@@ -38,7 +36,6 @@ class MovementController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # --- ТОВА Е МЕТОДЪТ, КОЙТО ОПРАВЯ ГРЕШКАТА В MAIN.PY ---
     def attach_supplier_controller(self, supplier_controller):
         """ Свързва контролера за доставчици, ако не е подаден при инициализацията. """
         self.supplier_controller = supplier_controller
@@ -57,22 +54,45 @@ class MovementController:
         prc = MovementValidator.parse_price(price)
         MovementValidator.validate_description(description)
 
+        # Проверка за продукт
         product = self.product_controller.get_by_id(product_id)
+        if not product:
+            raise ValueError("Продуктът не е намерен.")
         MovementValidator.validate_product_exists(product_id, self.product_controller)
+
+        # Проверка за локация
+        location = self.location_controller.get_by_id(location_id)
+        if not location:
+            raise ValueError("Локацията не е намерена.")
+
+        # Бизнес правило: не може да доставя в същия склад, в който вече е продуктът
+        if m_type_enum == MovementType.IN and product.location_id and product.location_id == location_id:
+            raise ValueError("Не може да доставяте продукт в същата локация, в която вече се намира.")
+
+        # Бизнес правило: продажбата трябва да е от склада, в който е продуктът
+        if m_type_enum == MovementType.OUT and product.location_id and product.location_id != location_id:
+            raise ValueError("Продажбата трябва да е от склада, в който се намира продуктът.")
+
         MovementValidator.validate_in_out_rules(m_type_str, product, qty, supplier_id, customer)
 
         # 2. Логика за наличност (Stock Management)
         now = self._get_now()
+
         if m_type_enum == MovementType.IN:
             product.quantity += qty
             product.location_id = location_id
+
             if self.inventory_controller:
                 self.inventory_controller.increase_stock(product_id, product.name, location_id, qty)
+
             log_action = "add"
-        else:
+
+        else:  # OUT
             product.quantity -= qty
+
             if self.inventory_controller:
                 self.inventory_controller.decrease_stock(product_id, location_id, qty)
+
             log_action = "remove"
 
         product.update_modified()
@@ -83,7 +103,8 @@ class MovementController:
             movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
             location_id=location_id, movement_type=m_type_enum, quantity=qty,
             unit=product.unit, description=description, price=prc,
-            supplier_id=supplier_id, customer=customer, date=now, created=now, modified=now
+            supplier_id=supplier_id, customer=customer,
+            date=now, created=now, modified=now
         )
 
         self.movements.append(movement)
@@ -104,11 +125,22 @@ class MovementController:
 
         MovementValidator.validate_move_locations(from_loc, to_loc)
         qty = MovementValidator.parse_quantity(quantity)
+
+        # Проверка за продукт
         product = self.product_controller.get_by_id(product_id)
+        if not product:
+            raise ValueError("Продуктът не е намерен.")
+
+        # Проверка за локации
+        if not self.location_controller.get_by_id(from_loc):
+            raise ValueError("Началната локация не е намерена.")
+        if not self.location_controller.get_by_id(to_loc):
+            raise ValueError("Крайната локация не е намерена.")
 
         MovementValidator.validate_move_stock(product_id, from_loc, qty, self.inventory_controller)
 
         now = self._get_now()
+
         move_entry = Movement(
             movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
             location_id=to_loc, movement_type=MovementType.MOVE, quantity=qty,
@@ -120,7 +152,9 @@ class MovementController:
         self.movements.append(move_entry)
         self.save_changes()
 
-        self.inventory_controller.move_stock(product_id, product.name, from_loc, to_loc, qty)
+        if self.inventory_controller:
+            self.inventory_controller.move_stock(product_id, product.name, from_loc, to_loc, qty)
+
         self.stocklog_controller.add_log(product_id, from_loc, qty, product.unit, "move_out")
         self.stocklog_controller.add_log(product_id, to_loc, qty, product.unit, "move_in")
         self._log(user_id, "MOVE_PRODUCT", f"Moved {product.name} from {from_loc} to {to_loc}")
@@ -139,14 +173,23 @@ class MovementController:
             raise ValueError("Локацията не е намерена.")
 
         # Забрана за доставка до същата локация
-        if movement_type == "IN":
-            if product.location_id == location_id:
-                raise ValueError("Не може да доставяте продукт в същата локация, в която вече се намира.")
+        if movement_type == "IN" and product.location_id == location_id:
+            raise ValueError("Не може да доставяте продукт в същата локация, в която вече се намира.")
+
+        # Продажбата трябва да е от склада, в който е продуктът
+        if movement_type == "OUT" and product.location_id and product.location_id != location_id:
+            raise ValueError("Продажбата трябва да е от склада, в който се намира продуктът.")
 
         # Проверка за наличност при OUT
         if movement_type == "OUT":
-            stock_qty = self.inventory_controller.get_quantity(product_id, location_id)
-            if stock_qty is None or stock_qty <= 0:
+            if not self.inventory_controller:
+                raise ValueError("Inventory контролерът не е наличен.")
+
+            # inventory_controller няма get_quantity(), използваме get_stock()
+            record = self.inventory_controller.get_stock(product_id, location_id)
+            stock_qty = record["quantity"] if record else 0
+
+            if stock_qty <= 0:
                 raise ValueError("Няма наличност от този продукт в избраната локация.")
 
     # READ / SEARCH (Изнесени във филтрите)
@@ -160,6 +203,8 @@ class MovementController:
         return filter_by_description(self.movements, keyword)
 
     def search_delivery(self, keyword: str) -> List[Movement]:
+        if not self.supplier_controller:
+            return []
         return filter_deliveries(self.movements, keyword, self.product_controller, self.supplier_controller)
 
     def advanced_filter(self, **kwargs):

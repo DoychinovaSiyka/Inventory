@@ -2,6 +2,7 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController
 from models.user import User
+from datetime import datetime
 
 
 class ReportsView:
@@ -31,7 +32,7 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Форматиране за визуализация (това е чиста View логика)
+    # Форматиране за визуализация
     @staticmethod
     def _clean_none(value, replacement="—"):
         return replacement if value is None else str(value)
@@ -57,7 +58,7 @@ class ReportsView:
         except:
             return str(value)
 
-    # СПРАВКИ – ПРОДАЖБИ (НОВ ФОРМАТ, БЕЗ _process_data)
+    # СПРАВКИ – ПРОДАЖБИ
     def report_sales(self, _):
         result = self.controller.report_sales()
         if not result.data:
@@ -126,11 +127,20 @@ class ReportsView:
             rows
         ))
 
+    # СПРАВКА – ТЪРСЕНЕ ПО ДАТА (ОПРАВЕНО И ДОВЪРШЕНО)
     def report_sales_by_date(self, _):
-        date = input("Дата: ")
-        result = self.controller.report_sales_by_date(date)
+        date_str = input("Дата (YYYY-MM-DD): ").strip()
+
+        # --- ВАЛИДАЦИЯ НА ДАТА ---
+        try:
+            datetime.strptime(date_str, "%Y-%m-%d")
+        except ValueError:
+            print("\nНевалиден формат на дата! Използвайте YYYY-MM-DD.\n")
+            return
+
+        result = self.controller.report_sales_by_date(date_str)
         if not result.data:
-            print(f"\nНяма резултати за дата: {date}\n")
+            print(f"\nНяма резултати за дата: {date_str}\n")
             return
 
         rows = [
@@ -186,7 +196,7 @@ class ReportsView:
             rows
         ))
 
-    # --- ДОБАВЕНО: СПРАВКА ЗА ВСИЧКИ ДОСТАВКИ ---
+    # СПРАВКА – ВСИЧКИ ДОСТАВКИ
     def report_all_deliveries(self, _):
         result = self.controller.report_all_deliveries()
         if not result.data:
@@ -210,7 +220,7 @@ class ReportsView:
             rows
         ))
 
-    # --- ДОБАВЕНО: ТЪРСЕНЕ НА ДОСТАВКА ---
+    # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         keyword = input("Търсене (ID, продукт, доставчик, дата): ").strip()
         result = self.controller.search_delivery(keyword)
@@ -236,6 +246,7 @@ class ReportsView:
             rows
         ))
 
+    # Оборот по дни
     def report_turnover_by_day(self, _):
         result = self.controller.report_turnover_by_day()
         if not result.data:
@@ -249,6 +260,7 @@ class ReportsView:
 
         print(format_table(["Дата", "Брой продажби", "Оборот"], rows))
 
+    # Топ продукти
     def report_top_products(self, _):
         result = self.controller.report_top_products()
         if not result.data:

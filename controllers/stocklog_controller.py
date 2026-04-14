@@ -3,7 +3,10 @@ from storage.json_repository import JSONRepository
 from validators.stock_log_validator import StockLogValidator
 from datetime import datetime
 
-from filters.stocklog_filters import (filter_by_location, filter_by_product, filter_search)
+# Филтри – изнесени в отделен пакет
+from filters.stocklog_filters import (
+    filter_by_location, filter_by_product, filter_search
+)
 
 
 class StockLogController:
@@ -33,7 +36,7 @@ class StockLogController:
         self.save_changes()
         return log
 
-    # READ операциите ползват чисти филтри
+    # READ операциите ползват филтри
     def get_by_location(self, location_id):
         return filter_by_location(self.logs, str(location_id))
 

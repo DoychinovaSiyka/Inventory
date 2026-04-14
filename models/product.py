@@ -10,17 +10,28 @@ class Product:
         # Просто си пълним данните
         self.product_id = str(product_id) if product_id else None
         self.name = name
+
+        # Категориите винаги са списък
         self.categories = categories if isinstance(categories, list) else []
+
         self.quantity = quantity
         self.price = price
         self.unit = unit if unit else "бр."
         self.description = description
+
+        # Доставчик
         self.supplier_id = str(supplier_id) if supplier_id else None
+
+        # Тагове
         self.tags = tags if isinstance(tags, list) else []
+
+        # Локация (винаги текст)
         self.location_id = str(location_id)
 
-        self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.modified = modified or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Дати – синхронизирани с останалите модели
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.created = created or now
+        self.modified = modified or now
 
         # Викаме валидатора да си свърши работата
         ProductValidator.validate_all(
@@ -37,11 +48,13 @@ class Product:
         )
 
     def update_modified(self):
+        """Обновява датата на последна промяна."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
         """Превръща обекта в речник за JSON - категориите стават чисти стрингове."""
         json_categories = []
+
         for c in self.categories:
             if isinstance(c, Category):
                 json_categories.append(str(c.category_id))
@@ -66,14 +79,17 @@ class Product:
     @staticmethod
     def from_dict(data, category_controller=None):
         """Прави нов Product от речник (JSON)."""
+        if not data:
+            return None
+
         raw_categories = data.get("categories", [])
         fixed_categories = []
 
         # Ако има контролер, зареждаме обектите Category
         if category_controller:
             for cid in raw_categories:
-                found_cat = category_controller.get_by_id(str(cid))
-                fixed_categories.append(found_cat if found_cat else str(cid))
+                cat = category_controller.get_by_id(str(cid))
+                fixed_categories.append(cat if cat else str(cid))
         else:
             fixed_categories = raw_categories
 

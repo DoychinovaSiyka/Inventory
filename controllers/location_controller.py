@@ -5,6 +5,7 @@ from storage.json_repository import JSONRepository
 from validators.location_validator import LocationValidator
 
 
+
 class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
@@ -35,7 +36,6 @@ class LocationController:
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         location = Location(location_id=self._generate_id(), name=name, zone=zone,
                             capacity=capacity, created=now, modified=now)
-
         self.locations.append(location)
         self.save_changes()
         return location
@@ -45,7 +45,7 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Location:
-        # Търсим локацията по най‑ясния и човешки начин
+        # Търсим локацията
         LocationValidator.validate_exists(location_id, self.locations)
 
         for loc in self.locations:

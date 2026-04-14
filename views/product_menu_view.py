@@ -74,7 +74,8 @@ class ProductView:
         description = input("Описание: ").strip()
         price_raw = input("Цена: ")
         quantity_raw = input("Количество: ")
-        unit = input("Мерна единица: ").strip()
+
+        unit = input("Мерна единица (пример: кг., кг, бр., бр., л., пакет): ").strip()
 
         try:
             price = ProductValidator.parse_float(price_raw, "Цена")
@@ -90,19 +91,16 @@ class ProductView:
 
         print("\nКатегории:")
         for i, c in enumerate(categories):
-            # показваме и индекс, и истинския ID – както в реални системи
             print(f"{i}. {c.name} (ID: {c.category_id})")
 
         cat_raw = input("Изберете категория (номер или Category ID): ").strip()
         try:
-            # позволяваме или индекс, или директно UUID
             if cat_raw.isdigit():
                 cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
                 if cat_idx < 0 or cat_idx >= len(categories):
                     raise ValueError("Невалиден избор за Категория.")
                 category_id = categories[cat_idx].category_id
             else:
-                # директно въвеждане на Category ID
                 ProductValidator.validate_uuid(cat_raw, "Category ID")
                 category_id = cat_raw
         except Exception as e:
@@ -133,19 +131,20 @@ class ProductView:
             return
 
         try:
-            u_id = user.user_id if hasattr(user, "user_id") else user.id
+            u_id = user.user_id
 
-            self.product_controller.add(
-                name=name,
-                category_ids=[category_id],
-                quantity=quantity,
-                unit=unit,
-                description=description,
-                price=price,
-                supplier_id=None,
-                user_id=u_id,
-                location_id=location_id
-            )
+            product_data = {
+                "name": name,
+                "category_ids": [category_id],
+                "quantity": quantity,
+                "unit": unit,
+                "description": description,
+                "price": price,
+                "supplier_id": None,
+                "location_id": location_id
+            }
+
+            self.product_controller.add(product_data, u_id)
 
             print("Продуктът е създаден успешно.")
         except ValueError as e:
@@ -154,7 +153,7 @@ class ProductView:
     def remove_product(self, user):
         pid = input("ID на продукт: ").strip()
         try:
-            u_id = user.user_id if hasattr(user, "user_id") else user.id
+            u_id = user.user_id
             self.product_controller.remove_by_id(pid, u_id)
             print("Продуктът е премахнат.")
         except ValueError as e:
@@ -263,7 +262,7 @@ class ProductView:
 
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
-            u_id = user.user_id if hasattr(user, "user_id") else user.id
+            u_id = user.user_id
             self.product_controller.increase_quantity(pid, amount, u_id)
             print("Увеличено.")
         except ValueError as e:
@@ -275,7 +274,7 @@ class ProductView:
 
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
-            u_id = user.user_id if hasattr(user, "user_id") else user.id
+            u_id = user.user_id
             self.product_controller.decrease_quantity(pid, amount, u_id)
             print("Намалено.")
         except ValueError as e:
@@ -313,18 +312,29 @@ class ProductView:
                 print(f"{p['name']} ({p['location']}) - {p['quantity']} {p['unit']}")
 
     def advanced_search(self, _):
+        print("\n  Разширено търсене  ")
+
         keyword = input("Ключова дума: ").strip() or None
+
         min_raw = input("Мин. цена: ")
         max_raw = input("Макс. цена: ")
 
         try:
-            min_p = ProductValidator.parse_float(min_raw, "Мин. цена")
-            max_p = ProductValidator.parse_float(max_raw, "Макс. цена")
+            min_p = ProductValidator.parse_optional_float(min_raw)
+            max_p = ProductValidator.parse_optional_float(max_raw)
         except ValueError as e:
             print(e)
             return
 
-        results = self.product_controller.search_combined(keyword, min_p, max_p)
+        results = self.product_controller.search_combined(
+            name_keyword=keyword,
+            min_price=min_p,
+            max_price=max_p
+        )
+
+        if not results:
+            print("Няма резултати.")
+            return
 
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

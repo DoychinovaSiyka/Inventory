@@ -18,7 +18,6 @@ from views.graph_menu_view import GraphView
 from views.password_utils import input_password
 from storage.json_repository import JSONRepository
 from datetime import datetime
-from models.user import User
 
 
 class InventoryApplication:
@@ -52,15 +51,6 @@ class InventoryApplication:
         self.location_controller = LocationController(self.location_repo)
         self.stocklog_controller = StockLogController(self.stocklog_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
-
-        # Регистрация на служебен оператор (ако липсва)
-        try:
-            self.user_controller.register(
-                "Ivan", "Petrov", "ivan@example.com",
-                "ivan", "test123", "Operator")
-        except ValueError:
-            pass
-
         self.product_controller = ProductController(
             self.product_repo,
             self.category_controller,
@@ -70,7 +60,6 @@ class InventoryApplication:
 
         # Създаваме InventoryController
         self.inventory_controller = InventoryController(self.inventory_repo)
-
         #  Ако inventory.json е празен – инициализираме го от продуктите
         if not self.inventory_controller.stock:
             products = self.product_controller.get_all()
@@ -95,7 +84,7 @@ class InventoryApplication:
             self.inventory_controller
         )
 
-        # ❗ ДОБАВЕНО — MovementController вече получава supplier_controller
+        # MovementController вече получава supplier_controller
         self.movement_controller.attach_supplier_controller(self.supplier_controller)
 
         self.report_controller = ReportController(
@@ -106,7 +95,7 @@ class InventoryApplication:
             self.location_controller
         )
 
-        #  АВТОМАТИЧНО ГЕНЕРИРАНЕ И ЗАПИСВАНЕ НА ОТЧЕТИ САМО ВЕДНЪЖ
+        #  Автоматично генериране и записване на отчети само веднъж
         initial_reports = self.report_controller.generate_all_reports()
         self.report_controller.save_reports_once(initial_reports)
 
@@ -135,7 +124,6 @@ class InventoryApplication:
     #  Процес на вход
     def _login_flow(self):
         username = input("Потребителско име: ")
-        # използваме скритото въвеждане на парола
         password = input_password("Парола: ")
 
         user = self.user_controller.login(username, password)
@@ -165,20 +153,7 @@ class InventoryApplication:
 
     #  Анонимен достъп
     def _anonymous_flow(self):
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        guest_user = User(
-            user_id="guest-0000",
-            first_name="Anonymous",
-            last_name="",
-            email="",
-            username="guest",
-            password="",
-            role="Anonymous",
-            status="Active",
-            created=now,
-            modified=now
-        )
-
+        guest_user = self.user_controller.create_anonymous_user()
         self.activity_log_controller.add_log(
             guest_user.user_id,
             "ANONYMOUS_LOGIN",
@@ -186,7 +161,6 @@ class InventoryApplication:
         )
 
         self.anonymous_menu.show_menu(guest_user)
-
         self.activity_log_controller.add_log(
             guest_user.user_id,
             "ANONYMOUS_LOGOUT",

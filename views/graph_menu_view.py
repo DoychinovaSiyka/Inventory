@@ -61,10 +61,10 @@ class GraphView:
             print(f"Стоката '{product_name}' не е налична другаде.")
             return
 
-        # Пускам Дейкстра само веднъж – от моята локация
+        # Пускам Дейкстра  веднъж – от моята локация
         dist, prev = self.graph.dijkstra(my_location)
 
-        # Намираме най-близкия склад с наличност
+        # Намирам най-близкия склад с наличност
         best_source = min(possible_sources, key=lambda w: dist[w])
         best_dist = dist[best_source]
 

@@ -22,22 +22,48 @@ class MovementView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Помощен метод за избор (преместен от контролера тук)
+    # Помощен метод за избор (подобрен – работи с номер ИЛИ ID + Enter = отказ)
     def _select_item(self, items, label):
         if not items:
             print(f"Няма налични {label}.")
             return None
+
         print(f"\nИзберете {label}:")
         for i, item in enumerate(items, start=1):
             name = getattr(item, 'name', 'N/A')
-            id_val = getattr(item, f'{label}_id', 'ID')
-            print(f"{i}. {name} (ID: {id_val})")
+            id_attr = (
+                getattr(item, "product_id", None) or
+                getattr(item, "location_id", None) or
+                getattr(item, "supplier_id", None) or
+                "ID"
+            )
+            print(f"{i}. {name} (ID: {id_attr})")
 
-        choice = input("Номер: ").strip()
-        if not choice.isdigit() or not (1 <= int(choice) <= len(items)):
-            print("Невалиден избор.")
+        choice = input("Номер или ID (Enter = отказ): ").strip()
+
+        # --- Enter = отказ ---
+        if choice == "":
             return None
-        return items[int(choice) - 1]
+
+        # --- избор по номер ---
+        if choice.isdigit():
+            idx = int(choice) - 1
+            if 0 <= idx < len(items):
+                return items[idx]
+            print("Невалиден номер.")
+            return None
+
+        # --- избор по ID ---
+        for item in items:
+            if (
+                getattr(item, "product_id", None) == choice or
+                getattr(item, "location_id", None) == choice or
+                getattr(item, "supplier_id", None) == choice
+            ):
+                return item
+
+        print("Невалиден ID.")
+        return None
 
     def show_menu(self):
         user = self.user_controller.logged_user
@@ -56,15 +82,26 @@ class MovementView:
         if not product:
             return
 
-        location = self._select_item(self.location_controller.get_all(), "локация")
-        if not location:
-            return
+        # Текущ склад на продукта
+        current_location = self.location_controller.get_by_id(product.location_id)
 
         print("\n0 - Доставка (IN)")
         print("1 - Продажба (OUT)")
         movement_type_choice = input("Избор: ").strip()
         movement_type = "IN" if movement_type_choice == "0" else "OUT"
 
+        # --- Продажба: винаги от текущия склад ---
+        if movement_type == "OUT":
+            location = current_location
+            print(f"\nПродажбата ще бъде извършена от склада, в който е продуктът: {location.name}")
+
+        # --- Доставка: избор на склад ---
+        else:
+            location = self._select_item(self.location_controller.get_all(), "локация")
+            if not location:
+                return
+
+        # Проверка от контролера (бизнес логика)
         try:
             self.movement_controller.check_movement_allowed(
                 product_id=product.product_id,
@@ -82,15 +119,19 @@ class MovementView:
         supplier_id = None
         customer = None
 
+        # --- Доставка (IN) изисква доставчик ---
         if movement_type == "IN":
             if self.supplier_controller:
                 supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
-                if supplier:
-                    supplier_id = supplier.supplier_id
+                if not supplier:
+                    print("Грешка: При IN движение трябва да има доставчик.")
+                    return
+                supplier_id = supplier.supplier_id
             else:
                 print("Грешка: Липсва контролер за доставчици.")
                 return
 
+        # --- Продажба (OUT) изисква клиент ---
         if movement_type == "OUT":
             customer = input("Име на клиент: ").strip() or None
 
@@ -128,6 +169,11 @@ class MovementView:
         if not to_loc:
             return
 
+        # --- Забрана: не може да премества в същия склад ---
+        if from_loc.location_id == to_loc.location_id:
+            print("\nГрешка: Не може да преместите продукта в същия склад!")
+            return
+
         quantity = input("Количество за преместване: ")
         description = input("Описание (по избор): ")
 
@@ -150,7 +196,6 @@ class MovementView:
     def search_movements(self, _):
         keyword = input("Търси по описание (мин. 3 символа): ").strip()
 
-        # ✔ Проверка за минимум 3 символа
         if len(keyword) < 3:
             print("Моля, въведете поне 3 символа за търсене.")
             return
@@ -159,7 +204,6 @@ class MovementView:
         if not results:
             print("Няма намерени движения.")
             return
-
         for m in results:
             print(f"[{m.date}] {m.movement_type.name} - {m.quantity} {m.unit}")
             print("Описание:")
@@ -182,7 +226,6 @@ class MovementView:
 
         print("0=IN, 1=OUT, 2=MOVE")
         m_type_input = input("Тип движение или Enter: ").strip() or None
-
         movement_type = None
         if m_type_input == "0":
             movement_type = "IN"
@@ -211,4 +254,8 @@ class MovementView:
             return
 
         for m in results:
-            print(f"[{m.date}] {m.movement_type.name} | Продукт: {m.product_id} | Сума: {m.price}")
+            if m.movement_type.name == "MOVE":
+                print(f"[{m.date}] MOVE | Продукт: {m.product_id}")
+            else:
+                print(f"[{m.date}] {m.movement_type.name} | Продукт: {m.product_id} | Сума: {m.price}")
+

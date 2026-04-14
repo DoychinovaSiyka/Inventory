@@ -24,5 +24,18 @@
         "date": "2026-04-13 23:23:43",
         "created": "2026-04-13 23:23:43",
         "modified": "2026-04-13 23:23:43"
+    },
+    {
+        "invoice_id": "fa44e377-2c4e-4f4c-bb0a-c6b32cbb3c14",
+        "movement_id": "e5bba381-2d00-4c5b-92df-e4bb3295a378",
+        "product": "череши",
+        "quantity": 1.0,
+        "unit": "кг",
+        "unit_price": 3.99,
+        "total_price": 3.99,
+        "customer": "Елена Иванова Кирева",
+        "date": "2026-04-14 22:21:27",
+        "created": "2026-04-14 22:21:27",
+        "modified": "2026-04-14 22:21:27"
     }
 ]

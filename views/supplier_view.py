@@ -61,7 +61,7 @@ class SupplierView:
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
 
-        # ✔️ Прихващаме грешката от контролера
+        #  Прихващаме грешката от контролера
         try:
             supplier = self.controller.get_by_id(supplier_id)
         except ValueError as e:

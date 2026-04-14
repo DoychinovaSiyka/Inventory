@@ -3,7 +3,7 @@ from models.movement import Movement, MovementType
 from datetime import datetime
 
 
-# Помощна функция за интелигентно парсване на дати (копираме я от фактурите)
+# Помощна функция за парсване на дати
 def _parse_movement_date(date_str: str) -> Optional[datetime]:
     if not date_str:
         return None
@@ -21,7 +21,7 @@ def filter_by_description(movements: List[Movement], keyword: str) -> List[Movem
     return [m for m in movements if keyword in (m.description or "").lower()]
 
 
-# Специализиран филтър за доставки (използва се в search_delivery)
+# Специализиран филтър за доставки използва се в search_delivery
 def filter_deliveries(movements: List[Movement], keyword: str, product_controller, supplier_controller) -> List[
     Movement]:
     keyword = (keyword or "").lower().strip()
@@ -53,17 +53,16 @@ def filter_deliveries(movements: List[Movement], keyword: str, product_controlle
     return results
 
 
-# Филтър по дата диапазон (ОПРАВЕН)
+# Филтър по дата диапазон
 def filter_by_date_range(movements: List[Movement],
                          start_date: Optional[str],
                          end_date: Optional[str]) -> List[Movement]:
     if not start_date and not end_date:
         return movements
-
     start = _parse_movement_date(start_date) if start_date else None
     end = _parse_movement_date(end_date) if end_date else None
-
     filtered = []
+
     for m in movements:
         m_date = _parse_movement_date(m.date)
         if not m_date:

@@ -4,10 +4,9 @@ from datetime import datetime
 from storage.json_repository import Repository
 from models.category import Category
 from validators.category_validator import CategoryValidator
-
-# Изнасяме логиката навън, за да не тежи тук
 from filters.category_filters import filter_categories
 from analytics.category_analytics import build_category_tree
+
 
 
 class CategoryController:
@@ -120,7 +119,7 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
 
-    # Контролерът вече не строи дървото, а само го вика
+    # Контролерът  не строи дървото, а само го вика
     def get_category_tree(self) -> List[dict]:
         """Изграждане на йерархия за менюто чрез външна логика."""
         return build_category_tree(self.categories)
@@ -129,17 +128,6 @@ class CategoryController:
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез външен филтър."""
         return filter_categories(self.categories, keyword)
-
-    def select_category(self, raw_index):
-        # Помощен метод за стабилност на входа
-        try:
-            index = int(raw_index)
-            categories = self.get_all()
-            if 0 <= index < len(categories):
-                return categories[index]
-            raise ValueError
-        except (ValueError, TypeError):
-            raise ValueError("Невалиден избор на категория.")
 
     def save_changes(self) -> None:
         # Записване на категориите обратно в JSON файла

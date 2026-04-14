@@ -4,10 +4,19 @@ from datetime import datetime
 
 class User:
     def __init__(self, first_name, last_name, email, username, password,
-        role="Operator", status="Active", user_id=None, created=None, modified=None):
-        # Уникален идентификатор на потребителя (UUID)
-        self.user_id = user_id or str(uuid.uuid4())
-        self.id = self.user_id   # за съвместимост с user.id
+                 role="Operator", status="Active", user_id=None, created=None, modified=None):
+        """
+        Модел за потребител.
+        ID-то се подава от контролера (или JSON), но ако липсва – генерираме UUID.
+        Датите (created/modified) също идват от контролера, за да има синхрон.
+        """
+        # Уникален идентификатор на потребителя
+        self.user_id = str(user_id) if user_id else str(uuid.uuid4())
+
+        # Съвместимост със стар код, който използва user.id
+        self.id = self.user_id
+
+        # Основни данни
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -16,28 +25,44 @@ class User:
 
         # Роля: Admin / Operator / Anonymous
         self.role = role
-        # Статус: Active / Disabled
+
+        # Статус: Active / Disabled / Blocked
         self.status = status
-        # Метаданни
-        self.created = created or datetime.now().isoformat()
-        self.modified = modified or datetime.now().isoformat()
+
+        # Дати – подават се от контролера или се генерират при нужда
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.created = created or now
+        self.modified = modified or now
 
     def update_modified(self):
-        self.modified = datetime.now().isoformat()
+        """Обновява датата на последна промяна."""
+        self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     @staticmethod
     def from_dict(data):
+        """Създава User от JSON речник."""
+        if not data:
+            return None
+
         user = User(
-            first_name=data["first_name"],
-            last_name=data["last_name"],
-            email=data["email"],username=data["username"],
-            password=data["password"],role=data.get("role", "Operator"),
-            status=data.get("status", "Active"),user_id=data.get("user_id"),
-            created=data.get("created"),modified=data.get("modified"))
+            first_name=data.get("first_name", ""),
+            last_name=data.get("last_name", ""),
+            email=data.get("email", ""),
+            username=data.get("username", ""),
+            password=data.get("password", ""),
+            role=data.get("role", "Operator"),
+            status=data.get("status", "Active"),
+            user_id=data.get("user_id"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
+
+        # Съвместимост със стар код
         user.id = user.user_id
         return user
 
     def to_dict(self):
+        """Конвертира User към JSON речник."""
         return {
             "user_id": self.user_id,
             "first_name": self.first_name,
@@ -50,3 +75,6 @@ class User:
             "created": self.created,
             "modified": self.modified
         }
+
+    def __str__(self):
+        return f"{self.username} ({self.role})"

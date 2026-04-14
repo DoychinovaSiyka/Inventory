@@ -9,27 +9,31 @@ class MovementType(Enum):
 
 class Movement:
     def __init__(self, movement_id, product_id, user_id, location_id, movement_type,
-                 quantity, unit, description, price, date, created=None, modified=None,
-                 supplier_id=None, customer=None, from_location_id=None, to_location_id=None):
-        # Моделът вече НЕ ГЕНЕРИРА ID и ДАТИ - той ги получава от Контролера
+                 quantity, unit, description, price, date,
+                 created=None, modified=None,
+                 supplier_id=None, customer=None,
+                 from_location_id=None, to_location_id=None):
+
+        # Моделът НЕ ГЕНЕРИРА ID и ДАТИ – Контролерът ги подава
         self.movement_id = str(movement_id)
         self.product_id = product_id
         self.user_id = user_id
+        # Основна локация (за IN/OUT)
         self.location_id = str(location_id) if location_id else None
-
         # Тип движение (Enum или String)
         self.movement_type = movement_type
+        # Количества и описание
         self.quantity = quantity
         self.unit = unit
         self.description = description
         self.price = float(price)
-
+        # Допълнителни участници
         self.supplier_id = supplier_id
         self.customer = customer
+        # MOVE специфични локации
         self.from_location_id = str(from_location_id) if from_location_id else None
         self.to_location_id = str(to_location_id) if to_location_id else None
-
-        # Дати (получени като готови стрингове)
+        # Дати – подават се от контролера като готови стрингове
         self.date = date
         self.created = created or date
         self.modified = modified or date
@@ -41,8 +45,7 @@ class Movement:
             "product_id": self.product_id,
             "user_id": self.user_id,
             "location_id": self.location_id,
-            "movement_type": self.movement_type.name if isinstance(self.movement_type, MovementType) else str(
-                self.movement_type),
+            "movement_type": self.movement_type.name if isinstance(self.movement_type, MovementType) else str(self.movement_type),
             "quantity": self.quantity,
             "unit": self.unit,
             "description": self.description,
@@ -58,12 +61,16 @@ class Movement:
 
     @staticmethod
     def from_dict(data):
-        """Създава обект от речник."""
+        """Създава Movement от JSON речник."""
+        if not data:
+            return None
+        # Опитваме да възстановим Enum
         mt_raw = data.get("movement_type")
         try:
-            mt = MovementType(mt_raw)  # Опитваме да го превърнем в Enum директно чрез стойността
+            mt = MovementType(mt_raw)
         except ValueError:
-            mt = mt_raw  # Ако не успее, го оставяме като обикновен текст
+            mt = mt_raw  # Ако не е валиден Enum, оставяме го като текст
+
         return Movement(
             movement_id=data.get("movement_id"),
             product_id=data.get("product_id"),
@@ -82,3 +89,6 @@ class Movement:
             created=data.get("created"),
             modified=data.get("modified")
         )
+
+    def __str__(self):
+        return f"Движение {self.movement_id} | Тип: {self.movement_type} | Количество: {self.quantity} {self.unit}"

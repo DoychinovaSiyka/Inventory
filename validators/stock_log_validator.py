@@ -21,7 +21,6 @@ class StockLogValidator:
     @staticmethod
     def validate_action(action):
         """Проверява дали действието е в позволения списък."""
-        # Можеш да добавиш "in", "out", "move" за консистенция
         allowed_actions = ["add", "remove", "move", "move_in", "move_out", "in", "out"]
         clean_action = str(action).strip().lower()
 
