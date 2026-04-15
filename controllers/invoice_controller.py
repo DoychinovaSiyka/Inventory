@@ -47,19 +47,9 @@ class InvoiceController:
         qty = float(movement.quantity)
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
-        invoice = Invoice(
-            invoice_id=str(uuid.uuid4()),
-            movement_id=movement.movement_id,
-            product=product.name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            date=now,
-            created=now,
-            modified=now
-        )
+        invoice = Invoice(invoice_id=str(uuid.uuid4()), movement_id=movement.movement_id, product=product.name,
+                          quantity=qty, unit=movement.unit, unit_price=unit_price,
+                          total_price=total_price, customer=customer, date=now, created=now, modified=now)
 
         self.invoices.append(invoice)
         self.save_changes()
@@ -111,7 +101,6 @@ class InvoiceController:
             raise ValueError("Фактурата не е намерена.")
 
         InvoiceValidator.validate_customer(new_customer)
-
         inv.customer = new_customer
         inv.update_modified()
         self.save_changes()

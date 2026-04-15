@@ -92,7 +92,6 @@ class ProductValidator:
             value = value.replace("лв.", "").replace("лв", "").strip()
             # Позволяваме запетая
             value = value.replace(",", ".").strip()
-
         try:
             f = float(value)
         except (ValueError, TypeError):

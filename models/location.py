@@ -31,14 +31,8 @@ class Location:
         if not data:
             return None
         # При зареждане от JSON, ако случайно ID-то е число, конструкторът ще го превърне в "1", "2" и т.н.
-        return Location(
-            location_id=data.get("location_id"),
-            name=data.get("name", ""),
-            zone=data.get("zone", ""),
-            capacity=data.get("capacity", 0),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Location(location_id=data.get("location_id"), name=data.get("name", ""), zone=data.get("zone", ""),
+                        capacity=data.get("capacity", 0), created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         return f"Локация: {self.name} | Зона: {self.zone} | Капацитет: {self.capacity}"

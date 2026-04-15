@@ -26,7 +26,6 @@ class MovementValidator:
             return "OUT"
         elif raw_type == "2":
             return "MOVE"
-
         raise ValueError("Невалиден тип движение. Използвайте 0=IN, 1=OUT, 2=MOVE.")
 
     @staticmethod
@@ -38,8 +37,6 @@ class MovementValidator:
             raise ValueError("Описанието трябва да е текст.")
 
         desc = description.strip()
-
-
         if len(desc) < 3:
             raise ValueError("Описанието трябва да е поне 3 символа.")
 
@@ -127,9 +124,7 @@ class MovementValidator:
 
         start = parse(start_date) if start_date else None
         end = parse(end_date) if end_date else None
-
         results = movements
-
         if start:
             results = [m for m in results if parse(m.date[:10]) and parse(m.date[:10]) >= start]
         if end:

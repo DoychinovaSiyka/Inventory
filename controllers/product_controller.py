@@ -62,18 +62,11 @@ class ProductController:
 
     # CREATE PRODUCT
     def add(self, product_data: dict, user_id: str) -> Product:
-        ProductValidator.validate_all(
-            product_id=None,
-            name=product_data['name'],
-            categories=product_data['category_ids'],
-            quantity=product_data['quantity'],
-            unit=product_data['unit'],
-            description=product_data['description'],
-            price=product_data['price'],
-            location_id=product_data.get('location_id'),
-            supplier_id=product_data.get('supplier_id'),
-            tags=product_data.get('tags', [])
-        )
+        ProductValidator.validate_all(product_id=None, name=product_data['name'],
+                                      categories=product_data['category_ids'], quantity=product_data['quantity'],
+                                      unit=product_data['unit'], description=product_data['description'],
+                                      price=product_data['price'], location_id=product_data.get('location_id'),
+                                      supplier_id=product_data.get('supplier_id'), tags=product_data.get('tags', []))
 
         if self._is_duplicate(product_data['name'], product_data.get('location_id', 'W1')):
             raise ValueError("Продуктът вече съществува в този склад.")
@@ -82,20 +75,12 @@ class ProductController:
         self._validate_supplier(product_data.get('supplier_id'))
 
         now = datetime.now().isoformat()
-        product = Product(
-            product_id=self._generate_id(),
-            name=product_data['name'],
-            categories=categories,
-            quantity=float(product_data['quantity']),
-            unit=product_data['unit'],
-            description=product_data['description'],
-            price=float(product_data['price']),
-            supplier_id=product_data.get('supplier_id'),
-            location_id=product_data.get('location_id', 'W1'),
-            tags=product_data.get('tags', []),
-            created=now,
-            modified=now
-        )
+        product = Product(product_id=self._generate_id(), name=product_data['name'],
+            categories=categories, quantity=float(product_data['quantity']),
+            unit=product_data['unit'], description=product_data['description'],
+            price=float(product_data['price']), supplier_id=product_data.get('supplier_id'),
+            location_id=product_data.get('location_id', 'W1'), tags=product_data.get('tags', []),
+            created=now, modified=now)
 
         self.products.append(product)
         self.save_changes()
@@ -145,7 +130,6 @@ class ProductController:
 
         ProductValidator.validate_price(new_price)
         product.price = round(float(new_price), 2)
-
         ProductValidator.validate_quantity(new_quantity)
         product.quantity = round(float(new_quantity), 2)
 
@@ -183,7 +167,8 @@ class ProductController:
         p.quantity = round(p.quantity - float(amount), 2)
         p.update_modified()
         self.save_changes()
-        self._log(user_id, "DECREASE_QUANTITY", f"Премахнати {amount} единици от продукт ID {product_id}")
+        self._log(user_id, "DECREASE_QUANTITY",
+                  f"Премахнати {amount} единици от продукт ID {product_id}")
         return True
 
     def remove_by_id(self, product_id: str, user_id: str) -> bool:

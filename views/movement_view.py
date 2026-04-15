@@ -28,15 +28,15 @@ class MovementView:
         if not items:
             print(f"Няма налични {label}.")
             return None
-
         print(f"\nИзберете {label}:")
         for i, item in enumerate(items, start=1):
-            # Показваме име и ID според типа
-            if hasattr(item, "product_id"):
+            # Продукт – разпознаваме по типа
+            if isinstance(item, type(self.product_controller.get_all()[0])):
                 item_id = item.product_id
-            elif hasattr(item, "location_id"):
+            elif isinstance(item, type(self.location_controller.get_all()[0])):
                 item_id = item.location_id
-            elif hasattr(item, "supplier_id"):
+            # Доставчик – разпознаваме по типа
+            elif self.supplier_controller and isinstance(item, type(self.supplier_controller.get_all()[0])):
                 item_id = item.supplier_id
             else:
                 item_id = "N/A"
@@ -47,16 +47,15 @@ class MovementView:
         choice = input("Номер (Enter = отказ): ").strip()
         if choice == "":
             return None
-
         if not choice.isdigit():
             print("Моля, въведете валиден номер.")
             return None
-
         idx = int(choice) - 1
         if 0 <= idx < len(items):
             return items[idx]
         print("Невалиден номер.")
         return None
+
 
     def show_menu(self):
         user = self.user_controller.logged_user
@@ -75,7 +74,6 @@ class MovementView:
             return
         # Текущ склад на продукта
         current_location = self.location_controller.get_by_id(product.location_id)
-
         print("\n0 - Доставка (IN)")
         print("1 - Продажба (OUT)")
         movement_type_choice = input("Избор: ").strip()
@@ -94,11 +92,8 @@ class MovementView:
 
         # Проверка от контролера - бизнес логика
         try:
-            self.movement_controller.check_movement_allowed(
-                product_id=product.product_id,
-                location_id=location.location_id,
-                movement_type=movement_type
-            )
+            self.movement_controller.check_movement_allowed(product_id=product.product_id,
+                                                            location_id=location.location_id, movement_type=movement_type)
         except ValueError as e:
             print("Грешка:", e)
             return
@@ -126,17 +121,10 @@ class MovementView:
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            movement = self.movement_controller.add(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                location_id=location.location_id,
-                movement_type=movement_type,
-                quantity=quantity,
-                description=description,
-                price=price,
-                customer=customer,
-                supplier_id=supplier_id
-            )
+            movement = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
+                                                    location_id=location.location_id, movement_type=movement_type,
+                                                    quantity=quantity, description=description,
+                                                    price=price, customer=customer, supplier_id=supplier_id)
             print("\nДвижението е добавено успешно!")
             print(f"ID: {movement.movement_id}")
 
@@ -146,19 +134,15 @@ class MovementView:
     # MOVE
     def move_between_locations(self, user):
         print("\n   Преместване между локации (MOVE)   ")
-
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
-
         from_loc = self._select_item(self.location_controller.get_all(), "ИЗХОДНА локация")
         if not from_loc:
             return
-
         to_loc = self._select_item(self.location_controller.get_all(), "ЦЕЛЕВА локация")
         if not to_loc:
             return
-
         if from_loc.location_id == to_loc.location_id:
             print("\nГрешка: Не може да преместите продукта в същия склад!")
             return
@@ -167,14 +151,9 @@ class MovementView:
         description = input("Описание (по избор): ")
 
         try:
-            movement = self.movement_controller.move_product(
-                product_id=product.product_id,
-                user_id=user.user_id,
-                from_loc=from_loc.location_id,
-                to_loc=to_loc.location_id,
-                quantity=quantity,
-                description=description
-            )
+            movement = self.movement_controller.move_product(product_id=product.product_id, user_id=user.user_id,
+                                                             from_loc=from_loc.location_id, to_loc=to_loc.location_id,
+                                                             quantity=quantity, description=description)
             print("\nПреместването е извършено успешно!")
             print(f"ID: {movement.movement_id}")
 
@@ -194,11 +173,7 @@ class MovementView:
             return
 
         columns = ["Дата", "Тип", "Количество", "Единица", "Описание"]
-        rows = [
-            [m.date, m.movement_type.name, m.quantity, m.unit, m.description]
-            for m in results
-        ]
-
+        rows = [[m.date, m.movement_type.name, m.quantity, m.unit, m.description] for m in results]
         print(format_table(columns, rows))
         print()
 
@@ -210,11 +185,7 @@ class MovementView:
             return
 
         columns = ["ID", "Дата", "Тип", "Количество", "Единица"]
-        rows = [
-            [m.movement_id, m.date, m.movement_type.name, m.quantity, m.unit]
-            for m in movements
-        ]
-
+        rows = [[m.movement_id, m.date, m.movement_type.name, m.quantity, m.unit] for m in movements]
         print(format_table(columns, rows))
 
     def advanced_filter(self, _):
@@ -236,14 +207,9 @@ class MovementView:
         location_id = input("ID на локация или Enter: ").strip() or None
         user_id = input("ID на потребител или Enter: ").strip() or None
 
-        results = self.movement_controller.advanced_filter(
-            movement_type=movement_type,
-            start_date=start_date,
-            end_date=end_date,
-            product_id=product_id,
-            location_id=location_id,
-            user_id=user_id
-        )
+        results = self.movement_controller.advanced_filter(movement_type=movement_type, start_date=start_date,
+                                                           end_date=end_date, product_id=product_id, location_id=location_id,
+                                                           user_id=user_id)
 
         if not results:
             print("\nНяма движения, които отговарят на критериите.")
@@ -260,9 +226,6 @@ class MovementView:
                     rows.append([m.date, m.movement_type.name, m.product_id, m.quantity, m.unit, m.price])
         else:
             columns = ["Дата", "Тип", "Продукт", "Количество", "Единица"]
-            rows = [
-                [m.date, m.movement_type.name, m.product_id, m.quantity, m.unit]
-                for m in results
-            ]
+            rows = [[m.date, m.movement_type.name, m.product_id, m.quantity, m.unit] for m in results]
 
         print(format_table(columns, rows))

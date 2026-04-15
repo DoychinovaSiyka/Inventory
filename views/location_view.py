@@ -19,13 +19,10 @@ class LocationView:
     def _build_menu(self, user):
         is_admin = user.role == "Admin"
         items = [MenuItem("1", "Списък с локации", self.show_all)]
-
         if is_admin:
-            items.extend([
-                MenuItem("2", "Добавяне на нова локация", self.add_location),
-                MenuItem("3", "Редактиране на съществуваща локация", self.edit_location),
-                MenuItem("4", "Изтриване на локация", self.delete_location)
-            ])
+            items.extend([MenuItem("2", "Добавяне на нова локация", self.add_location),
+                          MenuItem("3", "Редактиране на съществуваща локация", self.edit_location),
+                          MenuItem("4", "Изтриване на локация", self.delete_location)])
 
         items.append(MenuItem("0", "Назад към главното меню", lambda u: "break"))
         return Menu("Управление на складовата мрежа", items)
@@ -33,24 +30,21 @@ class LocationView:
     # Списък с локации
     def show_all(self, _):
         locations = self.location_controller.get_all()
-
         if not locations:
             print("\n[!] Няма налични локации в системата.")
             return
 
         columns = ["Код (ID)", "Име на обект", "Зона", "Капацитет"]
         rows = [[loc.location_id, loc.name, loc.zone, loc.capacity] for loc in locations]
-
         print("\n--- СПИСЪК НА СКЛАДОВЕТЕ И МАГАЗИНИТЕ ---")
         print(format_table(columns, rows))
 
-    # Добавяне
+
     def add_location(self, _):
         print("\n--- ДОБАВЯНЕ НА НОВА ЛОКАЦИЯ ---")
         name = input("Име на локация (град/склад): ").strip()
         zone = input("Зона/Сектор: ").strip()
         capacity_raw = input("Капацитет (число): ").strip()
-
         try:
             capacity = LocationValidator.validate_capacity(capacity_raw)
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity)
@@ -61,7 +55,6 @@ class LocationView:
     def edit_location(self, _):
         print("\n--- РЕДАКТИРАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID на локацията (напр. W1): ").strip()
-
         try:
             location = self.location_controller.get_by_id(loc_id)
         except ValueError as e:
@@ -69,11 +62,9 @@ class LocationView:
             return
 
         print("\n* Оставете празно, ако не желаете промяна на текущата стойност.")
-
         new_name = input(f"Ново име ({location.name}): ").strip() or None
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or None
         new_capacity = input(f"Нов капацитет ({location.capacity}): ").strip() or None
-
         try:
             self.location_controller.update(loc_id, name=new_name, zone=new_zone, capacity=new_capacity)
             print(f"[Успех] Данните за '{loc_id}' бяха обновени успешно!")

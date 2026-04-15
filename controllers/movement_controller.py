@@ -77,7 +77,6 @@ class MovementController:
 
         # 2. Логика за наличност (Stock Management)
         now = self._get_now()
-
         if m_type_enum == MovementType.IN:
             product.quantity += qty
             product.location_id = location_id
@@ -85,7 +84,6 @@ class MovementController:
             if self.inventory_controller:
                 self.inventory_controller.increase_stock(product_id, product.name, location_id, qty)
             log_action = "add"
-
         else:  # OUT
             product.quantity -= qty
 
@@ -97,13 +95,10 @@ class MovementController:
         self.product_controller.save_changes()
 
         # 3. Създаване на запис за движение
-        movement = Movement(
-            movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
-            location_id=location_id, movement_type=m_type_enum, quantity=qty,
-            unit=product.unit, description=description, price=prc,
-            supplier_id=supplier_id, customer=customer,
-            date=now, created=now, modified=now
-        )
+        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
+                            location_id=location_id, movement_type=m_type_enum, quantity=qty,
+                            unit=product.unit, description=description, price=prc, supplier_id=supplier_id, customer=customer,
+                            date=now, created=now, modified=now)
 
         self.movements.append(movement)
         self.save_changes()
@@ -136,16 +131,12 @@ class MovementController:
             raise ValueError("Крайната локация не е намерена.")
 
         MovementValidator.validate_move_stock(product_id, from_loc, qty, self.inventory_controller)
-
         now = self._get_now()
 
-        move_entry = Movement(
-            movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
-            location_id=to_loc, movement_type=MovementType.MOVE, quantity=qty,
-            unit=product.unit, description=f"От {from_loc} към {to_loc}. {description}",
-            price=0, from_location_id=from_loc, to_location_id=to_loc,
-            date=now, created=now, modified=now
-        )
+        move_entry = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
+                              location_id=to_loc, movement_type=MovementType.MOVE, quantity=qty,
+                              unit=product.unit, description=f"От {from_loc} към {to_loc}. {description}",
+                              price=0, from_location_id=from_loc, to_location_id=to_loc, date=now, created=now, modified=now)
 
         self.movements.append(move_entry)
         self.save_changes()

@@ -21,7 +21,6 @@ class Product:
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now
-
         ProductValidator.validate_all(product_id=self.product_id, name=self.name, categories=self.categories,
                                       quantity=self.quantity, unit=self.unit, description=self.description,
                                       price=self.price, location_id=self.location_id,
@@ -39,30 +38,20 @@ class Product:
             else:
                 json_categories.append(str(c))
 
-        return {
-            "product_id": self.product_id,
-            "name": self.name,
-            "categories": json_categories,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "supplier_id": self.supplier_id,
-            "tags": self.tags,
-            "location_id": self.location_id,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"product_id": self.product_id, "name": self.name,
+                "categories": json_categories, "quantity": self.quantity,
+                "unit": self.unit, "description": self.description,
+                "price": self.price, "supplier_id": self.supplier_id,
+                "tags": self.tags, "location_id": self.location_id,
+                "created": self.created, "modified": self.modified }
 
     @staticmethod
     def from_dict(data, category_controller=None):
         """Прави нов Product от речник (JSON)."""
         if not data:
             return None
-
         raw_categories = data.get("categories", [])
         fixed_categories = []
-
         # Ако има контролер, зареждаме обектите Category
         if category_controller:
             for cid in raw_categories:
@@ -71,20 +60,12 @@ class Product:
         else:
             fixed_categories = raw_categories
 
-        return Product(
-            product_id=data.get("product_id"),
-            name=data.get("name", "Неизвестен"),
-            categories=fixed_categories,
-            quantity=data.get("quantity", 0),
-            unit=data.get("unit", "бр."),
-            description=data.get("description", ""),
-            price=data.get("price", 0),
-            supplier_id=data.get("supplier_id"),
-            tags=data.get("tags", []),
-            location_id=data.get("location_id", "W1"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"),
+            categories=fixed_categories, quantity=data.get("quantity", 0),
+            unit=data.get("unit", "бр."), description=data.get("description", ""),
+            price=data.get("price", 0), supplier_id=data.get("supplier_id"),
+            tags=data.get("tags", []), location_id=data.get("location_id", "W1"),
+            created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         return f"{self.name} | {self.price} лв. | {self.quantity} {self.unit}"

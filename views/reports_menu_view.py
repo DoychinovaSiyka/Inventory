@@ -65,21 +65,10 @@ class ReportsView:
             print("\nНяма налични фактури или продажби.\n")
             return
 
-        rows = [
-            [
-                item.get("invoice_number"),
-                item.get("date"),
-                item.get("client"),
-                item.get("product"),
-                self._format_lv(item.get("total_amount"))
-            ]
-            for item in result.data
-        ]
+        rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
+                 self._format_lv(item.get("total_amount"))] for item in result.data]
 
-        print(format_table(
-            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
-            rows
-        ))
+        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],rows))
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
@@ -88,21 +77,10 @@ class ReportsView:
             print(f"\nНяма резултати за клиент: {customer}\n")
             return
 
-        rows = [
-            [
-                item.get("invoice_number"),
-                item.get("date"),
-                item.get("client"),
-                item.get("product"),
-                self._format_lv(item.get("total_amount"))
-            ]
-            for item in result.data
-        ]
+        rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
+                 self._format_lv(item.get("total_amount"))] for item in result.data]
 
-        print(format_table(
-            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
-            rows
-        ))
+        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
     def report_sales_by_product(self, _):
         product = input("Продукт: ")
@@ -111,21 +89,10 @@ class ReportsView:
             print(f"\nНяма резултати за продукт: {product}\n")
             return
 
-        rows = [
-            [
-                item.get("invoice_number"),
-                item.get("date"),
-                item.get("client"),
-                item.get("product"),
-                self._format_lv(item.get("total_amount"))
-            ]
-            for item in result.data
-        ]
+        rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
+             self._format_lv(item.get("total_amount"))] for item in result.data]
 
-        print(format_table(
-            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
-            rows
-        ))
+        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
     # СПРАВКА – ТЪРСЕНЕ ПО ДАТА (ОПРАВЕНО И ДОВЪРШЕНО)
     def report_sales_by_date(self, _):
@@ -141,21 +108,11 @@ class ReportsView:
             print(f"\nНяма резултати за дата: {date_str}\n")
             return
 
-        rows = [
-            [
-                item.get("invoice_number"),
-                item.get("date"),
-                item.get("client"),
-                item.get("product"),
-                self._format_lv(item.get("total_amount"))
-            ]
-            for item in result.data
-        ]
+        rows = [[item.get("invoice_number"), item.get("date"),
+                 item.get("client"), item.get("product"), self._format_lv(item.get("total_amount"))]
+                for item in result.data]
 
-        print(format_table(
-            ["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],
-            rows
-        ))
+        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
     # СПРАВКА – НАЛИЧНОСТИ
     def report_stock(self, _):
@@ -163,11 +120,7 @@ class ReportsView:
         if not result.data:
             print("\nНяма налични продукти.\n")
             return
-
-        rows = [
-            [i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])]
-            for i in result.data
-        ]
+        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])] for i in result.data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
     # СПРАВКА – ДВИЖЕНИЯ
@@ -176,23 +129,10 @@ class ReportsView:
         if not result.data:
             print("\nНяма налични движения.\n")
             return
+        rows = [[item.get("date"), item.get("type"), item.get("movement_id"), item.get("quantity"), item.get("price"),
+                 item.get("location_name")] for item in result.data]
 
-        rows = [
-            [
-                item.get("date"),
-                item.get("type"),
-                item.get("movement_id"),
-                item.get("quantity"),
-                item.get("price"),
-                item.get("location_name")
-            ]
-            for item in result.data
-        ]
-
-        print(format_table(
-            ["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"],
-            rows
-        ))
+        print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))
 
     # СПРАВКА – ВСИЧКИ ДОСТАВКИ
     def report_all_deliveries(self, _):
@@ -201,22 +141,9 @@ class ReportsView:
             print("\nНяма доставки.\n")
             return
 
-        rows = [
-            [
-                item.get("date"),
-                item.get("movement_id"),
-                item.get("product"),
-                item.get("quantity"),
-                item.get("supplier"),
-                item.get("location_name")
-            ]
-            for item in result.data
-        ]
-
-        print(format_table(
-            ["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"],
-            rows
-        ))
+        rows = [[item.get("date"), item.get("movement_id"), item.get("product"), item.get("quantity"),
+                 item.get("supplier"), item.get("location_name")] for item in result.data]
+        print(format_table(["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"], rows))
 
     # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
@@ -227,22 +154,9 @@ class ReportsView:
             print("\nНяма намерени доставки.\n")
             return
 
-        rows = [
-            [
-                item.get("date"),
-                item.get("movement_id"),
-                item.get("product"),
-                item.get("quantity"),
-                item.get("supplier"),
-                item.get("location_name")
-            ]
-            for item in result.data
-        ]
-
-        print(format_table(
-            ["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"],
-            rows
-        ))
+        rows = [[item.get("date"), item.get("movement_id"), item.get("product"), item.get("quantity"),
+                 item.get("supplier"), item.get("location_name")] for item in result.data]
+        print(format_table(["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"], rows))
 
     # Оборот по дни
     def report_turnover_by_day(self, _):
@@ -251,11 +165,7 @@ class ReportsView:
             print("\nНяма продажби за показване.\n")
             return
 
-        rows = [
-            [item["date"], item["count"], f"{item['total']:.2f} лв."]
-            for item in result.data
-        ]
-
+        rows = [[item["date"], item["count"], f"{item['total']:.2f} лв."] for item in result.data]
         print(format_table(["Дата", "Брой продажби", "Оборот"], rows))
 
     # Топ продукти
@@ -264,10 +174,5 @@ class ReportsView:
         if not result.data:
             print("\nНяма продажби.\n")
             return
-
-        rows = [
-            [item["product"], item["quantity"], f"{item['total']:.2f} лв."]
-            for item in result.data
-        ]
-
+        rows = [[item["product"], item["quantity"], f"{item['total']:.2f} лв."] for item in result.data]
         print(format_table(["Продукт", "Продадено количество", "Оборот"], rows))

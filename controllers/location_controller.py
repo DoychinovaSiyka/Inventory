@@ -64,7 +64,6 @@ class LocationController:
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
-
         location.update_modified()
         self.save_changes()
         return True

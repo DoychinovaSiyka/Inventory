@@ -56,6 +56,5 @@ class UserValidator:
             for u in all_users:
                 if u.role == "Admin":
                     admin_count += 1
-
             if admin_count <= 1:
                 raise ValueError("Не можете да премахнете последния администратор в системата!")

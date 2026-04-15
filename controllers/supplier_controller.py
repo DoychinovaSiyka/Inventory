@@ -19,14 +19,8 @@ class SupplierController:
         SupplierValidator.validate_all(name, contact, address)
 
         now = self._get_now()
-        supplier = Supplier(
-            supplier_id=str(uuid.uuid4()),
-            name=name.strip(),
-            contact=contact.strip(),
-            address=address.strip(),
-            created=now,
-            modified=now
-        )
+        supplier = Supplier(supplier_id=str(uuid.uuid4()), name=name.strip(), contact=contact.strip(),
+                            address=address.strip(), created=now, modified=now)
 
         self.suppliers.append(supplier)
         self.save_changes()

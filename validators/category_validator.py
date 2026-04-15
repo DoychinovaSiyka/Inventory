@@ -68,7 +68,6 @@ class CategoryValidator:
         """Проверява за циклична зависимост (дете → родител → дете)."""
         if parent_id is None:
             return
-
         current = parent_id
         while current:
             parent = next((c for c in all_categories if c.category_id == current), None)
@@ -78,7 +77,7 @@ class CategoryValidator:
                 raise ValueError("Открита циклична зависимост между категориите.")
             current = parent.parent_id
 
-    # DELETE VALIDATION (оригиналната ти логика)
+    # DELETE VALIDATION
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
         """Проверява дали категорията може да бъде изтрита."""
@@ -111,12 +110,7 @@ class CategoryValidator:
 
         # Забрана за изтриване, ако има продукти
         if product_controller:
-            has_products = any(
-                str(category_id) in [
-                    str(cat.category_id) if isinstance(cat, Category) else str(cat)
-                    for cat in p.categories
-                ]
-                for p in product_controller.get_all()
-            )
+            has_products = any(str(category_id) in [str(cat.category_id) if isinstance(cat, Category) else str(cat)
+                                                    for cat in p.categories] for p in product_controller.get_all())
             if has_products:
                 raise ValueError("Не може да изтриете категория с налични продукти!")

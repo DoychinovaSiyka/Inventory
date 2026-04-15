@@ -6,7 +6,7 @@ from models.user import User
 class CategoryView:
     def __init__(self, controller: CategoryController):
         self.controller = controller
-        self.menu = None  # менюто ще се създава динамично според ролята
+        self.menu = None  # менюто се създава динамично според ролята
 
     def show_menu(self, user: User):
         is_admin = (user is not None and user.role == "Admin")
@@ -36,10 +36,9 @@ class CategoryView:
         if not categories:
             print("Няма категории.")
             return
-
         print("\nКатегории:\n")
 
-        # Главни категории - тези без parent_id
+        # Главни категории - без parent_id
         roots = [c for c in categories if c.parent_id is None]
         for root in roots:
             print(f"- {root.name} (ID: {root.category_id})")
@@ -53,16 +52,13 @@ class CategoryView:
     def add_category(self, _):
         name = input("Име на категория: ").strip()
         description = input("Описание: ").strip()
-
         print("\nОставете празно за главна категория или изберете номер на родител:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
         try:
             # подаваме данните като dict, както контролерът очаква
-            self.controller.add(
-                {"name": name, "description": description, "parent_id": parent_id},
-                user_id="system"
-            )
+            self.controller.add({"name": name, "description": description, "parent_id": parent_id},
+                                user_id="system")
             print("Категорията е добавена успешно!")
         except ValueError as e:
             print("Грешка:", e)
@@ -73,7 +69,6 @@ class CategoryView:
         category = self.select_category()
         if not category:
             return
-
         category_id = category.category_id
         print("\nОставете празно, ако не искате да променяте полето.")
         new_name = input(f"Ново име ({category.name}): ").strip()
@@ -87,7 +82,7 @@ class CategoryView:
             if new_desc:
                 self.controller.update_description(category_id, new_desc, "system")
 
-            # винаги обновяваме родителя (валидаторът ще реши дали е позволено)
+            # обновяваме родителя - валидаторът ще реши дали е позволено
             self.controller.update_parent(category_id, parent_id, "system")
 
             print("Категорията е обновена успешно!")
@@ -103,7 +98,6 @@ class CategoryView:
         confirm = input(f"Наистина ли искате да изтриете '{category.name}'? (y/n): ").strip().lower()
         if confirm != "y":
             return
-
         try:
             self.controller.remove(category.category_id, "system")
             print("Категорията е изтрита успешно!")

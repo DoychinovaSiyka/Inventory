@@ -12,7 +12,6 @@ class LocationValidator:
         if zone is not None and len(zone) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
 
-
     @staticmethod
     def validate_capacity(capacity):
         if isinstance(capacity, str):
@@ -26,7 +25,7 @@ class LocationValidator:
 
         return capacity  # връщаме нормализирана стойност
 
-    # MASTER VALIDATION
+
     @staticmethod
     def validate_all(name, zone, capacity):
         LocationValidator.validate_name(name)

@@ -14,8 +14,8 @@ from views.admin_menu_view import AdminMenuView
 from views.operator_menu_view import OperatorMenuView
 from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
-
 from views.password_utils import input_password
+
 from storage.json_repository import JSONRepository
 from datetime import datetime
 
@@ -23,8 +23,8 @@ from datetime import datetime
 class InventoryApplication:
     def __init__(self):
         self._init_repositories()   # Инициализация на хранилищата (Repositories)
-        self._init_controllers()      #  Инициализация на контролерите
-        self._init_menus()            #  Инициализация на менютата
+        self._init_controllers()     #  Инициализация на контролерите
+        self._init_menus()           #  Инициализация на менютата
 
     #  Инициализация на хранилищата
     def _init_repositories(self):
@@ -61,19 +61,16 @@ class InventoryApplication:
         # MovementController получава inventory_controller
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
                                                       self.user_controller, self.location_controller,
-                                                      self.stocklog_controller,
-                                                      self.invoice_controller, self.activity_log_controller,
-                                                      self.inventory_controller)
+                                                      self.stocklog_controller, self.invoice_controller,
+                                                      self.activity_log_controller, self.inventory_controller)
 
         # MovementController  получава supplier_controller
         self.movement_controller.attach_supplier_controller(self.supplier_controller)
         self.report_controller = ReportController(self.report_repo, self.product_controller,
                                                   self.movement_controller, self.invoice_controller, self.location_controller)
-
         #  Автоматично генериране и записване на отчети само веднъж
         initial_reports = self.report_controller.generate_all_reports()
         self.report_controller.save_reports_once(initial_reports)
-
         # Инициализация на логистичния модул (Dijkstra)
         self.logistic_service = GraphView(self.inventory_controller)
 
@@ -100,14 +97,12 @@ class InventoryApplication:
     def _login_flow(self):
         username = input("Потребителско име: ")
         password = input_password("Парола: ")
-
         user = self.user_controller.login(username, password)
         if not user:
             print("[!] Грешно потребителско име или парола.")
             return
 
         self.activity_log_controller.add_log(user.user_id,"LOGIN",f"Потребител {user.username} влезе.")
-
         if user.role == "Admin":
             self.admin_menu.show_menu(user)
         elif user.role == "Operator":
@@ -138,8 +133,8 @@ class InventoryApplication:
             print("1. Вход с потребител")
             print("2. Вход като анонимен потребител (разглеждане)")
             print("0. Изход")
-            choice = input("\nИзбор: ").strip()
 
+            choice = input("\nИзбор: ").strip()
             if choice == "1":
                 self._login_flow()
             elif choice == "2":

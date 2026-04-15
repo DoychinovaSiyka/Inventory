@@ -21,28 +21,19 @@ class Category:
 
     def to_dict(self):
         """Сериализация за запис в JSON."""
-        return {
-            "category_id": self.category_id,
-            "name": self.name,
-            "description": self.description,
-            "parent_id": self.parent_id,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"category_id": self.category_id, "name": self.name, "description": self.description,
+            "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
         """Десериализация при зареждане от JSON."""
         if not data:
             return None
-        return Category(
-            category_id=data.get("category_id"),
-            name=data.get("name"),
-            description=data.get("description", ""),
-            parent_id=data.get("parent_id"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Category(category_id=data.get("category_id"), name=data.get("name"),
+                        description=data.get("description", ""),
+                        parent_id=data.get("parent_id"),
+                        created=data.get("created"),
+                        modified=data.get("modified"))
 
     def __str__(self):
         parent_info = f" (подкатегория на {self.parent_id})" if self.parent_id else ""

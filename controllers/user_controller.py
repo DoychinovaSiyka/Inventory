@@ -70,18 +70,10 @@ class UserController:
         if self.get_by_username(username):
             raise ValueError("Потребителското име вече съществува.")
 
-        new_user = User(
-            user_id=str(uuid.uuid4()),
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            email=email.strip(),
-            username=username.strip(),
-            password=self._hash_password(password),
-            role=role,
-            status="Active",
-            created=self._get_now(),
-            modified=self._get_now()
-        )
+        new_user = User(user_id=str(uuid.uuid4()), first_name=first_name.strip(),
+                        last_name=last_name.strip(), email=email.strip(), username=username.strip(),
+                        password=self._hash_password(password), role=role, status="Active", created=self._get_now(),
+                        modified=self._get_now())
 
         self.users.append(new_user)
         self.save_changes()
@@ -127,7 +119,6 @@ class UserController:
         user = self.get_by_username(target_username)
         if not user:
             raise ValueError("Потребителят не е намерен.")
-
         # Защита от премахване на последния админ
         UserValidator.validate_not_last_admin(user, self.users)
         self.users.remove(user)
@@ -140,37 +131,15 @@ class UserController:
         self._create_default_operator()
 
     def _create_default_admin(self):
-        self.register(
-            "Admin",
-            "System",
-            "admin@stock.com",
-            "admin",
-            "admin123",
-            role="Admin"
-        )
+        self.register("Admin","System","admin@stock.com",
+                      "admin","admin123", role="Admin")
 
     def _create_default_operator(self):
-        self.register(
-            "Ivan",
-            "Petrov",
-            "ivan@example.com",
-            "ivan",
-            "test123",
-            role="Operator"
-        )
+        self.register("Ivan","Petrov","ivan@example.com","ivan",
+                      "test123", role="Operator")
 
     # ANONYMOUS USER FACTORY
     def create_anonymous_user(self) -> User:
         now = self._get_now()
-        return User(
-            user_id="guest-0000",
-            first_name="Anonymous",
-            last_name="",
-            email="",
-            username="guest",
-            password="",
-            role="Anonymous",
-            status="Active",
-            created=now,
-            modified=now
-        )
+        return User(user_id="guest-0000", first_name="Anonymous", last_name="", email="",
+                    username="guest", password="", role="Anonymous", status="Active", created=now, modified=now)

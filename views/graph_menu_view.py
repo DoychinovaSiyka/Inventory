@@ -7,10 +7,8 @@ class GraphView:
     def __init__(self, inventory_controller):
         self.inventory_controller = inventory_controller
         self.graph = WarehouseGraph()
-        # Създаваме мрежата от складове
-        self._setup_network()
-        # Създаваме менюто отделно
-        self.menu = self._build_menu()
+        self._setup_network() # Създаваме мрежата от складове
+        self.menu = self._build_menu()  # Създаваме менюто отделно
 
     # Създаване на меню
     def _build_menu(self):

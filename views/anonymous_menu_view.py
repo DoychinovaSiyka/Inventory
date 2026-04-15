@@ -12,6 +12,7 @@ class AnonymousMenuView:
         self.product_view = ProductView(controllers["product"], controllers["category"],
                                         controllers["location"],
                                          controllers["activity_log"])
+
         self.category_view = CategoryView(controllers["category"])
         self.system_info_view = SystemInfoView()
         self.menu = self._build_menu()  # Създавам менюто отделно

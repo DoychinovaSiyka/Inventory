@@ -11,13 +11,13 @@ class ProductSortView:
 
     # Меню за избор на метод за сортиране
     def _build_menu(self):
-        return Menu("Сортиране на продукти", [MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
+        return Menu("Сортиране на продукти",  [
+            MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
             MenuItem("2", "По цена (висока → ниска) – selection sort", self.sort_price_desc),
             MenuItem("3", "По цена (ниска → висока) – bubble sort", self.sort_price_asc),
             MenuItem("4", "По количество (високо → ниско) – bubble sort", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско → високо) – selection sort", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, _=None):
         while True:

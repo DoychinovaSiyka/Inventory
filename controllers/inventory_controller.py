@@ -40,14 +40,8 @@ class InventoryController:
             record["quantity"] += qty
             record["modified"] = now
         else:
-            self.stock.append({
-                "product_id": product_id,
-                "product": product_name,
-                "warehouse": warehouse_id,
-                "quantity": qty,
-                "created": now,
-                "modified": now
-            })
+            self.stock.append({"product_id": product_id, "product": product_name,
+                               "warehouse": warehouse_id, "quantity": qty, "created": now, "modified": now})
 
         if should_save:
             self.save()
@@ -112,12 +106,7 @@ class InventoryController:
         Използва се само при първоначално стартиране на системата."""
         for p in products:
             if p.location_id and p.quantity > 0:
-                self.increase_stock(
-                    product_id=p.product_id,
-                    product_name=p.name,
-                    warehouse_id=p.location_id,
-                    qty=p.quantity,
-                    should_save=False
-                )
+                self.increase_stock(product_id=p.product_id, product_name=p.name,
+                                    warehouse_id=p.location_id, qty=p.quantity, should_save=False)
 
         self.save()

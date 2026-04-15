@@ -131,17 +131,8 @@ class ProductView:
 
         try:
             u_id = user.user_id
-
-            product_data = {
-                "name": name,
-                "category_ids": [category_id],
-                "quantity": quantity,
-                "unit": unit,
-                "description": description,
-                "price": price,
-                "supplier_id": None,
-                "location_id": location_id
-            }
+            product_data = {"name": name, "category_ids": [category_id], "quantity": quantity, "unit": unit,
+                "description": description, "price": price, "supplier_id": None, "location_id": location_id}
 
             self.product_controller.add(product_data, u_id)
 
@@ -166,7 +157,6 @@ class ProductView:
             return
 
         print(f"Редактиране на {product.name}")
-
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
@@ -192,10 +182,7 @@ class ProductView:
             return
 
         columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
-        rows = [
-            [p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)]
-            for p in products
-        ]
+        rows = [[p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)] for p in products]
 
         print(format_table(columns, rows))
 
@@ -235,7 +222,6 @@ class ProductView:
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
-
         raw = input("Изберете категория (номер или Category ID): ").strip()
         try:
             if raw.isdigit():
@@ -249,20 +235,16 @@ class ProductView:
         except Exception as e:
             print(e)
             return
-
         results = self.product_controller.search_by_category(selected_id)
-
         if not results:
             print("Няма продукти.")
             return
-
         for p in results:
             print(f"{p.name} | {p.location_id} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount_raw = input("Количество за добавяне: ")
-
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
             u_id = user.user_id
@@ -274,7 +256,6 @@ class ProductView:
     def decrease_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount_raw = input("Количество за изваждане: ")
-
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
             u_id = user.user_id
@@ -316,11 +297,9 @@ class ProductView:
 
     def advanced_search(self, _):
         print("\n  Разширено търсене  ")
-
         keyword = input("Ключова дума: ").strip() or None
         min_raw = input("Мин. цена: ")
         max_raw = input("Макс. цена: ")
-
         try:
             min_p = ProductValidator.parse_optional_float(min_raw)
             max_p = ProductValidator.parse_optional_float(max_raw)
@@ -330,10 +309,8 @@ class ProductView:
 
         results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p,
                                                           max_price=max_p)
-
         if not results:
             print("Няма резултати.")
             return
-
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

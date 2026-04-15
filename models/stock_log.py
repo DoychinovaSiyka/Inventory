@@ -13,30 +13,19 @@ class StockLog:
 
     def to_dict(self):
         """Превръща обекта в речник за JSON съхранение."""
-        return {
-            "log_id": self.log_id,
-            "product_id": self.product_id,
-            "location_id": self.location_id,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "action": self.action,
-            "timestamp": self.timestamp
-        }
+        return {"log_id": self.log_id, "product_id": self.product_id,
+                "location_id": self.location_id, "quantity": self.quantity,
+                "unit": self.unit, "action": self.action, "timestamp": self.timestamp}
 
     @staticmethod
     def from_dict(data):
         """Възстановява обекта от речник (JSON)."""
         if not data:
             return None
-        return StockLog(
-            log_id=data.get("log_id"),
-            product_id=data.get("product_id"),
-            location_id=data.get("location_id"),
-            quantity=data.get("quantity"),
-            unit=data.get("unit", "бр."),
-            action=data.get("action"),
-            timestamp=data.get("timestamp")
-        )
+        return StockLog(log_id=data.get("log_id"), product_id=data.get("product_id"),
+                        location_id=data.get("location_id"), quantity=data.get("quantity"),
+                        unit=data.get("unit", "бр."), action=data.get("action"),
+                        timestamp=data.get("timestamp"))
 
     def __str__(self):
         return f"[{self.timestamp}] {self.action.upper()} | {self.product_id} @ {self.location_id} | {self.quantity} {self.unit}"

@@ -24,11 +24,9 @@ class SupplierView:
 
         # admin-only функции
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на доставчик", self.add_supplier),
-                MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)
-            ])
+            menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
+                               MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
+                               MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", menu_items)
@@ -42,7 +40,6 @@ class SupplierView:
 
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
-
         print("\n" + format_table(columns, rows))
 
     # добавяне на доставчик (admin only)
@@ -50,7 +47,6 @@ class SupplierView:
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()
         address = input("Адрес: ").strip()
-
         try:
             self.controller.add(name=name, contact=contact, address=address)
             print("Доставчикът е добавен успешно!")
@@ -69,19 +65,14 @@ class SupplierView:
         if not supplier:
             print("Доставчикът не е намерен.")
             return
-
         print("\nОставете празно, ако не искате да променяте полето.")
         new_name = input(f"Ново име ({supplier.name}): ").strip()
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
 
         try:
-            self.controller.update(
-                supplier_id=supplier_id,
-                name=new_name or supplier.name,
-                contact=new_contact or supplier.contact,
-                address=new_address or supplier.address
-            )
+            self.controller.update(supplier_id=supplier_id, name=new_name or supplier.name,
+                                   contact=new_contact or supplier.contact, address=new_address or supplier.address)
             print("Доставчикът е обновен успешно!")
         except ValueError as e:
             print("Грешка:", e)
