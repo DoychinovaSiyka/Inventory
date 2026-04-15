@@ -34,22 +34,18 @@ class SupplierController:
         sid = str(supplier_id)
         return next((s for s in self.suppliers if s.supplier_id == sid), None)
 
-
+    # UPDATE
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
 
-        supplier = self.get_by_id(supplier_id)
-        if not supplier:
-            raise ValueError(f"Доставчик с ID {supplier_id} не е намерен.")
+        supplier = SupplierValidator.validate_exists(supplier_id, self)
 
         if name is not None:
             SupplierValidator.validate_name(name)
             supplier.name = name.strip()
-
         if contact is not None:
             SupplierValidator.validate_contact(contact)
             supplier.contact = contact.strip()
-
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
@@ -58,14 +54,14 @@ class SupplierController:
         self.save_changes()
         return supplier
 
-
+    # DELETE
     def remove(self, supplier_id: str) -> bool:
+        SupplierValidator.validate_exists(supplier_id, self)
+
         supplier = self.get_by_id(supplier_id)
-        if supplier:
-            self.suppliers.remove(supplier)
-            self.save_changes()
-            return True
-        return False
+        self.suppliers.remove(supplier)
+        self.save_changes()
+        return True
 
     def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

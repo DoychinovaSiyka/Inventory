@@ -3,41 +3,31 @@ from datetime import datetime
 
 class MovementValidator:
 
+    # BASIC TYPE VALIDATION
+    @staticmethod
+    def normalize_movement_type(movement_type):
+        """Унифицира входа към 'IN', 'OUT', 'MOVE'."""
+        mt = str(movement_type).upper()
+        mapping = {"0": "IN", "1": "OUT", "2": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
+        if mt not in mapping:
+            raise ValueError("Невалиден тип движение.")
+        return mapping[mt]
+
     @staticmethod
     def validate_movement_type(movement_type):
-        # Приема или int (0,1,2), или string ("IN","OUT","MOVE")
-        if movement_type is None:
-            raise ValueError("Типът движение е задължителен.")
-        # Ако е enum -> контролерът ще го подаде като string
-        mt = str(movement_type).upper()
-
-        if mt not in ("IN", "OUT", "MOVE"):
+        """Проверява дали типът е IN / OUT / MOVE."""
+        if movement_type not in ("IN", "OUT", "MOVE"):
             raise ValueError("Невалиден тип движение.")
-
-
-    @staticmethod
-    def parse_movement_type(raw_type: str):
-        raw_type = raw_type.strip()
-        if raw_type == "0":
-            return "IN"
-        elif raw_type == "1":
-            return "OUT"
-        elif raw_type == "2":
-            return "MOVE"
-        raise ValueError("Невалиден тип движение. Използвайте 0=IN, 1=OUT, 2=MOVE.")
 
     @staticmethod
     def validate_description(description):
         if description is None:
             raise ValueError("Описанието е задължително.")
-
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
-
         desc = description.strip()
         if len(desc) < 3:
             raise ValueError("Описанието трябва да е поне 3 символа.")
-
         if len(desc) > 500:
             raise ValueError("Описанието е твърде дълго.")
 
@@ -61,17 +51,8 @@ class MovementValidator:
             raise ValueError("Цената не може да е отрицателна.")
         return round(p, 2)
 
-    @staticmethod
-    def normalize_movement_type(movement_type):
-        # Връща string, за да няма нужда от импорт на MovementType
-        mt = str(movement_type).upper()
 
-        mapping = {"0": "IN", "1": "OUT", "2": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
-        if mt not in mapping:
-            raise ValueError("Невалиден тип движение.")
-
-        return mapping[mt]
-
+    # EXISTENCE VALIDATION
     @staticmethod
     def validate_user_exists(user_id, user_controller):
         user = user_controller.get_by_id(user_id)
@@ -84,6 +65,14 @@ class MovementValidator:
         if not product:
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
 
+    @staticmethod
+    def validate_location_exists(location_id, location_controller):
+        loc = location_controller.get_by_id(location_id)
+        if not loc:
+            raise ValueError(f"Локация с ID {location_id} не съществува.")
+
+
+    # BUSINESS RULES FOR IN / OUT
     @staticmethod
     def validate_in_out_rules(movement_type, product, quantity, supplier_id, customer):
         mt = str(movement_type).upper()
@@ -102,16 +91,36 @@ class MovementValidator:
             raise ValueError("MOVE може да се извършва само чрез move_product().")
 
     @staticmethod
+    def validate_location_rules(movement_type, product, target_location_id):
+        """Правила за това в кой склад може да се извърши IN/OUT."""
+        mt = str(movement_type).upper()
+
+        # IN: не може да доставяш в същия склад
+        if mt == "IN":
+            if product.location_id and str(product.location_id) == str(target_location_id):
+                raise ValueError("Не може да доставяте продукт в същата локация, в която вече се намира.")
+
+        # OUT: трябва да е от склада, в който е продуктът
+        if mt == "OUT":
+            if product.location_id and str(product.location_id) != str(target_location_id):
+                raise ValueError("Продажбата трябва да е от склада, в който се намира продуктът.")
+
+
+    # MOVE VALIDATION
+    @staticmethod
     def validate_move_locations(from_location_id, to_location_id):
-        if from_location_id == to_location_id:
+        if str(from_location_id) == str(to_location_id):
             raise ValueError("MOVE трябва да е между различни локации.")
 
     @staticmethod
     def validate_move_stock(product_id, from_location_id, quantity, inventory_controller):
-        record = inventory_controller._find(product_id, from_location_id)
+        """Проверява дали има наличност в началния склад."""
+        record = inventory_controller.get_stock(product_id, from_location_id)
         if not record or record["quantity"] < quantity:
             raise ValueError("Недостатъчна наличност в този склад.")
 
+
+    # DATE FILTERING
     @staticmethod
     def filter_by_date_range(movements, start_date, end_date):
         def parse(d):
@@ -130,6 +139,8 @@ class MovementValidator:
 
         return results
 
+
+    # INDEX VALIDATION
     @staticmethod
     def validate_index(raw, length, label):
         if not raw.isdigit():

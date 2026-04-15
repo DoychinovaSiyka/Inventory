@@ -54,6 +54,14 @@ class SupplierValidator:
                 raise ValueError(f"Доставчик с името '{name}' вече съществува.")
 
     @staticmethod
+    def validate_exists(supplier_id, controller):
+        """ Проверява дали доставчикът съществува и го връща. """
+        supplier = controller.get_by_id(supplier_id)
+        if not supplier:
+            raise ValueError(f"Доставчик с ID {supplier_id} не е намерен.")
+        return supplier
+
+    @staticmethod
     def validate_all(name, contact, address):
         """ Изпълнява всички проверки наведнъж. """
         SupplierValidator.validate_name(name)

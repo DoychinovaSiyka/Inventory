@@ -15,7 +15,6 @@ class ReportController:
         self.location_controller = location_controller
         raw_data = self.repo.load()
         self.reports = []
-
         # Ако raw_data е списък, го зареждаме. Ако е друго – започваме на чисто.
         if isinstance(raw_data, list):
             self.reports = [Report.from_dict(r) for r in raw_data if isinstance(r, dict)]

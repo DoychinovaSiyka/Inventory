@@ -22,7 +22,6 @@ class UserActivityLogController:
         log_entry = UserActivityLog(user_id, action, details).to_dict()
         # Добавяме уникално log_id
         log_entry["log_id"] = self._generate_log_id()
-
         # Зареждам текущите записи
         data = self.repo.get_all()
         if not isinstance(data, list):

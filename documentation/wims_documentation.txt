@@ -119,6 +119,27 @@ stock_log_validator.py
 supplier_validator.py
 user_validator.py
 
+
+filters/
+---------
+category_filters.py
+invoice_filters.py
+movement_filters.py
+product_filters.py
+report_filters.py
+stocklog_filters.py
+
+
+view_models/
+---------
+product_view_model.py
+
+analytics/
+---------
+category_analytics.py
+product_analytics.py
+
+
 views/
 ---------
 admin_menu_view.py

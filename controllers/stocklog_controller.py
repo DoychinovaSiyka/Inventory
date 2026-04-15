@@ -5,6 +5,7 @@ from datetime import datetime
 from filters.stocklog_filters import (filter_by_location, filter_by_product, filter_search)
 
 
+
 class StockLogController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
@@ -22,6 +23,7 @@ class StockLogController:
 
         self.logs.append(log)
         self.save_changes()
+
         return log
 
     # READ операции
