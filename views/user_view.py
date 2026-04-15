@@ -70,7 +70,7 @@ class UserView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # Деактивиране на потребител
+
     def deactivate_user(self, user):
         username = input("Потребителско име: ")
         try:

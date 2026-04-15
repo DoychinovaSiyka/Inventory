@@ -75,12 +75,7 @@ class LocationView:
         new_capacity = input(f"Нов капацитет ({location.capacity}): ").strip() or None
 
         try:
-            self.location_controller.update(
-                loc_id,
-                name=new_name,
-                zone=new_zone,
-                capacity=new_capacity
-            )
+            self.location_controller.update(loc_id, name=new_name, zone=new_zone, capacity=new_capacity)
             print(f"[Успех] Данните за '{loc_id}' бяха обновени успешно!")
         except ValueError as e:
             print(f"[Грешка] {e}")

@@ -103,4 +103,21 @@ class InventoryController:
                 except:
                     pass
 
-        self.save()  # Записвам финалния резултат веднъж
+        self.save()
+
+
+    # Инициализация на наличностите от продуктите
+    def initialize_from_products(self, products):
+        """ Създава начални записи за наличностите на база продуктите.
+        Използва се само при първоначално стартиране на системата."""
+        for p in products:
+            if p.location_id and p.quantity > 0:
+                self.increase_stock(
+                    product_id=p.product_id,
+                    product_name=p.name,
+                    warehouse_id=p.location_id,
+                    qty=p.quantity,
+                    should_save=False
+                )
+
+        self.save()

@@ -14,6 +14,7 @@ from filters.product_filters import (filter_search, filter_by_multiple_category_
 from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic, bubble_sort_logic, selection_sort_logic)
 from analytics.product_analytics import (calculate_average_price, calculate_total_inventory_value,
                                          get_most_expensive_product, get_cheapest_product, group_products_by_category)
+from view_models.product_view_model import ProductViewModel
 
 
 class ProductController:
@@ -200,7 +201,6 @@ class ProductController:
         name = name.lower()
         before = len(self.products)
         self.products = [p for p in self.products if p.name.lower() != name]
-
         if len(self.products) < before:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт '{name}'")
@@ -208,23 +208,10 @@ class ProductController:
 
         return False
 
-    # GROUPING FOR VIEW
+
     def group_by_category_display(self):
         groups = self.group_by_category()
-        result = {}
-
-        for category_id, products in groups.items():
-            items = []
-            for p in products:
-                items.append({
-                    "name": p.name,
-                    "location": p.location_id,
-                    "quantity": p.quantity,
-                    "unit": p.unit
-                })
-            result[category_id] = items
-
-        return result
+        return ProductViewModel.group_by_category(groups)
 
     # FILTERS
     def search(self, keyword: str) -> List[Product]:
