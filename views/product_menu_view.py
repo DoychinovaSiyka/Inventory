@@ -122,7 +122,9 @@ class ProductView:
                     raise ValueError("Невалиден избор за Локация.")
                 location_id = locations[loc_idx].location_id
             else:
-                ProductValidator.validate_uuid(loc_raw, "Location ID")
+                #  Location ID НЕ Е UUID
+                if not isinstance(loc_raw, str) or loc_raw.strip() == "":
+                    raise ValueError("Невалиден Location ID.")
                 location_id = loc_raw
         except Exception as e:
             print(e)
