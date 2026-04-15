@@ -7,7 +7,6 @@ class Invoice:
                  unit_price, total_price, customer, date,
                  created=None, modified=None):
 
-        # ID-то се подава от контролера или се зарежда от JSON файла. Ако липсва, тук се генерира ново UUID.
         self.invoice_id = str(invoice_id) if invoice_id else None
         self.movement_id = str(movement_id) if movement_id else None
         self.product = product
@@ -39,19 +38,10 @@ class Invoice:
 
     def to_dict(self):
         """Конвертиране към речник за JSON."""
-        return {
-            "invoice_id": self.invoice_id,
-            "movement_id": self.movement_id,
-            "product": self.product,
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "unit_price": self.unit_price,
-            "total_price": self.total_price,
-            "customer": self.customer,
-            "date": self.date,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"invoice_id": self.invoice_id, "movement_id": self.movement_id,
+                "product": self.product, "quantity": self.quantity, "unit": self.unit,
+                "unit_price": self.unit_price, "total_price": self.total_price, "customer": self.customer,
+                "date": self.date, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):

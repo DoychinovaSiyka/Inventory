@@ -1,8 +1,12 @@
 from datetime import datetime
 from models.report import Report
 from storage.json_repository import JSONRepository
-from filters.report_filters import (filter_out_invoices, filter_movements_by_product,
-                                    group_turnover_by_day, group_top_products)
+from filters.report_filters import (
+    filter_out_invoices,
+    filter_movements_by_product,
+    group_turnover_by_day,
+    group_top_products
+)
 
 
 class ReportController:
@@ -14,16 +18,12 @@ class ReportController:
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
-
-        # Зареждаме данните внимателно
         raw_data = self.repo.load()
         self.reports = []
 
-        # Ако raw_data е списък, го зареждаме. Ако е речник или празен низ, почваме на чисто.
+        # Ако raw_data е списък, го зареждаме. Ако е друго – започваме на чисто.
         if isinstance(raw_data, list):
             self.reports = [Report.from_dict(r) for r in raw_data if isinstance(r, dict)]
-        else:
-            self.reports = []
 
     def _create_report(self, report_type, parameters, data):
         """ Вътрешен помощен метод за създаване на обекта Report. """
@@ -41,11 +41,13 @@ class ReportController:
 
         for p in products:
             loc = self.location_controller.get_by_id(p.location_id)
+            location_name = loc.name if loc else "Няма склад"
+
             data.append({
                 "product": p.name,
                 "quantity": round(float(p.quantity), 2),
                 "price": round(float(p.price), 2),
-                "location": loc.name if loc else "Няма склад"
+                "location": location_name
             })
 
         return self._create_report("stock", {}, data)
@@ -63,16 +65,19 @@ class ReportController:
             loc = self.location_controller.get_by_id(m.location_id)
             location_name = loc.name if loc else "Неизвестен склад"
 
+            # MOVE движения нямат цена
+            movement_price = m.price if m.movement_type.name in ("IN", "OUT") else None
             data.append({
                 "date": m.date,
                 "type": m.movement_type.name,
                 "movement_id": m.movement_id,
                 "quantity": m.quantity,
-                "price": getattr(m, "price", None),
+                "price": movement_price,
                 "location_name": location_name
             })
 
         return self._create_report("movements_history", {}, data)
+
 
     # СПРАВКА 3: Обороти
     def report_turnover_by_day(self):
@@ -101,22 +106,20 @@ class ReportController:
         for inv in invoices:
             movement = self.movement_controller.get_by_id(inv.movement_id)
 
-            product_name = "N/A"
             if movement:
                 product = self.product_controller.get_by_id(movement.product_id)
                 product_name = product.name if product else "Изтрит продукт"
+            else:
+                product_name = "N/A"
 
-            inv_num = getattr(inv, 'invoice_id',
-                       getattr(inv, 'number',
-                       getattr(inv, 'invoice_number', 'N/A')))
+            invoice_number = inv.invoice_id
 
-            client = getattr(inv, 'customer_name',
-                      getattr(inv, 'customer', 'Неизвестен'))
+            client = inv.customer if inv.customer else "Неизвестен"
 
-            total = round(float(getattr(inv, "total_price", 0)), 2)
+            total = round(float(inv.total_price), 2)
 
             data.append({
-                "invoice_number": inv_num,
+                "invoice_number": invoice_number,
                 "date": inv.date,
                 "client": client,
                 "product": product_name,
@@ -204,10 +207,9 @@ class ReportController:
             location_name = loc.name if loc else "Неизвестен склад"
 
             supplier_name = "-"
-            if hasattr(self.movement_controller, "supplier_controller"):
-                if m.supplier_id:
-                    supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
-                    supplier_name = supplier.name if supplier else "-"
+            if m.supplier_id:
+                supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
+                supplier_name = supplier.name if supplier else "-"
 
             data.append({
                 "date": m.date,
@@ -236,16 +238,16 @@ class ReportController:
             location_name = loc.name if loc else "Неизвестен склад"
 
             supplier_name = "-"
-            if hasattr(m, "supplier_id") and m.supplier_id:
+            if m.supplier_id:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
-                if supplier:
-                    supplier_name = supplier.name
+                supplier_name = supplier.name if supplier else "-"
 
-            if (keyword in m.movement_id.lower() or
+            if (
+                keyword in m.movement_id.lower() or
                 keyword in product_name.lower() or
                 keyword in supplier_name.lower() or
-                keyword in m.date.lower()):
-
+                keyword in m.date.lower()
+            ):
                 data.append({
                     "date": m.date,
                     "movement_id": m.movement_id,
@@ -259,12 +261,11 @@ class ReportController:
 
     def generate_all_reports(self):
         """ Генерира пакет от всички видове отчети за инициализацията в main.py. """
-        all_reports = [
+        return [
             self.report_stock().to_dict(),
             self.report_turnover_by_day().to_dict(),
             self.report_top_products().to_dict()
         ]
-        return all_reports
 
     def save_reports_once(self, reports_list):
         """ Методът, който се вика от main.py. Очаква списък. """

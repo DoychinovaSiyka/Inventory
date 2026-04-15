@@ -33,9 +33,8 @@ class UserActivityLogController:
         # Записвам обратно в JSON файла
         self.repo.save(data)
 
-    # READ
+    # READ - Връща всички логове от JSON файла
     def get_all_logs(self):
-        # Връща всички логове от JSON файла
         data = self.repo.get_all()
         return data if isinstance(data, list) else []
 

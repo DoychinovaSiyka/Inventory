@@ -37,7 +37,7 @@ class UserController:
     def _hash_password(self, password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
-    # Запис в JSON
+
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
@@ -87,7 +87,7 @@ class UserController:
         self.save_changes()
         return new_user
 
-    # Промяна на роля (реалистична логика)
+    # Промяна на роля
     def change_role(self, username, new_role):
         user = self.get_by_username(username)
         if not user:
@@ -111,7 +111,6 @@ class UserController:
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
-        # Не може да сменяш със същия статус
         if user.status == new_status:
             raise ValueError(f"Потребителят вече е в статус '{new_status}'.")
 

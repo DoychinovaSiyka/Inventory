@@ -17,7 +17,7 @@ class InvoiceController:
         self._load_invoices()
 
     def _load_invoices(self):
-        """ Зарежда данните през модела (чиста архитектура). """
+        """ Зарежда данните през модела. """
         raw_data = self.repo.load()
         self.invoices = [Invoice.from_dict(inv) for inv in raw_data]
 
@@ -44,7 +44,6 @@ class InvoiceController:
         InvoiceValidator.validate_movement_for_invoice(movement)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         qty = float(movement.quantity)
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
@@ -82,11 +81,9 @@ class InvoiceController:
         return filter_by_product(self.invoices, keyword)
 
     def search_by_date(self, date_str: str):
-        """
-        Търсене по дата:
+        """ Търсене по дата:
         - ако датата е невалидна → връща "INVALID_DATE"
-        - ако е валидна → връща списък с фактури
-        """
+        - ако е валидна → връща списък с фактури"""
         try:
             datetime.strptime(date_str, "%Y-%m-%d")
         except ValueError:
@@ -107,7 +104,7 @@ class InvoiceController:
     def advanced_search(self, **kwargs) -> List[Invoice]:
         return filter_advanced(self.invoices, **kwargs)
 
-    # UPDATE
+
     def update_customer(self, invoice_id: str, new_customer: str, user_id: str) -> bool:
         inv = self.get_by_id(invoice_id)
         if not inv:

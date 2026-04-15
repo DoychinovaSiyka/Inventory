@@ -31,7 +31,7 @@ class CategoryController:
         description = category_data.get('description', "")
         parent_id = category_data.get('parent_id')
 
-        # Валидацията викаме от външния пакет. Валидаторът проверява всичко преди триене
+        # Валидаторът проверява всичко преди триене
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)

@@ -190,7 +190,7 @@ class MovementController:
             if stock_qty <= 0:
                 raise ValueError("Няма наличност от този продукт в избраната локация.")
 
-    # READ / SEARCH - са във филтрите
+    # READ / SEARCH
     def get_all(self) -> List[Movement]:
         return self.movements
 

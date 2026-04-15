@@ -9,7 +9,7 @@ class Product:
 
         self.product_id = str(product_id) if product_id else None
         self.name = name
-        # Категориите винаги са списък
+        # Категориите са списък
         self.categories = categories if isinstance(categories, list) else []
         self.quantity = quantity
         self.price = price
@@ -22,19 +22,10 @@ class Product:
         self.created = created or now
         self.modified = modified or now
 
-        # Викаме валидатора да си свърши работата
-        ProductValidator.validate_all(
-            product_id=self.product_id,
-            name=self.name,
-            categories=self.categories,
-            quantity=self.quantity,
-            unit=self.unit,
-            description=self.description,
-            price=self.price,
-            location_id=self.location_id,
-            supplier_id=self.supplier_id,
-            tags=self.tags
-        )
+        ProductValidator.validate_all(product_id=self.product_id, name=self.name, categories=self.categories,
+                                      quantity=self.quantity, unit=self.unit, description=self.description,
+                                      price=self.price, location_id=self.location_id,
+                                      supplier_id=self.supplier_id, tags=self.tags)
 
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

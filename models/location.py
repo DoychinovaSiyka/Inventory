@@ -22,14 +22,8 @@ class Location:
 
     def to_dict(self):
         """Сериализация за JSON."""
-        return {
-            "location_id": self.location_id,
-            "name": self.name,
-            "zone": self.zone,
-            "capacity": self.capacity,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"location_id": self.location_id, "name": self.name, "zone": self.zone,
+                "capacity": self.capacity, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
