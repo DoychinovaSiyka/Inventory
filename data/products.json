@@ -341,7 +341,7 @@
         "categories": [
             "sub-alko-001"
         ],
-        "quantity": 100.0,
+        "quantity": 90.0,
         "unit": "л",
         "description": "Свежо бяло вино с цитрусови нотки.",
         "price": 25.0,
@@ -349,6 +349,6 @@
         "tags": [],
         "location_id": "W5",
         "created": "2026-04-15T09:04:06.270739",
-        "modified": "2026-04-15 09:05:51"
+        "modified": "2026-04-15 16:55:32"
     }
 ]

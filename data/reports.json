@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "612c94c5-508c-4f13-9517-e3a65c9e8d39",
+        "report_id": "75949ade-8f1d-4de6-bc06-90673a237dd4",
         "report_type": "stock",
-        "generated_on": "2026-04-15 11:52:30",
+        "generated_on": "2026-04-15 16:51:49",
         "parameters": {},
         "data": [
             {
@@ -140,9 +140,9 @@
         ]
     },
     {
-        "report_id": "24dc819a-ed23-491b-b309-5cbeefafe11b",
+        "report_id": "949ff48e-b443-40b9-91d6-95d27aa9fcf1",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-15 11:52:30",
+        "generated_on": "2026-04-15 16:51:49",
         "parameters": {},
         "data": [
             {
@@ -163,9 +163,9 @@
         ]
     },
     {
-        "report_id": "30ae5bb6-7c25-4886-9260-3716bd5dea22",
+        "report_id": "8c046973-40ba-4e7e-a84a-36af8d0b58a2",
         "report_type": "top_products",
-        "generated_on": "2026-04-15 11:52:30",
+        "generated_on": "2026-04-15 16:51:49",
         "parameters": {},
         "data": [
             {

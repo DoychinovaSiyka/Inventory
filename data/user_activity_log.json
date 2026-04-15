@@ -999,5 +999,47 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-15 10:38:27"
+    },
+    {
+        "log_id": "e1fb8d5a-4330-4378-9517-fe9e5078ed3e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 16:52:12"
+    },
+    {
+        "log_id": "107a139c-1ffb-48d9-8dba-3b5264d580ab",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-15 16:52:15"
+    },
+    {
+        "log_id": "e24bddba-eb89-4a4f-bad7-982d96aebf9e",
+        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-15 16:52:37"
+    },
+    {
+        "log_id": "8cbc8f2b-a376-4fe5-96b8-164f7f1aaa8b",
+        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "action": "LOGOUT",
+        "details": "Потребител operator излезе.",
+        "timestamp": "2026-04-15 16:52:40"
+    },
+    {
+        "log_id": "f78244dc-a449-4d0a-b04f-999781c1be1c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 16:52:47"
+    },
+    {
+        "log_id": "7cf63e69-2c46-4cc3-8c98-3807acf14a27",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Премахнати 10.0 единици от продукт ID 6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
+        "timestamp": "2026-04-15 16:55:32"
     }
 ]
