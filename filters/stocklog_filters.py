@@ -4,7 +4,6 @@ from models.stock_log import StockLog
 
 def filter_by_location(logs: List[StockLog], location_id: str) -> List[StockLog]:
     """ Филтрира логовете по склад. """
-    # Използваме str() и за двата обекта, за да избегнем грешки тип '1' == 1
     target_id = str(location_id).strip()
     return [log for log in logs if str(log.location_id) == target_id]
 

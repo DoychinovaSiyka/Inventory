@@ -15,7 +15,7 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
         # Проверяваме името
         name_match = keyword in c.name.lower()
 
-        # Проверяваме описанието (ако съществува)
+        # Проверяваме описанието - ако съществува
         desc_match = False
         if c.description:
             desc_match = keyword in c.description.lower()

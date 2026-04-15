@@ -1,6 +1,5 @@
 class CategoryValidator:
 
-
     @staticmethod
     def validate_name(name):
         if not isinstance(name, str):

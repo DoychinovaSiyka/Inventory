@@ -8,7 +8,6 @@ from validators.user_validator import UserValidator
 class UserController:
     def __init__(self, repo):
         self.repo = repo
-
         # Зареждаме потребителите от репозиторито
         raw_data = self.repo.load()
         self.users: List[User] = []
@@ -20,23 +19,21 @@ class UserController:
 
         self.logged_user: Optional[User] = None
 
-        # Ако няма потребители → създаваме начален администратор и оператор
+        # Ако няма потребители -> създаваме начален администратор и оператор
         if not self.users:
             self._bootstrap_system()
         else:
-            # Ако няма администратор → създаваме
+            # Ако няма администратор -> създаваме
             if not any(u.role == "Admin" for u in self.users):
                 self._create_default_admin()
 
-            # Ако няма оператор → създаваме
+            # Ако няма оператор -> създаваме
             if not any(u.role == "Operator" for u in self.users):
                 self._create_default_operator()
 
-    # Текуща дата/час
     def _get_now(self):
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Хеширане на парола (опростено)
     def _hash_password(self, password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
@@ -44,7 +41,7 @@ class UserController:
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
-    # --- READ ---
+    # READ
     def get_by_username(self, username: str) -> Optional[User]:
         for u in self.users:
             if u.username == username:
@@ -54,7 +51,7 @@ class UserController:
     def get_all(self):
         return self.users
 
-    # --- AUTH ---
+    # AUTH
     def login(self, username: str, password: str) -> Optional[User]:
         hashed = self._hash_password(password)
         user = self.get_by_username(username)
@@ -65,7 +62,7 @@ class UserController:
 
         return None
 
-    # --- ADMIN ACTIONS ---
+    # ADMIN ACTIONS
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         # Комплексна валидация
         UserValidator.validate_user_data(username, password, email, role, "Active")
@@ -83,26 +80,19 @@ class UserController:
             role=role,
             status="Active",
             created=self._get_now(),
-            modified=self._get_now(),
-            role_changed=False,     # Промяна на роля – разрешена само веднъж
-            status_changed=False    # Промяна на статус – разрешена само веднъж
+            modified=self._get_now()
         )
 
         self.users.append(new_user)
         self.save_changes()
         return new_user
 
-    # Промяна на роля (само веднъж)
+    # Промяна на роля (реалистична логика)
     def change_role(self, username, new_role):
         user = self.get_by_username(username)
         if not user:
             raise ValueError("Няма такъв потребител.")
-
-        # Забрана за повторна промяна
-        if user.role_changed:
-            raise ValueError("Ролята на този потребител вече е променяна веднъж.")
-
-        # Забрана да сменяш роля със същата
+        # Не може да сменяш роля със същата
         if user.role == new_role:
             raise ValueError(f"Потребителят вече има роля '{new_role}'.")
 
@@ -110,32 +100,22 @@ class UserController:
             raise ValueError("Невалидна роля.")
 
         user.role = new_role
-        user.role_changed = True
         user.modified = self._get_now()
         self.save_changes()
 
-    # Промяна на статус (само веднъж)
+    # Промяна на статус
     def change_status(self, acting_user: User, target_username: str, new_status: str):
-        # Проверка за админ
         UserValidator.confirm_admin(acting_user)
-
-        # Проверка за валиден статус
         UserValidator.validate_status(new_status)
-
         user = self.get_by_username(target_username)
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
-        # Забрана за повторно активиране/деактивиране
-        if user.status_changed:
-            raise ValueError("Статусът на този потребител вече е променян веднъж.")
-
-        # Забрана да сменяш със същия статус
+        # Не може да сменяш със същия статус
         if user.status == new_status:
             raise ValueError(f"Потребителят вече е в статус '{new_status}'.")
 
         user.status = new_status
-        user.status_changed = True
         user.modified = self._get_now()
         self.save_changes()
         return True
@@ -151,7 +131,6 @@ class UserController:
 
         # Защита от премахване на последния админ
         UserValidator.validate_not_last_admin(user, self.users)
-
         self.users.remove(user)
         self.save_changes()
         return True
@@ -181,7 +160,7 @@ class UserController:
             role="Operator"
         )
 
-    # --- ANONYMOUS USER FACTORY ---
+    # ANONYMOUS USER FACTORY
     def create_anonymous_user(self) -> User:
         now = self._get_now()
         return User(

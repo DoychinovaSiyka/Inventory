@@ -286,5 +286,69 @@
         "location_id": "W1",
         "created": "2026-04-14T20:50:01.339123",
         "modified": "2026-04-14 21:58:45"
+    },
+    {
+        "product_id": "9e64604e-6674-4f9c-bb41-9a71751e266c",
+        "name": "Свински врат без кост",
+        "categories": [
+            "sub-meat-002"
+        ],
+        "quantity": 45.8,
+        "unit": "кг.",
+        "description": "Прясно свинско месо, подходящо за печене или пържоли",
+        "price": 5.67,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W3",
+        "created": "2026-04-15T08:39:21.472928",
+        "modified": "2026-04-15T08:39:21.472928"
+    },
+    {
+        "product_id": "d59a91a7-fd15-435c-8448-b25a05950a5c",
+        "name": "натурален сок Ябълка",
+        "categories": [
+            "sub-bezalko-002"
+        ],
+        "quantity": 100.0,
+        "unit": "бр.",
+        "description": "100% натурален сок без добавена захар",
+        "price": 3.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-15T08:40:51.061813",
+        "modified": "2026-04-15T08:40:51.061813"
+    },
+    {
+        "product_id": "4ecb4c5c-042b-472f-8db5-f22445fe6015",
+        "name": "Печен шамфастък",
+        "categories": [
+            "0f1e2d3c-4b5a-6978-8091-a2b3c4d5e6f7"
+        ],
+        "quantity": 10.0,
+        "unit": "кг.",
+        "description": "Вкусен печен и солен шамфъстък, първо качество.",
+        "price": 40.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W4",
+        "created": "2026-04-15T08:43:02.805244",
+        "modified": "2026-04-15T08:43:02.805244"
+    },
+    {
+        "product_id": "6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
+        "name": "Бяло вино (Совиньон блан)",
+        "categories": [
+            "sub-alko-001"
+        ],
+        "quantity": 100.0,
+        "unit": "л",
+        "description": "Свежо бяло вино с цитрусови нотки.",
+        "price": 25.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W5",
+        "created": "2026-04-15T09:04:06.270739",
+        "modified": "2026-04-15 09:05:51"
     }
 ]

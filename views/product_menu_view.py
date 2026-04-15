@@ -73,7 +73,7 @@ class ProductView:
         price_raw = input("Цена: ")
         quantity_raw = input("Количество: ")
 
-        unit = input("Мерна единица (пример: кг., кг, бр., бр., л., пакет): ").strip()
+        unit = input("Мерна единица (пример: кг, бр, л, пакет): ").strip()
 
         try:
             price = ProductValidator.parse_float(price_raw, "Цена")
@@ -122,7 +122,6 @@ class ProductView:
                     raise ValueError("Невалиден избор за Локация.")
                 location_id = locations[loc_idx].location_id
             else:
-                #  Location ID НЕ Е UUID
                 if not isinstance(loc_raw, str) or loc_raw.strip() == "":
                     raise ValueError("Невалиден Location ID.")
                 location_id = loc_raw
@@ -172,6 +171,10 @@ class ProductView:
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
         new_qty_raw = input(f"Ново количество ({product.quantity}): ").strip()
+        if new_qty_raw:
+            for suffix in ["бр.", "бр", "кг.", "кг", "л.", "л", " пакет", "пакет"]:
+                if new_qty_raw.endswith(suffix):
+                    new_qty_raw = new_qty_raw.replace(suffix, "").strip()
 
         try:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
@@ -315,7 +318,6 @@ class ProductView:
         print("\n  Разширено търсене  ")
 
         keyword = input("Ключова дума: ").strip() or None
-
         min_raw = input("Мин. цена: ")
         max_raw = input("Макс. цена: ")
 
@@ -326,11 +328,8 @@ class ProductView:
             print(e)
             return
 
-        results = self.product_controller.search_combined(
-            name_keyword=keyword,
-            min_price=min_p,
-            max_price=max_p
-        )
+        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p,
+                                                          max_price=max_p)
 
         if not results:
             print("Няма резултати.")

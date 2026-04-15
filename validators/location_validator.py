@@ -15,15 +15,12 @@ class LocationValidator:
 
     @staticmethod
     def validate_capacity(capacity):
-        # Позволяваме capacity да идва като текст от input()
         if isinstance(capacity, str):
             if not capacity.strip().isdigit():
                 raise ValueError("Капацитетът трябва да е цяло число.")
             capacity = int(capacity)
-
         if not isinstance(capacity, int):
             raise ValueError("Капацитетът трябва да е цяло число.")
-
         if capacity < 0:
             raise ValueError("Капацитетът трябва да е >= 0.")
 
@@ -36,7 +33,6 @@ class LocationValidator:
         LocationValidator.validate_zone(zone)
         return LocationValidator.validate_capacity(capacity)
 
-    # UNIQUE NAME
     @staticmethod
     def validate_unique_name(name, locations, exclude_id=None):
         for l in locations:

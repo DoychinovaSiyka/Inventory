@@ -7,7 +7,7 @@ class Invoice:
                  unit_price, total_price, customer, date,
                  created=None, modified=None):
 
-        # 1. Присвояване на стойности (Чист контейнер) няма UUID тук – Контролерът ни го подава
+        # ID-то се подава от контролера или се зарежда от JSON файла. Ако липсва, тук се генерира ново UUID.
         self.invoice_id = str(invoice_id) if invoice_id else None
         self.movement_id = str(movement_id) if movement_id else None
         self.product = product
@@ -16,13 +16,12 @@ class Invoice:
         self.unit = unit
         self.unit_price = unit_price
         self.total_price = total_price
-        # Дати
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
 
-        # 2. Валидация (Викаме съдията)
+
         InvoiceValidator.validate_all(
             product=self.product,
             customer=self.customer,
@@ -59,7 +58,6 @@ class Invoice:
         """Създаване на Invoice от JSON речник."""
         if not data:
             return None
-
         return Invoice(
             invoice_id=data.get("invoice_id"),
             movement_id=data.get("movement_id"),

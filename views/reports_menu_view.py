@@ -130,8 +130,6 @@ class ReportsView:
     # СПРАВКА – ТЪРСЕНЕ ПО ДАТА (ОПРАВЕНО И ДОВЪРШЕНО)
     def report_sales_by_date(self, _):
         date_str = input("Дата (YYYY-MM-DD): ").strip()
-
-        # --- ВАЛИДАЦИЯ НА ДАТА ---
         try:
             datetime.strptime(date_str, "%Y-%m-%d")
         except ValueError:

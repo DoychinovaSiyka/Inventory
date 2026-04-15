@@ -1,4 +1,5 @@
 class StockLog:
+
     def __init__(self, product_id, location_id, quantity, unit, action, timestamp, log_id=None):
         """ Модел за лог запис. timestamp се подава винаги отвън (Controller), за да има синхрон."""
         # ID-то идва от контролера (или JSON)
@@ -8,7 +9,6 @@ class StockLog:
         self.quantity = float(quantity)
         self.unit = str(unit).strip()
         self.action = str(action).lower()
-        # Датата винаги идва отвън
         self.timestamp = timestamp
 
     def to_dict(self):
@@ -28,7 +28,6 @@ class StockLog:
         """Възстановява обекта от речник (JSON)."""
         if not data:
             return None
-
         return StockLog(
             log_id=data.get("log_id"),
             product_id=data.get("product_id"),

@@ -2,9 +2,7 @@ from models.stock_log import StockLog
 from storage.json_repository import JSONRepository
 from validators.stock_log_validator import StockLogValidator
 from datetime import datetime
-from filters.stocklog_filters import (
-    filter_by_location, filter_by_product, filter_search
-)
+from filters.stocklog_filters import (filter_by_location, filter_by_product, filter_search)
 
 
 class StockLogController:
@@ -14,27 +12,19 @@ class StockLogController:
 
     def add_log(self, product_id, location_id, quantity, unit, action):
         """ Добавя лог запис след валидация и нормализация. """
-
-        #  Валидация и Нормализация - Валидаторът връща чисти данни
         qty = StockLogValidator.validate_quantity(quantity)
         StockLogValidator.validate_unit(unit)
         StockLogValidator.validate_action(action)
 
         # Създаване на обекта - Датата се генерира тук и се подава на модела
-        log = StockLog(
-            product_id=str(product_id),
-            location_id=str(location_id),
-            quantity=qty,
-            unit=unit,
-            action=action,
-            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        )
+        log = StockLog(product_id=str(product_id), location_id=str(location_id),
+                       quantity=qty, unit=unit, action=action, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         self.logs.append(log)
         self.save_changes()
         return log
 
-    # READ операциите ползват филтри
+    # READ операции
     def get_by_location(self, location_id):
         return filter_by_location(self.logs, str(location_id))
 

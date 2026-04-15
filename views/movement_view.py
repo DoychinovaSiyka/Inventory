@@ -12,7 +12,7 @@ class MovementView:
         self.supplier_controller = supplier_controller
         self.menu = self._build_menu()
 
-    # Меню
+
     def _build_menu(self):
         return Menu("Меню за Доставки/Продажби/Премествания", [
             MenuItem("1", "Създаване на доставка/продажба (IN/OUT)", self.create_movement),
@@ -23,7 +23,7 @@ class MovementView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Помощен метод за избор (подобрен – работи с номер ИЛИ ID + Enter = отказ)
+    # Помощен метод за избор - само по номер
     def _select_item(self, items, label):
         if not items:
             print(f"Няма налични {label}.")
@@ -31,39 +31,31 @@ class MovementView:
 
         print(f"\nИзберете {label}:")
         for i, item in enumerate(items, start=1):
-            name = getattr(item, 'name', 'N/A')
-            id_attr = (
-                getattr(item, "product_id", None) or
-                getattr(item, "location_id", None) or
-                getattr(item, "supplier_id", None) or
-                "ID"
-            )
-            print(f"{i}. {name} (ID: {id_attr})")
+            # Показваме име и ID според типа
+            if hasattr(item, "product_id"):
+                item_id = item.product_id
+            elif hasattr(item, "location_id"):
+                item_id = item.location_id
+            elif hasattr(item, "supplier_id"):
+                item_id = item.supplier_id
+            else:
+                item_id = "N/A"
 
-        choice = input("Номер или ID (Enter = отказ): ").strip()
+            name = getattr(item, "name", "N/A")
+            print(f"{i}. {name} (ID: {item_id})")
 
-        #  Enter = отказ
+        choice = input("Номер (Enter = отказ): ").strip()
         if choice == "":
             return None
 
-        #  избор по номер
-        if choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(items):
-                return items[idx]
-            print("Невалиден номер.")
+        if not choice.isdigit():
+            print("Моля, въведете валиден номер.")
             return None
 
-        #  избор по ID
-        for item in items:
-            if (
-                getattr(item, "product_id", None) == choice or
-                getattr(item, "location_id", None) == choice or
-                getattr(item, "supplier_id", None) == choice
-            ):
-                return item
-
-        print("Невалиден ID.")
+        idx = int(choice) - 1
+        if 0 <= idx < len(items):
+            return items[idx]
+        print("Невалиден номер.")
         return None
 
     def show_menu(self):
@@ -71,7 +63,6 @@ class MovementView:
         if not user:
             print("Трябва да сте логнат, за да правите доставки/продажби.")
             return
-
         while True:
             choice = self.menu.show()
             if self.menu.execute(choice, user) == "break":
@@ -95,13 +86,13 @@ class MovementView:
             location = current_location
             print(f"\nПродажбата ще бъде извършена от склада, в който е продуктът: {location.name}")
 
-        #  Доставка: избор на склад
+        # Доставка: избор на склад
         else:
             location = self._select_item(self.location_controller.get_all(), "локация")
             if not location:
                 return
 
-        # Проверка от контролера (бизнес логика)
+        # Проверка от контролера - бизнес логика
         try:
             self.movement_controller.check_movement_allowed(
                 product_id=product.product_id,
@@ -115,11 +106,10 @@ class MovementView:
         quantity = input("Количество: ")
         price = input("Цена: ")
         description = input("Описание: ")
-
         supplier_id = None
         customer = None
 
-        #  Доставка (IN) изисква доставчик
+        # Доставка (IN) изисква доставчик
         if movement_type == "IN":
             if self.supplier_controller:
                 supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
@@ -169,7 +159,6 @@ class MovementView:
         if not to_loc:
             return
 
-        # не може да премества в същия склад
         if from_loc.location_id == to_loc.location_id:
             print("\nГрешка: Не може да преместите продукта в същия склад!")
             return
@@ -195,7 +184,6 @@ class MovementView:
     # Търсене
     def search_movements(self, _):
         keyword = input("Търси по описание (мин. 3 символа): ").strip()
-
         if len(keyword) < 3:
             print("Моля, въведете поне 3 символа за търсене.")
             return
@@ -205,7 +193,6 @@ class MovementView:
             print("Няма намерени движения.")
             return
 
-        # ТАБЛИЦА
         columns = ["Дата", "Тип", "Количество", "Единица", "Описание"]
         rows = [
             [m.date, m.movement_type.name, m.quantity, m.unit, m.description]
@@ -213,7 +200,7 @@ class MovementView:
         ]
 
         print(format_table(columns, rows))
-        print()  # <-- това оправя грозното залепване
+        print()
 
     # Всички движения
     def show_all(self, _):
@@ -230,7 +217,6 @@ class MovementView:
 
         print(format_table(columns, rows))
 
-    # Разширено филтриране
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
 
@@ -263,10 +249,8 @@ class MovementView:
             print("\nНяма движения, които отговарят на критериите.")
             return
 
-        # Проверяваме дали има поне едно IN/OUT
         has_price = any(m.movement_type.name in ("IN", "OUT") for m in results)
         if has_price:
-            # Таблица с колона Сума
             columns = ["Дата", "Тип", "Продукт", "Количество", "Единица", "Сума"]
             rows = []
             for m in results:
@@ -275,10 +259,10 @@ class MovementView:
                 else:
                     rows.append([m.date, m.movement_type.name, m.product_id, m.quantity, m.unit, m.price])
         else:
-            # Таблица БЕЗ колона Сума
             columns = ["Дата", "Тип", "Продукт", "Количество", "Единица"]
-            rows = []
-            for m in results:
-                rows.append([m.date, m.movement_type.name, m.product_id, m.quantity, m.unit])
+            rows = [
+                [m.date, m.movement_type.name, m.product_id, m.quantity, m.unit]
+                for m in results
+            ]
 
         print(format_table(columns, rows))

@@ -1,13 +1,10 @@
 class Supplier:
     def __init__(self, supplier_id, name, contact, address, created, modified):
         """ Модел за доставчик. Датите (created/modified) идват от контролера."""
-
-
         self.supplier_id = str(supplier_id)
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
-        # Дати – подават се от контролера
         self.created = created
         self.modified = modified
 
@@ -25,7 +22,6 @@ class Supplier:
     def from_dict(d):
         if not d:
             return None
-
         return Supplier(
             supplier_id=d.get("supplier_id"),
             name=d.get("name", ""),

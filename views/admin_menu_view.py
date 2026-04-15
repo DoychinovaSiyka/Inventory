@@ -13,7 +13,7 @@ from views.system_info_view import SystemInfoView
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-        # Създаваме view обектите
+        # Създавам view обектите
         self.product_view = ProductView(controllers["product"], controllers["category"],
                                         controllers["location"],
                                         controllers["activity_log"])
@@ -21,9 +21,9 @@ class AdminMenuView:
         self.movement_view = MovementView(
             controllers["product"],
             controllers["movement"],
-            controllers["user"],  # user_controller
+            controllers["user"],      # user_controller
             controllers["location"],  # location_controller
-            controllers["supplier"]  # supplier_controller (по избор)
+            controllers["supplier"]  # supplier_controller - по избор
         )
 
         self.user_view = UserView(controllers["user"])
@@ -31,14 +31,10 @@ class AdminMenuView:
         self.invoice_view = InvoiceView(controllers["invoice"], controllers["activity_log"])
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
-
-        # Вземам инстанцията на GraphView
-        self.graph_view = controllers.get("logistic")
-        # Създавам менюто отделно
-        self.menu = self._build_menu()
+        self.graph_view = controllers.get("logistic") # Вземам инстанцията на GraphView
+        self.menu = self._build_menu()    # Създавам менюто отделно
 
 
-    # Създаване на меню
     def _build_menu(self):
         return Menu("Администраторско меню", [
             MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
@@ -66,12 +62,10 @@ class AdminMenuView:
 
     # Dijkstra – най-кратък път
     def open_graph(self, user):
-        # Вземам инстанцията на GraphView
         if self.graph_view:
             self.graph_view.show_menu(user)
         else:
             print("\nГрешка: Логистичният модул (Dijkstra) не е инициализиран.")
-
 
 
 

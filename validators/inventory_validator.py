@@ -38,7 +38,6 @@ class InventoryValidator:
 
         if not record:
             raise ValueError(f"Продуктът не е намерен в склад {warehouse_id}.")
-
         if record["quantity"] < val:
             raise ValueError(f"Недостатъчна наличност! Налично: {record['quantity']}, Заявка: {val}")
 

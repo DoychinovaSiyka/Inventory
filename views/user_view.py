@@ -16,7 +16,6 @@ class UserView:
             return
 
         self.menu = self._build_menu()
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
@@ -51,11 +50,9 @@ class UserView:
         email = input("Email: ")
         username = input("Потребителско име: ")
 
-        #  използва се input_password, което е импортирано
+
         password = input_password("Парола: ")  # скрито въвеждане
-
         role = input("Роля (Admin/Operator): ")
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("Потребителят е добавен!")

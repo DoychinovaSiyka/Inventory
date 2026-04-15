@@ -6,19 +6,17 @@ from views.category_view import CategoryView
 
 class AnonymousMenuView:
     def __init__(self, controllers):
-        # Запазваме контролерите, за да ги подадем на под-менютата
+        # Запазвам контролерите, за да ги подадем на под-менютата
         self.controllers = controllers
-        # Създаваме view обектите предварително
+        # Създавам view обектите предварително
         self.product_view = ProductView(controllers["product"], controllers["category"],
                                         controllers["location"],
                                          controllers["activity_log"])
         self.category_view = CategoryView(controllers["category"])
         self.system_info_view = SystemInfoView()
-        # Създаваме менюто отделно
-        self.menu = self._build_menu()
+        self.menu = self._build_menu()  # Създавам менюто отделно
 
-
-    # Създаване на менюто
+    # Създавам на менюто
     def _build_menu(self):
         return Menu("Меню за анонимен потребител", [
             MenuItem("1", "Разглеждане на продукти", self.open_products),
@@ -26,7 +24,6 @@ class AnonymousMenuView:
             MenuItem("3", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")])
 
-    # Основно меню
     def show_menu(self, user=None):
         while True:
             choice = self.menu.show()
@@ -42,6 +39,5 @@ class AnonymousMenuView:
     def open_categories(self, user):
         self.category_view.show_menu(user)
 
-    # Информация за системата
     def show_system_info(self, _):
         self.system_info_view.show_menu()

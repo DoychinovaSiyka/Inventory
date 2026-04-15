@@ -15,7 +15,7 @@ class ReportController:
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
 
-        # ЗАЩИТА: Зареждаме данните внимателно
+        # Зареждаме данните внимателно
         raw_data = self.repo.load()
         self.reports = []
 

@@ -20,6 +20,7 @@ class Menu:
         for item in self.items:
             if item.key == choice:
                 return item.action(user)
+
         print("Невалиден избор.")
         return None
 

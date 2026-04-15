@@ -3,7 +3,7 @@ from models.movement import Movement
 from models.invoice import Invoice
 
 
-# Помощни вътрешни функции (за вътрешна употреба)
+# Помощни вътрешни функции за вътрешна употреба
 
 def _match_string(target: str, keyword: str) -> bool:
     """ Унифицирано търсене: малки букви и премахване на интервали. """

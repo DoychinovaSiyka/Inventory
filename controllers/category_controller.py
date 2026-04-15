@@ -16,7 +16,6 @@ class CategoryController:
         # Зареждане на категориите от JSON файла - Контролерът нарежда зареждането
         self._load_categories()
 
-
     def _load_categories(self):
         raw_data = self.repo.load()
         self.categories = [Category.from_dict(c) for c in raw_data]
@@ -32,7 +31,7 @@ class CategoryController:
         description = category_data.get('description', "")
         parent_id = category_data.get('parent_id')
 
-        # Валидацията викаме от външния пакет
+        # Валидацията викаме от външния пакет. Валидаторът проверява всичко преди триене
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
@@ -40,7 +39,6 @@ class CategoryController:
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Генериране на уникално ID
         category = Category(category_id=str(uuid.uuid4()), name=name, description=description,
                             parent_id=parent_id, created=now, modified=now)
 
@@ -91,7 +89,6 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
-        # Валидаторът проверява всичко преди триене
         CategoryValidator.validate_can_delete(category_id, self.categories, product_controller)
         original_len = len(self.categories)
         self.categories = [c for c in self.categories if str(c.category_id) != str(category_id)]
@@ -112,12 +109,11 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if str(c.parent_id) == str(parent_id)]
 
-    # Контролерът  не строи дървото, а го вика
+    # Контролерът  не строи дървото - вика
     def get_category_tree(self) -> List[dict]:
         """Изграждане на йерархия за менюто чрез външна логика."""
         return build_category_tree(self.categories)
 
-    # Търсенето е във филтрите
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез външен филтър."""
         return filter_categories(self.categories, keyword)

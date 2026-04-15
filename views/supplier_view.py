@@ -60,8 +60,6 @@ class SupplierView:
     # редактиране на доставчик (admin only)
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-
-        #  Прихващаме грешката от контролера
         try:
             supplier = self.controller.get_by_id(supplier_id)
         except ValueError as e:
@@ -73,7 +71,6 @@ class SupplierView:
             return
 
         print("\nОставете празно, ако не искате да променяте полето.")
-
         new_name = input(f"Ново име ({supplier.name}): ").strip()
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
@@ -92,7 +89,6 @@ class SupplierView:
     # изтриване на доставчик (admin only)
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
-        # ️ Прихващаме грешката от контролера
         try:
             if self.controller.remove(supplier_id):
                 print("Доставчикът е изтрит успешно!")

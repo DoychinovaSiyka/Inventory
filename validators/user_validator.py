@@ -26,7 +26,7 @@ class UserValidator:
         if role not in ["Admin", "Operator", "Anonymous"]:
             raise ValueError("Невалидна роля на потребител.")
 
-        # Проверка за валиден статус (регистрация → винаги Active)
+        # Проверка за валиден статус (регистрация -> винаги Active)
         if status not in ["Active"]:
             raise ValueError("Невалиден статус при регистрация.")
 

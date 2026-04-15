@@ -1,13 +1,11 @@
 import uuid
 
-
 class Report:
     def __init__(self, report_type, generated_on, parameters=None, data=None, report_id=None):
         self.report_id = str(report_id) if report_id else str(uuid.uuid4())
         self.report_type = report_type
         self.generated_on = generated_on
-
-        # Гарантираме, че са празни колекции, ако не са подадени
+        # Гарантирам, че са празни колекции, ако не са подадени
         self.parameters = parameters if parameters is not None else {}
         self.data = data if data is not None else []
 

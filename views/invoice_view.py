@@ -29,10 +29,9 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # 1. Списък с всички фактури — БЕЗ ТАБЛИЦА
+    # Списък с всички фактури
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
-
         if not invoices:
             print("Няма налични фактури.")
             return
@@ -49,7 +48,7 @@ class InvoiceView:
             print(f"Дата: {inv.date}")
             print("==============================")
 
-    # 2. Преглед по ID — ОСТАВА ТАБЛИЦА
+    # Преглед по ID
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
         invoice = self.invoice_controller.get_by_id(invoice_id)
@@ -72,7 +71,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 3. Търсене по клиент — ТАБЛИЦА
+    # Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
         results = self.invoice_controller.search_by_customer(keyword)
@@ -95,11 +94,10 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 4. Търсене по продукт — ТАБЛИЦА
+    # Търсене по продукт
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
         results = self.invoice_controller.search_by_product(keyword)
-
         if not results:
             print("Няма фактури за този продукт.")
             return
@@ -118,12 +116,11 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 5. Търсене по дата — ТАБЛИЦА
+    # Търсене по дата
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
 
         results = self.invoice_controller.search_by_date(date_str)
-
         if results == "INVALID_DATE":
             print("\nНевалидна дата. Моля използвайте формат ГГГГ-ММ-ДД.\n")
             return
@@ -146,7 +143,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 6. Разширено търсене — ТАБЛИЦА
+    # Разширено търсене
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
 
@@ -154,7 +151,6 @@ class InvoiceView:
         product = input("Продукт (или Enter за пропуск): ").strip() or None
         start_date = input("Начална дата (ГГГГ-ММ-ДД) или Enter: ").strip() or None
         end_date = input("Крайна дата (ГГГГ-ММ-ДД) или Enter: ").strip() or None
-
         min_total = input("Минимална обща стойност или Enter: ").strip() or None
         max_total = input("Максимална обща стойност или Enter: ").strip() or None
 
@@ -186,7 +182,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # 7. Търсене по сума / диапазон — ТАБЛИЦА
+    #  Търсене по сума / диапазон
     def search_by_total(self, user):
         print("   Търсене по сума / диапазон   ")
 

@@ -31,7 +31,7 @@ class ProductSortView:
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-    #  Цена (висока - ниска) – Selection Sort
+
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
@@ -41,7 +41,6 @@ class ProductSortView:
         products = self.controller.bubble_sort()
         products.reverse()  # bubble sort ти връща DESC, обръщаме го
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
-
 
     #  Количество (високо - ниско)
     def sort_qty_desc(self, _):

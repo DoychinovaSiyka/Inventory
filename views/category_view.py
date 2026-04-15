@@ -39,11 +39,10 @@ class CategoryView:
 
         print("\nКатегории:\n")
 
-        # Главни категории = тези без parent_id
+        # Главни категории - тези без parent_id
         roots = [c for c in categories if c.parent_id is None]
         for root in roots:
             print(f"- {root.name} (ID: {root.category_id})")
-
             # Подкатегории
             children = [c for c in categories if c.parent_id == root.category_id]
             for child in children:
@@ -58,7 +57,6 @@ class CategoryView:
         print("\nОставете празно за главна категория или изберете номер на родител:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
-
         try:
             # подаваме данните като dict, както контролерът очаква
             self.controller.add(
@@ -77,15 +75,12 @@ class CategoryView:
             return
 
         category_id = category.category_id
-
         print("\nОставете празно, ако не искате да променяте полето.")
         new_name = input(f"Ново име ({category.name}): ").strip()
         new_desc = input(f"Ново описание ({category.description}): ").strip()
-
         print("\nИзберете нов родител или оставете празно за главна категория:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
-
         try:
             if new_name:
                 self.controller.update_name(category_id, new_name, "system")
@@ -105,7 +100,6 @@ class CategoryView:
         category = self.select_category()
         if not category:
             return
-
         confirm = input(f"Наистина ли искате да изтриете '{category.name}'? (y/n): ").strip().lower()
         if confirm != "y":
             return
@@ -127,7 +121,6 @@ class CategoryView:
             print(f"{i}. {cat.name}")
 
         choice = input("Въведете номер: ").strip()
-
         if not choice.isdigit():
             print("Невалиден избор.")
             return None

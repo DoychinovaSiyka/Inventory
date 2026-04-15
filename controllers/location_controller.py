@@ -5,18 +5,16 @@ from storage.json_repository import JSONRepository
 from validators.location_validator import LocationValidator
 
 
-
 class LocationController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
         # Зареждам всички локации от JSON и ги преобразувам в Location обекти
         self.locations: List[Location] = [Location.from_dict(l) for l in self.repo.load()]
 
-    # ID GENERATOR - поддържам консистентност с "W" префикса
+    # ID GENERATOR - консистентност с "W" префикса
     def _generate_id(self) -> str:
         if not self.locations:
             return "W1"
-
         ids = []
         for l in self.locations:
             num_part = str(l.location_id).replace("W", "")
@@ -25,7 +23,7 @@ class LocationController:
         next_id = max(ids) + 1 if ids else 1
         return f"W{next_id}"
 
-    # CREATE
+
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -54,7 +52,7 @@ class LocationController:
                zone: Optional[str] = None, capacity=None) -> bool:
 
         location = self.get_by_id(location_id)
-        # Ако полето е None - значи View не иска да го променя
+        # Ако полето е None - View не иска да го променя
         if name is not None:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
@@ -73,7 +71,6 @@ class LocationController:
 
     def remove(self, location_id: str) -> bool:
         LocationValidator.validate_exists(location_id, self.locations)
-        # Премахване
         self.locations = [l for l in self.locations if l.location_id != location_id]
         self.save_changes()
         return True

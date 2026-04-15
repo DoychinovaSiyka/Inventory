@@ -9,7 +9,7 @@ class MovementValidator:
         if movement_type is None:
             raise ValueError("Типът движение е задължителен.")
 
-        # Ако е enum → контролерът ще го подаде като string
+        # Ако е enum -> контролерът ще го подаде като string
         mt = str(movement_type).upper()
 
         if mt not in ("IN", "OUT", "MOVE"):
@@ -132,7 +132,6 @@ class MovementValidator:
 
         if start:
             results = [m for m in results if parse(m.date[:10]) and parse(m.date[:10]) >= start]
-
         if end:
             results = [m for m in results if parse(m.date[:10]) and parse(m.date[:10]) <= end]
 

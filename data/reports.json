@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "6c48f9c6-3d66-4ccb-a1df-9e8b805ee320",
+        "report_id": "beaae0d3-8856-4b45-a66c-b4e8137a3fa0",
         "report_type": "stock",
-        "generated_on": "2026-04-15 08:23:07",
+        "generated_on": "2026-04-15 10:38:19",
         "parameters": {},
         "data": [
             {
@@ -112,13 +112,37 @@
                 "quantity": 24.0,
                 "price": 5.99,
                 "location": "Склад София"
+            },
+            {
+                "product": "Свински врат без кост",
+                "quantity": 45.8,
+                "price": 5.67,
+                "location": "Склад Варна"
+            },
+            {
+                "product": "натурален сок Ябълка",
+                "quantity": 100.0,
+                "price": 3.0,
+                "location": "Склад София"
+            },
+            {
+                "product": "Печен шамфастък",
+                "quantity": 10.0,
+                "price": 40.0,
+                "location": "Склад Бургас"
+            },
+            {
+                "product": "Бяло вино (Совиньон блан)",
+                "quantity": 100.0,
+                "price": 25.0,
+                "location": "Магазин Смолян"
             }
         ]
     },
     {
-        "report_id": "a94d3694-bf32-413c-9cab-a041eaedbf6f",
+        "report_id": "491e43a8-2058-4336-84cc-36dc87728905",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-15 08:23:07",
+        "generated_on": "2026-04-15 10:38:19",
         "parameters": {},
         "data": [
             {
@@ -139,9 +163,9 @@
         ]
     },
     {
-        "report_id": "90f4a6cc-7bfe-4a17-8fe9-8b0d00b63d9a",
+        "report_id": "ffa71379-b4e2-47ba-8492-64eccd0d73e0",
         "report_type": "top_products",
-        "generated_on": "2026-04-15 08:23:07",
+        "generated_on": "2026-04-15 10:38:19",
         "parameters": {},
         "data": [
             {

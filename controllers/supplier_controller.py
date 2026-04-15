@@ -37,7 +37,6 @@ class SupplierController:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        """ Търсене с кастване към стринг за безопасност. """
         sid = str(supplier_id)
         return next((s for s in self.suppliers if s.supplier_id == sid), None)
 

@@ -3,26 +3,21 @@ from typing import Optional, Union
 
 
 class Location:
-    # Анотацията на location_id да бъде Union[str, int, None],
-    # но в логиката ще го превръщаме в str за консистентност с "W1", "W2"...
+    # Стойността на location_id може да е число или текст,
+    # но в модела я преобразувам в str, за да е еднаква с формата "W1", "W2" и др.
     def __init__(self, location_id: Optional[Union[str, int]] = None, name: str = "",
                  zone: str = "", capacity: int = 0,
                  created: Optional[str] = None, modified: Optional[str] = None):
 
-        # ID-то винаги е текст ако не е None
         self.location_id = str(location_id) if location_id is not None else None
-
         self.name = name
         self.zone = zone
         self.capacity = capacity
-
-        # Дати
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now
 
     def update_modified(self):
-        """Обновява датата на последна промяна."""
         self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self):
@@ -41,9 +36,7 @@ class Location:
         """Десериализация от JSON."""
         if not data:
             return None
-
-        # При зареждане от JSON, ако случайно ID-то е число,
-        # конструкторът ще го превърне в "1", "2" и т.н.
+        # При зареждане от JSON, ако случайно ID-то е число, конструкторът ще го превърне в "1", "2" и т.н.
         return Location(
             location_id=data.get("location_id"),
             name=data.get("name", ""),

@@ -14,13 +14,12 @@ class Movement:
                  supplier_id=None, customer=None,
                  from_location_id=None, to_location_id=None):
 
-        # Моделът НЕ ГЕНЕРИРА ID и ДАТИ – Контролерът ги подава
         self.movement_id = str(movement_id)
         self.product_id = product_id
         self.user_id = user_id
         # Основна локация (за IN/OUT)
         self.location_id = str(location_id) if location_id else None
-        # Тип движение (Enum или String)
+        # Тип движение - Enum или String
         self.movement_type = movement_type
         self.quantity = quantity
         self.unit = unit
@@ -61,7 +60,7 @@ class Movement:
         """Създава Movement от JSON речник."""
         if not data:
             return None
-        # Опитваме да възстановим Enum
+        # Опитвам да възстановим Enum
         mt_raw = data.get("movement_type")
         try:
             mt = MovementType(mt_raw)

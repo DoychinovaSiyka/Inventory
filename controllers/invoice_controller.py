@@ -25,17 +25,14 @@ class InvoiceController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # CREATE
+
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         """ Добавя готова фактура от речник. """
         InvoiceValidator.validate_all(**invoice_data)
 
-        invoice = Invoice(
-            invoice_id=str(uuid.uuid4()),
-            **invoice_data,
-            created=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            modified=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        )
+        invoice = Invoice(invoice_id=str(uuid.uuid4()), **invoice_data,
+                          created=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                          modified=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
         self.invoices.append(invoice)
         self.save_changes()
@@ -51,7 +48,6 @@ class InvoiceController:
         qty = float(movement.quantity)
         unit_price = round(float(movement.price), 2)
         total_price = round(qty * unit_price, 2)
-
         invoice = Invoice(
             invoice_id=str(uuid.uuid4()),
             movement_id=movement.movement_id,
@@ -104,7 +100,6 @@ class InvoiceController:
         return results
 
     def search_by_total(self, min_total: Optional[str] = None, max_total: Optional[str] = None) -> List[Invoice]:
-        """ Контролерът вече не 'парсва' сам, а ползва валидатора. """
         min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
         max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None
         return filter_by_total_range(self.invoices, min_val, max_val)

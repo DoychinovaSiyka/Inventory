@@ -21,7 +21,7 @@ class MainMenuView:
         self.graph_controller = controllers["graph"]
         self.menu = self._build_menu()
 
-    # Създаване на меню
+
     def _build_menu(self):
         return Menu("Главно меню", [MenuItem("1", "Продукти", self.open_products),
                                     MenuItem("2", "Категории", self.open_categories),

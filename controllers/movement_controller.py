@@ -84,7 +84,6 @@ class MovementController:
 
             if self.inventory_controller:
                 self.inventory_controller.increase_stock(product_id, product.name, location_id, qty)
-
             log_action = "add"
 
         else:  # OUT
@@ -92,7 +91,6 @@ class MovementController:
 
             if self.inventory_controller:
                 self.inventory_controller.decrease_stock(product_id, location_id, qty)
-
             log_action = "remove"
 
         product.update_modified()

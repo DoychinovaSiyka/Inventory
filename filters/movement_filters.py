@@ -14,7 +14,6 @@ def _parse_movement_date(date_str: str) -> Optional[datetime]:
     return None
 
 
-# Търсене по описание
 def filter_by_description(movements: List[Movement], keyword: str) -> List[Movement]:
     keyword = (keyword or "").lower().strip()
     return [m for m in movements if keyword in (m.description or "").lower()]
@@ -31,7 +30,6 @@ def filter_deliveries(movements: List[Movement], keyword: str, product_controlle
     for m in movements:
         if m.movement_type != MovementType.IN:
             continue
-
         # 1. Търсене по ID на движение
         if keyword in str(m.movement_id).lower():
             results.append(m)

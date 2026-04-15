@@ -1,6 +1,7 @@
 from typing import List, Callable, Any
 from models.product import Product
 
+
 def sort_by_name_logic(products: List[Product]) -> List[Product]:
     """Сортира оригиналния списък по име (in-place)."""
     products.sort(key=lambda p: p.name.lower())

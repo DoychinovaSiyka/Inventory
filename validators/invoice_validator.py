@@ -80,7 +80,7 @@ class InvoiceValidator:
     @staticmethod
     def validate_movement_for_invoice(movement):
         """Проверява дали стоковото движение е изходящо."""
-        # Проверка дали типът е "OUT" (в зависимост от вашата имплементация)
+        # Проверка дали типът е "OUT" (в зависимост от имплементация)
         m_type = str(movement.movement_type).upper()
         if "OUT" not in m_type:
             raise ValueError("Фактура може да се генерира само при продажба (OUT).")

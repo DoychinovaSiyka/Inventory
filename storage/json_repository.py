@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from storage.repository import Repository
 
-# Добавяне на родителската директория за стабилни импорти
+# Родителската директория за стабилни импорти
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 

@@ -88,6 +88,9 @@ class ProductValidator:
     def _parse_float_internal(value, field_name="стойност"):
         """Вътрешен метод – парсва число, позволява запетая, връща float."""
         if isinstance(value, str):
+            # Премахваме 'лв', 'лв.' и интервали
+            value = value.replace("лв.", "").replace("лв", "").strip()
+            # Позволяваме запетая
             value = value.replace(",", ".").strip()
 
         try:
@@ -136,7 +139,6 @@ class ProductValidator:
     def validate_all(product_id, name, categories, quantity, unit, description, price,
                      location_id, supplier_id, tags):
         """Вика всички проверки подред."""
-
         # UUID проверки
         if product_id:
             ProductValidator.validate_uuid(product_id, "Product ID")
@@ -156,5 +158,6 @@ class ProductValidator:
         ProductValidator.validate_unit(unit)
         ProductValidator.validate_price(price)
         ProductValidator.validate_description(description)
+
         if tags is not None and not isinstance(tags, list):
             raise ValueError("Tags трябва да са списък.")

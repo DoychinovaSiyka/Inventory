@@ -38,7 +38,7 @@ class OperatorMenuView:
 
     # Основно меню
     def show_menu(self, user):
-        # Проверка за достъп (по твоя оригинал)
+        # Проверка за достъп
         if user.role.lower() == "guest":
             print("Нямате достъп до операторското меню.")
             return
@@ -54,7 +54,7 @@ class OperatorMenuView:
         return view_class(*args)
 
 
-    #  Продукти: Добавен location контролер
+    #  Продукти
     def open_products(self, user):
         view = self._open_view( ProductView,self.product_controller, self.category_controller,
                                 self.location_controller, self.activity_log)

@@ -65,7 +65,6 @@ def filter_by_date_range(invoices: List[Invoice],
         inv_date = _parse_invoice_date(inv.date)
         if not inv_date:
             continue
-
         if start and inv_date < start:
             continue
         # Ако end_date е само ден (напр. 2023-10-10), да включим целия ден до 23:59:59
@@ -97,7 +96,6 @@ def filter_advanced(invoices: List[Invoice],
     if product:
         results = filter_by_product(results, product)
 
-    # Прилагам времевия и ценовия филтър
     results = filter_by_date_range(results, start_date, end_date)
     results = filter_by_total_range(results, min_total, max_total)
 

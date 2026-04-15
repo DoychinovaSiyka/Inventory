@@ -13,11 +13,9 @@ class SupplierValidator:
         """ Валидира и връща изчистеното име. """
         if not name or not str(name).strip():
             raise ValueError("Името на доставчика е задължително.")
-
         clean_name = str(name).strip()
         if len(clean_name) < 2:
             raise ValueError("Името на доставчика трябва да съдържа поне 2 символа.")
-
         return clean_name
 
     @staticmethod
@@ -27,7 +25,6 @@ class SupplierValidator:
             raise ValueError("Контактната информация е задължителна.")
 
         clean_contact = str(contact).strip()
-
         # Проверка чрез Regex
         is_email = SupplierValidator.email_regex.match(clean_contact)
         is_phone = SupplierValidator.phone_regex.match(clean_contact)
@@ -42,7 +39,6 @@ class SupplierValidator:
         """ Валидира и връща изчистения адрес. """
         if not address or not str(address).strip():
             raise ValueError("Адресът е задължителен.")
-
         clean_address = str(address).strip()
         if len(clean_address) < 3:
             raise ValueError("Адресът трябва да съдържа поне 3 символа.")

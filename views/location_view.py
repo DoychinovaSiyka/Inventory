@@ -89,12 +89,10 @@ class LocationView:
     def delete_location(self, _):
         print("\n--- ИЗТРИВАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID за изтриване (напр. W1): ").strip()
-
         confirm = input(f"Сигурни ли сте, че искате да изтриете {loc_id}? (y/n): ").lower()
         if confirm != 'y':
             print("Операцията е отказана.")
             return
-
         try:
             self.location_controller.remove(loc_id)
             print(f"[Успех] Локация {loc_id} беше премахната от системата.")

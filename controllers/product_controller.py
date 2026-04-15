@@ -154,12 +154,11 @@ class ProductController:
 
         return True
 
-    # QUANTITY
+
     def increase_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         p = self.get_by_id(product_id)
         if p is None:
             raise ValueError("Продуктът не е намерен.")
-
         if amount <= 0:
             raise ValueError("Количество трябва да е положително.")
 

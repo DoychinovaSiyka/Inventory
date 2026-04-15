@@ -13,7 +13,7 @@ class WarehouseGraph(Graph):
         # Добавяме склад по неговото ID
         self.nodes[warehouse.warehouse_id] = warehouse
 
-        # Ако няма запис за ребра – създаваме празен речник
+        # Ако няма запис за ребра – създавам празен речник
         if warehouse.warehouse_id not in self.edges:
             self.edges[warehouse.warehouse_id] = {}
 

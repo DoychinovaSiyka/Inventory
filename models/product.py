@@ -7,24 +7,17 @@ class Product:
     def __init__(self, product_id, name, categories, quantity, unit, description, price,
                  supplier_id=None, tags=None, created=None, modified=None, location_id="W1"):
 
-        # Просто си пълним данните
         self.product_id = str(product_id) if product_id else None
         self.name = name
         # Категориите винаги са списък
         self.categories = categories if isinstance(categories, list) else []
-
         self.quantity = quantity
         self.price = price
         self.unit = unit if unit else "бр."
         self.description = description
-
-        # Доставчик
         self.supplier_id = str(supplier_id) if supplier_id else None
-        # Тагове
         self.tags = tags if isinstance(tags, list) else []
-        # Локация (винаги текст)
         self.location_id = str(location_id)
-        # Дати
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now
@@ -44,13 +37,11 @@ class Product:
         )
 
     def update_modified(self):
-        """Обновява датата на последна промяна."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
         """Превръща обекта в речник за JSON - категориите стават чисти стрингове."""
         json_categories = []
-
         for c in self.categories:
             if isinstance(c, Category):
                 json_categories.append(str(c.category_id))

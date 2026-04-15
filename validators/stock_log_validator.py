@@ -18,6 +18,7 @@ class StockLogValidator:
             raise ValueError("Мерната единица е задължителна.")
         return unit.strip()
 
+
     @staticmethod
     def validate_action(action):
         """Проверява дали действието е в позволения списък."""

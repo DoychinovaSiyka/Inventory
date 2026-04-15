@@ -922,5 +922,82 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-15 08:23:20"
+    },
+    {
+        "log_id": "1803584f-f6f5-40ff-9381-788e590258be",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 08:37:37"
+    },
+    {
+        "log_id": "8f6a296f-eb33-435b-a311-99c02e9f712b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Свински врат без кост",
+        "timestamp": "2026-04-15 08:39:21"
+    },
+    {
+        "log_id": "03105167-39aa-4e4b-a9db-41af50bbd8d3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: натурален сок Ябълка",
+        "timestamp": "2026-04-15 08:40:51"
+    },
+    {
+        "log_id": "cb31ab12-7fbf-4370-a57d-f8d96b84e8f3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Печен шамфастък",
+        "timestamp": "2026-04-15 08:43:02"
+    },
+    {
+        "log_id": "b4509b45-caee-4ed6-b74f-7505b1e8327f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Комплект микрофибърни кърпи",
+        "timestamp": "2026-04-15 08:45:27"
+    },
+    {
+        "log_id": "06daaab6-b56a-43ed-b33d-9081d0b46f3a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID a16be0a5-6a8f-4665-bbb3-b153e7cb199a",
+        "timestamp": "2026-04-15 08:51:06"
+    },
+    {
+        "log_id": "397acdcc-ef27-4334-8ed3-a0fc7a7ecf35",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 08:56:01"
+    },
+    {
+        "log_id": "e328b9eb-c911-4ae2-91b7-46d28c4e3d2b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 08:57:40"
+    },
+    {
+        "log_id": "67793525-7c57-4e3c-9bc0-c85d8c1560c9",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Бутилка червено вино (Мерло)",
+        "timestamp": "2026-04-15 09:04:06"
+    },
+    {
+        "log_id": "f2dd87d1-3c91-4a53-b2de-84f80205314c",
+        "user_id": "system",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Бяло вино (Совиньон блан) (ID: 6a38047a-8e49-4ef4-b2ed-daeafbcbb8db)",
+        "timestamp": "2026-04-15 09:05:51"
+    },
+    {
+        "log_id": "26143220-16e9-4e25-b6ce-be134402f6ba",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-15 10:38:27"
     }
 ]

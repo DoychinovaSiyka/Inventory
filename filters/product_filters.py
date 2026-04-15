@@ -1,7 +1,7 @@
 from typing import List, Optional
 from models.product import Product
 
-# BASIC SEARCH
+
 def filter_search(products: List[Product], keyword: str) -> List[Product]:
     keyword = (keyword or "").lower().strip()
     if not keyword:
@@ -61,13 +61,12 @@ def filter_by_multiple_category_ids(products: List[Product], category_ids: List[
     return filtered
 
 
-# SUPPLIER FILTER
+
 def filter_by_supplier(products: List[Product], supplier_id: str) -> List[Product]:
     supplier_id = str(supplier_id)
     return [p for p in products if str(p.supplier_id) == supplier_id]
 
 
-# PRICE FILTERS
 def filter_by_price_range(products: List[Product],
                           min_price: Optional[float],
                           max_price: Optional[float]) -> List[Product]:
@@ -128,7 +127,6 @@ def filter_combined(products: List[Product],
                     supplier_id: Optional[str] = None) -> List[Product]:
 
     results = [p for p in products if p.name]
-
     # ключова дума -> име + описание + категории + тагове
     if name_keyword:
         kw = name_keyword.lower().strip()
@@ -141,7 +139,6 @@ def filter_combined(products: List[Product],
             tags = p.tags or []
 
             match = False
-
             if kw in name or kw in description:
                 match = True
 
@@ -154,7 +151,6 @@ def filter_combined(products: List[Product],
                 if kw in t.lower():
                     match = True
                     break
-
             if match:
                 filtered.append(p)
 
@@ -168,18 +164,15 @@ def filter_combined(products: List[Product],
             if any(str(c.category_id) == cid for c in (p.categories or []))
         ]
 
-    # доставчик
     if supplier_id is not None:
         sid = str(supplier_id)
         results = [p for p in results if str(p.supplier_id) == sid]
 
-    # цена
     if min_price is not None:
         results = [p for p in results if p.price is not None and p.price >= min_price]
     if max_price is not None:
         results = [p for p in results if p.price is not None and p.price <= max_price]
 
-    # количество
     if min_qty is not None:
         results = [p for p in results if p.quantity is not None and p.quantity >= min_qty]
     if max_qty is not None:
