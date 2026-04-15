@@ -81,7 +81,6 @@ class CategoryView:
                 self.controller.update_name(category_id, new_name, "system")
             if new_desc:
                 self.controller.update_description(category_id, new_desc, "system")
-
             # обновяваме родителя - валидаторът ще реши дали е позволено
             self.controller.update_parent(category_id, parent_id, "system")
 
@@ -113,7 +112,6 @@ class CategoryView:
 
         for i, cat in enumerate(categories, 1):
             print(f"{i}. {cat.name}")
-
         choice = input("Въведете номер: ").strip()
         if not choice.isdigit():
             print("Невалиден избор.")

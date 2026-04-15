@@ -38,7 +38,7 @@ class LocationValidator:
             if l.name.lower() == name.lower() and l.location_id != exclude_id:
                 raise ValueError("Локация с това име вече съществува.")
 
-    # EXISTS
+
     @staticmethod
     def validate_exists(location_id, locations):
         exists = any(str(l.location_id) == str(location_id) for l in locations)

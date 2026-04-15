@@ -7,19 +7,15 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
     Връща списък с намерените резултати."""
     if not keyword:
         return categories
-
     keyword = keyword.lower()
     results = []
-
     for c in categories:
         # Проверяваме името
         name_match = keyword in c.name.lower()
-
         # Проверяваме описанието - ако съществува
         desc_match = False
         if c.description:
             desc_match = keyword in c.description.lower()
-
         if name_match or desc_match:
             results.append(c)
 

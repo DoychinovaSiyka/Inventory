@@ -103,7 +103,6 @@ class MovementView:
         description = input("Описание: ")
         supplier_id = None
         customer = None
-
         # Доставка (IN) изисква доставчик
         if movement_type == "IN":
             if self.supplier_controller:
@@ -190,7 +189,6 @@ class MovementView:
 
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
-
         print("0=IN, 1=OUT, 2=MOVE")
         m_type_input = input("Тип движение или Enter: ").strip() or None
         movement_type = None

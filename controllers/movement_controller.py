@@ -136,7 +136,8 @@ class MovementController:
         move_entry = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, user_id=user_id,
                               location_id=to_loc, movement_type=MovementType.MOVE, quantity=qty,
                               unit=product.unit, description=f"От {from_loc} към {to_loc}. {description}",
-                              price=0, from_location_id=from_loc, to_location_id=to_loc, date=now, created=now, modified=now)
+                              price=0, from_location_id=from_loc, to_location_id=to_loc, date=now,
+                              created=now, modified=now)
 
         self.movements.append(move_entry)
         self.save_changes()

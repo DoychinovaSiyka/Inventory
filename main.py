@@ -76,18 +76,11 @@ class InventoryApplication:
 
     #  Инициализация на менютата
     def _init_menus(self):
-        self.controllers = {
-            "user": self.user_controller,
-            "product": self.product_controller,
-            "category": self.category_controller,
-            "supplier": self.supplier_controller,
-            "location": self.location_controller,
-            "movement": self.movement_controller,
-            "invoice": self.invoice_controller,
-            "report": self.report_controller,
-            "activity_log": self.activity_log_controller,
-            "logistic": self.logistic_service
-        }
+        self.controllers = {"user": self.user_controller, "product": self.product_controller,
+                            "category": self.category_controller, "supplier": self.supplier_controller,
+                            "location": self.location_controller, "movement": self.movement_controller,
+                            "invoice": self.invoice_controller, "report": self.report_controller,
+                            "activity_log": self.activity_log_controller, "logistic": self.logistic_service}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)

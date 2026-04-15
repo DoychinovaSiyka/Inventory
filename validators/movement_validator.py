@@ -8,7 +8,6 @@ class MovementValidator:
         # Приема или int (0,1,2), или string ("IN","OUT","MOVE")
         if movement_type is None:
             raise ValueError("Типът движение е задължителен.")
-
         # Ако е enum -> контролерът ще го подаде като string
         mt = str(movement_type).upper()
 
@@ -19,7 +18,6 @@ class MovementValidator:
     @staticmethod
     def parse_movement_type(raw_type: str):
         raw_type = raw_type.strip()
-
         if raw_type == "0":
             return "IN"
         elif raw_type == "1":

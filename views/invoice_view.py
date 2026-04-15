@@ -121,7 +121,6 @@ class InvoiceView:
 
         results = self.invoice_controller.advanced_search(customer=customer, product=product, start_date=start_date,
                                                           end_date=end_date, min_total=min_total, max_total=max_total)
-
         if not results:
             print("\nНяма фактури, които отговарят на критериите.")
             return

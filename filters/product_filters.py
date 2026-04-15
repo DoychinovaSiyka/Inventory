@@ -6,7 +6,6 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
     keyword = (keyword or "").lower().strip()
     if not keyword:
         return []
-
     results = []
     for p in products:
         name = p.name.lower() if p.name else ""
@@ -14,19 +13,16 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
         categories = p.categories or []
         tags = p.tags or []
         supplier_id = str(p.supplier_id).lower() if p.supplier_id else ""
-
         # име + описание
         if keyword in name or keyword in description:
             results.append(p)
             continue
-
         # категории
         for c in categories:
             c_name = c.name.lower() if hasattr(c, "name") else str(c).lower()
             if keyword in c_name:
                 results.append(p)
                 break
-
         for t in tags:
             if keyword in t.lower():
                 results.append(p)
@@ -42,16 +38,12 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
 # CATEGORY FILTERS
 def filter_by_category(products: List[Product], category_id: str) -> List[Product]:
     category_id = str(category_id)
-    return [
-        p for p in products
-        if any(str(c.category_id) == category_id for c in (p.categories or []))
-    ]
+    return [p for p in products if any(str(c.category_id) == category_id for c in (p.categories or []))]
 
 
 def filter_by_multiple_category_ids(products: List[Product], category_ids: List[str]) -> List[Product]:
     target_ids = set(str(cid) for cid in category_ids)
     filtered = []
-
     for p in products:
         for c in (p.categories or []):
             if str(c.category_id) in target_ids:
@@ -72,7 +64,6 @@ def filter_by_price_range(products: List[Product],
                           max_price: Optional[float]) -> List[Product]:
 
     results = [p for p in products if p.price is not None]
-
     if min_price is not None:
         results = [p for p in results if p.price >= min_price]
     if max_price is not None:
@@ -87,7 +78,6 @@ def filter_by_quantity_range(products: List[Product],
                              max_qty: Optional[float]) -> List[Product]:
 
     results = [p for p in products if p.quantity is not None]
-
     if min_qty is not None:
         results = [p for p in results if p.quantity >= min_qty]
     if max_qty is not None:
@@ -137,16 +127,13 @@ def filter_combined(products: List[Product],
             description = (p.description or "").lower()
             categories = p.categories or []
             tags = p.tags or []
-
             match = False
             if kw in name or kw in description:
                 match = True
-
             for c in categories:
                 if kw in c.name.lower():
                     match = True
                     break
-
             for t in tags:
                 if kw in t.lower():
                     match = True
@@ -159,10 +146,7 @@ def filter_combined(products: List[Product],
     # категория
     if category_id is not None:
         cid = str(category_id)
-        results = [
-            p for p in results
-            if any(str(c.category_id) == cid for c in (p.categories or []))
-        ]
+        results = [ p for p in results if any(str(c.category_id) == cid for c in (p.categories or []))]
 
     if supplier_id is not None:
         sid = str(supplier_id)

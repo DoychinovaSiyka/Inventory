@@ -137,8 +137,7 @@ class ProductValidator:
     @staticmethod
     def validate_all(product_id, name, categories, quantity, unit, description, price,
                      location_id, supplier_id, tags):
-        """Вика всички проверки подред."""
-        # UUID проверки
+        """Вика всички проверки подред. UUID проверки"""
         if product_id:
             ProductValidator.validate_uuid(product_id, "Product ID")
         if supplier_id is not None:

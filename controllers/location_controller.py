@@ -29,7 +29,6 @@ class LocationController:
         zone = LocationValidator.validate_zone(zone)
         capacity = LocationValidator.validate_capacity(capacity)
         LocationValidator.validate_unique_name(name, self.locations)
-
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         location = Location(location_id=self._generate_id(), name=name, zone=zone,
                             capacity=capacity, created=now, modified=now)

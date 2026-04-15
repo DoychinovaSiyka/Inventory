@@ -24,18 +24,13 @@ class UserView:
 
     # Създаване на менюто отделно
     def _build_menu(self):
-        return Menu(
-            "МЕНЮ ПОТРЕБИТЕЛИ",
-            [
-                MenuItem("1", "Списък на потребители", self.show_users),
-                MenuItem("2", "Добавяне на потребител", self.add_user),
-                MenuItem("3", "Промяна на роля", self.change_role),
-                MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
-                MenuItem("5", "Активиране на потребител", self.activate_user),
-                MenuItem("6", "Премахване на потребител", self.delete_user),
-                MenuItem("0", "Назад", lambda u: "break"),
-            ]
-        )
+        return Menu("МЕНЮ ПОТРЕБИТЕЛИ",[MenuItem("1", "Списък на потребители", self.show_users),
+                                        MenuItem("2", "Добавяне на потребител", self.add_user),
+                                        MenuItem("3", "Промяна на роля", self.change_role),
+                                        MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+                                        MenuItem("5", "Активиране на потребител", self.activate_user),
+                                        MenuItem("6", "Премахване на потребител", self.delete_user),
+                                        MenuItem("0", "Назад", lambda u: "break")])
 
     # Показване на всички потребители
     def show_users(self, _):
@@ -49,8 +44,6 @@ class UserView:
         ln = input("Фамилия: ")
         email = input("Email: ")
         username = input("Потребителско име: ")
-
-
         password = input_password("Парола: ")  # скрито въвеждане
         role = input("Роля (Admin/Operator): ")
         try:

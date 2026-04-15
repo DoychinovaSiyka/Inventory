@@ -120,7 +120,8 @@ class ReportsView:
         if not result.data:
             print("\nНяма налични продукти.\n")
             return
-        rows = [[i['product'], self._format_qty(i['quantity'], i['product']), self._format_lv(i['price'])] for i in result.data]
+        rows = [[i['product'], self._format_qty(i['quantity'], i['product']),
+                 self._format_lv(i['price'])] for i in result.data]
         print(format_table(["Продукт", "Количество", "Цена"], rows))
 
     # СПРАВКА – ДВИЖЕНИЯ

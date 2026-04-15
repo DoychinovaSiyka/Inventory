@@ -96,7 +96,6 @@ class InventoryController:
                     self.increase_stock(pid, pname, m.get("to_location_id"), qty, should_save=False)
                 except:
                     pass
-
         self.save()
 
 

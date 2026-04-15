@@ -9,7 +9,6 @@ class User:
         """ Модел за потребител. ID-то идва от контролера или от JSON файла.
         Ако липсва, се генерира нов UUID. Датите (created/modified) също се подават от контролера,
         за да има синхрон в системата. """
-
         self.user_id = str(user_id) if user_id else str(uuid.uuid4())
         self.id = self.user_id  # съвместимост със стар код
         self.first_name = first_name

@@ -34,14 +34,12 @@ def filter_deliveries(movements: List[Movement], keyword: str, product_controlle
         if keyword in str(m.movement_id).lower():
             results.append(m)
             continue
-
-        # 2. Търсене по име на продукт (чрез ProductController)
+        # 2. Търсене по име на продукт - чрез ProductController
         product = product_controller.get_by_id(m.product_id)
         if product and keyword in product.name.lower():
             results.append(m)
             continue
-
-        # 3. Търсене по име на доставчик (чрез SupplierController)
+        # 3. Търсене по име на доставчик - чрез SupplierController
         if m.supplier_id and supplier_controller:
             supplier = supplier_controller.get_by_id(m.supplier_id)
             if supplier and keyword in supplier.name.lower():
@@ -59,12 +57,10 @@ def filter_by_date_range(movements: List[Movement],
     start = _parse_movement_date(start_date) if start_date else None
     end = _parse_movement_date(end_date) if end_date else None
     filtered = []
-
     for m in movements:
         m_date = _parse_movement_date(m.date)
         if not m_date:
             continue
-
         if start and m_date < start:
             continue
         if end:
@@ -80,12 +76,9 @@ def filter_by_date_range(movements: List[Movement],
 
 # Комбиниран филтър (advanced_filter)
 def filter_advanced(movements: List[Movement],
-                    movement_type=None,
-                    start_date=None,
-                    end_date=None,
-                    product_id=None,
-                    location_id=None,
-                    user_id=None):
+                    movement_type=None, start_date=None,
+                    end_date=None, product_id=None,
+                    location_id=None, user_id=None):
     results = movements
 
     if movement_type:
@@ -95,13 +88,10 @@ def filter_advanced(movements: List[Movement],
 
     if start_date or end_date:
         results = filter_by_date_range(results, start_date, end_date)
-
     if product_id:
         results = [m for m in results if str(m.product_id) == str(product_id)]
-
     if location_id:
         results = [m for m in results if str(m.location_id) == str(location_id)]
-
     if user_id:
         results = [m for m in results if str(m.user_id) == str(user_id)]
 

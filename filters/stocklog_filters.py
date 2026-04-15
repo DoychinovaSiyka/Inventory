@@ -21,8 +21,5 @@ def filter_search(logs: List[StockLog], keyword: str) -> List[StockLog]:
 
     clean_keyword = str(keyword).lower().strip()
 
-    return [
-        log for log in logs
-        if clean_keyword in log.action.lower()
-           or clean_keyword in log.timestamp.lower()
-    ]
+    return [log for log in logs if clean_keyword in log.action.lower()
+            or clean_keyword in log.timestamp.lower()]

@@ -23,7 +23,6 @@ def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     return [inv for inv in invoices if keyword in inv.customer.lower()]
 
 
-# Търсене по продукт
 def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     if not keyword:
         return invoices

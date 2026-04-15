@@ -50,7 +50,7 @@ class Movement:
         """Създава Movement от JSON речник."""
         if not data:
             return None
-        # Опитвам да възстановим Enum
+        # пробвам да възстановим Enum
         mt_raw = data.get("movement_type")
         try:
             mt = MovementType(mt_raw)

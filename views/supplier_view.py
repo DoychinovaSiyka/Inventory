@@ -61,7 +61,6 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
             return
-
         if not supplier:
             print("Доставчикът не е намерен.")
             return
@@ -69,7 +68,6 @@ class SupplierView:
         new_name = input(f"Ново име ({supplier.name}): ").strip()
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
-
         try:
             self.controller.update(supplier_id=supplier_id, name=new_name or supplier.name,
                                    contact=new_contact or supplier.contact, address=new_address or supplier.address)

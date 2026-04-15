@@ -31,7 +31,6 @@ class ProductSortView:
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
         self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")

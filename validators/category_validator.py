@@ -85,7 +85,6 @@ class CategoryValidator:
         for c in all_categories:
             if c.parent_id == category_id:
                 raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
-
         # Има продукти?
         for p in products:
             if p.category_id == category_id:
