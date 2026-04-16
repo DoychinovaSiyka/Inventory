@@ -1041,5 +1041,159 @@
         "action": "DECREASE_QUANTITY",
         "details": "Премахнати 10.0 единици от продукт ID 6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
         "timestamp": "2026-04-15 16:55:32"
+    },
+    {
+        "log_id": "78a643ed-84fb-4585-8ea0-0eedff9d63d7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 11:53:36"
+    },
+    {
+        "log_id": "57ca87cb-ddef-4d75-8eea-4b9131523564",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DECREASE_QUANTITY",
+        "details": "Премахнати 10.0 единици от продукт ID 6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
+        "timestamp": "2026-04-16 11:54:40"
+    },
+    {
+        "log_id": "35312aed-cd85-4809-8363-0c14124c5c41",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "INCREASE_QUANTITY",
+        "details": "Добавени 6.0 единици към продукт ID d8effa46-27b6-454b-b8a9-e7bafe66e85c",
+        "timestamp": "2026-04-16 11:55:08"
+    },
+    {
+        "log_id": "7bb7e488-f12f-4f97-bf82-0daea02350b1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 11:59:41"
+    },
+    {
+        "log_id": "f858a6d3-0147-4614-9c04-0f25f4eef84e",
+        "user_id": "system",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Печен шамфастък (ID: 4ecb4c5c-042b-472f-8db5-f22445fe6015)",
+        "timestamp": "2026-04-16 12:00:45"
+    },
+    {
+        "log_id": "3262234f-f312-46d4-bf8b-b1ae599a3f13",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:03:15"
+    },
+    {
+        "log_id": "86ac61da-456f-4585-8f24-ee1266a77242",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: лимон",
+        "timestamp": "2026-04-16 12:04:06"
+    },
+    {
+        "log_id": "f38cc9d9-ff64-4dea-ac13-e649f1d5d7bb",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: четки за зъби",
+        "timestamp": "2026-04-16 12:06:03"
+    },
+    {
+        "log_id": "783c3dda-8f0c-4945-8c61-411f989580f8",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID b3933eef-ca05-4ec1-a2bc-923da75fc021",
+        "timestamp": "2026-04-16 12:06:18"
+    },
+    {
+        "log_id": "0c17124d-f44f-461e-adbb-e40cb7b32d9e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:21:14"
+    },
+    {
+        "log_id": "0cf91e4f-1ec7-4501-9be5-5b8ab6eaaf56",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:25:12"
+    },
+    {
+        "log_id": "2c1700ea-5105-4578-8b13-49bb19fbd2e1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:27:53"
+    },
+    {
+        "log_id": "665b40a0-e578-4348-ac4d-1ef7439434c7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:31:51"
+    },
+    {
+        "log_id": "77b40c9a-da53-4f2c-86b8-14a204923227",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:38:21"
+    },
+    {
+        "log_id": "1fc8c0ad-7d16-4b22-a61a-b2802f286a6c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:40:06"
+    },
+    {
+        "log_id": "627f2e48-5d6f-4a65-9eac-d9d05c7b349f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:49:31"
+    },
+    {
+        "log_id": "1a368cd6-325d-4ccf-8c38-28b3b59fbda1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:51:17"
+    },
+    {
+        "log_id": "6f6aa274-0bb4-4ffb-b8e5-ffe0d8645305",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 12:56:40"
+    },
+    {
+        "log_id": "84591329-17a4-4a95-b825-2879b659712c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 13:05:50"
+    },
+    {
+        "log_id": "12f3b42b-72cf-4b4f-85e3-75d7924c9fa6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 13:07:20"
+    },
+    {
+        "log_id": "12a4b9b2-4b13-4ca1-b6e2-45a9603f062a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 13:14:52"
+    },
+    {
+        "log_id": "8313603b-7c83-4800-866a-e6b6e6b43ad2",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 13:27:56"
     }
 ]

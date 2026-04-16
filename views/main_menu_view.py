@@ -33,7 +33,6 @@ class MainMenuView:
                                     MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
                                     MenuItem("0", "Изход", lambda u: "break")])
 
-
     # Основен цикъл
     def show_menu(self, user):
         while True:

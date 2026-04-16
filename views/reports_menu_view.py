@@ -1,7 +1,9 @@
+from typing import List
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController
 from models.user import User
+from models.report import Report
 from datetime import datetime
 
 
@@ -46,6 +48,15 @@ class ReportsView:
             return "0.00 лв."
 
     @staticmethod
+    def _format_qty_unit(quantity, unit):
+        """Комбинира количество + мерна единица."""
+        if quantity is None:
+            return "0"
+        if not unit:
+            return str(quantity)
+        return f"{quantity} {unit}"
+
+    @staticmethod
     def _format_qty(value, product_name=""):
         try:
             if value is None:
@@ -70,11 +81,13 @@ class ReportsView:
 
         print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
+    # Търсене по клиент
     def report_sales_by_customer(self, _):
-        customer = input("Клиент: ")
+        customer = input("Въведете име на клиент: ").strip()
         result = self.controller.report_sales_by_customer(customer)
+
         if not result.data:
-            print(f"\nНяма резултати за клиент: {customer}\n")
+            print("\nНяма фактури за този клиент.\n")
             return
 
         rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
@@ -130,33 +143,38 @@ class ReportsView:
         if not result.data:
             print("\nНяма налични движения.\n")
             return
-        rows = [[item.get("date"), item.get("type"), item.get("movement_id"), item.get("quantity"), item.get("price"),
-                 item.get("location_name")] for item in result.data]
+
+        rows = [[item.get("date"), item.get("type"), item.get("movement_id"),
+                 self._format_qty_unit(item.get("quantity"), item.get("unit")),
+                 item.get("price"), item.get("location_name")] for item in result.data]
 
         print(format_table(["Дата", "Тип", "ID", "Кол.", "Цена", "Склад"], rows))
 
     # СПРАВКА – ВСИЧКИ ДОСТАВКИ
     def report_all_deliveries(self, _):
-        result = self.controller.report_deliveries_all()  # ← КОРЕКЦИЯ
+        result = self.controller.report_deliveries_all()
         if not result.data:
             print("\nНяма доставки.\n")
             return
 
-        rows = [[item.get("date"), item.get("movement_id"), item.get("product"), item.get("quantity"),
+        rows = [[item.get("date"), item.get("movement_id"), item.get("product"),
+                 self._format_qty_unit(item.get("quantity"), item.get("unit")),
                  item.get("supplier"), item.get("location_name")] for item in result.data]
+
         print(format_table(["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"], rows))
 
     # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         keyword = input("Търсене (ID, продукт, доставчик, дата): ").strip()
-        result = self.controller.report_deliveries_search(keyword)  # ← КОРЕКЦИЯ
+        result = self.controller.search_deliveries_all(keyword)
 
         if not result.data:
             print("\nНяма намерени доставки.\n")
             return
-
-        rows = [[item.get("date"), item.get("movement_id"), item.get("product"), item.get("quantity"),
+        rows = [[item.get("date"), item.get("movement_id"), item.get("product"),
+                 self._format_qty_unit(item.get("quantity"), item.get("unit")),
                  item.get("supplier"), item.get("location_name")] for item in result.data]
+
         print(format_table(["Дата", "ID", "Продукт", "Количество", "Доставчик", "Склад"], rows))
 
     # Оборот по дни
@@ -175,5 +193,8 @@ class ReportsView:
         if not result.data:
             print("\nНяма продажби.\n")
             return
-        rows = [[item["product"], item["quantity"], f"{item['total']:.2f} лв."] for item in result.data]
+        rows = [[item["product"],
+                 self._format_qty_unit(item["quantity"], item.get("unit")),
+                 f"{item['total']:.2f} лв."] for item in result.data]
+
         print(format_table(["Продукт", "Продадено количество", "Оборот"], rows))

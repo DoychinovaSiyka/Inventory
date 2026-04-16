@@ -7,7 +7,7 @@ class GraphView:
     def __init__(self, inventory_controller):
         self.inventory_controller = inventory_controller
         self.graph = WarehouseGraph()
-        self._setup_network() # Създаваме мрежата от складове
+        self._setup_network()  # Създаваме мрежата от складове
         self.menu = self._build_menu()  # Създаваме менюто отделно
 
     # Създаване на меню
@@ -45,26 +45,34 @@ class GraphView:
     def calculate_best_delivery(self, _):
         product_name = input("Име на стока: ").strip()
         my_location = input("Вашето ID (напр. W1): ").strip()
+
         if my_location not in self.graph.nodes:
             print("Грешка: Невалидна локация!")
             return
 
         # Складове, които имат стоката
         possible_sources = self.inventory_controller.get_warehouses_with_product(product_name)
+        # Ако продуктът е наличен само в текущия склад
+        if possible_sources == [my_location]:
+            print(f"\nСтоката '{product_name}' е налична само във вашия склад ({my_location}).")
+            print("Няма други складове, от които да се достави.")
+            return
+
+        # Изключваме текущия склад – търсим само други
         possible_sources = [s for s in possible_sources if s != my_location]
 
         if not possible_sources:
             print(f"Стоката '{product_name}' не е налична другаде.")
             return
 
-        # Пускам Дейкстра  – от моята локация
+        # Пускаме Дейкстра от текущия склад
         dist, prev = self.graph.dijkstra(my_location)
 
-        # Намирам най-близкия склад с наличност
+        # Намираме най-близкия склад
         best_source = min(possible_sources, key=lambda w: dist[w])
         best_dist = dist[best_source]
 
-        # Възстановяване на пътя
+        # Възстановяване на маршрута
         path = []
         curr = best_source
         while curr != my_location:

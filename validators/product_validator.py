@@ -100,6 +100,34 @@ class ProductValidator:
             raise ValueError(f"{field_name} не може да е отрицателна.")
         return f
 
+    @staticmethod
+    def parse_optional_float(value, field_name="стойност"):
+        """Парсира число или връща None, ако е празно."""
+        if value is None or str(value).strip() == "":
+            return None
+        try:
+            f = float(str(value).replace(",", "."))
+        except ValueError:
+            raise ValueError(f"{field_name} трябва да е число.")
+        if f < 0:
+            raise ValueError(f"{field_name} не може да е отрицателна.")
+        return round(f, 2)
+
+    @staticmethod
+    def parse_int(value, field_name="стойност"):
+        """Парсира цяло число или хвърля грешка."""
+        if value is None or str(value).strip() == "":
+            raise ValueError(f"{field_name} е задължително поле.")
+
+        try:
+            i = int(str(value).strip())
+        except ValueError:
+            raise ValueError(f"{field_name} трябва да е цяло число.")
+
+        if i < 0:
+            raise ValueError(f"{field_name} не може да е отрицателно.")
+
+        return i
 
     # EXISTENCE VALIDATION
     @staticmethod

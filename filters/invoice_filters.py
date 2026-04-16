@@ -15,13 +15,33 @@ def _parse_invoice_date(date_str: str) -> Optional[datetime]:
     return None
 
 
+# Помощна функция за почистване на числови стойности
+def _clean_number(value):
+    """Премахва 'лв', интервали и запетаи, за да остане само число."""
+    if value is None or value == "":
+        return None
+    value = str(value).replace("лв.", "").replace("лв", "").replace(" ", "").replace(",", ".")
+    try:
+        return float(value)
+    except ValueError:
+        return None
+
+
 # Търсене по клиент
 def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     if not keyword:
         return invoices
-    keyword = keyword.lower().strip()
-    return [inv for inv in invoices if keyword in inv.customer.lower()]
 
+    keyword = keyword.lower().strip()
+    search_parts = keyword.split()
+    results = []
+    for inv in invoices:
+        client_name = inv.customer.lower() if inv.customer else ""
+        # Позволява търсене по част от име, по една или повече думи, в произволен ред
+        if all(part in client_name for part in search_parts):
+            results.append(inv)
+
+    return results
 
 def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     if not keyword:
@@ -42,11 +62,18 @@ def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
 def filter_by_total_range(invoices: List[Invoice],
                           min_value: Optional[float],
                           max_value: Optional[float]) -> List[Invoice]:
+
+    min_value = _clean_number(min_value)
+    max_value = _clean_number(max_value)
+
     results = invoices
+
     if min_value is not None:
-        results = [inv for inv in results if inv.total_price >= float(min_value)]
+        results = [inv for inv in results if float(inv.total_price) >= min_value]
+
     if max_value is not None:
-        results = [inv for inv in results if inv.total_price <= float(max_value)]
+        results = [inv for inv in results if float(inv.total_price) <= max_value]
+
     return results
 
 

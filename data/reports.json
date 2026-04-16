@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "75949ade-8f1d-4de6-bc06-90673a237dd4",
+        "report_id": "be782c8f-05f1-48cf-9bdd-b3c8d0b185a8",
         "report_type": "stock",
-        "generated_on": "2026-04-15 16:51:49",
+        "generated_on": "2026-04-16 13:27:50",
         "parameters": {},
         "data": [
             {
@@ -109,7 +109,7 @@
             },
             {
                 "product": "био ягоди",
-                "quantity": 24.0,
+                "quantity": 30.0,
                 "price": 5.99,
                 "location": "Склад София"
             },
@@ -127,22 +127,28 @@
             },
             {
                 "product": "Печен шамфастък",
-                "quantity": 10.0,
-                "price": 40.0,
+                "quantity": 17.0,
+                "price": 45.0,
                 "location": "Склад Бургас"
             },
             {
                 "product": "Бяло вино (Совиньон блан)",
-                "quantity": 100.0,
+                "quantity": 80.0,
                 "price": 25.0,
+                "location": "Магазин Смолян"
+            },
+            {
+                "product": "лимон",
+                "quantity": 10.0,
+                "price": 3.09,
                 "location": "Магазин Смолян"
             }
         ]
     },
     {
-        "report_id": "949ff48e-b443-40b9-91d6-95d27aa9fcf1",
+        "report_id": "69888358-a39a-4e8f-9738-39222891b096",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-15 16:51:49",
+        "generated_on": "2026-04-16 13:27:50",
         "parameters": {},
         "data": [
             {
@@ -163,9 +169,9 @@
         ]
     },
     {
-        "report_id": "8c046973-40ba-4e7e-a84a-36af8d0b58a2",
+        "report_id": "fcd1e009-c0e3-4ede-bd0d-f62124b2e172",
         "report_type": "top_products",
-        "generated_on": "2026-04-15 16:51:49",
+        "generated_on": "2026-04-16 13:27:50",
         "parameters": {},
         "data": [
             {
