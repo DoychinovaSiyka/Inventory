@@ -117,7 +117,6 @@ class InventoryApplication:
         self.activity_log_controller.add_log(guest_user.user_id,
                                              "ANONYMOUS_LOGOUT","Анонимен изход.")
 
-
     def run(self):
         while True:
             print("\n" + "=" * 31)
