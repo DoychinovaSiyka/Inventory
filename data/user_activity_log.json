@@ -1195,5 +1195,117 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-16 13:27:56"
+    },
+    {
+        "log_id": "67607b0b-c057-4981-b153-e9021a0a0fe8",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 14:32:39"
+    },
+    {
+        "log_id": "aca3b836-3487-41c9-902d-10bbaa333ac4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: студен чай \"Lemon Fresh\"",
+        "timestamp": "2026-04-16 14:35:59"
+    },
+    {
+        "log_id": "b4225595-82a0-466a-a6fd-6433f3e59158",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 14:42:13"
+    },
+    {
+        "log_id": "92f28deb-05d7-4eae-8625-5feacca5ee26",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: слива",
+        "timestamp": "2026-04-16 14:42:42"
+    },
+    {
+        "log_id": "cc615cef-6383-4316-8200-f6c8c3d2dd4f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 14:49:05"
+    },
+    {
+        "log_id": "f1ac8b50-4a6d-4529-b01d-949670cb5fb8",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 14:52:53"
+    },
+    {
+        "log_id": "a7a149bf-1d97-41e6-a0f6-43f6e71f4732",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "Product: слива, Qty: 12.0",
+        "timestamp": "2026-04-16 14:54:26"
+    },
+    {
+        "log_id": "2b33eb4e-f09d-41d8-92d0-77b8aca7c10c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "Product: слива, Qty: 4.0",
+        "timestamp": "2026-04-16 14:56:39"
+    },
+    {
+        "log_id": "07e206ff-7abe-468e-87f3-17e6c7183320",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:07:03"
+    },
+    {
+        "log_id": "e0820c2e-60e8-4426-835f-1dfb798569ac",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:24:01"
+    },
+    {
+        "log_id": "93a4cd84-ceab-4318-a3ed-7bfcbc019f49",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:31:17"
+    },
+    {
+        "log_id": "ae488318-2ced-45f2-a86d-e7e0d1027242",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:33:40"
+    },
+    {
+        "log_id": "8ffd35e3-1192-4b6e-9ca6-68be6c027c31",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:39:47"
+    },
+    {
+        "log_id": "3761ca73-cd75-4d64-8b53-d3458c477d82",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-16 15:39:48"
+    },
+    {
+        "log_id": "98a30b23-8cb1-426a-bd0a-4038254eac0d",
+        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-16 15:39:58"
+    },
+    {
+        "log_id": "095ef86a-0959-4d53-b632-ba7a6ec6b625",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-16 15:40:50"
     }
 ]

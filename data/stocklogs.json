@@ -511,5 +511,23 @@
         "unit": "кг",
         "action": "add",
         "timestamp": "2026-04-14 23:53:30"
+    },
+    {
+        "log_id": null,
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "location_id": "W1",
+        "quantity": 12.0,
+        "unit": "кг.",
+        "action": "add",
+        "timestamp": "2026-04-16 14:54:26"
+    },
+    {
+        "log_id": null,
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "location_id": "W2",
+        "quantity": 4.0,
+        "unit": "кг.",
+        "action": "add",
+        "timestamp": "2026-04-16 14:56:39"
     }
 ]

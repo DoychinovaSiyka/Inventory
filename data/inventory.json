@@ -246,5 +246,21 @@
         "quantity": 12.0,
         "created": "2026-04-14 23:53:30",
         "modified": "2026-04-14 23:53:30"
+    },
+    {
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "product": "слива",
+        "warehouse": "W1",
+        "quantity": 12.0,
+        "created": "2026-04-16 14:54:26",
+        "modified": "2026-04-16 14:54:26"
+    },
+    {
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "product": "слива",
+        "warehouse": "W2",
+        "quantity": 4.0,
+        "created": "2026-04-16 14:56:39",
+        "modified": "2026-04-16 14:56:39"
     }
 ]

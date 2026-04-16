@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "be782c8f-05f1-48cf-9bdd-b3c8d0b185a8",
+        "report_id": "2ab769d8-7cea-46e8-be0d-12850438fef2",
         "report_type": "stock",
-        "generated_on": "2026-04-16 13:27:50",
+        "generated_on": "2026-04-16 15:40:45",
         "parameters": {},
         "data": [
             {
@@ -142,13 +142,25 @@
                 "quantity": 10.0,
                 "price": 3.09,
                 "location": "Магазин Смолян"
+            },
+            {
+                "product": "студен чай \"Lemon Fresh\"",
+                "quantity": 150.0,
+                "price": 2.89,
+                "location": "Склад Варна"
+            },
+            {
+                "product": "слива",
+                "quantity": 72.0,
+                "price": 3.09,
+                "location": "Склад Пловдив"
             }
         ]
     },
     {
-        "report_id": "69888358-a39a-4e8f-9738-39222891b096",
+        "report_id": "a5e8eb64-24ae-41f0-8470-fac1388b1fdd",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-16 13:27:50",
+        "generated_on": "2026-04-16 15:40:45",
         "parameters": {},
         "data": [
             {
@@ -169,9 +181,9 @@
         ]
     },
     {
-        "report_id": "fcd1e009-c0e3-4ede-bd0d-f62124b2e172",
+        "report_id": "970fb9b7-ae61-41d5-a4d3-035bdaa50939",
         "report_type": "top_products",
-        "generated_on": "2026-04-16 13:27:50",
+        "generated_on": "2026-04-16 15:40:45",
         "parameters": {},
         "data": [
             {

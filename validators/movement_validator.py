@@ -43,14 +43,33 @@ class MovementValidator:
 
     @staticmethod
     def parse_price(price):
+        """ Приема цена в различни формати:
+        - 2.99
+        - 2,99
+        - 2.99 лв / 2.99лв / 2.99 лв.
+        - 2лв / 2 лв / 2лв.
+        - премахва интервали, 'лв', 'лв.', запетайки и други символи """
+        if not price:
+            raise ValueError("Невалидна цена.")
+
+        p = str(price).lower().strip()
+
+        # Премахваме валутни символи и интервали
+        for token in ["лв.", "лв", "lv.", "lv", " "]:
+            p = p.replace(token, "")
+
+        # Заменяме запетая с точка
+        p = p.replace(",", ".")
+
         try:
-            p = float(price)
+            value = float(p)
         except:
             raise ValueError("Невалидна цена.")
-        if p < 0:
-            raise ValueError("Цената не може да е отрицателна.")
-        return round(p, 2)
 
+        if value < 0:
+            raise ValueError("Цената не може да е отрицателна.")
+
+        return round(value, 2)
 
     # EXISTENCE VALIDATION
     @staticmethod
@@ -71,10 +90,16 @@ class MovementValidator:
         if not loc:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-
     # BUSINESS RULES FOR IN / OUT
     @staticmethod
-    def validate_in_out_rules(movement_type, product, quantity, supplier_id, customer):
+    def validate_in_out_rules(movement_type, product, quantity, supplier_id, customer,
+                              inventory_controller, location_id):
+        """
+        Нови правила за IN/OUT:
+        - OUT проверява наличност от инвентара, а не product.quantity
+        - IN изисква доставчик
+        - OUT изисква клиент
+        """
         mt = str(movement_type).upper()
 
         if mt == "IN":
@@ -82,8 +107,13 @@ class MovementValidator:
                 raise ValueError("При IN движение трябва да има доставчик.")
 
         if mt == "OUT":
-            if product.quantity < quantity:
-                raise ValueError("Недостатъчна наличност.")
+            # Проверка на наличност от инвентара (ВАРИАНТ 1)
+            record = inventory_controller.get_stock(product.product_id, location_id)
+            available = record["quantity"] if record else 0
+
+            if available < quantity:
+                raise ValueError(f"Недостатъчна наличност! Налично: {available}, Заявка: {quantity}")
+
             if not customer:
                 raise ValueError("При OUT движение трябва да има клиент.")
 
@@ -95,16 +125,13 @@ class MovementValidator:
         """Правила за това в кой склад може да се извърши IN/OUT."""
         mt = str(movement_type).upper()
 
-        # IN: не може да доставяш в същия склад
         if mt == "IN":
             if product.location_id and str(product.location_id) == str(target_location_id):
                 raise ValueError("Не може да доставяте продукт в същата локация, в която вече се намира.")
 
-        # OUT: трябва да е от склада, в който е продуктът
         if mt == "OUT":
             if product.location_id and str(product.location_id) != str(target_location_id):
                 raise ValueError("Продажбата трябва да е от склада, в който се намира продуктът.")
-
 
     # MOVE VALIDATION
     @staticmethod
@@ -113,12 +140,20 @@ class MovementValidator:
             raise ValueError("MOVE трябва да е между различни локации.")
 
     @staticmethod
+    def validate_move_allowed(product, from_location_id, to_location_id):
+        current_loc = str(product.location_id)
+
+        if str(to_location_id) == current_loc:
+            raise ValueError("Не може да преместите продукта в същия склад, в който вече се намира.")
+
+        if str(from_location_id) != current_loc:
+            raise ValueError("Не може да преместите продукт от склад, в който той не се намира.")
+
+    @staticmethod
     def validate_move_stock(product_id, from_location_id, quantity, inventory_controller):
-        """Проверява дали има наличност в началния склад."""
         record = inventory_controller.get_stock(product_id, from_location_id)
         if not record or record["quantity"] < quantity:
             raise ValueError("Недостатъчна наличност в този склад.")
-
 
     # DATE FILTERING
     @staticmethod
@@ -138,7 +173,6 @@ class MovementValidator:
             results = [m for m in results if parse(m.date[:10]) and parse(m.date[:10]) <= end]
 
         return results
-
 
     # INDEX VALIDATION
     @staticmethod

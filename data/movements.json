@@ -574,5 +574,41 @@
         "date": "2026-04-14 23:53:30",
         "created": "2026-04-14 23:53:30",
         "modified": "2026-04-14 23:53:30"
+    },
+    {
+        "movement_id": "b3f804fd-26f6-40d1-8343-1967768f4ed7",
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W1",
+        "movement_type": "IN",
+        "quantity": 12.0,
+        "unit": "кг.",
+        "description": "Сините сливи са сочни, сладко‑кисели плодове с тъмносин до виолетов цвят и характерна естествена восъчна обвивка. Плодовото месо е плътно, ароматно и златисто, а костилката се отделя лесно при добре узрелите плодове.",
+        "price": 4.99,
+        "supplier_id": "c4f2a8d1-7b3e-4f9a-9c1d-2e7f5b9a8c11",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-16 14:54:26",
+        "created": "2026-04-16 14:54:26",
+        "modified": "2026-04-16 14:54:26"
+    },
+    {
+        "movement_id": "002004b2-8849-43e8-a6fd-0e155c36cf8c",
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W2",
+        "movement_type": "IN",
+        "quantity": 4.0,
+        "unit": "кг.",
+        "description": "доставка на сливи",
+        "price": 3.0,
+        "supplier_id": "a9d7c3b5-1e4f-4a8c-9b2d-5f7a3e1c7d22",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-16 14:56:39",
+        "created": "2026-04-16 14:56:39",
+        "modified": "2026-04-16 14:56:39"
     }
 ]

@@ -50,6 +50,13 @@ class UserController:
     def get_all(self):
         """ Връща всички потребители. """
         return self.users
+    def get_by_id(self, user_id: str) -> Optional[User]:
+        """ Намира потребител по неговото ID. """
+        for u in self.users:
+            if u.user_id == user_id:
+                return u
+        return None
+
 
     # AUTH
     def login(self, username: str, password: str) -> Optional[User]:

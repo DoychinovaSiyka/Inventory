@@ -1,3 +1,6 @@
+from models.product import Product
+from models.location import Location
+from models.supplier import Supplier
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
@@ -31,42 +34,58 @@ class MovementView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Помощен метод за избор - само по номер
+    def _get_item_id(self, item):
+        if isinstance(item, Product):
+            return item.product_id
+        if isinstance(item, Location):
+            return item.location_id
+        if isinstance(item, Supplier):
+            return item.supplier_id
+        return "N/A"
+
+    def _get_item_name(self, item):
+        return item.name
+
+    def _get_item_qty_text(self, item):
+        if isinstance(item, Product):
+            return f" – {item.quantity} {item.unit}"
+        return ""
+
+
+    # Помощен метод за избор
     def _select_item(self, items, label):
         if not items:
             print(f"Няма налични {label}.")
             return None
+
         print(f"\nИзберете {label}:")
         for i, item in enumerate(items, start=1):
-            products = self.product_controller.get_all()
-            locations = self.location_controller.get_all()
-            suppliers = self.supplier_controller.get_all() if self.supplier_controller else []
+            item_id = self._get_item_id(item)
+            name = self._get_item_name(item)
+            qty_text = self._get_item_qty_text(item)
+            print(f"{i}. {name}{qty_text} (ID: {item_id})")
 
-            # Защита: ако списъкът е празен, не правим get_all()[0]
-            if products and isinstance(item, type(products[0])):
-                item_id = item.product_id
-            elif locations and isinstance(item, type(locations[0])):
-                item_id = item.location_id
-            elif suppliers and isinstance(item, type(suppliers[0])):
-                item_id = item.supplier_id
-            else:
-                item_id = "N/A"
-
-            name = getattr(item, "name", "N/A")
-            print(f"{i}. {name} (ID: {item_id})")
-
-        choice = input("Номер (Enter = отказ): ").strip()
-        if choice == "":
-            return None
-        if not choice.isdigit():
-            print("Моля, въведете валиден номер.")
+        raw = input("Номер или ID (Enter = отказ): ").strip()
+        if raw == "":
             return None
 
-        idx = int(choice) - 1
-        if 0 <= idx < len(items):
-            return items[idx]
-        print("Невалиден номер.")
+        # Избор по номер
+        if raw.isdigit():
+            idx = int(raw) - 1
+            if 0 <= idx < len(items):
+                return items[idx]
+            print("Невалиден номер.\n")
+            return None
+
+        # Избор по ID
+        raw_lower = raw.lower()
+        for item in items:
+            if self._get_item_id(item).lower() == raw_lower:
+                return item
+
+        print("Невалиден ID.\n")
         return None
+
 
     def show_menu(self):
         user = self.user_controller.logged_user

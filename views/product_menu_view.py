@@ -70,21 +70,25 @@ class ProductView:
         description = input("Описание: ").strip()
         price_raw = input("Цена: ")
         quantity_raw = input("Количество: ")
-        unit = input("Мерна единица (пример: кг, бр, л, пакет): ").strip()
+        unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
+
         try:
             price = ProductValidator.parse_float(price_raw, "Цена")
             quantity = ProductValidator.parse_float(quantity_raw, "Количество")
         except ValueError as e:
             print(e)
+            print("Моля, опитайте отново.\n")
             return
 
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
             return
+
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
+
         cat_raw = input("Изберете категория (номер или Category ID): ").strip()
 
         try:
@@ -98,16 +102,20 @@ class ProductView:
                 category_id = cat_raw
         except Exception as e:
             print(e)
+            print("Моля, опитайте отново.\n")
             return
 
         locations = self.location_controller.get_all()
         if not locations:
             print("Няма складове.")
             return
+
         print("\nЛокации:")
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
         loc_raw = input("Изберете локация (номер или Location ID): ").strip()
+
         try:
             if loc_raw.isdigit():
                 loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
@@ -120,17 +128,20 @@ class ProductView:
                 location_id = loc_raw
         except Exception as e:
             print(e)
+            print("Моля, опитайте отново.\n")
             return
 
         try:
             u_id = user.user_id
-            product_data = {"name": name, "category_ids": [category_id], "quantity": quantity, "unit": unit,
-                "description": description, "price": price, "supplier_id": None, "location_id": location_id}
+            product_data = {"name": name, "category_ids": [category_id],
+                            "quantity": quantity, "unit": unit, "description": description,
+                            "price": price, "supplier_id": None, "location_id": location_id}
 
             self.product_controller.add(product_data, u_id)
             print("Продуктът е създаден успешно.")
         except ValueError as e:
             print("Грешка:", e)
+            print("Моля, опитайте отново.\n")
 
     def remove_product(self, user):
         pid = input("ID на продукт: ").strip()
@@ -140,6 +151,7 @@ class ProductView:
             print("Продуктът е премахнат.")
         except ValueError as e:
             print("Грешка:", e)
+            print("Моля, опитайте отново.\n")
 
     def edit_product(self, _):
         pid = input("ID на продукт: ").strip()
@@ -147,15 +159,18 @@ class ProductView:
         if not product:
             print("Няма такъв продукт.")
             return
+
         print(f"Редактиране на {product.name}")
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
         new_qty_raw = input(f"Ново количество ({product.quantity}): ").strip()
+
         if new_qty_raw:
             for suffix in ["бр.", "бр", "кг.", "кг", "л.", "л", " пакет", "пакет"]:
                 if new_qty_raw.endswith(suffix):
                     new_qty_raw = new_qty_raw.replace(suffix, "").strip()
+
         try:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
             new_qty = ProductValidator.parse_float(new_qty_raw, "Количество") if new_qty_raw else product.quantity
@@ -163,6 +178,7 @@ class ProductView:
             print("Продуктът е обновен.")
         except ValueError as e:
             print("Грешка:", e)
+            print("Моля, опитайте отново.\n")
 
     #  DISPLAY
     def show_all(self, _):
@@ -206,10 +222,13 @@ class ProductView:
         if not categories:
             print("Няма категории.")
             return
+
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
+
         raw = input("Изберете категория (номер или Category ID): ").strip()
+
         try:
             if raw.isdigit():
                 idx = ProductValidator.parse_int(raw, "Категория")
@@ -221,17 +240,21 @@ class ProductView:
                 selected_id = raw
         except Exception as e:
             print(e)
+            print("Моля, опитайте отново.\n")
             return
+
         results = self.product_controller.search_by_category(selected_id)
         if not results:
             print("Няма продукти.")
             return
+
         for p in results:
             print(f"{p.name} | {p.location_id} | {p.quantity} {p.unit}")
 
     def increase_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount_raw = input("Количество за добавяне: ")
+
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
             u_id = user.user_id
@@ -239,10 +262,12 @@ class ProductView:
             print("Увеличено.")
         except ValueError as e:
             print(e)
+            print("Моля, опитайте отново.\n")
 
     def decrease_quantity(self, user):
         pid = input("ID на продукт: ").strip()
         amount_raw = input("Количество за изваждане: ")
+
         try:
             amount = ProductValidator.parse_float(amount_raw, "Количество")
             u_id = user.user_id
@@ -250,6 +275,7 @@ class ProductView:
             print("Намалено.")
         except ValueError as e:
             print(e)
+            print("Моля, опитайте отново.\n")
 
     def low_stock(self, _):
         low = self.product_controller.check_low_stock()
@@ -285,16 +311,20 @@ class ProductView:
         keyword = input("Ключова дума: ").strip() or None
         min_raw = input("Мин. цена: ")
         max_raw = input("Макс. цена: ")
+
         try:
             min_p = ProductValidator.parse_optional_float(min_raw)
             max_p = ProductValidator.parse_optional_float(max_raw)
         except ValueError as e:
             print(e)
+            print("Моля, опитайте отново.\n")
             return
-        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p,
-                                                          max_price=max_p)
+
+        results = self.product_controller.search_combined(name_keyword=keyword, min_price=min_p, max_price=max_p)
+
         if not results:
             print("Няма резултати.")
             return
+
         for p in results:
             print(f"{p.product_id} | {p.name} | {p.location_id} | {self.format_lv(p.price)}")

@@ -366,5 +366,37 @@
         "location_id": "W5",
         "created": "2026-04-16T12:04:06.556805",
         "modified": "2026-04-16T12:04:06.556805"
+    },
+    {
+        "product_id": "573c08e2-39cb-4258-81c9-e81f284a3554",
+        "name": "студен чай \"Lemon Fresh\"",
+        "categories": [
+            "sub-bezalko-002"
+        ],
+        "quantity": 150.0,
+        "unit": "бр",
+        "description": "Освежаващ студен чай с вкус на лимон, без добавена захар.",
+        "price": 2.89,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W3",
+        "created": "2026-04-16T14:35:59.721343",
+        "modified": "2026-04-16T14:35:59.721343"
+    },
+    {
+        "product_id": "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0",
+        "name": "слива",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 72.0,
+        "unit": "кг.",
+        "description": "синя слива",
+        "price": 3.09,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W2",
+        "created": "2026-04-16T14:42:42.135125",
+        "modified": "2026-04-16 14:56:39"
     }
 ]
