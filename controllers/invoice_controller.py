@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
+
 from storage.json_repository import JSONRepository
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
@@ -9,6 +10,7 @@ from filters.invoice_filters import (filter_by_customer, filter_by_product, filt
 
 
 class InvoiceController:
+    """ Контролерът управлява фактурите, без да съдържа бизнес логика. """
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -29,7 +31,7 @@ class InvoiceController:
         raw_data = self.repo.load() or []
         self.invoices = [Invoice.from_dict(inv) for inv in raw_data]
 
-    def _log(self, user_id, action, message):
+    def _log(self, user_id: str, action: str, message: str):
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
@@ -37,11 +39,14 @@ class InvoiceController:
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         """ Добавя готова фактура от речник. """
         InvoiceValidator.validate_all(**invoice_data)
+
         now = self._now()
         invoice = Invoice(invoice_id=self._generate_id(), **invoice_data, created=now, modified=now)
         self.invoices.append(invoice)
         self._save_changes()
-        self._log(user_id, "GENERATE_INVOICE", f"Ръчно генерирана фактура за {invoice.customer}")
+        self._log(user_id, "GENERATE_INVOICE",
+                  f"Ръчно генерирана фактура за {invoice.customer}")
+
         return invoice
 
     def create_from_movement(self, movement, product, customer: str, user_id: str) -> Invoice:
@@ -58,7 +63,9 @@ class InvoiceController:
 
         self.invoices.append(invoice)
         self._save_changes()
-        self._log(user_id, "GENERATE_INVOICE", f"Автоматична фактура за движение {movement.movement_id}")
+        self._log(user_id, "GENERATE_INVOICE",
+                  f"Автоматична фактура за движение {movement.movement_id}")
+
         return invoice
 
     # READ / SEARCH
@@ -91,22 +98,26 @@ class InvoiceController:
         inv = self.get_by_id(invoice_id)
         if not inv:
             raise ValueError("Фактурата не е намерена.")
-
         InvoiceValidator.validate_customer(new_customer)
         inv.customer = new_customer
         inv.update_modified()
+
         self._save_changes()
-        self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {invoice_id}")
+        self._log(user_id, "EDIT_INVOICE",
+                  f"Променен клиент на фактура {invoice_id}")
+
         return True
 
-
+    # DELETE
     def remove(self, invoice_id: str, user_id: str) -> bool:
         before = len(self.invoices)
         self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
         if len(self.invoices) < before:
             self._save_changes()
-            self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {invoice_id}")
+            self._log(user_id, "DELETE_INVOICE",
+                      f"Изтрита фактура {invoice_id}")
             return True
+
         return False
 
     # SAVE

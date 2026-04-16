@@ -32,6 +32,7 @@ class AnonymousMenuView:
             if result == "break":
                 break
 
+
     # Гостът може да вижда продуктите; ProductView автоматично крие админ бутоните за роли различни от Admin/Operator
     def open_products(self, user):
         self.product_view.show_menu(user)

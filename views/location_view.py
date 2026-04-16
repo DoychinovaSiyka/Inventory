@@ -33,7 +33,6 @@ class LocationView:
         if not locations:
             print("\n[!] Няма налични локации в системата.")
             return
-
         columns = ["Код (ID)", "Име на обект", "Зона", "Капацитет"]
         rows = [[loc.location_id, loc.name, loc.zone, loc.capacity] for loc in locations]
         print("\n--- СПИСЪК НА СКЛАДОВЕТЕ И МАГАЗИНИТЕ ---")

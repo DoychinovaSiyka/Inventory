@@ -8,7 +8,6 @@ class ProductSortView:
         self.controller = controller
         self.menu = self._build_menu()   # Създаваме менюто отделно
 
-
     # Меню за избор на метод за сортиране
     def _build_menu(self):
         return Menu("Сортиране на продукти",  [

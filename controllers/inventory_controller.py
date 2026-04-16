@@ -10,15 +10,16 @@ class InventoryController:
         self.repo = repo
         self.stock: List[Dict] = self.repo.load() or []
 
+    # Помощен метод за еднакъв формат на датите
     def _get_now_str(self) -> str:
-        """ Помощен метод за еднакъв формат на датите. """
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+    # Записване в JSON
     def _save(self):
         self.repo.save(self.stock)
 
+    # Намира продукт в склад. Кастваме към str за сигурност.
     def _find(self, product_id, warehouse_id) -> Optional[Dict]:
-        """ Намира продукт в склад. Кастваме към str за сигурност. """
         p_id = str(product_id)
         w_id = str(warehouse_id)
         for item in self.stock:
@@ -29,12 +30,11 @@ class InventoryController:
     def get_stock(self, product_id, warehouse_id):
         return self._find(product_id, warehouse_id)
 
-    # параметър should_save, за да оптимизирам масовите операции
+    # Параметър should_save за оптимизация при масови операции
     def increase_stock(self, product_id, product_name, warehouse_id, qty, should_save=True):
         InventoryValidator.validate_increase(product_id, product_name, warehouse_id, qty)
         record = self._find(product_id, warehouse_id)
         now = self._get_now_str()
-
         if record:
             record["quantity"] += float(qty)
             record["modified"] = now
@@ -47,10 +47,12 @@ class InventoryController:
 
     def decrease_stock(self, product_id, warehouse_id, qty, should_save=True):
         InventoryValidator.validate_decrease(product_id, warehouse_id, qty, self.stock)
+
         record = self._find(product_id, warehouse_id)
         if record:
             record["quantity"] -= float(qty)
             record["modified"] = self._get_now_str()
+            # Ако количеството падне до 0 – премахваме записа
             if record["quantity"] <= 0:
                 self.stock.remove(record)
 
@@ -59,7 +61,7 @@ class InventoryController:
 
     def move_stock(self, product_id, product_name, from_wh, to_wh, qty):
         InventoryValidator.validate_move(product_id, product_name, from_wh, to_wh, qty)
-        # Тук използвам should_save=False за първата стъпка, за да запишем само веднъж
+        # Първо намаляваме, но не записваме – записваме само веднъж накрая
         self.decrease_stock(product_id, from_wh, qty, should_save=False)
         self.increase_stock(product_id, product_name, to_wh, qty, should_save=True)
 
@@ -69,9 +71,9 @@ class InventoryController:
                 if item["product"].lower() == search_name and item["quantity"] > 0]
 
     def rebuild_from_movements(self, movements):
-        """ Оптимизирано преизчисляване - записва само веднъж накрая! """
+        """ Оптимизирано преизчисляване – записва само веднъж накрая! """
         self.stock = []
-        # Сортиран по дата
+        # Сортиране по дата
         movements = sorted(movements, key=lambda m: m.get("date", ""))
         InventoryValidator.validate_movements(movements)
         for m in movements:
@@ -79,7 +81,6 @@ class InventoryController:
             pname = m.get("product", "N/A")
             qty = float(m["quantity"])
             mtype = m["movement_type"]
-
             try:
                 if mtype == "IN":
                     self.increase_stock(pid, pname, m["location_id"], qty, should_save=False)
@@ -92,15 +93,17 @@ class InventoryController:
                     self.increase_stock(pid, pname, m.get("to_location_id"), qty, should_save=False)
 
             except Exception:
-                # Ако има грешка в движение, пропускаме го, но не спираме процеса
+                # Ако има грешка в движение – пропускаме го, но не спираме процеса
                 continue
 
         self._save()
 
     # Инициализация на наличностите от продуктите
     def initialize_from_products(self, products):
-        """ Създава начални записи за наличностите на база продуктите.Използва се само при
-        първоначално стартиране на системата."""
+        """
+        Създава начални записи за наличностите на база продуктите.
+        Използва се само при първоначално стартиране на системата.
+        """
         for p in products:
             if p.location_id and p.quantity > 0:
                 InventoryValidator.validate_initial_stock(p.product_id, p.name, p.location_id, p.quantity)

@@ -45,7 +45,6 @@ class GraphView:
     def calculate_best_delivery(self, _):
         product_name = input("Име на стока: ").strip()
         my_location = input("Вашето ID (напр. W1): ").strip()
-
         if my_location not in self.graph.nodes:
             print("Грешка: Невалидна локация!")
             return

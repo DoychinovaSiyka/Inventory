@@ -27,25 +27,27 @@ class ProductView:
         return f"{value:.2f} лв."
 
     def _build_menu(self):
-        return Menu("МЕНЮ ПРОДУКТИ", [MenuItem("1", "Създаване на продукт", self.create_product),
-                                      MenuItem("2", "Премахване на продукт", self.remove_product),
-                                      MenuItem("3", "Редактиране на продукт", self.edit_product),
-                                      MenuItem("4", "Покажи всички продукти",
-                                                 self.show_all_protected if self._is_operator() else self.show_all),
-                                      MenuItem("5", "Търсене", self.search),
-                                      MenuItem("6", "Сортиране на продукти",
-                                               self.sort_menu_protected if self._is_operator() else self.sort_menu),
-                                      MenuItem("7", "Средна цена", self.average_price),
-                                      MenuItem("8", "Филтриране по категория", self.filter_by_category),
-                                      MenuItem("9", "Увеличаване на количество", self.increase_quantity),
-                                      MenuItem("10", "Намаляване на количество", self.decrease_quantity),
-                                      MenuItem("11", "Продукти с ниска наличност", self.low_stock),
-                                      MenuItem("12", "Най-скъп продукт", self.most_expensive),
-                                      MenuItem("13", "Най-евтин продукт", self.cheapest),
-                                      MenuItem("14", "Обща стойност на склада", self.total_value),
-                                      MenuItem("15", "Групиране по категории", self.group_by_category),
-                                      MenuItem("16", "Разширено търсене", self.advanced_search),
-                                      MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("МЕНЮ ПРОДУКТИ", [
+            MenuItem("1", "Създаване на продукт", self.create_product),
+            MenuItem("2", "Премахване на продукт", self.remove_product),
+            MenuItem("3", "Редактиране на продукт", self.edit_product),
+            MenuItem("4", "Покажи всички продукти",
+                     self.show_all_protected if self._is_operator() else self.show_all),
+            MenuItem("5", "Търсене", self.search),
+            MenuItem("6", "Сортиране на продукти",
+                     self.sort_menu_protected if self._is_operator() else self.sort_menu),
+            MenuItem("7", "Средна цена", self.average_price),
+            MenuItem("8", "Филтриране по категория", self.filter_by_category),
+            MenuItem("9", "Увеличаване на количество", self.increase_quantity),
+            MenuItem("10", "Намаляване на количество", self.decrease_quantity),
+            MenuItem("11", "Продукти с ниска наличност", self.low_stock),
+            MenuItem("12", "Най-скъп продукт", self.most_expensive),
+            MenuItem("13", "Най-евтин продукт", self.cheapest),
+            MenuItem("14", "Обща стойност на склада", self.total_value),
+            MenuItem("15", "Групиране по категории", self.group_by_category),
+            MenuItem("16", "Разширено търсене", self.advanced_search),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     @staticmethod
     def _is_operator():
@@ -69,13 +71,13 @@ class ProductView:
         price_raw = input("Цена: ")
         quantity_raw = input("Количество: ")
         unit = input("Мерна единица (пример: кг, бр, л, пакет): ").strip()
-
         try:
             price = ProductValidator.parse_float(price_raw, "Цена")
             quantity = ProductValidator.parse_float(quantity_raw, "Количество")
         except ValueError as e:
             print(e)
             return
+
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
@@ -84,6 +86,7 @@ class ProductView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
         cat_raw = input("Изберете категория (номер или Category ID): ").strip()
+
         try:
             if cat_raw.isdigit():
                 cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
@@ -101,7 +104,6 @@ class ProductView:
         if not locations:
             print("Няма складове.")
             return
-
         print("\nЛокации:")
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
@@ -134,7 +136,7 @@ class ProductView:
         pid = input("ID на продукт: ").strip()
         try:
             u_id = user.user_id
-            self.product_controller.remove_by_id(pid, u_id)
+            self.product_controller.delete_by_id(pid, u_id)
             print("Продуктът е премахнат.")
         except ValueError as e:
             print("Грешка:", e)
@@ -154,12 +156,9 @@ class ProductView:
             for suffix in ["бр.", "бр", "кг.", "кг", "л.", "л", " пакет", "пакет"]:
                 if new_qty_raw.endswith(suffix):
                     new_qty_raw = new_qty_raw.replace(suffix, "").strip()
-
         try:
-            new_price = ProductValidator.parse_float(new_price_raw, "Цена") \
-                if new_price_raw else product.price
-            new_qty = ProductValidator.parse_float(new_qty_raw, "Количество") \
-                if new_qty_raw else product.quantity
+            new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
+            new_qty = ProductValidator.parse_float(new_qty_raw, "Количество") if new_qty_raw else product.quantity
             self.product_controller.update_product(pid, new_name, new_desc, new_price, new_qty)
             print("Продуктът е обновен.")
         except ValueError as e:
@@ -171,8 +170,10 @@ class ProductView:
         if not products:
             print("Няма продукти.")
             return
+
         columns = ["ID", "Име", "Склад", "Наличност", "Цена"]
-        rows = [[p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)] for p in products]
+        rows = [[p.product_id, p.name, p.location_id, f"{p.quantity} {p.unit}", self.format_lv(p.price)]
+                for p in products]
         print(format_table(columns, rows))
 
     @require_password("parola123")

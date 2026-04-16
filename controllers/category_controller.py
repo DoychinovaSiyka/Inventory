@@ -15,11 +15,13 @@ class CategoryController:
         self.categories: List[Category] = []
         self._load_categories()
 
+    # Зареждане на категориите от JSON
     def _load_categories(self):
         raw_data = self.repo.load() or []
         self.categories = [Category.from_dict(c) for c in raw_data]
 
-    def _log(self, user_id, action, message):
+    # Логване на действия
+    def _log(self, user_id: str, action: str, message: str):
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
@@ -48,48 +50,58 @@ class CategoryController:
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
-        CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
+        CategoryValidator.validate_unique(new_name,
+                                          [c for c in self.categories if c.category_id != category_id])
+
         category.name = new_name
         category.update_modified()
         self._save_changes()
-        self._log(user_id, "EDIT_CATEGORY", f"Името на категория {category_id} променено на {new_name}")
+        self._log(user_id, "EDIT_CATEGORY",
+                  f"Името на категория {category_id} променено на {new_name}")
+
         return True
 
     # UPDATE DESCRIPTION
     def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_description(new_description)
-
         category.description = new_description
         category.update_modified()
+
         self._save_changes()
-        self._log(user_id, "EDIT_CATEGORY", f"Описанието на категория {category_id} е обновено")
+        self._log(user_id, "EDIT_CATEGORY",
+                  f"Описанието на категория {category_id} е обновено")
+
         return True
 
     # UPDATE PARENT
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
-
         CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_parent_id(parent_id, category_id)
         CategoryValidator.validate_no_cycle(category_id, parent_id, self.categories)
+
         category.parent_id = parent_id
         category.update_modified()
+
         self._save_changes()
-        self._log(user_id, "EDIT_CATEGORY", f"Родителят на категория {category_id} е променен")
+        self._log(user_id, "EDIT_CATEGORY",
+                  f"Родителят на категория {category_id} е променен")
+
         return True
 
     # DELETE
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
         CategoryValidator.validate_exists(category_id, self)
-
         products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category_id, self.categories, products)
+
         before = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
         if len(self.categories) < before:
             self._save_changes()
-            self._log(user_id, "DELETE_CATEGORY", f"Изтрита категория ID {category_id}")
+            self._log(user_id, "DELETE_CATEGORY",
+                      f"Изтрита категория ID {category_id}")
             return True
         return False
 
@@ -103,12 +115,12 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]
 
-    # Контролерът  не строи дървото - вика
+    # Контролерът не строи дървото - вика външна функция
     def get_category_tree(self) -> List[dict]:
         return build_category_tree(self.categories)
 
+    # Търсене чрез външен филтър
     def search(self, keyword: str) -> List[Category]:
-        """Търсене по име или описание чрез външен филтър."""
         return filter_categories(self.categories, keyword)
 
     # Записване на категориите обратно в JSON файла

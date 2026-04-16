@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from models.user_activity_log import UserActivityLog
 from storage.json_repository import JSONRepository
 
@@ -16,24 +17,30 @@ class UserActivityLogController:
     def _generate_log_id():
         return str(uuid.uuid4())
 
+    @staticmethod
+    def _now() -> str:
+        """Връща текущата дата и час в стандартен формат."""
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     # CREATE
     def add_log(self, user_id, action, details=""):
+        """ Добавя нов лог запис. Контролерът НЕ съдържа бизнес логика – само създава модел и го записва."""
+
         # Създавам лог записа чрез модела
-        log_entry = UserActivityLog(user_id, action, details).to_dict()
+        log_entry = UserActivityLog(user_id, action, details, timestamp=self._now()).to_dict()
         # Добавяме уникално log_id
         log_entry["log_id"] = self._generate_log_id()
         # Зареждам текущите записи
         data = self.repo.get_all()
         if not isinstance(data, list):
             data = []  # защита при повреден или празен JSON
-
         # Добавям новия запис
         data.append(log_entry)
         # Записвам обратно в JSON файла
         self.repo.save(data)
 
     # READ - Връща всички логове от JSON файла
-    def get_all_logs(self):
+    def get_all(self):
         data = self.repo.get_all()
         return data if isinstance(data, list) else []
 

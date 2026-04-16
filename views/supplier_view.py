@@ -22,6 +22,7 @@ class SupplierView:
         is_admin = user.role == "Admin"
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
 
+
         # admin-only функции
         if is_admin:
             menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
@@ -37,7 +38,6 @@ class SupplierView:
         if not suppliers:
             print("Няма налични доставчици.")
             return
-
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
         print("\n" + format_table(columns, rows))

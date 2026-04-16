@@ -68,7 +68,7 @@ class ReportsView:
         rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
                  self._format_lv(item.get("total_amount"))] for item in result.data]
 
-        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"],rows))
+        print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
     def report_sales_by_customer(self, _):
         customer = input("Клиент: ")
@@ -90,11 +90,11 @@ class ReportsView:
             return
 
         rows = [[item.get("invoice_number"), item.get("date"), item.get("client"), item.get("product"),
-             self._format_lv(item.get("total_amount"))] for item in result.data]
+                 self._format_lv(item.get("total_amount"))] for item in result.data]
 
         print(format_table(["№ Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
-    # СПРАВКА – ТЪРСЕНЕ ПО ДАТА (ОПРАВЕНО И ДОВЪРШЕНО)
+    # СПРАВКА – ТЪРСЕНЕ ПО ДАТА
     def report_sales_by_date(self, _):
         date_str = input("Дата (YYYY-MM-DD): ").strip()
         try:
@@ -137,7 +137,7 @@ class ReportsView:
 
     # СПРАВКА – ВСИЧКИ ДОСТАВКИ
     def report_all_deliveries(self, _):
-        result = self.controller.report_all_deliveries()
+        result = self.controller.report_deliveries_all()  # ← КОРЕКЦИЯ
         if not result.data:
             print("\nНяма доставки.\n")
             return
@@ -149,7 +149,7 @@ class ReportsView:
     # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         keyword = input("Търсене (ID, продукт, доставчик, дата): ").strip()
-        result = self.controller.search_delivery(keyword)
+        result = self.controller.report_deliveries_search(keyword)  # ← КОРЕКЦИЯ
 
         if not result.data:
             print("\nНяма намерени доставки.\n")

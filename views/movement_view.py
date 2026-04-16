@@ -148,14 +148,12 @@ class MovementView:
 
         quantity = input("Количество за преместване: ")
         description = input("Описание (по избор): ")
-
         try:
             movement = self.movement_controller.move_product(product_id=product.product_id, user_id=user.user_id,
                                                              from_loc=from_loc.location_id, to_loc=to_loc.location_id,
                                                              quantity=quantity, description=description)
             print("\nПреместването е извършено успешно!")
             print(f"ID: {movement.movement_id}")
-
         except ValueError as e:
             print("Грешка:", e)
 
@@ -165,7 +163,6 @@ class MovementView:
         if len(keyword) < 3:
             print("Моля, въведете поне 3 символа за търсене.")
             return
-
         results = self.movement_controller.search_by_description(keyword)
         if not results:
             print("Няма намерени движения.")

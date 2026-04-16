@@ -53,7 +53,6 @@ class OperatorMenuView:
     def _open_view(view_class, *args):
         return view_class(*args)
 
-
     #  Продукти
     def open_products(self, user):
         view = self._open_view( ProductView,self.product_controller, self.category_controller,

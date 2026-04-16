@@ -14,7 +14,6 @@ class UserView:
         if user.role != "Admin":
             print("Само администратор може да управлява потребители.")
             return
-
         self.menu = self._build_menu()
         while True:
             choice = self.menu.show()
@@ -56,7 +55,6 @@ class UserView:
     def change_role(self, user):
         username = input("Потребителско име: ")
         new_role = input("Нова роля (Admin/Operator): ")
-
         try:
             self.controller.change_role(username, new_role)
             print("Ролята е променена.")

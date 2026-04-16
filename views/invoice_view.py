@@ -106,7 +106,6 @@ class InvoiceView:
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
         rows = [[inv.invoice_id, inv.product, inv.customer, f"{inv.quantity} {inv.unit}", f"{inv.total_price} лв."]
                 for inv in results]
-
         print("\n" + format_table(columns, rows))
 
     # Разширено търсене

@@ -17,10 +17,12 @@ from analytics.product_analytics import (calculate_average_price, calculate_tota
 from view_models.product_view_model import ProductViewModel
 
 
-
 class ProductController:
+    """ Контролерът управлява продуктите в системата. Той координира работата
+    между моделите, валидаторите, филтрите, аналитичните функции и хранилището, без да съдържа бизнес логика."""
     def __init__(self, repo: Repository, category_controller: CategoryController,
                  supplier_controller: SupplierController, activity_log_controller=None):
+
         self.repo = repo
         self.category_controller = category_controller
         self.supplier_controller = supplier_controller
@@ -33,17 +35,22 @@ class ProductController:
     def _generate_id() -> str:
         return str(uuid.uuid4())
 
+    @staticmethod
+    def _now() -> str:
+        return datetime.now().isoformat()
+
     def _log(self, user_id, action, message):
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # ЗАРЕЖДАНЕ НА ПРОДУКТИТЕ ОТ JSON
     def _load_products(self):
+        """Зарежда продуктите от JSON и ги преобразува в Product обекти."""
         raw_data = self.repo.load()
         self.products = [Product.from_dict(p_data, self.category_controller) for p_data in raw_data]
 
-    # CREATE PRODUCT
+    # CREATE
     def add(self, product_data: dict, user_id: str) -> Product:
+        """Добавя нов продукт след пълна валидация."""
         ProductValidator.validate_all(product_id=None, name=product_data['name'],
                                       categories=product_data['category_ids'], quantity=product_data['quantity'],
                                       unit=product_data['unit'], description=product_data['description'],
@@ -77,21 +84,18 @@ class ProductController:
         return next((p for p in self.products if str(p.product_id) == str(product_id)), None)
 
     def exists_by_name(self, name: str) -> bool:
-        for p in self.products:
-            if p.name.lower() == name.lower():
-                return True
-        return False
+        return any(p.name.lower() == name.lower() for p in self.products)
 
     # UPDATE
-    def update_product(self, product_id: str, new_name: str, new_description: str,
-                       new_price: float, new_quantity: float, user_id: str = "system") -> bool:
-
+    def update_product(self, product_id: str, new_name: str,
+                       new_description: str, new_price: float,
+                       new_quantity: float, user_id: str = "system") -> bool:
+        """Актуализира основните полета на продукт."""
         product = ProductValidator.validate_product_exists(product_id, self)
         if new_name and new_name.lower() != product.name.lower():
             ProductValidator.validate_name(new_name)
             ProductValidator.validate_unique_name_in_location(new_name, product.location_id, self.products)
             product.name = new_name
-
         if new_description and new_description != product.description:
             product.description = ProductValidator.validate_description(new_description)
 
@@ -99,7 +103,8 @@ class ProductController:
         product.quantity = ProductValidator.validate_quantity(new_quantity)
         product.update_modified()
         self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
+        self._log(user_id, "EDIT_PRODUCT",
+                  f"Обновен продукт: {product.name} (ID: {product_id})")
 
         return True
 
@@ -110,22 +115,24 @@ class ProductController:
         product.quantity = round(product.quantity + amount, 2)
         product.update_modified()
         self.save_changes()
-        self._log(user_id, "INCREASE_QUANTITY", f"Добавени {amount} единици към продукт ID {product_id}")
+        self._log(user_id, "INCREASE_QUANTITY",
+                  f"Добавени {amount} единици към продукт ID {product_id}")
+
         return True
 
     def decrease_quantity(self, product_id: str, amount: float, user_id: str) -> bool:
         product = ProductValidator.validate_product_exists(product_id, self)
         amount = ProductValidator.validate_quantity(amount)
         ProductValidator.validate_stock_available(product, amount)
-
         product.quantity = round(product.quantity - amount, 2)
         product.update_modified()
         self.save_changes()
-        self._log(user_id, "DECREASE_QUANTITY", f"Премахнати {amount} единици от продукт ID {product_id}")
+        self._log(user_id, "DECREASE_QUANTITY",
+                  f"Премахнати {amount} единици от продукт ID {product_id}")
         return True
 
-    # DELETE
-    def remove_by_id(self, product_id: str, user_id: str) -> bool:
+
+    def delete_by_id(self, product_id: str, user_id: str) -> bool:
         ProductValidator.validate_product_exists(product_id, self)
 
         before = len(self.products)
@@ -183,7 +190,7 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
 
-    # STATISTICS
+    # STATTICS
     def average_price(self) -> float:
         return calculate_average_price(self.products)
 

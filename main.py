@@ -94,8 +94,8 @@ class InventoryApplication:
         if not user:
             print("[!] Грешно потребителско име или парола.")
             return
-
         self.activity_log_controller.add_log(user.user_id,"LOGIN",f"Потребител {user.username} влезе.")
+
         if user.role == "Admin":
             self.admin_menu.show_menu(user)
         elif user.role == "Operator":
@@ -126,7 +126,6 @@ class InventoryApplication:
             print("1. Вход с потребител")
             print("2. Вход като анонимен потребител (разглеждане)")
             print("0. Изход")
-
             choice = input("\nИзбор: ").strip()
             if choice == "1":
                 self._login_flow()

@@ -17,7 +17,7 @@ class CategoryView:
             if result == "break":
                 break
 
-    # Създаване на менюто отделно
+    # Създавам на менюто отделно
     def _build_menu(self, is_admin: bool):
         menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
         if is_admin:
@@ -56,7 +56,7 @@ class CategoryView:
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
         try:
-            # подаваме данните като dict, както контролерът очаква
+            # подавам данните като dict, както контролерът очаква
             self.controller.add({"name": name, "description": description, "parent_id": parent_id},
                                 user_id="system")
             print("Категорията е добавена успешно!")
@@ -116,7 +116,6 @@ class CategoryView:
         if not choice.isdigit():
             print("Невалиден избор.")
             return None
-
         index = int(choice) - 1
         if 0 <= index < len(categories):
             return categories[index]
