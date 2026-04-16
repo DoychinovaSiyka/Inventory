@@ -44,8 +44,14 @@ class CategoryController:
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        category = Category(category_id=str(uuid.uuid4()), name=name, description=description,
-                            parent_id=parent_id, created=now, modified=now)
+        category = Category(
+            category_id=str(uuid.uuid4()),
+            name=name,
+            description=description,
+            parent_id=parent_id,
+            created=now,
+            modified=now
+        )
 
         self.categories.append(category)
         self._save_changes()
@@ -57,8 +63,15 @@ class CategoryController:
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self.categories)
         CategoryValidator.validate_update_name(new_name)
-        CategoryValidator.validate_unique(new_name,
-                                          [c for c in self.categories if c.category_id != category_id])
+
+        # Ако името е същото → няма смисъл да записваме
+        if category.name == new_name:
+            return True
+
+        CategoryValidator.validate_unique(
+            new_name,
+            [c for c in self.categories if c.category_id != category_id]
+        )
 
         category.name = new_name
         category.update_modified()
@@ -71,16 +84,22 @@ class CategoryController:
         category = CategoryValidator.validate_exists(category_id, self.categories)
         CategoryValidator.validate_description(new_description)
 
+        if category.description == new_description:
+            return True
+
         category.description = new_description
         category.update_modified()
 
         self._save_changes()
-        self._log(user_id, "EDIT_CATEGORY", f"Описание обновено")
+        self._log(user_id, "EDIT_CATEGORY", "Описание обновено")
         return True
 
     # UPDATE PARENT
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self.categories)
+        # Ако родителят е същият - няма нужда от запис
+        if category.parent_id == parent_id:
+            return True
 
         CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_parent_id(parent_id, category_id)
@@ -90,7 +109,7 @@ class CategoryController:
         category.update_modified()
 
         self._save_changes()
-        self._log(user_id, "EDIT_CATEGORY", f"Родител променен")
+        self._log(user_id, "EDIT_CATEGORY", "Родител променен")
         return True
 
     # DELETE
@@ -102,12 +121,13 @@ class CategoryController:
 
         before = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
-        if len(self.categories) < before:
+
+        deleted = len(self.categories) < before
+        if deleted:
             self._save_changes()
             self._log(user_id, "DELETE_CATEGORY", f"Категория {category_id} изтрита")
-            return True
 
-        return False
+        return deleted
 
     # Методи за достъп
     def get_all(self) -> List[Category]:
@@ -125,6 +145,8 @@ class CategoryController:
 
     # Търсене чрез външен филтър
     def search(self, keyword: str) -> List[Category]:
+        if not keyword or len(keyword.strip()) < 3:
+            return []
         return filter_categories(self.categories, keyword)
 
     # Записване на категориите обратно в JSON файла
