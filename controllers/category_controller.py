@@ -57,14 +57,11 @@ class CategoryController:
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self.categories)
         CategoryValidator.validate_update_name(new_name)
-        CategoryValidator.validate_unique(
-            new_name,
-            [c for c in self.categories if c.category_id != category_id]
-        )
+        CategoryValidator.validate_unique(new_name,
+                                          [c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()
-
         self._save_changes()
         self._log(user_id, "EDIT_CATEGORY", f"Име променено на {new_name}")
         return True

@@ -110,7 +110,6 @@ class UserController:
         - админ проверка
         - забрана за самоизтриване
         - забрана за изтриване на последния админ"""
-
         UserValidator.confirm_admin(acting_user)
         UserValidator.validate_not_self(acting_user.username, target_username)
         user = UserValidator.validate_exists(target_username, self)

@@ -4,7 +4,6 @@ from models.category import Category
 
 class ProductValidator:
 
-
     # BASIC FIELD VALIDATION
     @staticmethod
     def validate_uuid(value, field_name="ID"):
@@ -118,7 +117,6 @@ class ProductValidator:
         """Парсира цяло число или хвърля грешка."""
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително поле.")
-
         try:
             i = int(str(value).strip())
         except ValueError:

@@ -1,7 +1,6 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
-
 from storage.json_repository import JSONRepository
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
