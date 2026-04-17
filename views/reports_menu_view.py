@@ -26,10 +26,7 @@ class ReportsView:
             MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
             MenuItem("6", "Търсене по дата", self.report_sales_by_date),
             MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
-
-            # 🔥 По-ясно за потребителя
             MenuItem("8", "Търсене на доставка (по продукт, доставчик, описание или склад)", self.search_delivery),
-
             MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
             MenuItem("10", "Най-продавани продукти", self.report_top_products),
             MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
@@ -167,6 +164,21 @@ class ReportsView:
 
     # ------------------ SALES ------------------
 
+    def _format_table_fixed(self, headers, rows, col_widths):
+        """Локална функция за поддръжка на col_widths, без да пипаме format_table()."""
+        # Горна линия
+        line = "+" + "+".join("-" * w for w in col_widths) + "+"
+
+        # Заглавия
+        header_row = "|" + "|".join(f"{str(h):^{col_widths[i]}}" for i, h in enumerate(headers)) + "|"
+
+        # Редове
+        data_rows = []
+        for r in rows:
+            data_rows.append("|" + "|".join(f"{str(r[i]):^{col_widths[i]}}" for i in range(len(headers))) + "|")
+
+        return "\n".join([line, header_row, line] + data_rows + [line])
+
     def report_sales(self, _):
         result = self.controller.report_sales()
         if not result.data:
@@ -184,10 +196,10 @@ class ReportsView:
             for i in result.data
         ]
 
-        print(format_table(
+        print(self._format_table_fixed(
             ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
             rows,
-            col_widths=[12, 12, 22, 30, 12]
+            [12, 12, 22, 30, 12]
         ))
 
     def _print_sales_table(self, data):
@@ -197,7 +209,7 @@ class ReportsView:
 
         rows = [
             [
-                i["invoice_id"][:10] if "invoice_id" in i else i.get("invoice_number", "")[:10],
+                i.get("invoice_id", i.get("invoice_number", ""))[:10],
                 i["date"][:10],
                 self._truncate(i.get("customer") or i.get("client", ""), 22),
                 self._truncate(i["product"], 30),
@@ -206,10 +218,10 @@ class ReportsView:
             for i in data
         ]
 
-        print(format_table(
+        print(self._format_table_fixed(
             ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
             rows,
-            col_widths=[12, 12, 22, 30, 12]
+            [12, 12, 22, 30, 12]
         ))
 
     def report_sales_by_customer(self, _):

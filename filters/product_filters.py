@@ -107,13 +107,56 @@ def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
 
 
 # COMBINED SEARCH
-def filter_combined(products, keyword=None, min_price=None, max_price=None):
-    result = products
+def filter_combined(products,
+                    inventory_controller,
+                    keyword=None,
+                    min_price=None,
+                    max_price=None,
+                    min_quantity=None,
+                    max_quantity=None,
+                    category_id=None,
+                    supplier_id=None,
+                    location_id=None):
 
+    results = products
+
+    # Ключова дума
     if keyword:
-        result = filter_search(result, keyword)
+        kw = keyword.lower()
+        results = [p for p in results
+                   if kw in p.name.lower()
+                   or kw in p.description.lower()]
 
-    if min_price is not None or max_price is not None:
-        result = filter_by_price_range(result, min_price, max_price)
+    # Цена
+    if min_price is not None:
+        results = [p for p in results if p.price >= min_price]
 
-    return result
+    if max_price is not None:
+        results = [p for p in results if p.price <= max_price]
+
+    # Количество (от инвентара)
+    if min_quantity is not None or max_quantity is not None:
+        filtered = []
+        for p in results:
+            total = inventory_controller.get_total_stock(p.product_id)
+            if min_quantity is not None and total < min_quantity:
+                continue
+            if max_quantity is not None and total > max_quantity:
+                continue
+            filtered.append(p)
+        results = filtered
+
+    # Категория
+    if category_id:
+        results = [p for p in results
+                   if any(c.category_id == category_id for c in p.categories)]
+
+    # Доставчик
+    if supplier_id:
+        results = [p for p in results if p.supplier_id == supplier_id]
+
+    # Локация
+    if location_id:
+        results = [p for p in results if p.location_id == location_id]
+
+    return results

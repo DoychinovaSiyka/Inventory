@@ -280,6 +280,46 @@
             },
             "created": "2026-04-17 17:47:43",
             "modified": "2026-04-17 18:23:22"
+        },
+        "69b31bd9-a83f-4702-ade3-364fa8d1e329": {
+            "name": "testov product 2",
+            "unit": "кг.",
+            "total_stock": 20000.0,
+            "locations": {
+                "W4": 20000.0
+            },
+            "created": "2026-04-17 20:16:02",
+            "modified": "2026-04-17 20:16:02"
+        },
+        "ef1d4f2c-cedf-443a-ad80-6495bbe5224c": {
+            "name": "testov product 2",
+            "unit": "кг.",
+            "total_stock": 20000.0,
+            "locations": {
+                "W2": 20000.0
+            },
+            "created": "2026-04-17 21:06:30",
+            "modified": "2026-04-17 21:08:06"
+        },
+        "81fa18fe-f10c-4925-931a-7053b6ae0ec8": {
+            "name": "test_april",
+            "unit": "кг.",
+            "total_stock": 145.0,
+            "locations": {
+                "W5": 145.0
+            },
+            "created": "2026-04-17 21:33:46",
+            "modified": "2026-04-17 21:33:46"
+        },
+        "c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7": {
+            "name": "test",
+            "unit": "кг.",
+            "total_stock": 1990.0,
+            "locations": {
+                "W4": 1990.0
+            },
+            "created": "2026-04-17 21:34:37",
+            "modified": "2026-04-17 21:36:03"
         }
     }
 }

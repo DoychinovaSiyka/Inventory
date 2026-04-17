@@ -82,6 +82,8 @@ class ProductValidator:
     def _parse_float_internal(value, field_name="стойност"):
         if isinstance(value, str):
             value = value.replace("лв.", "").replace("лв", "").strip()
+            value = value.replace("lv.", "").replace("lv", "").strip()
+            value = value.replace("BGN", "").replace("bgn", "").strip()
             value = value.replace(",", ".").strip()
         try:
             f = float(value)
@@ -100,13 +102,10 @@ class ProductValidator:
     def parse_optional_float(value, field_name="стойност"):
         if value is None or str(value).strip() == "":
             return None
-        try:
-            f = float(str(value).replace(",", "."))
-        except ValueError:
-            raise ValueError(f"{field_name} трябва да е число.")
+        f = ProductValidator._parse_float_internal(value, field_name)
         if f < 0:
             raise ValueError(f"{field_name} не може да е отрицателна.")
-        return round(f, 2)
+        return f
 
     @staticmethod
     def parse_int(value, field_name="стойност"):
@@ -148,7 +147,6 @@ class ProductValidator:
         for p in products:
             if p.name.lower() == name.lower() and p.location_id == location_id:
                 raise ValueError("Продуктът вече съществува в този склад.")
-
 
     # MASTER VALIDATION
     @staticmethod

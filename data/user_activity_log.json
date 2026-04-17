@@ -2161,5 +2161,103 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-17 18:35:53"
+    },
+    {
+        "log_id": "80261dc0-0b79-48ee-a2f1-3fd4cabafa66",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 20:14:47"
+    },
+    {
+        "log_id": "c448e57f-b1c2-45cc-950a-3232bc76aeff",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: testov product 2",
+        "timestamp": "2026-04-17 20:16:02"
+    },
+    {
+        "log_id": "894b73d9-8df5-459c-9c05-eab874fe0bba",
+        "user_id": "system",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: testo product redacziq (ID: 69b31bd9-a83f-4702-ade3-364fa8d1e329)",
+        "timestamp": "2026-04-17 20:17:02"
+    },
+    {
+        "log_id": "1ba55ecc-1e84-4944-a66d-f24201ad7cd7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 69b31bd9-a83f-4702-ade3-364fa8d1e329",
+        "timestamp": "2026-04-17 20:17:49"
+    },
+    {
+        "log_id": "1b43072c-9c54-463e-b1ee-778ed912e12a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 21:05:27"
+    },
+    {
+        "log_id": "e8314d2c-cb63-45bc-aa98-1c140e0bb70e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: testov product 2",
+        "timestamp": "2026-04-17 21:06:30"
+    },
+    {
+        "log_id": "06928a09-d6e1-4254-8b1e-758c804706c2",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 98820cfa-54ec-4d07-b3eb-a46e2a9e65eb",
+        "timestamp": "2026-04-17 21:07:07"
+    },
+    {
+        "log_id": "d0f58b6f-5958-442b-b480-023369895b42",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: product 2 (ID: ef1d4f2c-cedf-443a-ad80-6495bbe5224c)",
+        "timestamp": "2026-04-17 21:08:06"
+    },
+    {
+        "log_id": "755b40b3-fcc2-4d6a-8bd9-88582acf7c92",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 21:13:05"
+    },
+    {
+        "log_id": "d893ffbf-e336-4a79-b2e9-2882df376ea5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 21:32:39"
+    },
+    {
+        "log_id": "2472152d-3745-48b7-a0c4-6e919d3d7b72",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: test_april",
+        "timestamp": "2026-04-17 21:33:46"
+    },
+    {
+        "log_id": "c5ea1bdc-b1e7-4238-bd43-996160258948",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: test",
+        "timestamp": "2026-04-17 21:34:37"
+    },
+    {
+        "log_id": "d61df191-bea6-45bc-9989-17608688a0ab",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 81fa18fe-f10c-4925-931a-7053b6ae0ec8",
+        "timestamp": "2026-04-17 21:34:59"
+    },
+    {
+        "log_id": "a695f12e-75da-4558-87b9-11b294a0d0ed",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: TEST1 (ID: c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7)",
+        "timestamp": "2026-04-17 21:36:04"
     }
 ]

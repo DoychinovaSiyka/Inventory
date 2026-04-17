@@ -400,22 +400,6 @@
         "modified": "2026-04-17T16:01:57.439898"
     },
     {
-        "product_id": "98820cfa-54ec-4d07-b3eb-a46e2a9e65eb",
-        "name": "testov product",
-        "categories": [
-            "55efa88a-4403-4a86-bead-00311b9e4ed9"
-        ],
-        "quantity": 100.0,
-        "unit": "кг.",
-        "description": "test proba",
-        "price": 19.0,
-        "supplier_id": null,
-        "tags": [],
-        "location_id": "W5",
-        "created": "2026-04-17T17:46:47.250873",
-        "modified": "2026-04-17T17:46:47.250873"
-    },
-    {
         "product_id": "7a719393-a6c3-4047-ad45-696d627a7da6",
         "name": "кока кола",
         "categories": [
@@ -430,5 +414,37 @@
         "location_id": "W1",
         "created": "2026-04-17T17:47:43.475810",
         "modified": "2026-04-17T17:47:43.475810"
+    },
+    {
+        "product_id": "ef1d4f2c-cedf-443a-ad80-6495bbe5224c",
+        "name": "product 2",
+        "categories": [
+            "55efa88a-4403-4a86-bead-00311b9e4ed9"
+        ],
+        "quantity": 10000.0,
+        "unit": "кг.",
+        "description": "productov test",
+        "price": 560.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "4",
+        "created": "2026-04-17T21:06:30.668324",
+        "modified": "2026-04-17 21:08:06"
+    },
+    {
+        "product_id": "c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7",
+        "name": "TEST1",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "quantity": 900.0,
+        "unit": "кг.",
+        "description": "TESTOV TEST",
+        "price": 56.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "0",
+        "created": "2026-04-17T21:34:37.170344",
+        "modified": "2026-04-17 21:36:03"
     }
 ]

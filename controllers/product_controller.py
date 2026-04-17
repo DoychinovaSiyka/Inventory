@@ -21,11 +21,9 @@ from analytics.product_analytics import (
     group_products_by_category
 )
 
-from view_models.product_view_model import ProductViewModel
-
 
 class ProductController:
-    """Контролерът управлява продуктите в системата."""
+    """Контролерът управлява продуктите в системата — чист MVC, без магии."""
 
     def __init__(self, repo, category_controller, activity_log_controller=None):
         self.repo = repo
@@ -35,7 +33,7 @@ class ProductController:
         self.products: List[Product] = []
         self._load_products()
 
-        # Закачат се отвън
+        # Закачат се отвън (явно, без магия)
         self.supplier_controller = None
         self.inventory_controller = None
 
@@ -83,7 +81,6 @@ class ProductController:
         quantity се използва само за първоначално зареждане → автоматично IN движение.
         """
 
-        # 1) Валидации
         ProductValidator.validate_all(
             product_id=None,
             name=product_data['name'],
@@ -105,7 +102,6 @@ class ProductController:
             self.products
         )
 
-        # 2) Създаване на продукт
         now = self._now()
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
@@ -113,7 +109,7 @@ class ProductController:
             product_id=self._generate_id(),
             name=product_data['name'],
             categories=categories,
-            quantity=float(product_data['quantity']),  # само за initialize_from_products
+            quantity=float(product_data['quantity']),
             unit=product_data['unit'],
             description=product_data['description'],
             price=float(product_data['price']),
@@ -127,7 +123,6 @@ class ProductController:
         self.products.append(product)
         self.save_changes()
 
-        # 3) Автоматично начално зареждане в инвентара
         initial_qty = float(product_data['quantity'])
         location_id = product_data.get('location_id', 'W1')
 
@@ -140,30 +135,92 @@ class ProductController:
                 unit=product.unit
             )
 
-        # 4) Лог
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
-
         return product
 
     # ================= UPDATE =================
 
-    def update_product(self, product_id: str, new_name: str,
-                       new_description: str, new_price: float,
+    def update_product(self,
+                       product_id: str,
+                       new_name: Optional[str],
+                       new_description: Optional[str],
+                       new_price: float,
+                       new_quantity: Optional[float] = None,
+                       new_unit: Optional[str] = None,
+                       new_category_ids: Optional[List[str]] = None,
+                       new_location_id: Optional[str] = None,
+                       new_supplier_id: Optional[str] = None,
+                       new_tags: Optional[List[str]] = None,
                        user_id: str = "system") -> bool:
 
         product = ProductValidator.validate_product_exists(product_id, self)
 
+        # Име
         if new_name and new_name.lower() != product.name.lower():
             ProductValidator.validate_name(new_name)
             ProductValidator.validate_unique_name_in_location(new_name, product.location_id, self.products)
             product.name = new_name
 
+        # Описание
         if new_description and new_description != product.description:
             product.description = ProductValidator.validate_description(new_description)
 
+        # Цена
         product.price = ProductValidator.validate_price(new_price)
-        product.update_modified()
 
+        # Количество – директно, без hasattr, без магии
+        if new_quantity is not None and self.inventory_controller:
+            try:
+                new_q = ProductValidator.parse_float(new_quantity, "Количество")
+                current_total = self.inventory_controller.get_total_stock(product_id)
+                delta = new_q - current_total
+
+                if delta > 0:
+                    self.inventory_controller.increase_stock(
+                        product_id=product.product_id,
+                        product_name=product.name,
+                        warehouse_id=product.location_id,
+                        qty=delta,
+                        unit=product.unit
+                    )
+                elif delta < 0:
+                    # приемаме, че inventory_controller има decrease_stock – това е част от договора
+                    self.inventory_controller.decrease_stock(
+                        product_id=product.product_id,
+                        warehouse_id=product.location_id,
+                        qty=abs(delta)
+                    )
+
+            except ValueError:
+                # невалидно количество → не пипаме инвентара
+                pass
+
+        # Мерна единица
+        if new_unit is not None and new_unit.strip() and new_unit != product.unit:
+            product.unit = ProductValidator.validate_unit(new_unit)
+
+        # Категории
+        if new_category_ids:
+            ProductValidator.validate_category_exists(new_category_ids, self.category_controller)
+            categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
+            product.categories = categories
+
+        # Локация
+        if new_location_id is not None and new_location_id != product.location_id:
+            product.location_id = new_location_id
+
+        # Доставчик
+        if new_supplier_id is not None:
+            ProductValidator.validate_supplier_exists(new_supplier_id, self.supplier_controller)
+            product.supplier_id = new_supplier_id
+
+        # Tags
+        if new_tags is not None:
+            if not isinstance(new_tags, list):
+                raise ValueError("Tags трябва да са списък.")
+            product.tags = new_tags
+
+        product.update_modified()
         self.save_changes()
         self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
         return True
@@ -226,8 +283,28 @@ class ProductController:
     def search_by_supplier(self, supplier_id: str):
         return filter_by_supplier(self.products, supplier_id)
 
-    def search_combined(self, *args, **kwargs):
-        return filter_combined(self.products, *args, **kwargs)
+    def search_combined(self,
+                        keyword=None,
+                        min_price=None,
+                        max_price=None,
+                        min_quantity=None,
+                        max_quantity=None,
+                        category_id=None,
+                        supplier_id=None,
+                        location_id=None):
+
+        return filter_combined(
+            self.products,
+            self.inventory_controller,
+            keyword=keyword,
+            min_price=min_price,
+            max_price=max_price,
+            min_quantity=min_quantity,
+            max_quantity=max_quantity,
+            category_id=category_id,
+            supplier_id=supplier_id,
+            location_id=location_id
+        )
 
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
@@ -248,8 +325,6 @@ class ProductController:
 
     def group_by_category(self) -> dict:
         return group_products_by_category(self.products)
-
-    # ================= SORTING =================
 
     def sort_by_name(self) -> List[Product]:
         return sort_by_name_logic(self.products)
