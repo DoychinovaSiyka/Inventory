@@ -601,5 +601,23 @@
         "unit": "бр",
         "action": "remove",
         "timestamp": "2026-04-17 14:58:11"
+    },
+    {
+        "log_id": null,
+        "product_id": "6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
+        "location_id": "W5",
+        "quantity": 20.0,
+        "unit": "л",
+        "action": "remove",
+        "timestamp": "2026-04-17 16:00:45"
+    },
+    {
+        "log_id": null,
+        "product_id": "79781693-2996-4fc7-ba04-290ea4a9915d",
+        "location_id": "W5",
+        "quantity": 10.0,
+        "unit": "кг",
+        "action": "remove",
+        "timestamp": "2026-04-17 16:03:40"
     }
 ]

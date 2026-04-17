@@ -1951,5 +1951,215 @@
         "action": "OUT_MOVEMENT",
         "details": "Product: студен чай \"Lemon Fresh\", Qty: 30.0",
         "timestamp": "2026-04-17 14:58:11"
+    },
+    {
+        "log_id": "ab92f399-1f11-4402-ac8a-d8d5bffe5747",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 15:54:55"
+    },
+    {
+        "log_id": "5b00895a-68ea-4c46-addf-e1b6863c3338",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Бяло вино (Совиньон блан), Qty: 20.0",
+        "timestamp": "2026-04-17 16:00:45"
+    },
+    {
+        "log_id": "38f490be-fdda-4c9b-8f89-554d0003017c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: вода",
+        "timestamp": "2026-04-17 16:01:57"
+    },
+    {
+        "log_id": "4ed66fd3-b640-4e45-a5d8-2e978c42b551",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-17 16:02:14"
+    },
+    {
+        "log_id": "304c04c0-20e8-45e0-b2f8-7ccf5ebf1a23",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 16:02:23"
+    },
+    {
+        "log_id": "9dc2e1f3-bce4-4a65-9897-fab6bf618ef1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: лимон, Qty: 10.0",
+        "timestamp": "2026-04-17 16:03:40"
+    },
+    {
+        "log_id": "8b14815f-16e8-4531-b8ee-1f2f5ac607b1",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 16:12:00"
+    },
+    {
+        "log_id": "f788054d-b320-4a60-bc9c-8bcd41fcb46d",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 16:20:11"
+    },
+    {
+        "log_id": "84d01374-53e5-4cf5-b9f5-669b69a6f5e4",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: test",
+        "timestamp": "2026-04-17 16:33:31"
+    },
+    {
+        "log_id": "fd82c8ae-bccb-4734-a0a8-e96682761bca",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:01:00"
+    },
+    {
+        "log_id": "88900ccf-7b9a-4c58-b993-1252b9cf068a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID f80e6fda-f1e1-4772-8799-7fc9c379c563",
+        "timestamp": "2026-04-17 17:01:19"
+    },
+    {
+        "log_id": "9a7c870a-f23b-44bd-beea-04055238376e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:09:32"
+    },
+    {
+        "log_id": "16fef12a-7d49-42fb-a456-c793d4c0c525",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:12:25"
+    },
+    {
+        "log_id": "a3ae6fc2-311b-4021-a11f-09a00e0f15ef",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:13:59"
+    },
+    {
+        "log_id": "91ee91f8-bc6d-4437-a2b7-9da96f12550e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:16:39"
+    },
+    {
+        "log_id": "88f82072-53aa-49df-b801-f5499b3ff297",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:25:29"
+    },
+    {
+        "log_id": "7579ef1c-3f5f-4f47-acd1-9788098e5ebe",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:30:29"
+    },
+    {
+        "log_id": "74ea0956-c4e0-47f7-b430-d53c53628e83",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:35:59"
+    },
+    {
+        "log_id": "eb2a8016-de5e-4765-aa9e-409199c29d42",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: test",
+        "timestamp": "2026-04-17 17:36:41"
+    },
+    {
+        "log_id": "46c4f603-e109-47f6-bae0-6288728fd2ac",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:42:49"
+    },
+    {
+        "log_id": "9618917a-40a4-49d4-b66e-021fb3f4fc5b",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 17:45:52"
+    },
+    {
+        "log_id": "cf4bc046-4e63-413a-941c-6f9fd9873844",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID bc72ed0c-9c1b-44fb-8827-8f174e80a54a",
+        "timestamp": "2026-04-17 17:46:10"
+    },
+    {
+        "log_id": "8abd01dc-6041-4087-8a42-1b186398ee34",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: testov product",
+        "timestamp": "2026-04-17 17:46:47"
+    },
+    {
+        "log_id": "dfd6b40a-35e0-4074-b4e6-59a5d2ddd6d5",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: кока кола",
+        "timestamp": "2026-04-17 17:47:43"
+    },
+    {
+        "log_id": "2a0ae414-db12-4fcd-915d-3e2c794a57cf",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 18:04:53"
+    },
+    {
+        "log_id": "418c6a5b-2fa6-4bcb-91cd-b7c3e3a47b71",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 18:16:42"
+    },
+    {
+        "log_id": "cf9eb58d-e39b-4888-9b12-2a77e5d0f1d6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 18:22:10"
+    },
+    {
+        "log_id": "3ea11b99-be77-4547-bca1-61597b280112",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: кока кола, Qty: 45.0, From: Склад София, To: Склад Бургас",
+        "timestamp": "2026-04-17 18:23:22"
+    },
+    {
+        "log_id": "2e6bec73-5e1b-4143-84e6-ae45450ebf53",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 18:27:38"
+    },
+    {
+        "log_id": "58f43482-4757-45de-9b95-1b89339503c7",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 18:35:53"
     }
 ]

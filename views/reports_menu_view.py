@@ -26,7 +26,10 @@ class ReportsView:
             MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
             MenuItem("6", "Търсене по дата", self.report_sales_by_date),
             MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
-            MenuItem("8", "Търсене на доставка", self.search_delivery),
+
+            # 🔥 По-ясно за потребителя
+            MenuItem("8", "Търсене на доставка (по продукт, доставчик, описание или склад)", self.search_delivery),
+
             MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
             MenuItem("10", "Най-продавани продукти", self.report_top_products),
             MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
@@ -34,9 +37,8 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # ---------------------------------------------------------
-    #  Помощни форматиращи функции
-    # ---------------------------------------------------------
+    # ------------------ HELPERS ------------------
+
     @staticmethod
     def _truncate(text, length=20):
         t = str(text)
@@ -60,9 +62,8 @@ class ReportsView:
         q = int(quantity) if float(quantity).is_integer() else round(float(quantity), 2)
         return f"{q} {u}".strip()
 
-    # ---------------------------------------------------------
-    #  Справка за движения
-    # ---------------------------------------------------------
+    # ------------------ MOVEMENTS ------------------
+
     def report_movements(self, _):
         result = self.controller.report_movements()
         if not result.data:
@@ -72,8 +73,16 @@ class ReportsView:
         rows = []
         for item in result.data:
             m_type = item["type"].upper()
+
             price_val = item.get("price")
             formatted_price = self._format_lv(price_val) if m_type != "MOVE" else "-"
+
+            if m_type == "MOVE":
+                from_loc = item.get("from_location_name", "N/A")
+                to_loc = item.get("location_name", "N/A")
+                loc_display = f"{from_loc} → {to_loc}"
+            else:
+                loc_display = item.get("location_name", "N/A")
 
             rows.append([
                 item["date"][:16],
@@ -82,15 +91,17 @@ class ReportsView:
                 item["movement_id"],
                 self._format_qty_unit(item["quantity"], item.get("unit")),
                 formatted_price,
-                self._truncate(item["location_name"], 15)
+                self._truncate(loc_display, 25)
             ])
 
         rows.sort(key=lambda x: x[0], reverse=True)
-        print(format_table(["Дата/Час", "Тип", "Продукт", "ID (Пълно)", "Кол.", "Цена", "Склад"], rows))
+        print(format_table(
+            ["Дата/Час", "Тип", "Продукт", "ID", "Кол.", "Цена", "Локация"],
+            rows
+        ))
 
-    # ---------------------------------------------------------
-    #  Инвентар по складове
-    # ---------------------------------------------------------
+    # ------------------ INVENTORY ------------------
+
     def report_inventory(self, _):
         inventory = self.controller.inventory_controller.data["products"]
 
@@ -112,9 +123,8 @@ class ReportsView:
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
 
-    # ---------------------------------------------------------
-    #  Обобщена справка
-    # ---------------------------------------------------------
+    # ------------------ SUMMARY ------------------
+
     def summary_report(self, _):
         inventory = self.controller.inventory_controller.data["products"]
 
@@ -124,7 +134,6 @@ class ReportsView:
 
         data = {}
 
-        # 1) Четем total_stock + locations
         from models.movement import MovementType
         for pid, pdata in inventory.items():
             data[pid] = {
@@ -135,12 +144,10 @@ class ReportsView:
                 "whs": pdata.get("locations", {})
             }
 
-        # 2) Добавяме продаденото количество (OUT)
         for m in self.controller.movement_controller.movements:
             if m.movement_type == MovementType.OUT and m.product_id in data:
                 data[m.product_id]["sold"] += float(m.quantity)
 
-        # 3) Форматиране
         rows = []
         for pid, info in data.items():
             wh_list = [f"{w}:{self._format_qty_unit(q, '')}" for w, q in info["whs"].items()]
@@ -156,11 +163,10 @@ class ReportsView:
             ])
 
         rows.sort(key=lambda r: r[0])
-        print(format_table(["Продукт", "Налично", "Продадено", "Складове (топ 3)"], rows))
+        print(format_table(["Продукт", "Налично", "Продадено", "Складове"], rows))
 
-    # ---------------------------------------------------------
-    #  Фактури
-    # ---------------------------------------------------------
+    # ------------------ SALES ------------------
+
     def report_sales(self, _):
         result = self.controller.report_sales()
         if not result.data:
@@ -171,14 +177,18 @@ class ReportsView:
             [
                 i["invoice_number"][:10],
                 i["date"][:10],
-                self._truncate(i["client"], 15),
-                self._truncate(i["product"], 20),
+                self._truncate(i["client"], 22),
+                self._truncate(i["product"], 30),
                 self._format_lv(i["total_price"])
             ]
             for i in result.data
         ]
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
+        print(format_table(
+            ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows,
+            col_widths=[12, 12, 22, 30, 12]
+        ))
 
     def _print_sales_table(self, data):
         if not data:
@@ -189,14 +199,18 @@ class ReportsView:
             [
                 i["invoice_id"][:10] if "invoice_id" in i else i.get("invoice_number", "")[:10],
                 i["date"][:10],
-                self._truncate(i["customer"] if "customer" in i else i.get("client", ""), 15),
-                self._truncate(i["product"], 20),
+                self._truncate(i.get("customer") or i.get("client", ""), 22),
+                self._truncate(i["product"], 30),
                 self._format_lv(i["total_price"])
             ]
             for i in data
         ]
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
+        print(format_table(
+            ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            rows,
+            col_widths=[12, 12, 22, 30, 12]
+        ))
 
     def report_sales_by_customer(self, _):
         c = input("Клиент: ")
@@ -210,9 +224,8 @@ class ReportsView:
         d = input("Дата (YYYY-MM-DD): ")
         self._print_sales_table(self.controller.report_sales_by_date(d).data)
 
-    # ---------------------------------------------------------
-    #  Доставки
-    # ---------------------------------------------------------
+    # ------------------ DELIVERIES ------------------
+
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if res.data:
@@ -232,7 +245,8 @@ class ReportsView:
             print("\n[!] Няма доставки.\n")
 
     def search_delivery(self, _):
-        k = input("Търсене: ")
+        k = input("Въведете текст за търсене (име на продукт, доставчик, склад или част от описание): ")
+
         res = self.controller.search_deliveries_all(k)
         if res.data:
             rows = [
@@ -250,9 +264,8 @@ class ReportsView:
         else:
             print("\n[!] Няма резултати.\n")
 
-    # ---------------------------------------------------------
-    #  Оборот и топ продукти
-    # ---------------------------------------------------------
+    # ------------------ TURNOVER ------------------
+
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
@@ -265,6 +278,8 @@ class ReportsView:
         ]
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
+
+    # ------------------ TOP PRODUCTS ------------------
 
     def report_top_products(self, _):
         res = self.controller.report_top_products()
@@ -283,9 +298,8 @@ class ReportsView:
 
         print(format_table(["Продукт", "Кол.", "Оборот"], rows))
 
-    # ---------------------------------------------------------
-    #  Жизнен цикъл на продукт
-    # ---------------------------------------------------------
+    # ------------------ LIFECYCLE ------------------
+
     def report_lifecycle(self, _):
         name = input("Въведете име на продукт: ").strip()
         data = self.controller.product_lifecycle(name)

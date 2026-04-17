@@ -38,13 +38,13 @@ class ProductView:
                      self.sort_menu_protected if self._is_operator() else self.sort_menu),
             MenuItem("7", "Средна цена", self.average_price),
             MenuItem("8", "Филтриране по категория", self.filter_by_category),
-            MenuItem("11", "Продукти с ниска наличност", self.low_stock),
-            MenuItem("12", "Най-скъп продукт", self.most_expensive),
-            MenuItem("13", "Най-евтин продукт", self.cheapest),
-            MenuItem("14", "Обща стойност на склада", self.total_value),
-            MenuItem("15", "Групиране по категории", self.group_by_category),
-            MenuItem("16", "Разширено търсене", self.advanced_search),
-            MenuItem("17", "Наличности по складове", self.show_stock_by_warehouses),
+            MenuItem("9", "Продукти с ниска наличност", self.low_stock),
+            MenuItem("10", "Най-скъп продукт", self.most_expensive),
+            MenuItem("11", "Най-евтин продукт", self.cheapest),
+            MenuItem("12", "Обща стойност на склада", self.total_value),
+            MenuItem("13", "Групиране по категории", self.group_by_category),
+            MenuItem("14", "Разширено търсене", self.advanced_search),
+            MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
@@ -298,30 +298,60 @@ class ProductView:
     def total_value(self, _):
         print(f"Обща стойност: {self.format_lv(self.product_controller.total_values())}")
 
-    def group_by_category(self, _):
-        groups = self.product_controller.group_by_category_display()
+    def group_by_category(self, user):
+        products = self.product_controller.get_all()
         inventory = self.product_controller.inventory_controller.data["products"]
 
-        for cat_id, items in groups.items():
-            cat = self.category_controller.get_by_id(cat_id)
-            print(f"\n--- {cat.name if cat else cat_id} ---")
+        grouped = {}
+        for p in products:
+            # ПОПРАВКА: Извличане на имената на категориите от списъка p.categories
+            cat = ", ".join([c.name for c in p.categories]) if p.categories else "Без категория"
+            grouped.setdefault(cat, []).append(p)
+
+        for category, items in grouped.items():
+            print(f"\n--- {category} ---")
             for p in items:
-                stock = inventory.get(p["id"], {}).get("total_stock", 0)
-                print(f"{p['name']} - {stock} {p['unit']}")
+                # ПОПРАВКА: Използване на p.product_id вместо p.id за съвместимост с модела
+                stock = inventory.get(p.product_id, {}).get("total_stock", 0)
+                print(f"{p.name} | {stock} {p.unit} | {p.price:.2f} лв.")
 
     def advanced_search(self, _):
         print("\n  Разширено търсене  ")
+
         keyword = input("Ключова дума: ").strip() or None
-        min_raw = input("Мин. цена: ")
-        max_raw = input("Макс. цена: ")
+        min_raw = input("Мин. цена: ").strip()
+        max_raw = input("Макс. цена: ").strip()
 
         try:
+            # Парсване на числа (или None)
             min_p = ProductValidator.parse_optional_float(min_raw)
             max_p = ProductValidator.parse_optional_float(max_raw)
-        except ValueError as e:
-            print(e)
-            print("Моля, опитайте отново.\n")
+            results = self.product_controller.search_combined(
+                keyword=keyword,
+                min_price=min_p,
+                max_price=max_p
+            )
 
+            # --- Няма резултати ---
+            if not results:
+                print("\n[!] Няма намерени продукти по тези критерии.\n")
+                return
+
+            # --- Показване на резултатите ---
+            print(f"\nНамерени резултати ({len(results)}):\n")
+
+            inventory = self.product_controller.inventory_controller.data["products"]
+
+            for p in results:
+                stock = inventory.get(p.product_id, {}).get("total_stock", 0)
+                price = f"{p.price:.2f} лв."
+                print(f"{p.name} | Цена: {price} | Наличност: {stock} {p.unit}")
+
+            print()
+
+        except ValueError as e:
+            print(f"\nГрешка: {e}")
+            print("Моля, опитайте отново.\n")
 
     # НАЛИЧНОСТИ ПО СКЛАДОВЕ
     def show_stock_by_warehouses(self, _):

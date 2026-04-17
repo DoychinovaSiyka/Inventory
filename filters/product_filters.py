@@ -107,59 +107,13 @@ def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
 
 
 # COMBINED SEARCH
-def filter_combined(products: List[Product],
-                    name_keyword: Optional[str] = None,
-                    category_id: Optional[str] = None,
-                    min_price: Optional[float] = None,
-                    max_price: Optional[float] = None,
-                    min_qty: Optional[float] = None,
-                    max_qty: Optional[float] = None,
-                    supplier_id: Optional[str] = None) -> List[Product]:
+def filter_combined(products, keyword=None, min_price=None, max_price=None):
+    result = products
 
-    results = [p for p in products if p.name]
-    # ключова дума -> име + описание + категории + тагове
-    if name_keyword:
-        kw = name_keyword.lower().strip()
-        filtered = []
+    if keyword:
+        result = filter_search(result, keyword)
 
-        for p in results:
-            name = p.name.lower()
-            description = (p.description or "").lower()
-            categories = p.categories or []
-            tags = p.tags or []
-            match = False
-            if kw in name or kw in description:
-                match = True
-            for c in categories:
-                if kw in c.name.lower():
-                    match = True
-                    break
-            for t in tags:
-                if kw in t.lower():
-                    match = True
-                    break
-            if match:
-                filtered.append(p)
+    if min_price is not None or max_price is not None:
+        result = filter_by_price_range(result, min_price, max_price)
 
-        results = filtered
-
-    # категория
-    if category_id is not None:
-        cid = str(category_id)
-        results = [ p for p in results if any(str(c.category_id) == cid for c in (p.categories or []))]
-
-    if supplier_id is not None:
-        sid = str(supplier_id)
-        results = [p for p in results if str(p.supplier_id) == sid]
-
-    if min_price is not None:
-        results = [p for p in results if p.price is not None and p.price >= min_price]
-    if max_price is not None:
-        results = [p for p in results if p.price is not None and p.price <= max_price]
-
-    if min_qty is not None:
-        results = [p for p in results if p.quantity is not None and p.quantity >= min_qty]
-    if max_qty is not None:
-        results = [p for p in results if p.quantity is not None and p.quantity <= max_qty]
-
-    return results
+    return result

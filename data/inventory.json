@@ -1,3 +1,285 @@
 {
-  "products": {}
+    "products": {
+        "3bab61f1-cad2-4391-93b7-0047a82322dd": {
+            "name": "Ананас",
+            "unit": "бр.",
+            "total_stock": 47.0,
+            "locations": {
+                "W1": 47.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "c6c2b4c1-4c3f-4a0e-9f6a-1b9d7e2f4a11": {
+            "name": "бира \"Siyka\"",
+            "unit": "бр.",
+            "total_stock": 105.0,
+            "locations": {
+                "W5": 105.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "f1a8d9c7-2b4e-4e3f-8c9d-7a2b1e5f9c33": {
+            "name": "вафла \"Боровец\"",
+            "unit": "бр.",
+            "total_stock": 31.0,
+            "locations": {
+                "W1": 31.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44": {
+            "name": "зелен лук",
+            "unit": "кг",
+            "total_stock": 15.0,
+            "locations": {
+                "W1": 15.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "9321b4fb-b9f5-43d9-ab10-e574b15960c8": {
+            "name": "картофи",
+            "unit": "кг",
+            "total_stock": 20.0,
+            "locations": {
+                "W2": 20.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "e4b1c9f7-3d2a-4b8f-9e1c-7a5d2f3b8c55": {
+            "name": "кафе \"Lavazza\"",
+            "unit": "бр.",
+            "total_stock": 37.22,
+            "locations": {
+                "W1": 37.22
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "b7e9a1d3-5c4f-4e2a-8d9f-1c3b7e5a9f66": {
+            "name": "кафе \"Нова Бразилия\"",
+            "unit": "бр.",
+            "total_stock": 80.0,
+            "locations": {
+                "W1": 80.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55": {
+            "name": "киви",
+            "unit": "кг",
+            "total_stock": 3.0,
+            "locations": {
+                "W1": 3.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "c1e7f9a3-4b2d-4e0f-9c8a-3d5f7b1a6c88": {
+            "name": "Подправки микс",
+            "unit": "бр.",
+            "total_stock": 12.0,
+            "locations": {
+                "W1": 12.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "f8a1c3d7-2e4b-4f9a-8c1d-7b3e5f9a7d99": {
+            "name": "Прясно мляко",
+            "unit": "бр.",
+            "total_stock": 17.0,
+            "locations": {
+                "W5": 17.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22": {
+            "name": "Розови домати",
+            "unit": "бр.",
+            "total_stock": 199.0,
+            "locations": {
+                "W5": 199.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33": {
+            "name": "сладолед \"Family\"",
+            "unit": "бр.",
+            "total_stock": 400.0,
+            "locations": {
+                "W1": 400.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44": {
+            "name": "шоколад \"Kinder\"",
+            "unit": "бр.",
+            "total_stock": 223.0,
+            "locations": {
+                "W2": 223.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "ac1e582c-c606-46f3-a669-a836098a1a6e": {
+            "name": "Портокали \"Мерлин\"",
+            "unit": "кг",
+            "total_stock": 57.0,
+            "locations": {
+                "W4": 57.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "4374c1a6-de5f-48ae-a0e8-0d029d4f97a6": {
+            "name": "кори за баница \"Bella\"",
+            "unit": "бр.",
+            "total_stock": 45.0,
+            "locations": {
+                "W2": 45.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "b74e9d24-f831-434b-86b3-8451ee3cd737": {
+            "name": "череши",
+            "unit": "кг",
+            "total_stock": 29.0,
+            "locations": {
+                "W2": 29.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "d8effa46-27b6-454b-b8a9-e7bafe66e85c": {
+            "name": "био ягоди",
+            "unit": "кг.",
+            "total_stock": 30.0,
+            "locations": {
+                "W1": 30.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "9e64604e-6674-4f9c-bb41-9a71751e266c": {
+            "name": "Свински врат без кост",
+            "unit": "кг.",
+            "total_stock": 45.8,
+            "locations": {
+                "W3": 45.8
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "d59a91a7-fd15-435c-8448-b25a05950a5c": {
+            "name": "натурален сок Ябълка",
+            "unit": "бр.",
+            "total_stock": 100.0,
+            "locations": {
+                "W1": 100.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "4ecb4c5c-042b-472f-8db5-f22445fe6015": {
+            "name": "Печен шамфастък",
+            "unit": "кг.",
+            "total_stock": 17.0,
+            "locations": {
+                "W4": 17.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "6a38047a-8e49-4ef4-b2ed-daeafbcbb8db": {
+            "name": "Бяло вино (Совиньон блан)",
+            "unit": "л",
+            "total_stock": 80.0,
+            "locations": {
+                "W5": 80.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "79781693-2996-4fc7-ba04-290ea4a9915d": {
+            "name": "лимон",
+            "unit": "кг",
+            "total_stock": 10.0,
+            "locations": {
+                "W5": 10.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "573c08e2-39cb-4258-81c9-e81f284a3554": {
+            "name": "студен чай \"Lemon Fresh\"",
+            "unit": "бр",
+            "total_stock": 150.0,
+            "locations": {
+                "W3": 150.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "a1d9f64a-9ee7-4dfe-8691-7a4d4fd538c0": {
+            "name": "слива",
+            "unit": "кг.",
+            "total_stock": 72.0,
+            "locations": {
+                "W2": 72.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "1b68ac9a-8963-49a8-9eea-1da51753547f": {
+            "name": "вода",
+            "unit": "л.",
+            "total_stock": 100.0,
+            "locations": {
+                "W5": 100.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "f80e6fda-f1e1-4772-8799-7fc9c379c563": {
+            "name": "test",
+            "unit": "кг.",
+            "total_stock": 560.0,
+            "locations": {
+                "W4": 560.0
+            },
+            "created": "2026-04-17 17:00:54",
+            "modified": "2026-04-17 17:00:54"
+        },
+        "98820cfa-54ec-4d07-b3eb-a46e2a9e65eb": {
+            "name": "testov product",
+            "unit": "кг.",
+            "total_stock": 100.0,
+            "locations": {
+                "W5": 100.0
+            },
+            "created": "2026-04-17 17:46:47",
+            "modified": "2026-04-17 17:46:47"
+        },
+        "7a719393-a6c3-4047-ad45-696d627a7da6": {
+            "name": "кока кола",
+            "unit": "бр.",
+            "total_stock": 100.0,
+            "locations": {
+                "W1": 55.0,
+                "W4": 45.0
+            },
+            "created": "2026-04-17 17:47:43",
+            "modified": "2026-04-17 18:23:22"
+        }
+    }
 }

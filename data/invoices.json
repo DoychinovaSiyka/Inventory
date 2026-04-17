@@ -102,5 +102,31 @@
         "date": "2026-04-17 14:58:11",
         "created": "2026-04-17 14:58:11",
         "modified": "2026-04-17 14:58:11"
+    },
+    {
+        "invoice_id": "e1e4b571-ac89-4e2c-b78e-a6ea00657dfd",
+        "movement_id": "d4119c9d-5fad-4114-8052-b79b6e663310",
+        "product": "Бяло вино (Совиньон блан)",
+        "quantity": 20.0,
+        "unit": "л",
+        "unit_price": 25.69,
+        "total_price": 513.8,
+        "customer": "Димитър Пеев",
+        "date": "2026-04-17 16:00:45",
+        "created": "2026-04-17 16:00:45",
+        "modified": "2026-04-17 16:00:45"
+    },
+    {
+        "invoice_id": "534fc25f-84fc-4255-b689-1dcc031d34d0",
+        "movement_id": "22f16509-5a09-4410-b835-ede8b39fcbaf",
+        "product": "лимон",
+        "quantity": 10.0,
+        "unit": "кг",
+        "unit_price": 4.88,
+        "total_price": 48.8,
+        "customer": "Стефан Стефанов",
+        "date": "2026-04-17 16:03:40",
+        "created": "2026-04-17 16:03:40",
+        "modified": "2026-04-17 16:03:40"
     }
 ]

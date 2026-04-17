@@ -382,5 +382,53 @@
         "location_id": "W2",
         "created": "2026-04-16T14:42:42.135125",
         "modified": "2026-04-16 14:56:39"
+    },
+    {
+        "product_id": "1b68ac9a-8963-49a8-9eea-1da51753547f",
+        "name": "вода",
+        "categories": [
+            "new-water-001"
+        ],
+        "quantity": 100.0,
+        "unit": "л.",
+        "description": "\"Банкя\" - изворна вода",
+        "price": 4.9,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W5",
+        "created": "2026-04-17T16:01:57.439898",
+        "modified": "2026-04-17T16:01:57.439898"
+    },
+    {
+        "product_id": "98820cfa-54ec-4d07-b3eb-a46e2a9e65eb",
+        "name": "testov product",
+        "categories": [
+            "55efa88a-4403-4a86-bead-00311b9e4ed9"
+        ],
+        "quantity": 100.0,
+        "unit": "кг.",
+        "description": "test proba",
+        "price": 19.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W5",
+        "created": "2026-04-17T17:46:47.250873",
+        "modified": "2026-04-17T17:46:47.250873"
+    },
+    {
+        "product_id": "7a719393-a6c3-4047-ad45-696d627a7da6",
+        "name": "кока кола",
+        "categories": [
+            "sub-bezalko-002"
+        ],
+        "quantity": 100.0,
+        "unit": "бр.",
+        "description": "енергийна газирана напитка",
+        "price": 5.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-17T17:47:43.475810",
+        "modified": "2026-04-17T17:47:43.475810"
     }
 ]

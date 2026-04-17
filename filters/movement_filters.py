@@ -96,3 +96,41 @@ def filter_advanced(movements: List[Movement],
         results = [m for m in results if str(m.user_id) == str(user_id)]
 
     return results
+
+    # ================== ТЪРСЕНЕ И ФИЛТРИРАНЕ ==================
+
+    def search_by_description(self, keyword: str) -> List[Movement]:
+        """Търси движения, чието описание съдържа ключовата дума."""
+        keyword = keyword.lower()
+        return [
+            m for m in self.movements
+            if keyword in m.description.lower()
+        ]
+
+    def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
+                        product_id=None, location_id=None, user_id=None) -> List[Movement]:
+        """
+        Разширено филтриране по много критерии (Логика "И").
+        Ако даден параметър е None, той се игнорира.
+        """
+        results = self.movements
+
+        if movement_type:
+            results = [m for m in results if m.movement_type.name == movement_type]
+
+        if product_id:
+            results = [m for m in results if m.product_id == product_id]
+
+        if location_id:
+            results = [m for m in results if m.location_id == location_id]
+
+        if user_id:
+            results = [m for m in results if m.user_id == user_id]
+
+        if start_date:
+            results = [m for m in results if m.date >= start_date]
+
+        if end_date:
+            results = [m for m in results if m.date <= end_date]
+
+        return results

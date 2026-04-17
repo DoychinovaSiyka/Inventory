@@ -1,9 +1,9 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
+
 from models.product import Product
 from validators.product_validator import ProductValidator
-
 from filters.product_filters import (
     filter_search, filter_by_multiple_category_ids, filter_by_category,
     filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
@@ -32,14 +32,15 @@ class ProductController:
         self.category_controller = category_controller
         self.activity_log = activity_log_controller
 
-        self.products = []
+        self.products: List[Product] = []
         self._load_products()
 
         # Закачат се отвън
         self.supplier_controller = None
         self.inventory_controller = None
 
-    # INTERNAL HELPERS
+    # ================= INTERNAL HELPERS =================
+
     @staticmethod
     def _generate_id() -> str:
         return str(uuid.uuid4())
@@ -53,28 +54,41 @@ class ProductController:
             self.activity_log.add_log(user_id, action, message)
 
     def _load_products(self):
-        raw_data = self.repo.load()
-        self.products = [Product.from_dict(p_data, self.category_controller) for p_data in raw_data]
+        raw = self.repo.load()
+        self.products = [
+            Product.from_dict(p_data, self.category_controller)
+            for p_data in raw
+        ]
 
+    # ================= READ =================
+
+    def get_all(self) -> List[Product]:
+        return self.products
+
+    def get_by_id(self, product_id: str) -> Optional[Product]:
+        return next((p for p in self.products if str(p.product_id) == str(product_id)), None)
 
     def get_by_name(self, name: str) -> Optional[Product]:
-        """Намира продукт по име (case-insensitive)."""
         name = name.strip().lower()
-        for p in self.products:
-            if p.name.lower() == name:
-                return p
-        return None
+        return next((p for p in self.products if p.name.lower() == name), None)
 
+    def exists_by_name(self, name: str) -> bool:
+        return any(p.name.lower() == name.lower() for p in self.products)
 
-    # CREATE
+    # ================= CREATE =================
+
     def add(self, product_data: dict, user_id: str) -> Product:
-        """Добавя нов продукт (quantity вече НЕ се използва за наличности)."""
+        """
+        Добавя нов продукт.
+        quantity се използва само за първоначално зареждане → автоматично IN движение.
+        """
 
+        # 1) Валидации
         ProductValidator.validate_all(
             product_id=None,
             name=product_data['name'],
             categories=product_data['category_ids'],
-            quantity=product_data['quantity'],  # само за първоначално зареждане
+            quantity=product_data['quantity'],
             unit=product_data['unit'],
             description=product_data['description'],
             price=product_data['price'],
@@ -91,7 +105,8 @@ class ProductController:
             self.products
         )
 
-        now = datetime.now().isoformat()
+        # 2) Създаване на продукт
+        now = self._now()
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
         product = Product(
@@ -111,20 +126,27 @@ class ProductController:
 
         self.products.append(product)
         self.save_changes()
+
+        # 3) Автоматично начално зареждане в инвентара
+        initial_qty = float(product_data['quantity'])
+        location_id = product_data.get('location_id', 'W1')
+
+        if self.inventory_controller and initial_qty > 0:
+            self.inventory_controller.increase_stock(
+                product_id=product.product_id,
+                product_name=product.name,
+                warehouse_id=location_id,
+                qty=initial_qty,
+                unit=product.unit
+            )
+
+        # 4) Лог
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
+
         return product
 
-    # READ
-    def get_all(self) -> List[Product]:
-        return self.products
+    # ================= UPDATE =================
 
-    def get_by_id(self, product_id: str) -> Optional[Product]:
-        return next((p for p in self.products if str(p.product_id) == str(product_id)), None)
-
-    def exists_by_name(self, name: str) -> bool:
-        return any(p.name.lower() == name.lower() for p in self.products)
-
-    # UPDATE (quantity е премахнато!)
     def update_product(self, product_id: str, new_name: str,
                        new_description: str, new_price: float,
                        user_id: str = "system") -> bool:
@@ -140,14 +162,14 @@ class ProductController:
             product.description = ProductValidator.validate_description(new_description)
 
         product.price = ProductValidator.validate_price(new_price)
-
         product.update_modified()
-        self.save_changes()
 
+        self.save_changes()
         self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
         return True
 
-    # DELETE
+    # ================= DELETE =================
+
     def delete_by_id(self, product_id: str, user_id: str) -> bool:
         ProductValidator.validate_product_exists(product_id, self)
 
@@ -174,18 +196,15 @@ class ProductController:
 
         return False
 
-    # INVENTORY
+    # ================= INVENTORY =================
+
     def get_total_stock(self, product_id: str) -> float:
-        if self.inventory_controller is None:
+        if not self.inventory_controller:
             return 0.0
         return self.inventory_controller.get_total_stock(product_id)
 
-    # VIEW MODEL
-    def group_by_category_display(self):
-        groups = self.group_by_category()
-        return ProductViewModel.group_by_category(groups)
+    # ================= FILTERS =================
 
-    # FILTERS
     def search(self, keyword: str) -> List[Product]:
         return filter_search(self.products, keyword)
 
@@ -213,7 +232,8 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
 
-    # STATISTICS
+    # ================= ANALYTICS =================
+
     def average_price(self) -> float:
         return calculate_average_price(self.products)
 
@@ -229,7 +249,8 @@ class ProductController:
     def group_by_category(self) -> dict:
         return group_products_by_category(self.products)
 
-    # SORTING
+    # ================= SORTING =================
+
     def sort_by_name(self) -> List[Product]:
         return sort_by_name_logic(self.products)
 
@@ -242,6 +263,7 @@ class ProductController:
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
 
-    # SAVE
+    # ================= SAVE =================
+
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])
