@@ -130,7 +130,7 @@ class InvoiceView:
             columns, rows, [12, 26, 12, 12, 12]
         ))
 
-    # ================= SEARCH BY DATE =================
+
 
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()

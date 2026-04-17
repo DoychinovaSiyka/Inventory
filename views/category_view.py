@@ -135,7 +135,6 @@ class CategoryView:
             if choice == cat.category_id:
                 return cat
 
-        # Ако е номер
         if choice.isdigit():
             index = int(choice) - 1
             if 0 <= index < len(categories):

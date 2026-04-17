@@ -393,7 +393,8 @@ class MovementView:
 
         print(format_table(columns, rows))
 
-    # ADVANCED FILTER
+
+
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
         print("0=IN, 1=OUT, 2=MOVE")

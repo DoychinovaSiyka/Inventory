@@ -66,10 +66,8 @@ class InventoryValidator:
         current_qty = float(locations.get(str(warehouse_id), 0.0))
 
         if current_qty < val:
-            raise ValueError(
-                f"Недостатъчна наличност в склад {warehouse_id}! "
-                f"Налично: {current_qty}, Заявка: {val}"
-            )
+            raise ValueError(f"Недостатъчна наличност в склад {warehouse_id}! " 
+                             f"Налично: {current_qty}, Заявка: {val}")
 
     @staticmethod
     def validate_move(product_id, product_name, from_wh, to_wh, qty, master_inventory):
@@ -100,10 +98,8 @@ class InventoryValidator:
             total_recorded = float(data.get("total_stock", 0.0))  # Ключът е total_stock
 
             if abs(wh_sum - total_recorded) > 0.0001:
-                raise ValueError(
-                    f"Разсинхронизация при {data['name']}! "
-                    f"Сума по локации: {wh_sum}, Общо записано: {total_recorded}."
-                )
+                raise ValueError(f"Разсинхронизация при {data['name']}! " 
+                                 f"Сума по локации: {wh_sum}, Общо записано: {total_recorded}.")
 
     @staticmethod
     def validate_movements(movements):
@@ -112,7 +108,6 @@ class InventoryValidator:
             raise ValueError("Списъкът с движения е в невалиден формат.")
 
         valid_types = {"IN", "OUT", "MOVE"}
-
         for idx, m in enumerate(movements):
             mtype = m.get("movement_type")
             if mtype not in valid_types:
@@ -122,7 +117,6 @@ class InventoryValidator:
             val = InventoryValidator._validate_number(qty, f"Количество в запис #{idx}")
             if val <= 0:
                 raise ValueError(f"Запис #{idx}: Количеството трябва да е над 0.")
-
             if mtype == "MOVE":
                 if not m.get("from_warehouse") or not m.get("to_warehouse"):
                     raise ValueError(f"Запис #{idx}: Липсва склад при MOVE.")

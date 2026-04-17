@@ -6,18 +6,11 @@ class InvoiceValidator:
 
     @staticmethod
     def parse_float(value, field_name="Стойност"):
-        """
-        Парсва число, като премахва 'лв', интервали и запетаи.
-        Връща None при грешка, без да хвърля traceback.
-        """
+        """Парсва число, като премахва 'лв', интервали и запетаи. Връща None при грешка."""
         if value is None or value == "":
             return None
-
-        cleaned = (str(value)
-                   .replace("лв.", "")
-                   .replace("лв", "")
-                   .replace(" ", "")
-                   .replace(",", "."))
+        cleaned = (str(value).replace("лв.", "").replace("лв", "")
+                   .replace(" ", "").replace(",", "."))
 
         try:
             return float(cleaned)
@@ -111,10 +104,7 @@ class InvoiceValidator:
 
     @staticmethod
     def validate_all(product, customer, quantity, unit, unit_price, movement_id, total_price, date=None):
-        """
-        Главен метод за проверка на всички полета.
-        Всички грешки се прихващат и се показват нормално.
-        """
+        """Главен метод за проверка на всички полета."""
         InvoiceValidator.validate_product(product)
         InvoiceValidator.validate_customer(customer)
         InvoiceValidator.validate_quantity(quantity)
@@ -138,10 +128,7 @@ class InvoiceValidator:
 
     @staticmethod
     def validate_search_filters(start_date, end_date, min_total, max_total):
-        """
-        Валидира параметрите за разширено търсене.
-        Всички грешки се прихващат.
-        """
+        """Валидира параметрите за разширено търсене.Всички грешки се прихващат."""
         if start_date:
             InvoiceValidator.validate_date(start_date)
         if end_date:

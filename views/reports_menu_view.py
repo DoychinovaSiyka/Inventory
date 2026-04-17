@@ -34,7 +34,7 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # ------------------ HELPERS ------------------
+    # HELPERS
 
     @staticmethod
     def _truncate(text, length=20):
@@ -59,7 +59,6 @@ class ReportsView:
         q = int(quantity) if float(quantity).is_integer() else round(float(quantity), 2)
         return f"{q} {u}".strip()
 
-    # ------------------ MOVEMENTS ------------------
 
     def report_movements(self, _):
         result = self.controller.report_movements()
@@ -97,7 +96,7 @@ class ReportsView:
             rows
         ))
 
-    # ------------------ INVENTORY ------------------
+
 
     def report_inventory(self, _):
         inventory = self.controller.inventory_controller.data["products"]
@@ -120,7 +119,7 @@ class ReportsView:
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
 
-    # ------------------ SUMMARY ------------------
+
 
     def summary_report(self, _):
         inventory = self.controller.inventory_controller.data["products"]
@@ -162,7 +161,6 @@ class ReportsView:
         rows.sort(key=lambda r: r[0])
         print(format_table(["Продукт", "Налично", "Продадено", "Складове"], rows))
 
-    # ------------------ SALES ------------------
 
     def _format_table_fixed(self, headers, rows, col_widths):
         """Локална функция за поддръжка на col_widths, без да пипаме format_table()."""
@@ -291,7 +289,6 @@ class ReportsView:
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
 
-    # ------------------ TOP PRODUCTS ------------------
 
     def report_top_products(self, _):
         res = self.controller.report_top_products()
@@ -310,7 +307,7 @@ class ReportsView:
 
         print(format_table(["Продукт", "Кол.", "Оборот"], rows))
 
-    # ------------------ LIFECYCLE ------------------
+
 
     def report_lifecycle(self, _):
         name = input("Въведете име на продукт: ").strip()

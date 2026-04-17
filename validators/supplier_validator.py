@@ -67,4 +67,3 @@ class SupplierValidator:
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
         SupplierValidator.validate_address(address)
-        return True

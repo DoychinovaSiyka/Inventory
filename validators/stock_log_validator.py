@@ -24,7 +24,6 @@ class StockLogValidator:
         """Проверява дали действието е в позволения списък."""
         allowed_actions = ["add", "remove", "move", "move_in", "move_out", "in", "out"]
         clean_action = str(action).strip().lower()
-
         if clean_action not in allowed_actions:
             raise ValueError(f"Невалидно действие '{action}'. Позволени: {allowed_actions}")
         return clean_action
