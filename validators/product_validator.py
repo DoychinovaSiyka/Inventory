@@ -43,16 +43,14 @@ class ProductValidator:
         if len(categories) == 0:
             raise ValueError("Продуктът трябва да има поне една категория.")
         for c in categories:
-            if isinstance(c, Category):
-                cid = str(c.category_id)
-            else:
-                cid = str(c)
+            cid = str(c.category_id) if isinstance(c, Category) else str(c)
             if not cid or cid.strip() == "":
                 raise ValueError("Списъкът съдържа невалидна или празна категория.")
         return categories
 
     @staticmethod
     def validate_quantity(quantity):
+        """Използва се само при създаване на продукт (начално количество)."""
         try:
             q = float(quantity)
             if q < 0:
@@ -79,7 +77,6 @@ class ProductValidator:
             raise ValueError("Цената трябва да е положително число.")
         return round(p, 2)
 
-
     # PARSING HELPERS
     @staticmethod
     def _parse_float_internal(value, field_name="стойност"):
@@ -101,7 +98,6 @@ class ProductValidator:
 
     @staticmethod
     def parse_optional_float(value, field_name="стойност"):
-        """Парсира число или връща None, ако е празно."""
         if value is None or str(value).strip() == "":
             return None
         try:
@@ -114,17 +110,14 @@ class ProductValidator:
 
     @staticmethod
     def parse_int(value, field_name="стойност"):
-        """Парсира цяло число или хвърля грешка."""
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително поле.")
         try:
             i = int(str(value).strip())
         except ValueError:
             raise ValueError(f"{field_name} трябва да е цяло число.")
-
         if i < 0:
             raise ValueError(f"{field_name} не може да е отрицателно.")
-
         return i
 
     # EXISTENCE VALIDATION
@@ -149,18 +142,12 @@ class ProductValidator:
         if not supplier:
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
-
     # BUSINESS RULES
     @staticmethod
     def validate_unique_name_in_location(name, location_id, products):
         for p in products:
             if p.name.lower() == name.lower() and p.location_id == location_id:
                 raise ValueError("Продуктът вече съществува в този склад.")
-
-    @staticmethod
-    def validate_stock_available(product, amount):
-        if product.quantity < amount:
-            raise ValueError("Недостатъчна наличност.")
 
 
     # MASTER VALIDATION
@@ -171,7 +158,7 @@ class ProductValidator:
         ProductValidator.validate_uuid(supplier_id, "Supplier ID")
         ProductValidator.validate_name(name)
         ProductValidator.validate_categories(categories)
-        ProductValidator.validate_quantity(quantity)
+        ProductValidator.validate_quantity(quantity)  # само при create
         ProductValidator.validate_unit(unit)
         ProductValidator.validate_price(price)
         ProductValidator.validate_description(description)

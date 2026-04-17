@@ -53,8 +53,14 @@ class UserValidator:
         user = controller.get_by_username(username)
         if not user:
             raise ValueError("Невалидно потребителско име или парола.")
+
         if user.status != "Active":
             raise ValueError("Потребителят е деактивиран.")
+
+        # Проверка на паролата (хеширана)
+        if user.password != controller._hash_password(password):
+            raise ValueError("Невалидно потребителско име или парола.")
+
         return user
 
     @staticmethod

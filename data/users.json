@@ -9,9 +9,7 @@
         "role": "Admin",
         "status": "Active",
         "created": "2026-03-14 16:04:53",
-        "modified": "2026-03-14 16:04:53",
-        "role_changed": false,
-        "status_changed": false
+        "modified": "2026-03-14 16:04:53"
     },
     {
         "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
@@ -23,9 +21,7 @@
         "role": "Operator",
         "status": "Active",
         "created": "2026-03-14 16:04:53",
-        "modified": "2026-03-14 16:04:53",
-        "role_changed": false,
-        "status_changed": false
+        "modified": "2026-03-14 16:04:53"
     },
     {
         "user_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
@@ -37,8 +33,6 @@
         "role": "Operator",
         "status": "Active",
         "created": "2026-03-14 16:04:53",
-        "modified": "2026-04-15 10:39:00",
-        "role_changed": true,
-        "status_changed": false
+        "modified": "2026-04-15 10:39:00"
     }
 ]

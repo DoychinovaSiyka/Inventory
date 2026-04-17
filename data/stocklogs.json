@@ -529,5 +529,77 @@
         "unit": "кг.",
         "action": "add",
         "timestamp": "2026-04-16 14:56:39"
+    },
+    {
+        "log_id": null,
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W1",
+        "quantity": 20.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-04-16 17:37:14"
+    },
+    {
+        "log_id": null,
+        "product_id": "9321b4fb-b9f5-43d9-ab10-e574b15960c8",
+        "location_id": "W1",
+        "quantity": 5.0,
+        "unit": "кг",
+        "action": "add",
+        "timestamp": "2026-04-16 17:39:48"
+    },
+    {
+        "log_id": null,
+        "product_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "location_id": "W1",
+        "quantity": 20.0,
+        "unit": "бр.",
+        "action": "remove",
+        "timestamp": "2026-04-16 18:28:11"
+    },
+    {
+        "log_id": null,
+        "product_id": "a9d3f1b7-4c2e-4a8f-9b1d-3e7f5c9a8e22",
+        "location_id": "W1",
+        "quantity": 10.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-04-16 18:29:49"
+    },
+    {
+        "log_id": null,
+        "product_id": "a3d7f2b1-9c4e-4f0a-8b1d-2e7f9c3a5b44",
+        "location_id": "W1",
+        "quantity": 5.0,
+        "unit": "кг",
+        "action": "remove",
+        "timestamp": "2026-04-16 20:46:15"
+    },
+    {
+        "log_id": null,
+        "product_id": "b8547f8a-1588-47c8-abff-76965ee0ce96",
+        "location_id": "W1",
+        "quantity": 1.0,
+        "unit": "бр.",
+        "action": "add",
+        "timestamp": "2026-04-16 21:51:22"
+    },
+    {
+        "log_id": null,
+        "product_id": "6a38047a-8e49-4ef4-b2ed-daeafbcbb8db",
+        "location_id": "W5",
+        "quantity": 60.0,
+        "unit": "л",
+        "action": "remove",
+        "timestamp": "2026-04-17 14:57:00"
+    },
+    {
+        "log_id": null,
+        "product_id": "573c08e2-39cb-4258-81c9-e81f284a3554",
+        "location_id": "W3",
+        "quantity": 30.0,
+        "unit": "бр",
+        "action": "remove",
+        "timestamp": "2026-04-17 14:58:11"
     }
 ]

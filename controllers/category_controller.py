@@ -9,11 +9,8 @@ from analytics.category_analytics import build_category_tree
 
 
 class CategoryController:
-    """
-    Контролер за категории.
-    Отговаря за координация между валидатори, модели и хранилище.
-    Не съдържа бизнес логика – само orchestration.
-    """
+    """ Контролер за категории. Отговаря за координация между валидатори, модели и хранилище.
+    Не съдържа бизнес логика – само orchestration."""
 
     def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
@@ -44,14 +41,8 @@ class CategoryController:
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        category = Category(
-            category_id=str(uuid.uuid4()),
-            name=name,
-            description=description,
-            parent_id=parent_id,
-            created=now,
-            modified=now
-        )
+        category = Category(category_id=str(uuid.uuid4()),
+                            name=name, description=description, parent_id=parent_id, created=now, modified=now)
 
         self.categories.append(category)
         self._save_changes()
@@ -61,10 +52,10 @@ class CategoryController:
 
     # UPDATE NAME
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
-        category = CategoryValidator.validate_exists(category_id, self.categories)
+        category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
 
-        # Ако името е същото → няма смисъл да записваме
+        # Ако името е същото - няма смисъл да записваме
         if category.name == new_name:
             return True
 
@@ -81,7 +72,7 @@ class CategoryController:
 
     # UPDATE DESCRIPTION
     def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
-        category = CategoryValidator.validate_exists(category_id, self.categories)
+        category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_description(new_description)
 
         if category.description == new_description:
@@ -96,7 +87,7 @@ class CategoryController:
 
     # UPDATE PARENT
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
-        category = CategoryValidator.validate_exists(category_id, self.categories)
+        category = CategoryValidator.validate_exists(category_id, self)
         # Ако родителят е същият - няма нужда от запис
         if category.parent_id == parent_id:
             return True
@@ -104,7 +95,6 @@ class CategoryController:
         CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_parent_id(parent_id, category_id)
         CategoryValidator.validate_no_cycle(category_id, parent_id, self.categories)
-
         category.parent_id = parent_id
         category.update_modified()
 
@@ -112,9 +102,9 @@ class CategoryController:
         self._log(user_id, "EDIT_CATEGORY", "Родител променен")
         return True
 
-    # DELETE
+
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
-        CategoryValidator.validate_exists(category_id, self.categories)
+        CategoryValidator.validate_exists(category_id, self)
 
         products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category_id, self.categories, products)

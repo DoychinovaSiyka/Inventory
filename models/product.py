@@ -9,22 +9,38 @@ class Product:
 
         self.product_id = str(product_id) if product_id else None
         self.name = name
-        # Категориите са списък
+
+        # Категориите са списък от Category или ID
         self.categories = categories if isinstance(categories, list) else []
-        self.quantity = quantity
+
+        # ВАЖНО: quantity вече НЕ е наличност!
+        # Използва се само при първоначално създаване.
+        self.quantity = float(quantity)
+
         self.price = price
         self.unit = unit if unit else "бр."
         self.description = description
         self.supplier_id = str(supplier_id) if supplier_id else None
         self.tags = tags if isinstance(tags, list) else []
         self.location_id = str(location_id)
+
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now
-        ProductValidator.validate_all(product_id=self.product_id, name=self.name, categories=self.categories,
-                                      quantity=self.quantity, unit=self.unit, description=self.description,
-                                      price=self.price, location_id=self.location_id,
-                                      supplier_id=self.supplier_id, tags=self.tags)
+
+        # Валидация (quantity остава само за create)
+        ProductValidator.validate_all(
+            product_id=self.product_id,
+            name=self.name,
+            categories=self.categories,
+            quantity=self.quantity,
+            unit=self.unit,
+            description=self.description,
+            price=self.price,
+            location_id=self.location_id,
+            supplier_id=self.supplier_id,
+            tags=self.tags
+        )
 
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -38,21 +54,30 @@ class Product:
             else:
                 json_categories.append(str(c))
 
-        return {"product_id": self.product_id, "name": self.name,
-                "categories": json_categories, "quantity": self.quantity,
-                "unit": self.unit, "description": self.description,
-                "price": self.price, "supplier_id": self.supplier_id,
-                "tags": self.tags, "location_id": self.location_id,
-                "created": self.created, "modified": self.modified }
+        return {
+            "product_id": self.product_id,
+            "name": self.name,
+            "categories": json_categories,
+            "quantity": self.quantity,  # историческо поле, НЕ наличност
+            "unit": self.unit,
+            "description": self.description,
+            "price": self.price,
+            "supplier_id": self.supplier_id,
+            "tags": self.tags,
+            "location_id": self.location_id,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data, category_controller=None):
         """Прави нов Product от речник (JSON)."""
         if not data:
             return None
+
         raw_categories = data.get("categories", [])
         fixed_categories = []
-        # Ако има контролер, зареждаме обектите Category
+
         if category_controller:
             for cid in raw_categories:
                 cat = category_controller.get_by_id(str(cid))
@@ -60,12 +85,21 @@ class Product:
         else:
             fixed_categories = raw_categories
 
-        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"),
-            categories=fixed_categories, quantity=data.get("quantity", 0),
-            unit=data.get("unit", "бр."), description=data.get("description", ""),
-            price=data.get("price", 0), supplier_id=data.get("supplier_id"),
-            tags=data.get("tags", []), location_id=data.get("location_id", "W1"),
-            created=data.get("created"), modified=data.get("modified"))
+        return Product(
+            product_id=data.get("product_id"),
+            name=data.get("name", "Неизвестен"),
+            categories=fixed_categories,
+            quantity=data.get("quantity", 0),  # НЕ наличност
+            unit=data.get("unit", "бр."),
+            description=data.get("description", ""),
+            price=data.get("price", 0),
+            supplier_id=data.get("supplier_id"),
+            tags=data.get("tags", []),
+            location_id=data.get("location_id", "W1"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def __str__(self):
-        return f"{self.name} | {self.price} лв. | {self.quantity} {self.unit}"
+        # quantity вече НЕ е наличност → не го показваме
+        return f"{self.name} | {self.price} лв. | {self.unit}"

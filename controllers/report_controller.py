@@ -1,221 +1,281 @@
-from datetime import datetime
-from models.report import Report
-from storage.json_repository import JSONRepository
-from filters.report_filters import (
-    filter_out_invoices, filter_movements_by_product,
-    group_turnover_by_day, group_top_products
-)
+from typing import List, Dict
+from models.movement import MovementType
+
+
+class ReportResult:
+    def __init__(self, data):
+        self.data = data
 
 
 class ReportController:
-    """ Контролер за отчети. Координира данни от други контролери и филтри,
-    създава Report обекти и ги записва чрез JSONRepository. Не съдържа бизнес логика. """
+    def __init__(self, repo, product_controller, movement_controller,
+                 invoice_controller, location_controller, inventory_controller):
 
-    def __init__(self, repo: JSONRepository, product_controller, movement_controller,
-                 invoice_controller, location_controller):
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
-        raw_data = self.repo.load()
-        self.reports = []
+        self.inventory_controller = inventory_controller
 
-        # Защита при повреден JSON
-        if isinstance(raw_data, list):
-            self.reports = [Report.from_dict(r) for r in raw_data if isinstance(r, dict)]
-
-    # INTERNAL HELPERS
-    @staticmethod
-    def _now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    def _create_report(self, report_type: str, parameters: dict, data):
-        """Вътрешен помощен метод за създаване на обект Report."""
-        return Report(report_type=report_type, generated_on=self._now(),
-                      parameters=parameters, data=data)
-
-    # СПРАВКА 1: Наличности
-    def report_stock(self) -> Report:
-        """ Генерира отчет за наличностите по продукти и складове. """
-        data = []
-
-        for p in self.product_controller.get_all():
-            loc = self.location_controller.get_by_id(p.location_id)
-            location_name = loc.name if loc else "Няма склад"
-
-            data.append({"product": p.name, "quantity": round(float(p.quantity), 2),
-                         "price": round(float(p.price), 2), "location": location_name})
-
-        return self._create_report("stock", {}, data)
-
-    # СПРАВКА 2: Движения
-    def report_movements(self) -> Report:
-        """ Генерира отчет за всички движения в склада. """
-        data = []
-
-        for m in self.movement_controller.get_all():
-            product = self.product_controller.get_by_id(m.product_id)
-            product_name = product.name if product else "Неизвестен продукт"
-
-            loc = self.location_controller.get_by_id(m.location_id)
-            location_name = loc.name if loc else "Неизвестен склад"
-
-            movement_price = m.price if m.movement_type.name in ("IN", "OUT") else None
-            data.append({"date": m.date, "type": m.movement_type.name, "movement_id": m.movement_id,
-                         "quantity": m.quantity, "price": movement_price, "location_name": location_name})
-
-        return self._create_report("movements_history", {}, data)
-
-    # СПРАВКА 3: Обороти
-    def report_turnover_by_day(self):
-        """Генерира отчет за оборота по дни на база фактури."""
-        invoices = filter_out_invoices(self.invoice_controller.invoices, self.movement_controller.movements)
-        data = group_turnover_by_day(invoices)
-
-        return self._create_report("turnover_by_day", {}, data)
-
-    # СПРАВКА 4: Топ продукти
-    def report_top_products(self):
-        """Генерира отчет за най-продаваните продукти."""
-        invoices = filter_out_invoices(self.invoice_controller.invoices, self.movement_controller.movements)
-        data = group_top_products(invoices)
-
-        return self._create_report("top_products", {}, data)
-
-    # СПРАВКА 5: Всички фактури / продажби
-    def report_sales(self) -> Report:
-        """ Генерира отчет за всички издадени фактури (продажби). """
-        data = []
-        for inv in self.invoice_controller.invoices:
-            movement = self.movement_controller.get_by_id(inv.movement_id)
-            product_name = "N/A"
-            if movement:
-                product = self.product_controller.get_by_id(movement.product_id)
-                product_name = product.name if product else "Изтрит продукт"
-
-            client = inv.customer if inv.customer else "Неизвестен"
-            total = round(float(inv.total_price), 2)
-            data.append({"invoice_number": invoice_number, "date": inv.date, "client": client,
-                         "product": product_name, "total_amount": total, "tax_amount": 0.00})
-
-        return self._create_report("sales_all", {}, data)
-
-    # СПРАВКА: Продажби по клиент
-    def report_sales_by_customer(self, customer: str) -> Report:
-        """ Генерира отчет за продажби, филтрирани по клиент. """
-        customer = customer.lower().strip()
-        search_parts = customer.split()
-        data = []
-
-        for inv in self.invoice_controller.invoices:
-            client_name = inv.customer.lower() if inv.customer else ""
-            if not all(part in client_name for part in search_parts):
-                continue
-
-            total = round(float(inv.total_price), 2)
-
-            data.append({"invoice_number": inv.invoice_id, "date": inv.date, "client": inv.customer,
-                         "product": inv.product, "total_amount": total})
-
-        return self._create_report("sales_by_customer", {"customer": customer}, data)
-
-    # СПРАВКА: Продажби по продукт
-    def report_sales_by_product(self, product_name: str) -> Report:
-        """ Генерира отчет за продажби, филтрирани по продукт. """
-        product_name = product_name.lower()
-        data = []
-
-        for inv in self.invoice_controller.invoices:
-            if product_name not in inv.product.lower():
-                continue
-            total = round(float(inv.total_price), 2)
-            data.append({"invoice_number": inv.invoice_id, "date": inv.date, "client": inv.customer,
-                         "product": inv.product, "total_amount": total})
-
-        return self._create_report("sales_by_product", {"product": product_name}, data)
-
-    # СПРАВКА: Продажби по дата
-    def report_sales_by_date(self, date_str: str) -> Report:
-        """Генерира отчет за продажби по конкретна дата (или начало на дата)."""
-        data = []
-        for inv in self.invoice_controller.invoices:
-            if not inv.date.startswith(date_str):
-                continue
-            total = round(float(inv.total_price), 2)
-
-            data.append({"invoice_number": inv.invoice_id, "date": inv.date,
-                         "client": inv.customer, "product": inv.product, "total_amount": total})
-
-        return self._create_report("sales_by_date", {"date": date_str}, data)
-
-    # СПРАВКА: Всички доставки (IN)
-    def report_deliveries_all(self) -> Report:
-        """ Генерира отчет за всички доставки (IN движения). """
+    # ---------------------------------------------------------
+    #  Справка за движения
+    # ---------------------------------------------------------
+    def report_movements(self):
         data = []
         for m in self.movement_controller.movements:
-            if m.movement_type.name != "IN":
-                continue
+
             product = self.product_controller.get_by_id(m.product_id)
             product_name = product.name if product else "Неизвестен продукт"
 
-            loc = self.location_controller.get_by_id(m.location_id)
-            location_name = loc.name if loc else "Неизвестен склад"
+            location = self.location_controller.get_by_id(m.location_id)
 
-            supplier_name = "-"
-            if m.supplier_id:
-                supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
-                supplier_name = supplier.name if supplier else "-"
+            data.append({
+                "movement_id": m.movement_id,
+                "product_name": product_name,
+                "type": m.movement_type.name,
+                "quantity": m.quantity,
+                "unit": m.unit,
+                "price": m.price,
+                "location_name": location.name if location else "N/A",
+                "date": m.date
+            })
+        return ReportResult(data)
 
-            data.append({"date": m.date, "movement_id": m.movement_id, "product": product_name,
-                         "quantity": m.quantity, "supplier": supplier_name, "location_name": location_name})
+    # ---------------------------------------------------------
+    #  Всички продажби (фактури)
+    # ---------------------------------------------------------
+    def report_sales(self):
+        invoices = self.invoice_controller.get_all()
+        data = []
 
-        return self._create_report("deliveries_all", {}, data)
+        for inv in invoices:
+            data.append({
+                "invoice_number": inv.invoice_id,
+                "date": inv.date,
+                "client": inv.customer,
+                "product": inv.product,
+                "total_price": inv.total_price
+            })
 
-    # СПРАВКА: Търсене на доставка (IN)
-    def search_deliveries_all(self, keyword: str) -> Report:
-        """ Генерира отчет за доставки, филтрирани по ключова дума. """
+        return ReportResult(data)
+
+    # ---------------------------------------------------------
+    #  Търсене по клиент
+    # ---------------------------------------------------------
+    def report_sales_by_customer(self, customer: str):
+        customer = customer.lower()
+        invoices = self.invoice_controller.get_all()
+
+        data = [
+            {
+                "invoice_number": i.invoice_id,
+                "date": i.date,
+                "client": i.customer,
+                "product": i.product,
+                "total_price": i.total_price
+            }
+            for i in invoices
+            if customer in i.customer.lower()
+        ]
+
+        return ReportResult(data)
+
+    # ---------------------------------------------------------
+    #  Търсене по продукт
+    # ---------------------------------------------------------
+    def report_sales_by_product(self, product: str):
+        product = product.lower()
+        invoices = self.invoice_controller.get_all()
+
+        data = [
+            {
+                "invoice_number": i.invoice_id,
+                "date": i.date,
+                "client": i.customer,
+                "product": i.product,
+                "total_price": i.total_price
+            }
+            for i in invoices
+            if product in i.product.lower()
+        ]
+
+        return ReportResult(data)
+
+    # ---------------------------------------------------------
+    #  Търсене по дата
+    # ---------------------------------------------------------
+    def report_sales_by_date(self, date: str):
+        invoices = self.invoice_controller.get_all()
+
+        data = [
+            {
+                "invoice_number": i.invoice_id,
+                "date": i.date,
+                "client": i.customer,
+                "product": i.product,
+                "total_price": i.total_price
+            }
+            for i in invoices
+            if date in i.date
+        ]
+
+        return ReportResult(data)
+
+    # ---------------------------------------------------------
+    #  Доставки
+    # ---------------------------------------------------------
+    def report_deliveries_all(self):
+        data = []
+        for m in self.movement_controller.movements:
+            if m.movement_type == MovementType.IN:
+
+                product = self.product_controller.get_by_id(m.product_id)
+                product_name = product.name if product else "Неизвестен продукт"
+
+                location = self.location_controller.get_by_id(m.location_id)
+                supplier = None
+                if m.supplier_id:
+                    supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
+
+                data.append({
+                    "date": m.date,
+                    "movement_id": m.movement_id,
+                    "product": product_name,
+                    "quantity": m.quantity,
+                    "unit": m.unit,
+                    "supplier": supplier.name if supplier else "N/A",
+                    "location_name": location.name if location else "N/A"
+                })
+        return ReportResult(data)
+
+    def search_deliveries_all(self, keyword: str):
         keyword = keyword.lower()
-        data = []
+        res = self.report_deliveries_all()
+        filtered = [d for d in res.data if keyword in str(d).lower()]
+        return ReportResult(filtered)
+
+    # ---------------------------------------------------------
+    #  Оборот по дни
+    # ---------------------------------------------------------
+    def report_turnover_by_day(self):
+        invoices = self.invoice_controller.get_all()
+        daily = {}
+
+        for inv in invoices:
+            day = inv.date[:10]
+            if day not in daily:
+                daily[day] = {"count": 0, "total": 0.0}
+            daily[day]["count"] += 1
+            daily[day]["total"] += inv.total_price
+
+        data = [{"date": d, "count": v["count"], "total": v["total"]} for d, v in daily.items()]
+        return ReportResult(data)
+
+    # ---------------------------------------------------------
+    #  Най-продавани продукти — ОПРАВЕНО (ползва OUT движения)
+    # ---------------------------------------------------------
+    def report_top_products(self):
+        stats = {}
+
         for m in self.movement_controller.movements:
-            if m.movement_type.name != "IN":
+            if m.movement_type != MovementType.OUT:
                 continue
 
             product = self.product_controller.get_by_id(m.product_id)
-            product_name = product.name if product else "Неизвестен продукт"
-            loc = self.location_controller.get_by_id(m.location_id)
-            location_name = loc.name if loc else "Неизвестен склад"
+            if not product:
+                continue
 
-            supplier_name = "-"
-            if m.supplier_id:
-                supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
-                supplier_name = supplier.name if supplier else "-"
+            name = product.name
 
-            if (keyword in m.movement_id.lower() or keyword in product_name.lower() or
-                    keyword in supplier_name.lower() or keyword in m.date.lower()):
-                data.append({"date": m.date, "movement_id": m.movement_id,
-                             "product": product_name, "quantity": m.quantity, "supplier": supplier_name,
-                             "location_name": location_name})
+            if name not in stats:
+                stats[name] = {"quantity": 0, "total": 0.0, "unit": product.unit}
 
-        return self._create_report("deliveries_search", {"keyword": keyword}, data)
+            stats[name]["quantity"] += m.quantity
+            stats[name]["total"] += m.quantity * m.price
 
-    # ГЕНЕРИРАНЕ НА ПАКЕТ ОТ ОТЧЕТИ
-    def generate_all_reports(self):
-        """ Генерира пакет от всички видове отчети за инициализацията в main.py. """
-        return [self.report_stock().to_dict(), self.report_turnover_by_day().to_dict(),
-                self.report_top_products().to_dict()]
+        data = [
+            {"product": k, "quantity": v["quantity"], "total": v["total"], "unit": v["unit"]}
+            for k, v in stats.items()
+        ]
 
-    # ЗАПИС В ХРАНИЛИЩЕ
-    def save_reports_once(self, reports_list):
-        """ Записва подаден списък с отчети (dict) еднократно в JSON файла. """
-        if isinstance(reports_list, list):
-            self.repo.save(reports_list)
+        data.sort(key=lambda x: x["quantity"], reverse=True)
+        return ReportResult(data)
 
-    def save_changes(self):
-        """ Записва всички заредени Report обекти обратно в JSON файла. """
-        self.repo.save([r.to_dict() for r in self.reports])
 
-    def save_report(self, report: Report):
-        """ Добавя нов отчет в паметта и го записва в JSON файла. """
-        self.reports.append(report)
-        self.save_changes()
+
+
+    # ---------------------------------------------------------
+    #  ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ (Избор: 1)
+    # ---------------------------------------------------------
+    def report_inventory_summary(self):
+        data = []
+
+        for product in self.product_controller.get_all():
+            pid = product.product_id
+            name = product.name
+            unit = product.unit
+
+            # Текуща наличност от инвентара
+            current_stock = self.inventory_controller.get_total_stock(pid)
+
+            # Продадено количество (OUT)
+            sold = 0.0
+            for m in self.movement_controller.movements:
+                if m.product_id == pid and m.movement_type == MovementType.OUT:
+                    sold += m.quantity
+
+            # Топ 3 склада
+            locations = self.inventory_controller.data["products"].get(pid, {}).get("locations", {})
+            top3 = sorted(locations.items(), key=lambda x: x[1], reverse=True)[:3]
+            top3_str = ", ".join([f"{loc}:{qty}" for loc, qty in top3]) if top3 else "-"
+
+            data.append({
+                "product": name,
+                "available": f"{current_stock} {unit}",
+                "sold": f"{sold} {unit}" if sold > 0 else "-",
+                "top_locations": top3_str
+            })
+
+        return ReportResult(data)
+
+
+    #  Жизнен цикъл на продукт
+    def product_lifecycle(self, name: str):
+        name = name.lower()
+
+        product = None
+        for p in self.product_controller.get_all():
+            if name in p.name.lower():
+                product = p
+                break
+
+        if not product:
+            return None
+
+        current_stock = self.inventory_controller.get_total_stock(product.product_id)
+
+        total_in = 0.0
+        total_out = 0.0
+
+        for m in self.movement_controller.movements:
+            if m.product_id != product.product_id:
+                continue
+
+            if m.movement_type == MovementType.IN:
+                total_in += m.quantity
+            elif m.movement_type == MovementType.OUT:
+                total_out += m.quantity
+
+        initial_stock = current_stock - total_in + total_out
+
+        return {
+            "product": product.name,
+            "unit": product.unit,
+            "initial_stock": initial_stock,
+            "total_in": total_in,
+            "total_out": total_out,
+            "expected_stock": current_stock,
+            "current_stock": current_stock,
+            "revenue": total_out * product.price
+        }

@@ -1,5 +1,6 @@
 from views.menu import Menu, MenuItem
 from views.product_menu_view import ProductView
+
 from views.category_view import CategoryView
 from views.movement_view import MovementView
 from views.user_view import UserView

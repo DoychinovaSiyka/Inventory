@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "2ab769d8-7cea-46e8-be0d-12850438fef2",
+        "report_id": "a604f436-ee9f-485b-a0ba-462ddd9599c5",
         "report_type": "stock",
-        "generated_on": "2026-04-16 15:40:45",
+        "generated_on": "2026-04-17 00:50:03",
         "parameters": {},
         "data": [
             {
@@ -37,7 +37,7 @@
             },
             {
                 "product": "кафе \"Lavazza\"",
-                "quantity": 37.22,
+                "quantity": 39.0,
                 "price": 4.89,
                 "location": "Склад София"
             },
@@ -121,8 +121,8 @@
             },
             {
                 "product": "натурален сок Ябълка",
-                "quantity": 100.0,
-                "price": 3.0,
+                "quantity": 120.0,
+                "price": 5.0,
                 "location": "Склад София"
             },
             {
@@ -150,17 +150,23 @@
                 "location": "Склад Варна"
             },
             {
-                "product": "слива",
-                "quantity": 72.0,
-                "price": 3.09,
-                "location": "Склад Пловдив"
+                "product": "манго",
+                "quantity": 120.0,
+                "price": 9.99,
+                "location": "Склад Варна"
+            },
+            {
+                "product": "Шоколадов десерт \"Choco Dream\"",
+                "quantity": 299.0,
+                "price": 7.69,
+                "location": "Магазин Смолян"
             }
         ]
     },
     {
-        "report_id": "a5e8eb64-24ae-41f0-8470-fac1388b1fdd",
+        "report_id": "4eb5dba6-c0ce-4c38-a82e-8a6d4d7c7fce",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-16 15:40:45",
+        "generated_on": "2026-04-17 00:50:03",
         "parameters": {},
         "data": [
             {
@@ -177,13 +183,18 @@
                 "date": "2026-04-14",
                 "total": 3.99,
                 "count": 1
+            },
+            {
+                "date": "2026-04-16",
+                "total": 162.55,
+                "count": 3
             }
         ]
     },
     {
-        "report_id": "970fb9b7-ae61-41d5-a4d3-035bdaa50939",
+        "report_id": "eff96e72-08fb-42a0-bdc4-952d3b2d87ec",
         "report_type": "top_products",
-        "generated_on": "2026-04-16 15:40:45",
+        "generated_on": "2026-04-17 00:50:03",
         "parameters": {},
         "data": [
             {
@@ -195,6 +206,16 @@
                 "product": "череши",
                 "quantity": 1.0,
                 "total": 3.99
+            },
+            {
+                "product": "сладолед \"Family\"",
+                "quantity": 40.0,
+                "total": 157.6
+            },
+            {
+                "product": "зелен лук",
+                "quantity": 5.0,
+                "total": 4.95
             }
         ]
     }

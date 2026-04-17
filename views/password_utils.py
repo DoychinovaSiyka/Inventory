@@ -41,41 +41,48 @@ def input_password(prompt="Въведете парола: "):
 
 
 def format_table(columns, rows):
-    """ Форматира таблица в текстов вид.
-    Гарантира, че rows винаги е списък, дори ако е None. """
-    if rows is None:
-        rows = []
+    """ Професионално форматиране на таблица с дясно подравняване за суми и количества. """
+    if rows is None: rows = []
 
-    # Ако няма редове – връщаме само заглавна таблица
-    if not rows:
-        col_widths = [len(col) + 2 for col in columns]
-        top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
-        header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"
-        bottom_border = top_border
-        return "\n".join([top_border, header, bottom_border])
-
+    # 1. Изчисляване на ширините
     all_rows = [columns] + rows
-    col_widths = [max(len(str(row[i])) for row in all_rows) + 2 for i in range(len(columns))]
+    col_widths = []
+    for i in range(len(columns)):
+        max_w = max(len(str(row[i])) for row in all_rows)
+        col_widths.append(max_w + 2)  # +2 за малко 'въздух'
 
+    # 2. Рамки
     top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
+
+    # 3. Хедър (Заглавията винаги центрирани)
     header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"
     separator = "+" + "+".join("-" * w for w in col_widths) + "+"
 
-    data = []
+    # 4. Данни
+    data_rows = []
     for row in rows:
         line = "|"
         for i, cell in enumerate(row):
-            cell_str = f"{cell:.2f}" if isinstance(cell, float) else str(cell)
-            if isinstance(cell, (int, float)):
-                line += cell_str.rjust(col_widths[i]) + "|"
+            cell_str = str(cell)
+
+            # ЛОГИКА ЗА ПОДРАВНЯВАНЕ:
+            # Проверяваме дали колоната съдържа пари, количества или е ID/Дата
+            is_numeric = any(unit in cell_str for unit in ["лв.", "бр.", "кг.", " л.", " л "]) or \
+                         cell_str.replace('.', '', 1).isdigit()
+
+            # Специално изключение за ID-та и Дати (те са дълги и трябва да са вляво)
+            if len(cell_str) > 15 and "-" in cell_str:  # вероятно е UUID
+                is_numeric = False
+
+            if is_numeric:
+                # Дясно подравняване за цифри (с 1 интервал разстояние от рамката)
+                line += cell_str.rjust(col_widths[i] - 1) + " |"
             else:
-                line += cell_str.ljust(col_widths[i]) + "|"
-        data.append(line)
+                # Ляво подравняване за текст
+                line += " " + cell_str.ljust(col_widths[i] - 1) + "|"
+        data_rows.append(line)
 
-    bottom_border = top_border
-    return "\n".join([top_border, header, separator] + data + [bottom_border])
-
-
+    return "\n".join([top_border, header, separator] + data_rows + [top_border])
 #  Декоратор за защита с парола
 def require_password(correct_password):
     def decorator(func):

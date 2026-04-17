@@ -3,207 +3,264 @@
         "category_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
         "name": "напитки",
         "description": "Всички видове течности за консумация.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-alko-001",
         "name": "алкохолни напитки",
         "description": "Вино, ракия, бира, текила и др.",
-        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6"
+        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-bezalko-002",
         "name": "безалкохолни напитки",
         "description": "Сокове, газирани напитки, студен чай.",
-        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6"
+        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-water-001",
         "name": "вода",
         "description": "Минерална, изворна, газирана вода.",
-        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6"
+        "parent_id": "45d29434-381b-4f5f-a149-497e353a0cf6",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "2ed81812-7f7e-48bb-a446-4c96da251856",
         "name": "плодове",
         "description": "Свежи сезонни плодове.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "b5ad5404-91e5-42e2-99c4-508bed75024c",
         "name": "био плодове",
         "description": "Естествени плодове без химикали.",
-        "parent_id": "2ed81812-7f7e-48bb-a446-4c96da251856"
+        "parent_id": "2ed81812-7f7e-48bb-a446-4c96da251856",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f",
         "name": "зеленчуци",
         "description": "Пресни зеленчуци.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "55efa88a-4403-4a86-bead-00311b9e4ed9",
         "name": "месо",
         "description": "Прясно и охладено месо.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-meat-001",
         "name": "пилешко месо",
         "description": "Цяло пиле, филе, бутчета.",
-        "parent_id": "55efa88a-4403-4a86-bead-00311b9e4ed9"
+        "parent_id": "55efa88a-4403-4a86-bead-00311b9e4ed9",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-meat-002",
         "name": "свинско месо",
         "description": "Плешка, врат, контрафиле.",
-        "parent_id": "55efa88a-4403-4a86-bead-00311b9e4ed9"
+        "parent_id": "55efa88a-4403-4a86-bead-00311b9e4ed9",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
         "name": "млечни продукти",
         "description": "Продукти от млечен произход.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-dairy-001",
         "name": "сирена и кашкавали",
         "description": "Бяло саламурено сирене, кашкавал, извара.",
-        "parent_id": "47a393b7-2385-43cd-812c-5eb5d00964dc"
+        "parent_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-dairy-002",
         "name": "млека",
         "description": "Прясно и кисело мляко.",
-        "parent_id": "47a393b7-2385-43cd-812c-5eb5d00964dc"
+        "parent_id": "47a393b7-2385-43cd-812c-5eb5d00964dc",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "80e92038-6cec-4286-a14d-60432c76ba97",
         "name": "тестени изделия",
         "description": "Хляб, паста и изделия от брашно.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-bread-001",
         "name": "хляб и хлебни изделия",
         "description": "Хляб, франзели, питки.",
-        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97"
+        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-pasta-001",
         "name": "паста и макаронени изделия",
         "description": "Макарони, спагети, фиде.",
-        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97"
+        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-pastry-001",
         "name": "банички, кори и баници",
         "description": "Кори за баница, банички, баници.",
-        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97"
+        "parent_id": "80e92038-6cec-4286-a14d-60432c76ba97",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a",
         "name": "сладки изделия",
         "description": "Шоколади, бисквити, вафли.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-sugar-001",
         "name": "захарни изделия",
         "description": "Бонбони, локум, захарни пръчици.",
-        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
+        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-choco-001",
         "name": "шоколадови изделия",
         "description": "Шоколади, трюфели, шоколадови десерти.",
-        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
+        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "new-biscuits-001",
         "name": "бисквити и вафли",
         "description": "Бисквити, вафли, сладки.",
-        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a"
+        "parent_id": "d157b6e5-7acd-4fe9-b68e-6fe71720d36a",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "22c76763-e708-49a3-9e3b-199e9d70a7f3",
         "name": "подправки и сосове",
         "description": "Овкусители за готвене.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "e3422d3c-99ca-4fa5-a270-fc23cb834790",
         "name": "козметика",
         "description": "Продукти за лична хигиена.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-cosm-001",
         "name": "грижа за тялото",
         "description": "Сапуни, лосиони, душ гелове.",
-        "parent_id": "e3422d3c-99ca-4fa5-a270-fc23cb834790"
+        "parent_id": "e3422d3c-99ca-4fa5-a270-fc23cb834790",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
     {
         "category_id": "sub-cosm-002",
         "name": "грижа за косата",
         "description": "Шампоани, балсами, маски.",
-        "parent_id": "e3422d3c-99ca-4fa5-a270-fc23cb834790"
+        "parent_id": "e3422d3c-99ca-4fa5-a270-fc23cb834790",
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "a1b2c3d4-e5f6-47a8-9123-abcdef123456",
         "name": "консерви и буркани",
         "description": "Консервирани храни.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "bb22cc33-dd44-ee55-ff66-112233445566",
         "name": "зърнени и бобови",
         "description": "Ориз, боб, леща.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "99887766-5544-3322-1100-aabbccddeeff",
         "name": "замразени храни",
         "description": "Замразени зеленчуци и меса.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "123e4567-e89b-12d3-a456-426614174000",
         "name": "масла и мазнини",
         "description": "Олио, зехтин, масло.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "0f1e2d3c-4b5a-6978-8091-a2b3c4d5e6f7",
         "name": "ядки и сушени плодове",
         "description": "Бадеми, орехи, стафиди.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "12bac240-f22b-499a-80e5-6608c71caac1",
         "name": "препарати за кухня",
         "description": "Почистващи препарати.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
     },
-
     {
         "category_id": "8dddf036-8b39-4906-bd01-e1c336a3a1bb",
         "name": "домашни потребности",
         "description": "Аксесоари за дома.",
-        "parent_id": null
+        "parent_id": null,
+        "created": "2026-04-16 17:01:45",
+        "modified": "2026-04-16 17:01:45"
+    },
+    {
+        "category_id": "3c369069-b324-4118-a4aa-7943130be80e",
+        "name": "Тропически плодове",
+        "description": "Плодове от топъл климат",
+        "parent_id": "new-water-001",
+        "created": "2026-04-16 17:06:32",
+        "modified": "2026-04-16 17:06:32"
     }
 ]
