@@ -11,6 +11,17 @@ class InvoiceView:
         self.activity_log = activity_log_controller
         self.menu = self._build_menu()
 
+    #  TABLE FIX (NO col_widths)
+    def _format_table_fixed(self, headers, rows, col_widths):
+        line = "+" + "+".join("-" * w for w in col_widths) + "+"
+        header_row = "|" + "|".join(f"{str(h):^{col_widths[i]}}" for i, h in enumerate(headers)) + "|"
+        data_rows = []
+        for r in rows:
+            data_rows.append("|" + "|".join(f"{str(r[i]):^{col_widths[i]}}" for i in range(len(headers))) + "|")
+
+        return "\n".join([line, header_row, line] + data_rows + [line])
+
+
     def show_menu(self, user: User):
         while True:
             choice = self.menu.show()
@@ -30,7 +41,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Списък с всички фактури
+
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -49,7 +60,7 @@ class InvoiceView:
             print(f"Дата: {inv.date}")
             print("==============================")
 
-    # Преглед по ID
+
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
         invoice = self.invoice_controller.get_by_id(invoice_id)
@@ -71,7 +82,7 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # Търсене по клиент
+
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
         results = self.invoice_controller.search_by_customer(keyword)
@@ -91,13 +102,11 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + format_table(
-            columns,
-            rows,
-            col_widths=[12, 40, 12, 12, 12]
+        print("\n" + self._format_table_fixed(
+            columns, rows, [12, 40, 12, 12, 12]
         ))
 
-    # Търсене по продукт
+
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
         results = self.invoice_controller.search_by_product(keyword)
@@ -117,19 +126,20 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + format_table(
-            columns,
-            rows,
-            col_widths=[12, 26, 12, 12, 12]
+        print("\n" + self._format_table_fixed(
+            columns, rows, [12, 26, 12, 12, 12]
         ))
 
-    # Търсене по дата
+    # ================= SEARCH BY DATE =================
+
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
         results = self.invoice_controller.search_by_date(date_str)
+
         if results == "INVALID_DATE":
             print("\nНевалидна дата. Моля използвайте формат ГГГГ-ММ-ДД.\n")
             return
+
         if not results:
             print("Няма фактури за тази дата.")
             return
@@ -146,13 +156,11 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + format_table(
-            columns,
-            rows,
-            col_widths=[12, 40, 26, 12, 12]
+        print("\n" + self._format_table_fixed(
+            columns, rows, [12, 40, 26, 12, 12]
         ))
 
-    # Разширено търсене
+
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
         customer = input("Клиент (или Enter за пропуск): ").strip() or None
@@ -188,13 +196,11 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + format_table(
-            columns,
-            rows,
-            col_widths=[12, 40, 26, 12, 12, 12]
+        print("\n" + self._format_table_fixed(
+            columns, rows, [12, 40, 26, 12, 12, 12]
         ))
 
-    # Търсене по сума / диапазон
+    # SEARCH BY TOTAL
     def search_by_total(self, _):
         print("   Търсене по сума / диапазон")
         min_total = input("Минимална сума (или Enter): ").strip()
@@ -225,8 +231,4 @@ class InvoiceView:
             for inv in results
         ]
 
-        print(format_table(
-            columns,
-            rows,
-            col_widths=[12, 40, 26, 12, 12, 12]
-        ))
+        print(self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 12]))

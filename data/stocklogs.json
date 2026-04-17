@@ -619,5 +619,23 @@
         "unit": "кг",
         "action": "remove",
         "timestamp": "2026-04-17 16:03:40"
+    },
+    {
+        "log_id": null,
+        "product_id": "4ecb4c5c-042b-472f-8db5-f22445fe6015",
+        "location_id": "W4",
+        "quantity": 7.0,
+        "unit": "кг.",
+        "action": "remove",
+        "timestamp": "2026-04-17 22:45:38"
+    },
+    {
+        "log_id": null,
+        "product_id": "e67e0e95-0e33-43a4-8d99-a45247d01afc",
+        "location_id": "W1",
+        "quantity": 5.0,
+        "unit": "кг.",
+        "action": "add",
+        "timestamp": "2026-04-17 22:47:19"
     }
 ]

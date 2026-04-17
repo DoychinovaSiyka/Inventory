@@ -416,35 +416,51 @@
         "modified": "2026-04-17T17:47:43.475810"
     },
     {
-        "product_id": "ef1d4f2c-cedf-443a-ad80-6495bbe5224c",
-        "name": "product 2",
+        "product_id": "c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7",
+        "name": "TEST 1 2026",
         "categories": [
             "55efa88a-4403-4a86-bead-00311b9e4ed9"
         ],
-        "quantity": 10000.0,
-        "unit": "кг.",
-        "description": "productov test",
-        "price": 560.0,
-        "supplier_id": null,
-        "tags": [],
-        "location_id": "4",
-        "created": "2026-04-17T21:06:30.668324",
-        "modified": "2026-04-17 21:08:06"
-    },
-    {
-        "product_id": "c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7",
-        "name": "TEST1",
-        "categories": [
-            "2ed81812-7f7e-48bb-a446-4c96da251856"
-        ],
         "quantity": 900.0,
         "unit": "кг.",
-        "description": "TESTOV TEST",
-        "price": 56.0,
+        "description": "PROBEN TEST NA SISITEMATA NA SISI",
+        "price": 78.0,
         "supplier_id": null,
         "tags": [],
         "location_id": "0",
         "created": "2026-04-17T21:34:37.170344",
-        "modified": "2026-04-17 21:36:03"
+        "modified": "2026-04-17 22:07:30"
+    },
+    {
+        "product_id": "172b1f3c-9810-4571-9769-b55bd591bd6e",
+        "name": "TEST 123 APRIL",
+        "categories": [
+            "sub-meat-001"
+        ],
+        "quantity": 567.0,
+        "unit": "кг.",
+        "description": "PROBEN TEST NA SISTEMATA",
+        "price": 45678.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "4",
+        "created": "2026-04-17T21:57:46.436145",
+        "modified": "2026-04-17 22:00:56"
+    },
+    {
+        "product_id": "e67e0e95-0e33-43a4-8d99-a45247d01afc",
+        "name": "testov product vtora uprtreba",
+        "categories": [
+            "80e92038-6cec-4286-a14d-60432c76ba97"
+        ],
+        "quantity": 1900.0,
+        "unit": "кг.",
+        "description": "za proba na sisitemata",
+        "price": 234.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-17T22:06:00.628896",
+        "modified": "2026-04-17T22:06:00.628896"
     }
 ]

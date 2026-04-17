@@ -45,21 +45,17 @@ def format_table(columns, rows):
     if rows is None:
         rows = []
 
-    # 1. Изчисляване на ширините (вече позволява ДЪЛГИ имена)
+    # Изчисляване на ширините (вече позволява ДЪЛГИ имена)
     all_rows = [columns] + rows
     col_widths = []
     for i in range(len(columns)):
         max_w = max(len(str(row[i])) for row in all_rows)
         col_widths.append(max_w + 2)  # +2 за въздух
 
-    # 2. Рамки
-    top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
 
-    # 3. Хедър – центриран
+    top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
     header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"
     separator = "+" + "+".join("-" * w for w in col_widths) + "+"
-
-    # 4. Данни
     data_rows = []
     for row in rows:
         line = "|"
@@ -76,15 +72,13 @@ def format_table(columns, rows):
                           or cell_str.endswith("л")
                           or cell_str.endswith("л."))
 
-            # UUID и дати -> винаги текст
+            # UUID и дати ->  текст
             if "-" in cell_str and len(cell_str) > 15:
                 is_numeric = False
 
             if is_numeric:
-                # Дясно подравняване
                 line += cell_str.rjust(col_widths[i] - 1) + " |"
             else:
-                # Ляво подравняване
                 line += " " + cell_str.ljust(col_widths[i] - 1) + "|"
 
         data_rows.append(line)

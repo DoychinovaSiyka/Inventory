@@ -193,12 +193,12 @@
         "4ecb4c5c-042b-472f-8db5-f22445fe6015": {
             "name": "Печен шамфастък",
             "unit": "кг.",
-            "total_stock": 17.0,
+            "total_stock": 10.0,
             "locations": {
-                "W4": 17.0
+                "W4": 10.0
             },
             "created": "2026-04-17 17:00:54",
-            "modified": "2026-04-17 17:00:54"
+            "modified": "2026-04-17 22:45:38"
         },
         "6a38047a-8e49-4ef4-b2ed-daeafbcbb8db": {
             "name": "Бяло вино (Совиньон блан)",
@@ -314,12 +314,44 @@
         "c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7": {
             "name": "test",
             "unit": "кг.",
-            "total_stock": 1990.0,
+            "total_stock": 2999.0,
             "locations": {
-                "W4": 1990.0
+                "W4": 1990.0,
+                "0": 1009.0
             },
             "created": "2026-04-17 21:34:37",
-            "modified": "2026-04-17 21:36:03"
+            "modified": "2026-04-17 22:07:30"
+        },
+        "172b1f3c-9810-4571-9769-b55bd591bd6e": {
+            "name": "test_123",
+            "unit": "кг.",
+            "total_stock": 888000.0,
+            "locations": {
+                "W5": 888000.0
+            },
+            "created": "2026-04-17 21:57:46",
+            "modified": "2026-04-17 22:00:56"
+        },
+        "d2a9f2cd-7145-405a-a415-e61a895a4cca": {
+            "name": "nov test",
+            "unit": "бр.",
+            "total_stock": 788.0,
+            "locations": {
+                "W3": 788.0
+            },
+            "created": "2026-04-17 21:58:34",
+            "modified": "2026-04-17 21:58:34"
+        },
+        "e67e0e95-0e33-43a4-8d99-a45247d01afc": {
+            "name": "testov product vtora uprtreba",
+            "unit": "кг.",
+            "total_stock": 1905.0,
+            "locations": {
+                "W1": 1005.0,
+                "W5": 900.0
+            },
+            "created": "2026-04-17 22:06:00",
+            "modified": "2026-04-17 22:47:19"
         }
     }
 }

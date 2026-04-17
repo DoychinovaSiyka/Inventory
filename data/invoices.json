@@ -128,5 +128,18 @@
         "date": "2026-04-17 16:03:40",
         "created": "2026-04-17 16:03:40",
         "modified": "2026-04-17 16:03:40"
+    },
+    {
+        "invoice_id": "c48c4a1a-0ca5-47fd-860a-137b3fb25e91",
+        "movement_id": "7e5f36cd-bce1-46b0-906f-65fa67c30410",
+        "product": "Печен шамфастък",
+        "quantity": 7.0,
+        "unit": "кг.",
+        "unit_price": 45.0,
+        "total_price": 315.0,
+        "customer": "Todor",
+        "date": "2026-04-17 22:45:38",
+        "created": "2026-04-17 22:45:38",
+        "modified": "2026-04-17 22:45:38"
     }
 ]

@@ -2259,5 +2259,96 @@
         "action": "EDIT_PRODUCT",
         "details": "Обновен продукт: TEST1 (ID: c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7)",
         "timestamp": "2026-04-17 21:36:04"
+    },
+    {
+        "log_id": "f6f8d08a-9b71-4e1c-bece-3a45c0a446f3",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 21:57:02"
+    },
+    {
+        "log_id": "fe423ffd-062f-42a0-b648-3976916513c6",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: test_123",
+        "timestamp": "2026-04-17 21:57:46"
+    },
+    {
+        "log_id": "fc6c8bdf-4750-4c89-98cf-f26a789f851c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: nov test",
+        "timestamp": "2026-04-17 21:58:34"
+    },
+    {
+        "log_id": "286237f3-1273-4a80-a57c-73e6544fd80c",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID d2a9f2cd-7145-405a-a415-e61a895a4cca",
+        "timestamp": "2026-04-17 21:59:41"
+    },
+    {
+        "log_id": "d7762145-e5ff-43ad-82d7-f6e6887d65e8",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: TEST 123 APRIL (ID: 172b1f3c-9810-4571-9769-b55bd591bd6e)",
+        "timestamp": "2026-04-17 22:00:56"
+    },
+    {
+        "log_id": "f3feadb7-7ef7-4c2a-9e06-2dc90966f641",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 22:05:01"
+    },
+    {
+        "log_id": "f0660e39-bb23-443e-a315-ad851e405109",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: testov product vtora uprtreba",
+        "timestamp": "2026-04-17 22:06:00"
+    },
+    {
+        "log_id": "dff65f7c-3a52-4ce1-b601-a4053b4e6bda",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID ef1d4f2c-cedf-443a-ad80-6495bbe5224c",
+        "timestamp": "2026-04-17 22:06:21"
+    },
+    {
+        "log_id": "daad63b0-ce86-49cd-b02b-748134671c01",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: TEST 1 2026 (ID: c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7)",
+        "timestamp": "2026-04-17 22:07:30"
+    },
+    {
+        "log_id": "d9e9e8a4-1a3b-4fab-b3fe-95194970f813",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-17 22:22:14"
+    },
+    {
+        "log_id": "d406bbd7-fe48-4b2f-8c04-5705f6b7ea33",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: testov product vtora uprtreba, Qty: 900.0, From: Склад София, To: Магазин Смолян",
+        "timestamp": "2026-04-17 22:43:39"
+    },
+    {
+        "log_id": "85d5ab59-bcf2-4601-8f65-d2352888165f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Печен шамфастък, Qty: 7.0, Price: 45.0",
+        "timestamp": "2026-04-17 22:45:38"
+    },
+    {
+        "log_id": "e91d9549-a924-4078-8d28-c2f67602873f",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "IN_MOVEMENT",
+        "details": "Product: testov product vtora uprtreba, Qty: 5.0, Price: 9.0",
+        "timestamp": "2026-04-17 22:47:20"
     }
 ]

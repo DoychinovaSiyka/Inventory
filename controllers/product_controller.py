@@ -184,15 +184,14 @@ class ProductController:
                         unit=product.unit
                     )
                 elif delta < 0:
-                    # приемаме, че inventory_controller има decrease_stock – това е част от договора
                     self.inventory_controller.decrease_stock(
                         product_id=product.product_id,
                         warehouse_id=product.location_id,
-                        qty=abs(delta)
+                        qty=abs(delta),
+                        unit=product.unit
                     )
 
             except ValueError:
-                # невалидно количество → не пипаме инвентара
                 pass
 
         # Мерна единица
