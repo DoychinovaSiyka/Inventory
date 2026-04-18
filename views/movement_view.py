@@ -47,10 +47,18 @@ class MovementView:
         return sum(float(q) for q in locations.values())
 
     def _get_product_warehouses_with_qty(self, product):
+        """ Връщаме ИСТИНСКИТЕ UUID на локациите, не ключовете от inventory (W1/W2/W3)."""
         inv = self._get_inventory()
         pdata = inv.get(product.product_id, {})
-        locations = pdata.get("locations", {})
-        return [(wh, float(qty), product.unit) for wh, qty in locations.items()]
+        loc_qty = pdata.get("locations", {})
+
+        result = []
+        for loc in self.location_controller.get_all():
+            if loc.location_id in loc_qty:
+                qty = float(loc_qty[loc.location_id])
+                result.append((loc.location_id, qty, product.unit))
+        return result
+
 
     def _get_item_qty_text(self, item):
         if isinstance(item, Product):
@@ -59,6 +67,7 @@ class MovementView:
         return ""
 
     def _get_product_locations(self, product):
+        # ВРЪЩАМЕ ИСТИНСКИТЕ UUID НА ЛОКАЦИИТЕ
         wh_list = self._get_product_warehouses_with_qty(product)
         ids = sorted({wh for (wh, _, _) in wh_list})
         return ", ".join(ids)
@@ -148,10 +157,10 @@ class MovementView:
                 return
 
             print("\nИзберете склад, от който ще се продаде продуктът:")
-            for i, (wh, qty, unit) in enumerate(wh_list, start=1):
-                loc = self.location_controller.get_by_id(wh)
-                loc_name = loc.name if loc else wh
-                print(f"{i}. {loc_name} – {qty} {unit} (ID: {wh})")
+            for i, (loc_id, qty, unit) in enumerate(wh_list, start=1):
+                loc = self.location_controller.get_by_id(loc_id)
+                loc_name = loc.name if loc else loc_id
+                print(f"{i}. {loc_name} – {qty} {unit} (ID: {loc_id})")
 
             raw = input("Ваш избор (номер или ID): ").strip()
             if raw == "":
@@ -164,9 +173,9 @@ class MovementView:
                 if 0 <= idx < len(wh_list):
                     chosen_wh = wh_list[idx][0]
             else:
-                for (wh, _, _) in wh_list:
-                    if wh.lower() == raw.lower():
-                        chosen_wh = wh
+                for (loc_id, _, _) in wh_list:
+                    if loc_id.lower() == raw.lower():
+                        chosen_wh = loc_id
                         break
 
             if not chosen_wh:
@@ -224,9 +233,9 @@ class MovementView:
         if not product:
             return
 
-        # наличности по складове
+        # наличности по складове (ОПРАВЕНО: ВИНАГИ UUID)
         wh_list = self._get_product_warehouses_with_qty(product)
-        qty_by_wh = {wh: (qty, unit) for (wh, qty, unit) in wh_list}
+        qty_by_wh = {loc_id: (qty, unit) for (loc_id, qty, unit) in wh_list}
 
         if not wh_list:
             print("Грешка: Продуктът няма наличност в нито един склад.")
@@ -308,6 +317,7 @@ class MovementView:
             print("Грешка:", e)
 
 
+
     def search_movements(self, _):
         keyword = input("Търси по описание (мин. 3 символа): ").strip()
         if len(keyword) < 3:
@@ -356,7 +366,7 @@ class MovementView:
         print(f"ID: {movement.movement_id}")
         print(f"Дата: {movement.date}")
         print(f"Тип: {movement.movement_type.name}")
-        print(f"Количество: {self._format_qty_unit(movement.quantity, movement.unit)}")
+        print(f"Количество: {self._format_qty_unit(movement.quantity, m.unit)}")
 
         # Локации
         if movement.movement_type.name == "MOVE":
@@ -400,7 +410,6 @@ class MovementView:
 
         errors = []
 
-
         m_type_input = input("Тип movement или Enter: ").strip() or None
         movement_type = None
 
@@ -413,7 +422,6 @@ class MovementView:
                 movement_type = "MOVE"
             else:
                 errors.append("Невалиден тип движение. Допустими: 0=IN, 1=OUT, 2=MOVE.")
-
 
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip() or None
         end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip() or None
@@ -432,17 +440,14 @@ class MovementView:
             except ValueError:
                 errors.append("Невалидна крайна дата. Форматът е YYYY-MM-DD.")
 
-
         product_id = input("ID на продукт или Enter: ").strip() or None
         if product_id:
             try:
-                import uuid
                 uuid.UUID(product_id)
                 if not self.product_controller.get_by_id(product_id):
                     errors.append("Продукт с такова ID не съществува.")
             except:
                 errors.append("Невалиден формат за ID на продукт.")
-
 
         location_id = input("ID на локация или Enter: ").strip() or None
         if location_id:
@@ -453,7 +458,6 @@ class MovementView:
             except:
                 errors.append("Невалиден формат за ID на локация.")
 
-        #  User ID
         user_id = input("ID на потребител или Enter: ").strip() or None
         if user_id:
             try:
@@ -463,14 +467,12 @@ class MovementView:
             except:
                 errors.append("Невалиден формат за ID на потребител.")
 
-        # If errors - show all and stop
         if errors:
             print("\n[!] Открити са грешки:")
             for e in errors:
                 print(" - " + e)
             print("\nМоля, коригирайте и опитайте отново.\n")
             return
-
 
         results = self.movement_controller.advanced_filter(
             movement_type=movement_type,
