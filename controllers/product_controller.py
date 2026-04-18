@@ -33,11 +33,11 @@ class ProductController:
         self.products: List[Product] = []
         self._load_products()
 
-        # Закачат се отвън (явно, без магия)
+        # Закачат се отвън
         self.supplier_controller = None
         self.inventory_controller = None
 
-    # ================= INTERNAL HELPERS =================
+    # INTERNAL HELPERS
 
     @staticmethod
     def _generate_id() -> str:
@@ -58,7 +58,7 @@ class ProductController:
             for p_data in raw
         ]
 
-    # ================= READ =================
+    # READ
 
     def get_all(self) -> List[Product]:
         return self.products
@@ -73,7 +73,7 @@ class ProductController:
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-    # ================= CREATE =================
+
 
     def add(self, product_data: dict, user_id: str) -> Product:
         """
@@ -138,7 +138,6 @@ class ProductController:
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
         return product
 
-    # ================= UPDATE =================
 
     def update_product(self,
                        product_id: str,
@@ -224,7 +223,6 @@ class ProductController:
         self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
         return True
 
-    # ================= DELETE =================
 
     def delete_by_id(self, product_id: str, user_id: str) -> bool:
         ProductValidator.validate_product_exists(product_id, self)
@@ -252,14 +250,12 @@ class ProductController:
 
         return False
 
-    # ================= INVENTORY =================
-
+    # INVENTORY
     def get_total_stock(self, product_id: str) -> float:
         if not self.inventory_controller:
             return 0.0
         return self.inventory_controller.get_total_stock(product_id)
 
-    # ================= FILTERS =================
 
     def search(self, keyword: str) -> List[Product]:
         return filter_search(self.products, keyword)
@@ -308,7 +304,7 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
 
-    # ================= ANALYTICS =================
+
 
     def average_price(self) -> float:
         return calculate_average_price(self.products)
@@ -337,7 +333,6 @@ class ProductController:
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
 
-    # ================= SAVE =================
 
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

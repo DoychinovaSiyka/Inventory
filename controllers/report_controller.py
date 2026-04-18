@@ -18,9 +18,8 @@ class ReportController:
         self.location_controller = location_controller
         self.inventory_controller = inventory_controller
 
-    # ---------------------------------------------------------
+
     #  Справка за движения
-    # ---------------------------------------------------------
     def report_movements(self):
         data = []
         for m in self.movement_controller.movements:
@@ -42,9 +41,8 @@ class ReportController:
             })
         return ReportResult(data)
 
-    # ---------------------------------------------------------
+
     #  Всички продажби (фактури)
-    # ---------------------------------------------------------
     def report_sales(self):
         invoices = self.invoice_controller.get_all()
         data = []
@@ -60,9 +58,8 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
+
     #  Търсене по клиент
-    # ---------------------------------------------------------
     def report_sales_by_customer(self, customer: str):
         customer = customer.lower()
         invoices = self.invoice_controller.get_all()
@@ -81,9 +78,8 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
-    #  Търсене по продукт
-    # ---------------------------------------------------------
+
+
     def report_sales_by_product(self, product: str):
         product = product.lower()
         invoices = self.invoice_controller.get_all()
@@ -102,9 +98,8 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
+
     #  Търсене по дата
-    # ---------------------------------------------------------
     def report_sales_by_date(self, date: str):
         invoices = self.invoice_controller.get_all()
 
@@ -122,9 +117,8 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
+
     #  Доставки
-    # ---------------------------------------------------------
     def report_deliveries_all(self):
         data = []
         for m in self.movement_controller.movements:
@@ -155,9 +149,8 @@ class ReportController:
         filtered = [d for d in res.data if keyword in str(d).lower()]
         return ReportResult(filtered)
 
-    # ---------------------------------------------------------
+
     #  Оборот по дни
-    # ---------------------------------------------------------
     def report_turnover_by_day(self):
         invoices = self.invoice_controller.get_all()
         daily = {}
@@ -172,9 +165,8 @@ class ReportController:
         data = [{"date": d, "count": v["count"], "total": v["total"]} for d, v in daily.items()]
         return ReportResult(data)
 
-    # ---------------------------------------------------------
-    #  Най-продавани продукти — ОПРАВЕНО (ползва OUT движения)
-    # ---------------------------------------------------------
+
+    #  Най-продавани продукти —  (ползва OUT движения)
     def report_top_products(self):
         stats = {}
 
@@ -204,10 +196,7 @@ class ReportController:
 
 
 
-
-    # ---------------------------------------------------------
     #  ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ (Избор: 1)
-    # ---------------------------------------------------------
     def report_inventory_summary(self):
         data = []
 

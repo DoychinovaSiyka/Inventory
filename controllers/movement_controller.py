@@ -27,7 +27,7 @@ class MovementController:
         self.movements: List[Movement] = []
         self._load_movements()
 
-    # INTERNAL HELPERS
+
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]

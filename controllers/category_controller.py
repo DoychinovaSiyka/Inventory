@@ -50,7 +50,7 @@ class CategoryController:
 
         return category
 
-    # UPDATE NAME
+
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
@@ -85,7 +85,7 @@ class CategoryController:
         self._log(user_id, "EDIT_CATEGORY", "Описание обновено")
         return True
 
-    # UPDATE PARENT
+
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         # Ако родителят е същият - няма нужда от запис
