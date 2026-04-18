@@ -1,3 +1,5 @@
+import re
+
 class CategoryValidator:
 
     @staticmethod
@@ -15,6 +17,10 @@ class CategoryValidator:
         if len(cleaned) > 50:
             raise ValueError("Името не може да надвишава 50 символа.")
 
+        # Разрешаваме букви, цифри, интервали, тирета (всички видове), кавички, запетайки, точки и скоби
+        if not re.match(r'^[A-Za-zА-Яа-я0-9 \-–—.,()"„“]+$', cleaned):
+            raise ValueError("Името съдържа невалидни символи.")
+
     @staticmethod
     def validate_unique(name, existing_categories):
         target = name.strip().lower()
@@ -28,12 +34,23 @@ class CategoryValidator:
 
     @staticmethod
     def validate_description(description):
-        if description is None or description == "":
+        if description is None or description.strip() == "":
             return
+
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
-        if len(description) > 200:
+
+        cleaned = description.strip()
+
+        if len(cleaned) < 3:
+            raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
+
+        if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
+
+        # Разрешаваме нормална пунктуация + Unicode тирета
+        if not re.match(r'^[A-Za-zА-Яа-я0-9 \-–—.,!?()\"„“]+$', cleaned):
+            raise ValueError("Описанието съдържа невалидни символи.")
 
     @staticmethod
     def validate_parent_id(parent_id, category_id):
@@ -41,18 +58,27 @@ class CategoryValidator:
             raise ValueError("Категория не може да бъде подкатегория на самата себе си.")
 
     @staticmethod
+    def validate_parent_exists(parent_id, categories):
+        if parent_id is None or parent_id == "":
+            return
+        exists = any(str(c.category_id) == str(parent_id) for c in categories)
+        if not exists:
+            raise ValueError("Родителската категория не съществува.")
+
+    @staticmethod
     def validate_parent_choice(choice):
         if choice is None or choice.strip() == "":
             return None
-        if not choice.isdigit():
-            raise ValueError("Изборът за родител трябва да е число.")
-        return int(choice)
 
-    @staticmethod
-    def validate_category_choice(choice):
-        if not choice.isdigit():
-            raise ValueError("Изборът трябва да е число.")
-        return int(choice)
+        cleaned = choice.strip()
+
+        if cleaned.isdigit():
+            return int(cleaned)
+
+        if re.match(r"^[A-Za-z0-9\-\_]+$", cleaned):
+            return cleaned
+
+        raise ValueError("Невалиден формат за родителска категория.")
 
     @staticmethod
     def validate_no_cycle(category_id, parent_id, all_categories):
@@ -72,18 +98,10 @@ class CategoryValidator:
         for c in all_categories:
             if c.parent_id == category_id:
                 raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
+
         for p in products:
             if p.category_id == category_id:
                 raise ValueError("Категорията съдържа продукти и не може да бъде изтрита.")
-
-    @staticmethod
-    def validate_parent_exists(parent_id, categories):
-        if parent_id is None:
-            return
-        exists = any(str(c.category_id) == str(parent_id) for c in categories)
-        if not exists:
-            raise ValueError("Родителската категория не съществува.")
-
 
     @staticmethod
     def validate_exists(category_id, controller):

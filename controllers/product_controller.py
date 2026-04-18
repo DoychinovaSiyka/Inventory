@@ -6,7 +6,7 @@ from models.product import Product
 from validators.product_validator import ProductValidator
 from filters.product_filters import (
     filter_search, filter_by_multiple_category_ids, filter_by_category,
-    filter_by_supplier, filter_by_price_range, filter_by_quantity_range,
+    filter_by_supplier, filter_by_price_range,
     filter_low_stock, filter_warehouses, filter_combined
 )
 
@@ -23,7 +23,9 @@ from analytics.product_analytics import (
 
 
 class ProductController:
-    """Контролерът управлява продуктите в системата — чист MVC, без магии."""
+    """Контролерът управлява продуктите в системата — чист MVC, без магии.
+       Продуктът е каталоген запис, НЕ носи наличности и НЕ носи склад.
+    """
 
     def __init__(self, repo, category_controller, activity_log_controller=None):
         self.repo = repo
@@ -73,21 +75,20 @@ class ProductController:
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-
+    # CREATE
 
     def add(self, product_data: dict, user_id: str) -> Product:
         """
         Добавя нов продукт.
-        quantity се използва само за първоначално зареждане → автоматично IN движение.
+        ВАЖНО:
+        - quantity вече НЕ се използва
+        - location_id вече НЕ се използва
+        - НЯМА автоматично IN движение
         """
 
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
         ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
-        ProductValidator.validate_unique_name_in_location(
-            product_data['name'],
-            product_data.get('location_id', 'W1'),
-            self.products
-        )
+        ProductValidator.validate_name(product_data['name'])
 
         now = self._now()
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
@@ -96,12 +97,10 @@ class ProductController:
             product_id=self._generate_id(),
             name=product_data['name'],
             categories=categories,
-            quantity=float(product_data['quantity']),
             unit=product_data['unit'],
             description=product_data['description'],
             price=float(product_data['price']),
             supplier_id=product_data.get('supplier_id'),
-            location_id=product_data.get('location_id', 'W1'),
             tags=product_data.get('tags', []),
             created=now,
             modified=now
@@ -110,31 +109,18 @@ class ProductController:
         self.products.append(product)
         self.save_changes()
 
-        initial_qty = float(product_data['quantity'])
-        location_id = product_data.get('location_id', 'W1')
-
-        if self.inventory_controller and initial_qty > 0:
-            self.inventory_controller.increase_stock(
-                product_id=product.product_id,
-                product_name=product.name,
-                warehouse_id=location_id,
-                qty=initial_qty,
-                unit=product.unit
-            )
-
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
         return product
 
+    # UPDATE
 
     def update_product(self,
                        product_id: str,
                        new_name: Optional[str],
                        new_description: Optional[str],
                        new_price: float,
-                       new_quantity: Optional[float] = None,
                        new_unit: Optional[str] = None,
                        new_category_ids: Optional[List[str]] = None,
-                       new_location_id: Optional[str] = None,
                        new_supplier_id: Optional[str] = None,
                        new_tags: Optional[List[str]] = None,
                        user_id: str = "system") -> bool:
@@ -144,7 +130,6 @@ class ProductController:
         # Име
         if new_name and new_name.lower() != product.name.lower():
             ProductValidator.validate_name(new_name)
-            ProductValidator.validate_unique_name_in_location(new_name, product.location_id, self.products)
             product.name = new_name
 
         # Описание
@@ -153,32 +138,6 @@ class ProductController:
 
         # Цена
         product.price = ProductValidator.validate_price(new_price)
-
-        # Количество – директно, без hasattr, без магии
-        if new_quantity is not None and self.inventory_controller:
-            try:
-                new_q = ProductValidator.parse_float(new_quantity, "Количество")
-                current_total = self.inventory_controller.get_total_stock(product_id)
-                delta = new_q - current_total
-
-                if delta > 0:
-                    self.inventory_controller.increase_stock(
-                        product_id=product.product_id,
-                        product_name=product.name,
-                        warehouse_id=product.location_id,
-                        qty=delta,
-                        unit=product.unit
-                    )
-                elif delta < 0:
-                    self.inventory_controller.decrease_stock(
-                        product_id=product.product_id,
-                        warehouse_id=product.location_id,
-                        qty=abs(delta),
-                        unit=product.unit
-                    )
-
-            except ValueError:
-                pass
 
         # Мерна единица
         if new_unit is not None and new_unit.strip() and new_unit != product.unit:
@@ -189,10 +148,6 @@ class ProductController:
             ProductValidator.validate_category_exists(new_category_ids, self.category_controller)
             categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
             product.categories = categories
-
-        # Локация
-        if new_location_id is not None and new_location_id != product.location_id:
-            product.location_id = new_location_id
 
         # Доставчик
         if new_supplier_id is not None:
@@ -210,6 +165,7 @@ class ProductController:
         self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name} (ID: {product_id})")
         return True
 
+    # DELETE
 
     def delete_by_id(self, product_id: str, user_id: str) -> bool:
         ProductValidator.validate_product_exists(product_id, self)
@@ -237,12 +193,14 @@ class ProductController:
 
         return False
 
-    # INVENTORY
+    # INVENTORY HELPERS
+
     def get_total_stock(self, product_id: str) -> float:
         if not self.inventory_controller:
             return 0.0
         return self.inventory_controller.get_total_stock(product_id)
 
+    # SEARCH / FILTERS
 
     def search(self, keyword: str) -> List[Product]:
         return filter_search(self.products, keyword)
@@ -256,9 +214,6 @@ class ProductController:
     def search_by_price_range(self, min_price=None, max_price=None):
         return filter_by_price_range(self.products, min_price, max_price)
 
-    def search_by_quantity_range(self, min_qty=None, max_qty=None):
-        return filter_by_quantity_range(self.products, min_qty, max_qty)
-
     def search_by_category(self, category_id: str):
         return filter_by_category(self.products, category_id)
 
@@ -269,8 +224,6 @@ class ProductController:
                         keyword=None,
                         min_price=None,
                         max_price=None,
-                        min_quantity=None,
-                        max_quantity=None,
                         category_id=None,
                         supplier_id=None,
                         location_id=None):
@@ -281,8 +234,6 @@ class ProductController:
             keyword=keyword,
             min_price=min_price,
             max_price=max_price,
-            min_quantity=min_quantity,
-            max_quantity=max_quantity,
             category_id=category_id,
             supplier_id=supplier_id,
             location_id=location_id
@@ -291,7 +242,7 @@ class ProductController:
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
 
-
+    # ANALYTICS
 
     def average_price(self) -> float:
         return calculate_average_price(self.products)
@@ -320,6 +271,7 @@ class ProductController:
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
 
+    # SAVE
 
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

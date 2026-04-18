@@ -1,38 +1,14 @@
 [
     {
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
         "first_name": "Admin",
-        "last_name": "User",
-        "email": "admin@example.com",
+        "last_name": "System",
+        "email": "admin@system.local",
         "username": "admin",
         "password": "97100109105110495051",
         "role": "Admin",
         "status": "Active",
-        "created": "2026-03-14 16:04:53",
-        "modified": "2026-03-14 16:04:53"
-    },
-    {
-        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
-        "first_name": "Operator",
-        "last_name": "User",
-        "email": "operator@example.com",
-        "username": "operator",
-        "password": "11111210111497116111114495051",
-        "role": "Operator",
-        "status": "Active",
-        "created": "2026-03-14 16:04:53",
-        "modified": "2026-03-14 16:04:53"
-    },
-    {
-        "user_id": "d1f7a3c9-2b4e-4e8f-9c1d-5a7e3f9b8d55",
-        "first_name": "Ivan",
-        "last_name": "Petrov",
-        "email": "ivan@example.com",
-        "username": "ivan",
-        "password": "116101115116495051",
-        "role": "Operator",
-        "status": "Active",
-        "created": "2026-03-14 16:04:53",
-        "modified": "2026-04-15 10:39:00"
+        "created": "2026-04-18 17:53:20",
+        "modified": "2026-04-18 17:53:20"
     }
 ]

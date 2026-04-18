@@ -11,6 +11,7 @@ class SupplierController:
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
+
     # INTERNAL HELPERS
     @staticmethod
     def _now() -> str:

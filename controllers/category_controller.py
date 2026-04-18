@@ -10,7 +10,7 @@ from analytics.category_analytics import build_category_tree
 
 class CategoryController:
     """ Контролер за категории. Отговаря за координация между валидатори, модели и хранилище.
-    Не съдържа бизнес логика – само orchestration."""
+    Не съдържа бизнес логика."""
 
     def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
@@ -59,10 +59,8 @@ class CategoryController:
         if category.name == new_name:
             return True
 
-        CategoryValidator.validate_unique(
-            new_name,
-            [c for c in self.categories if c.category_id != category_id]
-        )
+        CategoryValidator.validate_unique(new_name,
+                                          [c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
         category.update_modified()
@@ -129,7 +127,7 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]
 
-    # Дърво на категории (външна аналитична функция)
+    # Дърво на категории - външна аналитична функция
     def get_category_tree(self) -> List[dict]:
         return build_category_tree(self.categories)
 

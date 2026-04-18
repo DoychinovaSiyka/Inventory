@@ -7,6 +7,7 @@ from filters.stocklog_filters import (filter_by_location, filter_by_product, fil
 
 
 
+
 class StockLogController:
     """ Контролер за логове на складови операции. Координира валидатор, модел, филтри и хранилище. Не съдържа бизнес логика."""
 

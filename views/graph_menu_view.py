@@ -25,7 +25,6 @@ class GraphView:
 
     def _setup_network(self):
         """Дефинираме графа от складове и връзките между тях."""
-        # Важно: ID-тата трябва да съвпадат точно с тези в inventory.json (W1, W2...)
         warehouses = [
             Warehouse("W1", "София"),
             Warehouse("W2", "Пловдив"),
@@ -38,14 +37,20 @@ class GraphView:
             self.graph.add_warehouse(w)
 
         # Реални пътни разстояния (тегла на ребрата)
-        self.graph.add_edge("W1", "W2", 150)  # София - Пловдив
-        self.graph.add_edge("W2", "W4", 250)  # Пловдив - Бургас
-        self.graph.add_edge("W4", "W3", 130)  # Бургас - Варна
-        self.graph.add_edge("W1", "W5", 250)  # София - Смолян
-        self.graph.add_edge("W5", "W3", 350)  # Смолян - Варна
+        self.graph.add_edge("W1", "W2", 150)
+        self.graph.add_edge("W2", "W4", 250)
+        self.graph.add_edge("W4", "W3", 130)
+        self.graph.add_edge("W1", "W5", 250)
+        self.graph.add_edge("W5", "W3", 350)
 
     def calculate_best_delivery(self, _):
-        """Изчислява най-краткия път до склад, който има търсената стока."""
+        """ ЛОГИКА НА МОДУЛА:
+        Ако продуктът е наличен в стартовия склад - няма доставка.
+        Ако продуктът е наличен само в един склад - изчисляваме разстоянието до него.
+        Ако продуктът е наличен в няколко склада - Dijkstra намира най-близкия.
+        Ако продуктът не е наличен никъде - съобщение.
+        Ако няма път между складовете - съобщение."""
+
         product_name = input("Име на стока: ").strip()
         if not product_name:
             print("[!] Моля, въведете име на стока.")
@@ -59,51 +64,60 @@ class GraphView:
             print(f"Достъпни локации: {', '.join(self.graph.nodes.keys())}")
             return
 
-        #  Намираме складовете, които имат наличност от продукта
-        # Този метод вече е оправихме в InventoryController да ползва self.data
+        # Намираме складовете, които имат наличност от продукта
         possible_sources = self.inventory_controller.get_warehouses_with_product(product_name)
+        possible_sources = [str(s).upper() for s in possible_sources]
 
-        # Филтрираме текущия склад (не ни трябва път до нас самите)
-        other_sources = [s for s in possible_sources if str(s).upper() != my_location]
-
-        if not other_sources:
-            # Проверяваме дали изобщо има такава стока някъде
-            if my_location in [str(s).upper() for s in possible_sources]:
-                print(f"\n[*] Продуктът '{product_name}' е наличен само при вас ({my_location}).")
-            else:
-                print(f"\n[!] Продуктът '{product_name}' не е намерен в нито един склад.")
+        # Продуктът е наличен в стартовия склад
+        if my_location in possible_sources:
+            print(f"\n[*] Продуктът '{product_name}' е наличен във вашия склад ({my_location}).")
+            print("Няма нужда от доставка.")
             return
 
+        # Продуктът не е наличен в стартовия склад
+        print(f"\n[!] Продуктът '{product_name}' не е наличен в {my_location}.")
+        print("Търся най-близкия склад с наличност...\n")
 
-        # Изпълняваме алгоритъма на Дейкстра от нашата локация
+        # Филтрираме само складове, които имат наличност
+        other_sources = [s for s in possible_sources if s != my_location]
+
+        # Продуктът не е наличен никъде
+        if not other_sources:
+            print(f"[!] Продуктът '{product_name}' не е намерен в нито един склад.")
+            return
+
+        # Продуктът е наличен само в един склад
+        if len(other_sources) == 1:
+            only_source = other_sources[0]
+            print(f"[*] Продуктът е наличен само в един склад: {only_source}.")
+            print("Изчислявам разстоянието...\n")
+
+        # Стартираме Dijkstra от стартовия склад
         distances, predecessors = self.graph.dijkstra(my_location)
 
-        #  Филтрираме само тези складове със стока, до които реално има път
+        # Филтрираме само достижимите складове
         reachable_sources = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
 
+        # Има складове с наличност, но няма път до тях
         if not reachable_sources:
             print(f"\n[!] Стоката е налична в {other_sources}, но няма сухопътна връзка до тях.")
             return
 
-        # Избираме източника с най-малко разстояние
+        #  Продуктът е наличен в няколко склада - намираме най-близкия
         best_source = min(reachable_sources, key=lambda w: distances[w])
         shortest_distance = distances[best_source]
 
-        # Възстановяваме маршрута стъпка по стъпка
+        # Възстановяваме маршрута
         path = []
         current_step = best_source
-        try:
-            while current_step is not None:
-                path.append(current_step)
-                if current_step == my_location:
-                    break
-                current_step = predecessors.get(current_step)
-            path.reverse()
-        except Exception:
-            print("\n[!] Възникна грешка при генерирането на маршрута.")
-            return
+        while current_step is not None:
+            path.append(current_step)
+            if current_step == my_location:
+                break
+            current_step = predecessors.get(current_step)
+        path.reverse()
 
-        # Визуализация на резултата
+
         source_name = self.graph.nodes[best_source].name
         print("\n" + "═" * 45)
         print("         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")

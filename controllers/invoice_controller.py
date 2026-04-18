@@ -10,8 +10,7 @@ from filters.invoice_filters import (filter_by_customer, filter_by_product,
 
 
 class InvoiceController:
-    """Чист MVC контролер – съдържа само CRUD и координация."""
-
+    """Контролер – съдържа само CRUD и координация."""
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller

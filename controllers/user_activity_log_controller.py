@@ -12,6 +12,7 @@ class UserActivityLogController:
         # по‑професионално и следва SOLID принципите.
         self.repo = JSONRepository(filepath)
 
+
     # Вътрешен метод за генериране на уникално ID за всеки лог
     @staticmethod
     def _generate_log_id():

@@ -1,33 +1,33 @@
+import uuid
 from datetime import datetime
 from models.category import Category
 from validators.product_validator import ProductValidator
 
 
 class Product:
-    def __init__(self, product_id, name, categories, quantity, unit, description, price,
-                 supplier_id=None, tags=None, created=None, modified=None, location_id="W1"):
+    """
+    МОДЕЛ НА ПРОДУКТ
+    Продуктът е чист запис: име, описание, цена, категории, доставчик, тагове
+    """
 
-        self.product_id = str(product_id) if product_id else None
+    def __init__(self, product_id, name, categories, unit, description, price,
+                 supplier_id=None, tags=None, created=None, modified=None):
+
+        # ако няма подадено id → генерираме UUID
+        self.product_id = str(product_id) if product_id else str(uuid.uuid4())
         self.name = name
 
-        # Категориите са списък от Category или ID
         self.categories = categories if isinstance(categories, list) else []
 
-        # ВАЖНО: quantity вече НЕ е наличност!
-        # Използва се само при първоначално създаване.
-        self.quantity = float(quantity)
-
-        self.price = price
         self.unit = unit if unit else "бр."
         self.description = description
+        self.price = float(price)
         self.supplier_id = str(supplier_id) if supplier_id else None
         self.tags = tags if isinstance(tags, list) else []
-        self.location_id = str(location_id)
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now
-
 
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -45,13 +45,11 @@ class Product:
             "product_id": self.product_id,
             "name": self.name,
             "categories": json_categories,
-            "quantity": self.quantity,  # историческо поле, НЕ наличност
             "unit": self.unit,
             "description": self.description,
             "price": self.price,
             "supplier_id": self.supplier_id,
             "tags": self.tags,
-            "location_id": self.location_id,
             "created": self.created,
             "modified": self.modified
         }
@@ -73,20 +71,17 @@ class Product:
             fixed_categories = raw_categories
 
         return Product(
-            product_id=data.get("product_id"),
+            product_id=data.get("product_id"),  # ако липсва → ще се генерира UUID
             name=data.get("name", "Неизвестен"),
             categories=fixed_categories,
-            quantity=data.get("quantity", 0),
             unit=data.get("unit", "бр."),
             description=data.get("description", ""),
             price=data.get("price", 0),
             supplier_id=data.get("supplier_id"),
             tags=data.get("tags", []),
-            location_id=data.get("location_id", "W1"),
             created=data.get("created"),
             modified=data.get("modified")
         )
 
     def __str__(self):
-        # quantity вече НЕ е наличност  не го показваме
         return f"{self.name} | {self.price} лв. | {self.unit}"

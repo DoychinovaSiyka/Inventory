@@ -15,7 +15,6 @@ from views.operator_menu_view import OperatorMenuView
 from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
 from views.password_utils import input_password
-
 from storage.json_repository import JSONRepository
 
 
@@ -25,8 +24,9 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-
+    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА ХРАНИЛИЩАТА
+    # -----------------------------
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -39,10 +39,12 @@ class InventoryApplication:
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-
+    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
+    # -----------------------------
     def _init_controllers(self):
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
+
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -50,25 +52,19 @@ class InventoryApplication:
         self.stocklog_controller = StockLogController(self.stocklog_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # 1. InventoryController (Инициализираме го преди продуктите)
+        # InventoryController – вече НЕ се инициализира от продукти
         self.inventory_controller = InventoryController(self.inventory_repo)
 
-        # 2. ProductController
+        # ProductController
         self.product_controller = ProductController(
             self.product_repo,
             self.category_controller,
             self.activity_log_controller
         )
         self.product_controller.supplier_controller = self.supplier_controller
-        # Закачаме инвентара към product_controller веднага
         self.product_controller.inventory_controller = self.inventory_controller
 
-        # Ако inventory.json е празен → зареждаме от продуктите
-        if not self.inventory_controller.data.get("products"):
-            products = self.product_controller.get_all()
-            self.inventory_controller.initialize_from_products(products)
-
-        # 3. MovementController (НОВИЯТ)
+        # MovementController
         self.movement_controller = MovementController(
             self.movement_repo,
             self.product_controller,
@@ -81,7 +77,7 @@ class InventoryApplication:
             self.supplier_controller
         )
 
-        # 4. ReportController
+        # ReportController
         self.report_controller = ReportController(
             self.report_repo,
             self.product_controller,
@@ -91,17 +87,16 @@ class InventoryApplication:
             self.inventory_controller
         )
 
-        # 5. Логистичен модул (Dijkstra)
-        # Тук предаваме нужните контролери за работа на графа
+        # Логистичен модул (Dijkstra)
         self.logistic_service = GraphView(
             self.inventory_controller,
             self.location_controller
         )
 
-
+    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА МЕНЮТАТА
+    # -----------------------------
     def _init_menus(self):
-        # Речникът с контролери, който се предава на изгледите (Views)
         self.controllers = {
             "user": self.user_controller,
             "product": self.product_controller,
@@ -119,8 +114,9 @@ class InventoryApplication:
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
-
+    # -----------------------------
     #   ПРОЦЕС НА ВХОД
+    # -----------------------------
     def _login_flow(self):
         while True:
             try:
@@ -149,8 +145,9 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"\n[!] {e}\nОпитайте отново.\n")
 
-
+    # -----------------------------
     #   АНОНИМЕН ДОСТЪП
+    # -----------------------------
     def _anonymous_flow(self):
         guest_user = self.user_controller.create_anonymous_user()
         self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN", "Анонимен достъп.")
@@ -159,8 +156,9 @@ class InventoryApplication:
 
         self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT", "Анонимен изход.")
 
-
+    # -----------------------------
     #   СТАРТ НА ПРИЛОЖЕНИЕТО
+    # -----------------------------
     def run(self):
         while True:
             print("\n" + "=" * 31)
