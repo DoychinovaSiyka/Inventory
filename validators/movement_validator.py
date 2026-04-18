@@ -63,8 +63,6 @@ class MovementValidator:
             raise ValueError("Цената не може да е отрицателна.")
         return round(value, 2)
 
-
-
     @staticmethod
     def validate_user_exists(user_id, user_controller):
         MovementValidator.validate_uuid(user_id, "User ID")
@@ -79,7 +77,10 @@ class MovementValidator:
 
     @staticmethod
     def validate_location_exists(location_id, location_controller):
-        MovementValidator.validate_uuid(location_id, "Location ID")
+        # Локациите НЕ са UUID → НЕ ги валидираме като UUID
+        if not isinstance(location_id, str) or location_id.strip() == "":
+            raise ValueError("Location ID е невалиден.")
+
         if not location_controller.get_by_id(location_id):
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
@@ -90,7 +91,6 @@ class MovementValidator:
         MovementValidator.validate_uuid(supplier_id, "Supplier ID")
         if not supplier_controller.get_by_id(supplier_id):
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
-
 
     # BUSINESS RULES FOR IN / OUT
     @staticmethod
@@ -111,26 +111,16 @@ class MovementValidator:
             if available < quantity:
                 raise ValueError(f"Недостатъчна наличност! В този склад има само {available} {product.unit}.")
 
-
     @staticmethod
     def validate_move_locations(from_location_id, to_location_id):
         if str(from_location_id) == str(to_location_id):
             raise ValueError("MOVE трябва да е между различни локации.")
 
     @staticmethod
-    def validate_move_allowed(product, from_location_id, to_location_id):
-        current_loc = str(product.location_id)
-        if str(to_location_id) == current_loc:
-            raise ValueError("Не може да преместите продукта в същия склад, в който вече се намира.")
-        if str(from_location_id) != current_loc:
-            raise ValueError("Не може да преместите продукт от склад, в който той не се намира.")
-
-    @staticmethod
     def validate_move_stock(product_id, from_location_id, quantity, inventory_controller):
         available = inventory_controller.get_stock_for_location(product_id, from_location_id)
         if available < quantity:
             raise ValueError("Недостатъчна наличност в този склад за извършване на трансфер.")
-
 
     @staticmethod
     def validate_date(date_str):

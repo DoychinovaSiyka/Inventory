@@ -132,7 +132,6 @@
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-07 19:41:39"
     },
-
     {
         "log_id": "04f9a44c-fe91-4d47-b026-9186775ef57f",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
@@ -2176,5 +2175,26 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-18 11:22:15"
+    },
+    {
+        "log_id": "9b3834aa-ab50-42d0-820f-a9864f9b21ce",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 11:50:42"
+    },
+    {
+        "log_id": "5cce9479-48d4-49ed-a4b5-d654b4689971",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 11:56:26"
+    },
+    {
+        "log_id": "f7f0268b-dbea-414b-a174-ac346a23c19a",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: jwoe",
+        "timestamp": "2026-04-18 11:57:07"
     }
 ]

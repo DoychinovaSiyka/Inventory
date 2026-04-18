@@ -75,8 +75,14 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Описание (може да е празно, не го валидираме строго)
-        description = input("Описание: ").strip()
+        # Описание (строг режим – валидира се веднага)
+        while True:
+            description = input("Описание: ").strip()
+            try:
+                ProductValidator.validate_description(description)
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
 
         # Цена (строг режим – докато не е валидна)
         while True:

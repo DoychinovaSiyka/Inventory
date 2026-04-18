@@ -462,5 +462,21 @@
         "location_id": "W1",
         "created": "2026-04-17T22:06:00.628896",
         "modified": "2026-04-17T22:06:00.628896"
+    },
+    {
+        "product_id": "dc6dc03d-bf01-4b53-a58b-daa51f90efe1",
+        "name": "jwoe",
+        "categories": [
+            "12bac240-f22b-499a-80e5-6608c71caac1"
+        ],
+        "quantity": 0.0,
+        "unit": "кг.",
+        "description": "joiqeuop",
+        "price": 0.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W5",
+        "created": "2026-04-18T11:57:07.107798",
+        "modified": "2026-04-18T11:57:07.107798"
     }
 ]
