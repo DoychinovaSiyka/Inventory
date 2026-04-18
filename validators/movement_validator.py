@@ -3,19 +3,27 @@ import uuid
 
 
 class MovementValidator:
-
+    # -----------------------------
     # BASIC VALIDATION
+    # -----------------------------
     @staticmethod
     def validate_uuid(value, field_name):
         try:
             uuid.UUID(str(value))
-        except:
+        except Exception:
             raise ValueError(f"{field_name} е невалидно UUID.")
 
     @staticmethod
     def normalize_movement_type(movement_type):
         mt = str(movement_type).upper()
-        mapping = {"0": "IN", "1": "OUT", "2": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
+        mapping = {
+            "0": "IN",
+            "1": "OUT",
+            "2": "MOVE",
+            "IN": "IN",
+            "OUT": "OUT",
+            "MOVE": "MOVE"
+        }
         if mt not in mapping:
             raise ValueError("Невалиден тип движение. Допустими: IN, OUT, MOVE.")
         return mapping[mt]
@@ -41,7 +49,7 @@ class MovementValidator:
     def parse_quantity(quantity):
         try:
             q = float(quantity)
-        except:
+        except Exception:
             raise ValueError("Невалидно количество.")
         if q <= 0:
             raise ValueError("Количество трябва да е > 0.")
@@ -51,14 +59,17 @@ class MovementValidator:
     def parse_price(price):
         if price is None or str(price).strip() == "":
             raise ValueError("Цената е задължителна.")
+
         p = str(price).lower().strip()
         for token in ["лв.", "лв", "lv.", "lv", " "]:
             p = p.replace(token, "")
         p = p.replace(",", ".")
+
         try:
             value = float(p)
-        except:
+        except Exception:
             raise ValueError("Невалидна цена.")
+
         if value < 0:
             raise ValueError("Цената не може да е отрицателна.")
         return round(value, 2)
@@ -75,7 +86,9 @@ class MovementValidator:
         if not product_controller.get_by_id(product_id):
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
 
-
+    # -----------------------------
+    # LOCATION VALIDATION
+    # -----------------------------
     @staticmethod
     def validate_location_exists(location_id, location_controller):
         return MovementValidator.validate_location_id(location_id, location_controller)
@@ -87,7 +100,7 @@ class MovementValidator:
 
         loc = str(loc_id).strip()
 
-        # 1) Ако е цифра → индекс
+        # 1) Ако е цифра → индекс (1..N)
         if loc.isdigit():
             num = int(loc)
             locations = location_controller.get_all()
@@ -104,24 +117,42 @@ class MovementValidator:
         # 3) Всичко друго → грешка
         raise ValueError("Невалиден Location ID. Допустими: 1–9 или W1–W9.")
 
+    # -----------------------------
+    # BUSINESS RULES: IN / OUT
+    # -----------------------------
     @staticmethod
-    def validate_in_out_rules(movement_type, product, quantity, supplier_id, customer,
-                              inventory_controller, location_id):
+    def validate_in_out_rules(movement_type,
+                              product,
+                              quantity,
+                              supplier_id,
+                              customer,
+                              inventory_controller,
+                              location_id):
 
         mt = str(movement_type).upper()
 
+        # IN: изисква доставчик (може да е 'system' или реален)
         if mt == "IN":
-            if supplier_id is None:
-                raise ValueError("При IN движение трябва да има доставчик.")
+            if supplier_id is None or str(supplier_id).strip() == "":
+                raise ValueError("При IN движение трябва да има доставчик (може да е 'system').")
 
+        # OUT: изисква клиент и достатъчна наличност
         if mt == "OUT":
             if not customer:
                 raise ValueError("При OUT движение трябва да има клиент.")
 
+            if inventory_controller is None:
+                raise ValueError("InventoryController не е наличен за проверка на наличностите.")
+
             available = inventory_controller.get_stock_for_location(product.product_id, location_id)
             if available < quantity:
-                raise ValueError(f"Недостатъчна наличност! В този склад има само {available} {product.unit}.")
+                raise ValueError(
+                    f"Недостатъчна наличност! В този склад има само {available} {product.unit}."
+                )
 
+    # -----------------------------
+    # MOVE RULES
+    # -----------------------------
     @staticmethod
     def validate_move_locations(from_location_id, to_location_id):
         if str(from_location_id) == str(to_location_id):
@@ -129,13 +160,19 @@ class MovementValidator:
 
     @staticmethod
     def validate_move_stock(product_id, from_location_id, quantity, inventory_controller):
+        if inventory_controller is None:
+            raise ValueError("InventoryController не е наличен за проверка на наличностите.")
+
         available = inventory_controller.get_stock_for_location(product_id, from_location_id)
         if available < quantity:
             raise ValueError("Недостатъчна наличност в този склад за извършване на трансфер.")
 
+    # -----------------------------
+    # DATE
+    # -----------------------------
     @staticmethod
     def validate_date(date_str):
         try:
             datetime.strptime(date_str, "%Y-%m-%d")
-        except:
+        except Exception:
             raise ValueError("Невалидна дата. Форматът е YYYY-MM-DD.")

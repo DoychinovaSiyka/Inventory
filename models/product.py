@@ -16,7 +16,6 @@ class Product:
         # ако няма подадено id → генерираме UUID
         self.product_id = str(product_id) if product_id else str(uuid.uuid4())
         self.name = name
-
         self.categories = categories if isinstance(categories, list) else []
 
         self.unit = unit if unit else "бр."
@@ -24,7 +23,6 @@ class Product:
         self.price = float(price)
         self.supplier_id = str(supplier_id) if supplier_id else None
         self.tags = tags if isinstance(tags, list) else []
-
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now

@@ -25,6 +25,7 @@ from analytics.product_analytics import (
 class ProductController:
     """Контролерът управлява продуктите в системата — чист MVC, без магии.
        Продуктът е каталоген запис, НЕ носи наличности и НЕ носи склад.
+       Истината за наличностите е в movements + inventory.
     """
 
     def __init__(self, repo, category_controller, activity_log_controller=None):
@@ -38,6 +39,7 @@ class ProductController:
         # Закачат се отвън
         self.supplier_controller = None
         self.inventory_controller = None
+        self.movement_controller = None  # ВАЖНО: инжектира се от main.py
 
     # INTERNAL HELPERS
 
@@ -47,7 +49,7 @@ class ProductController:
 
     @staticmethod
     def _now() -> str:
-        return datetime.now().isoformat()
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def _log(self, user_id, action, message):
         if self.activity_log:
@@ -80,10 +82,8 @@ class ProductController:
     def add(self, product_data: dict, user_id: str) -> Product:
         """
         Добавя нов продукт.
-        ВАЖНО:
-        - quantity вече НЕ се използва
-        - location_id вече НЕ се използва
-        - НЯМА автоматично IN движение
+        - Product е чист каталоген запис.
+        - Началното количество се реализира чрез IN движение.
         """
 
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
@@ -106,10 +106,34 @@ class ProductController:
             modified=now
         )
 
+        # 1) Записваме продукта
         self.products.append(product)
         self.save_changes()
-
         self._log(user_id, "ADD_PRODUCT", f"Успешно добавен: {product.name}")
+
+        # 2) ВЗИМАМЕ quantity и location_id от product_data
+        quantity = product_data.get("quantity", None)
+        location_id = product_data.get("location_id", None)
+
+        # 3) Създаваме IN движение
+        if (
+            quantity is not None
+            and location_id is not None
+            and self.movement_controller is not None
+        ):
+            qty = float(quantity)
+            if qty > 0:
+                self.movement_controller.add(
+                    product_id=product.product_id,
+                    user_id=user_id,
+                    location_id=location_id,
+                    movement_type="IN",
+                    quantity=str(qty),
+                    description="Начално зареждане при създаване на продукт",
+                    price=str(product.price),
+                    supplier_id=product.supplier_id or "system"   # ← ОПРАВЕНО
+                )
+
         return product
 
     # UPDATE
@@ -119,8 +143,10 @@ class ProductController:
                        new_name: Optional[str],
                        new_description: Optional[str],
                        new_price: float,
+                       new_quantity: Optional[float] = None,
                        new_unit: Optional[str] = None,
                        new_category_ids: Optional[List[str]] = None,
+                       new_location_id: Optional[str] = None,
                        new_supplier_id: Optional[str] = None,
                        new_tags: Optional[List[str]] = None,
                        user_id: str = "system") -> bool:
@@ -138,6 +164,41 @@ class ProductController:
 
         # Цена
         product.price = ProductValidator.validate_price(new_price)
+
+        # КОРЕКЦИЯ НА КОЛИЧЕСТВОТО ЧРЕЗ ДВИЖЕНИЯ (НЕ В ПРОДУКТА)
+        if (
+            new_quantity is not None
+            and self.inventory_controller is not None
+            and self.movement_controller is not None
+        ):
+            try:
+                current_stock = self.inventory_controller.get_total_stock(product_id)
+                diff = float(new_quantity) - float(current_stock)
+
+                if diff > 0:
+                    self.movement_controller.add(
+                        product_id=product_id,
+                        user_id=user_id,
+                        location_id=new_location_id or "W1",
+                        movement_type="IN",
+                        quantity=str(diff),
+                        description="Корекция (+) от екрана за редакция на продукт",
+                        price=str(product.price),
+                        supplier_id=product.supplier_id or "system"
+                    )
+                elif diff < 0:
+                    self.movement_controller.add(
+                        product_id=product_id,
+                        user_id=user_id,
+                        location_id=new_location_id or "W1",
+                        movement_type="OUT",
+                        quantity=str(abs(diff)),
+                        description="Корекция (-) от екрана за редакция на продукт",
+                        price=str(product.price),
+                        supplier_id=product.supplier_id or "system"
+                    )
+            except Exception:
+                pass
 
         # Мерна единица
         if new_unit is not None and new_unit.strip() and new_unit != product.unit:

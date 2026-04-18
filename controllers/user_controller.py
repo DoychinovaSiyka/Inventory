@@ -29,10 +29,15 @@ class UserController:
         # Ако няма потребители → създаваме само администратор
         if not self.users:
             self._create_default_admin()
+            self._create_default_operator()   # ← ДОБАВЕНО
         else:
             # Ако липсва админ → създаваме
             if not any(u.role == "Admin" for u in self.users):
                 self._create_default_admin()
+
+            # Ако липсва оператор → създаваме
+            if not any(u.role == "Operator" for u in self.users):
+                self._create_default_operator()
 
     # ---------------------------------------------------------
     # INTERNAL HELPERS
@@ -166,6 +171,24 @@ class UserController:
         self.users.append(admin)
         self.save_changes()
 
+    def _create_default_operator(self):
+        """Създава оператор само ако липсва."""
+        operator = User(
+            user_id=str(uuid.uuid4()),
+            first_name="Operator",
+            last_name="User",
+            email="operator@example.com",
+            username="operator",
+            password=self._hash_password("operator123"),
+            role="Operator",
+            status="Active",
+            created=self._get_now(),
+            modified=self._get_now()
+        )
+
+        self.users.append(operator)
+        self.save_changes()
+
     # ---------------------------------------------------------
     # ANONYMOUS USER
     # ---------------------------------------------------------
@@ -184,3 +207,5 @@ class UserController:
             created=now,
             modified=now
         )
+
+# password - dimitar01

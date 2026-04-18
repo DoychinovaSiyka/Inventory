@@ -54,5 +54,278 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-18 18:33:16"
+    },
+    {
+        "log_id": "1377df3d-9fe9-4217-bac6-228fe828c215",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 18:46:13"
+    },
+    {
+        "log_id": "c7c495a7-6409-4786-8c83-70f5f2a7e744",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 19:57:31"
+    },
+    {
+        "log_id": "0e02b0e7-a08a-4e23-9d2a-25392ef6c677",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:12:26"
+    },
+    {
+        "log_id": "bd485f33-f6cb-4ac7-a44e-082f4738bd4c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-18 20:12:29"
+    },
+    {
+        "log_id": "165d9d39-fcce-4127-b8db-695f59f573b1",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:13:12"
+    },
+    {
+        "log_id": "c16e4d40-2793-46e6-8e70-b26a19ddb77e",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:14:17"
+    },
+    {
+        "log_id": "e2702701-e10d-4a2b-80a2-20d154f5a872",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-18 20:14:22"
+    },
+    {
+        "log_id": "84016a72-96f1-4543-9f0c-bc9c190c8e1c",
+        "user_id": "b5c1e7a9-3d4f-4f2a-9c8b-7e1f3a5d8c44",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-18 20:19:01"
+    },
+    {
+        "log_id": "2d4de2c5-6a17-46b4-bf43-129b85b9d5ec",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-18 20:21:24"
+    },
+    {
+        "log_id": "807030e5-2a5c-4547-9b10-9c55907c83ea",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGOUT",
+        "details": "Потребител operator излезе.",
+        "timestamp": "2026-04-18 20:21:28"
+    },
+    {
+        "log_id": "96e32687-2b0f-4a5a-a485-bb8ab55780da",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-18 20:21:40"
+    },
+    {
+        "log_id": "b047c8d3-6e30-427e-9221-f233e858b5d0",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGOUT",
+        "details": "Потребител operator излезе.",
+        "timestamp": "2026-04-18 20:21:55"
+    },
+    {
+        "log_id": "f6f1e917-d169-4dcd-b477-7c8c852a0260",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:22:01"
+    },
+    {
+        "log_id": "b75fa05b-f874-4d19-ad2d-b9ebe0068e15",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 20:37:58"
+    },
+    {
+        "log_id": "b289e376-2b1c-4663-8b4c-dd3995670cce",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:42:31"
+    },
+    {
+        "log_id": "1d1051a0-a87d-4757-a39c-be488ae79e54",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 20:44:12"
+    },
+    {
+        "log_id": "b66d8ba0-0134-47e0-89f6-82328fd3c33f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 20:46:51"
+    },
+    {
+        "log_id": "914e0afb-d8b8-4149-b365-bc0161d1784d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 20:47:53"
+    },
+    {
+        "log_id": "7e713dd7-6398-4d2b-b1cb-878ce56c3e49",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 21:39:31"
+    },
+    {
+        "log_id": "3fbc7e12-ffaf-47f0-8b85-4ca6276b8f06",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 21:40:32"
+    },
+    {
+        "log_id": "5ddb980e-2cbc-471e-9bc4-92b94004c7e4",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 21:44:35"
+    },
+    {
+        "log_id": "32ae8c00-122f-4ecf-9319-43dbeba76e05",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 21:45:52"
+    },
+    {
+        "log_id": "92f1ee5e-0486-41b0-8bfa-c3b01118f238",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 21:51:18"
+    },
+    {
+        "log_id": "b3705e5e-aead-4842-9c30-aec2bd57b2e2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 21:52:26"
+    },
+    {
+        "log_id": "cc0794c2-88fd-49ce-a713-7ea2cdfcbe1e",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Кисело мляко Родопско 3.6% (ID: 72d94c1a-0ccf-4c8b-873f-bc8c8c501444)",
+        "timestamp": "2026-04-18 21:53:09"
+    },
+    {
+        "log_id": "767081f4-fee0-42cc-b7d2-6b5049245ad3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 21:58:50"
+    },
+    {
+        "log_id": "44cacaef-d039-4063-aaf7-4ba8e35384a8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 22:00:00"
+    },
+    {
+        "log_id": "21bfc83a-2366-409a-9dd3-89fce5283628",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 22:08:49"
+    },
+    {
+        "log_id": "33a27ea9-c8d0-4633-8bf1-0986a82aeb6f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%",
+        "timestamp": "2026-04-18 22:10:12"
+    },
+    {
+        "log_id": "2294a271-8999-4332-8ba0-7fb534d4ae43",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Кисело мляко Родопско 3.6%, Qty: 1290.0, Price: 3.89",
+        "timestamp": "2026-04-18 22:10:12"
+    },
+    {
+        "log_id": "244a3340-2809-4b2f-85e7-d92e5fd17614",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 22:28:05"
+    },
+    {
+        "log_id": "3d4928bc-a5e5-4c31-9555-1191e31241b8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Кисело мляко Родопско 3.6%\"",
+        "timestamp": "2026-04-18 22:28:50"
+    },
+    {
+        "log_id": "1218086f-61e1-4716-b348-d60daccfeda7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Кисело мляко Родопско 3.6%\", Qty: 1290.0, Price: 3.89",
+        "timestamp": "2026-04-18 22:28:50"
+    },
+    {
+        "log_id": "d034534c-0dae-43de-9d08-0f0aef1f2e1d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:02:10"
+    },
+    {
+        "log_id": "cb4ab2c0-0184-429f-94cc-384bf2e55678",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:10:47"
+    },
+    {
+        "log_id": "41ddcfcd-3151-4ce1-8ff2-f173798e0e8e",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:13:25"
+    },
+    {
+        "log_id": "45e9718d-28f8-4e36-9ca2-7a80fbf3ee08",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:24:58"
+    },
+    {
+        "log_id": "d518701e-3465-4ded-927a-883f1a32a84a",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:32:13"
+    },
+    {
+        "log_id": "6575b9c9-ae20-4288-8af6-923839471b45",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 23:48:52"
     }
 ]

@@ -38,17 +38,34 @@ class CategoryView:
             print("Няма категории.")
             return
 
-        print("\nКатегории:\n")
-        roots = [c for c in categories if c.parent_id is None]
-        for root in roots:
-            print(f"- {root.name} (ID: {root.category_id})")
+        print("\nКатегории (йерархия):\n")
 
-            children = [c for c in categories if c.parent_id == root.category_id]
+        # намираме root категориите
+        roots = [c for c in categories if c.parent_id is None]
+        roots.sort(key=lambda x: x.name.lower())
+
+        def print_tree(cat, level, prefix):
+            indent = "   " * level
+
+            if level == 0:
+                # главна категория → номер
+                print(f"{prefix}. {cat.name} (ID: {cat.category_id})")
+            else:
+                # подкатегория → тире
+                print(f"{indent}- {cat.name} (ID: {cat.category_id})")
+
+            # деца
+            children = [c for c in categories if c.parent_id == cat.category_id]
+            children.sort(key=lambda x: x.name.lower())
+
             for child in children:
-                print(f"   - {child.name} (ID: {child.category_id})")
+                print_tree(child, level + 1, prefix)
+
+        # извеждаме root категориите с номерация
+        for i, root in enumerate(roots, 1):
+            print_tree(root, 0, str(i))
 
         print()
-
 
     # Добавяне на категория
     def add_category(self, _):

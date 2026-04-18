@@ -3,7 +3,6 @@ from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
 from controllers.supplier_controller import SupplierController
 from controllers.location_controller import LocationController
-from controllers.stocklog_controller import StockLogController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
@@ -33,7 +32,6 @@ class InventoryApplication:
         self.category_repo = JSONRepository("data/categories.json")
         self.supplier_repo = JSONRepository("data/suppliers.json")
         self.location_repo = JSONRepository("data/locations.json")
-        self.stocklog_repo = JSONRepository("data/stocklogs.json")
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
@@ -43,16 +41,17 @@ class InventoryApplication:
     #   ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
     # -----------------------------
     def _init_controllers(self):
+        # Логове на потребители (остават)
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
+        # Основни контролери
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
-        self.stocklog_controller = StockLogController(self.stocklog_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # InventoryController – вече НЕ се инициализира от продукти
+        # InventoryController
         self.inventory_controller = InventoryController(self.inventory_repo)
 
         # ProductController
@@ -64,18 +63,21 @@ class InventoryApplication:
         self.product_controller.supplier_controller = self.supplier_controller
         self.product_controller.inventory_controller = self.inventory_controller
 
-        # MovementController
+        # MovementController (БЕЗ stocklog_controller)
         self.movement_controller = MovementController(
             self.movement_repo,
             self.product_controller,
             self.user_controller,
             self.location_controller,
-            self.stocklog_controller,
+            None,  # stocklog_controller премахнат
             self.invoice_controller,
             self.activity_log_controller,
             self.inventory_controller,
             self.supplier_controller
         )
+
+        # Закачаме movement_controller към product_controller
+        self.product_controller.movement_controller = self.movement_controller
 
         # ReportController
         self.report_controller = ReportController(
