@@ -229,7 +229,6 @@ class ReportController:
         return ReportResult(data)
 
 
-    #  Жизнен цикъл на продукт
     def product_lifecycle(self, name: str):
         name = name.lower()
 

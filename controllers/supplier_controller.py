@@ -39,7 +39,7 @@ class SupplierController:
         sid = str(supplier_id)
         return next((s for s in self.suppliers if s.supplier_id == sid), None)
 
-    # UPDATE
+
     def update(self, supplier_id: str, name: Optional[str] = None, contact: Optional[str] = None,
                address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
@@ -57,7 +57,7 @@ class SupplierController:
         self.save_changes()
         return supplier
 
-    # DELETE
+
     def remove(self, supplier_id: str) -> bool:
         """ Изтрива доставчик след проверка за съществуване."""
         SupplierValidator.validate_exists(supplier_id, self)
@@ -66,7 +66,6 @@ class SupplierController:
         self.save_changes()
         return True
 
-    # SAVE
     def save_changes(self) -> None:
         """Записва всички доставчици в JSON хранилището."""
         self.repo.save([s.to_dict() for s in self.suppliers])

@@ -65,20 +65,47 @@ class ProductView:
     # CRUD
     def create_product(self, user):
         print("\n  Създаване на продукт  ")
-        name = input("Име: ").strip()
+
+        # Име
+        while True:
+            name = input("Име: ").strip()
+            try:
+                ProductValidator.validate_name(name)
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
+
+        # Описание (може да е празно, не го валидираме строго)
         description = input("Описание: ").strip()
-        price_raw = input("Цена: ")
-        quantity_raw = input("Начално количество (само за първоначално зареждане): ")
-        unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
 
-        try:
-            price = ProductValidator.parse_float(price_raw, "Цена")
-            quantity = ProductValidator.parse_float(quantity_raw, "Количество")
-        except ValueError as e:
-            print(e)
-            print("Моля, опитайте отново.\n")
-            return
+        # Цена (строг режим – докато не е валидна)
+        while True:
+            price_raw = input("Цена: ").strip()
+            try:
+                price = ProductValidator.parse_float(price_raw, "Цена")
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
 
+        # Начално количество (строг режим – докато не е валидно)
+        while True:
+            quantity_raw = input("Начално количество (само за първоначално зареждане): ").strip()
+            try:
+                quantity = ProductValidator.parse_float(quantity_raw, "Количество")
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
+
+        # Мерна единица (строг режим)
+        while True:
+            unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
+            try:
+                ProductValidator.validate_unit(unit)
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
+
+        # Категории
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
@@ -88,22 +115,22 @@ class ProductView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
 
-        cat_raw = input("Изберете категория (номер или Category ID): ").strip()
+        while True:
+            cat_raw = input("Изберете категория (номер или Category ID): ").strip()
+            try:
+                if cat_raw.isdigit():
+                    cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
+                    if cat_idx < 0 or cat_idx >= len(categories):
+                        raise ValueError("Невалиден избор за Категория.")
+                    category_id = categories[cat_idx].category_id
+                else:
+                    ProductValidator.validate_uuid(cat_raw, "Category ID")
+                    category_id = cat_raw
+                break
+            except Exception as e:
+                print(f"[!] {e}")
 
-        try:
-            if cat_raw.isdigit():
-                cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
-                if cat_idx < 0 or cat_idx >= len(categories):
-                    raise ValueError("Невалиден избор за Категория.")
-                category_id = categories[cat_idx].category_id
-            else:
-                ProductValidator.validate_uuid(cat_raw, "Category ID")
-                category_id = cat_raw
-        except Exception as e:
-            print(e)
-            print("Моля, опитайте отново.\n")
-            return
-
+        # Локации
         locations = self.location_controller.get_all()
         if not locations:
             print("Няма складове.")
@@ -113,28 +140,34 @@ class ProductView:
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
 
-        loc_raw = input("Изберете локация (номер или Location ID): ").strip()
-
-        try:
-            if loc_raw.isdigit():
-                loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
-                if loc_idx < 0 or loc_idx >= len(locations):
-                    raise ValueError("Невалиден избор за Локация.")
-                location_id = locations[loc_idx].location_id
-            else:
-                if not isinstance(loc_raw, str) or loc_raw.strip() == "":
-                    raise ValueError("Невалиден Location ID.")
-                location_id = loc_raw
-        except Exception as e:
-            print(e)
-            print("Моля, опитайте отново.\n")
-            return
+        while True:
+            loc_raw = input("Изберете локация (номер или Location ID): ").strip()
+            try:
+                if loc_raw.isdigit():
+                    loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
+                    if loc_idx < 0 or loc_idx >= len(locations):
+                        raise ValueError("Невалиден избор за Локация.")
+                    location_id = locations[loc_idx].location_id
+                else:
+                    if not isinstance(loc_raw, str) or loc_raw.strip() == "":
+                        raise ValueError("Невалиден Location ID.")
+                    location_id = loc_raw
+                break
+            except Exception as e:
+                print(f"[!] {e}")
 
         try:
             u_id = user.user_id
-            product_data = {"name": name, "category_ids": [category_id],
-                            "quantity": quantity, "unit": unit, "description": description,
-                            "price": price, "supplier_id": None, "location_id": location_id}
+            product_data = {
+                "name": name,
+                "category_ids": [category_id],
+                "quantity": quantity,
+                "unit": unit,
+                "description": description,
+                "price": price,
+                "supplier_id": None,
+                "location_id": location_id
+            }
 
             product = self.product_controller.add(product_data, u_id)
             print("Продуктът е създаден успешно.")
