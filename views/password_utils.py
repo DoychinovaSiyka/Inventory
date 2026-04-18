@@ -85,6 +85,7 @@ def format_table(columns, rows):
 
     return "\n".join([top_border, header, separator] + data_rows + [top_border])
 
+
 #  Декоратор за защита с парола
 def require_password(correct_password):
     def decorator(func):
@@ -106,6 +107,7 @@ def require_password(correct_password):
 
         return wrapper
     return decorator
+
 
 
 @require_password("parola123")  # защита с парола

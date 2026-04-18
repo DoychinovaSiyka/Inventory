@@ -84,6 +84,7 @@ class CategoryValidator:
         if not exists:
             raise ValueError("Родителската категория не съществува.")
 
+
     @staticmethod
     def validate_exists(category_id, controller):
         category = controller.get_by_id(category_id)

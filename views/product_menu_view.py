@@ -7,6 +7,7 @@ from views.product_sort_view import ProductSortView
 from views.password_utils import require_password
 from views.password_utils import format_table
 from validators.product_validator import ProductValidator
+from validators.movement_validator import MovementValidator
 
 
 class ProductView:
@@ -75,7 +76,6 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Описание
         while True:
             description = input("Описание: ").strip()
             try:
@@ -102,7 +102,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Мерна единица
+
         while True:
             unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
             try:
@@ -111,7 +111,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Категории
+        # КАТЕГОРИИ
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
@@ -125,18 +125,21 @@ class ProductView:
             cat_raw = input("Изберете категория (номер или Category ID): ").strip()
             try:
                 if cat_raw.isdigit():
-                    cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
-                    if cat_idx < 0 or cat_idx >= len(categories):
+                    idx = int(cat_raw)
+                    if idx < 0 or idx >= len(categories):
                         raise ValueError("Невалиден избор за Категория.")
-                    category_id = categories[cat_idx].category_id
+                    category_id = categories[idx].category_id
                 else:
                     ProductValidator.validate_uuid(cat_raw, "Category ID")
+                    if not self.category_controller.get_by_id(cat_raw):
+                        raise ValueError("Несъществуваща категория.")
                     category_id = cat_raw
                 break
             except Exception as e:
                 print(f"[!] {e}")
 
-        # Локации
+
+
         locations = self.location_controller.get_all()
         if not locations:
             print("Няма складове.")
@@ -149,20 +152,13 @@ class ProductView:
         while True:
             loc_raw = input("Изберете локация (номер или Location ID): ").strip()
             try:
-                if loc_raw.isdigit():
-                    loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
-                    if loc_idx < 0 or loc_idx >= len(locations):
-                        raise ValueError("Невалиден избор за Локация.")
-                    location_id = locations[loc_idx].location_id
-                else:
-                    if not isinstance(loc_raw, str) or loc_raw.strip() == "":
-                        raise ValueError("Невалиден Location ID.")
-                    location_id = loc_raw
+                # Използваме строгия валидатор → нормализира към W1–Wn
+                location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
                 break
             except Exception as e:
                 print(f"[!] {e}")
 
-        # Създаване
+        # СЪЗДАВАНЕ
         try:
             u_id = user.user_id
             product_data = {
@@ -208,28 +204,48 @@ class ProductView:
         new_qty_raw = input(f"Ново количество (текущо: {self.product_controller.get_total_stock(pid)}): ").strip()
         new_unit = input(f"Нова мерна единица ({product.unit}): ").strip() or product.unit
 
-        # Категории
+
         print("\nКатегории:")
         categories = self.category_controller.get_all()
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
+
         cat_raw = input("Нова категория (Enter за пропуск): ").strip()
         new_category_ids = None
-        if cat_raw:
-            if cat_raw.isdigit():
-                idx = int(cat_raw)
-                if 0 <= idx < len(categories):
-                    new_category_ids = [categories[idx].category_id]
-            else:
-                new_category_ids = [cat_raw]
 
-        # Локация
+        if cat_raw:
+            try:
+                if cat_raw.isdigit():
+                    idx = int(cat_raw)
+                    if idx < 0 or idx >= len(categories):
+                        raise ValueError("Невалиден избор за Категория.")
+                    new_category_ids = [categories[idx].category_id]
+                else:
+                    ProductValidator.validate_uuid(cat_raw, "Category ID")
+                    if not self.category_controller.get_by_id(cat_raw):
+                        raise ValueError("Несъществуваща категория.")
+                    new_category_ids = [cat_raw]
+            except Exception as e:
+                print(f"[!] {e}")
+                return
+
+
+        from validators.movement_validator import MovementValidator
+
         print("\nЛокации:")
         locations = self.location_controller.get_all()
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
         loc_raw = input("Нова локация (Enter за пропуск): ").strip()
-        new_location_id = loc_raw if loc_raw else None
+        new_location_id = None
+
+        if loc_raw:
+            try:
+                new_location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
+            except Exception as e:
+                print(f"[!] {e}")
+                return
 
         try:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
@@ -277,7 +293,7 @@ class ProductView:
             rows.append([
                 p.product_id,
                 p.name,
-                f"{stock} {p.unit}",
+                f"{stock:.2f} {p.unit}",
                 self.format_lv(p.price)
             ])
 

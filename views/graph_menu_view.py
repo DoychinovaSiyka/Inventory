@@ -74,6 +74,7 @@ class GraphView:
                 print(f"\n[!] Продуктът '{product_name}' не е намерен в нито един склад.")
             return
 
+
         # Изпълняваме алгоритъма на Дейкстра от нашата локация
         distances, predecessors = self.graph.dijkstra(my_location)
 

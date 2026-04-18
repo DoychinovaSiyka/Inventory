@@ -23,7 +23,7 @@ class LocationValidator:
         if capacity < 0:
             raise ValueError("Капацитетът трябва да е >= 0.")
 
-        return capacity  # връщаме нормализирана стойност
+        return capacity   # връщаме нормализирана стойност
 
 
     @staticmethod

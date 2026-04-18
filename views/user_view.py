@@ -9,6 +9,7 @@ class UserView:
         self.controller = controller
         self.menu = None  # менюто ще се създава динамично според ролята
 
+
     # Основно меню
     def show_menu(self, user: User):
         if user.role != "Admin":

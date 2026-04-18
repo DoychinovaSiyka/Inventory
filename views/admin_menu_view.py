@@ -49,6 +49,7 @@ class AdminMenuView:
         ])
 
 
+
     def show_menu(self, user):
         if user.role.lower() != "admin":
             print("Само администратор има достъп до това меню.")

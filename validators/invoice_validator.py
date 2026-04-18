@@ -113,7 +113,6 @@ class InvoiceValidator:
         InvoiceValidator.validate_unit_price(unit_price)
         InvoiceValidator.validate_total_price(total_price, quantity, unit_price)
         InvoiceValidator.validate_uuid(movement_id, "Movement ID")
-
         if date:
             InvoiceValidator.validate_date(date)
 

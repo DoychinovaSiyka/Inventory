@@ -10,6 +10,7 @@ class Menu:
         self.title = title
         self.items = items
 
+
     def show(self):
         print(f"\n   {self.title}   ")
         for item in self.items:
@@ -20,7 +21,6 @@ class Menu:
         for item in self.items:
             if item.key == choice:
                 return item.action(user)
-
         print("Невалиден избор.")
         return None
 

@@ -22,7 +22,6 @@ class SupplierView:
         is_admin = user.role == "Admin"
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
 
-
         # admin-only функции
         if is_admin:
             menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
@@ -42,7 +41,7 @@ class SupplierView:
         rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
         print("\n" + format_table(columns, rows))
 
-    # добавяне на доставчик (admin only)
+    # добавяне на доставчик - admin only
     def add_supplier(self, _):
         name = input("Име на доставчик: ").strip()
         contact = input("Контакт (телефон/имейл): ").strip()
@@ -53,7 +52,7 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # редактиране на доставчик (admin only)
+    # редактиране на доставчик - admin only
     def edit_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
         try:
@@ -75,7 +74,7 @@ class SupplierView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # изтриване на доставчик (admin only)
+    # изтриване на доставчик - admin only
     def delete_supplier(self, _):
         supplier_id = input("Въведете ID на доставчик: ").strip()
         try:

@@ -17,6 +17,7 @@ class AnonymousMenuView:
         self.system_info_view = SystemInfoView()
         self.menu = self._build_menu()  # Създавам менюто отделно
 
+
     # Създавам на менюто
     def _build_menu(self):
         return Menu("Меню за анонимен потребител", [

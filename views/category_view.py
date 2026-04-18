@@ -129,8 +129,6 @@ class CategoryView:
             print(f"{i}. {cat.name} (ID: {cat.category_id})")
 
         choice = input("Въведете номер или ID: ").strip()
-
-        # Ако е ID
         for cat in categories:
             if choice == cat.category_id:
                 return cat

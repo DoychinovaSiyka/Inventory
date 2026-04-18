@@ -40,7 +40,7 @@ class ProductSortView:
         products.reverse()  # bubble sort ти връща DESC, обръщаме го
         self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
 
-    #  Количество (високо - ниско)
+    #  Количество високо - ниско
     def sort_qty_desc(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.quantity, reverse=True)
         self._print_sorted(products, "Количество (високо - ниско)", "Bubble Sort")

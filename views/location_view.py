@@ -16,6 +16,7 @@ class LocationView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def _build_menu(self, user):
         is_admin = user.role == "Admin"
         items = [MenuItem("1", "Списък с локации", self.show_all)]

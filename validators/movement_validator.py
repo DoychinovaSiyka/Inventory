@@ -75,24 +75,35 @@ class MovementValidator:
         if not product_controller.get_by_id(product_id):
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
 
+
     @staticmethod
     def validate_location_exists(location_id, location_controller):
-        # Локациите НЕ са UUID → НЕ ги валидираме като UUID
-        if not isinstance(location_id, str) or location_id.strip() == "":
-            raise ValueError("Location ID е невалиден.")
-
-        if not location_controller.get_by_id(location_id):
-            raise ValueError(f"Локация с ID {location_id} не съществува.")
+        return MovementValidator.validate_location_id(location_id, location_controller)
 
     @staticmethod
-    def validate_supplier_exists(supplier_id, supplier_controller):
-        if supplier_id is None:
-            raise ValueError("При IN движение трябва да има доставчик.")
-        MovementValidator.validate_uuid(supplier_id, "Supplier ID")
-        if not supplier_controller.get_by_id(supplier_id):
-            raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
+    def validate_location_id(loc_id, location_controller):
+        if loc_id is None:
+            raise ValueError("Location ID е задължително.")
 
-    # BUSINESS RULES FOR IN / OUT
+        loc = str(loc_id).strip()
+
+        # 1) Ако е цифра → индекс
+        if loc.isdigit():
+            num = int(loc)
+            locations = location_controller.get_all()
+            if num < 1 or num > len(locations):
+                raise ValueError(f"Невалиден номер на локация. Допустими: 1–{len(locations)}.")
+            return locations[num - 1].location_id
+
+        # 2) Ако е W1–W9 → директно ID
+        if loc.upper().startswith("W") and loc[1:].isdigit():
+            if not location_controller.get_by_id(loc.upper()):
+                raise ValueError(f"Локация {loc} не съществува.")
+            return loc.upper()
+
+        # 3) Всичко друго → грешка
+        raise ValueError("Невалиден Location ID. Допустими: 1–9 или W1–W9.")
+
     @staticmethod
     def validate_in_out_rules(movement_type, product, quantity, supplier_id, customer,
                               inventory_controller, location_id):

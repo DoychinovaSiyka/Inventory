@@ -20,9 +20,7 @@ class OperatorMenuView:
         self.user_controller = controllers["user"]
         self.activity_log = controllers["activity_log"]
         self.supplier_controller = controllers.get("supplier")  # ако има доставчици
-
-        # Създавам менюто като отделен метод
-        self.menu = self._build_menu()
+        self.menu = self._build_menu()     # Създавам менюто като отделен метод
 
     # Създаваме менюто отделно
     def _build_menu(self):
@@ -41,7 +39,6 @@ class OperatorMenuView:
         if user.role.lower() == "guest":
             print("Нямате достъп до операторското меню.")
             return
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)

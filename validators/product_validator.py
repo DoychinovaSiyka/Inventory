@@ -63,15 +63,44 @@ class ProductValidator:
 
     @staticmethod
     def validate_unit(unit):
-        allowed_units = ["кг.", "бр.", "л.", "пакет"]
-
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 
         u = unit.strip().lower()
+        mapping = {
+            "кг": "кг.",
+            "kg": "кг.",
+            "килограм": "кг.",
+            "килограма": "кг.",
+            "килограми": "кг.",
+            "бр": "бр.",
+            "бр.": "бр.",
+            "брой": "бр.",
+            "l": "л.",
+            "л": "л.",
+            "литър": "л.",
+            "литра": "л.",
+            "литри": "л.",
+            "пакет": "пакет",
+            "paket": "пакет",
+            "packet": "пакет"
+        }
 
-        if u not in allowed_units:
-            raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
+        # Премахваме числа, ако потребителят е написал "20 кг"
+        parts = u.split()
+        if len(parts) > 1:
+            # взимаме последната дума като мерна единица
+            u = parts[-1]
+
+        # Нормализиране
+        if u in mapping:
+            return mapping[u]
+
+        # Разрешени единици
+        allowed = ["кг.", "бр.", "л.", "пакет"]
+
+        if u not in allowed:
+            raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed)}")
 
         return u
 

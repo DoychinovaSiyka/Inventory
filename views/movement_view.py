@@ -352,7 +352,7 @@ class MovementView:
         print(format_table(columns, rows))
         print()
 
-        # --- Детайлен изглед ---
+        #  Детайлен изглед
         choice = input("Въведете ID за детайли или Enter за изход: ").strip()
         if not choice:
             return
@@ -389,7 +389,7 @@ class MovementView:
         print(movement.description or "(няма)")
         print("-----------------------------\n")
 
-    # SHOW ALL
+
     def show_all(self, _):
         movements = self.movement_controller.movements
         if not movements:

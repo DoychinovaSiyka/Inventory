@@ -168,7 +168,6 @@ class InvoiceView:
             print("[!] Моля, въведете дата.")
             return
 
-        # Валидация през InvoiceValidator
         try:
             InvoiceValidator.validate_date(date_str)
         except ValueError as e:

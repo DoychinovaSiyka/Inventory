@@ -41,6 +41,7 @@ class MainMenuView:
             if result == "break":
                 break
 
+
     # Действия - всяко е отделен метод
     def open_products(self, user):
         ProductView(self.product_controller, self.category_controller).show_menu(user)
