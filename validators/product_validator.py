@@ -63,11 +63,17 @@ class ProductValidator:
 
     @staticmethod
     def validate_unit(unit):
+        allowed_units = ["кг.", "бр.", "л.", "пакет"]
+
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
-        if len(unit.strip()) < 1:
-            raise ValueError("Мерната единица не може да бъде празна.")
-        return unit.strip()
+
+        u = unit.strip().lower()
+
+        if u not in allowed_units:
+            raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed_units)}")
+
+        return u
 
     @staticmethod
     def validate_price(price):

@@ -75,7 +75,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Описание (строг режим – валидира се веднага)
+        # Описание
         while True:
             description = input("Описание: ").strip()
             try:
@@ -84,7 +84,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Цена (строг режим – докато не е валидна)
+        # Цена
         while True:
             price_raw = input("Цена: ").strip()
             try:
@@ -93,7 +93,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Начално количество (строг режим – докато не е валидно)
+        # Начално количество
         while True:
             quantity_raw = input("Начално количество (само за първоначално зареждане): ").strip()
             try:
@@ -102,7 +102,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Мерна единица (строг режим)
+        # Мерна единица
         while True:
             unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
             try:
@@ -162,6 +162,7 @@ class ProductView:
             except Exception as e:
                 print(f"[!] {e}")
 
+        # Създаване
         try:
             u_id = user.user_id
             product_data = {

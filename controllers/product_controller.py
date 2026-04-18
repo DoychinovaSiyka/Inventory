@@ -81,19 +81,6 @@ class ProductController:
         quantity се използва само за първоначално зареждане → автоматично IN движение.
         """
 
-        ProductValidator.validate_all(
-            product_id=None,
-            name=product_data['name'],
-            categories=product_data['category_ids'],
-            quantity=product_data['quantity'],
-            unit=product_data['unit'],
-            description=product_data['description'],
-            price=product_data['price'],
-            location_id=product_data.get('location_id'),
-            supplier_id=product_data.get('supplier_id'),
-            tags=product_data.get('tags', [])
-        )
-
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
         ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
         ProductValidator.validate_unique_name_in_location(

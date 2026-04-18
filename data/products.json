@@ -478,5 +478,21 @@
         "location_id": "W5",
         "created": "2026-04-18T11:57:07.107798",
         "modified": "2026-04-18T11:57:07.107798"
+    },
+    {
+        "product_id": "823fc790-9373-41ab-b287-b9d1358ed71f",
+        "name": "www",
+        "categories": [
+            "sub-dairy-002"
+        ],
+        "quantity": 1900.0,
+        "unit": "k",
+        "description": "1wwowo",
+        "price": 90.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W2",
+        "created": "2026-04-18T12:44:51.904422",
+        "modified": "2026-04-18T12:44:51.904422"
     }
 ]

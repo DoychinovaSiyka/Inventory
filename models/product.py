@@ -28,19 +28,6 @@ class Product:
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация (quantity остава само за create)
-        ProductValidator.validate_all(
-            product_id=self.product_id,
-            name=self.name,
-            categories=self.categories,
-            quantity=self.quantity,
-            unit=self.unit,
-            description=self.description,
-            price=self.price,
-            location_id=self.location_id,
-            supplier_id=self.supplier_id,
-            tags=self.tags
-        )
 
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -89,7 +76,7 @@ class Product:
             product_id=data.get("product_id"),
             name=data.get("name", "Неизвестен"),
             categories=fixed_categories,
-            quantity=data.get("quantity", 0),  # НЕ наличност
+            quantity=data.get("quantity", 0),
             unit=data.get("unit", "бр."),
             description=data.get("description", ""),
             price=data.get("price", 0),
@@ -101,5 +88,5 @@ class Product:
         )
 
     def __str__(self):
-        # quantity вече НЕ е наличност → не го показваме
+        # quantity вече НЕ е наличност  не го показваме
         return f"{self.name} | {self.price} лв. | {self.unit}"

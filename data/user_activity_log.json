@@ -28,62 +28,6 @@
         "timestamp": "2026-04-06 08:11:30"
     },
     {
-        "log_id": "ed9afbb5-25ae-4ee3-9095-29980e3800ea",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "SEARCH_INVOICE",
-        "details": "Searched invoices by product 'ананас'",
-        "timestamp": "2026-04-06 08:11:35"
-    },
-    {
-        "log_id": "bfcf91c1-069b-45af-833b-201a6360c33d",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "SEARCH_INVOICE",
-        "details": "Searched invoices by date '2026-04-05'",
-        "timestamp": "2026-04-06 08:11:58"
-    },
-    {
-        "log_id": "a88b9c2f-324f-4a0a-831d-9ac38f04c2a8",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "ADVANCED_SEARCH_INVOICE",
-        "details": "Used advanced invoice search",
-        "timestamp": "2026-04-06 08:13:29"
-    },
-    {
-        "log_id": "7b110d33-e532-4618-80b6-025011f2e30d",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "VIEW_INVOICES",
-        "details": "Viewed all invoices",
-        "timestamp": "2026-04-06 08:28:46"
-    },
-    {
-        "log_id": "28cc6f4a-a152-4282-94cb-fe5f311c155a",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "VIEW_INVOICE",
-        "details": "Viewed invoice 2458b945-621f-4524-86ec-1a53d38f70d6",
-        "timestamp": "2026-04-06 08:29:15"
-    },
-    {
-        "log_id": "dfc601ba-4100-4e42-8a91-9934a5334a23",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "VIEW_INVOICES",
-        "details": "Viewed all invoices",
-        "timestamp": "2026-04-06 08:33:59"
-    },
-    {
-        "log_id": "bbde1a18-0ead-4f4d-8030-84a769d50e21",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "VIEW_INVOICE",
-        "details": "Viewed invoice 2458b945-621f-4524-86ec-1a53d38f70d6",
-        "timestamp": "2026-04-06 08:34:15"
-    },
-    {
-        "log_id": "e43f7bf0-c936-42ec-ba8d-bc9408460da1",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "SEARCH_INVOICE",
-        "details": "Searched invoices by customer 'Ирина '",
-        "timestamp": "2026-04-06 08:34:24"
-    },
-    {
         "log_id": "c21de08c-6d54-4f63-bfeb-6251f9942ae7",
         "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
         "action": "SEARCH_INVOICE",
@@ -236,111 +180,6 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-12 11:45:19"
-    },
-    {
-        "log_id": "a6d11e14-4c93-450d-8a86-445a3c7645dc",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 14:57:17"
-    },
-    {
-        "log_id": "6830ebb3-4267-48be-9b85-335ec618a556",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "VIEW_INVOICES",
-        "details": "Viewed all invoices",
-        "timestamp": "2026-04-13 14:58:03"
-    },
-    {
-        "log_id": "e92a16c2-8c1f-4cb6-8253-45eae9c7d2c7",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 16:26:16"
-    },
-    {
-        "log_id": "9651e199-637d-4970-98d6-f0c69d54be8e",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 16:41:03"
-    },
-    {
-        "log_id": "ff3166e9-2283-4e35-b800-533ba2b91615",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 20:56:24"
-    },
-    {
-        "log_id": "a2ea7fd1-7f39-46ec-82de-c93635b2dffe",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:05:56"
-    },
-    {
-        "log_id": "aeb5f78f-32a0-4c94-8b59-7e843765f089",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:13:28"
-    },
-    {
-        "log_id": "42015172-8f4b-47f1-afeb-0d6716e35f8c",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:20:45"
-    },
-    {
-        "log_id": "924b5475-64a8-4feb-965f-9cd4b59700b4",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:25:10"
-    },
-    {
-        "log_id": "24abeb45-1669-4067-8842-44e1abf36fe4",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:28:02"
-    },
-    {
-        "log_id": "e828ee20-0adc-418d-aa16-3ead245da9aa",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:32:55"
-    },
-    {
-        "log_id": "52ff2e22-5b56-4a56-98a2-48519bdc365b",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:45:09"
-    },
-    {
-        "log_id": "e60e6a73-d152-4b37-b53c-1350eeba6cd5",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:46:15"
-    },
-    {
-        "log_id": "2bfcb14f-4a7b-4473-948f-4294ce871847",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:52:10"
-    },
-    {
-        "log_id": "cc17a5be-e92e-45bb-b1a3-9f5958ec0ecd",
-        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
-        "action": "LOGIN",
-        "details": "Потребител admin влезе.",
-        "timestamp": "2026-04-13 21:58:44"
     },
     {
         "log_id": "f8d2737e-e7de-48ff-b0f3-ae63cb94d24e",
@@ -2196,5 +2035,26 @@
         "action": "ADD_PRODUCT",
         "details": "Успешно добавен: jwoe",
         "timestamp": "2026-04-18 11:57:07"
+    },
+    {
+        "log_id": "19059e12-e58b-4f14-adac-452c5b42842e",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 12:30:47"
+    },
+    {
+        "log_id": "47a236d1-b241-4910-9785-9d36a7fa2141",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 12:44:17"
+    },
+    {
+        "log_id": "4e788851-aefe-4dca-9f8c-4d19be0956c9",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: www",
+        "timestamp": "2026-04-18 12:44:51"
     }
 ]
