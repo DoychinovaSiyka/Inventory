@@ -148,6 +148,108 @@ class ProductValidator:
             if p.name.lower() == name.lower() and p.location_id == location_id:
                 raise ValueError("Продуктът вече съществува в този склад.")
 
+    def create_product(self, user):
+        print("\n  Създаване на продукт  ")
+        name = input("Име: ").strip()
+        description = input("Описание: ").strip()
+        price_raw = input("Цена: ")
+        quantity_raw = input("Начално количество (само за първоначално зареждане): ")
+        unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
+
+        errors = []
+        price = None
+        quantity = None
+
+        # Валидация на цена
+        try:
+            price = ProductValidator.parse_float(price_raw, "Цена")
+        except ValueError as e:
+            errors.append(str(e))
+
+        # Валидация на количество
+        try:
+            quantity = ProductValidator.parse_float(quantity_raw, "Количество")
+        except ValueError as e:
+            errors.append(str(e))
+
+        if errors:
+            print()
+            for err in errors:
+                print(err)
+            print("Моля, коригирайте грешките и опитайте отново.\n")
+            return
+
+        categories = self.category_controller.get_all()
+        if not categories:
+            print("Няма категории.")
+            return
+
+        print("\nКатегории:")
+        for i, c in enumerate(categories):
+            print(f"{i}. {c.name} (ID: {c.category_id})")
+
+        cat_raw = input("Изберете категория (номер или Category ID): ").strip()
+
+        try:
+            if cat_raw.isdigit():
+                cat_idx = ProductValidator.parse_int(cat_raw, "Категория")
+                if cat_idx < 0 or cat_idx >= len(categories):
+                    raise ValueError("Невалиден избор за Категория.")
+                category_id = categories[cat_idx].category_id
+            else:
+                ProductValidator.validate_uuid(cat_raw, "Category ID")
+                category_id = cat_raw
+        except Exception as e:
+            print(e)
+            print("Моля, опитайте отново.\n")
+            return
+
+        locations = self.location_controller.get_all()
+        if not locations:
+            print("Няма складове.")
+            return
+
+        print("\nЛокации:")
+        for i, loc in enumerate(locations):
+            print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
+        loc_raw = input("Изберете локация (номер или Location ID): ").strip()
+
+        try:
+            if loc_raw.isdigit():
+                loc_idx = ProductValidator.parse_int(loc_raw, "Локация")
+                if loc_idx < 0 or loc_idx >= len(locations):
+                    raise ValueError("Невалиден избор за Локация.")
+                location_id = locations[loc_idx].location_id
+            else:
+                if not isinstance(loc_raw, str) or loc_raw.strip() == "":
+                    raise ValueError("Невалиден Location ID.")
+                location_id = loc_raw
+        except Exception as e:
+            print(e)
+            print("Моля, опитайте отново.\n")
+            return
+
+        try:
+            u_id = user.user_id
+            product_data = {
+                "name": name,
+                "category_ids": [category_id],
+                "quantity": quantity,
+                "unit": unit,
+                "description": description,
+                "price": price,
+                "supplier_id": None,
+                "location_id": location_id
+            }
+
+            product = self.product_controller.add(product_data, u_id)
+            print("Продуктът е създаден успешно.")
+
+        except ValueError as e:
+            print("Грешка:", e)
+            print("Моля, опитайте отново.\n")
+
     # MASTER VALIDATION
     @staticmethod
     def validate_all(product_id, name, categories, quantity, unit, description, price,

@@ -27,8 +27,7 @@ class MovementController:
         self.movements: List[Movement] = []
         self._load_movements()
 
-    # ================== INTERNAL HELPERS ==================
-
+    # INTERNAL HELPERS
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]
@@ -50,8 +49,7 @@ class MovementController:
                 return m
         return None
 
-    # ================== CHECKS ==================
-
+    # CHECKS
     def check_movement_allowed(self, product_id: str, location_id: str, movement_type: str) -> bool:
         """Бърза проверка дали движението е допустимо спрямо наличностите."""
         product = self.product_controller.get_by_id(product_id)
@@ -69,8 +67,7 @@ class MovementController:
 
         return True
 
-    # ================== IN / OUT ==================
-
+    # IN / OUT
     def add(self,
             product_id: str,
             user_id: str,
@@ -81,13 +78,11 @@ class MovementController:
             price: str,
             customer: Optional[str] = None,
             supplier_id: Optional[str] = None) -> Movement:
-        """
-        Създава IN или OUT движение.
-        При OUT по подразбиране използва каталожната цена на продукта,
-        а въведената цена може да бъде валидирана/ограничена.
-        """
 
-        # 1) Нормализиране и базови валидации
+        """Създава IN или OUT движение.При OUT по подразбиране използва каталожната цена на продукта,
+        а въведената цена може да бъде валидирана/ограничена."""
+
+        #  Нормализиране и базови валидации
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         MovementValidator.validate_movement_type(m_type_str)
 
@@ -101,7 +96,7 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        # 2) Бизнес правила за IN/OUT (наличности, доставчик, клиент и т.н.)
+        #  Бизнес правила за IN/OUT (наличности, доставчик, клиент и т.н.)
         MovementValidator.validate_in_out_rules(
             m_type_str, product, qty, supplier_id, customer,
             self.inventory_controller, location_id
@@ -112,7 +107,7 @@ class MovementController:
         now = self._now()
         m_type_enum = MovementType[m_type_str]
 
-        # 3) ЦЕНОВА ЛОГИКА
+        #  ЦЕНОВА ЛОГИКА
         # При IN: цената е доставна (input_price).
         # При OUT: по подразбиране използваме каталожната цена на продукта.
         if m_type_enum == MovementType.OUT:
@@ -123,7 +118,7 @@ class MovementController:
         else:
             prc = input_price
 
-        # 4) ОПЕРАЦИИ ВЪРХУ ИНВЕНТАРА
+        #  ОПЕРАЦИИ ВЪРХУ ИНВЕНТАРА
         if self.inventory_controller:
             if m_type_enum == MovementType.IN:
                 self.inventory_controller.increase_stock(
@@ -147,7 +142,7 @@ class MovementController:
         else:
             log_action = "none"
 
-        # 5) СЪЗДАВАНЕ НА ЗАПИС ЗА ДВИЖЕНИЕТО
+        #  СЪЗДАВАНЕ НА ЗАПИС ЗА ДВИЖЕНИЕТО
         movement = Movement(
             movement_id=str(uuid.uuid4()),
             product_id=product_id,
@@ -169,7 +164,7 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-        # 6) ЛОГВАНЕ + ФАКТУРА
+        #  ЛОГВАНЕ + ФАКТУРА
         if log_action != "none":
             self.stocklog_controller.add_log(product_id, location_id, qty, product.unit, log_action)
 
@@ -180,8 +175,6 @@ class MovementController:
 
         return movement
 
-    #  MOVE ==================
-
     def move_product(self,
                      product_id: str,
                      user_id: str,
@@ -189,10 +182,8 @@ class MovementController:
                      to_loc: str,
                      quantity: str,
                      description: str = "") -> Movement:
-        """
-        MOVE: прехвърля наличност между два склада.
-        Не променя общата наличност, само разпределението по локации.
-        """
+        """ MOVE: прехвърля наличност между два склада. Не променя общата наличност,
+        само разпределението по локации."""
 
         qty = MovementValidator.parse_quantity(quantity)
 
@@ -206,13 +197,13 @@ class MovementController:
         product = self.product_controller.get_by_id(product_id)
         now = self._now()
 
-        # 1) ОБНОВЯВАНЕ НА ИНВЕНТАРА
+        # ОБНОВЯВАНЕ НА ИНВЕНТАРА
         if self.inventory_controller:
             self.inventory_controller.move_stock(
                 product_id, product.name, from_loc, to_loc, qty, product.unit
             )
 
-        # 2) СЪЗДАВАНЕ НА MOVE ЗАПИС
+        #  СЪЗДАВАНЕ НА MOVE ЗАПИС
         loc_from_obj = self.location_controller.get_by_id(from_loc)
         loc_to_obj = self.location_controller.get_by_id(to_loc)
 
@@ -252,13 +243,11 @@ class MovementController:
     def advanced_filter(self, **kwargs):
         """Контролерът подава всичко на разширения филтър."""
         return filter_advanced(self.movements, **kwargs)
-    # ================== ПРЕСМЯТАНЕ НА ИНВЕНТАРА ОТ movements.json ==================
 
+    #  ПРЕСМЯТАНЕ НА ИНВЕНТАРА ОТ movements.json
     def rebuild_inventory(self) -> None:
-        """
-        Извиква rebuild_inventory_from_movements() в InventoryController.
-        Това пресмята целия инвентар от movements.json.
-        """
+        """Извиква rebuild_inventory_from_movements() в InventoryController.
+        Това пресмята целия инвентар от movements.json."""
         if not self.inventory_controller:
             raise ValueError("InventoryController не е инициализиран.")
 

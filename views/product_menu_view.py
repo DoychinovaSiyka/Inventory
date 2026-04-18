@@ -455,21 +455,37 @@ class ProductView:
             return
 
         inventory = self.product_controller.inventory_controller.data["products"]
+        all_locations = self.location_controller.get_all()
 
         for p in products:
             print(f"\n   {p.name}   ")
 
             inv_entry = inventory.get(p.product_id, None)
-
             if not inv_entry:
                 print("  Няма наличности в нито един склад.")
                 continue
 
             rows = []
             total = inv_entry.get("total_stock", 0)
+            product_locations = inv_entry.get("locations", {})
 
-            for wh, qty in inv_entry.get("locations", {}).items():
-                rows.append([wh, f"{qty} {p.unit}"])
+            # Обхождаме ВСИЧКИ складове от системата
+            for loc in all_locations:
+                wh_id = loc.location_id
+
+                # Количество в този склад
+                qty = product_locations.get(wh_id, None)
+
+                if qty is None:
+                    # Продуктът никога не е бил тук
+                    display_qty = f"0 {p.unit} (няма движение)"
+                else:
+                    if qty > 0:
+                        display_qty = f"{qty} {p.unit}"
+                    else:
+                        display_qty = f"0 {p.unit} (изчерпан)"
+
+                rows.append([wh_id, display_qty])
 
             print(format_table(["Склад", "Наличност"], rows))
             print(f"  Общо: {total} {p.unit}")

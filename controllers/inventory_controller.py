@@ -36,8 +36,7 @@ class InventoryController:
                 "modified": self._now()
             }
 
-    # ================== ПУБЛИЧНИ МЕТОДИ ЗА СПРАВКИ ==================
-
+    #  ПУБЛИЧНИ МЕТОДИ ЗА СПРАВКИ
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         """Намира всички складове, в които даден продукт има наличност > 0."""
         warehouses_found: List[str] = []
@@ -64,8 +63,7 @@ class InventoryController:
             return 0.0
         return float(p["locations"].get(warehouse_id, 0.0))
 
-    # ================== ОПЕРАЦИИ ВЪРХУ НАЛИЧНОСТТА ==================
-
+    # ОПЕРАЦИИ ВЪРХУ НАЛИЧНОСТТА
     def increase_stock(self, product_id: str, product_name: str,
                        warehouse_id: str, qty: float, unit: str) -> None:
         InventoryValidator.validate_increase(product_id, product_name, warehouse_id, qty)
@@ -100,11 +98,9 @@ class InventoryController:
 
     def move_stock(self, product_id: str, product_name: str,
                    from_wh: str, to_wh: str, qty: float, unit: str) -> None:
-        """
-        MOVE: не променя total_stock, а само преразпределя между локации.
-        """
+        """ MOVE: не променя total_stock, а само преразпределя между локации."""
 
-        #  Подаваме master_inventory (self.data)
+        #  Подавам master_inventory (self.data)
         InventoryValidator.validate_move(
             product_id,
             product_name,
@@ -132,8 +128,7 @@ class InventoryController:
         p["modified"] = self._now()
         self._save()
 
-    # ================== ИНИЦИАЛИЗАЦИЯ ОТ ПРОДУКТИ ==================
-
+    # ИНИЦИАЛИЗАЦИЯ ОТ ПРОДУКТИ
     def initialize_from_products(self, products: List[Any]) -> None:
         """
         Еднократна инициализация на инвентара от каталога с продукти.
@@ -152,19 +147,15 @@ class InventoryController:
                     unit=p.unit
                 )
 
-    # ================== ПЪЛНО ПРЕСМЯТАНЕ ОТ movements.json ==================
-
+    #  ПЪЛНО ПРЕСМЯТАНЕ ОТ movements.json
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
-        """
-        Пълно пресмятане на инвентара от movements.json.
-        Изтрива стария инвентар и го изгражда наново само на база движенията.
-        Това е ERP-коректният източник на истина.
-        """
+        """Пълно пресмятане на инвентара от movements.json.
+        Изтрива стария инвентар и го изгражда наново само на база движенията."""
 
-        # 1) Изчистваме текущия инвентар
+        #  Изчистваме текущия инвентар
         self.data = {"products": {}}
 
-        # 2) Обхождаме всички движения по ред
+        #  Обхождаме всички движения по ред
         for m in movements:
             pid = m.product_id
             pname = m.product_name
@@ -180,5 +171,5 @@ class InventoryController:
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 
-        # 3) Записваме новия инвентар
+        #  Записваме новия инвентар
         self._save()

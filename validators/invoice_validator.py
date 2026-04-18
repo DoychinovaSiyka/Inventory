@@ -4,92 +4,93 @@ from datetime import datetime
 
 class InvoiceValidator:
 
+
+    # BASIC PARSING
     @staticmethod
     def parse_float(value, field_name="Стойност"):
-        """Парсва число, като премахва 'лв', интервали и запетаи. Връща None при грешка."""
-        if value is None or value == "":
-            return None
-        cleaned = (str(value).replace("лв.", "").replace("лв", "")
-                   .replace(" ", "").replace(",", "."))
+        if value is None or str(value).strip() == "":
+            raise ValueError(f"{field_name} е задължително поле.")
+
+        cleaned = (str(value)
+                   .replace("лв.", "")
+                   .replace("лв", "")
+                   .replace(" ", "")
+                   .replace(",", "."))
 
         try:
-            return float(cleaned)
+            number = float(cleaned)
         except ValueError:
-            print(f"\nГрешка: Полето '{field_name}' трябва да бъде валидно число.\n")
-            return None
+            raise ValueError(f"{field_name} трябва да бъде валидно число.")
 
+        return number
+
+
+    # UUID VALIDATION
     @staticmethod
     def validate_uuid(value, field_name="ID"):
-        """Проверка за валиден UUID."""
         if value is None:
             return
         try:
             uuid.UUID(str(value))
         except:
-            print(f"\nГрешка: Невалиден UUID формат за {field_name}: {value}\n")
-            return None
+            raise ValueError(f"Невалиден UUID формат за {field_name}: {value}")
 
+
+    # FIELD VALIDATION
     @staticmethod
     def validate_product(product):
-        """Проверка за име на продукт."""
         if not product or not isinstance(product, str):
-            print("\nГрешка: Името на продукта е задължително.\n")
-            return None
+            raise ValueError("Името на продукта е задължително.")
 
     @staticmethod
     def validate_customer(customer):
-        """Проверка за име на клиент."""
         if not customer or not isinstance(customer, str):
-            print("\nГрешка: Клиентът е задължителен.\n")
-            return None
+            raise ValueError("Клиентът е задължителен.")
 
     @staticmethod
     def validate_quantity(quantity):
-        """Проверка за количество."""
         try:
-            if quantity is None or float(quantity) <= 0:
-                print("\nГрешка: Количеството трябва да е положително число.\n")
-                return None
+            q = float(quantity)
         except:
-            print("\nГрешка: Количеството трябва да е валидно число.\n")
-            return None
+            raise ValueError("Количеството трябва да е валидно число.")
+
+        if q <= 0:
+            raise ValueError("Количеството трябва да е положително число.")
 
     @staticmethod
     def validate_unit_price(unit_price):
-        """Проверка за единична цена."""
         try:
-            if unit_price is None or float(unit_price) <= 0:
-                print("\nГрешка: Единичната цена трябва да е положително число.\n")
-                return None
+            p = float(unit_price)
         except:
-            print("\nГрешка: Единичната цена трябва да е валидно число.\n")
-            return None
+            raise ValueError("Единичната цена трябва да е валидно число.")
+
+        if p <= 0:
+            raise ValueError("Единичната цена трябва да е положително число.")
 
     @staticmethod
     def validate_total_price(total_price, quantity, unit_price):
-        """
-        Проверява дали сметката е вярна.
-        При грешка не хвърля traceback, а показва нормално съобщение.
-        """
-        if total_price is None:
-            print("\nГрешка: Общата сума е задължителна.\n")
-            return None
+        try:
+            total = float(total_price)
+        except:
+            raise ValueError("Общата сума трябва да е валидно число.")
 
         try:
-            expected_total = round(float(quantity) * float(unit_price), 2)
-            if abs(float(total_price) - expected_total) > 0.01:
-                print(f"\nГрешка в сметката! Очаквано: {expected_total}, Получено: {total_price}\n")
-                return None
+            expected = round(float(quantity) * float(unit_price), 2)
         except:
-            print("\nГрешка: Невалидни стойности за изчисляване на общата сума.\n")
-            return None
+            raise ValueError("Невалидни стойности за изчисляване на общата сума.")
+
+        if abs(expected - total) > 0.01:
+            raise ValueError(f"Грешка в сметката! Очаквано: {expected}, Получено: {total}")
+
+    @staticmethod
+    def validate_unit(unit):
+        if not unit or not isinstance(unit, str):
+            raise ValueError("Мерната единица е задължителна.")
 
     @staticmethod
     def validate_date(date_str):
-        """Проверка за валидна дата."""
         if not date_str:
-            print("\nГрешка: Датата е задължителна.\n")
-            return None
+            raise ValueError("Датата е задължителна.")
 
         formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]
         for fmt in formats:
@@ -97,38 +98,37 @@ class InvoiceValidator:
                 datetime.strptime(date_str, fmt)
                 return
             except ValueError:
-                continue
+                pass
 
-        print("\nГрешка: Невалидна дата. Използвайте YYYY-MM-DD.\n")
-        return None
+        raise ValueError("Невалидна дата. Използвайте YYYY-MM-DD.")
 
+
+    # MASTER VALIDATION
     @staticmethod
     def validate_all(product, customer, quantity, unit, unit_price, movement_id, total_price, date=None):
-        """Главен метод за проверка на всички полета."""
         InvoiceValidator.validate_product(product)
         InvoiceValidator.validate_customer(customer)
         InvoiceValidator.validate_quantity(quantity)
+        InvoiceValidator.validate_unit(unit)
         InvoiceValidator.validate_unit_price(unit_price)
         InvoiceValidator.validate_total_price(total_price, quantity, unit_price)
         InvoiceValidator.validate_uuid(movement_id, "Movement ID")
 
-        if not unit:
-            print("\nГрешка: Мерната единица е задължителна.\n")
-
         if date:
             InvoiceValidator.validate_date(date)
 
+
+    # MOVEMENT VALIDATION
     @staticmethod
     def validate_movement_for_invoice(movement):
-        """Проверява дали стоковото движение е изходящо."""
-        m_type = str(movement.movement_type).upper()
-        if "OUT" not in m_type:
-            print("\nГрешка: Фактура може да се генерира само при продажба (OUT).\n")
-            return None
+        m_type = str(movement.movement_type.name).upper()
+        if m_type != "OUT":
+            raise ValueError("Фактура може да се генерира само при продажба (OUT).")
 
+
+    # SEARCH FILTER VALIDATION
     @staticmethod
     def validate_search_filters(start_date, end_date, min_total, max_total):
-        """Валидира параметрите за разширено търсене.Всички грешки се прихващат."""
         if start_date:
             InvoiceValidator.validate_date(start_date)
         if end_date:

@@ -1,3 +1,4 @@
+from datetime import datetime
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.invoice_controller import InvoiceController
@@ -21,7 +22,6 @@ class InvoiceView:
 
         return "\n".join([line, header_row, line] + data_rows + [line])
 
-
     def show_menu(self, user: User):
         while True:
             choice = self.menu.show()
@@ -41,7 +41,6 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -59,7 +58,6 @@ class InvoiceView:
             print(f"Клиент: {inv.customer}")
             print(f"Дата: {inv.date}")
             print("==============================")
-
 
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
@@ -82,12 +80,15 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
+        if not keyword:
+            print("[!] Моля, въведете име или част от име.")
+            return
+
         results = self.invoice_controller.search_by_customer(keyword)
         if not results:
-            print("Няма фактури за този клиент.")
+            print("[!] Няма такъв клиент или няма фактури за този клиент.")
             return
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
@@ -102,16 +103,17 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + self._format_table_fixed(
-            columns, rows, [12, 40, 12, 12, 12]
-        ))
-
+        print("\n" + self._format_table_fixed(columns, rows, [12, 40, 12, 12, 12]))
 
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
+        if not keyword:
+            print("[!] Моля, въведете име или част от име.")
+            return
+
         results = self.invoice_controller.search_by_product(keyword)
         if not results:
-            print("Няма фактури за този продукт.")
+            print("[!] Няма такъв продукт или няма фактури за този продукт.")
             return
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
@@ -126,22 +128,18 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + self._format_table_fixed(
-            columns, rows, [12, 26, 12, 12, 12]
-        ))
-
-
+        print("\n" + self._format_table_fixed(columns, rows, [12, 26, 12, 12, 12]))
 
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
         results = self.invoice_controller.search_by_date(date_str)
 
         if results == "INVALID_DATE":
-            print("\nНевалидна дата. Моля използвайте формат ГГГГ-ММ-ДД.\n")
+            print("\n[!] Невалидна дата. Форматът трябва да е ГГГГ-ММ-ДД.\n")
             return
 
         if not results:
-            print("Няма фактури за тази дата.")
+            print("[!] Няма фактури за тази дата.")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
@@ -156,10 +154,7 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + self._format_table_fixed(
-            columns, rows, [12, 40, 26, 12, 12]
-        ))
-
+        print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
@@ -179,8 +174,21 @@ class InvoiceView:
             max_total=max_total
         )
 
+        if isinstance(results, str):
+            if results == "INVALID_START_DATE":
+                print("[!] Невалидна начална дата. Форматът е ГГГГ-ММ-ДД.")
+            elif results == "INVALID_END_DATE":
+                print("[!] Невалидна крайна дата. Форматът е ГГГГ-ММ-ДД.")
+            elif results == "INVALID_MIN_TOTAL":
+                print("[!] Невалидна минимална сума.")
+            elif results == "INVALID_MAX_TOTAL":
+                print("[!] Невалидна максимална сума.")
+            else:
+                print("[!] Невалидни критерии за търсене.")
+            return
+
         if not results:
-            print("\nНяма фактури, които отговарят на критериите.")
+            print("\n[!] Няма фактури, които отговарят на критериите.")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
@@ -200,7 +208,7 @@ class InvoiceView:
             columns, rows, [12, 40, 26, 12, 12, 12]
         ))
 
-    # SEARCH BY TOTAL
+
     def search_by_total(self, _):
         print("   Търсене по сума / диапазон")
         min_total = input("Минимална сума (или Enter): ").strip()

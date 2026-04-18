@@ -427,9 +427,9 @@
         "price": 78.0,
         "supplier_id": null,
         "tags": [],
-        "location_id": "0",
+        "location_id": "1",
         "created": "2026-04-17T21:34:37.170344",
-        "modified": "2026-04-17 22:07:30"
+        "modified": "2026-04-18 08:52:35"
     },
     {
         "product_id": "172b1f3c-9810-4571-9769-b55bd591bd6e",

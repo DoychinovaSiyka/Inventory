@@ -4,6 +4,7 @@ from models.supplier import Supplier
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 import textwrap
+import uuid
 
 
 class MovementView:
@@ -393,26 +394,83 @@ class MovementView:
 
         print(format_table(columns, rows))
 
-
-
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
         print("0=IN, 1=OUT, 2=MOVE")
 
+        errors = []
+
+
         m_type_input = input("Тип movement или Enter: ").strip() or None
         movement_type = None
-        if m_type_input == "0":
-            movement_type = "IN"
-        elif m_type_input == "1":
-            movement_type = "OUT"
-        elif m_type_input == "2":
-            movement_type = "MOVE"
+
+        if m_type_input is not None:
+            if m_type_input == "0":
+                movement_type = "IN"
+            elif m_type_input == "1":
+                movement_type = "OUT"
+            elif m_type_input == "2":
+                movement_type = "MOVE"
+            else:
+                errors.append("Невалиден тип движение. Допустими: 0=IN, 1=OUT, 2=MOVE.")
+
 
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip() or None
         end_date = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip() or None
+
+        from datetime import datetime
+
+        if start_date:
+            try:
+                datetime.strptime(start_date, "%Y-%m-%d")
+            except ValueError:
+                errors.append("Невалидна начална дата. Форматът е YYYY-MM-DD.")
+
+        if end_date:
+            try:
+                datetime.strptime(end_date, "%Y-%m-%d")
+            except ValueError:
+                errors.append("Невалидна крайна дата. Форматът е YYYY-MM-DD.")
+
+
         product_id = input("ID на продукт или Enter: ").strip() or None
+        if product_id:
+            try:
+                import uuid
+                uuid.UUID(product_id)
+                if not self.product_controller.get_by_id(product_id):
+                    errors.append("Продукт с такова ID не съществува.")
+            except:
+                errors.append("Невалиден формат за ID на продукт.")
+
+
         location_id = input("ID на локация или Enter: ").strip() or None
+        if location_id:
+            try:
+                uuid.UUID(location_id)
+                if not self.location_controller.get_by_id(location_id):
+                    errors.append("Локация с такова ID не съществува.")
+            except:
+                errors.append("Невалиден формат за ID на локация.")
+
+        #  User ID
         user_id = input("ID на потребител или Enter: ").strip() or None
+        if user_id:
+            try:
+                uuid.UUID(user_id)
+                if not self.user_controller.get_by_id(user_id):
+                    errors.append("Потребител с такова ID не съществува.")
+            except:
+                errors.append("Невалиден формат за ID на потребител.")
+
+        # If errors - show all and stop
+        if errors:
+            print("\n[!] Открити са грешки:")
+            for e in errors:
+                print(" - " + e)
+            print("\nМоля, коригирайте и опитайте отново.\n")
+            return
+
 
         results = self.movement_controller.advanced_filter(
             movement_type=movement_type,

@@ -2350,5 +2350,19 @@
         "action": "IN_MOVEMENT",
         "details": "Product: testov product vtora uprtreba, Qty: 5.0, Price: 9.0",
         "timestamp": "2026-04-17 22:47:20"
+    },
+    {
+        "log_id": "9b134849-729c-402f-a12b-6d317c419a43",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-18 08:48:54"
+    },
+    {
+        "log_id": "c2ba6252-cd86-4d98-977a-f248baae53df",
+        "user_id": "e3b7c9a1-5d4f-4e2a-8f9c-1b7d3e5a9f33",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: TEST 1 2026 (ID: c7ef2a9f-d2b5-495c-93cc-3cd03cd68ec7)",
+        "timestamp": "2026-04-18 08:52:35"
     }
 ]
