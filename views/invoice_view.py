@@ -41,6 +41,9 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
+
+    # ПРЕГЛЕД НА ВСИЧКИ ФАКТУРИ
+
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -59,8 +62,21 @@ class InvoiceView:
             print(f"Дата: {inv.date}")
             print("==============================")
 
+
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
+
+        if not invoice_id:
+            print("[!] Моля, въведете ID.")
+            return
+
+        # Валидация на UUID
+        try:
+            InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
+        except ValueError as e:
+            print(f"[!] {e}")
+            return
+
         invoice = self.invoice_controller.get_by_id(invoice_id)
         if not invoice:
             print("Фактурата не е намерена.")
@@ -80,15 +96,22 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
+
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
+
         if not keyword:
             print("[!] Моля, въведете име или част от име.")
             return
 
         results = self.invoice_controller.search_by_customer(keyword)
+
+        if results is None:
+            print("[!] Невалиден клиент.")
+            return
+
         if not results:
-            print("[!] Няма такъв клиент или няма фактури за този клиент.")
+            print("[!] Няма такъв клиент.")
             return
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
@@ -105,15 +128,22 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 12, 12, 12]))
 
+
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
+
         if not keyword:
             print("[!] Моля, въведете име или част от име.")
             return
 
         results = self.invoice_controller.search_by_product(keyword)
+
+        if results is None:
+            print("[!] Невалиден продукт.")
+            return
+
         if not results:
-            print("[!] Няма такъв продукт или няма фактури за този продукт.")
+            print("[!] Няма такъв продукт.")
             return
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
@@ -130,13 +160,22 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 26, 12, 12, 12]))
 
+
     def search_by_date(self, user):
         date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
-        results = self.invoice_controller.search_by_date(date_str)
 
-        if results == "INVALID_DATE":
-            print("\n[!] Невалидна дата. Форматът трябва да е ГГГГ-ММ-ДД.\n")
+        if not date_str:
+            print("[!] Моля, въведете дата.")
             return
+
+        # Валидация през InvoiceValidator
+        try:
+            InvoiceValidator.validate_date(date_str)
+        except ValueError as e:
+            print(f"[!] {e}")
+            return
+
+        results = self.invoice_controller.search_by_date(date_str)
 
         if not results:
             print("[!] Няма фактури за тази дата.")
@@ -156,6 +195,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
+
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
         customer = input("Клиент (или Enter за пропуск): ").strip() or None
@@ -165,6 +205,13 @@ class InvoiceView:
         min_total = input("Минимална обща стойност или Enter: ").strip() or None
         max_total = input("Максимална обща стойност или Enter: ").strip() or None
 
+        # Валидация през InvoiceValidator
+        try:
+            InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
+        except ValueError as e:
+            print(f"[!] {e}")
+            return
+
         results = self.invoice_controller.advanced_search(
             customer=customer,
             product=product,
@@ -173,19 +220,6 @@ class InvoiceView:
             min_total=min_total,
             max_total=max_total
         )
-
-        if isinstance(results, str):
-            if results == "INVALID_START_DATE":
-                print("[!] Невалидна начална дата. Форматът е ГГГГ-ММ-ДД.")
-            elif results == "INVALID_END_DATE":
-                print("[!] Невалидна крайна дата. Форматът е ГГГГ-ММ-ДД.")
-            elif results == "INVALID_MIN_TOTAL":
-                print("[!] Невалидна минимална сума.")
-            elif results == "INVALID_MAX_TOTAL":
-                print("[!] Невалидна максимална сума.")
-            else:
-                print("[!] Невалидни критерии за търсене.")
-            return
 
         if not results:
             print("\n[!] Няма фактури, които отговарят на критериите.")
@@ -214,14 +248,15 @@ class InvoiceView:
         min_total = input("Минимална сума (или Enter): ").strip()
         max_total = input("Максимална сума (или Enter): ").strip()
 
-        min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
-        max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None
-
-        if (min_total and min_val is None) or (max_total and max_val is None):
-            print("\nМоля, въведете валидни числови стойности.\n")
+        try:
+            min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
+            max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None
+        except ValueError as e:
+            print(f"[!] {e}")
             return
 
         results = self.invoice_controller.search_by_total(min_val, max_val)
+
         if not results:
             print("\nНяма фактури в този диапазон.\n")
             return
