@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from controllers.report_controller import ReportController
@@ -59,7 +60,6 @@ class ReportsView:
         q = int(quantity) if float(quantity).is_integer() else round(float(quantity), 2)
         return f"{q} {u}".strip()
 
-
     def report_movements(self, _):
         result = self.controller.report_movements()
         if not result.data:
@@ -96,8 +96,6 @@ class ReportsView:
             rows
         ))
 
-
-
     def report_inventory(self, _):
         inventory = self.controller.inventory_controller.data["products"]
 
@@ -118,8 +116,6 @@ class ReportsView:
 
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
-
-
 
     def summary_report(self, _):
         inventory = self.controller.inventory_controller.data["products"]
@@ -161,7 +157,6 @@ class ReportsView:
         rows.sort(key=lambda r: r[0])
         print(format_table(["Продукт", "Налично", "Продадено", "Складове"], rows))
 
-
     def _format_table_fixed(self, headers, rows, col_widths):
         """Локална функция за поддръжка на col_widths, без да пипаме format_table()."""
         # Горна линия
@@ -200,9 +195,9 @@ class ReportsView:
             [12, 12, 22, 30, 12]
         ))
 
-    def _print_sales_table(self, data):
+    def _print_sales_table(self, data, empty_message="\n[!] Няма резултати.\n"):
         if not data:
-            print("\n[!] Няма резултати.\n")
+            print(empty_message)
             return
 
         rows = [
@@ -223,19 +218,48 @@ class ReportsView:
         ))
 
     def report_sales_by_customer(self, _):
-        c = input("Клиент: ")
-        self._print_sales_table(self.controller.report_sales_by_customer(c).data)
+        c = input("Клиент: ").strip()
+        if not c:
+            print("\n[!] Моля, въведете име на клиент.\n")
+            return
+
+        res = self.controller.report_sales_by_customer(c)
+        self._print_sales_table(
+            res.data,
+            "\n[!] Няма такъв клиент или няма продажби за този клиент.\n"
+        )
 
     def report_sales_by_product(self, _):
-        p = input("Продукт: ")
-        self._print_sales_table(self.controller.report_sales_by_product(p).data)
+        p = input("Продукт: ").strip()
+        if not p:
+            print("\n[!] Моля, въведете име на продукт.\n")
+            return
+
+        res = self.controller.report_sales_by_product(p)
+        self._print_sales_table(
+            res.data,
+            "\n[!] Няма такъв продукт или няма продажби за този продукт.\n"
+        )
 
     def report_sales_by_date(self, _):
-        d = input("Дата (YYYY-MM-DD): ")
-        self._print_sales_table(self.controller.report_sales_by_date(d).data)
+        d = input("Дата (YYYY-MM-DD): ").strip()
+        if not d:
+            print("\n[!] Моля, въведете дата.\n")
+            return
 
-    # ------------------ DELIVERIES ------------------
+        try:
+            datetime.strptime(d, "%Y-%m-%d")
+        except ValueError:
+            print("\n[!] Невалидна дата. Форматът трябва да е YYYY-MM-DD.\n")
+            return
 
+        res = self.controller.report_sales_by_date(d)
+        self._print_sales_table(
+            res.data,
+            "\n[!] Няма продажби за тази дата.\n"
+        )
+
+    #  DELIVERIES
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if res.data:
@@ -255,7 +279,11 @@ class ReportsView:
             print("\n[!] Няма доставки.\n")
 
     def search_delivery(self, _):
-        k = input("Въведете текст за търсене (име на продукт, доставчик, склад или част от описание): ")
+        k = input("Въведете текст за търсене (име на продукт, доставчик, склад или част от описание): ").strip()
+
+        if not k:
+            print("\n[!] Моля, въведете текст за търсене.\n")
+            return
 
         res = self.controller.search_deliveries_all(k)
         if res.data:
@@ -272,10 +300,9 @@ class ReportsView:
             ]
             print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
         else:
-            print("\n[!] Няма резултати.\n")
+            print("\n[!] Няма доставки, отговарящи на зададените критерии.\n")
 
-    # ------------------ TURNOVER ------------------
-
+    #  TURNOVER
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
@@ -288,7 +315,6 @@ class ReportsView:
         ]
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
-
 
     def report_top_products(self, _):
         res = self.controller.report_top_products()
@@ -306,8 +332,6 @@ class ReportsView:
         ]
 
         print(format_table(["Продукт", "Кол.", "Оборот"], rows))
-
-
 
     def report_lifecycle(self, _):
         name = input("Въведете име на продукт: ").strip()
