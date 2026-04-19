@@ -6,8 +6,7 @@ from validators.inventory_validator import InventoryValidator
 
 class InventoryController:
     """Чист MVC контролер за наличности.
-       Работи безопасно при празни JSON файлове.
-    """
+       Работи безопасно при празни JSON файлове."""
 
     def __init__(self, repo: JSONRepository):
         self.repo = repo
@@ -19,7 +18,7 @@ class InventoryController:
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
         else:
-            # Ако структурата е стара (списък) → мигрираме
+            # Ако структурата е стара (списък) - мигрираме
             if isinstance(data, list):
                 self.data = {"products": {}}
             else:
@@ -34,10 +33,7 @@ class InventoryController:
     def _save(self):
         self.repo.save(self.data)
 
-    # ---------------------------------------------------------
     # ВЪТРЕШНИ ПОМОЩНИ МЕТОДИ
-    # ---------------------------------------------------------
-
     def _get_product(self, product_id: str) -> Dict[str, Any] | None:
         return self.data["products"].get(product_id)
 
@@ -53,10 +49,7 @@ class InventoryController:
                 "modified": self._now()
             }
 
-    # ---------------------------------------------------------
     # ПУБЛИЧНИ МЕТОДИ ЗА СПРАВКИ
-    # ---------------------------------------------------------
-
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         warehouses = []
         name_lower = product_name.lower()
@@ -81,10 +74,7 @@ class InventoryController:
             return 0.0
         return float(p["locations"].get(warehouse_id, 0.0))
 
-    # ---------------------------------------------------------
     # ОПЕРАЦИИ ВЪРХУ НАЛИЧНОСТТА
-    # ---------------------------------------------------------
-
     def increase_stock(self, product_id: str, product_name: str,
                        warehouse_id: str, qty: float, unit: str) -> None:
 
@@ -161,10 +151,7 @@ class InventoryController:
         p["modified"] = self._now()
         self._save()
 
-    # ---------------------------------------------------------
     # ПЪЛНО ПРЕСМЯТАНЕ ОТ movements.json
-    # ---------------------------------------------------------
-
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
         """Пълно пресмятане на инвентара от движенията."""
 

@@ -4,7 +4,7 @@ from validators.category_validator import CategoryValidator
 
 class Category:
     def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
-        #  UUID - получавам от Контролера. Моделът НЕ ГЕНЕРИРА ID и ДАТИ – Контролерът ги подава
+        #  UUID - получава от Контролера. Моделът НЕ ГЕНЕРИРА ID и ДАТИ – Контролерът ги подава
         self.category_id = str(category_id) if category_id else None
         self.name = name
         self.description = description

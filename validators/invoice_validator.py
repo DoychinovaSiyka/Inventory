@@ -4,8 +4,7 @@ from datetime import datetime
 
 class InvoiceValidator:
 
-
-    # BASIC PARSING
+    # Парсване на числа от текст (пример: "12,50 лв")
     @staticmethod
     def parse_float(value, field_name="Стойност"):
         if value is None or str(value).strip() == "":
@@ -24,8 +23,7 @@ class InvoiceValidator:
 
         return number
 
-
-    # UUID VALIDATION
+    # Проверка за валиден UUID
     @staticmethod
     def validate_uuid(value, field_name="ID"):
         if value is None:
@@ -35,8 +33,7 @@ class InvoiceValidator:
         except:
             raise ValueError(f"Невалиден UUID формат за {field_name}: {value}")
 
-
-    # FIELD VALIDATION
+    # Основни проверки за полета
     @staticmethod
     def validate_product(product):
         if not product or not isinstance(product, str):
@@ -53,9 +50,8 @@ class InvoiceValidator:
             q = float(quantity)
         except:
             raise ValueError("Количеството трябва да е валидно число.")
-
         if q <= 0:
-            raise ValueError("Количеството трябва да е положително число.")
+            raise ValueError("Количеството трябва да е положително.")
 
     @staticmethod
     def validate_unit_price(unit_price):
@@ -63,10 +59,10 @@ class InvoiceValidator:
             p = float(unit_price)
         except:
             raise ValueError("Единичната цена трябва да е валидно число.")
-
         if p <= 0:
-            raise ValueError("Единичната цена трябва да е положително число.")
+            raise ValueError("Единичната цена трябва да е положителна.")
 
+    # Проверка дали total = quantity * unit_price
     @staticmethod
     def validate_total_price(total_price, quantity, unit_price):
         try:
@@ -87,6 +83,7 @@ class InvoiceValidator:
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 
+    # Проверка на дата
     @staticmethod
     def validate_date(date_str):
         if not date_str:
@@ -102,8 +99,7 @@ class InvoiceValidator:
 
         raise ValueError("Невалидна дата. Използвайте YYYY-MM-DD.")
 
-
-    # MASTER VALIDATION
+    # Пълна проверка на фактура
     @staticmethod
     def validate_all(product, customer, quantity, unit, unit_price, movement_id, total_price, date=None):
         InvoiceValidator.validate_product(product)
@@ -116,16 +112,14 @@ class InvoiceValidator:
         if date:
             InvoiceValidator.validate_date(date)
 
-
-    # MOVEMENT VALIDATION
+    # Фактура може да се прави само при OUT движение
     @staticmethod
     def validate_movement_for_invoice(movement):
         m_type = str(movement.movement_type.name).upper()
         if m_type != "OUT":
             raise ValueError("Фактура може да се генерира само при продажба (OUT).")
 
-
-    # SEARCH FILTER VALIDATION
+    # Проверки за филтри при търсене
     @staticmethod
     def validate_search_filters(start_date, end_date, min_total, max_total):
         if start_date:

@@ -63,9 +63,7 @@ class Movement:
         self.created = created or date
         self.modified = modified or date
 
-    # ---------------------------------------------------------
-    #  SAVE → JSON
-    # ---------------------------------------------------------
+    # SAVE → JSON
     def to_dict(self):
         return {
             "movement_id": self.movement_id,
@@ -89,15 +87,13 @@ class Movement:
             "modified": self.modified
         }
 
-    # ---------------------------------------------------------
-    #  LOAD ← JSON
-    # ---------------------------------------------------------
+    # LOAD ← JSON
     @staticmethod
     def from_dict(data):
         if not data:
             return None
 
-        # Обработка на типа движение ( Enum )
+        # Обработка на типа движение (Enum)
         mt_raw = data.get("movement_type")
         mt = MovementType.IN  # стойност по подразбиране
 

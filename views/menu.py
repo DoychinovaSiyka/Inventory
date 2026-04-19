@@ -10,7 +10,6 @@ class Menu:
         self.title = title
         self.items = items
 
-
     def show(self):
         print(f"\n   {self.title}   ")
         for item in self.items:

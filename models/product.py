@@ -1,17 +1,17 @@
 import uuid
 from datetime import datetime
 from models.category import Category
-from validators.product_validator import ProductValidator
 
 
 class Product:
     """
     МОДЕЛ НА ПРОДУКТ
-    Продуктът е чист запис: име, описание, цена, категории, доставчик, тагове
+    Продуктът е чист запис: име, описание, цена, категории, доставчик, тагове, локация
     """
 
     def __init__(self, product_id, name, categories, unit, description, price,
-                 supplier_id=None, tags=None, created=None, modified=None):
+                 supplier_id=None, tags=None, location_id=None,
+                 created=None, modified=None):
 
         # ако няма подадено id → генерираме UUID
         self.product_id = str(product_id) if product_id else str(uuid.uuid4())
@@ -23,6 +23,10 @@ class Product:
         self.price = float(price)
         self.supplier_id = str(supplier_id) if supplier_id else None
         self.tags = tags if isinstance(tags, list) else []
+
+        # НОВО → ЛОКАЦИЯ
+        self.location_id = location_id
+
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now
@@ -48,6 +52,7 @@ class Product:
             "price": self.price,
             "supplier_id": self.supplier_id,
             "tags": self.tags,
+            "location_id": self.location_id,   # ← НОВО
             "created": self.created,
             "modified": self.modified
         }
@@ -61,15 +66,21 @@ class Product:
         raw_categories = data.get("categories", [])
         fixed_categories = []
 
+        # ВИНАГИ връщаме Category обекти
         if category_controller:
             for cid in raw_categories:
+                if isinstance(cid, dict):
+                    fixed_categories.append(Category.from_dict(cid))
+                    continue
+
                 cat = category_controller.get_by_id(str(cid))
-                fixed_categories.append(cat if cat else str(cid))
+                if cat:
+                    fixed_categories.append(cat)
         else:
-            fixed_categories = raw_categories
+            fixed_categories = []
 
         return Product(
-            product_id=data.get("product_id"),  # ако липсва → ще се генерира UUID
+            product_id=data.get("product_id"),
             name=data.get("name", "Неизвестен"),
             categories=fixed_categories,
             unit=data.get("unit", "бр."),
@@ -77,6 +88,7 @@ class Product:
             price=data.get("price", 0),
             supplier_id=data.get("supplier_id"),
             tags=data.get("tags", []),
+            location_id=data.get("location_id"),   # ← НОВО
             created=data.get("created"),
             modified=data.get("modified")
         )

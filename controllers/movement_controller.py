@@ -12,10 +12,8 @@ class MovementController:
     """
     Контролер за управление на стоковите движения (IN, OUT, MOVE).
 
-    Архитектурен принцип:
-    - Истината за наличностите е в movements.json (IN/OUT/MOVE).
-    - inventory.json е производен файл и се пресмята от движенията.
-    - Няма начални количества без произход (без IN движение).
+    Истината за наличностите е в movements.json.
+    inventory.json е производен файл и се пресмята от движенията.
     """
 
     def __init__(self,
@@ -23,7 +21,6 @@ class MovementController:
                  product_controller,
                  user_controller,
                  location_controller,
-                 stocklog_controller,
                  invoice_controller,
                  activity_log_controller=None,
                  inventory_controller=None,
@@ -33,7 +30,6 @@ class MovementController:
         self.product_controller = product_controller
         self.user_controller = user_controller
         self.location_controller = location_controller
-        self.stocklog_controller = stocklog_controller
         self.invoice_controller = invoice_controller
         self.activity_log = activity_log_controller
         self.inventory_controller = inventory_controller
@@ -43,9 +39,7 @@ class MovementController:
         self._load_movements()
         self._sync_inventory_from_movements()
 
-    # ---------------------------------------------------------
     # LOAD
-    # ---------------------------------------------------------
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]
@@ -58,9 +52,7 @@ class MovementController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # ---------------------------------------------------------
     # INVENTORY SYNC
-    # ---------------------------------------------------------
     def _inventory_safe_movements(self) -> List[Movement]:
         safe = []
         for m in self.movements:
@@ -72,10 +64,7 @@ class MovementController:
         if not self.inventory_controller:
             return
 
-        # 1) Генерира IN за продукти с OUT, но без IN
         self._generate_initial_in_movements()
-
-        # 2) Генерира IN за продукти без НИКАКВИ движения
         self.generate_initial_stock_for_all_products()
 
         safe_movements = self._inventory_safe_movements()
@@ -86,24 +75,18 @@ class MovementController:
         except Exception:
             pass
 
-    # ---------------------------------------------------------
     # SAVE
-    # ---------------------------------------------------------
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
-    # ---------------------------------------------------------
     # BASIC GETTERS
-    # ---------------------------------------------------------
     def get_by_id(self, movement_id):
         for m in self.movements:
             if m.movement_id == movement_id:
                 return m
         return None
 
-    # ---------------------------------------------------------
     # VALIDATION HELPERS
-    # ---------------------------------------------------------
     def check_movement_allowed(self, product_id: str, location_id: str, movement_type: str) -> bool:
         product = self.product_controller.get_by_id(product_id)
         if not product:
@@ -119,9 +102,7 @@ class MovementController:
 
         return True
 
-    # ---------------------------------------------------------
     # ADD MOVEMENT (IN / OUT)
-    # ---------------------------------------------------------
     def add(self,
             product_id: str,
             user_id: str,
@@ -166,7 +147,6 @@ class MovementController:
                 self.inventory_controller.increase_stock(
                     product_id, product.name, location_id, qty, product.unit
                 )
-                log_action = "add"
 
             elif m_type_enum == MovementType.OUT:
                 current_stock = self.inventory_controller.get_stock_for_location(product_id, location_id)
@@ -178,11 +158,6 @@ class MovementController:
                 self.inventory_controller.decrease_stock(
                     product_id, location_id, qty, product.unit
                 )
-                log_action = "remove"
-            else:
-                log_action = "none"
-        else:
-            log_action = "none"
 
         movement = Movement(
             movement_id=str(uuid.uuid4()),
@@ -205,19 +180,15 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-        if log_action != "none":
-            self.stocklog_controller.add_log(product_id, location_id, qty, product.unit, log_action)
-
-        self._log(user_id, f"{m_type_str}_MOVEMENT", f"Product: {product.name}, Qty: {qty}, Price: {prc}")
+        self._log(user_id, f"{m_type_str}_MOVEMENT",
+                  f"Product: {product.name}, Qty: {qty}, Price: {prc}")
 
         if m_type_enum == MovementType.OUT:
             self.invoice_controller.create_from_movement(movement, product, customer, user_id)
 
         return movement
 
-    # ---------------------------------------------------------
     # MOVE
-    # ---------------------------------------------------------
     def move_product(self,
                      product_id: str,
                      user_id: str,
@@ -275,9 +246,7 @@ class MovementController:
 
         return move_entry
 
-    # ---------------------------------------------------------
     # AUTO INITIAL IN (ако има OUT, но няма IN)
-    # ---------------------------------------------------------
     def _generate_initial_in_movements(self):
         if not self.inventory_controller:
             return
@@ -333,12 +302,8 @@ class MovementController:
             self.movements.sort(key=lambda m: m.date)
             self.repo.save([m.to_dict() for m in self.movements])
 
-    # ---------------------------------------------------------
     # AUTO INITIAL IN (ако продуктът няма НИКАКВИ движения)
-    # ---------------------------------------------------------
     def generate_initial_stock_for_all_products(self):
-        """Създава начално IN движение за всеки продукт, който няма никакви движения."""
-
         if not self.inventory_controller:
             return
 
@@ -355,9 +320,9 @@ class MovementController:
 
         for p in products:
             if p.product_id in product_ids_with_moves:
-                continue  # продуктът вече има движения
+                continue
 
-            qty = 50  # начално количество
+            qty = 50
             now = self._now()
 
             auto_in = Movement(
@@ -384,18 +349,14 @@ class MovementController:
             self.movements.extend(new_movements)
             self.save_changes()
 
-    # ---------------------------------------------------------
     # SEARCH
-    # ---------------------------------------------------------
     def search_by_description(self, keyword: str):
         return filter_by_description(self.movements, keyword)
 
     def advanced_filter(self, **kwargs):
         return filter_advanced(self.movements, **kwargs)
 
-    # ---------------------------------------------------------
     # REBUILD
-    # ---------------------------------------------------------
     def rebuild_inventory(self) -> None:
         if not self.inventory_controller:
             raise ValueError("InventoryController не е инициализиран.")

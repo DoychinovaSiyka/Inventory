@@ -27,7 +27,7 @@ def _clean_number(value):
         return None
 
 
-# Търсене по клиент
+
 def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     if not keyword:
         return invoices
@@ -50,7 +50,7 @@ def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     return [inv for inv in invoices if keyword in inv.product.lower()]
 
 
-# Търсене по дата (просто съвпадение на текст в началото)
+# Търсене по дата - просто съвпадение на текст в началото
 def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
     if not date_str:
         return invoices
@@ -77,7 +77,7 @@ def filter_by_total_range(invoices: List[Invoice],
     return results
 
 
-# Филтър по дата диапазон
+
 def filter_by_date_range(invoices: List[Invoice],
                          start_date: Optional[str],
                          end_date: Optional[str]) -> List[Invoice]:

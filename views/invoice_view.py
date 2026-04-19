@@ -10,12 +10,15 @@ class InvoiceView:
     def __init__(self, invoice_controller: InvoiceController, activity_log_controller=None):
         self.invoice_controller = invoice_controller
         self.activity_log = activity_log_controller
+
+        # Създаваме менюто за работа с фактури
         self.menu = self._build_menu()
 
-    #  TABLE FIX (NO col_widths)
+    # Форматиране на таблица с фиксирани ширини - за по-четим изход
     def _format_table_fixed(self, headers, rows, col_widths):
         line = "+" + "+".join("-" * w for w in col_widths) + "+"
         header_row = "|" + "|".join(f"{str(h):^{col_widths[i]}}" for i, h in enumerate(headers)) + "|"
+
         data_rows = []
         for r in rows:
             data_rows.append("|" + "|".join(f"{str(r[i]):^{col_widths[i]}}" for i in range(len(headers))) + "|")
@@ -23,6 +26,7 @@ class InvoiceView:
         return "\n".join([line, header_row, line] + data_rows + [line])
 
     def show_menu(self, user: User):
+        # Основен цикъл за менюто – изпълнява избраната опция
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
@@ -30,6 +34,7 @@ class InvoiceView:
                 break
 
     def _build_menu(self):
+        # Менюто съдържа всички функции за работа с фактури
         return Menu("Меню Фактури", [
             MenuItem("1", "Списък с всички фактури", self.show_all),
             MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
@@ -41,9 +46,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-
-    # ПРЕГЛЕД НА ВСИЧКИ ФАКТУРИ
-
+    # Показва всички фактури в системата
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -62,7 +65,7 @@ class InvoiceView:
             print(f"Дата: {inv.date}")
             print("==============================")
 
-
+    # Преглед на конкретна фактура по ID
     def view_by_id(self, user):
         invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
 
@@ -70,7 +73,7 @@ class InvoiceView:
             print("[!] Моля, въведете ID.")
             return
 
-        # Валидация на UUID
+        # Проверяваме дали ID-то е валидно
         try:
             InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
         except ValueError as e:
@@ -82,6 +85,7 @@ class InvoiceView:
             print("Фактурата не е намерена.")
             return
 
+        # Подготвяме таблица за по-приятен визуален изход
         columns = ["Поле", "Стойност"]
         rows = [
             ["ID", invoice.invoice_id],
@@ -96,16 +100,14 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-
+    # Търсене по клиент
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
-
         if not keyword:
             print("[!] Моля, въведете име или част от име.")
             return
 
         results = self.invoice_controller.search_by_customer(keyword)
-
         if results is None:
             print("[!] Невалиден клиент.")
             return
@@ -128,7 +130,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 12, 12, 12]))
 
-
+    # Търсене по продукт
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
 
@@ -137,7 +139,6 @@ class InvoiceView:
             return
 
         results = self.invoice_controller.search_by_product(keyword)
-
         if results is None:
             print("[!] Невалиден продукт.")
             return
@@ -168,6 +169,7 @@ class InvoiceView:
             print("[!] Моля, въведете дата.")
             return
 
+        # Проверяваме дали датата е валидна
         try:
             InvoiceValidator.validate_date(date_str)
         except ValueError as e:
@@ -175,7 +177,6 @@ class InvoiceView:
             return
 
         results = self.invoice_controller.search_by_date(date_str)
-
         if not results:
             print("[!] Няма фактури за тази дата.")
             return
@@ -194,9 +195,10 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
-
+    # Разширено търсене по няколко критерия
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
+        # Потребителят може да пропусне някои полета
         customer = input("Клиент (или Enter за пропуск): ").strip() or None
         product = input("Продукт (или Enter за пропуск): ").strip() or None
         start_date = input("Начална дата (ГГГГ-ММ-ДД) или Enter: ").strip() or None
@@ -204,13 +206,14 @@ class InvoiceView:
         min_total = input("Минимална обща стойност или Enter: ").strip() or None
         max_total = input("Максимална обща стойност или Enter: ").strip() or None
 
-        # Валидация през InvoiceValidator
+        # Проверяваме дали въведените филтри са валидни
         try:
             InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
         except ValueError as e:
             print(f"[!] {e}")
             return
 
+        # Извършваме търсенето
         results = self.invoice_controller.advanced_search(
             customer=customer,
             product=product,
@@ -237,16 +240,16 @@ class InvoiceView:
             for inv in results
         ]
 
-        print("\n" + self._format_table_fixed(
-            columns, rows, [12, 40, 26, 12, 12, 12]
-        ))
+        print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 12]))
 
-
+    # Търсене по минимална/максимална сума
     def search_by_total(self, _):
         print("   Търсене по сума / диапазон")
+
         min_total = input("Минимална сума (или Enter): ").strip()
         max_total = input("Максимална сума (или Enter): ").strip()
 
+        # Парсваме числата, ако са въведени
         try:
             min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
             max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None

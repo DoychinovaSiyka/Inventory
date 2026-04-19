@@ -152,9 +152,21 @@ class ProductView:
         while True:
             loc_raw = input("Изберете локация (номер или Location ID): ").strip()
             try:
-                # Използваме строгия валидатор → нормализира към W1–Wn
-                location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
+                # Ако е число → превръщаме индекс → реален Location ID
+                if loc_raw.isdigit():
+                    idx = int(loc_raw)
+                    locations = self.location_controller.get_all()
+
+                    if idx < 0 or idx >= len(locations):
+                        raise ValueError("Невалиден избор за Локация.")
+
+                    location_id = locations[idx].location_id
+                else:
+                    # Ако е директно W1, W2, … → валидираме
+                    location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
+
                 break
+
             except Exception as e:
                 print(f"[!] {e}")
 

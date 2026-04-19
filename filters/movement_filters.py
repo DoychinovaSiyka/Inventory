@@ -97,7 +97,6 @@ def filter_advanced(movements: List[Movement],
 
     return results
 
-    # ================== ТЪРСЕНЕ И ФИЛТРИРАНЕ ==================
 
     def search_by_description(self, keyword: str) -> List[Movement]:
         """Търси движения, чието описание съдържа ключовата дума."""

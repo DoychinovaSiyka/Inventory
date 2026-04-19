@@ -26,9 +26,7 @@ class ReportController:
         self.location_controller = location_controller
         self.inventory_controller = inventory_controller
 
-    # ---------------------------------------------------------
     # СПРАВКА: ВСИЧКИ ДВИЖЕНИЯ
-    # ---------------------------------------------------------
     def report_movements(self):
         data = []
 
@@ -58,9 +56,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ВСИЧКИ ПРОДАЖБИ
-    # ---------------------------------------------------------
     def report_sales(self):
         invoices = self.invoice_controller.get_all()
         if invoices is None:
@@ -79,9 +75,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ПРОДАЖБИ ПО КЛИЕНТ
-    # ---------------------------------------------------------
     def report_sales_by_customer(self, customer):
         customer = customer.lower()
         invoices = self.invoice_controller.get_all()
@@ -102,9 +96,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ПРОДАЖБИ ПО ПРОДУКТ
-    # ---------------------------------------------------------
     def report_sales_by_product(self, product):
         product = product.lower()
         invoices = self.invoice_controller.get_all()
@@ -125,9 +117,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ПРОДАЖБИ ПО ДАТА
-    # ---------------------------------------------------------
     def report_sales_by_date(self, date):
         invoices = self.invoice_controller.get_all()
         if invoices is None:
@@ -147,9 +137,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ВСИЧКИ ДОСТАВКИ (IN)
-    # ---------------------------------------------------------
     def report_deliveries_all(self):
         data = []
 
@@ -187,9 +175,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ОБОРОТ ПО ДНИ
-    # ---------------------------------------------------------
     def report_turnover_by_day(self):
         invoices = self.invoice_controller.get_all()
         if invoices is None:
@@ -220,9 +206,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: НАЙ-ПРОДАВАНИ ПРОДУКТИ
-    # ---------------------------------------------------------
     def report_top_products(self):
         stats = {}
 
@@ -255,9 +239,7 @@ class ReportController:
         data.sort(key=lambda x: x["quantity"], reverse=True)
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ОБОБЩЕНА НАЛИЧНОСТ
-    # ---------------------------------------------------------
     def report_inventory_summary(self):
         data = []
 
@@ -306,9 +288,7 @@ class ReportController:
 
         return ReportResult(data)
 
-    # ---------------------------------------------------------
     # СПРАВКА: ЖИЗНЕН ЦИКЪЛ НА ПРОДУКТ
-    # ---------------------------------------------------------
     def product_lifecycle(self, name):
         name = name.lower()
 

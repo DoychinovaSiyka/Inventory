@@ -28,7 +28,8 @@ class LocationView:
         items.append(MenuItem("0", "Назад към главното меню", lambda u: "break"))
         return Menu("Управление на складовата мрежа", items)
 
-    # Списък с локации
+
+
     def show_all(self, _):
         locations = self.location_controller.get_all()
         if not locations:

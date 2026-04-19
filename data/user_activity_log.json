@@ -327,5 +327,208 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-18 23:48:52"
+    },
+    {
+        "log_id": "7f480dd3-7243-492f-abba-4698b1a4e1a2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:16:17"
+    },
+    {
+        "log_id": "590fe033-3941-498d-a7d3-b28b86db6485",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:21:00"
+    },
+    {
+        "log_id": "8297e0b8-217c-4502-98f6-4e22e15db4aa",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Моркови",
+        "timestamp": "2026-04-19 00:23:34"
+    },
+    {
+        "log_id": "738b3b76-5770-49ce-a4e8-679ff846d77b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:27:51"
+    },
+    {
+        "log_id": "29f30024-43ce-4f7e-a2f5-0ea0c9cd8ac0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Моркови",
+        "timestamp": "2026-04-19 00:29:06"
+    },
+    {
+        "log_id": "9d8e982e-acdf-4628-8379-297f16ded70d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Моркови, Qty: 67.0, Price: 1.99",
+        "timestamp": "2026-04-19 00:29:06"
+    },
+    {
+        "log_id": "95650265-afe8-4fb8-a8b4-b8fc2d78d743",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: testov pro",
+        "timestamp": "2026-04-19 00:30:02"
+    },
+    {
+        "log_id": "8f339bfc-ee91-489b-88b5-6f2d59e5ed13",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: testov pro, Qty: 12123.0, Price: 100.0",
+        "timestamp": "2026-04-19 00:30:02"
+    },
+    {
+        "log_id": "0804306c-2f68-49fa-8d22-59670646bb78",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Testov product (ID: 07995fe1-4fae-4392-95aa-05918a64580e)",
+        "timestamp": "2026-04-19 00:30:53"
+    },
+    {
+        "log_id": "2fa2ca20-986e-45f6-a310-295beaf27bfe",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID ab80ab03-5e3c-4c80-a997-5372f80d681d",
+        "timestamp": "2026-04-19 00:31:23"
+    },
+    {
+        "log_id": "e057d26b-7f11-4a19-b2c1-240776bf3a1c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:40:50"
+    },
+    {
+        "log_id": "340c72cc-d986-4610-8a1b-6fc614b776c2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:43:37"
+    },
+    {
+        "log_id": "b96c6085-e34f-4dac-911b-d73698a0d64d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 00:57:19"
+    },
+    {
+        "log_id": "ae535bfa-01b9-43de-ab40-53ec16ee0cc0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 01:01:46"
+    },
+    {
+        "log_id": "7f6cde1b-858c-4ca4-ad86-0f305508e99f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 01:06:42"
+    },
+    {
+        "log_id": "bc066317-4dd1-4bc6-95a1-4e0352659ae0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 01:14:47"
+    },
+    {
+        "log_id": "3adf0639-02f2-4cf1-a18e-139eed359ddf",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 09:30:12"
+    },
+    {
+        "log_id": "f5cf85ac-d89e-4c6d-938e-17033c2376c0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 10:08:33"
+    },
+    {
+        "log_id": "7a6f927c-0acb-49e5-95c6-95d42d87d465",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Консерва царевица 400g, Qty: 8.0, Price: 4.99",
+        "timestamp": "2026-04-19 10:10:47"
+    },
+    {
+        "log_id": "74d19cb5-95f0-4291-a75e-b7ccae6eb0a8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 10:14:58"
+    },
+    {
+        "log_id": "7c033a02-54ec-4314-bb7e-f0de01470122",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Консерва царевица 400g, Qty: 70.0, Price: 4.89",
+        "timestamp": "2026-04-19 10:17:58"
+    },
+    {
+        "log_id": "fed6cfb6-050c-4cdc-8e63-d71fa38d031d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 14.0, Price: 3.29",
+        "timestamp": "2026-04-19 10:21:35"
+    },
+    {
+        "log_id": "99998363-8541-4847-b29e-a36f3f96c4ca",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: Шоколад Линдт 100g, Qty: 12.0, From: София – Основен склад, To: Магазин Смолян",
+        "timestamp": "2026-04-19 10:24:39"
+    },
+    {
+        "log_id": "b96af01a-6e2d-4b21-95a1-91d9d08d1db1",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Успешно добавен: Салам „Балкански“ 300g",
+        "timestamp": "2026-04-19 10:30:23"
+    },
+    {
+        "log_id": "e97b8482-bf10-4a08-8ed6-e266e883c9fa",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Салам „Балкански“ 300g, Qty: 8.99, Price: 7.99",
+        "timestamp": "2026-04-19 10:30:23"
+    },
+    {
+        "log_id": "49c0d5f8-cedd-4876-bcca-934f62bcddab",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: 100, Qty: 91.01, Price: 7.99",
+        "timestamp": "2026-04-19 10:31:28"
+    },
+    {
+        "log_id": "3fab56aa-94be-4f35-9710-a8ed354b6509",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: 100 (ID: 71d9da7b-2528-4b1f-ba1f-fa2a1ab55472)",
+        "timestamp": "2026-04-19 10:31:28"
+    },
+    {
+        "log_id": "5dad3277-c291-4104-9b20-b90d65784ec2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Салам „Балкански“ 300g (ID: 71d9da7b-2528-4b1f-ba1f-fa2a1ab55472)",
+        "timestamp": "2026-04-19 10:32:02"
+    },
+    {
+        "log_id": "3b75d214-87a7-46da-8fd6-a6812a0a9557",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Салам „Балкански“ 300g, Qty: 76.0, Price: 7.99",
+        "timestamp": "2026-04-19 10:33:02"
     }
 ]

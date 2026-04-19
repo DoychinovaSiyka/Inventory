@@ -1,3 +1,28 @@
 [
-
+    {
+        "invoice_id": "949b97e6-00fe-4bf9-b506-2357aa72a391",
+        "movement_id": "65d7569b-9a5c-4364-9896-61c7a33a74c9",
+        "product": "Леща 1kg",
+        "quantity": 14.0,
+        "unit": "кг",
+        "unit_price": 3.29,
+        "total_price": 46.06,
+        "customer": "Стоян",
+        "date": "2026-04-19 10:21:35",
+        "created": "2026-04-19 10:21:35",
+        "modified": "2026-04-19 10:21:35"
+    },
+    {
+        "invoice_id": "88c6493e-eff8-46ab-a3dd-0735faf0c25e",
+        "movement_id": "cdc62deb-10b0-41df-bfc2-2a489c43b24d",
+        "product": "Салам „Балкански“ 300g",
+        "quantity": 76.0,
+        "unit": "бр.",
+        "unit_price": 7.99,
+        "total_price": 607.24,
+        "customer": "Калин Красимиров",
+        "date": "2026-04-19 10:33:02",
+        "created": "2026-04-19 10:33:02",
+        "modified": "2026-04-19 10:33:02"
+    }
 ]

@@ -6,11 +6,8 @@ from validators.user_validator import UserValidator
 
 
 class UserController:
-    """
-    Чист MVC контролер за потребители.
-    Работи безопасно при празен users.json.
-    Създава само един администратор при първо стартиране.
-    """
+    """ MVC контролер за потребители. Работи безопасно при празен users.json.
+    Създава само един администратор или оператор  при първо стартиране."""
 
     def __init__(self, repo):
         self.repo = repo
@@ -26,23 +23,21 @@ class UserController:
 
         self.logged_user: Optional[User] = None
 
-        # Ако няма потребители → създаваме само администратор
+        # Ако няма потребители - създаваме само администратор
         if not self.users:
             self._create_default_admin()
-            self._create_default_operator()   # ← ДОБАВЕНО
+            self._create_default_operator()
         else:
-            # Ако липсва админ → създаваме
+            # Ако липсва админ - създаваме
             if not any(u.role == "Admin" for u in self.users):
                 self._create_default_admin()
 
-            # Ако липсва оператор → създаваме
+            # Ако липсва оператор - създаваме
             if not any(u.role == "Operator" for u in self.users):
                 self._create_default_operator()
 
-    # ---------------------------------------------------------
-    # INTERNAL HELPERS
-    # ---------------------------------------------------------
 
+    # INTERNAL HELPERS
     def _get_now(self):
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -52,10 +47,8 @@ class UserController:
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
 
-    # ---------------------------------------------------------
-    # READ
-    # ---------------------------------------------------------
 
+    # READ
     def get_by_username(self, username: str) -> Optional[User]:
         for u in self.users:
             if u.username == username:
@@ -71,27 +64,22 @@ class UserController:
                 return u
         return None
 
-    # ---------------------------------------------------------
-    # AUTH
-    # ---------------------------------------------------------
 
+    # AUTH
     def login(self, username: str, password: str) -> Optional[User]:
         if not self.users:
             return None
 
         user = UserValidator.validate_login(username, password, self)
         hashed = self._hash_password(password)
-
         if user.password == hashed:
             self.logged_user = user
             return user
 
         return None
 
-    # ---------------------------------------------------------
-    # ADMIN ACTIONS
-    # ---------------------------------------------------------
 
+    # ADMIN ACTIONS
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
@@ -149,10 +137,8 @@ class UserController:
         self.save_changes()
         return True
 
-    # ---------------------------------------------------------
-    # BOOTSTRAP LOGIC
-    # ---------------------------------------------------------
 
+    # BOOTSTRAP LOGIC
     def _create_default_admin(self):
         """Създава само един администратор при празен старт."""
         admin = User(
@@ -189,10 +175,8 @@ class UserController:
         self.users.append(operator)
         self.save_changes()
 
-    # ---------------------------------------------------------
-    # ANONYMOUS USER
-    # ---------------------------------------------------------
 
+    # ANONYMOUS USER
     def create_anonymous_user(self) -> User:
         now = self._get_now()
         return User(

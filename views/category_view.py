@@ -31,7 +31,7 @@ class CategoryView:
         return Menu("Меню Категории", menu_items)
 
 
-    #  Подобрена дървовидна визуализация
+
     def show_all(self, _):
         categories = self.controller.get_all()
         if not categories:
@@ -46,7 +46,6 @@ class CategoryView:
 
         def print_tree(cat, level, prefix):
             indent = "   " * level
-
             if level == 0:
                 # главна категория → номер
                 print(f"{prefix}. {cat.name} (ID: {cat.category_id})")
@@ -103,7 +102,6 @@ class CategoryView:
         print("\nИзберете нов родител (номер или ID) или оставете празно за главна категория:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
-
         try:
             if new_name:
                 self.controller.update_name(category_id, new_name, "system")
@@ -126,7 +124,6 @@ class CategoryView:
         confirm = input(f"Наистина ли искате да изтриете '{category.name}'? (y/n): ").strip().lower()
         if confirm != "y":
             return
-
         try:
             self.controller.remove(category.category_id, "system")
             print("Категорията е изтрита успешно!")

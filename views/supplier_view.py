@@ -7,7 +7,7 @@ from models.user import User
 class SupplierView:
     def __init__(self, controller: SupplierController):
         self.controller = controller
-        self.menu = None  # ще се създаде динамично според ролята
+        self.menu = None  # създава се динамично според ролята
 
     def show_menu(self, user: User):
         self.menu = self._build_menu(user)

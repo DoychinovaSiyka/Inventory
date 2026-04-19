@@ -7,8 +7,7 @@ from views.password_utils import input_password  # скрито въвеждан
 class UserView:
     def __init__(self, controller: UserController):
         self.controller = controller
-        self.menu = None  # менюто ще се създава динамично според ролята
-
+        self.menu = None
 
     # Основно меню
     def show_menu(self, user: User):
@@ -80,7 +79,7 @@ class UserView:
         except ValueError as e:
             print("Грешка:", e)
 
-    # Изтриване на потребител
+
     def delete_user(self, user):
         username = input("Потребителско име за изтриване: ")
         try:

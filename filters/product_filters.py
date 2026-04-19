@@ -85,10 +85,22 @@ def filter_by_quantity_range(products: List[Product],
 
     return results
 
+def filter_low_stock(products, threshold, inventory_controller=None):
+    """
+    Връща продукти, чието общо количество е под зададения праг.
+    Количеството НЕ е в Product, а в inventory.json.
+    """
 
-def filter_low_stock(products: List[Product], threshold: float = 5) -> List[Product]:
-    return [p for p in products if p.quantity is not None and p.quantity < threshold]
+    if inventory_controller is None:
+        return []
 
+    low = []
+    for p in products:
+        stock = inventory_controller.get_total_stock(p.product_id)
+        if stock < threshold:
+            low.append(p)
+
+    return low
 
 # WAREHOUSE LOOKUP
 def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
@@ -134,7 +146,7 @@ def filter_combined(products,
     if max_price is not None:
         results = [p for p in results if p.price <= max_price]
 
-    # Количество (от инвентара)
+    # Количество - от инвентара
     if min_quantity is not None or max_quantity is not None:
         filtered = []
         for p in results:

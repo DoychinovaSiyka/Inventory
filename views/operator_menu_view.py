@@ -6,12 +6,12 @@ from views.invoice_view import InvoiceView
 from views.reports_menu_view import ReportsView
 from views.system_info_view import SystemInfoView
 from views.password_utils import require_password
-from views.location_view import LocationView   # ← ДОБАВЕНО ЗА READ-ONLY ЛОКАЦИИ
+from views.location_view import LocationView
 
 
 class OperatorMenuView:
     def __init__(self, controllers):
-        # Запазвам контролерите като отделни атрибути
+        # Запазваме всички контролери, за да може менюто да отваря съответните екрани
         self.product_controller = controllers["product"]
         self.category_controller = controllers["category"]
         self.location_controller = controllers["location"]
@@ -20,10 +20,12 @@ class OperatorMenuView:
         self.report_controller = controllers["report"]
         self.user_controller = controllers["user"]
         self.activity_log = controllers["activity_log"]
-        self.supplier_controller = controllers.get("supplier")  # ако има доставчици
-        self.menu = self._build_menu()     # Създавам менюто като отделен метод
+        self.supplier_controller = controllers.get("supplier")  # може и да няма доставчици
 
-    # Създаваме менюто отделно
+        # Създаваме менюто веднъж при инициализация
+        self.menu = self._build_menu()
+
+    # Създаваме структурата на менюто
     def _build_menu(self):
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти", self.open_products),
@@ -33,29 +35,32 @@ class OperatorMenuView:
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
 
-            #  Операторът може САМО да гледа локациите (READ-ONLY), защитено с парола
+            # Операторът може само да гледа локациите, не да ги редактира
             MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
 
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Основно меню
+    # Основен цикъл на менюто
     def show_menu(self, user):
+        # Гост потребител няма достъп до операторското меню
         if user.role.lower() == "guest":
             print("Нямате достъп до операторското меню.")
             return
+
+        # Показваме менюто, докато потребителят не избере "Назад"
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)
             if result == "break":
                 break
 
-    # Помощен метод за отваряне на View
+    # Малък помощен метод за създаване на view класове
     @staticmethod
     def _open_view(view_class, *args):
         return view_class(*args)
 
-    # Продукти
+    # Екран за управление на продукти
     def open_products(self, user):
         view = self._open_view(
             ProductView,
@@ -66,13 +71,13 @@ class OperatorMenuView:
         )
         view.show_menu(user)
 
-    # Категории — защитено меню
+    # Категории — защитено с парола, защото не е за всеки оператор
     @require_password("parola123")
     def open_categories(self, user):
         view = self._open_view(CategoryView, self.category_controller)
         view.show_menu(user)
 
-    # Движения — операторът има достъп
+    # Движения (IN/OUT/MOVE) — операторът има достъп
     def open_movements(self, user):
         view = self._open_view(
             MovementView,
@@ -80,11 +85,11 @@ class OperatorMenuView:
             self.movement_controller,
             self.user_controller,
             self.location_controller,
-            self.supplier_controller  # доставчици, ако има
+            self.supplier_controller  # ако има доставчици
         )
         view.show_menu(user)
 
-    # Справки — защитено меню
+    # Справки — също защитено с парола
     @require_password("parola123")
     def open_reports(self, user):
         view = self._open_view(ReportsView, self.report_controller)
@@ -96,18 +101,18 @@ class OperatorMenuView:
         view = self._open_view(InvoiceView, self.invoice_controller, self.activity_log)
         view.show_menu(user)
 
-    #   Преглед на локации (READ-ONLY)
+    # Преглед на локации — само четене, без редакция
     @require_password("parola123")
     def open_locations_readonly(self, user):
         print("\n--- СПИСЪК НА ЛОКАЦИИТЕ (READ-ONLY) ---")
-        view = LocationView(self.location_controller)
 
-        # Показваме само списъка — без меню, без добавяне, без редакция
+        # Използваме LocationView, но само за показване
+        view = LocationView(self.location_controller)
         view.show_all(user)
 
         input("\nНатиснете Enter за връщане към менюто...")
 
-    # Информация за системата — публично
+    # Информация за системата — достъпно за всички
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()

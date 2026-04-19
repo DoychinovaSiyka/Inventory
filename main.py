@@ -23,9 +23,7 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА ХРАНИЛИЩАТА
-    # -----------------------------
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -37,11 +35,9 @@ class InventoryApplication:
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
-    # -----------------------------
     def _init_controllers(self):
-        # Логове на потребители (остават)
+        # Логове на потребители
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
         # Основни контролери
@@ -51,10 +47,10 @@ class InventoryApplication:
         self.location_controller = LocationController(self.location_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # InventoryController
+
         self.inventory_controller = InventoryController(self.inventory_repo)
 
-        # ProductController
+
         self.product_controller = ProductController(
             self.product_repo,
             self.category_controller,
@@ -63,20 +59,19 @@ class InventoryApplication:
         self.product_controller.supplier_controller = self.supplier_controller
         self.product_controller.inventory_controller = self.inventory_controller
 
-        # MovementController (БЕЗ stocklog_controller)
+
         self.movement_controller = MovementController(
             self.movement_repo,
             self.product_controller,
             self.user_controller,
             self.location_controller,
-            None,  # stocklog_controller премахнат
             self.invoice_controller,
             self.activity_log_controller,
             self.inventory_controller,
             self.supplier_controller
         )
 
-        # Закачаме movement_controller към product_controller
+        # Закачам movement_controller към product_controller
         self.product_controller.movement_controller = self.movement_controller
 
         # ReportController
@@ -95,9 +90,7 @@ class InventoryApplication:
             self.location_controller
         )
 
-    # -----------------------------
     #   ИНИЦИАЛИЗАЦИЯ НА МЕНЮТАТА
-    # -----------------------------
     def _init_menus(self):
         self.controllers = {
             "user": self.user_controller,
@@ -116,9 +109,7 @@ class InventoryApplication:
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
-    # -----------------------------
     #   ПРОЦЕС НА ВХОД
-    # -----------------------------
     def _login_flow(self):
         while True:
             try:
@@ -147,9 +138,7 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"\n[!] {e}\nОпитайте отново.\n")
 
-    # -----------------------------
     #   АНОНИМЕН ДОСТЪП
-    # -----------------------------
     def _anonymous_flow(self):
         guest_user = self.user_controller.create_anonymous_user()
         self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN", "Анонимен достъп.")
@@ -158,9 +147,7 @@ class InventoryApplication:
 
         self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT", "Анонимен изход.")
 
-    # -----------------------------
-    #   СТАРТ НА ПРИЛОЖЕНИЕТО
-    # -----------------------------
+
     def run(self):
         while True:
             print("\n" + "=" * 31)

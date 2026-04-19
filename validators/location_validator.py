@@ -12,12 +12,12 @@ class LocationValidator:
         if len(cleaned) > 100:
             raise ValueError("Името на локацията е твърде дълго.")
 
-        return cleaned  # ← ВАЖНО: връщаме нормализирано име
+        return cleaned
 
     @staticmethod
     def validate_zone(zone):
         if zone is None:
-            return ""  # позволяваме празна зона, но не None
+            return ""  # позволяваме празна зона
 
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
@@ -27,7 +27,7 @@ class LocationValidator:
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
 
-        return cleaned  # ← ВАЖНО: връщаме нормализирана зона
+        return cleaned
 
     @staticmethod
     def validate_capacity(capacity):

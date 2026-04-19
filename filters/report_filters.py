@@ -39,7 +39,6 @@ def filter_movements_by_type(movements: List[Movement], movement_type: str):
 
 
 def filter_movements_by_date(movements: List[Movement], date_str: str):
-    """ Движения по дата (ГГГГ-ММ-ДД). """
     return [m for m in movements if _match_date(m.date, date_str)]
 
 

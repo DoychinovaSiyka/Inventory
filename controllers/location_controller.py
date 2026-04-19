@@ -21,10 +21,7 @@ class LocationController:
 
         self.locations: List[Location] = [Location.from_dict(l) for l in raw]
 
-    # ---------------------------------------------------------
     # INTERNAL HELPERS
-    # ---------------------------------------------------------
-
     def _log(self, action: str, message: str):
         if self.activity_log:
             self.activity_log.add_log("system", action, message)
@@ -43,10 +40,7 @@ class LocationController:
         next_id = max(numeric_ids) + 1 if numeric_ids else 1
         return f"W{next_id}"
 
-    # ---------------------------------------------------------
     # CREATE
-    # ---------------------------------------------------------
-
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -71,10 +65,7 @@ class LocationController:
 
         return location
 
-    # ---------------------------------------------------------
     # READ
-    # ---------------------------------------------------------
-
     def get_all(self) -> List[Location]:
         return self.locations
 
@@ -85,10 +76,7 @@ class LocationController:
                 return loc
         return None
 
-    # ---------------------------------------------------------
     # UPDATE
-    # ---------------------------------------------------------
-
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
 
@@ -115,10 +103,7 @@ class LocationController:
 
         return True
 
-    # ---------------------------------------------------------
     # DELETE
-    # ---------------------------------------------------------
-
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
@@ -130,9 +115,6 @@ class LocationController:
 
         return True
 
-    # ---------------------------------------------------------
     # SAVE
-    # ---------------------------------------------------------
-
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

@@ -3,33 +3,32 @@ import json
 from pathlib import Path
 from storage.repository import Repository
 
-# Родителската директория за стабилни импорти
+# Добавяме родителската директория, за да работят импортите нормално
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 
 class JSONRepository(Repository):
     """
-    Чист, безопасен Repository слой.
-    - НЕ прави предположения за структурата на данните.
-    - Връща {} ако файлът съдържа {}.
-    - Връща [] ако файлът съдържа [].
-    - Ако файлът е празен или повреден → връща празна структура според съдържанието.
+    Repository слой за работа с JSON файлове.
+    Идеята е да зарежда и записва данни безопасно,
+    без да прави предположения за структурата.
     """
 
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        # Ако файлът не съществува → създаваме празен файл
+        # Ако файлът липсва, създаваме празен според типа
         if not self.filepath.exists():
-            # Ако името подсказва речник → {}
             if self.filepath.name == "inventory.json":
                 self.save({})
             else:
                 self.save([])
 
     def load(self):
-        """Зарежда JSON съдържанието безопасно."""
+        """Чете JSON файла и връща съдържанието му.
+        Ако е празен или повреден, връща подходяща празна структура.
+        """
         if not self.filepath.exists():
             return {} if self.filepath.name == "inventory.json" else []
 
@@ -37,21 +36,21 @@ class JSONRepository(Repository):
             with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-                # Ако е None → връщаме празна структура
+                # Ако файлът е празен (None), връщаме празна структура
                 if data is None:
                     return {} if self.filepath.name == "inventory.json" else []
 
-                # Ако е валиден JSON → връщаме го
                 return data
 
         except (json.JSONDecodeError, OSError):
-            # Ако файлът е повреден → връщаме празна структура
+            # Ако JSON-ът е счупен, връщаме празна структура
             return {} if self.filepath.name == "inventory.json" else []
 
     def save(self, data):
-        """Записва JSON съдържание безопасно."""
+        """Записва данните обратно в JSON файла."""
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
     def get_all(self):
+        """Удобен shorthand за load()."""
         return self.load()

@@ -7,7 +7,7 @@ from views.reports_menu_view import ReportsView
 from views.invoice_view import InvoiceView
 from views.supplier_view import SupplierView
 from views.system_info_view import SystemInfoView
-from views.location_view import LocationView   # ← ДОБАВЕНО
+from views.location_view import LocationView
 
 
 class AdminMenuView:
@@ -15,35 +15,21 @@ class AdminMenuView:
         self.controllers = controllers
 
         # Създавам view обектите
-        self.product_view = ProductView(
-            controllers["product"],
-            controllers["category"],
-            controllers["location"],
-            controllers["activity_log"]
-        )
+        self.product_view = ProductView(controllers["product"], controllers["category"],
+                                        controllers["location"], controllers["activity_log"])
 
         self.category_view = CategoryView(controllers["category"])
-
-        self.movement_view = MovementView(
-            controllers["product"],
-            controllers["movement"],
-            controllers["user"],
-            controllers["location"],
-            controllers["supplier"]
-        )
+        self.movement_view = MovementView(controllers["product"], controllers["movement"],
+                                          controllers["user"], controllers["location"],
+                                          controllers["supplier"])
 
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
         self.invoice_view = InvoiceView(controllers["invoice"], controllers["activity_log"])
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
-
-        # НОВО: меню за локации
         self.location_view = LocationView(controllers["location"])
-
-        # Логистичен модул
-        self.graph_view = controllers.get("logistic")
-
+        self.graph_view = controllers.get("logistic")  # Логистичен модул
         self.menu = self._build_menu()
 
 
