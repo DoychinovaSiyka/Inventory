@@ -31,7 +31,7 @@ class Movement:
         self.to_location_id = str(to_location_id) if to_location_id else None
         # Тип движение – IN, OUT или MOVE
         self.movement_type = movement_type
-        # Количество – опитвам се да го обърна към число
+
         try:
             self.quantity = float(quantity)
         except (ValueError, TypeError):
@@ -39,7 +39,6 @@ class Movement:
 
         self.unit = unit or ""
 
-        # Кратко описание на движението
         self.description = description or ""
 
         # Цена – ако не може да се парсне, слагам 0

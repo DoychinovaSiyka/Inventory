@@ -8,7 +8,6 @@ class User:
 
         # ID-то може да е от JSON или да се генерира ново
         self.user_id = str(user_id) if user_id else str(uuid.uuid4())
-        self.id = self.user_id  # за съвместимост със стар код
         # Основни данни за потребителя
         self.first_name = first_name
         self.last_name = last_name

@@ -141,7 +141,6 @@ class ReportController:
         return ReportResult(data)
 
 
-
     # Справка - оборот по дни
     def report_turnover_by_day(self):
         invoices = self.invoice_controller.get_all() or []
@@ -232,12 +231,12 @@ class ReportController:
             if m.product_id != pid:
                 continue
 
-            # Само реални доставки
+            # Реални доставки
             if m.movement_type == MovementType.IN:
                 if m.supplier_id and m.user_id != "system" and "начално" not in m.description.lower():
                     total_in += m.quantity
 
-            # Само реални продажби
+            # Реални продажби
             elif m.movement_type == MovementType.OUT:
                 total_out += m.quantity
 
