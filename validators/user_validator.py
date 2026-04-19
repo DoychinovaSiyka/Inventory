@@ -2,7 +2,6 @@ import re
 
 
 class UserValidator:
-
     @staticmethod
     def validate_user_data(username: str, password: str, email: str, role: str, status: str):
         """ Основна валидация при регистрация или редакция. """
@@ -17,7 +16,6 @@ class UserValidator:
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         if not re.match(email_regex, email):
             raise ValueError(f"Невалиден формат на имейл: {email}")
-
         UserValidator.validate_role(role)
         UserValidator.validate_status(status)
 

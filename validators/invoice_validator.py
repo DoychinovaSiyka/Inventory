@@ -10,11 +10,8 @@ class InvoiceValidator:
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително поле.")
 
-        cleaned = (str(value)
-                   .replace("лв.", "")
-                   .replace("лв", "")
-                   .replace(" ", "")
-                   .replace(",", "."))
+        cleaned = (str(value).replace("лв.", "").replace("лв", "")
+                   .replace(" ", "").replace(",", "."))
 
         try:
             number = float(cleaned)
@@ -83,7 +80,7 @@ class InvoiceValidator:
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 
-    # Проверка на дата
+
     @staticmethod
     def validate_date(date_str):
         if not date_str:
@@ -127,8 +124,8 @@ class InvoiceValidator:
         if end_date:
             InvoiceValidator.validate_date(end_date)
 
+
         if min_total is not None:
             InvoiceValidator.parse_float(min_total, "Минимална сума")
-
         if max_total is not None:
             InvoiceValidator.parse_float(max_total, "Максимална сума")

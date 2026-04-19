@@ -6,10 +6,8 @@ from validators.location_validator import LocationValidator
 
 
 class LocationController:
-    """
-    Чист MVC контролер за локации.
-    Работи безопасно при празен locations.json.
-    """
+    """Контролерът управлява локациите в системата.
+    Работи коректно дори когато locations.json е празен."""
 
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
@@ -21,7 +19,7 @@ class LocationController:
 
         self.locations: List[Location] = [Location.from_dict(l) for l in raw]
 
-    # INTERNAL HELPERS
+    # Помощни методи, които използвам вътре в класа
     def _log(self, action: str, message: str):
         if self.activity_log:
             self.activity_log.add_log("system", action, message)
@@ -50,14 +48,8 @@ class LocationController:
         LocationValidator.validate_unique_name(name, self.locations)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        location = Location(
-            location_id=self._generate_id(),
-            name=name,
-            zone=zone,
-            capacity=capacity,
-            created=now,
-            modified=now
-        )
+        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity,
+                            created=now, modified=now)
 
         self.locations.append(location)
         self.save_changes()
@@ -103,7 +95,7 @@ class LocationController:
 
         return True
 
-    # DELETE
+
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
@@ -115,6 +107,6 @@ class LocationController:
 
         return True
 
-    # SAVE
+
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

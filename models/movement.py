@@ -15,29 +15,23 @@ class Movement:
                  from_location_id=None, to_location_id=None,
                  location_name=None):
 
-        # Унифициран ID
+        # ID-то го държа като стринг, за да е еднакво навсякъде
         self.id = str(movement_id)
         self.movement_id = self.id
-
-        # Продукт
+        # Продукт – ако няма име, слагам нещо смислено, за да не се чупят справките
         self.product_id = str(product_id)
-        # Тук е важна проверката: ако името е None или празно, слагаме "Неизвестен"
         self.product_name = product_name if product_name else "Неизвестен продукт"
-
-        # Потребител
+        # Потребителят, който е направил движението
         self.user_id = str(user_id)
-
-        # Локации
+        # Основна локация + име на склада, ако е подадено
         self.location_id = str(location_id) if location_id else None
         self.location_name = location_name if location_name else "Неизвестен склад"
-
+        # При MOVE движения – от къде и към къде
         self.from_location_id = str(from_location_id) if from_location_id else None
         self.to_location_id = str(to_location_id) if to_location_id else None
-
-        # Тип движение
+        # Тип движение – IN, OUT или MOVE
         self.movement_type = movement_type
-
-        # Количество
+        # Количество – опитвам се да го обърна към число
         try:
             self.quantity = float(quantity)
         except (ValueError, TypeError):
@@ -45,90 +39,65 @@ class Movement:
 
         self.unit = unit or ""
 
-        # Описание
+        # Кратко описание на движението
         self.description = description or ""
 
-        # Цена
+        # Цена – ако не може да се парсне, слагам 0
         try:
             self.price = float(price) if price is not None else 0.0
         except (ValueError, TypeError):
             self.price = 0.0
-
-        # Доставчик / Клиент
+        # Доставчик или клиент – според типа движение
         self.supplier_id = supplier_id
         self.customer = customer
-
-        # Дати
+        # Дати – ако не са подадени, ползвам датата на движението
         self.date = date
         self.created = created or date
         self.modified = modified or date
 
-    # SAVE → JSON
+    # SAVE - JSON
     def to_dict(self):
-        return {
-            "movement_id": self.movement_id,
-            "product_id": self.product_id,
-            "product_name": self.product_name,
-            "user_id": self.user_id,
-            "location_id": self.location_id,
-            "location_name": self.location_name,
-            "movement_type": self.movement_type.value if isinstance(self.movement_type, MovementType) else str(
-                self.movement_type),
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "supplier_id": self.supplier_id,
-            "customer": self.customer,
-            "from_location_id": self.from_location_id,
-            "to_location_id": self.to_location_id,
-            "date": self.date,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"movement_id": self.movement_id,
+                "product_id": self.product_id, "product_name": self.product_name,
+                "user_id": self.user_id, "location_id": self.location_id,
+                "location_name": self.location_name,
+                "movement_type": self.movement_type.value if isinstance(self.movement_type, MovementType) else str(self.movement_type),
+                "quantity": self.quantity, "unit": self.unit, "description": self.description,
+                "price": self.price, "supplier_id": self.supplier_id,
+                "customer": self.customer, "from_location_id": self.from_location_id,
+                "to_location_id": self.to_location_id, "date": self.date,
+                "created": self.created, "modified": self.modified}
 
-    # LOAD ← JSON
+    # LOAD <- JSON
     @staticmethod
     def from_dict(data):
         if not data:
             return None
 
-        # Обработка на типа движение (Enum)
+        # Опитвам се да възстановя типа движение (Enum)
         mt_raw = data.get("movement_type")
-        mt = MovementType.IN  # стойност по подразбиране
+        mt = MovementType.IN  # по подразбиране
 
         if mt_raw:
             try:
-                # Първо пробваме да го намерим по име на ключа (IN, OUT, MOVE)
                 if mt_raw in MovementType.__members__:
                     mt = MovementType[mt_raw]
-                # После пробваме по стойност ("IN", "OUT", "MOVE")
                 else:
                     mt = MovementType(mt_raw)
             except (ValueError, KeyError):
                 mt = MovementType.IN
 
-        return Movement(
-            movement_id=data.get("movement_id"),
-            product_id=data.get("product_id"),
-            # Опитваме се да вземем product_name, ако липсва - търсим под ключ 'product'
-            product_name=data.get("product_name") or data.get("product"),
-            user_id=data.get("user_id"),
-            location_id=data.get("location_id"),
-            movement_type=mt,
-            quantity=data.get("quantity", 0),
-            unit=data.get("unit", "бр."),
-            description=data.get("description", ""),
-            price=data.get("price", 0.0),
-            supplier_id=data.get("supplier_id"),
-            customer=data.get("customer"),
-            from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"),
-            location_name=data.get("location_name"),
-            date=data.get("date"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
+                        product_name=data.get("product_name") or data.get("product"),
+                        user_id=data.get("user_id"), location_id=data.get("location_id"),
+                        movement_type=mt, quantity=data.get("quantity", 0),
+                        unit=data.get("unit", "бр."), description=data.get("description", ""),
+                        price=data.get("price", 0.0), supplier_id=data.get("supplier_id"),
+                        customer=data.get("customer"),
+                        from_location_id=data.get("from_location_id"),
+                        to_location_id=data.get("to_location_id"),
+                        location_name=data.get("location_name"), date=data.get("date"),
+                        created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         m_type = self.movement_type.value if isinstance(self.movement_type, MovementType) else self.movement_type

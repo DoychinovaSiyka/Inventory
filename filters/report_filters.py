@@ -3,28 +3,32 @@ from models.movement import Movement
 from models.invoice import Invoice
 
 
-# Помощни вътрешни функции за вътрешна употреба
+# Малки помощни функции за вътрешно ползване
 def _match_string(target: str, keyword: str) -> bool:
-    """ Унифицирано търсене: малки букви и премахване на интервали. """
-    if not keyword: return True
+    """Правя търсенето по-унифицирано – малки букви, без излишни интервали."""
+    if not keyword:
+        return True
     return keyword.lower().strip() in (target or "").lower()
 
 
 def _match_date(date_val: str, date_str: str) -> bool:
-    """ Унифицирано филтриране по дата. """
-    if not date_str: return True
+    """Базова проверка за дата – просто сравнявам началото на стринга."""
+    if not date_str:
+        return True
     return date_val.startswith(date_str.strip())
 
 
-# Филтри за Фактури и Движения
+# Филтри за фактури и движения
 def filter_out_invoices(invoices: List[Invoice], movements: List[Movement]) -> List[Invoice]:
-    """ Филтър: само OUT фактури чрез мапване на движенията. """
+    """Връща само фактурите, които са свързани с OUT движения."""
     movement_map = {m.movement_id: m for m in movements}
-    return [inv for inv in invoices if (m := movement_map.get(inv.movement_id)) and m.movement_type.name == "OUT"]
+    return [inv for inv in invoices
+            if (m := movement_map.get(inv.movement_id))
+            and m.movement_type.name == "OUT"]
 
 
 def filter_movements_by_product(movements: List[Movement], product_controller, keyword: str):
-    """ Движения по име на продукт. """
+    """Филтрирам движенията по име на продукт."""
     result = []
     for m in movements:
         product = product_controller.get_by_id(m.product_id)
@@ -34,34 +38,38 @@ def filter_movements_by_product(movements: List[Movement], product_controller, k
 
 
 def filter_movements_by_type(movements: List[Movement], movement_type: str):
-    """ Движения по тип (IN/OUT/MOVE). """
+    """Филтър по тип движение – IN, OUT или MOVE."""
     return [m for m in movements if m.movement_type.name == movement_type.upper()]
 
 
 def filter_movements_by_date(movements: List[Movement], date_str: str):
+    """Филтър по дата – просто проверявам дали започва с подадения текст."""
     return [m for m in movements if _match_date(m.date, date_str)]
 
 
-# Филтри за Продажби
+# Филтри за продажби
 def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
-    """ Продажби по клиент (мин. 3 символа). """
-    if len(keyword.strip()) < 3: return []
+    """Търсене на продажби по клиент. Изисквам поне 3 символа, за да има смисъл."""
+    if len(keyword.strip()) < 3:
+        return []
     return [inv for inv in invoices if _match_string(inv.customer, keyword)]
 
 
 def filter_sales_by_product(invoices: List[Invoice], product_name: str):
-    """ Продажби по име на продукт. """
+    """Филтър за продажби по име на продукт."""
     return [inv for inv in invoices if _match_string(inv.product, product_name)]
 
 
 def filter_sales_by_date(invoices: List[Invoice], date_str: str):
+    """Филтър по дата на фактурата."""
     return [inv for inv in invoices if _match_date(inv.date, date_str)]
 
 
-#  Логика за Групиране - Справки
+# Групиране за справки
 def group_turnover_by_day(invoices: List[Invoice]):
-    """ Групира оборот по дни. """
+    """Групирам оборота по дни – колко продажби и каква сума има за всеки ден."""
     turnover = {}
+
     for inv in invoices:
         date_only = inv.date.split(" ")[0]
         total = float(inv.total_price)
@@ -75,8 +83,9 @@ def group_turnover_by_day(invoices: List[Invoice]):
 
 
 def group_top_products(invoices: List[Invoice]):
-    """ Групира статистика по продукти. """
+    """Правя статистика кои продукти се продават най-много."""
     stats = {}
+
     for inv in invoices:
         name = inv.product
         if name not in stats:

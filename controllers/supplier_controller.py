@@ -6,13 +6,14 @@ from validators.supplier_validator import SupplierValidator
 
 
 class SupplierController:
-    """ Контролер за доставчици. Координира валидатор, модел и хранилище. Не съдържа бизнес логика."""
+    """Контролерът управлява доставчиците и координира валидатора,
+    модела и хранилището."""
+
     def __init__(self, repo):
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
-
-    # INTERNAL HELPERS
+    # Помощни методи, които използвам вътре в класа
     @staticmethod
     def _now() -> str:
         """Връща текущата дата и час в стандартен формат."""
@@ -25,7 +26,8 @@ class SupplierController:
         SupplierValidator.validate_all(name, contact, address)
         now = self._now()
         supplier = Supplier(supplier_id=str(uuid.uuid4()), name=name.strip(),
-                            contact=contact.strip(), address=address.strip(), created=now, modified=now)
+                            contact=contact.strip(), address=address.strip(),
+                            created=now, modified=now)
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier

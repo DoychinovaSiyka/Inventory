@@ -10,7 +10,7 @@ from filters.invoice_filters import (filter_by_customer, filter_by_product,
 
 
 class InvoiceController:
-    """Контролер – съдържа само CRUD и координация."""
+    """Контролерът се грижи само за CRUD операциите и координацията между слоевете."""
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -40,14 +40,8 @@ class InvoiceController:
     # CRUD
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         InvoiceValidator.validate_all(**invoice_data)
-
         now = self._now()
-        invoice = Invoice(
-            invoice_id=self._generate_id(),
-            created=now,
-            modified=now,
-            **invoice_data
-        )
+        invoice = Invoice(invoice_id=self._generate_id(), created=now, modified=now, **invoice_data)
 
         self.invoices.append(invoice)
         self._save_changes()
@@ -92,7 +86,6 @@ class InvoiceController:
     def remove(self, invoice_id: str, user_id: str) -> bool:
         before = len(self.invoices)
         self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
-
         if len(self.invoices) < before:
             self._save_changes()
             self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {invoice_id}")
@@ -100,8 +93,7 @@ class InvoiceController:
 
         return False
 
-
-    # FILTER DELEGATION
+    # Прехвърлям филтрирането към отделните функции
     def search_by_customer(self, keyword: str):
         return filter_by_customer(self.invoices, keyword)
 
@@ -116,9 +108,6 @@ class InvoiceController:
         return filter_by_total_range(self.invoices, min_total, max_total)
 
     def advanced_search(self, **kwargs):
-        InvoiceValidator.validate_search_filters(kwargs.get("start_date"),
-            kwargs.get("end_date"),
-            kwargs.get("min_total"),
-            kwargs.get("max_total")
-        )
+        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"),
+                                                 kwargs.get("min_total"), kwargs.get("max_total"))
         return filter_advanced(self.invoices, **kwargs)

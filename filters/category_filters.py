@@ -3,8 +3,8 @@ from models.category import Category
 
 
 def filter_categories(categories: List[Category], keyword: str) -> List[Category]:
-    """Търси в списък от категории по име или описание.
-    Връща списък с намерените резултати."""
+    """Търси в списък с категории по име или описание.
+    Връща само тези, които съвпадат с търсенето."""
     if not keyword:
         return categories
     keyword = keyword.lower()

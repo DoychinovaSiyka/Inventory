@@ -21,11 +21,9 @@ class CategoryView:
     def _build_menu(self, is_admin: bool):
         menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на категория", self.add_category),
-                MenuItem("3", "Редактиране на категория", self.edit_category),
-                MenuItem("4", "Изтриване на категория", self.delete_category)
-            ])
+            menu_items.extend([MenuItem("2", "Добавяне на категория", self.add_category),
+                               MenuItem("3", "Редактиране на категория", self.edit_category),
+                               MenuItem("4", "Изтриване на категория", self.delete_category)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Категории", menu_items)
@@ -39,7 +37,6 @@ class CategoryView:
             return
 
         print("\nКатегории (йерархия):\n")
-
         # намираме root категориите
         roots = [c for c in categories if c.parent_id is None]
         roots.sort(key=lambda x: x.name.lower())
@@ -76,10 +73,8 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            self.controller.add(
-                {"name": name, "description": description, "parent_id": parent_id},
-                user_id="system"
-            )
+            self.controller.add({"name": name, "description": description, "parent_id": parent_id},
+                                user_id="system")
             print("Категорията е добавена успешно!")
         except ValueError as e:
             print("Грешка:", e)
@@ -146,11 +141,9 @@ class CategoryView:
         for cat in categories:
             if choice == cat.category_id:
                 return cat
-
         if choice.isdigit():
             index = int(choice) - 1
             if 0 <= index < len(categories):
                 return categories[index]
-
         print("Невалиден избор.")
         return None

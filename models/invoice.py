@@ -2,6 +2,7 @@ from datetime import datetime
 from validators.invoice_validator import InvoiceValidator
 
 
+
 class Invoice:
     def __init__(self, invoice_id, movement_id, product, quantity, unit, unit_price, total_price, customer, date,
                  created=None, modified=None):

@@ -3,16 +3,16 @@ from models.product import Product
 
 
 def sort_by_name_logic(products: List[Product]) -> List[Product]:
-    """Сортира оригиналния списък по име (in-place)."""
+    """Сортирам по име – директно върху оригиналния списък."""
     products.sort(key=lambda p: p.name.lower())
     return products
 
 def sort_by_price_desc_logic(products: List[Product]) -> List[Product]:
-    """Връща нов списък, сортиран по цена (низходящо)."""
+    """Правя нов списък, подреден по цена - от най-скъпите надолу."""
     return sorted(products, key=lambda p: p.price, reverse=True)
 
 def bubble_sort_logic(products: List[Product], key: Callable, reverse: bool) -> List[Product]:
-    """Bubble Sort: Сравнява съседни елементи и ги разменя при нужда."""
+    """Bubble sort – сравнявам съседни елементи и разменям, ако трябва."""
     arr = products[:]
     n = len(arr)
     for i in range(n):
@@ -25,7 +25,7 @@ def bubble_sort_logic(products: List[Product], key: Callable, reverse: bool) -> 
     return arr
 
 def selection_sort_logic(products: List[Product], key: Callable, reverse: bool) -> List[Product]:
-    """Selection Sort: Намира най-добрия елемент и го поставя на текущата позиция."""
+    """Selection sort – търся най-подходящия елемент и го местя отпред."""
     arr = products[:]
     n = len(arr)
     i = 0

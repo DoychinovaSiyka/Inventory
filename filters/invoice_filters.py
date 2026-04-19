@@ -3,7 +3,7 @@ from models.invoice import Invoice
 from datetime import datetime
 
 
-# Помощна функция за безопасно парсване на дати в различни формати
+# Помощна функция за парсване на дати в няколко формата
 def _parse_invoice_date(date_str: str) -> Optional[datetime]:
     if not date_str:
         return None
@@ -15,17 +15,19 @@ def _parse_invoice_date(date_str: str) -> Optional[datetime]:
     return None
 
 
-# Помощна функция за почистване на числови стойности
+# Почиствам числови стойности, за да остане само число
 def _clean_number(value):
-    """Премахва 'лв', интервали и запетаи, за да остане само число."""
+    """Премахвам 'лв', интервали и запетаи, за да може да се парсне като число."""
     if value is None or value == "":
         return None
-    value = str(value).replace("лв.", "").replace("лв", "").replace(" ", "").replace(",", ".")
+
+    value = (str(value).replace("лв.", "")
+             .replace("лв", "").replace(" ", "")
+             .replace(",", "."))
     try:
         return float(value)
     except ValueError:
         return None
-
 
 
 def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
@@ -35,30 +37,35 @@ def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     keyword = keyword.lower().strip()
     search_parts = keyword.split()
     results = []
+
     for inv in invoices:
         client_name = inv.customer.lower() if inv.customer else ""
-        # Позволява търсене по част от име, по една или повече думи, в произволен ред
+        # Позволявам търсене по части от името, по няколко думи, в
+        # произволен ред
         if all(part in client_name for part in search_parts):
             results.append(inv)
 
     return results
 
+
 def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     if not keyword:
         return invoices
+
     keyword = keyword.lower().strip()
     return [inv for inv in invoices if keyword in inv.product.lower()]
 
 
-# Търсене по дата - просто съвпадение на текст в началото
+# Търсене по дата – просто проверявам дали датата започва с подадения текст
 def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
     if not date_str:
         return invoices
+
     date_str = date_str.strip()
     return [inv for inv in invoices if inv.date.startswith(date_str)]
 
 
-# Филтър по обща цена
+# Филтър по диапазон на общата цена
 def filter_by_total_range(invoices: List[Invoice],
                           min_value: Optional[float],
                           max_value: Optional[float]) -> List[Invoice]:
@@ -77,25 +84,30 @@ def filter_by_total_range(invoices: List[Invoice],
     return results
 
 
-
 def filter_by_date_range(invoices: List[Invoice],
                          start_date: Optional[str],
                          end_date: Optional[str]) -> List[Invoice]:
+
     if not start_date and not end_date:
         return invoices
 
     start = _parse_invoice_date(start_date) if start_date else None
     end = _parse_invoice_date(end_date) if end_date else None
+
     filtered = []
+
     for inv in invoices:
         inv_date = _parse_invoice_date(inv.date)
         if not inv_date:
             continue
+
+        # Ако датата е преди началната – пропускам
         if start and inv_date < start:
             continue
-        # Ако end_date е само ден (напр. 2023-10-10), да включим целия ден до 23:59:59
+
+        # Ако има крайна дата, проверявам дали попада в диапазона
         if end:
-            # Ако end е подаден без час, го вдигам до края на деня за коректно сравнение
+            # Ако е подадена само дата без час – приемам края на деня
             if len(end_date.strip()) <= 10:
                 inv_date_only = inv_date.replace(hour=0, minute=0, second=0, microsecond=0)
                 if inv_date_only > end:
@@ -104,16 +116,15 @@ def filter_by_date_range(invoices: List[Invoice],
                 continue
 
         filtered.append(inv)
+
     return filtered
 
 
-# Комбиниран филтър - advanced_search
-def filter_advanced(invoices: List[Invoice],
-                    customer: Optional[str] = None,
+# Комбиниран филтър – прилага всички критерии един след друг
+def filter_advanced(invoices: List[Invoice], customer: Optional[str] = None,
                     product: Optional[str] = None,
                     start_date: Optional[str] = None,
-                    end_date: Optional[str] = None,
-                    min_total: Optional[float] = None,
+                    end_date: Optional[str] = None, min_total: Optional[float] = None,
                     max_total: Optional[float] = None) -> List[Invoice]:
 
     results = invoices

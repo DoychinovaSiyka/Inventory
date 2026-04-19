@@ -51,59 +51,36 @@ class InventoryApplication:
         self.inventory_controller = InventoryController(self.inventory_repo)
 
 
-        self.product_controller = ProductController(
-            self.product_repo,
-            self.category_controller,
-            self.activity_log_controller
-        )
+        self.product_controller = ProductController(self.product_repo,
+                                                    self.category_controller, self.activity_log_controller)
         self.product_controller.supplier_controller = self.supplier_controller
         self.product_controller.inventory_controller = self.inventory_controller
 
 
-        self.movement_controller = MovementController(
-            self.movement_repo,
-            self.product_controller,
-            self.user_controller,
-            self.location_controller,
-            self.invoice_controller,
-            self.activity_log_controller,
-            self.inventory_controller,
-            self.supplier_controller
-        )
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
+                                                      self.user_controller, self.location_controller,
+                                                      self.invoice_controller, self.activity_log_controller,
+                                                      self.inventory_controller, self.supplier_controller)
 
         # Закачам movement_controller към product_controller
         self.product_controller.movement_controller = self.movement_controller
 
         # ReportController
-        self.report_controller = ReportController(
-            self.report_repo,
-            self.product_controller,
-            self.movement_controller,
-            self.invoice_controller,
-            self.location_controller,
-            self.inventory_controller
-        )
+        self.report_controller = ReportController(self.report_repo, self.product_controller,
+                                                  self.movement_controller, self.invoice_controller,
+                                                  self.location_controller, self.inventory_controller)
 
         # Логистичен модул (Dijkstra)
-        self.logistic_service = GraphView(
-            self.inventory_controller,
-            self.location_controller
-        )
+        self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
 
     #   ИНИЦИАЛИЗАЦИЯ НА МЕНЮТАТА
     def _init_menus(self):
-        self.controllers = {
-            "user": self.user_controller,
-            "product": self.product_controller,
-            "category": self.category_controller,
-            "supplier": self.supplier_controller,
-            "location": self.location_controller,
-            "movement": self.movement_controller,
-            "invoice": self.invoice_controller,
-            "report": self.report_controller,
-            "activity_log": self.activity_log_controller,
-            "logistic": self.logistic_service
-        }
+        self.controllers = {"user": self.user_controller, "product": self.product_controller,
+                            "category": self.category_controller,
+                            "supplier": self.supplier_controller,
+                            "location": self.location_controller, "movement": self.movement_controller,
+                            "invoice": self.invoice_controller, "report": self.report_controller,
+                            "activity_log": self.activity_log_controller, "logistic": self.logistic_service}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -118,9 +95,8 @@ class InventoryApplication:
                 user = self.user_controller.login(username, password)
 
                 print(f"\nУспешен вход! Добре дошли, {user.first_name}.\n")
-                self.activity_log_controller.add_log(
-                    user.user_id, "LOGIN", f"Потребител {user.username} влезе."
-                )
+                self.activity_log_controller.add_log(user.user_id,
+                                                     "LOGIN", f"Потребител {user.username} влезе.")
 
                 if user.role == "Admin":
                     self.admin_menu.show_menu(user)
@@ -130,9 +106,8 @@ class InventoryApplication:
                     print("[!] Невалидна роля на потребителя.")
                     return
 
-                self.activity_log_controller.add_log(
-                    user.user_id, "LOGOUT", f"Потребител {user.username} излезе."
-                )
+                self.activity_log_controller.add_log(user.user_id,
+                                                     "LOGOUT", f"Потребител {user.username} излезе.")
                 return
 
             except ValueError as e:
@@ -141,11 +116,11 @@ class InventoryApplication:
     #   АНОНИМЕН ДОСТЪП
     def _anonymous_flow(self):
         guest_user = self.user_controller.create_anonymous_user()
-        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGIN", "Анонимен достъп.")
-
+        self.activity_log_controller.add_log(guest_user.user_id,
+                                             "ANONYMOUS_LOGIN", "Анонимен достъп.")
         self.anonymous_menu.show_menu(guest_user)
-
-        self.activity_log_controller.add_log(guest_user.user_id, "ANONYMOUS_LOGOUT", "Анонимен изход.")
+        self.activity_log_controller.add_log(guest_user.user_id,
+                                             "ANONYMOUS_LOGOUT", "Анонимен изход.")
 
 
     def run(self):

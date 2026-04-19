@@ -8,7 +8,6 @@ class AnonymousMenuView:
     def __init__(self, controllers):
         # Запазвам контролерите, за да ги подадем на под-менютата
         self.controllers = controllers
-        # Създавам view обектите
         self.product_view = ProductView(controllers["product"], controllers["category"],
                                         controllers["location"],
                                          controllers["activity_log"])

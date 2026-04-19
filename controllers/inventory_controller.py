@@ -5,27 +5,29 @@ from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
-    """Чист MVC контролер за наличности.
-       Работи безопасно при празни JSON файлове."""
+    """Контролерът управлява наличностите.
+    Работи коректно дори когато JSON файловете са празни."""
 
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-
-        # Зареждаме инвентара
+        # Зареждам инвентара от файла
         data = self.repo.load()
 
-        # Ако файлът е празен или None → създаваме празна структура
+        # Ако файлът е празен или структурата е грешна - започвам с празен инвентар
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
-        else:
-            # Ако структурата е стара (списък) - мигрираме
-            if isinstance(data, list):
-                self.data = {"products": {}}
-            else:
-                # Гарантираме, че има ключ "products"
-                if "products" not in data:
-                    data["products"] = {}
-                self.data = data
+            return
+
+        # Ако е стара структура (списък) - мигрирам към нов формат
+        if isinstance(data, list):
+            self.data = {"products": {}}
+            return
+
+        # Гарантирам, че ключът "products" съществува
+        if "products" not in data:
+            data["products"] = {}
+
+        self.data = data
 
     def _now(self) -> str:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -33,23 +35,18 @@ class InventoryController:
     def _save(self):
         self.repo.save(self.data)
 
-    # ВЪТРЕШНИ ПОМОЩНИ МЕТОДИ
+    # Помощни методи, които използвам вътре в класа
     def _get_product(self, product_id: str) -> Dict[str, Any] | None:
         return self.data["products"].get(product_id)
 
     def _ensure_product(self, product_id: str, name: str, unit: str):
         """Създава празен запис за продукт, ако липсва."""
         if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {
-                "name": name,
-                "unit": unit,
-                "total_stock": 0.0,
-                "locations": {},
-                "created": self._now(),
-                "modified": self._now()
-            }
+            self.data["products"][product_id] = {"name": name, "unit": unit,
+                                                 "total_stock": 0.0, "locations": {}, "created": self._now(),
+                                                 "modified": self._now()}
 
-    # ПУБЛИЧНИ МЕТОДИ ЗА СПРАВКИ
+    # Публични методи за справки
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         warehouses = []
         name_lower = product_name.lower()
@@ -74,11 +71,10 @@ class InventoryController:
             return 0.0
         return float(p["locations"].get(warehouse_id, 0.0))
 
-    # ОПЕРАЦИИ ВЪРХУ НАЛИЧНОСТТА
-    def increase_stock(self, product_id: str, product_name: str,
-                       warehouse_id: str, qty: float, unit: str) -> None:
-
-        # Валидаторът трябва да работи с празни данни → проверяваме безопасно
+    # Операции, свързани с наличностите
+    def increase_stock(self, product_id: str, product_name: str, warehouse_id: str,
+                       qty: float, unit: str) -> None:
+        # Валидаторът трябва да работи с празни данни - проверяваме безопасно
         if qty <= 0:
             return
 
@@ -93,19 +89,16 @@ class InventoryController:
 
         self._save()
 
-    def decrease_stock(self, product_id: str, warehouse_id: str,
-                       qty: float, unit: str) -> None:
-
+    def decrease_stock(self, product_id: str, warehouse_id: str, qty: float, unit: str) -> None:
         if qty <= 0:
             return
-
         p = self._get_product(product_id)
         if not p:
             return
 
         qty = float(qty)
 
-        # Ако няма достатъчно → просто не правим нищо (празен старт)
+        # Ако няма достатъчно наличност – просто не правя нищо (при празен старт)
         current = float(p.get("total_stock", 0.0))
         if current < qty:
             return
@@ -122,61 +115,60 @@ class InventoryController:
         p["modified"] = self._now()
         self._save()
 
-    def move_stock(self, product_id: str, product_name: str,
-                   from_wh: str, to_wh: str, qty: float, unit: str) -> None:
+    def move_stock(self, product_id: str, product_name: str, from_wh: str,
+                   to_wh: str, qty: float, unit: str) -> None:
 
         if qty <= 0:
             return
-
         p = self._get_product(product_id)
         if not p:
             return
 
         qty = float(qty)
 
-        # Ако няма в изходния склад → нищо не правим
+        # Ако няма в изходния склад – пропускам
         if from_wh not in p["locations"]:
             return
 
-        # Махаме от изходния склад
+        # Махам количеството от изходния склад
         new_qty = float(p["locations"][from_wh]) - qty
         if new_qty > 0:
             p["locations"][from_wh] = new_qty
         else:
             del p["locations"][from_wh]
 
-        # Добавяме в целевия склад
+        # Добавям в целевия склад
         p["locations"][to_wh] = float(p["locations"].get(to_wh, 0.0)) + qty
 
         p["modified"] = self._now()
         self._save()
 
-    # ПЪЛНО ПРЕСМЯТАНЕ ОТ movements.json
-    def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
-        """Пълно пресмятане на инвентара от движенията."""
+        # Пълно пресмятане на инвентара от movements.json
+        def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
 
-        # Изчистваме
-        self.data = {"products": {}}
+            # Започвам с празна структура
+            self.data = {"products": {}}
 
-        # Ако няма движения → празен инвентар
-        if not movements:
+            # Ако няма движения – инвентарът остава празен
+            if not movements:
+                self._save()
+                return
+
+            # Обхождам движенията по ред
+            for m in movements:
+                pid = m.product_id
+                pname = m.product_name
+                qty = float(m.quantity)
+                unit = m.unit
+
+                if m.movement_type.name == "IN":
+                    self.increase_stock(pid, pname, m.location_id, qty, unit)
+
+                elif m.movement_type.name == "OUT":
+                    self.decrease_stock(pid, m.location_id, qty, unit)
+
+                elif m.movement_type.name == "MOVE":
+                    self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
+
             self._save()
-            return
 
-        # Обхождаме движенията по ред
-        for m in movements:
-            pid = m.product_id
-            pname = m.product_name
-            qty = float(m.quantity)
-            unit = m.unit
-
-            if m.movement_type.name == "IN":
-                self.increase_stock(pid, pname, m.location_id, qty, unit)
-
-            elif m.movement_type.name == "OUT":
-                self.decrease_stock(pid, m.location_id, qty, unit)
-
-            elif m.movement_type.name == "MOVE":
-                self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
-
-        self._save()

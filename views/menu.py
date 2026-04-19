@@ -1,4 +1,5 @@
 class MenuItem:
+
     def __init__(self, key, text, action):
         self.key = key
         self.text = text
@@ -20,6 +21,7 @@ class Menu:
         for item in self.items:
             if item.key == choice:
                 return item.action(user)
+
         print("Невалиден избор.")
         return None
 

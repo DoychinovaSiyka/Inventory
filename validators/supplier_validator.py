@@ -42,7 +42,6 @@ class SupplierValidator:
         clean_address = str(address).strip()
         if len(clean_address) < 3:
             raise ValueError("Адресът трябва да съдържа поне 3 символа.")
-
         return clean_address
 
     @staticmethod

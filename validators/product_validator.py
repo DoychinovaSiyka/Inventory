@@ -54,7 +54,7 @@ class ProductValidator:
 
         return categories
 
-    # Количество
+
     @staticmethod
     def validate_quantity(quantity):
         try:
@@ -65,20 +65,17 @@ class ProductValidator:
             raise ValueError("Количеството трябва да е над 0.")
         return round(q, 2)
 
-    # Мерна единица
     @staticmethod
-    def validate_unit(unit):
+    def validate_unit(unit):  # проверка и нормализиране на мерната единица
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 
         u = unit.strip().lower()
 
-        mapping = {
-            "кг": "кг.", "kg": "кг.", "килограм": "кг.", "килограма": "кг.", "килограми": "кг.",
-            "бр": "бр.", "бр.": "бр.", "брой": "бр.",
-            "l": "л.", "л": "л.", "литър": "л.", "литра": "л.", "литри": "л.",
-            "пакет": "пакет", "paket": "пакет", "packet": "пакет"
-        }
+        mapping = {"кг": "кг.", "kg": "кг.", "килограм": "кг.", "килограма": "кг.",
+                   "килограми": "кг.", "бр": "бр.", "бр.": "бр.", "брой": "бр.", "l": "л.",
+                   "л": "л.", "литър": "л.", "литра": "л.", "литри": "л.", "пакет": "пакет",
+                   "paket": "пакет", "packet": "пакет"}
 
         parts = u.split()
         if len(parts) > 1:
@@ -93,9 +90,8 @@ class ProductValidator:
 
         return u
 
-    # Цена
     @staticmethod
-    def validate_price(price):
+    def validate_price(price):  # цена – трябва да е число > 0
         try:
             p = float(price)
         except (ValueError, TypeError):
@@ -106,18 +102,10 @@ class ProductValidator:
 
     # Помощни парсери
     @staticmethod
-    def _parse_float_internal(value, field_name="стойност"):
+    def _parse_float_internal(value, field_name="стойност"):  # чистя лв., запетаи и т.н.
         if isinstance(value, str):
-            value = (
-                value.replace("лв.", "")
-                     .replace("лв", "")
-                     .replace("lv.", "")
-                     .replace("lv", "")
-                     .replace("BGN", "")
-                     .replace("bgn", "")
-                     .replace(",", ".")
-                     .strip()
-            )
+            value = (value.replace("лв.", "").replace("лв", "").replace("lv.", "")
+                     .replace("lv", "").replace("BGN", "").replace("bgn", "").replace(",", ".").strip())
         try:
             f = float(value)
         except (ValueError, TypeError):
@@ -125,14 +113,14 @@ class ProductValidator:
         return round(f, 2)
 
     @staticmethod
-    def parse_float(value, field_name="стойност"):
+    def parse_float(value, field_name="стойност"):  # задължително число > 0
         f = ProductValidator._parse_float_internal(value, field_name)
         if f <= 0:
             raise ValueError(f"{field_name} трябва да е над 0.")
         return f
 
     @staticmethod
-    def parse_optional_float(value, field_name="стойност"):
+    def parse_optional_float(value, field_name="стойност"):  # може да липсва, но ако има – > 0
         if value is None or str(value).strip() == "":
             return None
         f = ProductValidator._parse_float_internal(value, field_name)
@@ -141,7 +129,7 @@ class ProductValidator:
         return f
 
     @staticmethod
-    def parse_int(value, field_name="стойност"):
+    def parse_int(value, field_name="стойност"):  # цяло число, не отрицателно
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително.")
         try:
@@ -154,20 +142,20 @@ class ProductValidator:
 
     # Проверки за съществуване
     @staticmethod
-    def validate_product_exists(product_id, product_controller):
+    def validate_product_exists(product_id, product_controller):  # продуктът трябва да съществува
         product = product_controller.get_by_id(product_id)
         if not product:
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
         return product
 
     @staticmethod
-    def validate_category_exists(category_ids, category_controller):
+    def validate_category_exists(category_ids, category_controller):  # проверка за категории
         for cid in category_ids:
             if not category_controller.get_by_id(cid):
                 raise ValueError(f"Категория с ID {cid} не съществува.")
 
     @staticmethod
-    def validate_supplier_exists(supplier_id, supplier_controller):
+    def validate_supplier_exists(supplier_id, supplier_controller):  # доставчик – ако има, трябва да е валиден
         if supplier_id is None:
             return
         supplier = supplier_controller.get_by_id(supplier_id)
@@ -176,7 +164,7 @@ class ProductValidator:
 
     # Проверка за дублиране в склад
     @staticmethod
-    def validate_unique_name_in_location(name, location_id, products):
+    def validate_unique_name_in_location(name, location_id, products):  # име + склад → уникално
         for p in products:
             if p.name.lower() == name.lower() and getattr(p, "location_id", None) == location_id:
                 raise ValueError("Продуктът вече съществува в този склад.")

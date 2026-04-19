@@ -35,7 +35,7 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
     return results
 
 
-# CATEGORY FILTERS
+
 def filter_by_category(products: List[Product], category_id: str) -> List[Product]:
     category_id = str(category_id)
     return [p for p in products if any(str(c.category_id) == category_id for c in (p.categories or []))]
@@ -72,7 +72,7 @@ def filter_by_price_range(products: List[Product],
     return results
 
 
-# QUANTITY FILTERS
+
 def filter_by_quantity_range(products: List[Product],
                              min_qty: Optional[float],
                              max_qty: Optional[float]) -> List[Product]:
@@ -86,10 +86,8 @@ def filter_by_quantity_range(products: List[Product],
     return results
 
 def filter_low_stock(products, threshold, inventory_controller=None):
-    """
-    Връща продукти, чието общо количество е под зададения праг.
-    Количеството НЕ е в Product, а в inventory.json.
-    """
+    """Връща продуктите, които са паднали под зададения минимум.
+    Количествата не са в Product, а идват от inventory.json."""
 
     if inventory_controller is None:
         return []
@@ -102,7 +100,7 @@ def filter_low_stock(products, threshold, inventory_controller=None):
 
     return low
 
-# WAREHOUSE LOOKUP
+# Проверки и търсене на складове
 def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
     product_name = product_name.lower()
     warehouses = []
@@ -118,17 +116,10 @@ def filter_warehouses(products: List[Product], product_name: str) -> List[str]:
     return warehouses
 
 
-# COMBINED SEARCH
-def filter_combined(products,
-                    inventory_controller,
-                    keyword=None,
-                    min_price=None,
-                    max_price=None,
-                    min_quantity=None,
-                    max_quantity=None,
-                    category_id=None,
-                    supplier_id=None,
-                    location_id=None):
+# Комбинирано търсене по няколко критерия
+def filter_combined(products, inventory_controller, keyword=None,
+                    min_price=None, max_price=None, min_quantity=None,
+                    max_quantity=None, category_id=None, supplier_id=None, location_id=None):
 
     results = products
 
@@ -163,11 +154,11 @@ def filter_combined(products,
         results = [p for p in results
                    if any(c.category_id == category_id for c in p.categories)]
 
-    # Доставчик
+
     if supplier_id:
         results = [p for p in results if p.supplier_id == supplier_id]
 
-    # Локация
+
     if location_id:
         results = [p for p in results if p.location_id == location_id]
 

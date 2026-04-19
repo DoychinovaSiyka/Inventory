@@ -12,7 +12,6 @@ class ReportsView:
     def __init__(self, controller: ReportController):
         # Запазваме контролера за справки
         self.controller = controller
-
         #  контролерите са налични в ReportController
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
@@ -31,21 +30,19 @@ class ReportsView:
                 break
 
     def _build_menu(self):
-        return Menu("Справки и Отчети", [
-            MenuItem("1", "Обобщена справка за наличности", self.summary_report),
-            MenuItem("2", "Справка за движения", self.report_movements),
-            MenuItem("3", "Всички фактури/продажби", self.report_sales),
-            MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
-            MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
-            MenuItem("6", "Търсене по дата", self.report_sales_by_date),
-            MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
-            MenuItem("8", "Търсене на доставка", self.search_delivery),
-            MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
-            MenuItem("10", "Най-продавани продукти", self.report_top_products),
-            MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
-            MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Справки и Отчети", [MenuItem("1", "Обобщена справка за наличности", self.summary_report),
+                                         MenuItem("2", "Справка за движения", self.report_movements),
+                                         MenuItem("3", "Всички фактури/продажби", self.report_sales),
+                                         MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
+                                         MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
+                                         MenuItem("6", "Търсене по дата", self.report_sales_by_date),
+                                         MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
+                                         MenuItem("8", "Търсене на доставка", self.search_delivery),
+                                         MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
+                                         MenuItem("10", "Най-продавани продукти", self.report_top_products),
+                                         MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
+                                         MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
+                                         MenuItem("0", "Назад", lambda u: "break")])
 
     # Помощни функции за форматиране
     @staticmethod
@@ -127,7 +124,7 @@ class ReportsView:
                 return raw
             print("[!] Моля, въведете стойност.")
 
-    # Справка: налично количество и продадено количество по продукт
+    # Справка - налично количество и продадено количество по продукт
     def summary_report(self, _):
         if not self.inventory_controller or "products" not in self.inventory_controller.data:
             print("\n[!] Системата е празна. Няма наличности.\n")
@@ -143,13 +140,9 @@ class ReportsView:
             unit = pdata.get("unit", "")
             locations = pdata.get("locations", {})
 
-            data[pid] = {
-                "name": name,
-                "total": total_stock,
-                "sold": 0.0,
-                "unit": unit,
-                "whs": locations
-            }
+            data[pid] = {"name": name, "total": total_stock,
+                         "sold": 0.0, "unit": unit,
+                         "whs": locations}
 
         # Добавяме продадените количества от движенията (OUT)
         if self.movement_controller:
@@ -171,12 +164,10 @@ class ReportsView:
             else:
                 wh_display = ", ".join(wh_list)
 
-            rows.append([
-                self._truncate(info["name"], 25),
-                self._format_qty_unit(info["total"], info["unit"]),
-                self._format_qty_unit(info["sold"], info["unit"], dash_on_zero=True),
-                wh_display if wh_display else "-"
-            ])
+            rows.append([self._truncate(info["name"], 25),
+                         self._format_qty_unit(info["total"], info["unit"]),
+                         self._format_qty_unit(info["sold"], info["unit"], dash_on_zero=True),
+                         wh_display if wh_display else "-"])
 
         rows.sort(key=lambda r: r[0])
         print(format_table(["Продукт", "Налично", "Продадено", "Складове"], rows))
@@ -207,14 +198,8 @@ class ReportsView:
             else:
                 price_str = self._format_lv(item.get("price"))
 
-            rows.append([
-                date_str,
-                m_type,
-                product_name,
-                qty,
-                price_str,
-                self._truncate(loc_display, 25)
-            ])
+            rows.append([date_str, m_type, product_name,
+                         qty, price_str, self._truncate(loc_display, 25)])
 
         print(format_table(["Дата/Час", "Тип", "Продукт", "Кол.", "Цена", "Локация"], rows))
 
@@ -223,7 +208,6 @@ class ReportsView:
         if not self.inventory_controller or "products" not in self.inventory_controller.data:
             print("\n[!] Складовете са празни.\n")
             return
-
         rows = []
         products = self.inventory_controller.data["products"]
 
@@ -233,11 +217,8 @@ class ReportsView:
             locations = pdata.get("locations", {})
 
             for wh, qty in locations.items():
-                rows.append([
-                    self._truncate(name, 25),
-                    self._truncate(wh, 15),
-                    self._format_qty_unit(qty, unit)
-                ])
+                rows.append([self._truncate(name, 25), self._truncate(wh, 15),
+                             self._format_qty_unit(qty, unit)])
 
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
@@ -289,13 +270,9 @@ class ReportsView:
             product_name = item.get("product", "N/A")
             total_price = item.get("total_price", 0)
 
-            rows.append([
-                str(invoice_or_movement)[:10],
-                date_str,
-                self._truncate(client_name, 20),
-                self._truncate(product_name, 25),
-                self._format_lv(total_price)
-            ])
+            rows.append([str(invoice_or_movement)[:10], date_str,
+                         self._truncate(client_name, 20),
+                         self._truncate(product_name, 25), self._format_lv(total_price)])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -326,15 +303,8 @@ class ReportsView:
             qty = self._format_qty_unit(item.get("quantity", 0), item.get("unit"))
             supplier_name = self._truncate(item.get("supplier", "N/A"), 15)
             location_name = self._truncate(item.get("location_name", "N/A"), 15)
-
-            rows.append([
-                date_str,
-                movement_id,
-                product_name,
-                qty,
-                supplier_name,
-                location_name
-            ])
+            rows.append([date_str, movement_id, product_name,
+                         qty, supplier_name, location_name])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
@@ -344,7 +314,6 @@ class ReportsView:
         if not res.data:
             print("\n[!] Няма данни за оборот.\n")
             return
-
         rows = []
         for item in res.data:
             date_str = item["date"]
@@ -360,7 +329,6 @@ class ReportsView:
         if not res.data:
             print("\n[!] Няма данни за продажби.\n")
             return
-
         rows = []
         for item in res.data:
             product_name = self._truncate(item["product"], 25)

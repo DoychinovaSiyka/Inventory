@@ -2,6 +2,7 @@ import re
 
 class CategoryValidator:
 
+
     @staticmethod
     def validate_name(name):
         if not isinstance(name, str):
@@ -71,7 +72,6 @@ class CategoryValidator:
             return None
 
         cleaned = choice.strip()
-
         if cleaned.isdigit():
             return int(cleaned)
 

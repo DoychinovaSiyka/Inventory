@@ -58,6 +58,7 @@ class UserView:
         try:
             self.controller.change_role(username, new_role)
             print("Ролята е променена.")
+
         except ValueError as e:
             print("Грешка:", e)
 

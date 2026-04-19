@@ -1,4 +1,5 @@
 class Supplier:
+
     def __init__(self, supplier_id, name, contact, address, created, modified):
         """ Модел за доставчик. Датите (created/modified) идват от контролера."""
         self.supplier_id = str(supplier_id)

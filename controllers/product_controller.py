@@ -19,18 +19,17 @@ from analytics.product_analytics import (calculate_average_price, calculate_tota
 
 class ProductController:
     """Контролерът отговаря за работа с продуктите – добавяне, редакция, триене и справки."""
-
     def __init__(self, repo, category_controller, activity_log_controller=None):
         # Запазваме нужните контролери и хранилището
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log = activity_log_controller
 
-        # Тук държим всички продукти в паметта
+        # държим всички продукти в паметта
         self.products: List[Product] = []
         self._load_products()
 
-        # Тези контролери се задават отвън, когато са налични
+        # контролерите се задават отвън, когато са налични
         self.supplier_controller = None
         self.inventory_controller = None
         self.movement_controller = None
@@ -53,13 +52,10 @@ class ProductController:
     # Зареждаме продуктите от файла/базата
     def _load_products(self):
         raw = self.repo.load()
-        self.products = [
-            Product.from_dict(p_data, self.category_controller)
-            for p_data in raw
-        ]
+        self.products = [Product.from_dict(p_data, self.category_controller)
+                         for p_data in raw]
 
     # Операции за четене
-
     def get_all(self) -> List[Product]:
         return self.products
 
@@ -73,13 +69,9 @@ class ProductController:
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-    # Добавяне на нов продукт
 
     def add(self, product_data: dict, user_id: str) -> Product:
-        """
-        Добавяме нов продукт.
-        Забележка: началното количество се прави чрез IN движение.
-        """
+        """ Добавяме нов продукт.Началното количество се прави чрез IN движение."""
 
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
         ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
@@ -88,25 +80,14 @@ class ProductController:
         now = self._now()
 
         # Взимаме обектите на категориите
-        categories = [
-            self.category_controller.get_by_id(cid)
-            for cid in product_data['category_ids']
-        ]
+        categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
         # Създаваме продукта
-        product = Product(
-            product_id=self._generate_id(),
-            name=product_data['name'],
-            categories=categories,
-            unit=product_data['unit'],
-            description=product_data['description'],
-            price=float(product_data['price']),
-            supplier_id=product_data.get('supplier_id'),
-            tags=product_data.get('tags', []),
-            location_id=product_data.get('location_id'),
-            created=now,
-            modified=now
-        )
+        product = Product(product_id=self._generate_id(), name=product_data['name'],
+                          categories=categories, unit=product_data['unit'],
+                          description=product_data['description'], price=float(product_data['price']),
+                          supplier_id=product_data.get('supplier_id'), tags=product_data.get('tags', []),
+                          location_id=product_data.get('location_id'), created=now, modified=now)
 
         # Добавяме продукта в списъка
         self.products.append(product)
@@ -120,39 +101,23 @@ class ProductController:
         if quantity and location_id and self.movement_controller:
             qty = float(quantity)
             if qty > 0:
-                self.movement_controller.add(
-                    product_id=product.product_id,
-                    user_id=user_id,
-                    location_id=location_id,
-                    movement_type="IN",
-                    quantity=str(qty),
-                    description="Начално зареждане при създаване на продукт",
-                    price=str(product.price),
-                    supplier_id=product.supplier_id or "system"
-                )
+                self.movement_controller.add(product_id=product.product_id, user_id=user_id,
+                                             location_id=location_id, movement_type="IN", quantity=str(qty),
+                                             description="Начално зареждане при създаване на продукт",
+                                             price=str(product.price), supplier_id=product.supplier_id or "system")
 
         return product
 
     # Редакция на продукт
-    def update_product(
-        self,
-        product_id: str,
-        new_name: Optional[str],
-        new_description: Optional[str],
-        new_price: float,
-        new_quantity: Optional[float] = None,
-        new_unit: Optional[str] = None,
-        new_category_ids: Optional[List[str]] = None,
-        new_location_id: Optional[str] = None,
-        new_supplier_id: Optional[str] = None,
-        new_tags: Optional[List[str]] = None,
-        user_id: str = "system"
-    ) -> bool:
+    def update_product(self, product_id: str, new_name: Optional[str], new_description: Optional[str],
+                       new_price: float, new_quantity: Optional[float] = None, new_unit: Optional[str] = None,
+                       new_category_ids: Optional[List[str]] = None, new_location_id: Optional[str] = None,
+                       new_supplier_id: Optional[str] = None, new_tags: Optional[List[str]] = None,
+                       user_id: str = "system") -> bool:
 
         # Проверяваме дали продуктът съществува
         product = ProductValidator.validate_product_exists(product_id, self)
 
-        # Име
         if new_name and new_name.lower() != product.name.lower():
             ProductValidator.validate_name(new_name)
             product.name = new_name
@@ -161,7 +126,7 @@ class ProductController:
         if new_description and new_description != product.description:
             product.description = ProductValidator.validate_description(new_description)
 
-        # Цена
+
         product.price = ProductValidator.validate_price(new_price)
 
         # Корекция на количество чрез движения
@@ -169,29 +134,18 @@ class ProductController:
             try:
                 current_stock = self.inventory_controller.get_total_stock(product_id)
                 diff = float(new_quantity) - float(current_stock)
-
                 if diff > 0:
-                    self.movement_controller.add(
-                        product_id=product_id,
-                        user_id=user_id,
-                        location_id=new_location_id or product.location_id or "W1",
-                        movement_type="IN",
-                        quantity=str(diff),
-                        description="Корекция (+) от редакция",
-                        price=str(product.price),
-                        supplier_id=product.supplier_id or "system"
-                    )
+                    self.movement_controller.add(product_id=product_id, user_id=user_id,
+                                                 location_id=new_location_id or product.location_id or "W1",
+                                                 movement_type="IN", quantity=str(diff),
+                                                 description="Корекция (+) от редакция", price=str(product.price),
+                                                 supplier_id=product.supplier_id or "system")
                 elif diff < 0:
-                    self.movement_controller.add(
-                        product_id=product_id,
-                        user_id=user_id,
-                        location_id=new_location_id or product.location_id or "W1",
-                        movement_type="OUT",
-                        quantity=str(abs(diff)),
-                        description="Корекция (-) от редакция",
-                        price=str(product.price),
-                        supplier_id=product.supplier_id or "system"
-                    )
+                    self.movement_controller.add(product_id=product_id, user_id=user_id,
+                                                 location_id=new_location_id or product.location_id or "W1",
+                                                 movement_type="OUT", quantity=str(abs(diff)),
+                                                 description="Корекция (-) от редакция", price=str(product.price),
+                                                 supplier_id=product.supplier_id or "system")
             except Exception:
                 pass
 
@@ -202,21 +156,16 @@ class ProductController:
         # Категории
         if new_category_ids:
             ProductValidator.validate_category_exists(new_category_ids, self.category_controller)
-            product.categories = [
-                self.category_controller.get_by_id(cid)
-                for cid in new_category_ids
-            ]
+            product.categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
 
-        # Локация
         if new_location_id is not None:
             product.location_id = new_location_id
 
-        # Доставчик
         if new_supplier_id is not None:
             ProductValidator.validate_supplier_exists(new_supplier_id, self.supplier_controller)
             product.supplier_id = new_supplier_id
 
-        # Tags
+
         if new_tags is not None:
             if not isinstance(new_tags, list):
                 raise ValueError("Tags трябва да са списък.")
@@ -235,7 +184,6 @@ class ProductController:
 
         before = len(self.products)
         self.products = [p for p in self.products if str(p.product_id) != str(product_id)]
-
         if len(self.products) < before:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт ID {product_id}")
@@ -246,9 +194,7 @@ class ProductController:
     def remove_by_name(self, name: str, user_id: str) -> bool:
         name = name.lower()
         before = len(self.products)
-
         self.products = [p for p in self.products if p.name.lower() != name]
-
         if len(self.products) < before:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт '{name}'")
@@ -281,29 +227,14 @@ class ProductController:
     def search_by_supplier(self, supplier_id: str):
         return filter_by_supplier(self.products, supplier_id)
 
-    def search_combined(
-        self,
-        keyword=None,
-        min_price=None,
-        max_price=None,
-        min_quantity=None,
-        max_quantity=None,
-        category_id=None,
-        supplier_id=None,
-        location_id=None
-    ):
-        return filter_combined(
-            self.products,
-            self.inventory_controller,
-            keyword=keyword,
-            min_price=min_price,
-            max_price=max_price,
-            min_quantity=min_quantity,
-            max_quantity=max_quantity,
-            category_id=category_id,
-            supplier_id=supplier_id,
-            location_id=location_id
-        )
+    def search_combined(self, keyword=None, min_price=None, max_price=None, min_quantity=None,
+                        max_quantity=None, category_id=None, supplier_id=None, location_id=None):
+
+        return filter_combined(self.products, self.inventory_controller, keyword=keyword,
+                               min_price=min_price, max_price=max_price,
+                               min_quantity=min_quantity, max_quantity=max_quantity,
+                               category_id=category_id, supplier_id=supplier_id, location_id=location_id)
+
 
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)
