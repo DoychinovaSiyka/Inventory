@@ -95,15 +95,26 @@ class ReportController:
         return ReportResult(data)
 
     # Справка - всички доставки (IN)
-    def report_deliveries_all(self):
+    def report_deliveries_all(self, keyword=None):
         data = []
 
         for m in self.movement_controller.movements:
             if m.movement_type != MovementType.IN:
                 continue
 
+            # Филтър за реални доставки
+            if m.supplier_id is None:
+                continue
+            if m.user_id == "system":
+                continue
+            if m.description and ("начално" in m.description.lower() or "корекция" in m.description.lower()):
+                continue
+
             product = self.product_controller.get_by_id(m.product_id)
-            product_name = product.name if product else "Неизвестен продукт"
+            if not product:
+                continue
+
+            product_name = product.name
 
             location = self.location_controller.get_by_id(m.location_id)
             location_name = location.name if location else "N/A"
@@ -113,12 +124,23 @@ class ReportController:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
                 supplier_name = supplier.name if supplier else "N/A"
 
-            data.append({"date": m.date, "movement_id": m.movement_id,
-                         "product": product_name, "quantity": m.quantity,
-                         "unit": m.unit, "supplier": supplier_name,
-                         "location_name": location_name})
+            row = {"date": m.date, "movement_id": m.movement_id,
+                   "product": product_name, "quantity": m.quantity,
+                   "unit": m.unit, "supplier": supplier_name,
+                   "location_name": location_name}
+
+            if keyword:
+                k = keyword.lower()
+                if k not in product_name.lower() \
+                   and k not in supplier_name.lower() \
+                   and k not in location_name.lower():
+                    continue
+
+            data.append(row)
 
         return ReportResult(data)
+
+
 
     # Справка - оборот по дни
     def report_turnover_by_day(self):
@@ -205,24 +227,26 @@ class ReportController:
         current_stock = self.inventory_controller.get_total_stock(pid) if self.inventory_controller else 0.0
 
         total_in = total_out = 0.0
-        first_in = None
 
         for m in self.movement_controller.movements:
             if m.product_id != pid:
                 continue
 
+            # Само реални доставки
             if m.movement_type == MovementType.IN:
-                total_in += m.quantity
-                if first_in is None:
-                    first_in = m.quantity
+                if m.supplier_id and m.user_id != "system" and "начално" not in m.description.lower():
+                    total_in += m.quantity
 
+            # Само реални продажби
             elif m.movement_type == MovementType.OUT:
                 total_out += m.quantity
 
-        initial_stock = first_in if first_in is not None else 0.0
+        # Изчисляваме началното количество така
+        initial_stock = current_stock + total_out - total_in
 
         return {"product": product.name, "unit": unit,
                 "initial_stock": initial_stock, "total_in": total_in,
                 "total_out": total_out, "expected_stock": current_stock,
                 "current_stock": current_stock,
                 "revenue": total_out * product.price}
+

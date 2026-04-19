@@ -356,21 +356,6 @@
         "modified": "2026-04-19 00:29:06"
     },
     {
-        "product_id": "07995fe1-4fae-4392-95aa-05918a64580e",
-        "name": "Testov product",
-        "categories": [
-            "45d29434-381b-4f5f-a149-497e353a0cf6"
-        ],
-        "unit": "кг.",
-        "description": "weoriewpo",
-        "price": 3232.0,
-        "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
-        "tags": [],
-        "location_id": "W1",
-        "created": "2026-04-19 00:30:02",
-        "modified": "2026-04-19 00:30:53"
-    },
-    {
         "product_id": "71d9da7b-2528-4b1f-ba1f-fa2a1ab55472",
         "name": "Салам „Балкански“ 300g",
         "categories": [
@@ -384,5 +369,50 @@
         "location_id": "W3",
         "created": "2026-04-19 10:30:23",
         "modified": "2026-04-19 10:32:02"
+    },
+    {
+        "product_id": "16025628-3329-40f6-9b41-f005f4aa945a",
+        "name": "Ананас, Тайланд",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "unit": "бр.",
+        "description": "Ананас - пресен, узрял, сладък.",
+        "price": 12.99,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W3",
+        "created": "2026-04-19 18:37:38",
+        "modified": "2026-04-19 18:39:58"
+    },
+    {
+        "product_id": "5818e19a-1c81-4b1a-8bd2-979c7e7e4370",
+        "name": "kqwl",
+        "categories": [
+            "bb22cc33-dd44-ee55-ff66-112233445566"
+        ],
+        "unit": "кг",
+        "description": "wpqw",
+        "price": 3.0,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-19 19:12:11",
+        "modified": "2026-04-19 19:12:11"
+    },
+    {
+        "product_id": "d9645aea-001a-441c-b241-1cc01166d31b",
+        "name": "череши",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "unit": "кг.",
+        "description": "Черешите са дребни, сочни плодове с тънка лъскава кожица и сладък, леко кисел вкус. Узрелите череши са месести, ароматни и имат характерен свеж червен цвят.",
+        "price": 6.99,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-19 19:40:07",
+        "modified": "2026-04-19 19:40:07"
     }
 ]

@@ -530,5 +530,103 @@
         "action": "OUT_MOVEMENT",
         "details": "Product: Салам „Балкански“ 300g, Qty: 76.0, Price: 7.99",
         "timestamp": "2026-04-19 10:33:02"
+    },
+    {
+        "log_id": "dedb0b1a-2583-4a3f-8bbc-723b84b6bec0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 18:34:51"
+    },
+    {
+        "log_id": "b57383bb-302f-4560-ad67-07c800227043",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: Ананас",
+        "timestamp": "2026-04-19 18:37:38"
+    },
+    {
+        "log_id": "fc879229-ebac-4bef-a997-fd74eaae32c3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Ананас, Qty: 45.0, Price: 11.99",
+        "timestamp": "2026-04-19 18:37:38"
+    },
+    {
+        "log_id": "33e28089-2ae2-4a88-b0c2-bcd2bf3ce5cf",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 07995fe1-4fae-4392-95aa-05918a64580e",
+        "timestamp": "2026-04-19 18:38:03"
+    },
+    {
+        "log_id": "d39151db-760b-427e-801e-3bad1a8702f8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Ананас, Тайланд, Qty: 10.0, Price: 12.99",
+        "timestamp": "2026-04-19 18:39:58"
+    },
+    {
+        "log_id": "13b75c12-983c-43eb-a77e-6646980b8a3b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: Ананас, Тайланд",
+        "timestamp": "2026-04-19 18:39:58"
+    },
+    {
+        "log_id": "827b6df0-f81e-4d0f-8412-4052c16dcea2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 18:55:43"
+    },
+    {
+        "log_id": "546a56cc-d277-4775-a9da-3ddb95bc0261",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 19:11:47"
+    },
+    {
+        "log_id": "1b6c053a-2d8a-4974-8a21-dfd891a63137",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: kqwl",
+        "timestamp": "2026-04-19 19:12:11"
+    },
+    {
+        "log_id": "2f807840-53e5-4c31-ae15-68f54f46f5b7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: kqwl, Qty: 1.0, Price: 3.0",
+        "timestamp": "2026-04-19 19:12:11"
+    },
+    {
+        "log_id": "f8420101-c810-4308-927f-ec2163f1b37c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 19:23:21"
+    },
+    {
+        "log_id": "e57937c4-f02f-4f3c-95e8-a24365c232b7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-19 19:38:55"
+    },
+    {
+        "log_id": "034a6191-f4b6-44de-9701-68131b8f3bcd",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: череши",
+        "timestamp": "2026-04-19 19:40:07"
+    },
+    {
+        "log_id": "1f24c36a-e2c1-4f9e-9606-23abce1f113c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: череши, Qty: 170.0, Price: 6.99",
+        "timestamp": "2026-04-19 19:40:07"
     }
 ]

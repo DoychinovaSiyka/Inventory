@@ -284,10 +284,9 @@ class ReportsView:
             return
         self._print_delivery_table(res.data)
 
-
     def search_delivery(self, _):
         keyword = self._input_nonempty("Търсене (Продукт/Доставчик/Склад): ")
-        res = self.controller.search_deliveries_all(keyword)
+        res = self.controller.report_deliveries_all(keyword)
         if not res.data:
             print("\n[!] Няма доставки по тези критерии.\n")
             return
