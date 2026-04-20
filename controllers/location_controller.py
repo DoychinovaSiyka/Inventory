@@ -80,11 +80,9 @@ class LocationController:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
             location.name = name
-
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
-
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
