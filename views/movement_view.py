@@ -176,7 +176,13 @@ class MovementView:
             except Exception:
                 print("Грешка: цената трябва да е валидно число (пример: 4.99). Опитайте отново.\n")
 
-        description = input("Описание: ")
+
+        while True:
+            description = input("Описание: ").strip()
+            if len(description) >= 3:
+                break
+            print("Грешка: описанието трябва да е поне 3 символа. Опитайте отново.\n")
+
         supplier_id = None
         customer = None
 

@@ -719,5 +719,12 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-20 21:54:52"
+    },
+    {
+        "log_id": "86b67c6a-7ea2-466b-8d27-62916b4e229b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 22:15:08"
     }
 ]
