@@ -57,24 +57,31 @@ class Product:
         raw_categories = data.get("categories", [])
         fixed_categories = []
 
-        # Ако имаме контролер, опитвам се да върна истински Category обекти
+        # Ако имаме контролер – опитвам се да върна Category обекти
         if category_controller:
             for cid in raw_categories:
+                # Ако е речник - директно създавам Category
                 if isinstance(cid, dict):
                     fixed_categories.append(Category.from_dict(cid))
-                    continue
-
-                cat = category_controller.get_by_id(str(cid))
-                if cat:
-                    fixed_categories.append(cat)
+                else:
+                    # Ако е ID - търся го в контролера
+                    cat = category_controller.get_by_id(str(cid))
+                    if cat:
+                        fixed_categories.append(cat)
         else:
+            # Ако няма контролер – връщам празен списък
             fixed_categories = []
 
-        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"),
-                       categories=fixed_categories, unit=data.get("unit", "бр."),
-                       description=data.get("description", ""), price=data.get("price", 0),
-                       supplier_id=data.get("supplier_id"), tags=data.get("tags", []),
-                       location_id=data.get("location_id"), created=data.get("created"),
+        return Product(product_id=data.get("product_id"),
+                       name=data.get("name", "Неизвестен"),
+                       categories=fixed_categories,
+                       unit=data.get("unit", "бр."),
+                       description=data.get("description", ""),
+                       price=data.get("price", 0),
+                       supplier_id=data.get("supplier_id"),
+                       tags=data.get("tags", []),
+                       location_id=data.get("location_id"),
+                       created=data.get("created"),
                        modified=data.get("modified"))
 
     def __str__(self):

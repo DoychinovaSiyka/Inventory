@@ -1,4 +1,6 @@
 from models.movement import MovementType
+from models.report import Report
+from datetime import datetime
 
 
 class ReportResult:
@@ -20,6 +22,19 @@ class ReportController:
         self.location_controller = location_controller
         self.inventory_controller = inventory_controller
 
+    # вътрешен метод – автоматично записване на отчет
+    def _save_report(self, report_type, parameters, data):
+        report = Report(
+            report_type=report_type,
+            generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            parameters=parameters,
+            data=data
+        )
+
+        all_reports = self.repo.get_all() or []
+        all_reports.append(report.to_dict())
+        self.repo.save(all_reports)
+
     # Справка - всички движения
     def report_movements(self):
         data = []
@@ -37,6 +52,7 @@ class ReportController:
                          "price": m.price, "location_name": location_name,
                          "date": m.date})
 
+        self._save_report("movements", {}, data)
         return ReportResult(data)
 
     # Справка - всички продажби
@@ -49,6 +65,7 @@ class ReportController:
                          "client": inv.customer, "product": inv.product,
                          "total_price": inv.total_price})
 
+        self._save_report("sales", {}, data)
         return ReportResult(data)
 
     # Справка - продажби по клиент
@@ -64,6 +81,7 @@ class ReportController:
                              "product": inv.product,
                              "total_price": inv.total_price})
 
+        self._save_report("sales_by_customer", {"customer": customer}, data)
         return ReportResult(data)
 
     # Справка - продажби по продукт
@@ -79,6 +97,7 @@ class ReportController:
                              "product": inv.product,
                              "total_price": inv.total_price})
 
+        self._save_report("sales_by_product", {"product": product}, data)
         return ReportResult(data)
 
     # Справка - продажби по дата
@@ -92,6 +111,7 @@ class ReportController:
                              "product": inv.product,
                              "total_price": inv.total_price})
 
+        self._save_report("sales_by_date", {"date": date}, data)
         return ReportResult(data)
 
     # Справка - всички доставки (IN)
@@ -138,8 +158,8 @@ class ReportController:
 
             data.append(row)
 
+        self._save_report("deliveries_all", {"keyword": keyword}, data)
         return ReportResult(data)
-
 
     # Справка - оборот по дни
     def report_turnover_by_day(self):
@@ -155,6 +175,8 @@ class ReportController:
             daily[day]["total"] += inv.total_price
 
         data = [{"date": d, "count": v["count"], "total": v["total"]} for d, v in daily.items()]
+
+        self._save_report("turnover_by_day", {}, data)
         return ReportResult(data)
 
     # Справка - най-продавани продукти
@@ -181,11 +203,14 @@ class ReportController:
                 for name, info in stats.items()]
 
         data.sort(key=lambda x: x["quantity"], reverse=True)
+
+        self._save_report("top_products", {}, data)
         return ReportResult(data)
 
     # Справка - обобщена наличност
     def report_inventory_summary(self):
         if not self.inventory_controller:
+            self._save_report("inventory_summary", {}, [])
             return ReportResult([])
 
         inv_data = self.inventory_controller.data or {}
@@ -212,14 +237,22 @@ class ReportController:
                          "sold": f"{sold} {unit}" if sold > 0 else "-",
                          "top_locations": top3_str})
 
+        self._save_report("inventory_summary", {}, data)
         return ReportResult(data)
 
     # Справка - жизнен цикъл на продукт
     def product_lifecycle(self, name):
         name = name.lower()
-        product = next((p for p in self.product_controller.get_all()
-                        if name in p.name.lower()), None)
+
+        # Търся продукта по по-човешки начин, без генератори
+        product = None
+        for p in self.product_controller.get_all():
+            if p.name and name in p.name.lower():
+                product = p
+                break
+
         if not product:
+            self._save_report("product_lifecycle", {"name": name}, [])
             return None
 
         pid, unit = product.product_id, product.unit
@@ -240,12 +273,13 @@ class ReportController:
             elif m.movement_type == MovementType.OUT:
                 total_out += m.quantity
 
-        # Изчисляваме началното количество така
         initial_stock = current_stock + total_out - total_in
 
-        return {"product": product.name, "unit": unit,
+        data = {"product": product.name, "unit": unit,
                 "initial_stock": initial_stock, "total_in": total_in,
                 "total_out": total_out, "expected_stock": current_stock,
                 "current_stock": current_stock,
                 "revenue": total_out * product.price}
 
+        self._save_report("product_lifecycle", {"name": name}, data)
+        return data

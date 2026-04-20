@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 class JSONRepository(Repository):
     """
     Repository слой за работа с JSON файлове.
-    Идеята е да зарежда и записва данни безопасно,
+    Да зареждат и записват данни безопасно,
     без да прави предположения за структурата.
     """
 
@@ -52,5 +52,4 @@ class JSONRepository(Repository):
             json.dump(data, f, indent=4, ensure_ascii=False)
 
     def get_all(self):
-        """Удобен shorthand за load()."""
         return self.load()

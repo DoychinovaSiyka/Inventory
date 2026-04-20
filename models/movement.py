@@ -15,9 +15,8 @@ class Movement:
                  from_location_id=None, to_location_id=None,
                  location_name=None):
 
-        # ID-то го държа като стринг, за да е еднакво навсякъде
-        self.id = str(movement_id)
-        self.movement_id = self.id
+        # ID-то го държа като стринг
+        self.movement_id = str(movement_id)
         # Продукт – ако няма име, слагам нещо смислено, за да не се чупят справките
         self.product_id = str(product_id)
         self.product_name = product_name if product_name else "Неизвестен продукт"
@@ -41,7 +40,7 @@ class Movement:
 
         self.description = description or ""
 
-        # Цена – ако не може да се парсне, слагам 0
+        # Цена – ако не може да се парсне - 0
         try:
             self.price = float(price) if price is not None else 0.0
         except (ValueError, TypeError):
@@ -73,18 +72,20 @@ class Movement:
         if not data:
             return None
 
-        # Опитвам се да възстановя типа движение (Enum)
+        # Пробвам да възстановя типа движение (Enum)
         mt_raw = data.get("movement_type")
         mt = MovementType.IN  # по подразбиране
 
         if mt_raw:
             try:
-                if mt_raw in MovementType.__members__:
+                # Пробвам да го конвертирам като стойност на Enum
+                mt = MovementType(mt_raw)
+            except Exception:
+                try:
+                    # Пробвам като име на Enum (IN, OUT, MOVE)
                     mt = MovementType[mt_raw]
-                else:
-                    mt = MovementType(mt_raw)
-            except (ValueError, KeyError):
-                mt = MovementType.IN
+                except Exception:
+                    mt = MovementType.IN
 
         return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
                         product_name=data.get("product_name") or data.get("product"),
