@@ -107,14 +107,13 @@ class MovementView:
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
         movement_type = "IN" if input("Избор: ").strip() == "0" else "OUT"
 
-        # --- OUT: избор на склад (автоматичен при 1 склад)
+        # OUT: автоматичен избор при 1 склад
         if movement_type == "OUT":
             wh_list = self._get_product_warehouses_with_qty(product)
             if not wh_list:
                 print("\nГрешка: Няма наличност."); return
 
             if len(wh_list) == 1:
-                # автоматичен избор при 1 склад
                 loc_id, qty, unit = wh_list[0]
                 location = self.location_controller.get_by_id(loc_id)
                 print(f"\nИзбран склад: {location.name} – {qty} {unit} (ID: {loc_id})")
@@ -140,24 +139,38 @@ class MovementView:
                 location = self.location_controller.get_by_id(chosen)
 
         else:
-            # IN → избор на локация
+            # IN - избор на локация
             location = self._select_item(self.location_controller.get_all(), "локация")
             if not location: return
 
-        quantity = input("Количество: ")
-        price = input("Цена: ")
+        # валидираме количество
+        quantity = input("Количество: ").strip()
+        try:
+            MovementValidator.parse_quantity(quantity)
+        except Exception:
+            print("Грешка: Въведете валидно количество (само число, по-голямо от 0).")
+            return
+
+        # валидираме цена
+        price = input("Цена: ").strip()
+        try:
+            MovementValidator.parse_price(price)
+        except Exception:
+            print("Грешка: Въведете валидна цена (само число, без букви).")
+            return
+
         description = input("Описание: ")
         supplier_id = None
         customer = None
 
-        # --- IN → доставчик
+        #  IN - доставчик
         if movement_type == "IN":
             supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
             if not supplier:
                 print("Грешка: IN изисква доставчик."); return
             supplier_id = supplier.supplier_id
 
-        # --- OUT → клиент
+        # OUT - клиент
         if movement_type == "OUT":
             customer = input("Име на клиент: ").strip() or None
 

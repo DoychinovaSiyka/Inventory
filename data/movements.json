@@ -587,5 +587,24 @@
         "date": "2026-04-20 19:55:42",
         "created": "2026-04-20 19:55:42",
         "modified": "2026-04-20 19:55:42"
+    },
+    {
+        "movement_id": "d2e47aad-69ce-4513-86b4-3570396362e0",
+        "product_id": "d9645aea-001a-441c-b241-1cc01166d31b",
+        "product_name": "череши",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W1",
+        "movement_type": "IN",
+        "quantity": 12.0,
+        "unit": "кг.",
+        "description": "доставка на череши",
+        "price": 4.99,
+        "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-20 21:21:20",
+        "created": "2026-04-20 21:21:20",
+        "modified": "2026-04-20 21:21:20"
     }
 ]
