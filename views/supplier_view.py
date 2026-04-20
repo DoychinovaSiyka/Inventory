@@ -53,34 +53,78 @@ class SupplierView:
 
     # редактиране на доставчик - admin only
     def edit_supplier(self, _):
-        supplier_id = input("Въведете ID на доставчик: ").strip()
-        try:
-            supplier = self.controller.get_by_id(supplier_id)
-        except ValueError as e:
-            print("Грешка:", e)
-            return
-        if not supplier:
-            print("Доставчикът не е намерен.")
-            return
+        print("\nРедактиране на доставчик")
+
+        # цикъл докато не въведем валидно ID
+        while True:
+            supplier_id = input("Въведете ID на доставчик: ").strip()
+
+            if supplier_id == "":
+                print("Операцията е отказана.\n")
+                return
+
+            try:
+                supplier = self.controller.get_by_id(supplier_id)
+            except ValueError as e:
+                print("Грешка:", e)
+                print("Моля, опитайте отново.\n")
+                continue
+
+            if not supplier:
+                print("Доставчикът не е намерен.")
+                print("Моля, опитайте отново.\n")
+                continue
+
+            # ако стигнем тук → имаме валиден доставчик
+            break
+
         print("\nОставете празно, ако не искате да променяте полето.")
         new_name = input(f"Ново име ({supplier.name}): ").strip()
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
         new_address = input(f"Нов адрес ({supplier.address}): ").strip()
+
         try:
             self.controller.update(supplier_id=supplier_id, name=new_name or supplier.name,
-                                   contact=new_contact or supplier.contact,
-                                   address=new_address or supplier.address)
+                                   contact=new_contact or supplier.contact, address=new_address or supplier.address)
             print("Доставчикът е обновен успешно!")
         except ValueError as e:
             print("Грешка:", e)
 
+
     # изтриване на доставчик - admin only
     def delete_supplier(self, _):
-        supplier_id = input("Въведете ID на доставчик: ").strip()
-        try:
-            if self.controller.remove(supplier_id):
-                print("Доставчикът е изтрит успешно!")
-            else:
+        print("\nИзтриване на доставчик")
+
+        # цикъл докато не въведем валидно ID
+        while True:
+            supplier_id = input("Въведете ID на доставчик: ").strip()
+
+            if supplier_id == "":
+                print("Операцията е отказана.\n")
+                return
+
+            try:
+                supplier = self.controller.get_by_id(supplier_id)
+            except ValueError as e:
+                print("Грешка:", e)
+                print("Моля, опитайте отново.\n")
+                continue
+
+            if not supplier:
                 print("Доставчикът не е намерен.")
+                print("Моля, опитайте отново.\n")
+                continue
+
+            # валиден доставчик
+            break
+
+        confirm = input(f"Наистина ли искате да изтриете '{supplier.name}'? (y/n): ").strip().lower()
+        if confirm != "y":
+            print("Операцията е отказана.")
+            return
+
+        try:
+            self.controller.remove(supplier_id)
+            print("Доставчикът е изтрит успешно!")
         except ValueError as e:
             print("Грешка:", e)

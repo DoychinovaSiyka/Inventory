@@ -63,36 +63,62 @@ class MovementView:
 
     def _select_item(self, items, label):
         if not items:
-            print(f"Няма налични {label}."); return None
+            print(f"Няма налични {label}.")
+            return None
 
-        print(f"\nИзберете {label}:")
-        for i, item in enumerate(items, start=1):
-            if isinstance(item, Product): item_id = item.product_id
-            elif isinstance(item, Location): item_id = item.location_id
-            else: item_id = item.supplier_id
+        while True:
+            print(f"\nИзберете {label}:")
+            for i, item in enumerate(items, start=1):
 
-            qty_text = self._get_item_qty_text(item)
-            print(f"{i}. {item.name}{qty_text} (ID: {item_id})")
+                # Определяне на ID според типа
+                if isinstance(item, Product):
+                    item_id = item.product_id
+                elif isinstance(item, Location):
+                    item_id = item.location_id
+                else:
+                    item_id = item.supplier_id
 
-            if isinstance(item, Product):
-                locs = self._get_product_locations(item)
-                if locs: print(f"   Намира се в: {locs}")
+                # Количество (ако е продукт)
+                qty_text = self._get_item_qty_text(item)
 
-        raw = input("Номер или ID (Enter = отказ): ").strip()
-        if raw == "": return None
+                print(f"{i}. {item.name}{qty_text} (ID: {item_id})")
 
-        if raw.isdigit():
-            idx = int(raw)-1
-            return items[idx] if 0 <= idx < len(items) else None
+                # Показване на локации за продукт
+                if isinstance(item, Product):
+                    locs = self._get_product_locations(item)
+                    if locs:
+                        print(f"   Намира се в: {locs}")
 
-        raw_l = raw.lower()
-        for item in items:
-            if isinstance(item, Product): iid = item.product_id
-            elif isinstance(item, Location): iid = item.location_id
-            else: iid = item.supplier_id
-            if iid.lower() == raw_l: return item
+            raw = input("Номер или ID (Enter = отказ): ").strip()
 
-        print("Невалиден ID.\n"); return None
+            # Enter = отказ
+            if raw == "":
+                print("Операцията е отказана.")
+                return None
+
+            # Избор по номер
+            if raw.isdigit():
+                idx = int(raw) - 1
+                if 0 <= idx < len(items):
+                    return items[idx]
+                else:
+                    print("Невалиден номер. Опитайте отново.\n")
+                    continue
+
+            # Избор по ID
+            raw_l = raw.lower()
+            for item in items:
+                if isinstance(item, Product):
+                    iid = item.product_id
+                elif isinstance(item, Location):
+                    iid = item.location_id
+                else:
+                    iid = item.supplier_id
+
+                if iid.lower() == raw_l:
+                    return item
+
+            print("Невалиден ID. Опитайте отново.\n")
 
     def show_menu(self):
         user = self.user_controller.logged_user
@@ -103,7 +129,8 @@ class MovementView:
 
     def create_movement(self, user):
         product = self._select_item(self.product_controller.get_all(), "продукт")
-        if not product: return
+        if not product:
+            return
 
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
         movement_type = "IN" if input("Избор: ").strip() == "0" else "OUT"
@@ -112,7 +139,8 @@ class MovementView:
         if movement_type == "OUT":
             wh_list = self._get_product_warehouses_with_qty(product)
             if not wh_list:
-                print("\nГрешка: Няма наличност за този продукт в нито един склад."); return
+                print("\nГрешка: Няма наличност за този продукт в нито един склад.")
+                return
 
             if len(wh_list) == 1:
                 loc_id, qty, unit = wh_list[0]
@@ -120,7 +148,7 @@ class MovementView:
                 print(f"\nИзбран склад: {location.name} – {qty} {unit} (ID: {loc_id})")
             else:
                 print("\nИзберете склад (само от тези с наличност):")
-                for i,(loc_id,qty,unit) in enumerate(wh_list, start=1):
+                for i, (loc_id, qty, unit) in enumerate(wh_list, start=1):
                     loc = self.location_controller.get_by_id(loc_id)
                     print(f"{i}. {loc.name} – {qty} {unit} (ID: {loc_id})")
 
@@ -128,38 +156,57 @@ class MovementView:
                 chosen = None
 
                 if raw.isdigit():
-                    idx = int(raw)-1
-                    if 0 <= idx < len(wh_list): chosen = wh_list[idx][0]
+                    idx = int(raw) - 1
+                    if 0 <= idx < len(wh_list):
+                        chosen = wh_list[idx][0]
                 else:
-                    for loc_id,_,_ in wh_list:
-                        if loc_id.lower() == raw.lower(): chosen = loc_id
+                    for loc_id, _, _ in wh_list:
+                        if loc_id.lower() == raw.lower():
+                            chosen = loc_id
 
                 if not chosen:
-                    print("Невалиден склад."); return
+                    print("Невалиден склад.")
+                    return
 
                 location = self.location_controller.get_by_id(chosen)
 
         else:
-            # IN – НЕ може да доставяме в склад, в който продуктът вече е наличен
+            # IN – истинска доставка → позволяваме ВСЕКИ склад
             all_locs = self.location_controller.get_all()
             if not all_locs:
-                print("Грешка: Няма дефинирани локации."); return
-
-            product_locs = {loc_id for (loc_id,_,_) in self._get_product_warehouses_with_qty(product)}
-            free_locs = [loc for loc in all_locs if loc.location_id not in product_locs]
-
-            if not free_locs:
-                print("Грешка: Продуктът вече се намира във всички складове. Няма къде да се достави.")
+                print("Грешка: Няма дефинирани локации.")
                 return
 
-            if len(free_locs) == 1:
-                location = free_locs[0]
-                print(f"\nИзбран склад: {location.name} (ID: {location.location_id})")
+            print("\nИзберете склад за доставка:")
+            for idx, loc in enumerate(all_locs, start=1):
+                print(f"{idx}. {loc.name} (ID: {loc.location_id})")
+
+            raw = input("Номер или ID (Enter = отказ): ").strip()
+            if raw == "":
+                return
+
+            chosen_loc = None
+
+            if raw.isdigit():
+                num = int(raw)
+                for idx, loc in enumerate(all_locs, start=1):
+                    if idx == num:
+                        chosen_loc = loc
+                        break
             else:
-                location = self._select_item(free_locs, "локация (където продуктът НЕ е наличен)")
-                if not location: return
+                raw_l = raw.lower()
+                for loc in all_locs:
+                    if loc.location_id.lower() == raw_l:
+                        chosen_loc = loc
+                        break
 
+            if not chosen_loc:
+                print("Грешка: Невалиден избор на локация.")
+                return
 
+            location = chosen_loc
+
+        # количество – цикъл докато е валидно
         while True:
             quantity_raw = input("Количество: ").strip()
             try:
@@ -168,6 +215,7 @@ class MovementView:
             except Exception:
                 print("Грешка: количеството трябва да е валидно число (пример: 5 или 12.5). Опитайте отново.\n")
 
+        # цена – цикъл докато е валидно
         while True:
             price_raw = input("Цена: ").strip()
             try:
@@ -176,7 +224,7 @@ class MovementView:
             except Exception:
                 print("Грешка: цената трябва да е валидно число (пример: 4.99). Опитайте отново.\n")
 
-
+        # описание – цикъл докато е валидно
         while True:
             description = input("Описание: ").strip()
             if len(description) >= 3:
@@ -187,9 +235,41 @@ class MovementView:
         customer = None
 
         if movement_type == "IN":
-            supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
-            if not supplier:
-                print("Грешка: Доставката изисква избран доставчик."); return
+            # истинска доставка → избираме доставчик
+            all_suppliers = self.supplier_controller.get_all()
+
+            print("\nИзберете доставчик:")
+            for idx, s in enumerate(all_suppliers, start=1):
+                print(f"{idx}. {s.name} (ID: {s.supplier_id})")
+
+            while True:
+                raw = input("Номер или ID (Enter = отказ): ").strip()
+
+                if raw == "":
+                    print("Грешка: Доставката изисква избран доставчик.")
+                    continue
+
+                supplier = None
+
+                if raw.isdigit():
+                    num = int(raw)
+                    for idx, s in enumerate(all_suppliers, start=1):
+                        if idx == num:
+                            supplier = s
+                            break
+                else:
+                    raw_l = raw.lower()
+                    for s in all_suppliers:
+                        if s.supplier_id.lower() == raw_l:
+                            supplier = s
+                            break
+
+                if supplier:
+                    break
+
+                print("Грешка: Невалиден избор на доставчик.")
+                print("Моля, опитайте отново.\n")
+
             supplier_id = supplier.supplier_id
 
         if movement_type == "OUT":

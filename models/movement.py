@@ -8,12 +8,9 @@ class MovementType(Enum):
 
 
 class Movement:
-    def __init__(self, movement_id, product_id, product_name, user_id,
-                 location_id, movement_type, quantity, unit, description,
-                 price, date, created=None, modified=None,
-                 supplier_id=None, customer=None,
-                 from_location_id=None, to_location_id=None,
-                 location_name=None):
+    def __init__(self, movement_id, product_id, product_name, user_id, location_id, movement_type, quantity, unit,
+                 description, price, date, created=None, modified=None, supplier_id=None, customer=None, from_location_id=None,
+                 to_location_id=None, location_name=None):
 
 
         self.movement_id = str(movement_id)

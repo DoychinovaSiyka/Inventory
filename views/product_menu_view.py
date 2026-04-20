@@ -171,23 +171,41 @@ class ProductView:
             print("Моля, опитайте отново.\n")
 
     def remove_product(self, user):
-        pid = input("ID на продукт: ").strip()
-        try:
-            u_id = user.user_id
-            self.product_controller.delete_by_id(pid, u_id)
-            print("Продуктът е премахнат.")
-        except ValueError as e:
-            print("Грешка:", e)
+        print("\nПремахване на продукт")
+        while True:
+            pid = input("ID на продукт: ").strip()
+            product = self.product_controller.get_by_id(pid)
+            if product:
+                break
+
+            print("Няма такъв продукт.")
             print("Моля, опитайте отново.\n")
 
-    def edit_product(self, user):
-        pid = input("ID на продукт: ").strip()
-        product = self.product_controller.get_by_id(pid)
-        if not product:
-            print("Няма такъв продукт.")
+        confirm = input(f"Сигурни ли сте, че искате да изтриете '{product.name}'? (Y/N): ").strip().lower()
+        if confirm != "y":
+            print("Операцията е отказана.")
             return
 
+        self.product_controller.delete_by_id(product.product_id, user.user_id)
+        print("Продуктът е премахнат.")
+
+    def edit_product(self, user):
+        print("\nРедактиране на продукт")
+
+        # цикъл докато не въведем валидно ID
+        while True:
+            pid = input("ID на продукт: ").strip()
+            product = self.product_controller.get_by_id(pid)
+
+            if product:
+                break
+
+            print("Няма такъв продукт.")
+            print("Моля, опитайте отново.\n")
+
+        # тук вече имаме валиден продукт
         print(f"Редактиране на {product.name}")
+
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
@@ -237,11 +255,10 @@ class ProductView:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
             new_quantity = ProductValidator.parse_optional_float(new_qty_raw, "Количество") if new_qty_raw else None
 
-            self.product_controller.update_product(
-                product_id=pid, new_name=new_name, new_description=new_desc,
-                new_price=new_price, new_quantity=new_quantity, new_unit=new_unit,
-                new_category_ids=new_category_ids, new_location_id=new_location_id,
-                new_supplier_id=None, new_tags=None, user_id=user.user_id)
+            self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_desc,
+                                                   new_price=new_price, new_quantity=new_quantity, new_unit=new_unit,
+                                                   new_category_ids=new_category_ids, new_location_id=new_location_id,
+                                                   new_supplier_id=None, new_tags=None, user_id=user.user_id)
 
             print("Продуктът е обновен.")
 

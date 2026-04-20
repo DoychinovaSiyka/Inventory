@@ -62,28 +62,46 @@ class InvoiceView:
 
     # преглед по ID
     def view_by_id(self, user):
-        invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
-        if not invoice_id:
-            print("[!] Моля, въведете ID.")
-            return
-        try:
-            InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
-        except ValueError as e:
-            print(f"[!] {e}")
-            return
+        print("\nПреглед на фактура по ID")
 
-        invoice = self.invoice_controller.get_by_id(invoice_id)
-        if not invoice:
-            print("Фактурата не е намерена.")
-            return
+        # цикъл докато не въведем валиден UUID и съществуваща фактура
+        while True:
+            invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
 
+            if not invoice_id:
+                print("[!] Моля, въведете ID или натиснете Enter за отказ.\n")
+                return
+
+            # проверка за валиден UUID
+            try:
+                InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
+            except ValueError as e:
+                print(f"[!] {e}")
+                print("Моля, опитайте отново.\n")
+                continue
+
+            # проверка дали фактурата съществува
+            invoice = self.invoice_controller.get_by_id(invoice_id)
+            if not invoice:
+                print("Фактурата не е намерена.")
+                print("Моля, опитайте отново.\n")
+                continue
+
+            # ако стигнем тук - имаме валидна фактура
+            break
+
+        # показваме фактурата
         columns = ["Поле", "Стойност"]
-        rows = [["ID", invoice.invoice_id], ["Movement ID", invoice.movement_id],
-                ["Продукт", invoice.product],
-                ["Количество", f"{invoice.quantity} {invoice.unit}"],
-                ["Единична цена", f"{invoice.unit_price} лв."],
-                ["Обща цена", f"{invoice.total_price} лв."], ["Клиент", invoice.customer],
-                ["Дата", invoice.date]]
+        rows = [
+            ["ID", invoice.invoice_id],
+            ["Movement ID", invoice.movement_id],
+            ["Продукт", invoice.product],
+            ["Количество", f"{invoice.quantity} {invoice.unit}"],
+            ["Единична цена", f"{invoice.unit_price} лв."],
+            ["Обща цена", f"{invoice.total_price} лв."],
+            ["Клиент", invoice.customer],
+            ["Дата", invoice.date]
+        ]
 
         print("\n" + format_table(columns, rows))
 

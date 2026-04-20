@@ -44,10 +44,10 @@ class CategoryView:
         def print_tree(cat, level, prefix):
             indent = "   " * level
             if level == 0:
-                # главна категория → номер
+                # главна категория - номер
                 print(f"{prefix}. {cat.name} (ID: {cat.category_id})")
             else:
-                # подкатегория → тире
+                # подкатегория - тире
                 print(f"{indent}- {cat.name} (ID: {cat.category_id})")
 
             # деца
@@ -137,13 +137,23 @@ class CategoryView:
         for i, cat in enumerate(categories, 1):
             print(f"{i}. {cat.name} (ID: {cat.category_id})")
 
-        choice = input("Въведете номер или ID: ").strip()
-        for cat in categories:
-            if choice == cat.category_id:
-                return cat
-        if choice.isdigit():
-            index = int(choice) - 1
-            if 0 <= index < len(categories):
-                return categories[index]
-        print("Невалиден избор.")
-        return None
+        while True:
+            choice = input("Въведете номер или ID: ").strip()
+
+            if choice == "":
+                print("Операцията е отказана.\n")
+                return None
+
+            # избор по ID
+            for cat in categories:
+                if choice.lower() == cat.category_id.lower():
+                    return cat
+
+            # избор по номер
+            if choice.isdigit():
+                index = int(choice) - 1
+                if 0 <= index < len(categories):
+                    return categories[index]
+
+            print("Невалиден избор.")
+            print("Моля, опитайте отново.\n")

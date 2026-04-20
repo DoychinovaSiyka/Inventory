@@ -1,28 +1,28 @@
 [
     {
-        "invoice_id": "4a25fc14-e266-42b9-afd4-fda41e2ad245",
-        "movement_id": "dd44ee37-4006-4609-be7b-5bc61bf44d8a",
-        "product": "Леща 1kg",
-        "quantity": 14.0,
-        "unit": "кг",
-        "unit_price": 3.29,
-        "total_price": 46.06,
-        "customer": "Стоян",
-        "date": "2026-04-20 19:48:23",
-        "created": "2026-04-20 19:48:23",
-        "modified": "2026-04-20 19:48:23"
-    },
-    {
-        "invoice_id": "7e8edb0c-fe73-451b-8416-48b5657caa59",
-        "movement_id": "3ad383fe-9fa8-4c25-99ab-086dfc05e8c4",
-        "product": "Салам „Балкански“ 300g",
-        "quantity": 76.0,
+        "invoice_id": "7fc6e5b3-e849-4ef1-9ba6-f29218d347e5",
+        "movement_id": "552fad26-5082-45df-a526-9ef0cd7342ac",
+        "product": "Шоколад Линдт 100g",
+        "quantity": 12.0,
         "unit": "бр.",
         "unit_price": 7.99,
-        "total_price": 607.24,
+        "total_price": 95.88,
         "customer": "Калин Красимиров",
-        "date": "2026-04-20 19:55:42",
-        "created": "2026-04-20 19:55:42",
-        "modified": "2026-04-20 19:55:42"
+        "date": "2026-04-21 01:03:25",
+        "created": "2026-04-21 01:03:25",
+        "modified": "2026-04-21 01:03:25"
+    },
+    {
+        "invoice_id": "dc21cc40-2b15-431c-9788-34a53aad4eb4",
+        "movement_id": "bfea16ba-5184-499f-be1b-949d538891c5",
+        "product": "Бисквити Закуска 200g",
+        "quantity": 25.0,
+        "unit": "бр.",
+        "unit_price": 1.23,
+        "total_price": 30.75,
+        "customer": "Елена Кирева",
+        "date": "2026-04-21 01:04:11",
+        "created": "2026-04-21 01:04:11",
+        "modified": "2026-04-21 01:04:11"
     }
 ]

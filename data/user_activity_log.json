@@ -726,5 +726,194 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-20 22:15:08"
+    },
+    {
+        "log_id": "5a824d03-1900-4d5a-92e4-699213c8e1aa",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 22:26:05"
+    },
+    {
+        "log_id": "35f4acf1-7a63-45d5-9cee-7b4e3074c0f4",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: kqwl, Qty: 3.0, Price: 3.99",
+        "timestamp": "2026-04-20 22:28:56"
+    },
+    {
+        "log_id": "3a58a2f9-df9c-4b42-8d3b-1ef664da0f88",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 22:53:53"
+    },
+    {
+        "log_id": "8dfd3dda-8084-4051-9d94-f74d024bbde0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:06:41"
+    },
+    {
+        "log_id": "7413d983-3cf9-473b-8144-be5359cb9697",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:14:21"
+    },
+    {
+        "log_id": "c52ec862-5156-4ddd-9c58-441f178409fb",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-20 23:16:23"
+    },
+    {
+        "log_id": "117e9be3-1539-46b4-8e51-8e16c5250580",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:16:30"
+    },
+    {
+        "log_id": "d742aab5-663e-4d13-b388-bb92a3882764",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 18.0, Price: 3.29",
+        "timestamp": "2026-04-20 23:17:42"
+    },
+    {
+        "log_id": "2d1cf71a-ca53-4a64-81dd-091d99093532",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: Ананас, Тайланд, Qty: 19.0, From: София – Основен склад, To: Бургас – Пристанищен склад",
+        "timestamp": "2026-04-20 23:18:38"
+    },
+    {
+        "log_id": "9f00326a-2d45-4d36-96ac-51912879b068",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Шоколад Линдт 100g, Qty: 120.0, Price: 3.99",
+        "timestamp": "2026-04-20 23:20:58"
+    },
+    {
+        "log_id": "b22af405-407a-450f-80d2-96253d269e51",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:24:14"
+    },
+    {
+        "log_id": "921e2209-e79d-4f34-9e7a-7fcd022285ae",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: Ананас, Тайланд, Qty: 12.0, From: Бургас – Пристанищен склад, To: Пловдив – Регионален склад",
+        "timestamp": "2026-04-20 23:25:23"
+    },
+    {
+        "log_id": "d8fffa58-a672-4fe5-b2bf-58f14a14a62b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-20 23:47:47"
+    },
+    {
+        "log_id": "992489ff-da21-42ca-9b07-1b3205b2cc31",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:47:56"
+    },
+    {
+        "log_id": "07a7dc6a-c218-45f9-8c9e-0ef442b73db6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-20 23:48:16"
+    },
+    {
+        "log_id": "637ddec7-b6ce-47ad-a826-3ed74cffed26",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:48:29"
+    },
+    {
+        "log_id": "47386edf-570d-4824-962e-5932f290a109",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 23:56:33"
+    },
+    {
+        "log_id": "15966820-bee5-4588-ad31-7bbca7ee1ffc",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 00:18:30"
+    },
+    {
+        "log_id": "4372ea06-7384-402b-bb63-31ca5a663894",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 00:24:19"
+    },
+    {
+        "log_id": "840371c7-3149-48fc-bf2a-7be31b264d4c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 00:37:09"
+    },
+    {
+        "log_id": "60976e97-99f4-4241-9a5e-1bdd12feec80",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 18.0, Price: 4.99",
+        "timestamp": "2026-04-21 00:39:40"
+    },
+    {
+        "log_id": "35b21fd6-6243-452e-b70e-bc4cf97acacb",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 00:56:29"
+    },
+    {
+        "log_id": "d9944086-269a-4af5-b93e-49f6bdf2b1e3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 12.0, Price: 3.9",
+        "timestamp": "2026-04-21 00:57:55"
+    },
+    {
+        "log_id": "eb3b2393-3a17-493d-a497-a92e6b0f270c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 2.0, Price: 3.09",
+        "timestamp": "2026-04-21 01:02:02"
+    },
+    {
+        "log_id": "402c3c70-1d00-4ad2-98a0-6bff86761511",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Шоколад Линдт 100g, Qty: 12.0, Price: 7.99",
+        "timestamp": "2026-04-21 01:03:25"
+    },
+    {
+        "log_id": "a7b4271a-8f89-4665-b0a3-83c963797c29",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Бисквити Закуска 200g, Qty: 25.0, Price: 1.23",
+        "timestamp": "2026-04-21 01:04:11"
+    },
+    {
+        "log_id": "7a32b7a5-2170-490b-9d8f-8c5cdf30574d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "MOVE_MOVEMENT",
+        "details": "Product: череши, Qty: 23.0, From: София – Основен склад, To: Варна – Морски склад",
+        "timestamp": "2026-04-21 01:04:37"
     }
 ]

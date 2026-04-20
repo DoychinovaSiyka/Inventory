@@ -1,655 +1,317 @@
 [
     {
-        "report_id": "9d1ad23c-2f4d-445c-825b-8cd3417a58c0",
+        "report_id": "753e1306-16d5-4f2d-b133-0faf0431ce96",
         "report_type": "movements",
-        "generated_on": "2026-04-20 19:34:09",
+        "generated_on": "2026-04-21 01:02:28",
         "parameters": {},
         "data": [
             {
-                "movement_id": "af6e8685-397c-4fe7-9958-27b1fa8fb3cd",
+                "movement_id": "560ee66e-596e-4eb6-bf49-d0077e108315",
                 "product_name": "Кисело мляко Родопско 3.6%\"",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 3.89,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "aa738cef-bcf4-4e45-bbac-8593908d542e",
+                "movement_id": "36856781-c07e-42a0-957a-545301130731",
                 "product_name": "Минерална вода Банкя 1.5L",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.19,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "2806c7cb-0b74-4387-a98d-f1c78e8494f0",
+                "movement_id": "f26e6f0c-ea73-4fbd-9860-0fa838d30123",
                 "product_name": "Фанта Портокал 500ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.79,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "8d326f2a-b9e4-4a7d-ace6-201e6f9268b9",
+                "movement_id": "14741925-8eed-40c5-8ce3-75511bbae48a",
                 "product_name": "Студен чай Лимон 500ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.59,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "af326db5-c9bb-43a9-8086-004723b7a0d5",
+                "movement_id": "56b8f808-0569-4436-98d1-dd43bd866768",
                 "product_name": "Бяло вино Шардоне 750ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 8.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "6a0cc477-21e4-4cd9-9008-724b5b9ae6a9",
+                "movement_id": "bac75877-00a3-44f1-9bf2-22381b801911",
                 "product_name": "Бира Загорка 500ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "9c41f610-9004-4b3b-940d-c7c339de9719",
+                "movement_id": "12f4d919-387c-4d43-bff5-c088b2445ef5",
                 "product_name": "Био банани 1kg",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 5.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "d4c8e942-84d2-4882-b53f-b56ee8daa69c",
+                "movement_id": "4fb843f6-82aa-4bb4-941f-b327e488d053",
                 "product_name": "Краставици 1kg",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 2.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "062e15bc-f4cd-4eb7-97a4-7416ec0385fc",
+                "movement_id": "704a133c-c78f-4ba2-92c5-701a85e04122",
                 "product_name": "Пилешки бутчета 1kg",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 7.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "a4ab9fae-81d7-4595-a124-be2f123509bd",
+                "movement_id": "c4fc46a2-b727-4387-9914-0477236c0e2e",
                 "product_name": "Свински котлет 1kg",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 13.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "bd83c9fb-b2dd-4f45-ae90-9d7e5554db3c",
+                "movement_id": "534bd9b3-8909-4a1f-872e-4095cc8da288",
                 "product_name": "Кисело мляко 2% 500g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.39,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "fc8bf098-38ce-483a-8437-2ffdb0a5f811",
+                "movement_id": "e6278227-e582-4f64-af34-8254fd35ae9b",
                 "product_name": "Телешки кашкавал 400g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 9.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "67d7a426-7b8c-47ae-81cf-a025961ef521",
+                "movement_id": "45c0de59-e91c-4688-96ff-7398c588f5c1",
                 "product_name": "Хляб Добруджа 700g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "d0ba64eb-a77b-497b-8689-7fc52849e186",
+                "movement_id": "0553b8af-7281-457d-904b-8bdb3f1176d3",
                 "product_name": "Макарони 500g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 2.29,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "79e6eb03-9e10-44b8-beee-2c2ca71857e4",
+                "movement_id": "7756c861-db59-4df7-8e7b-67ed23b39208",
                 "product_name": "Кори за баница 500g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 2.59,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "4f39d3b3-6244-4786-98de-b3baef954cda",
+                "movement_id": "b24fdf17-8f21-4a8f-9f4c-0221daffc082",
                 "product_name": "Шоколад Линдт 100g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 3.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "79fc3460-c310-4545-a34e-e08cf1c45701",
+                "movement_id": "bf68983f-1a7a-4c87-801b-2c2352d63946",
                 "product_name": "Бисквити Закуска 200g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.69,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "9739ab0f-04fa-4812-ba0c-6241ea5f5114",
+                "movement_id": "72373b3f-77c2-445b-9590-06f03b5a10fb",
                 "product_name": "Локум Асорти 250g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.49,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "4ffff7ba-02ed-47c0-b813-6782e8a0d9c8",
+                "movement_id": "ad0c07e8-b08f-4483-a210-c667e46451bf",
                 "product_name": "Душ гел Dove 250ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 6.29,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "ecc30c70-01ac-4841-b611-ba3ea787066c",
+                "movement_id": "78981b42-6686-44d4-b29a-62013bd5a9ea",
                 "product_name": "Балсам за коса Elseve 400ml",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 6.79,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "7312ff75-0672-45f6-893e-5696a7e70062",
+                "movement_id": "732b8904-fef3-4add-92fb-d9f485ec0807",
                 "product_name": "Консерва царевица 400g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 1.89,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "730356da-546e-40f8-b47a-4f474918d54a",
+                "movement_id": "cb064f2b-5b20-44a2-bd8a-de5ab3e97480",
                 "product_name": "Леща 1kg",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 3.29,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "f60a1c09-09c3-45f6-8726-41985bed8506",
+                "movement_id": "6ee2d2e7-52ea-44b9-b854-09591331dc24",
                 "product_name": "Замразен грах 400g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 2.39,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "0cf2b255-2a5c-457b-9a4a-c68118aa06e0",
+                "movement_id": "b4f6ce7a-11ad-4194-8988-938fec1d931f",
                 "product_name": "Моркови",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 1.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "36883836-9e59-405a-8cc2-819899d8c81e",
+                "movement_id": "4f170587-0572-423a-b5f8-0560654b3ad6",
                 "product_name": "Салам „Балкански“ 300g",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 7.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "30c81b16-3722-4f00-9d81-469ec94ad77a",
+                "movement_id": "04a34b3c-c777-4274-a172-fa33c2235374",
                 "product_name": "Ананас, Тайланд",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "бр.",
                 "price": 12.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "18f86998-d5c9-4677-9cfe-2727b1c99c3a",
+                "movement_id": "c586526d-f48b-4c55-bb14-6074ed556b64",
                 "product_name": "kqwl",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг",
                 "price": 3.0,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
             },
             {
-                "movement_id": "8d2a7e87-79be-4750-a54c-7b2542d2cf10",
+                "movement_id": "56f3f0e9-18db-47f1-8b9f-402d3d63e787",
                 "product_name": "череши",
                 "type": "IN",
                 "quantity": 50.0,
                 "unit": "кг.",
                 "price": 6.99,
                 "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
+                "date": "2026-04-21 00:56:23"
+            },
+            {
+                "movement_id": "ca8444dd-a084-4bcf-9f52-f25b2800da78",
+                "product_name": "Леща 1kg",
+                "type": "IN",
+                "quantity": 12.0,
+                "unit": "кг",
+                "price": 3.9,
+                "location_name": "Пловдив – Регионален склад",
+                "date": "2026-04-21 00:57:55"
+            },
+            {
+                "movement_id": "c7a9da69-cb69-4a67-a70e-f6fa8ba43aae",
+                "product_name": "Леща 1kg",
+                "type": "IN",
+                "quantity": 2.0,
+                "unit": "кг",
+                "price": 3.09,
+                "location_name": "София – Основен склад",
+                "date": "2026-04-21 01:02:02"
             }
         ]
     },
     {
-        "report_id": "bb531c73-6f69-4a36-ba99-12b32d90f040",
+        "report_id": "b0aa22f5-8470-4ffe-a757-a144269d9f2c",
         "report_type": "sales",
-        "generated_on": "2026-04-20 19:34:12",
+        "generated_on": "2026-04-21 01:02:29",
         "parameters": {},
         "data": []
-    },
-    {
-        "report_id": "c089b25f-9d9e-4f5c-9944-eb437d8f83de",
-        "report_type": "movements",
-        "generated_on": "2026-04-20 20:43:45",
-        "parameters": {},
-        "data": [
-            {
-                "movement_id": "af6e8685-397c-4fe7-9958-27b1fa8fb3cd",
-                "product_name": "Кисело мляко Родопско 3.6%\"",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 3.89,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "aa738cef-bcf4-4e45-bbac-8593908d542e",
-                "product_name": "Минерална вода Банкя 1.5L",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.19,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "2806c7cb-0b74-4387-a98d-f1c78e8494f0",
-                "product_name": "Фанта Портокал 500ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.79,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "8d326f2a-b9e4-4a7d-ace6-201e6f9268b9",
-                "product_name": "Студен чай Лимон 500ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.59,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "af326db5-c9bb-43a9-8086-004723b7a0d5",
-                "product_name": "Бяло вино Шардоне 750ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 8.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "6a0cc477-21e4-4cd9-9008-724b5b9ae6a9",
-                "product_name": "Бира Загорка 500ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "9c41f610-9004-4b3b-940d-c7c339de9719",
-                "product_name": "Био банани 1kg",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 5.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "d4c8e942-84d2-4882-b53f-b56ee8daa69c",
-                "product_name": "Краставици 1kg",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 2.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "062e15bc-f4cd-4eb7-97a4-7416ec0385fc",
-                "product_name": "Пилешки бутчета 1kg",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 7.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "a4ab9fae-81d7-4595-a124-be2f123509bd",
-                "product_name": "Свински котлет 1kg",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 13.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "bd83c9fb-b2dd-4f45-ae90-9d7e5554db3c",
-                "product_name": "Кисело мляко 2% 500g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.39,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "fc8bf098-38ce-483a-8437-2ffdb0a5f811",
-                "product_name": "Телешки кашкавал 400g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 9.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "67d7a426-7b8c-47ae-81cf-a025961ef521",
-                "product_name": "Хляб Добруджа 700g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "d0ba64eb-a77b-497b-8689-7fc52849e186",
-                "product_name": "Макарони 500g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 2.29,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "79e6eb03-9e10-44b8-beee-2c2ca71857e4",
-                "product_name": "Кори за баница 500g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 2.59,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "4f39d3b3-6244-4786-98de-b3baef954cda",
-                "product_name": "Шоколад Линдт 100g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 3.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "79fc3460-c310-4545-a34e-e08cf1c45701",
-                "product_name": "Бисквити Закуска 200g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.69,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "9739ab0f-04fa-4812-ba0c-6241ea5f5114",
-                "product_name": "Локум Асорти 250g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.49,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "4ffff7ba-02ed-47c0-b813-6782e8a0d9c8",
-                "product_name": "Душ гел Dove 250ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 6.29,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "ecc30c70-01ac-4841-b611-ba3ea787066c",
-                "product_name": "Балсам за коса Elseve 400ml",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 6.79,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "7312ff75-0672-45f6-893e-5696a7e70062",
-                "product_name": "Консерва царевица 400g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 1.89,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "730356da-546e-40f8-b47a-4f474918d54a",
-                "product_name": "Леща 1kg",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 3.29,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "f60a1c09-09c3-45f6-8726-41985bed8506",
-                "product_name": "Замразен грах 400g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 2.39,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "0cf2b255-2a5c-457b-9a4a-c68118aa06e0",
-                "product_name": "Моркови",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 1.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "36883836-9e59-405a-8cc2-819899d8c81e",
-                "product_name": "Салам „Балкански“ 300g",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 7.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "30c81b16-3722-4f00-9d81-469ec94ad77a",
-                "product_name": "Ананас, Тайланд",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "бр.",
-                "price": 12.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "18f86998-d5c9-4677-9cfe-2727b1c99c3a",
-                "product_name": "kqwl",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг",
-                "price": 3.0,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "8d2a7e87-79be-4750-a54c-7b2542d2cf10",
-                "product_name": "череши",
-                "type": "IN",
-                "quantity": 50.0,
-                "unit": "кг.",
-                "price": 6.99,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:33:17"
-            },
-            {
-                "movement_id": "dd44ee37-4006-4609-be7b-5bc61bf44d8a",
-                "product_name": "Леща 1kg",
-                "type": "OUT",
-                "quantity": 14.0,
-                "unit": "кг",
-                "price": 3.29,
-                "location_name": "София – Основен склад",
-                "date": "2026-04-20 19:48:23"
-            },
-            {
-                "movement_id": "ab919d5d-ea73-4607-8765-0822d3d424ff",
-                "product_name": "Салам „Балкански“ 300g",
-                "type": "IN",
-                "quantity": 90.0,
-                "unit": "бр.",
-                "price": 9.99,
-                "location_name": "Варна – Морски склад",
-                "date": "2026-04-20 19:54:08"
-            },
-            {
-                "movement_id": "3ad383fe-9fa8-4c25-99ab-086dfc05e8c4",
-                "product_name": "Салам „Балкански“ 300g",
-                "type": "OUT",
-                "quantity": 76.0,
-                "unit": "бр.",
-                "price": 7.99,
-                "location_name": "Варна – Морски склад",
-                "date": "2026-04-20 19:55:42"
-            }
-        ]
-    },
-    {
-        "report_id": "8cbad670-9616-46fc-955b-93cf2900e75d",
-        "report_type": "sales",
-        "generated_on": "2026-04-20 20:43:55",
-        "parameters": {},
-        "data": [
-            {
-                "invoice_number": "4a25fc14-e266-42b9-afd4-fda41e2ad245",
-                "date": "2026-04-20 19:48:23",
-                "client": "Стоян",
-                "product": "Леща 1kg",
-                "total_price": 46.06
-            },
-            {
-                "invoice_number": "7e8edb0c-fe73-451b-8416-48b5657caa59",
-                "date": "2026-04-20 19:55:42",
-                "client": "Калин Красимиров",
-                "product": "Салам „Балкански“ 300g",
-                "total_price": 607.24
-            }
-        ]
-    },
-    {
-        "report_id": "14f7f445-5028-4740-bfa1-61818b03c934",
-        "report_type": "product_lifecycle",
-        "generated_on": "2026-04-20 20:44:05",
-        "parameters": {
-            "name": "леща"
-        },
-        "data": {
-            "product": "Леща 1kg",
-            "unit": "кг",
-            "initial_stock": 50.0,
-            "total_in": 0.0,
-            "total_out": 14.0,
-            "expected_stock": 36.0,
-            "current_stock": 36.0,
-            "revenue": 46.06
-        }
     }
 ]
