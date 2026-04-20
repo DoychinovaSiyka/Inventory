@@ -915,5 +915,26 @@
         "action": "MOVE_MOVEMENT",
         "details": "Product: череши, Qty: 23.0, From: София – Основен склад, To: Варна – Морски склад",
         "timestamp": "2026-04-21 01:04:37"
+    },
+    {
+        "log_id": "7de5035e-6204-4c68-b6f0-c5f05a1a2003",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 01:12:37"
+    },
+    {
+        "log_id": "06cc621f-db4d-4b73-b9e9-00129ac22fac",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 01:16:47"
+    },
+    {
+        "log_id": "15e89880-74db-4c64-a513-f661dc07881c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 01:26:11"
     }
 ]

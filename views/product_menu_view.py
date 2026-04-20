@@ -192,9 +192,15 @@ class ProductView:
     def edit_product(self, user):
         print("\nРедактиране на продукт")
 
-        # цикъл докато не въведем валидно ID
+        # цикъл докато не въведем валидно ID или Enter за отказ
         while True:
             pid = input("ID на продукт: ").strip()
+
+            # Enter = отказ
+            if pid == "":
+                print("Операцията е отказана.")
+                return
+
             product = self.product_controller.get_by_id(pid)
 
             if product:

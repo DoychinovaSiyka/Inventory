@@ -313,5 +313,68 @@
         "generated_on": "2026-04-21 01:02:29",
         "parameters": {},
         "data": []
+    },
+    {
+        "report_id": "49a106ca-14f4-44f5-bd3b-ae612e377d49",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-04-21 01:16:55",
+        "parameters": {
+            "customer": "qopepoqw"
+        },
+        "data": []
+    },
+    {
+        "report_id": "7208058c-0152-4e62-9733-11742e65df2e",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-21 01:17:01",
+        "parameters": {
+            "product": "qepow"
+        },
+        "data": []
+    },
+    {
+        "report_id": "10ff0d97-aa2a-4cb8-8293-de52573ad684",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-04-21 01:26:18",
+        "parameters": {
+            "customer": "epwq"
+        },
+        "data": []
+    },
+    {
+        "report_id": "871bcf35-1fcf-4e6d-8103-2fd8a8f5e74d",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-21 01:26:22",
+        "parameters": {
+            "product": "qwoe"
+        },
+        "data": []
+    },
+    {
+        "report_id": "d76ef75b-d826-4a6b-9c19-961d3e9be4e2",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-21 01:32:31",
+        "parameters": {
+            "product": "3и"
+        },
+        "data": []
+    },
+    {
+        "report_id": "fa99f452-33c9-4c6d-9537-6e353768c373",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-21 01:32:35",
+        "parameters": {
+            "product": "зудизуедз;"
+        },
+        "data": []
+    },
+    {
+        "report_id": "4421520e-f8fc-46c5-b479-24dbc266264c",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-04-21 01:32:44",
+        "parameters": {
+            "customer": "изедусиезд"
+        },
+        "data": []
     }
 ]

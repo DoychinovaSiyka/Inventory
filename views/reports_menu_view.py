@@ -30,19 +30,21 @@ class ReportsView:
                 break
 
     def _build_menu(self):
-        return Menu("Справки и Отчети", [MenuItem("1", "Обобщена справка за наличности", self.summary_report),
-                                         MenuItem("2", "Справка за движения", self.report_movements),
-                                         MenuItem("3", "Всички фактури/продажби", self.report_sales),
-                                         MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
-                                         MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
-                                         MenuItem("6", "Търсене по дата", self.report_sales_by_date),
-                                         MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
-                                         MenuItem("8", "Търсене на доставка", self.search_delivery),
-                                         MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
-                                         MenuItem("10", "Най-продавани продукти", self.report_top_products),
-                                         MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
-                                         MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
-                                         MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("Справки и Отчети", [
+            MenuItem("1", "Обобщена справка за наличности", self.summary_report),
+            MenuItem("2", "Справка за движения", self.report_movements),
+            MenuItem("3", "Всички фактури/продажби", self.report_sales),
+            MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
+            MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
+            MenuItem("6", "Търсене по дата", self.report_sales_by_date),  # ← ДОБАВЕНО
+            MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
+            MenuItem("8", "Търсене на доставка", self.search_delivery),
+            MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
+            MenuItem("10", "Най-продавани продукти", self.report_top_products),
+            MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
+            MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     # Помощни функции за форматиране
     @staticmethod
@@ -100,13 +102,16 @@ class ReportsView:
         # Четем дата от потребителя и я валидираме
         while True:
             d = input(prompt).strip()
+
+            # Enter = отказ
             if d == "":
+                print("Операцията е отказана.")
                 return None
+
             try:
-                MovementValidator.validate_date(d)
-                return d
-            except ValueError as e:
-                print(f"[!] {e}")
+                return datetime.strptime(d, "%Y-%m-%d").date()
+            except ValueError:
+                print("[!] Невалидна дата. Форматът е YYYY-MM-DD.\n")
 
     def _input_nonempty(self, prompt="Въведете стойност: "):
         # Изискваме непразен вход
@@ -223,14 +228,12 @@ class ReportsView:
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
 
-
     def report_sales(self, _):
         result = self.controller.report_sales()
         if not result.data:
             print("\n[!] Няма намерени продажби.\n")
             return
         self._print_sales_table(result.data)
-
 
     def report_sales_by_customer(self, _):
         customer_name = self._input_nonempty("Клиент (име): ")
@@ -240,7 +243,6 @@ class ReportsView:
             return
         self._print_sales_table(res.data)
 
-
     def report_sales_by_product(self, _):
         product_search = self._input_product_search()
         res = self.controller.report_sales_by_product(product_search)
@@ -249,8 +251,10 @@ class ReportsView:
             return
         self._print_sales_table(res.data)
 
-    # Продажби по дата
+
+    # ДОБАВЕНО: Търсене по дата
     def report_sales_by_date(self, _):
+        # Търсене на продажби по дата
         d = self._input_valid_date()
         if d is None:
             return
@@ -258,6 +262,7 @@ class ReportsView:
         if not res.data:
             print("\n[!] Няма продажби на тази дата.\n")
             return
+
         self._print_sales_table(res.data)
 
     # Таблица за продажби
