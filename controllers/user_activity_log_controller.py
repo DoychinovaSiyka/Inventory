@@ -26,7 +26,7 @@ class UserActivityLogController:
         """Добавя нов лог запис. Контролерът не съдържа бизнес логика – просто създава модела и го записва."""
 
         # Създавам лог записа чрез модела
-        log_entry = UserActivityLog(user_id, action, details, timestamp=self._now()).to_dict()
+        log_entry = UserActivityLog(user_id, action, details, timestamp = self._now()).to_dict()
 
         # Добавям уникално log_id
         log_entry["log_id"] = self._generate_log_id()

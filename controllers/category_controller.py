@@ -35,7 +35,6 @@ class CategoryController:
         description = category_data.get("description", "")
         parent_id = category_data.get("parent_id")
 
-        # Проверки за валидност
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)

@@ -5,6 +5,7 @@ from models.user import User
 from validators.user_validator import UserValidator
 
 
+
 class UserController:
     """Контролерът управлява потребителите. Работи коректно при празен users.json.
     При първо стартиране създава един администратор и един оператор."""
@@ -109,7 +110,6 @@ class UserController:
         UserValidator.validate_status(new_status)
 
         user = UserValidator.validate_exists(target_username, self)
-
         if user.status == new_status:
             raise ValueError(f"Потребителят вече е в статус '{new_status}'.")
 
@@ -124,7 +124,6 @@ class UserController:
 
         user = UserValidator.validate_exists(target_username, self)
         UserValidator.validate_not_last_admin(user, self.users)
-
         self.users.remove(user)
         self.save_changes()
         return True
