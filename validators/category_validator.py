@@ -42,10 +42,8 @@ class CategoryValidator:
             raise ValueError("Описанието трябва да е текст.")
 
         cleaned = description.strip()
-
         if len(cleaned) < 3:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
-
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 

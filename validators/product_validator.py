@@ -113,7 +113,7 @@ class ProductValidator:
         return round(f, 2)
 
     @staticmethod
-    def parse_float(value, field_name="стойност"):  # задължително число > 0
+    def parse_float(value, field_name="стойност"):
         f = ProductValidator._parse_float_internal(value, field_name)
         if f <= 0:
             raise ValueError(f"{field_name} трябва да е над 0.")

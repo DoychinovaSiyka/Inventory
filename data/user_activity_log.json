@@ -642,5 +642,54 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-20 16:59:21"
+    },
+    {
+        "log_id": "16a07434-cb29-4f5e-b0fc-9f992386743d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 19:10:25"
+    },
+    {
+        "log_id": "c47ed941-d390-48a0-8076-9190f205c5aa",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 19:14:04"
+    },
+    {
+        "log_id": "069983c6-b012-4871-89dc-fd110da3b876",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 19:33:46"
+    },
+    {
+        "log_id": "f13c326c-ae9a-406e-a4b3-444836d36516",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Леща 1kg, Qty: 14.0, Price: 3.29",
+        "timestamp": "2026-04-20 19:48:23"
+    },
+    {
+        "log_id": "e854cb51-8aec-4fac-917d-f75975d99acf",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "IN_MOVEMENT",
+        "details": "Product: Салам „Балкански“ 300g, Qty: 90.0, Price: 9.99",
+        "timestamp": "2026-04-20 19:54:08"
+    },
+    {
+        "log_id": "8ee4589e-c3fd-49f0-a385-b8d18827f2d2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "OUT_MOVEMENT",
+        "details": "Product: Салам „Балкански“ 300g, Qty: 76.0, Price: 7.99",
+        "timestamp": "2026-04-20 19:55:42"
+    },
+    {
+        "log_id": "af4c16d1-6ba4-4ae1-a8d3-f37435b0dfe6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 20:43:31"
     }
 ]

@@ -6,6 +6,8 @@ class MovementValidator:
 
     @staticmethod
     def validate_uuid(value, field_name):  # базова проверка за UUID
+        if value is None or str(value).strip() == "":
+            raise ValueError(f"{field_name} е задължително.")
         try:
             uuid.UUID(str(value))
         except Exception:
@@ -13,7 +15,7 @@ class MovementValidator:
 
     @staticmethod
     def normalize_movement_type(movement_type):  # нормализирам типа движение
-        mt = str(movement_type).upper()
+        mt = str(movement_type).strip().upper()
         mapping = {"0": "IN", "1": "OUT", "2": "MOVE",
                    "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
         if mt not in mapping:
@@ -39,10 +41,13 @@ class MovementValidator:
 
     @staticmethod
     def parse_quantity(quantity):  # количество – число > 0
+        if quantity is None or str(quantity).strip() == "":
+            raise ValueError("Количество е задължително.")
+        raw = str(quantity).strip().replace(",", ".")
         try:
-            q = float(quantity)
+            q = float(raw)
         except Exception:
-            raise ValueError("Невалидно количество.")
+            raise ValueError("Невалидно количество. Въведете число.")
         if q <= 0:
             raise ValueError("Количество трябва да е > 0.")
         return round(q, 2)
@@ -60,8 +65,7 @@ class MovementValidator:
         try:
             value = float(p)
         except Exception:
-            raise ValueError("Невалидна цена.")
-
+            raise ValueError("Невалидна цена. Въведете число.")
         if value < 0:
             raise ValueError("Цената не може да е отрицателна.")
         return round(value, 2)
@@ -84,7 +88,7 @@ class MovementValidator:
 
     @staticmethod
     def validate_location_id(loc_id, location_controller):  # ID може да е индекс или W1
-        if loc_id is None:
+        if loc_id is None or str(loc_id).strip() == "":
             raise ValueError("Location ID е задължително.")
 
         loc = str(loc_id).strip()
@@ -92,14 +96,17 @@ class MovementValidator:
         if loc.isdigit():  # индекс
             num = int(loc)
             locations = location_controller.get_all()
+            if not locations:
+                raise ValueError("Няма дефинирани локации.")
             if num < 1 or num > len(locations):
                 raise ValueError(f"Невалиден номер на локация. Допустими: 1–{len(locations)}.")
             return locations[num - 1].location_id
 
         if loc.upper().startswith("W") and loc[1:].isdigit():  # W1, W2...
-            if not location_controller.get_by_id(loc.upper()):
-                raise ValueError(f"Локация {loc} не съществува.")
-            return loc.upper()
+            code = loc.upper()
+            if not location_controller.get_by_id(code):
+                raise ValueError(f"Локация {code} не съществува.")
+            return code
 
         raise ValueError("Невалиден Location ID. Допустими: 1–9 или W1–W9.")
 
@@ -108,15 +115,26 @@ class MovementValidator:
                               supplier_id, customer, inventory_controller, location_id):
         mt = str(movement_type).upper()
 
-        if mt == "IN":  # IN → трябва доставчик
-            if not supplier_id:
+        # IN → трябва доставчик, НЕ трябва клиент
+        if mt == "IN":
+            if not supplier_id or str(supplier_id).strip() == "":
                 raise ValueError("При IN движение трябва да има доставчик.")
+            if customer:
+                raise ValueError("При IN движение не може да има клиент.")
 
-        if mt == "OUT":  # OUT → клиент + наличност
-            if not customer:
+        # OUT → трябва клиент, НЕ трябва доставчик
+        if mt == "OUT":
+            if not customer or str(customer).strip() == "":
                 raise ValueError("При OUT движение трябва да има клиент.")
+            if supplier_id:
+                raise ValueError("При OUT движение не може да има доставчик.")
+
             if inventory_controller is None:
                 raise ValueError("InventoryController липсва.")
+            if product is None:
+                raise ValueError("Липсва продукт за проверка на наличност.")
+            if location_id is None:
+                raise ValueError("Липсва локация за проверка на наличност.")
 
             available = inventory_controller.get_stock_for_location(product.product_id,
                                                                     location_id)
@@ -124,8 +142,17 @@ class MovementValidator:
                 raise ValueError(f"Недостатъчна наличност! В този склад има само {available} "
                                  f"{product.unit}.")
 
+        # MOVE → не трябва нито доставчик, нито клиент
+        if mt == "MOVE":
+            if supplier_id:
+                raise ValueError("MOVE не може да има доставчик.")
+            if customer:
+                raise ValueError("MOVE не може да има клиент.")
+
     @staticmethod
     def validate_move_locations(from_location_id, to_location_id):  # MOVE -> различни локации
+        if from_location_id is None or to_location_id is None:
+            raise ValueError("MOVE изисква две локации.")
         if str(from_location_id) == str(to_location_id):
             raise ValueError("MOVE трябва да е между различни локации.")
 
@@ -133,13 +160,17 @@ class MovementValidator:
     def validate_move_stock(product_id, from_location_id, quantity, inventory_controller):  # MOVE -> проверка за наличност
         if inventory_controller is None:
             raise ValueError("InventoryController липсва.")
+        if product_id is None:
+            raise ValueError("Липсва продукт за MOVE.")
         available = inventory_controller.get_stock_for_location(product_id, from_location_id)
         if available < quantity:
             raise ValueError("Недостатъчна наличност за трансфер.")
 
     @staticmethod
     def validate_date(date_str):  # дата във формат YYYY-MM-DD
+        if date_str is None or str(date_str).strip() == "":
+            raise ValueError("Датата е задължителна. Форматът е YYYY-MM-DD.")
         try:
-            datetime.strptime(date_str, "%Y-%m-%d")
+            datetime.strptime(date_str.strip(), "%Y-%m-%d")
         except Exception:
             raise ValueError("Невалидна дата. Форматът е YYYY-MM-DD.")

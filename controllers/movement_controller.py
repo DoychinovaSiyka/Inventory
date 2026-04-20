@@ -27,7 +27,18 @@ class MovementController:
 
         self.movements: List[Movement] = []
         self._load_movements()
+
+        # АВТОМАТИЧЕН REBUILD НА ИНВЕНТАРА ПРИ СТАРТ
         self._sync_inventory_from_movements()
+
+        # Ако инвентарът е празен – rebuild от движенията
+        if self.inventory_controller and not self.inventory_controller.data.get("products"):
+            safe = self._inventory_safe_movements()
+            safe.sort(key=lambda m: m.date)
+            try:
+                self.inventory_controller.rebuild_inventory_from_movements(safe)
+            except Exception:
+                pass
 
     # Зареждам продуктите от файла
     def _load_movements(self) -> None:
@@ -96,12 +107,22 @@ class MovementController:
             movement_type: str, quantity: str, description: str, price: str,
             customer: Optional[str] = None, supplier_id: Optional[str] = None) -> Movement:
 
+        # Нормализираме типа
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         MovementValidator.validate_movement_type(m_type_str)
 
-        qty = MovementValidator.parse_quantity(quantity)
-        input_price = MovementValidator.parse_price(price)
+        # ПЪРВО валидираме количество и цена (за да не стигаме до други менюта)
+        try:
+            qty = MovementValidator.parse_quantity(quantity)
+        except Exception:
+            raise ValueError("Невалидно количество. Въведете число.")
 
+        try:
+            input_price = MovementValidator.parse_price(price)
+        except Exception:
+            raise ValueError("Невалидна цена. Въведете число.")
+
+        # Останалите проверки
         MovementValidator.validate_description(description)
         MovementValidator.validate_user_exists(user_id, self.user_controller)
         MovementValidator.validate_product_exists(product_id, self.product_controller)
@@ -109,8 +130,11 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        MovementValidator.validate_in_out_rules(m_type_str, product, qty, supplier_id,
-                                                customer, self.inventory_controller, location_id)
+        # IN / OUT правила
+        MovementValidator.validate_in_out_rules(
+            m_type_str, product, qty, supplier_id, customer,
+            self.inventory_controller, location_id
+        )
 
         now = self._now()
         m_type_enum = MovementType[m_type_str]
@@ -124,21 +148,27 @@ class MovementController:
         # Инвентар
         if self.inventory_controller:
             if m_type_enum == MovementType.IN:
-                self.inventory_controller.increase_stock(product_id, product.name, location_id, qty,
-                                                         product.unit)
+                self.inventory_controller.increase_stock(
+                    product_id, product.name, location_id, qty, product.unit
+                )
 
             elif m_type_enum == MovementType.OUT:
                 current_stock = self.inventory_controller.get_stock_for_location(product_id, location_id)
                 if current_stock < qty:
-                    raise ValueError(f"Недостатъчна наличност! Налично: {current_stock} {product.unit}, "
-                                     f"Търсено: {qty}")
+                    raise ValueError(
+                        f"Недостатъчна наличност! Налично: {current_stock} {product.unit}, Търсено: {qty}"
+                    )
 
-                self.inventory_controller.decrease_stock(product_id, location_id, qty, product.unit)
+                self.inventory_controller.decrease_stock(
+                    product_id, location_id, qty, product.unit
+                )
 
-        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name,
-                            user_id=user_id, location_id=location_id, movement_type=m_type_enum, quantity=qty,
-                            unit=product.unit, description=description, price=prc, supplier_id=supplier_id,
-                            customer=customer, date=now, created=now, modified=now)
+        movement = Movement(
+            movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name,
+            user_id=user_id, location_id=location_id, movement_type=m_type_enum, quantity=qty,
+            unit=product.unit, description=description, price=prc, supplier_id=supplier_id,
+            customer=customer, date=now, created=now, modified=now
+        )
 
         self.movements.append(movement)
         self.save_changes()
@@ -168,8 +198,9 @@ class MovementController:
         now = self._now()
 
         if self.inventory_controller:
-            self.inventory_controller.move_stock(product_id, product.name, from_loc, to_loc,
-                                                 qty, product.unit)
+            self.inventory_controller.move_stock(
+                product_id, product.name, from_loc, to_loc, qty, product.unit
+            )
 
         loc_from_obj = self.location_controller.get_by_id(from_loc)
         loc_to_obj = self.location_controller.get_by_id(to_loc)
@@ -177,12 +208,14 @@ class MovementController:
         name_from = loc_from_obj.name if loc_from_obj else from_loc
         name_to = loc_to_obj.name if loc_to_obj else to_loc
 
-        move_entry = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
-                              product_name=product.name, user_id=user_id, location_id=to_loc,
-                              movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
-                              description=f"Трансфер: {name_from} -> {name_to}. {description}", price=0,
-                              from_location_id=from_loc, to_location_id=to_loc, date=now, created=now,
-                              modified=now)
+        move_entry = Movement(
+            movement_id=str(uuid.uuid4()), product_id=product_id,
+            product_name=product.name, user_id=user_id, location_id=to_loc,
+            movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
+            description=f"Трансфер: {name_from} -> {name_to}. {description}", price=0,
+            from_location_id=from_loc, to_location_id=to_loc, date=now, created=now,
+            modified=now
+        )
 
         self.movements.append(move_entry)
         self.save_changes()
@@ -223,12 +256,14 @@ class MovementController:
 
             default_location = all_locations[0].location_id
 
-            auto_in = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
-                               product_name=product.name, user_id="system", location_id=default_location,
-                               movement_type=MovementType.IN, quantity=total_out_qty, unit=product.unit,
-                               description="Автоматично начално зареждане", price=float(product.price),
-                               supplier_id=None, customer=None, date=earliest_date, created=earliest_date,
-                               modified=earliest_date)
+            auto_in = Movement(
+                movement_id=str(uuid.uuid4()), product_id=product_id,
+                product_name=product.name, user_id="system", location_id=default_location,
+                movement_type=MovementType.IN, quantity=total_out_qty, unit=product.unit,
+                description="Автоматично начално зареждане", price=float(product.price),
+                supplier_id=None, customer=None, date=earliest_date, created=earliest_date,
+                modified=earliest_date
+            )
 
             new_movements.append(auto_in)
 
@@ -258,11 +293,13 @@ class MovementController:
 
             qty = 50
             now = self._now()
-            auto_in = Movement(movement_id=str(uuid.uuid4()), product_id=p.product_id, product_name=p.name,
-                               user_id="system", location_id=default_location, movement_type=MovementType.IN,
-                               quantity=qty, unit=p.unit, description="Начално зареждане (автоматично)",
-                               price=float(p.price), supplier_id=None, customer=None, date=now,
-                               created=now, modified=now)
+            auto_in = Movement(
+                movement_id=str(uuid.uuid4()), product_id=p.product_id, product_name=p.name,
+                user_id="system", location_id=default_location, movement_type=MovementType.IN,
+                quantity=qty, unit=p.unit, description="Начално зареждане (автоматично)",
+                price=float(p.price), supplier_id=None, customer=None, date=now,
+                created=now, modified=now
+            )
 
             new_movements.append(auto_in)
 

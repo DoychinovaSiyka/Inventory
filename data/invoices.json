@@ -1,28 +1,28 @@
 [
     {
-        "invoice_id": "949b97e6-00fe-4bf9-b506-2357aa72a391",
-        "movement_id": "65d7569b-9a5c-4364-9896-61c7a33a74c9",
+        "invoice_id": "4a25fc14-e266-42b9-afd4-fda41e2ad245",
+        "movement_id": "dd44ee37-4006-4609-be7b-5bc61bf44d8a",
         "product": "Леща 1kg",
         "quantity": 14.0,
         "unit": "кг",
         "unit_price": 3.29,
         "total_price": 46.06,
         "customer": "Стоян",
-        "date": "2026-04-19 10:21:35",
-        "created": "2026-04-19 10:21:35",
-        "modified": "2026-04-19 10:21:35"
+        "date": "2026-04-20 19:48:23",
+        "created": "2026-04-20 19:48:23",
+        "modified": "2026-04-20 19:48:23"
     },
     {
-        "invoice_id": "88c6493e-eff8-46ab-a3dd-0735faf0c25e",
-        "movement_id": "cdc62deb-10b0-41df-bfc2-2a489c43b24d",
+        "invoice_id": "7e8edb0c-fe73-451b-8416-48b5657caa59",
+        "movement_id": "3ad383fe-9fa8-4c25-99ab-086dfc05e8c4",
         "product": "Салам „Балкански“ 300g",
         "quantity": 76.0,
         "unit": "бр.",
         "unit_price": 7.99,
         "total_price": 607.24,
         "customer": "Калин Красимиров",
-        "date": "2026-04-19 10:33:02",
-        "created": "2026-04-19 10:33:02",
-        "modified": "2026-04-19 10:33:02"
+        "date": "2026-04-20 19:55:42",
+        "created": "2026-04-20 19:55:42",
+        "modified": "2026-04-20 19:55:42"
     }
 ]

@@ -107,32 +107,40 @@ class MovementView:
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
         movement_type = "IN" if input("Избор: ").strip() == "0" else "OUT"
 
+        # --- OUT: избор на склад (автоматичен при 1 склад)
         if movement_type == "OUT":
             wh_list = self._get_product_warehouses_with_qty(product)
             if not wh_list:
                 print("\nГрешка: Няма наличност."); return
 
-            print("\nИзберете склад:")
-            for i,(loc_id,qty,unit) in enumerate(wh_list, start=1):
-                loc = self.location_controller.get_by_id(loc_id)
-                print(f"{i}. {loc.name if loc else loc_id} – {qty} {unit} (ID: {loc_id})")
-
-            raw = input("Ваш избор: ").strip()
-            chosen = None
-
-            if raw.isdigit():
-                idx = int(raw)-1
-                if 0 <= idx < len(wh_list): chosen = wh_list[idx][0]
+            if len(wh_list) == 1:
+                # автоматичен избор при 1 склад
+                loc_id, qty, unit = wh_list[0]
+                location = self.location_controller.get_by_id(loc_id)
+                print(f"\nИзбран склад: {location.name} – {qty} {unit} (ID: {loc_id})")
             else:
-                for loc_id,_,_ in wh_list:
-                    if loc_id.lower() == raw.lower(): chosen = loc_id
+                print("\nИзберете склад:")
+                for i,(loc_id,qty,unit) in enumerate(wh_list, start=1):
+                    loc = self.location_controller.get_by_id(loc_id)
+                    print(f"{i}. {loc.name if loc else loc_id} – {qty} {unit} (ID: {loc_id})")
 
-            if not chosen:
-                print("Невалиден склад."); return
+                raw = input("Ваш избор: ").strip()
+                chosen = None
 
-            location = self.location_controller.get_by_id(chosen)
+                if raw.isdigit():
+                    idx = int(raw)-1
+                    if 0 <= idx < len(wh_list): chosen = wh_list[idx][0]
+                else:
+                    for loc_id,_,_ in wh_list:
+                        if loc_id.lower() == raw.lower(): chosen = loc_id
+
+                if not chosen:
+                    print("Невалиден склад."); return
+
+                location = self.location_controller.get_by_id(chosen)
 
         else:
+            # IN → избор на локация
             location = self._select_item(self.location_controller.get_all(), "локация")
             if not location: return
 
@@ -142,17 +150,20 @@ class MovementView:
         supplier_id = None
         customer = None
 
+        # --- IN → доставчик
         if movement_type == "IN":
             supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
             if not supplier:
                 print("Грешка: IN изисква доставчик."); return
             supplier_id = supplier.supplier_id
 
+        # --- OUT → клиент
         if movement_type == "OUT":
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            mv = self.movement_controller.add(product_id=product.product_id,
+            mv = self.movement_controller.add(
+                product_id=product.product_id,
                 user_id=user.user_id, location_id=location.location_id,
                 movement_type=movement_type, quantity=quantity,
                 description=description, price=price,
