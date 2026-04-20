@@ -705,5 +705,19 @@
         "action": "IN_MOVEMENT",
         "details": "Product: череши, Qty: 12.0, Price: 4.99",
         "timestamp": "2026-04-20 21:21:20"
+    },
+    {
+        "log_id": "fa9d9d22-3ae5-4ad8-8fe8-638a2c43b799",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 21:34:08"
+    },
+    {
+        "log_id": "390e1197-930e-4135-a266-e56bd564992e",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-20 21:54:52"
     }
 ]
