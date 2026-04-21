@@ -60,12 +60,8 @@ def format_table(columns, rows):
         for i, cell in enumerate(row):
             cell_str = str(cell)
             is_numeric = (cell_str.replace('.', '', 1).isdigit() or cell_str.endswith("лв.")
-                          or cell_str.endswith("кг")
-                          or cell_str.endswith("кг.")
-                          or cell_str.endswith("бр")
-                          or cell_str.endswith("бр.")
-                          or cell_str.endswith("л")
-                          or cell_str.endswith("л."))
+                          or cell_str.endswith("кг") or cell_str.endswith("кг.") or cell_str.endswith("бр")
+                          or cell_str.endswith("бр.") or cell_str.endswith("л") or cell_str.endswith("л."))
 
             # UUID и дати ->  текст
             if "-" in cell_str and len(cell_str) > 15:
