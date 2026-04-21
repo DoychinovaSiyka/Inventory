@@ -23,13 +23,15 @@ class UserView:
 
     # Създаване на менюто отделно
     def _build_menu(self):
-        return Menu("МЕНЮ ПОТРЕБИТЕЛИ",[MenuItem("1", "Списък на потребители", self.show_users),
-                                        MenuItem("2", "Добавяне на потребител", self.add_user),
-                                        MenuItem("3", "Промяна на роля", self.change_role),
-                                        MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
-                                        MenuItem("5", "Активиране на потребител", self.activate_user),
-                                        MenuItem("6", "Премахване на потребител", self.delete_user),
-                                        MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("МЕНЮ ПОТРЕБИТЕЛИ", [
+            MenuItem("1", "Списък на потребители", self.show_users),
+            MenuItem("2", "Добавяне на потребител", self.add_user),
+            MenuItem("3", "Промяна на роля", self.change_role),
+            MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+            MenuItem("5", "Активиране на потребител", self.activate_user),
+            MenuItem("6", "Премахване на потребител", self.delete_user),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     # Показване на всички потребители
     def show_users(self, _):
@@ -39,12 +41,36 @@ class UserView:
 
     # Добавяне на потребител
     def add_user(self, _):
-        fn = input("Име: ")
-        ln = input("Фамилия: ")
-        email = input("Email: ")
-        username = input("Потребителско име: ")
-        password = input_password("Парола: ")  # скрито въвеждане
-        role = input("Роля (Admin/Operator): ")
+        fn = input("Име (Enter за отказ): ").strip()
+        if not fn:
+            print("Операцията е отказана.")
+            return
+
+        ln = input("Фамилия (Enter за отказ): ").strip()
+        if not ln:
+            print("Операцията е отказана.")
+            return
+
+        email = input("Email (Enter за отказ): ").strip()
+        if not email:
+            print("Операцията е отказана.")
+            return
+
+        username = input("Потребителско име (Enter за отказ): ").strip()
+        if not username:
+            print("Операцията е отказана.")
+            return
+
+        password = input_password("Парола (Enter за отказ): ").strip()
+        if not password:
+            print("Операцията е отказана.")
+            return
+
+        role = input("Роля (Admin/Operator, Enter за отказ): ").strip()
+        if not role:
+            print("Операцията е отказана.")
+            return
+
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("Потребителят е добавен!")
@@ -53,18 +79,29 @@ class UserView:
 
     # Промяна на роля
     def change_role(self, user):
-        username = input("Потребителско име: ")
-        new_role = input("Нова роля (Admin/Operator): ")
+        username = input("Потребителско име (Enter за отказ): ").strip()
+        if not username:
+            print("Операцията е отказана.")
+            return
+
+        new_role = input("Нова роля (Admin/Operator, Enter за отказ): ").strip()
+        if not new_role:
+            print("Операцията е отказана.")
+            return
+
         try:
             self.controller.change_role(username, new_role)
             print("Ролята е променена.")
-
         except ValueError as e:
             print("Грешка:", e)
 
-
+    # Деактивиране на потребител
     def deactivate_user(self, user):
-        username = input("Потребителско име: ")
+        username = input("Потребителско име (Enter за отказ): ").strip()
+        if not username:
+            print("Операцията е отказана.")
+            return
+
         try:
             self.controller.change_status(user, username, "Inactive")
             print("Потребителят е деактивиран.")
@@ -73,16 +110,24 @@ class UserView:
 
     # Активиране на потребител
     def activate_user(self, user):
-        username = input("Потребителско име: ")
+        username = input("Потребителско име (Enter за отказ): ").strip()
+        if not username:
+            print("Операцията е отказана.")
+            return
+
         try:
             self.controller.change_status(user, username, "Active")
             print("Потребителят е активиран.")
         except ValueError as e:
             print("Грешка:", e)
 
-
+    # Изтриване на потребител
     def delete_user(self, user):
-        username = input("Потребителско име за изтриване: ")
+        username = input("Потребителско име за изтриване (Enter за отказ): ").strip()
+        if not username:
+            print("Операцията е отказана.")
+            return
+
         try:
             self.controller.delete_user(user, username)
             print("Потребителят е изтрит.")

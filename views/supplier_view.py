@@ -42,9 +42,21 @@ class SupplierView:
 
     # добавяне на доставчик - admin only
     def add_supplier(self, _):
-        name = input("Име на доставчик: ").strip()
-        contact = input("Контакт (телефон/имейл): ").strip()
-        address = input("Адрес: ").strip()
+        name = input("Име на доставчик (Enter за отказ): ").strip()
+        if not name:
+            print("Операцията е отказана.\n")
+            return
+
+        contact = input("Контакт (телефон/имейл, Enter за отказ): ").strip()
+        if not contact:
+            print("Операцията е отказана.\n")
+            return
+
+        address = input("Адрес (Enter за отказ): ").strip()
+        if not address:
+            print("Операцията е отказана.\n")
+            return
+
         try:
             self.controller.add(name=name, contact=contact, address=address)
             print("Доставчикът е добавен успешно!")

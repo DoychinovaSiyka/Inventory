@@ -16,8 +16,10 @@ class GraphView:
 
     def _build_menu(self):
         # Менюто съдържа основната функция – търсене на най-близък склад
-        return Menu("Логистичен Модул (Dijkstra)", [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-                                                    MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("Логистичен Модул (Dijkstra)", [
+            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     def show_menu(self, user):
         # Обикновен цикъл за работа с менюто
@@ -29,19 +31,22 @@ class GraphView:
     def _setup_network(self):  # настройвам си складовете и разстоянията между тях
         """Създавам складовете и задавам примерни разстояния. Това е графът, върху който
         работи Dijkstra."""
-        warehouses = [Warehouse("W1", "София"),
-                      Warehouse("W2", "Пловдив"),
-                      Warehouse("W3", "Варна"),
-                      Warehouse("W4", "Бургас"), Warehouse("W5", "Магазин Смолян")]
+        warehouses = [
+            Warehouse("W1", "София"),
+            Warehouse("W2", "Пловдив"),
+            Warehouse("W3", "Варна"),
+            Warehouse("W4", "Бургас"),
+            Warehouse("W5", "Магазин Смолян")
+        ]
 
         # добавям всички складове в графа
         for w in warehouses:
             self.graph.add_warehouse(w)
 
         # разстояния между складовете – примерни, но реалистични
-        self.graph.add_edge("W1", "W2", 150);
+        self.graph.add_edge("W1", "W2", 150)
         self.graph.add_edge("W2", "W4", 250)
-        self.graph.add_edge("W4", "W3", 130);
+        self.graph.add_edge("W4", "W3", 130)
         self.graph.add_edge("W1", "W5", 250)
         self.graph.add_edge("W5", "W3", 350)
 
@@ -49,12 +54,18 @@ class GraphView:
         """Проверявам дали продуктът е в стартовия склад. Ако не е – търся всички складове
         с наличност и Dijkstra избира най-близкия."""
 
-        product_name = input("Име на стока: ").strip()
+        # ✔ Оправено: Enter = отказ
+        product_name = input("Име на стока (Enter = отказ): ").strip()
         if not product_name:
-            print("[!] Моля, въведете име на стока.")
+            print("Операцията е отказана.")
             return
 
-        my_location = input("Вашето ID (напр. W1): ").strip().upper()
+        # ✔ Оправено: Enter = отказ
+        my_location = input("Вашето ID (напр. W1, Enter = отказ): ").strip().upper()
+        if not my_location:
+            print("Операцията е отказана.")
+            return
+
         # проверявам дали складът съществува
         if my_location not in self.graph.nodes:
             print(f"\n[!] Локация '{my_location}' не съществува.")

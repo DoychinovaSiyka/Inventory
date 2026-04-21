@@ -30,9 +30,6 @@ class InventoryController:
 
         self.data = data
 
-    def _now(self) -> str:
-        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     def _save(self):
         self.repo.save(self.data)
 
@@ -43,14 +40,7 @@ class InventoryController:
     def _ensure_product(self, product_id: str, name: str, unit: str):
         """Създава празен запис за продукт, ако липсва."""
         if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {
-                "name": name,
-                "unit": unit,
-                "total_stock": 0.0,
-                "locations": {},
-                "created": self._now(),
-                "modified": self._now()
-            }
+            self.data["products"][product_id] = {"name": name, "unit": unit, "total_stock": 0.0, "locations": {}}
 
     # Публични методи за справки
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
@@ -91,7 +81,6 @@ class InventoryController:
 
         p["total_stock"] = float(p.get("total_stock", 0.0)) + qty
         p["locations"][warehouse_id] = float(p["locations"].get(warehouse_id, 0.0)) + qty
-        p["modified"] = self._now()
 
         self._save()
 
@@ -118,7 +107,6 @@ class InventoryController:
             else:
                 del p["locations"][warehouse_id]
 
-        p["modified"] = self._now()
         self._save()
 
     def move_stock(self, product_id: str, product_name: str, from_wh: str,
@@ -146,7 +134,6 @@ class InventoryController:
         # Добавям в целевия склад
         p["locations"][to_wh] = float(p["locations"].get(to_wh, 0.0)) + qty
 
-        p["modified"] = self._now()
         self._save()
 
     # Пълно пресмятане на инвентара от movements.json

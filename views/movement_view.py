@@ -133,7 +133,23 @@ class MovementView:
             return
 
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
-        movement_type = "IN" if input("Избор: ").strip() == "0" else "OUT"
+
+        # ✔ Оправена логика за избор на IN/OUT
+        while True:
+            mt_raw = input("Избор (0/1, Enter = отказ): ").strip()
+
+            if mt_raw == "":
+                print("Операцията е отказана.")
+                return
+
+            if mt_raw == "0":
+                movement_type = "IN"
+                break
+            elif mt_raw == "1":
+                movement_type = "OUT"
+                break
+            else:
+                print("[!] Невалиден избор. Моля, въведете 0 или 1.\n")
 
         # OUT – избор само от складове с наличност
         if movement_type == "OUT":
@@ -368,9 +384,16 @@ class MovementView:
             print("Грешка:", e)
 
     def search_movements(self, _):
-        kw = input("Търси по описание (мин. 3 символа): ").strip()
+        # ✔ Оправено поведение: Enter = отказ
+        kw = input("Търси по описание (мин. 3 символа, Enter = отказ): ").strip()
+
+        if kw == "":
+            print("Операцията е отказана.")
+            return
+
         if len(kw) < 3:
-            print("Моля, въведете поне 3 символа."); return
+            print("Моля, въведете поне 3 символа.")
+            return
 
         results = self.movement_controller.search_by_description(kw)
         if not results:
@@ -484,9 +507,14 @@ class MovementView:
             print("\nМоля, коригирайте и опитайте отново.\n")
             return
 
-        results = self.movement_controller.advanced_filter(movement_type=movement_type, start_date=start_date,
-                                                           end_date=end_date, product_id=product_id,
-                                                           location_id=location_id, user_id=user_id)
+        results = self.movement_controller.advanced_filter(
+            movement_type=movement_type,
+            start_date=start_date,
+            end_date=end_date,
+            product_id=product_id,
+            location_id=location_id,
+            user_id=user_id
+        )
 
         if not results:
             print("\nНяма движения по тези критерии.\n")

@@ -33,14 +33,16 @@ class InvoiceView:
 
     def _build_menu(self):
         # всички опции за работа с фактури
-        return Menu("Меню Фактури", [MenuItem("1", "Списък с всички фактури", self.show_all),
-                                     MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
-                                    MenuItem("3", "Търсене по клиент", self.search_by_customer),
-                                    MenuItem("4", "Търсене по продукт", self.search_by_product),
-                                    MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
-                                    MenuItem("6", "Разширено търсене", self.advanced_search),
-                                    MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
-                                    MenuItem("0", "Назад", lambda u: "break") ])
+        return Menu("Меню Фактури", [
+            MenuItem("1", "Списък с всички фактури", self.show_all),
+            MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
+            MenuItem("3", "Търсене по клиент", self.search_by_customer),
+            MenuItem("4", "Търсене по продукт", self.search_by_product),
+            MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
+            MenuItem("6", "Разширено търсене", self.advanced_search),
+            MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     # показва всички фактури
     def show_all(self, user):
@@ -69,10 +71,9 @@ class InvoiceView:
             invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
 
             if not invoice_id:
-                print("[!] Моля, въведете ID или натиснете Enter за отказ.\n")
+                print("[!] Прекъснато – празен вход.\n")
                 return
 
-            # проверка за валиден UUID
             try:
                 InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
             except ValueError as e:
@@ -80,17 +81,14 @@ class InvoiceView:
                 print("Моля, опитайте отново.\n")
                 continue
 
-            # проверка дали фактурата съществува
             invoice = self.invoice_controller.get_by_id(invoice_id)
             if not invoice:
                 print("Фактурата не е намерена.")
                 print("Моля, опитайте отново.\n")
                 continue
 
-            # ако стигнем тук - имаме валидна фактура
             break
 
-        # показваме фактурата
         columns = ["Поле", "Стойност"]
         rows = [
             ["ID", invoice.invoice_id],
@@ -105,11 +103,11 @@ class InvoiceView:
 
         print("\n" + format_table(columns, rows))
 
-    # търсене по клиент
+    # търсене по клиент – празно => прекъсва
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
         if not keyword:
-            print("[!] Моля, въведете име или част от име.")
+            print("[!] Прекъснато – празен вход.\n")
             return
 
         results = self.invoice_controller.search_by_customer(keyword)
@@ -126,11 +124,11 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 12, 12, 12]))
 
-    # търсене по продукт
+    # търсене по продукт – празно => прекъсва
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
         if not keyword:
-            print("[!] Моля, въведете име или част от име.")
+            print("[!] Прекъснато – празен вход.\n")
             return
 
         results = self.invoice_controller.search_by_product(keyword)
@@ -147,17 +145,21 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 26, 12, 12, 12]))
 
-    # търсене по дата
+    # търсене по дата – празно => прекъсва, грешно => пита пак
     def search_by_date(self, user):
-        date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
-        if not date_str:
-            print("[!] Моля, въведете дата.")
-            return
-        try:
-            InvoiceValidator.validate_date(date_str)
-        except ValueError as e:
-            print(f"[!] {e}")
-            return
+        while True:
+            date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
+
+            if not date_str:
+                print("[!] Прекъснато – празен вход.\n")
+                return
+
+            try:
+                InvoiceValidator.validate_date(date_str)
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
+                print("Моля, опитайте отново.\n")
 
         results = self.invoice_controller.search_by_date(date_str)
         if not results:
@@ -170,7 +172,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
-    # разширено търсене
+    # разширено търсене – празните са позволени
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
         customer = input("Клиент (или Enter): ").strip() or None
@@ -186,9 +188,11 @@ class InvoiceView:
             print(f"[!] {e}")
             return
 
-        results = self.invoice_controller.advanced_search(customer=customer, product=product,
-                                                          start_date=start_date, end_date=end_date,
-                                                          min_total=min_total, max_total=max_total)
+        results = self.invoice_controller.advanced_search(
+            customer=customer, product=product,
+            start_date=start_date, end_date=end_date,
+            min_total=min_total, max_total=max_total
+        )
 
         if not results:
             print("\n[!] Няма фактури по тези критерии.")
@@ -200,7 +204,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 12]))
 
-    # търсене по сума
+    # търсене по сума – празните са позволени
     def search_by_total(self, _):
         print("   Търсене по сума / диапазон")
         min_total = input("Минимална сума (или Enter): ").strip()

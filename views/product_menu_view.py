@@ -11,10 +11,8 @@ from validators.movement_validator import MovementValidator
 
 
 class ProductView:
-    def __init__(self, product_controller: ProductController,
-                 category_controller: CategoryController,
-                 location_controller: LocationController,
-                 activity_log_controller=None):
+    def __init__(self, product_controller: ProductController, category_controller: CategoryController,
+                 location_controller: LocationController, activity_log_controller=None):
 
         self.product_controller = product_controller
         self.category_controller = category_controller
@@ -67,6 +65,7 @@ class ProductView:
     def create_product(self, user):
         print("\n  Създаване на продукт  ")
 
+        # Име – задължително, не допуска празно
         while True:
             name = input("Име: ").strip()
             try:
@@ -75,6 +74,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
+        # Описание – задължително, не допуска празно
         while True:
             description = input("Описание: ").strip()
             try:
@@ -83,6 +83,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
+        # Цена – задължително
         while True:
             price_raw = input("Цена: ").strip()
             try:
@@ -100,7 +101,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-
+        # Мерна единица – задължителна
         while True:
             unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
             try:
@@ -120,7 +121,10 @@ class ProductView:
             print(f"{i}. {c.name} (ID: {c.category_id})")
 
         while True:
-            cat_raw = input("Изберете категория (номер или Category ID): ").strip()
+            cat_raw = input("Изберете категория (номер или Category ID, Enter за отказ): ").strip()
+            if cat_raw == "":
+                print("Операцията е отказана.")
+                return
             try:
                 if cat_raw.isdigit():
                     idx = int(cat_raw)
@@ -136,7 +140,7 @@ class ProductView:
             except Exception as e:
                 print(f"[!] {e}")
 
-
+        # ЛОКАЦИИ
         locations = self.location_controller.get_all()
         if not locations:
             print("Няма складове.")
@@ -147,7 +151,10 @@ class ProductView:
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
 
         while True:
-            loc_raw = input("Изберете локация (номер или Location ID): ").strip()
+            loc_raw = input("Изберете локация (номер или Location ID, Enter за отказ): ").strip()
+            if loc_raw == "":
+                print("Операцията е отказана.")
+                return
             try:
                 # Използваме строгия валидатор -> нормализира към W1–Wn
                 location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
@@ -158,10 +165,16 @@ class ProductView:
         # СЪЗДАВАНЕ
         try:
             u_id = user.user_id
-            product_data = {"name": name, "category_ids": [category_id],
-                            "quantity": quantity, "unit": unit,
-                            "description": description, "price": price,
-                            "supplier_id": None, "location_id": location_id}
+            product_data = {
+                "name": name,
+                "category_ids": [category_id],
+                "quantity": quantity,
+                "unit": unit,
+                "description": description,
+                "price": price,
+                "supplier_id": None,
+                "location_id": location_id
+            }
 
             product = self.product_controller.add(product_data, u_id)
             print("Продуктът е създаден успешно.")
@@ -173,7 +186,11 @@ class ProductView:
     def remove_product(self, user):
         print("\nПремахване на продукт")
         while True:
-            pid = input("ID на продукт: ").strip()
+            pid = input("ID на продукт (Enter за отказ): ").strip()
+            if pid == "":
+                print("Операцията е отказана.")
+                return
+
             product = self.product_controller.get_by_id(pid)
             if product:
                 break
@@ -194,7 +211,7 @@ class ProductView:
 
         # цикъл докато не въведем валидно ID или Enter за отказ
         while True:
-            pid = input("ID на продукт: ").strip()
+            pid = input("ID на продукт (Enter за отказ): ").strip()
 
             # Enter = отказ
             if pid == "":
@@ -261,10 +278,19 @@ class ProductView:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
             new_quantity = ProductValidator.parse_optional_float(new_qty_raw, "Количество") if new_qty_raw else None
 
-            self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_desc,
-                                                   new_price=new_price, new_quantity=new_quantity, new_unit=new_unit,
-                                                   new_category_ids=new_category_ids, new_location_id=new_location_id,
-                                                   new_supplier_id=None, new_tags=None, user_id=user.user_id)
+            self.product_controller.update_product(
+                product_id=pid,
+                new_name=new_name,
+                new_description=new_desc,
+                new_price=new_price,
+                new_quantity=new_quantity,
+                new_unit=new_unit,
+                new_category_ids=new_category_ids,
+                new_location_id=new_location_id,
+                new_supplier_id=None,
+                new_tags=None,
+                user_id=user.user_id
+            )
 
             print("Продуктът е обновен.")
 
@@ -294,7 +320,11 @@ class ProductView:
         self.show_all(user)
 
     def search(self, _):
-        keyword = input("Търсене: ").strip().lower()
+        keyword = input("Търсене (Enter за отказ): ").strip().lower()
+        if keyword == "":
+            print("Операцията е отказана.")
+            return
+
         results = self.product_controller.search(keyword)
         if not results:
             print("Няма резултати.")
@@ -328,7 +358,10 @@ class ProductView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
 
-        raw = input("Изберете категория (номер или Category ID): ").strip()
+        raw = input("Изберете категория (номер или Category ID, Enter за отказ): ").strip()
+        if raw == "":
+            print("Операцията е отказана.")
+            return
 
         try:
             if raw.isdigit():
@@ -398,14 +431,14 @@ class ProductView:
     def advanced_search(self, _):
         print("\n  Разширено търсене  ")
 
-        keyword = input("Ключова дума: ").strip()
+        keyword = input("Ключова дума (Enter за пропуск): ").strip()
         if keyword == "":
             keyword = None
 
-        min_raw = input("Мин. цена: ").strip()
-        max_raw = input("Макс. цена: ").strip()
-        min_qty_raw = input("Мин. количество: ").strip()
-        max_qty_raw = input("Макс. количество: ").strip()
+        min_raw = input("Мин. цена (Enter за пропуск): ").strip()
+        max_raw = input("Макс. цена (Enter за пропуск): ").strip()
+        min_qty_raw = input("Мин. количество (Enter за пропуск): ").strip()
+        max_qty_raw = input("Макс. количество (Enter за пропуск): ").strip()
 
         print("\nКатегории:")
         categories = self.category_controller.get_all()
@@ -448,7 +481,8 @@ class ProductView:
                 keyword=keyword, min_price=min_price, max_price=max_price,
                 min_quantity=min_qty, max_quantity=max_qty,
                 category_id=category_id, supplier_id=supplier_id,
-                location_id=location_id)
+                location_id=location_id
+            )
             if not results:
                 print("\n[!] Няма намерени продукти по тези критерии.\n")
                 return

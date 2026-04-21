@@ -38,10 +38,9 @@ class OperatorMenuView:
 
     # основен цикъл
     def show_menu(self, user):
-        if user.role.lower() == "guest":   # гост → няма достъп
+        if user.role.lower() == "guest":   # гост - няма достъп
             print("Нямате достъп до операторското меню.")
             return
-
         while True:
             choice = self.menu.show()
             result = self.menu.execute(choice, user)

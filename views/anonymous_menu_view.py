@@ -24,6 +24,7 @@ class AnonymousMenuView:
             MenuItem("3", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")])
 
+
     def show_menu(self, user=None):
         while True:
             choice = self.menu.show()

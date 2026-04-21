@@ -17,12 +17,18 @@ class Menu:
             print(f"{item.key}. {item.text}")
 
         while True:
-            choice = input("Избор: ").strip()
+            choice = input("Избор (Enter = отказ): ").strip()
+
+            # Enter = отказ
+            if choice == "":
+                return "0"   # връща към предишното меню
+
+            # не е число
             if not choice.isdigit():
                 print("Моля, въведете валидна числова опция от менюто.\n")
                 continue
 
-            # е число, но не съществува в менюто
+            # число, но не съществува
             if choice not in [item.key for item in self.items]:
                 print("Няма такава опция в менюто. Опитайте отново.\n")
                 continue
@@ -36,6 +42,7 @@ class Menu:
 
         print("Невалиден избор.")
         return None
+
 
 # Menu и MenuItem реализират проста система за навигация.
 # MenuItem съдържа ключ, текст и действие, а Menu показва опциите и изпълнява избраната функция.

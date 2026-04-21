@@ -52,7 +52,6 @@ class MainMenuView:
     def open_suppliers(self, user):
         SupplierView(self.supplier_controller).show_menu(user)
 
-
     def open_movements(self, _):
         MovementView( self.product_controller, self.movement_controller, self.user_controller).show_menu()
 

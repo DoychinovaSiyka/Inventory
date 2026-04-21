@@ -54,6 +54,7 @@ class ProductSortView:
                           key=lambda p: inv.get(p.product_id, {}).get("total_stock", 0))
         self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
 
+
     # Общ метод за визуализация
     def _print_sorted(self, products, title, algorithm):
         if not products:
