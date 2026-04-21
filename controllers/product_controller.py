@@ -79,7 +79,7 @@ class ProductController:
         self.save_changes()
         self._log(user_id, "ADD_PRODUCT", f"Добавен продукт: {product.name}")
 
-        # Начално количество чрез движение (това ще направи запис в movements.json)
+        # Начално количество чрез движение
         quantity = product_data.get("quantity")
         location_id = product_data.get("location_id") or "W1"
 
@@ -88,7 +88,7 @@ class ProductController:
             if qty > 0:
                 self.movement_controller.add(product_id=product.product_id, user_id=user_id,
                                              location_id=location_id, movement_type="IN", quantity=str(qty),
-                                             description="Начално зареждане при създаване", rice=str(product.price),
+                                             description="Начално зареждане при създаване", price=str(product.price),
                                              supplier_id=product.supplier_id or "system")
         return product
 
@@ -110,6 +110,7 @@ class ProductController:
             product.price = ProductValidator.validate_price(new_price)
             has_changes = True
 
+        # Корекция на количество чрез движение
         if new_quantity is not None and self.inventory_controller and self.movement_controller:
             current_stock = self.inventory_controller.get_total_stock(product_id)
             diff = float(new_quantity) - float(current_stock)
@@ -142,7 +143,7 @@ class ProductController:
             return True
         return False
 
-    # Справки и филтри
+
     def search(self, keyword: str) -> List[Product]:
         return filter_search(self.products, keyword)
 
@@ -151,3 +152,27 @@ class ProductController:
 
     def total_values(self) -> float:
         return calculate_total_inventory_value(self.products, self.inventory_controller)
+
+    # Най-скъп продукт
+    def most_expensive(self) -> Optional[Product]:
+        return get_most_expensive_product(self.products)
+
+    # Най-евтин продукт
+    def cheapest(self) -> Optional[Product]:
+        return get_cheapest_product(self.products)
+
+    # Средна цена
+    def average_price(self) -> float:
+        return calculate_average_price(self.products)
+
+    # Обща стойност на склада
+    def total_inventory_value(self) -> float:
+        return calculate_total_inventory_value(self.products, self.inventory_controller)
+
+    # Групиране по категории
+    def group_by_category(self):
+        return group_products_by_category(self.products)
+
+    # Разширено търсене
+    def advanced_search(self, **kwargs):
+        return filter_combined(self.products, self.inventory_controller, **kwargs)
