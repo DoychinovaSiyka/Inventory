@@ -12,7 +12,6 @@ class UserController:
 
     def __init__(self, repo):
         self.repo = repo
-
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
@@ -159,5 +158,3 @@ class UserController:
                     email="", username="guest", password="", role="Anonymous",
                     status="Active", created=now, modified=now)
 
-
-# password - dimitar01
