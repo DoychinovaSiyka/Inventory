@@ -3,8 +3,7 @@ from typing import Optional, Union
 
 
 class Location:
-    """Модел за складова локация.
-    Държа name и zone винаги като текст, за да няма None."""
+    """Модел за складова локация. Държа name и zone винаги като текст, за да няма None."""
     def __init__(self, location_id: Optional[Union[str, int]] = None,
                  name: Optional[str] = "", zone: Optional[str] = "",
                  capacity: int = 0, created: Optional[str] = None,
@@ -17,7 +16,6 @@ class Location:
         self.name = name if name is not None else ""
         self.zone = zone if zone is not None else ""
         self.capacity = capacity
-
         # Дати за създаване и последна промяна
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now

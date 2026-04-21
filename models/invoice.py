@@ -19,7 +19,6 @@ class Invoice:
         self.unit = unit
         self.unit_price = unit_price
         self.total_price = total_price
-
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now

@@ -4,9 +4,8 @@ from models.category import Category
 
 
 class Product:
-    def __init__(self, product_id, name, categories, unit, description, price,
-                 supplier_id=None, tags=None, location_id=None,
-                 created=None, modified=None):
+    def __init__(self, product_id, name, categories, unit, description, price, supplier_id=None,
+                 tags=None, location_id=None, created=None, modified=None):
 
         # Ако няма подадено ID, генерирам ново – така всеки продукт е уникален
         self.product_id = str(product_id) if product_id else str(uuid.uuid4())
@@ -72,17 +71,11 @@ class Product:
             # Ако няма контролер – връщам празен списък
             fixed_categories = []
 
-        return Product(product_id=data.get("product_id"),
-                       name=data.get("name", "Неизвестен"),
-                       categories=fixed_categories,
-                       unit=data.get("unit", "бр."),
-                       description=data.get("description", ""),
-                       price=data.get("price", 0),
-                       supplier_id=data.get("supplier_id"),
-                       tags=data.get("tags", []),
-                       location_id=data.get("location_id"),
-                       created=data.get("created"),
-                       modified=data.get("modified"))
+        return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"),
+                       categories=fixed_categories, unit=data.get("unit", "бр."),
+                       description=data.get("description", ""), price=data.get("price", 0),
+                       supplier_id=data.get("supplier_id"), tags=data.get("tags", []),
+                       location_id=data.get("location_id"), created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         return f"{self.name} | {self.price} лв. | {self.unit}"

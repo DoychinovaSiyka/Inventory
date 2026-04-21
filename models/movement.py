@@ -51,27 +51,12 @@ class Movement:
 
     # SAVE - JSON
     def to_dict(self):
-        return {
-            "movement_id": self.movement_id,
-            "product_id": self.product_id,
-            "product_name": self.product_name,
-            "user_id": self.user_id,
-            "location_id": self.location_id,
-            "movement_type": self.movement_type.value
-                if isinstance(self.movement_type, MovementType)
-                else str(self.movement_type),
-            "quantity": self.quantity,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "supplier_id": self.supplier_id,
-            "customer": self.customer,
-            "from_location_id": self.from_location_id,
-            "to_location_id": self.to_location_id,
-            "date": self.date,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"movement_id": self.movement_id, "product_id": self.product_id, "product_name": self.product_name,
+                "user_id": self.user_id, "location_id": self.location_id, "movement_type": self.movement_type.value
+            if isinstance(self.movement_type, MovementType) else str(self.movement_type),
+                "quantity": self.quantity, "unit": self.unit, "description": self.description, "price": self.price,
+                "supplier_id": self.supplier_id, "customer": self.customer, "from_location_id": self.from_location_id,
+                "to_location_id": self.to_location_id, "date": self.date, "created": self.created, "modified": self.modified}
 
     # LOAD <- JSON
     @staticmethod
@@ -94,30 +79,15 @@ class Movement:
                 except Exception:
                     mt = MovementType.IN
 
-        return Movement(
-            movement_id=data.get("movement_id"),
-            product_id=data.get("product_id"),
-            product_name=data.get("product_name") or data.get("product"),
-            user_id=data.get("user_id"),
-            location_id=data.get("location_id"),
-            movement_type=mt,
-            quantity=data.get("quantity", 0),
-            unit=data.get("unit", "бр."),
-            description=data.get("description", ""),
-            price=data.get("price", 0.0),
-            supplier_id=data.get("supplier_id"),
-            customer=data.get("customer"),
-            from_location_id=data.get("from_location_id"),
-            to_location_id=data.get("to_location_id"),
-            date=data.get("date"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
+                        product_name=data.get("product_name") or data.get("product"), user_id=data.get("user_id"),
+                        location_id=data.get("location_id"), movement_type=mt, quantity=data.get("quantity", 0),
+                        unit=data.get("unit", "бр."), description=data.get("description", ""), price=data.get("price", 0.0),
+                        supplier_id=data.get("supplier_id"), customer=data.get("customer"),
+                        from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"),
+                        date=data.get("date"), created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         m_type = self.movement_type.value if isinstance(self.movement_type, MovementType) else self.movement_type
-        return (
-            f"Движение {self.movement_id} | {m_type} | "
-            f"{self.quantity} {self.unit} | Продукт: {self.product_name} | "
-            f"Склад ID: {self.location_id}"
-        )
+        return (f"Движение {self.movement_id} | {m_type} | {self.quantity} {self.unit} | Продукт: {self.product_name} | " 
+                f"Склад ID: {self.location_id}")

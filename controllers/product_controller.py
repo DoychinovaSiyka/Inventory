@@ -18,7 +18,6 @@ from analytics.product_analytics import (calculate_average_price, calculate_tota
 
 class ProductController:
     """Контролерът отговаря за работа с продуктите. Оправен за оптимизиран запис."""
-
     def __init__(self, repo, category_controller, activity_log_controller=None):
         self.repo = repo
         self.category_controller = category_controller
@@ -30,6 +29,7 @@ class ProductController:
         self.supplier_controller = None
         self.inventory_controller = None
         self.movement_controller = None
+
 
     @staticmethod
     def _generate_id() -> str:

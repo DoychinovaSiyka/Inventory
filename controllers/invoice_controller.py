@@ -93,7 +93,7 @@ class InvoiceController:
 
         return False
 
-    # Прехвърлям филтрирането към отделните функции
+
     def search_by_customer(self, keyword: str):
         return filter_by_customer(self.invoices, keyword)
 

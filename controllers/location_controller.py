@@ -6,9 +6,7 @@ from validators.location_validator import LocationValidator
 
 
 class LocationController:
-    """Контролерът управлява локациите в системата.
-    Работи коректно дори когато locations.json е празен."""
-
+    """Контролерът управлява локациите в системата. Работи коректно дори когато locations.json е празен."""
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
