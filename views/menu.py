@@ -18,17 +18,11 @@ class Menu:
 
         while True:
             choice = input("Избор (Enter = отказ): ").strip()
-
-            # Enter = отказ
             if choice == "":
                 return "0"   # връща към предишното меню
-
-            # не е число
             if not choice.isdigit():
                 print("Моля, въведете валидна числова опция от менюто.\n")
                 continue
-
-            # число, но не съществува
             if choice not in [item.key for item in self.items]:
                 print("Няма такава опция в менюто. Опитайте отново.\n")
                 continue

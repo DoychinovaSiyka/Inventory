@@ -74,7 +74,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Описание – задължително, не допуска празно
+
         while True:
             description = input("Описание: ").strip()
             try:
@@ -101,7 +101,6 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Мерна единица – задължителна
         while True:
             unit = input("Мерна единица (пример: кг., бр., л., пакет): ").strip()
             try:
@@ -140,7 +139,7 @@ class ProductView:
             except Exception as e:
                 print(f"[!] {e}")
 
-        # ЛОКАЦИИ
+
         locations = self.location_controller.get_all()
         if not locations:
             print("Няма складове.")
@@ -162,19 +161,11 @@ class ProductView:
             except Exception as e:
                 print(f"[!] {e}")
 
-        # СЪЗДАВАНЕ
         try:
             u_id = user.user_id
-            product_data = {
-                "name": name,
-                "category_ids": [category_id],
-                "quantity": quantity,
-                "unit": unit,
-                "description": description,
-                "price": price,
-                "supplier_id": None,
-                "location_id": location_id
-            }
+            product_data = {"name": name, "category_ids": [category_id], "quantity": quantity,
+                            "unit": unit, "description": description, "price": price, "supplier_id": None,
+                            "location_id": location_id}
 
             product = self.product_controller.add(product_data, u_id)
             print("Продуктът е създаден успешно.")
@@ -219,7 +210,6 @@ class ProductView:
                 return
 
             product = self.product_controller.get_by_id(pid)
-
             if product:
                 break
 
@@ -228,7 +218,6 @@ class ProductView:
 
         # тук вече имаме валиден продукт
         print(f"Редактиране на {product.name}")
-
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
         new_price_raw = input(f"Нова цена ({product.price}): ").strip()
@@ -278,19 +267,11 @@ class ProductView:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
             new_quantity = ProductValidator.parse_optional_float(new_qty_raw, "Количество") if new_qty_raw else None
 
-            self.product_controller.update_product(
-                product_id=pid,
-                new_name=new_name,
-                new_description=new_desc,
-                new_price=new_price,
-                new_quantity=new_quantity,
-                new_unit=new_unit,
-                new_category_ids=new_category_ids,
-                new_location_id=new_location_id,
-                new_supplier_id=None,
-                new_tags=None,
-                user_id=user.user_id
-            )
+            self.product_controller.update_product(product_id=pid, new_name=new_name,
+                                                   new_description=new_desc, new_price=new_price, new_quantity=new_quantity,
+                                                   new_unit=new_unit, new_category_ids=new_category_ids,
+                                                   new_location_id=new_location_id, new_supplier_id=None, new_tags=None,
+                                                   user_id=user.user_id)
 
             print("Продуктът е обновен.")
 
@@ -477,12 +458,10 @@ class ProductView:
             min_qty = ProductValidator.parse_optional_float(min_qty_raw)
             max_qty = ProductValidator.parse_optional_float(max_qty_raw)
 
-            results = self.product_controller.search_combined(
-                keyword=keyword, min_price=min_price, max_price=max_price,
-                min_quantity=min_qty, max_quantity=max_qty,
-                category_id=category_id, supplier_id=supplier_id,
-                location_id=location_id
-            )
+            results = self.product_controller.search_combined(keyword=keyword, min_price=min_price, max_price=max_price,
+                                                              min_quantity=min_qty, max_quantity=max_qty,
+                                                              category_id=category_id, supplier_id=supplier_id,
+                                                              location_id=location_id)
             if not results:
                 print("\n[!] Няма намерени продукти по тези критерии.\n")
                 return
@@ -500,11 +479,9 @@ class ProductView:
                     if supplier:
                         supplier_name = supplier.name
 
-                rows.append([
-                    p.name, f"{p.price:.2f} лв.", f"{stock} {p.unit}",
-                    ", ".join([c.name for c in p.categories]) if p.categories else "-",
-                    p.location_id, supplier_name
-                ])
+                rows.append([p.name, f"{p.price:.2f} лв.", f"{stock} {p.unit}",
+                             ", ".join([c.name for c in p.categories]) if p.categories else "-",
+                             p.location_id, supplier_name])
 
             print(format_table(["Продукт", "Цена", "Наличност", "Категории", "Локация", "Доставчик"], rows))
             print()
@@ -546,7 +523,6 @@ class ProductView:
                         display_qty = f"{qty} {p.unit}"
                     else:
                         display_qty = f"0 {p.unit} (изчерпан)"
-
                 rows.append([wh_id, display_qty])
 
             print(format_table(["Склад", "Наличност"], rows))

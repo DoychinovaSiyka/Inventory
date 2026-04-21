@@ -111,7 +111,6 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         MovementValidator.validate_movement_type(m_type_str)
 
-
         try:
             qty = MovementValidator.parse_quantity(quantity)
         except Exception:
@@ -126,7 +125,7 @@ class MovementController:
             except Exception:
                 raise ValueError("Невалидна цена. Въведете число.")
 
-        # Останалите проверки
+
         MovementValidator.validate_description(description)
         MovementValidator.validate_user_exists(user_id, self.user_controller)
         MovementValidator.validate_product_exists(product_id, self.product_controller)
@@ -304,7 +303,6 @@ class MovementController:
             self.movements.extend(new_movements)
             self.save_changes()
 
-    # SEARCH
     def search_by_description(self, keyword: str):
         return filter_by_description(self.movements, keyword)
 

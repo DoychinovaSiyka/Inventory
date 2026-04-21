@@ -41,11 +41,10 @@ def input_password(prompt="Въведете парола: "):
 
 
 def format_table(columns, rows):
-    """ Професионално форматиране на таблица с автоматична ширина и правилно подравняване. """
     if rows is None:
         rows = []
 
-    # Изчисляване на ширините (вече позволява ДЪЛГИ имена)
+    # Изчисляване на ширините
     all_rows = [columns] + rows
     col_widths = []
     for i in range(len(columns)):
@@ -60,8 +59,7 @@ def format_table(columns, rows):
         line = "|"
         for i, cell in enumerate(row):
             cell_str = str(cell)
-            is_numeric = (cell_str.replace('.', '', 1).isdigit()
-                          or cell_str.endswith("лв.")
+            is_numeric = (cell_str.replace('.', '', 1).isdigit() or cell_str.endswith("лв.")
                           or cell_str.endswith("кг")
                           or cell_str.endswith("кг.")
                           or cell_str.endswith("бр")

@@ -24,7 +24,6 @@ class ProductSortView:
             if result == "break":
                 break
 
-    # Сортиране по име (A–Z)
     def sort_by_name(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
@@ -58,13 +57,13 @@ class ProductSortView:
     # Общ метод за визуализация
     def _print_sorted(self, products, title, algorithm):
         if not products:
-            print("\n[!] Няма продукти за показване.");
+            print("\n[!] Няма продукти за показване.")
             return
 
         print(f"\nСортиране по: {title}")
         print(f"Алгоритъм: {algorithm}\n")
 
-        rows = [];
+        rows = []
         inv = self.controller.inventory_controller.data["products"]
 
         for p in products:

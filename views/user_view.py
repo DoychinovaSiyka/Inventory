@@ -55,22 +55,18 @@ class UserView:
         if not email:
             print("Операцията е отказана.")
             return
-
         username = input("Потребителско име (Enter за отказ): ").strip()
         if not username:
             print("Операцията е отказана.")
             return
-
         password = input_password("Парола (Enter за отказ): ").strip()
         if not password:
             print("Операцията е отказана.")
             return
-
         role = input("Роля (Admin/Operator, Enter за отказ): ").strip()
         if not role:
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("Потребителят е добавен!")
@@ -88,7 +84,6 @@ class UserView:
         if not new_role:
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.change_role(username, new_role)
             print("Ролята е променена.")
@@ -101,7 +96,6 @@ class UserView:
         if not username:
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.change_status(user, username, "Inactive")
             print("Потребителят е деактивиран.")
@@ -114,7 +108,6 @@ class UserView:
         if not username:
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.change_status(user, username, "Active")
             print("Потребителят е активиран.")
@@ -127,7 +120,6 @@ class UserView:
         if not username:
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.delete_user(user, username)
             print("Потребителят е изтрит.")

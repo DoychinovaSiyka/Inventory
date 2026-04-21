@@ -8,7 +8,6 @@ class GraphView:
         self.inventory_controller = inventory_controller
         self.location_controller = location_controller
         self.graph = WarehouseGraph()
-
         # Подготвяме мрежата от складове и разстоянията между тях
         self._setup_network()
         # Създаваме менюто за логистичния модул
@@ -22,7 +21,6 @@ class GraphView:
         ])
 
     def show_menu(self, user):
-        # Обикновен цикъл за работа с менюто
         while True:
             choice = self.menu.show()
             if choice == "0" or self.menu.execute(choice, user) == "break":
@@ -31,13 +29,9 @@ class GraphView:
     def _setup_network(self):  # настройвам си складовете и разстоянията между тях
         """Създавам складовете и задавам примерни разстояния. Това е графът, върху който
         работи Dijkstra."""
-        warehouses = [
-            Warehouse("W1", "София"),
-            Warehouse("W2", "Пловдив"),
-            Warehouse("W3", "Варна"),
-            Warehouse("W4", "Бургас"),
-            Warehouse("W5", "Магазин Смолян")
-        ]
+        warehouses = [Warehouse("W1", "София"),
+                      Warehouse("W2", "Пловдив"), Warehouse("W3", "Варна"),
+                      Warehouse("W4", "Бургас"), Warehouse("W5", "Магазин Смолян")]
 
         # добавям всички складове в графа
         for w in warehouses:
@@ -54,21 +48,18 @@ class GraphView:
         """Проверявам дали продуктът е в стартовия склад. Ако не е – търся всички складове
         с наличност и Dijkstra избира най-близкия."""
 
-        # ✔ Оправено: Enter = отказ
         product_name = input("Име на стока (Enter = отказ): ").strip()
         if not product_name:
             print("Операцията е отказана.")
             return
 
-        # ✔ Оправено: Enter = отказ
         my_location = input("Вашето ID (напр. W1, Enter = отказ): ").strip().upper()
         if not my_location:
             print("Операцията е отказана.")
             return
 
-        # проверявам дали складът съществува
         if my_location not in self.graph.nodes:
-            print(f"\n[!] Локация '{my_location}' не съществува.")
+            print(f"[!] Локация '{my_location}' не съществува.")
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
@@ -76,7 +67,7 @@ class GraphView:
         possible_sources = self.inventory_controller.get_warehouses_with_product(product_name)
         possible_sources = [str(s).upper() for s in possible_sources]
 
-        # ако продуктът е в стартовия склад → няма доставка
+        # ако продуктът е в стартовия склад - няма доставка
         if my_location in possible_sources:
             print(f"\n[*] '{product_name}' е наличен в {my_location}. Няма нужда от доставка.")
             return
@@ -95,7 +86,6 @@ class GraphView:
 
         # стартирам Dijkstra
         distances, predecessors = self.graph.dijkstra(my_location)
-
         # филтрирам складовете, до които реално има път
         reachable_sources = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
 

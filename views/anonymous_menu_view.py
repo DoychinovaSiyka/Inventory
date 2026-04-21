@@ -42,5 +42,6 @@ class AnonymousMenuView:
     def open_categories(self, user):
         self.category_view.show_menu(user)
 
+
     def show_system_info(self, _):
         self.system_info_view.show_menu()

@@ -69,7 +69,6 @@ class MovementView:
         while True:
             print(f"\nИзберете {label}:")
             for i, item in enumerate(items, start=1):
-
                 # Определяне на ID според типа
                 if isinstance(item, Product):
                     item_id = item.product_id
@@ -133,8 +132,7 @@ class MovementView:
             return
 
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
-
-        # ✔ Оправена логика за избор на IN/OUT
+        # Логика за избор на IN/OUT
         while True:
             mt_raw = input("Избор (0/1, Enter = отказ): ").strip()
 
@@ -187,7 +185,7 @@ class MovementView:
                 location = self.location_controller.get_by_id(chosen)
 
         else:
-            # IN – истинска доставка → позволяваме ВСЕКИ склад
+            # IN – истинска доставка - позволяваме ВСЕКИ склад
             all_locs = self.location_controller.get_all()
             if not all_locs:
                 print("Грешка: Няма дефинирани локации.")
@@ -222,7 +220,6 @@ class MovementView:
 
             location = chosen_loc
 
-        # количество – цикъл докато е валидно
         while True:
             quantity_raw = input("Количество: ").strip()
             try:
@@ -231,7 +228,6 @@ class MovementView:
             except Exception:
                 print("Грешка: количеството трябва да е валидно число (пример: 5 или 12.5). Опитайте отново.\n")
 
-        # цена – цикъл докато е валидно
         while True:
             price_raw = input("Цена: ").strip()
             try:
@@ -251,7 +247,7 @@ class MovementView:
         customer = None
 
         if movement_type == "IN":
-            # истинска доставка → избираме доставчик
+            # доставка - избираме доставчик
             all_suppliers = self.supplier_controller.get_all()
 
             print("\nИзберете доставчик:")
@@ -292,9 +288,9 @@ class MovementView:
             customer = input("Име на клиент: ").strip() or None
 
         try:
-            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
-                location_id=location.location_id, movement_type=movement_type, quantity=qty,
-                description=description, price=prc, customer=customer, supplier_id=supplier_id)
+            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id, location_id=location.location_id,
+                                              movement_type=movement_type, quantity=qty, description=description,
+                                              price=prc, customer=customer, supplier_id=supplier_id)
 
             print("\nДвижението е добавено успешно!")
             print(f"ID: {mv.movement_id}")
@@ -376,7 +372,6 @@ class MovementView:
         try:
             mv = self.movement_controller.move_product(product_id=product.product_id,user_id=user.user_id,
                 from_loc=from_loc, to_loc=to_loc, quantity=qty, description=desc)
-
             print("\nПреместването е извършено успешно!")
             print(f"ID: {mv.movement_id}")
 
@@ -384,13 +379,10 @@ class MovementView:
             print("Грешка:", e)
 
     def search_movements(self, _):
-        # ✔ Оправено поведение: Enter = отказ
         kw = input("Търси по описание (мин. 3 символа, Enter = отказ): ").strip()
-
         if kw == "":
             print("Операцията е отказана.")
             return
-
         if len(kw) < 3:
             print("Моля, въведете поне 3 символа.")
             return
@@ -507,15 +499,9 @@ class MovementView:
             print("\nМоля, коригирайте и опитайте отново.\n")
             return
 
-        results = self.movement_controller.advanced_filter(
-            movement_type=movement_type,
-            start_date=start_date,
-            end_date=end_date,
-            product_id=product_id,
-            location_id=location_id,
-            user_id=user_id
-        )
-
+        results = self.movement_controller.advanced_filter(movement_type=movement_type,
+                                                           start_date=start_date, end_date=end_date, product_id=product_id,
+                                                           location_id=location_id, user_id=user_id)
         if not results:
             print("\nНяма движения по тези критерии.\n")
             return

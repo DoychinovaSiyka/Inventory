@@ -10,15 +10,12 @@ class InventoryController:
 
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-
         # Зареждам инвентара от файла
         data = self.repo.load()
-
         # Ако файлът е празен или структурата е грешна - започвам с празен инвентар
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
             return
-
         # Ако е стара структура (списък) - мигрирам към нов формат
         if isinstance(data, list):
             self.data = {"products": {}}
@@ -42,7 +39,7 @@ class InventoryController:
         if product_id not in self.data["products"]:
             self.data["products"][product_id] = {"name": name, "unit": unit, "total_stock": 0.0, "locations": {}}
 
-    # Публични методи за справки
+    # Методи за справки
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         warehouses = []
         name_lower = product_name.lower()
@@ -91,7 +88,6 @@ class InventoryController:
         p = self._get_product(product_id)
         if not p:
             return
-
         qty = float(qty)
         current = float(p.get("total_stock", 0.0))
 
@@ -111,19 +107,15 @@ class InventoryController:
 
     def move_stock(self, product_id: str, product_name: str, from_wh: str,
                    to_wh: str, qty: float, unit: str) -> None:
-
         if qty <= 0:
             return
 
         p = self._get_product(product_id)
         if not p:
             return
-
         qty = float(qty)
-
         if from_wh not in p["locations"]:
             return
-
         # Махам от изходния склад
         new_qty = float(p["locations"][from_wh]) - qty
         if new_qty > 0:
@@ -138,10 +130,8 @@ class InventoryController:
 
     # Пълно пресмятане на инвентара от movements.json
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
-
         # Започвам с празна структура
         self.data = {"products": {}}
-
         if not movements:
             self._save()
             return
@@ -152,7 +142,6 @@ class InventoryController:
             pname = m.product_name
             qty = float(m.quantity)
             unit = m.unit
-
             if m.movement_type.name == "IN":
                 self.increase_stock(pid, pname, m.location_id, qty, unit)
 

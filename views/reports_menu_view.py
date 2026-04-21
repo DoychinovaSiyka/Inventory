@@ -16,7 +16,6 @@ class ReportsView:
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
         self.movement_controller = controller.movement_controller
-
         # Създаваме менюто за справки
         self.menu = self._build_menu()
 
@@ -86,35 +85,35 @@ class ReportsView:
         except (ValueError, TypeError):
             return "-"
 
-    # Въвеждане на непразен текст – празно => прекъсва
+    # Въвеждане на непразен текст – Enter -> отказ
     def _input_nonempty(self, prompt):
-        value = input(prompt).strip()
+        value = input(f"{prompt} (Enter = отказ): ").strip()
         if not value:
-            print("[!] Прекъснато – празен вход.\n")
+            print("[!] Операцията е отказана.\n")
             return None
         return value
 
-    # Въвеждане на продукт за търсене – празно => прекъсва
+    # Въвеждане на продукт за търсене – Enter -> отказ
     def _input_product_search(self):
-        value = input("Продукт (име или част от име): ").strip()
+        value = input("Продукт (име или част от име, Enter = отказ): ").strip()
         if not value:
-            print("[!] Прекъснато – празен вход.\n")
+            print("[!] Операцията е отказана.\n")
             return None
         return value
 
-    # Въвеждане и валидиране на дата – празно => прекъсва, грешно => пита пак
+    # Въвеждане и валидиране на дата – Enter -> отказ, грешно -> пита пак
     def _input_valid_date(self):
         while True:
-            value = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
+            value = input("Въведете дата (ГГГГ-ММ-ДД, Enter = отказ): ").strip()
 
             if not value:
-                print("[!] Прекъснато – празен вход.\n")
+                print("[!] Операцията е отказана.\n")
                 return None
 
             try:
                 return datetime.strptime(value, "%Y-%m-%d")
             except ValueError:
-                print("[!] Невалидна дата. Използвайте YYYY-MM-DD.")
+                print("[!] Невалидна дата. Използвайте формат YYYY-MM-DD.\n")
 
     # Справка за всички движения
     def report_movements(self, _):
@@ -139,15 +138,8 @@ class ReportsView:
             price_str = "-" if m_type == "MOVE" else self._format_lv(item.get("price"))
             location = self._truncate(item.get("location", "N/A"), 25)
 
-            rows.append([
-                movement_id,
-                date_str,
-                m_type,
-                product_name,
-                qty,
-                price_str,
-                location
-            ])
+            rows.append([movement_id, date_str, m_type, product_name,
+                         qty, price_str, location])
 
         print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "Цена", "Локация"], rows))
 
@@ -166,11 +158,8 @@ class ReportsView:
             locations = pdata.get("locations", {})
 
             for wh, qty in locations.items():
-                rows.append([
-                    self._truncate(name, 25),
-                    self._truncate(wh, 15),
-                    self._format_qty_unit(qty, unit)
-                ])
+                rows.append([self._truncate(name, 25), self._truncate(wh, 15),
+                             self._format_qty_unit(qty, unit)])
 
         rows.sort(key=lambda x: (x[0], x[1]))
         print(format_table(["Продукт", "Склад", "Наличност"], rows))
@@ -197,17 +186,10 @@ class ReportsView:
 
         rows = []
         for item in result.data:
-            rows.append([
-                self._truncate(item["product"], 25),
-                item["available"],
-                item["sold"],
-                item["top_locations"]
-            ])
+            rows.append([self._truncate(item["product"], 25), item["available"],
+                         item["sold"], item["top_locations"]])
 
-        print(format_table(
-            ["Продукт", "Наличност", "Продадено", "Топ локации"],
-            rows
-        ))
+        print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
     def report_sales_by_customer(self, _):
         customer_name = self._input_nonempty("Клиент (име): ")
@@ -254,13 +236,7 @@ class ReportsView:
             product_name = self._truncate(item.get("product", "N/A"), 25)
             total_price = self._format_lv(item.get("total_price", 0))
 
-            rows.append([
-                invoice_number,
-                date_str,
-                client_name,
-                product_name,
-                total_price
-            ])
+            rows.append([invoice_number, date_str, client_name, product_name, total_price])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -294,14 +270,7 @@ class ReportsView:
             supplier_name = self._truncate(item.get("supplier", "N/A"), 15)
             location_name = self._truncate(item.get("location", "N/A"), 15)
 
-            rows.append([
-                date_str,
-                movement_id,
-                product_name,
-                qty,
-                supplier_name,
-                location_name
-            ])
+            rows.append([date_str, movement_id, product_name, qty, supplier_name,location_name])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 

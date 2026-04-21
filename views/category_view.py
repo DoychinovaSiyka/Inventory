@@ -64,12 +64,10 @@ class CategoryView:
         if not name:
             print("Операцията е отказана.")
             return
-
         description = input("Описание (Enter = отказ): ").strip()
         if not description:
             print("Операцията е отказана.")
             return
-
         print("\nОставете празно за главна категория или въведете НОМЕР или ID на родител:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
@@ -86,19 +84,16 @@ class CategoryView:
         category = self.select_category()
         if not category:
             return
-
         category_id = category.category_id
         print("\nОставете празно, ако не искате да променяте полето.")
         print(f"Текущо име: {category.name}")
         new_name = input("Ново име: ").strip()
-
         print(f"Текущо описание: {category.description}")
         new_desc = input("Ново описание: ").strip()
 
         print("\nИзберете нов родител (номер или ID) или оставете празно за главна категория:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
-
         try:
             if new_name:
                 self.controller.update_name(category_id, new_name, "system")
@@ -117,11 +112,9 @@ class CategoryView:
         category = self.select_category()
         if not category:
             return
-
         confirm = input(f"Наистина ли искате да изтриете '{category.name}'? (y/n): ").strip().lower()
         if confirm != "y":
             return
-
         try:
             self.controller.remove(category.category_id, "system")
             print("Категорията е изтрита успешно!")
@@ -145,12 +138,10 @@ class CategoryView:
             if choice == "":
                 print("Операцията е отказана.\n")
                 return None
-
             # избор по ID
             for cat in categories:
                 if choice.lower() == cat.category_id.lower():
                     return cat
-
             # избор по номер
             if choice.isdigit():
                 index = int(choice) - 1

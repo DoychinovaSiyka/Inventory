@@ -132,18 +132,15 @@ class ReportController:
     # Справка - всички доставки (IN)
     def report_deliveries_all(self, keyword=None):
         data = []
-
         for m in self.movement_controller.movements:
             if m.movement_type != MovementType.IN:
                 continue
-
             if m.supplier_id is None:
                 continue
             if m.user_id == "system":
                 continue
             if m.description and ("начално" in m.description.lower() or "корекция" in m.description.lower()):
                 continue
-
             product = self.product_controller.get_by_id(m.product_id)
             if not product:
                 continue
@@ -152,7 +149,6 @@ class ReportController:
 
             location = self.location_controller.get_by_id(m.location_id)
             location_name = location.name if location else "N/A"
-
             supplier_name = "N/A"
             if self.movement_controller.supplier_controller:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
@@ -196,7 +192,6 @@ class ReportController:
     # Справка - най-продавани продукти
     def report_top_products(self):
         stats = {}
-
         for m in self.movement_controller.movements:
             if m.movement_type != MovementType.OUT:
                 continue
@@ -231,7 +226,6 @@ class ReportController:
         inv_data = self.inventory_controller.data or {}
         products_data = inv_data.get("products", {})
         data = []
-
         for product in self.product_controller.get_all():
             pid, unit = product.product_id, product.unit
 
