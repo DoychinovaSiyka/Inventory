@@ -79,7 +79,7 @@ class InventoryController:
         p["total_stock"] = float(p.get("total_stock", 0.0)) + qty
         p["locations"][warehouse_id] = float(p["locations"].get(warehouse_id, 0.0)) + qty
 
-        self._save()
+
 
     def decrease_stock(self, product_id: str, warehouse_id: str, qty: float, unit: str) -> None:
         if qty <= 0:
@@ -103,7 +103,6 @@ class InventoryController:
             else:
                 del p["locations"][warehouse_id]
 
-        self._save()
 
     def move_stock(self, product_id: str, product_name: str, from_wh: str,
                    to_wh: str, qty: float, unit: str) -> None:
@@ -116,6 +115,7 @@ class InventoryController:
         qty = float(qty)
         if from_wh not in p["locations"]:
             return
+
         # Махам от изходния склад
         new_qty = float(p["locations"][from_wh]) - qty
         if new_qty > 0:
@@ -126,7 +126,7 @@ class InventoryController:
         # Добавям в целевия склад
         p["locations"][to_wh] = float(p["locations"].get(to_wh, 0.0)) + qty
 
-        self._save()
+
 
     # Пълно пресмятане на инвентара от movements.json
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
@@ -142,6 +142,7 @@ class InventoryController:
             pname = m.product_name
             qty = float(m.quantity)
             unit = m.unit
+
             if m.movement_type.name == "IN":
                 self.increase_stock(pid, pname, m.location_id, qty, unit)
 
@@ -151,4 +152,5 @@ class InventoryController:
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 
+        #  Единствен запис
         self._save()
