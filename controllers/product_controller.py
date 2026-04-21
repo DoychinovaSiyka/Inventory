@@ -178,7 +178,7 @@ class ProductController:
             product.supplier_id = new_supplier_id
             has_changes = True
 
-        # Tags
+
         if new_tags is not None:
             if not isinstance(new_tags, list):
                 raise ValueError("Tags трябва да са списък.")

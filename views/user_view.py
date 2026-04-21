@@ -30,8 +30,7 @@ class UserView:
             MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
             MenuItem("5", "Активиране на потребител", self.activate_user),
             MenuItem("6", "Премахване на потребител", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
     # Показване на всички потребители
     def show_users(self, _):

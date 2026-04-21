@@ -47,12 +47,12 @@ class OperatorMenuView:
             if result == "break":
                 break
 
-    # малък помощен метод за създаване на view класове
+    # помощен метод за създаване на view класове
     @staticmethod
     def _open_view(view_class, *args):
         return view_class(*args)
 
-    # продукти
+
     def open_products(self, user):
         view = self._open_view(ProductView,self.product_controller,
                                self.category_controller,self.location_controller,
@@ -94,7 +94,7 @@ class OperatorMenuView:
 
         input("\nНатиснете Enter за връщане към менюто...")
 
-    # системна информация
+
     @staticmethod
     def open_system_info(_):
         SystemInfoView().show_menu()

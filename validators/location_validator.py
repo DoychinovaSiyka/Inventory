@@ -9,15 +9,23 @@ class LocationValidator:
         if not cleaned:
             raise ValueError("Името на локацията е задължително.")
 
+        if len(cleaned) < 2:
+            raise ValueError("Името е твърде кратко.")
+
         if len(cleaned) > 100:
             raise ValueError("Името на локацията е твърде дълго.")
+
+        allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯабвгдежзийклмнопрстуфхцчшщъьюя0123456789 -–—.,()\"„“"
+        for ch in cleaned:
+            if ch not in allowed:
+                raise ValueError("Името съдържа невалидни символи.")
 
         return cleaned
 
     @staticmethod
     def validate_zone(zone):
         if zone is None:
-            return ""  # позволяваме празна зона
+            return ""
 
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
@@ -38,17 +46,10 @@ class LocationValidator:
         if not isinstance(capacity, int):
             raise ValueError("Капацитетът трябва да е цяло число.")
 
-        if capacity < 0:
-            raise ValueError("Капацитетът трябва да е >= 0.")
+        if capacity <= 0:
+            raise ValueError("Капацитетът трябва да е положително число.")
 
         return capacity
-
-    @staticmethod
-    def validate_all(name, zone, capacity):
-        name = LocationValidator.validate_name(name)
-        zone = LocationValidator.validate_zone(zone)
-        capacity = LocationValidator.validate_capacity(capacity)
-        return name, zone, capacity
 
     @staticmethod
     def validate_unique_name(name, locations, exclude_id=None):

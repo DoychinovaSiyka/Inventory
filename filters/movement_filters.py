@@ -3,7 +3,7 @@ from models.movement import Movement, MovementType
 from datetime import datetime
 
 
-# Парсвам датите от движенията – приемам няколко формата, за да не гърми
+# Парсвам датите от движенията – приемам няколко формата
 def _parse_movement_date(date_str: str) -> Optional[datetime]:
     if not date_str:
         return None

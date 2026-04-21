@@ -7,9 +7,10 @@ from validators.location_validator import LocationValidator
 
 class LocationController:
     """Контролерът управлява локациите в системата. Работи коректно дори когато locations.json е празен."""
-    def __init__(self, repo: JSONRepository, activity_log_controller=None):
+    def __init__(self, repo: JSONRepository, activity_log_controller=None, inventory_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
+        self.inventory_controller = inventory_controller
 
         raw = self.repo.load()
         if not raw or not isinstance(raw, list):
@@ -17,7 +18,6 @@ class LocationController:
 
         self.locations: List[Location] = [Location.from_dict(l) for l in raw]
 
-    # Помощни методи, които използвам вътре в класа
     def _log(self, action: str, message: str):
         if self.activity_log:
             self.activity_log.add_log("system", action, message)
@@ -42,7 +42,6 @@ class LocationController:
         zone = LocationValidator.validate_zone(zone)
         capacity = LocationValidator.validate_capacity(capacity)
 
-        # Проверка за уникално име
         LocationValidator.validate_unique_name(name, self.locations)
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -72,15 +71,17 @@ class LocationController:
 
         location = self.get_by_id(location_id)
         if location is None:
-            return False  # безопасно при празен старт
+            raise ValueError(f"Локация с ID {location_id} не съществува.")
 
         if name is not None:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
             location.name = name
+
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
+
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
@@ -91,11 +92,17 @@ class LocationController:
 
         return True
 
-
+    # DELETE
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
-            return False  # безопасно при празен старт
+            raise ValueError(f"Локация с ID {location_id} не съществува.")
+
+        # Дали в склада има наличности
+        if self.inventory_controller:
+            stock = self.inventory_controller.get_stock_by_location(location_id)
+            if stock and sum(item.quantity for item in stock) > 0:
+                raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
 
         self.locations = [l for l in self.locations if l.location_id != location_id]
         self.save_changes()

@@ -5,8 +5,7 @@ from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
-    """Контролерът управлява наличностите.
-    Работи коректно дори когато JSON файловете са празни."""
+    """Контролерът управлява наличностите. Работи коректно дори когато JSON файловете са празни."""
 
     def __init__(self, repo: JSONRepository):
         self.repo = repo
@@ -152,5 +151,5 @@ class InventoryController:
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 
-        #  Единствен запис
+        #  Един запис
         self._save()

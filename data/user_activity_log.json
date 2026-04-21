@@ -1139,5 +1139,68 @@
         "action": "EDIT_PRODUCT",
         "details": "Обновен продукт: Kqwl",
         "timestamp": "2026-04-21 19:31:31"
+    },
+    {
+        "log_id": "53b3a3fd-223b-4abc-9820-f2242397de26",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:46:44"
+    },
+    {
+        "log_id": "5ded665c-7c2f-4967-9942-268b11781843",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 19:59:31"
+    },
+    {
+        "log_id": "b51cccad-b0eb-4ba4-a239-72c7c497065c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:59:38"
+    },
+    {
+        "log_id": "9f31c615-2473-455b-b119-3751df3c935c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:06:31"
+    },
+    {
+        "log_id": "575c6160-b1c3-41f7-9980-c8842cdefa9f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:09:12"
+    },
+    {
+        "log_id": "817485d4-73ab-443f-98dd-81e3f659cefd",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:12:23"
+    },
+    {
+        "log_id": "5012c5e1-30ac-468f-9924-bcecb2cd25bd",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:25:48"
+    },
+    {
+        "log_id": "04623fa9-6a91-4745-a02f-bd10245413e1",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:29:15"
+    },
+    {
+        "log_id": "c72294d0-bc04-4172-bd16-03300b3fe641",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 20:34:33"
     }
 ]

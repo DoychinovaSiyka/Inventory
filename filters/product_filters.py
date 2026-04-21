@@ -149,7 +149,7 @@ def filter_combined(products, inventory_controller, keyword=None,
             filtered.append(p)
         results = filtered
 
-    # Категория
+
     if category_id:
         results = [p for p in results
                    if any(c.category_id == category_id for c in p.categories)]

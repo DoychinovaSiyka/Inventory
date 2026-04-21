@@ -29,7 +29,7 @@ class Graph:
     def add_edge(self, start: NodeType, end: NodeType, dist: int) -> None:
         self.edges[start][end] = dist
 
-    # Алгоритъм на Дейкстра — съобразен с преподавателя
+    
     def dijkstra(self, initial: NodeType) -> tuple[dict[NodeType, int], dict[NodeType, NodeType]]:
         visited: dict[NodeType, int] = {initial: 0}   # най-кратко разстояние до всеки възел
         prev: dict[NodeType, NodeType] = {}           # предишен възел по най-краткия път

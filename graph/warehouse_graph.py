@@ -10,7 +10,7 @@ class WarehouseGraph(Graph):
         self.edges = {}   # Съседни складове и разстояния
 
     def add_warehouse(self, warehouse):
-        # Добавяме склад по неговото ID
+        # Добавям склад по неговото ID
         self.nodes[warehouse.warehouse_id] = warehouse
 
         # Ако няма запис за ребра – създавам празен речник

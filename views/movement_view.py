@@ -4,6 +4,7 @@ from models.supplier import Supplier
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from validators.movement_validator import MovementValidator
+from datetime import datetime
 import textwrap, uuid
 
 
@@ -30,38 +31,50 @@ class MovementView:
             MenuItem("3","Търсене на движения", self.search_movements),
             MenuItem("4","Покажи всички движения", self.show_all),
             MenuItem("5","Разширено филтриране", self.advanced_filter),
-            MenuItem("0","Назад", lambda u: "break")
-        ])
+            MenuItem("0","Назад", lambda u: "break")])
 
+    # Взимам целия инвентар от inventory_controller - секцията "products"
     def _get_inventory(self):
         return self.product_controller.inventory_controller.data["products"]
 
     def _get_product_total_qty(self, product):
+        # Взимам данните за конкретния продукт от инвентара
         pdata = self._get_inventory().get(product.product_id, {})
+        # Събирам всички количества от всички локации
         return sum(float(q) for q in pdata.get("locations", {}).values())
 
     def _get_product_warehouses_with_qty(self, product):
+        # Взимам данните за продукта
         pdata = self._get_inventory().get(product.product_id, {})
-        loc_qty = pdata.get("locations", {})
+        loc_qty = pdata.get("locations", {})  # наличности по складове
         result = []
+        # Минавам през всички складове от LocationController
         for loc in self.location_controller.get_all():
+            # Ако продуктът има количество в този склад
             if loc.location_id in loc_qty:
-                qty = float(loc_qty[loc.location_id])
+                qty = float(loc_qty[loc.location_id])  # взимам количеството
+                # Добавям tuple: (ID на склада, количество, мерна единица)
                 result.append((loc.location_id, qty, product.unit))
         return result
 
     def _get_item_qty_text(self, item):
+        # Ако е продукт - показвам общата наличност
         if isinstance(item, Product):
             total = self._get_product_total_qty(item)
-            return f" – {total} {item.unit}"
-        return ""
+            return f" – {total} {item.unit}"  # пример: " – 62 бр."
+        return ""  # за други типове не показвам нищо
 
     def _get_product_locations(self, product):
+        # Взимам списък от (склад, количество, единица)
         wh = self._get_product_warehouses_with_qty(product)
-        ids = sorted({loc for (loc,_,_) in wh})
+        # Взимам само ID-тата на складовете и ги сортирам
+        ids = sorted({loc for (loc, _, _) in wh})
+        # Връщам ги като текст: "W1, W3"
         return ", ".join(ids)
 
     def _select_item(self, items, label):
+        """ Показва списък с елементи и позволява избор по номер или ID.
+        Валидира входа, връща избрания елемент или None при отказ."""
         if not items:
             print(f"Няма налични {label}.")
             return None
@@ -77,9 +90,8 @@ class MovementView:
                 else:
                     item_id = item.supplier_id
 
-                # Количество (ако е продукт)
+                # Количество - ако е продукт
                 qty_text = self._get_item_qty_text(item)
-
                 print(f"{i}. {item.name}{qty_text} (ID: {item_id})")
 
                 # Показване на локации за продукт
@@ -89,13 +101,10 @@ class MovementView:
                         print(f"   Намира се в: {locs}")
 
             raw = input("Номер или ID (Enter = отказ): ").strip()
-
-            # Enter = отказ
             if raw == "":
                 print("Операцията е отказана.")
                 return None
 
-            # Избор по номер
             if raw.isdigit():
                 idx = int(raw) - 1
                 if 0 <= idx < len(items):
@@ -119,6 +128,7 @@ class MovementView:
 
             print("Невалиден ID. Опитайте отново.\n")
 
+
     def show_menu(self):
         user = self.user_controller.logged_user
         if not user:
@@ -127,19 +137,25 @@ class MovementView:
             if self.menu.execute(self.menu.show(), user) == "break": break
 
     def create_movement(self, user):
+        """ Създава ново движение (IN/OUT) за избран продукт.
+        1) Потребителят избира продукт.
+        2) Избира тип движение – доставка (IN) или продажба (OUT).
+        3) При OUT се показват само складове с наличност; при IN – всички складове.
+        4) Въвеждат се количество, цена и описание.
+        5) При IN се избира доставчик; при OUT се въвежда клиент.
+        6) Данните се валидират и движението се записва чрез MovementController."""
+
+
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
-
         print("\n0 - Доставка (IN)\n1 - Продажба (OUT)")
         # Логика за избор на IN/OUT
         while True:
             mt_raw = input("Избор (0/1, Enter = отказ): ").strip()
-
             if mt_raw == "":
                 print("Операцията е отказана.")
                 return
-
             if mt_raw == "0":
                 movement_type = "IN"
                 break
@@ -155,7 +171,6 @@ class MovementView:
             if not wh_list:
                 print("\nГрешка: Няма наличност за този продукт в нито един склад.")
                 return
-
             if len(wh_list) == 1:
                 loc_id, qty, unit = wh_list[0]
                 location = self.location_controller.get_by_id(loc_id)
@@ -236,7 +251,7 @@ class MovementView:
             except Exception:
                 print("Грешка: цената трябва да е валидно число (пример: 4.99). Опитайте отново.\n")
 
-        # описание – цикъл докато е валидно
+
         while True:
             description = input("Описание: ").strip()
             if len(description) >= 3:
@@ -299,6 +314,17 @@ class MovementView:
             print("Грешка:", e)
 
     def move_between_locations(self, user):
+        """
+            Извършва вътрешно преместване (MOVE) на продукт между две локации.
+            1) Потребителят избира продукт.
+            2) Показват се всички складове и наличностите му в тях.
+            3) Избира се изходна локация – позволени са само локации с наличност.
+            4) Избира се целева локация – всяка различна от изходната.
+            5) Въвежда се количество за преместване (валидира се).
+            6) По желание се въвежда описание.
+            7) Данните се предават към MovementController, който записва MOVE движението.
+            """
+
         print("\n   Преместване между локации (MOVE)   ")
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product: return
@@ -456,8 +482,6 @@ class MovementView:
 
         start_date = input("Начална дата (YYYY-MM-DD) или Enter: ").strip() or None
         end_date   = input("Крайна дата (YYYY-MM-DD) или Enter: ").strip() or None
-
-        from datetime import datetime
         if start_date:
             try: datetime.strptime(start_date,"%Y-%m-%d")
             except: errors.append("Невалидна начална дата.")

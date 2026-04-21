@@ -15,7 +15,7 @@ def _parse_invoice_date(date_str: str) -> Optional[datetime]:
     return None
 
 
-# Почиствам числови стойности, за да остане само число
+
 def _clean_number(value):
     """Премахвам 'лв', интервали и запетаи, за да може да се парсне като число."""
     if value is None or value == "":

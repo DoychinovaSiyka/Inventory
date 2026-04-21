@@ -36,20 +36,23 @@ class CategoryValidator:
     @staticmethod
     def validate_description(description):
         if description is None or description.strip() == "":
-            return
+            raise ValueError("Описанието е задължително.")
 
         if not isinstance(description, str):
             raise ValueError("Описанието трябва да е текст.")
 
         cleaned = description.strip()
+
         if len(cleaned) < 3:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
+
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-        # Разрешаваме нормална пунктуация + Unicode тирета
         if not re.match(r'^[A-Za-zА-Яа-я0-9 \-–—.,!?()\"„“]+$', cleaned):
             raise ValueError("Описанието съдържа невалидни символи.")
+
+        return cleaned
 
     @staticmethod
     def validate_parent_id(parent_id, category_id):

@@ -14,9 +14,8 @@ class Product:
         # Ако няма подадена мерна единица, ползвам "бр."
         self.unit = unit if unit else "бр."
         self.description = description
-        # Цена – винаги я държа като float
         self.price = float(price)
-        # Доставчик – пазя само ID-то
+        # Доставчик – само ID-то
         self.supplier_id = str(supplier_id) if supplier_id else None
         # Тагове – ако не е списък, правя го на празен
         self.tags = tags if isinstance(tags, list) else []

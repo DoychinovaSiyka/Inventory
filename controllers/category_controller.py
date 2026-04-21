@@ -71,7 +71,7 @@ class CategoryController:
         self._log(user_id, "EDIT_CATEGORY", f"Име променено на {new_name}")
         return True
 
-    # UPDATE – промяна на описание
+
     def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_description(new_description)

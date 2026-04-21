@@ -63,8 +63,9 @@ class ProductView:
 
     # CRUD
     def create_product(self, user):
+        """ Създава нов продукт чрез въвеждане на име, описание, цена, количество,
+        мерна единица, категория и начална локация. Валидира всички входни данни и записва продукта чрез ProductController."""
         print("\n  Създаване на продукт  ")
-
         # Име – задължително, не допуска празно
         while True:
             name = input("Име: ").strip()
@@ -73,7 +74,6 @@ class ProductView:
                 break
             except ValueError as e:
                 print(f"[!] {e}")
-
 
         while True:
             description = input("Описание: ").strip()
@@ -92,7 +92,6 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Начално количество
         while True:
             quantity_raw = input("Начално количество (само за първоначално зареждане): ").strip()
             try:
@@ -109,7 +108,6 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # КАТЕГОРИИ
         categories = self.category_controller.get_all()
         if not categories:
             print("Няма категории.")
@@ -198,13 +196,12 @@ class ProductView:
         print("Продуктът е премахнат.")
 
     def edit_product(self, user):
+        """ Редактира съществуващ продукт: позволява промяна на име, описание, цена, количество, мерна единица,
+        категория и локация. Валидира входа и обновява продукта в контролера."""
         print("\nРедактиране на продукт")
-
         # цикъл докато не въведем валидно ID или Enter за отказ
         while True:
             pid = input("ID на продукт (Enter за отказ): ").strip()
-
-            # Enter = отказ
             if pid == "":
                 print("Операцията е отказана.")
                 return
@@ -212,11 +209,9 @@ class ProductView:
             product = self.product_controller.get_by_id(pid)
             if product:
                 break
-
             print("Няма такъв продукт.")
             print("Моля, опитайте отново.\n")
 
-        # тук вече имаме валиден продукт
         print(f"Редактиране на {product.name}")
         new_name = input(f"Ново име ({product.name}): ").strip() or product.name
         new_desc = input(f"Ново описание ({product.description}): ").strip() or product.description
@@ -395,6 +390,7 @@ class ProductView:
         print(f"Обща стойност: {self.format_lv(self.product_controller.total_values())}")
 
     def group_by_category(self, user):
+        """ Филтрира продуктите по избрана категория. Позволява избор по номер или Category ID и показва наличностите."""
         products = self.product_controller.get_all()
         inventory = self.product_controller.inventory_controller.data["products"]
 
@@ -410,8 +406,11 @@ class ProductView:
                 print(f"{p.name} | {stock} {p.unit} | {p.price:.2f} лв.")
 
     def advanced_search(self, _):
-        print("\n  Разширено търсене  ")
+        """ Извършва разширено търсене по множество критерии:
+        ключова дума, цена, количество, категория, локация и доставчик. Валидира входните стойности и
+        показва резултатите във формат таблица."""
 
+        print("\n  Разширено търсене  ")
         keyword = input("Ключова дума (Enter за пропуск): ").strip()
         if keyword == "":
             keyword = None
@@ -491,6 +490,8 @@ class ProductView:
             print("Моля, опитайте отново.\n")
 
     def show_stock_by_warehouses(self, _):
+        """ Показва наличностите на всеки продукт по всички складове. Извежда таблица с количества и
+        обща наличност за продукта."""
         products = self.product_controller.get_all()
         if not products:
             print("Няма продукти.")

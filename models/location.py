@@ -16,7 +16,6 @@ class Location:
         self.name = name if name is not None else ""
         self.zone = zone if zone is not None else ""
         self.capacity = capacity
-        # Дати за създаване и последна промяна
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now

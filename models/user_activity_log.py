@@ -4,7 +4,7 @@ from datetime import datetime
 
 class UserActivityLog:
     def __init__(self, user_id, action, details="", timestamp=None, log_id=None):
-        """ Модел за лог запис. timestamp се подава винаги отвън (Controller), за да има синхрон."""
+        """ Модел за лог запис. timestamp се подава винаги отвън (Controller)."""
         # Уникален идентификатор на лог записа (UUID)
         self.log_id = str(log_id) if log_id else str(uuid.uuid4())
         # Кой потребител е извършил действието

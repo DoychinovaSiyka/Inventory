@@ -16,8 +16,7 @@ class ReportsView:
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
         self.movement_controller = controller.movement_controller
-        # Създаваме менюто за справки
-        self.menu = self._build_menu()
+        self.menu = self._build_menu() # Създаваме менюто за справки
 
     def show_menu(self, user: User):
         while True:

@@ -57,7 +57,6 @@ class GraphView:
         if not my_location:
             print("Операцията е отказана.")
             return
-
         if my_location not in self.graph.nodes:
             print(f"[!] Локация '{my_location}' не съществува.")
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
@@ -71,12 +70,10 @@ class GraphView:
         if my_location in possible_sources:
             print(f"\n[*] '{product_name}' е наличен в {my_location}. Няма нужда от доставка.")
             return
-
         print(f"\n[!] '{product_name}' не е наличен в {my_location}. Търся най-близкия склад...\n")
 
         # всички складове с наличност, различни от стартовия
         other_sources = [s for s in possible_sources if s != my_location]
-
         if not other_sources:
             print(f"[!] '{product_name}' не е намерен в нито един склад.")
             return

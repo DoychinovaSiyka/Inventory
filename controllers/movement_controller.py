@@ -39,8 +39,8 @@ class MovementController:
 
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
+
         try:
-            # Rebuild само в паметта
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
         except Exception:
             pass
@@ -60,6 +60,44 @@ class MovementController:
                 safe.append(m)
         return safe
 
+    def get_by_id(self, movement_id: str) -> Optional[Movement]:
+        movement_id = str(movement_id).strip()
+        for m in self.movements:
+            if m.movement_id == movement_id:
+                return m
+        return None
+
+    def move_product(self, product_id: str, user_id: str,
+                     from_loc: str, to_loc: str,
+                     quantity: str, description: str) -> Movement:
+        """Преместване между локации (MOVE)."""
+
+        qty = MovementValidator.parse_quantity(quantity)
+        MovementValidator.validate_movement_type("MOVE")
+
+        product = self.product_controller.get_by_id(product_id)
+
+        # Актуализиране на инвентара
+        self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
+        self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)
+
+        now = self._now()
+
+        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
+                            product_name=product.name, user_id=user_id, location_id=None,
+                            movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
+                            description=description, price=None, supplier_id=None, customer=None,
+                            date=now, created=now, modified=now, from_location_id=from_loc, to_location_id=to_loc)
+
+        self.movements.append(movement)
+
+        # ЗАПИСВАМЕ ПРИ НОВО ДВИЖЕНИЕ
+        self.save_changes()
+
+        return movement
+
+
+
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str, quantity: str,
             description: str, price: str, customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
@@ -67,7 +105,6 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         MovementValidator.validate_movement_type(m_type_str)
         qty = MovementValidator.parse_quantity(quantity)
-
         prc = None if m_type_str == "MOVE" else MovementValidator.parse_price(price)
 
         product = self.product_controller.get_by_id(product_id)
@@ -99,6 +136,14 @@ class MovementController:
 
         return movement
 
+    def search_by_description(self, keyword: str) -> List[Movement]:
+        keyword = keyword.strip().lower()
+        if len(keyword) < 3:
+            return []
+        return [m for m in self.movements if keyword in m.description.lower()]
+
+    def advanced_filter(self, **criteria) -> List[Movement]:
+        return filter_advanced(self.movements, **criteria)
 
     def rebuild_inventory(self) -> None:
         """Ръчно преизчисляване на всичко."""

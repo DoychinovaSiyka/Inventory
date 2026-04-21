@@ -6,9 +6,7 @@ from validators.supplier_validator import SupplierValidator
 
 
 class SupplierController:
-    """Контролерът управлява доставчиците и координира валидатора,
-    модела и хранилището."""
-
+    """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
     def __init__(self, repo):
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
@@ -46,6 +44,7 @@ class SupplierController:
     def update(self, supplier_id: str, name: Optional[str] = None, contact: Optional[str] = None,
                address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
+
         supplier = SupplierValidator.validate_exists(supplier_id, self)
         if name is not None:
             SupplierValidator.validate_name(name)

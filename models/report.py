@@ -5,8 +5,7 @@ class Report:
         self.report_id = str(report_id) if report_id else str(uuid.uuid4())
         self.report_type = report_type
         self.generated_on = generated_on
-        # празни колекции, ако не са подадени
-        self.parameters = parameters if parameters is not None else {}
+        self.parameters = parameters if parameters is not None else {} # празни колекции, ако не са подадени
         self.data = data if data is not None else []
 
     def to_dict(self):

@@ -118,7 +118,6 @@ class SupplierView:
                 print("Моля, опитайте отново.\n")
                 continue
 
-            # валиден доставчик
             break
 
         confirm = input(f"Наистина ли искате да изтриете '{supplier.name}'? (y/n): ").strip().lower()
