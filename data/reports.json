@@ -1,3 +1,745 @@
 [
-
+    {
+        "report_id": "fc74ce0c-c255-4cd0-acb6-d08c76ca6ed6",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-04-21 12:38:29",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 28
+            },
+            "data": [
+                {
+                    "product": "Кисело мляко Родопско 3.6%\"",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Минерална вода Банкя 1.5L",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Фанта Портокал 500ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Студен чай Лимон 500ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Бяло вино Шардоне 750ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Бира Загорка 500ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Био банани 1kg",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Краставици 1kg",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Пилешки бутчета 1kg",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Свински котлет 1kg",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Кисело мляко 2% 500g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Телешки кашкавал 400g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Хляб Добруджа 700g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Макарони 500g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Кори за баница 500g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Шоколад Линдт 100g",
+                    "available": "38.0 бр.",
+                    "sold": "12.0 бр.",
+                    "top_locations": "W1:38.0"
+                },
+                {
+                    "product": "Бисквити Закуска 200g",
+                    "available": "25.0 бр.",
+                    "sold": "25.0 бр.",
+                    "top_locations": "W1:25.0"
+                },
+                {
+                    "product": "Локум Асорти 250g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Душ гел Dove 250ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Балсам за коса Elseve 400ml",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Консерва царевица 400g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Леща 1kg",
+                    "available": "64.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:52.0, W2:12.0"
+                },
+                {
+                    "product": "Замразен грах 400g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Моркови",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Салам „Балкански“ 300g",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "Ананас, Тайланд",
+                    "available": "50.0 бр.",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "kqwl",
+                    "available": "50.0 кг",
+                    "sold": "-",
+                    "top_locations": "W1:50.0"
+                },
+                {
+                    "product": "череши",
+                    "available": "50.0 кг.",
+                    "sold": "-",
+                    "top_locations": "W1:27.0, W3:23.0"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "eba6109d-953c-4557-998a-70d8b4d543a0",
+        "report_type": "movements",
+        "generated_on": "2026-04-21 12:38:29",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_records": 33,
+                "total_quantity": 1474.0,
+                "total_value": 6501.11
+            },
+            "data": [
+                {
+                    "movement_id": "560ee66e-596e-4eb6-bf49-d0077e108315",
+                    "product": "Кисело мляко Родопско 3.6%\"",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 3.89,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "36856781-c07e-42a0-957a-545301130731",
+                    "product": "Минерална вода Банкя 1.5L",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.19,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "f26e6f0c-ea73-4fbd-9860-0fa838d30123",
+                    "product": "Фанта Портокал 500ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.79,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "14741925-8eed-40c5-8ce3-75511bbae48a",
+                    "product": "Студен чай Лимон 500ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.59,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "56b8f808-0569-4436-98d1-dd43bd866768",
+                    "product": "Бяло вино Шардоне 750ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 8.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "bac75877-00a3-44f1-9bf2-22381b801911",
+                    "product": "Бира Загорка 500ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "12f4d919-387c-4d43-bff5-c088b2445ef5",
+                    "product": "Био банани 1kg",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 5.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "4fb843f6-82aa-4bb4-941f-b327e488d053",
+                    "product": "Краставици 1kg",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 2.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "704a133c-c78f-4ba2-92c5-701a85e04122",
+                    "product": "Пилешки бутчета 1kg",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 7.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "c4fc46a2-b727-4387-9914-0477236c0e2e",
+                    "product": "Свински котлет 1kg",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 13.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "534bd9b3-8909-4a1f-872e-4095cc8da288",
+                    "product": "Кисело мляко 2% 500g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.39,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "e6278227-e582-4f64-af34-8254fd35ae9b",
+                    "product": "Телешки кашкавал 400g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 9.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "45c0de59-e91c-4688-96ff-7398c588f5c1",
+                    "product": "Хляб Добруджа 700g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "0553b8af-7281-457d-904b-8bdb3f1176d3",
+                    "product": "Макарони 500g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 2.29,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "7756c861-db59-4df7-8e7b-67ed23b39208",
+                    "product": "Кори за баница 500g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 2.59,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "b24fdf17-8f21-4a8f-9f4c-0221daffc082",
+                    "product": "Шоколад Линдт 100g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 3.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "bf68983f-1a7a-4c87-801b-2c2352d63946",
+                    "product": "Бисквити Закуска 200g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.69,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "72373b3f-77c2-445b-9590-06f03b5a10fb",
+                    "product": "Локум Асорти 250g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.49,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "ad0c07e8-b08f-4483-a210-c667e46451bf",
+                    "product": "Душ гел Dove 250ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 6.29,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "78981b42-6686-44d4-b29a-62013bd5a9ea",
+                    "product": "Балсам за коса Elseve 400ml",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 6.79,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "732b8904-fef3-4add-92fb-d9f485ec0807",
+                    "product": "Консерва царевица 400g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 1.89,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "cb064f2b-5b20-44a2-bd8a-de5ab3e97480",
+                    "product": "Леща 1kg",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 3.29,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "6ee2d2e7-52ea-44b9-b854-09591331dc24",
+                    "product": "Замразен грах 400g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 2.39,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "b4f6ce7a-11ad-4194-8988-938fec1d931f",
+                    "product": "Моркови",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 1.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "4f170587-0572-423a-b5f8-0560654b3ad6",
+                    "product": "Салам „Балкански“ 300g",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 7.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "04a34b3c-c777-4274-a172-fa33c2235374",
+                    "product": "Ананас, Тайланд",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "бр.",
+                    "price": 12.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "c586526d-f48b-4c55-bb14-6074ed556b64",
+                    "product": "kqwl",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг",
+                    "price": 3.0,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "56f3f0e9-18db-47f1-8b9f-402d3d63e787",
+                    "product": "череши",
+                    "type": "IN",
+                    "quantity": 50.0,
+                    "unit": "кг.",
+                    "price": 6.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "ca8444dd-a084-4bcf-9f52-f25b2800da78",
+                    "product": "Леща 1kg",
+                    "type": "IN",
+                    "quantity": 12.0,
+                    "unit": "кг",
+                    "price": 3.9,
+                    "location": "Пловдив – Регионален склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "c7a9da69-cb69-4a67-a70e-f6fa8ba43aae",
+                    "product": "Леща 1kg",
+                    "type": "IN",
+                    "quantity": 2.0,
+                    "unit": "кг",
+                    "price": 3.09,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "552fad26-5082-45df-a526-9ef0cd7342ac",
+                    "product": "Шоколад Линдт 100g",
+                    "type": "OUT",
+                    "quantity": 12.0,
+                    "unit": "бр.",
+                    "price": 7.99,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "bfea16ba-5184-499f-be1b-949d538891c5",
+                    "product": "Бисквити Закуска 200g",
+                    "type": "OUT",
+                    "quantity": 25.0,
+                    "unit": "бр.",
+                    "price": 1.23,
+                    "location": "София – Основен склад",
+                    "date": "2026-04-21"
+                },
+                {
+                    "movement_id": "d9e08c0b-d803-4169-b478-6a603af6b24b",
+                    "product": "череши",
+                    "type": "MOVE",
+                    "quantity": 23.0,
+                    "unit": "кг.",
+                    "price": 0.0,
+                    "location": "Варна – Морски склад",
+                    "date": "2026-04-21"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "73a2b14e-46ed-4e7f-b108-0393753f02eb",
+        "report_type": "sales",
+        "generated_on": "2026-04-21 12:38:30",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_sales": 2,
+                "total_revenue": 126.63
+            },
+            "data": [
+                {
+                    "invoice_number": "7fc6e5b3-e849-4ef1-9ba6-f29218d347e5",
+                    "date": "2026-04-21",
+                    "client": "Калин Красимиров",
+                    "product": "Шоколад Линдт 100g",
+                    "quantity": 12.0,
+                    "unit_price": 7.99,
+                    "total_price": 95.88
+                },
+                {
+                    "invoice_number": "dc21cc40-2b15-431c-9788-34a53aad4eb4",
+                    "date": "2026-04-21",
+                    "client": "Елена Кирева",
+                    "product": "Бисквити Закуска 200g",
+                    "quantity": 25.0,
+                    "unit_price": 1.23,
+                    "total_price": 30.75
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "a390b67b-fafe-4df9-a673-818ad0897da5",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-04-21 12:38:34",
+        "parameters": {
+            "customer": "uiewo"
+        },
+        "data": {
+            "summary": {
+                "customer": "uiewo",
+                "total_sales": 0,
+                "total_revenue": 0
+            },
+            "data": []
+        }
+    },
+    {
+        "report_id": "c2428d66-aabd-49ae-81c5-571e3fc9ae0b",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-21 12:38:40",
+        "parameters": {
+            "product": "irw"
+        },
+        "data": {
+            "summary": {
+                "product": "irw",
+                "total_sales": 0,
+                "total_revenue": 0
+            },
+            "data": []
+        }
+    },
+    {
+        "report_id": "b6a30e00-747b-42de-96ce-95d0a5e80210",
+        "report_type": "deliveries_all",
+        "generated_on": "2026-04-21 12:38:51",
+        "parameters": {
+            "keyword": null
+        },
+        "data": {
+            "summary": {
+                "total_records": 2,
+                "total_quantity": 14.0,
+                "total_value": 0
+            },
+            "data": [
+                {
+                    "movement_id": "ca8444dd-a084-4bcf-9f52-f25b2800da78",
+                    "date": "2026-04-21",
+                    "product": "Леща 1kg",
+                    "quantity": 12.0,
+                    "unit": "кг",
+                    "supplier": "\"Fresh Market Distribution\"",
+                    "location": "Пловдив – Регионален склад"
+                },
+                {
+                    "movement_id": "c7a9da69-cb69-4a67-a70e-f6fa8ba43aae",
+                    "date": "2026-04-21",
+                    "product": "Леща 1kg",
+                    "quantity": 2.0,
+                    "unit": "кг",
+                    "supplier": "\"Milen Trade Group\"",
+                    "location": "София – Основен склад"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "f2d46fae-2161-4ef2-999f-9b792ea8cf82",
+        "report_type": "deliveries_all",
+        "generated_on": "2026-04-21 12:38:57",
+        "parameters": {
+            "keyword": ".eyd"
+        },
+        "data": {
+            "summary": {
+                "total_records": 0,
+                "total_quantity": 0,
+                "total_value": 0
+            },
+            "data": []
+        }
+    },
+    {
+        "report_id": "095c1b95-e5b6-48a9-a76f-f21220fc2ddb",
+        "report_type": "deliveries_all",
+        "generated_on": "2026-04-21 12:39:05",
+        "parameters": {
+            "keyword": "леща"
+        },
+        "data": {
+            "summary": {
+                "total_records": 2,
+                "total_quantity": 14.0,
+                "total_value": 0
+            },
+            "data": [
+                {
+                    "movement_id": "ca8444dd-a084-4bcf-9f52-f25b2800da78",
+                    "date": "2026-04-21",
+                    "product": "Леща 1kg",
+                    "quantity": 12.0,
+                    "unit": "кг",
+                    "supplier": "\"Fresh Market Distribution\"",
+                    "location": "Пловдив – Регионален склад"
+                },
+                {
+                    "movement_id": "c7a9da69-cb69-4a67-a70e-f6fa8ba43aae",
+                    "date": "2026-04-21",
+                    "product": "Леща 1kg",
+                    "quantity": 2.0,
+                    "unit": "кг",
+                    "supplier": "\"Milen Trade Group\"",
+                    "location": "София – Основен склад"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "02967c38-9ad5-4701-b561-b1a24cee5fdc",
+        "report_type": "turnover_by_day",
+        "generated_on": "2026-04-21 12:39:07",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "days": 1,
+                "total_revenue": 126.63
+            },
+            "data": [
+                {
+                    "date": "2026-04-21",
+                    "count": 2,
+                    "total": 126.63
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "f73f9881-3645-47b8-9fb4-00a6bc9f55b5",
+        "report_type": "top_products",
+        "generated_on": "2026-04-21 12:39:09",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 2
+            },
+            "data": [
+                {
+                    "product": "Бисквити Закуска 200g",
+                    "quantity": 25.0,
+                    "total": 30.75,
+                    "unit": "бр."
+                },
+                {
+                    "product": "Шоколад Линдт 100g",
+                    "quantity": 12.0,
+                    "total": 95.88,
+                    "unit": "бр."
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "20d9ac69-f51e-4fc6-8686-c6a146297528",
+        "report_type": "product_lifecycle",
+        "generated_on": "2026-04-21 12:39:13",
+        "parameters": {
+            "name": "леща"
+        },
+        "data": {
+            "summary": {
+                "found": true
+            },
+            "data": {
+                "product": "Леща 1kg",
+                "unit": "кг",
+                "initial_stock": 50.0,
+                "total_in": 14.0,
+                "total_out": 0.0,
+                "expected_stock": 64.0,
+                "current_stock": 64.0,
+                "revenue": 0.0
+            }
+        }
+    }
 ]
