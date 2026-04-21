@@ -992,5 +992,33 @@
         "action": "LOGOUT",
         "details": "Потребител admin излезе.",
         "timestamp": "2026-04-21 16:50:03"
+    },
+    {
+        "log_id": "4dc32e52-1152-4078-aae6-706eb101b5a7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 17:41:20"
+    },
+    {
+        "log_id": "6388a79d-67a3-4c67-ab15-f0a6885d5858",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 17:42:08"
+    },
+    {
+        "log_id": "a2ac9304-c2a4-4436-97fd-0ac12f7e611a",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 17:42:22"
+    },
+    {
+        "log_id": "73f7fa7e-7c9a-4787-a754-6e2892762297",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 17:42:28"
     }
 ]
