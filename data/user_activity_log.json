@@ -978,5 +978,19 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-21 16:08:01"
+    },
+    {
+        "log_id": "92bcdc2f-0ccf-4e7a-b348-1ed93377fe26",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 16:42:48"
+    },
+    {
+        "log_id": "e35e4858-91c3-48ad-9bba-9978385ca8e6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 16:50:03"
     }
 ]
