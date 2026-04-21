@@ -10,11 +10,9 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 class JSONRepository(Repository):
     """ Repository слой за работа с JSON файлове. Да зареждат и записват данни безопасно,
     без да прави предположения за структурата."""
-
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
-
         # Кеш за избягване на излишни записи
         self._last_saved_data = None
 
@@ -23,7 +21,6 @@ class JSONRepository(Repository):
 
         if not self.filepath.exists():
             return {} if self.filepath.name == "inventory.json" else []
-
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
