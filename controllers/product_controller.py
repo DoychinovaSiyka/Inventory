@@ -115,68 +115,85 @@ class ProductController:
                        new_supplier_id: Optional[str] = None, new_tags: Optional[List[str]] = None,
                        user_id: str = "system") -> bool:
 
-        # Проверяваме дали продуктът съществува
         product = ProductValidator.validate_product_exists(product_id, self)
+        has_changes = False
 
-        if new_name and new_name.lower() != product.name.lower():
-            ProductValidator.validate_name(new_name)
-            product.name = new_name
+        # Име
+        if new_name is not None:
+            new_name_clean = new_name.strip()
+            if new_name_clean != product.name:
+                ProductValidator.validate_name(new_name_clean)
+                product.name = new_name_clean
+                has_changes = True
 
         # Описание
-        if new_description and new_description != product.description:
-            product.description = ProductValidator.validate_description(new_description)
+        if new_description is not None:
+            new_desc_clean = new_description.strip()
+            if new_desc_clean != product.description:
+                product.description = ProductValidator.validate_description(new_desc_clean)
+                has_changes = True
 
+        # Цена
+        new_price_valid = ProductValidator.validate_price(new_price)
+        if new_price_valid != product.price:
+            product.price = new_price_valid
+            has_changes = True
 
-        product.price = ProductValidator.validate_price(new_price)
-
-        # Корекция на количество чрез движения
+        # Количество чрез движение
         if new_quantity is not None and self.inventory_controller and self.movement_controller:
-            try:
-                current_stock = self.inventory_controller.get_total_stock(product_id)
-                diff = float(new_quantity) - float(current_stock)
-                if diff > 0:
-                    self.movement_controller.add(product_id=product_id, user_id=user_id,
-                                                 location_id=new_location_id or product.location_id or "W1",
-                                                 movement_type="IN", quantity=str(diff),
-                                                 description="Корекция (+) от редакция", price=str(product.price),
-                                                 supplier_id=product.supplier_id or "system")
-                elif diff < 0:
-                    self.movement_controller.add(product_id=product_id, user_id=user_id,
-                                                 location_id=new_location_id or product.location_id or "W1",
-                                                 movement_type="OUT", quantity=str(abs(diff)),
-                                                 description="Корекция (-) от редакция", price=str(product.price),
-                                                 supplier_id=product.supplier_id or "system")
-            except Exception:
-                pass
+            current_stock = self.inventory_controller.get_total_stock(product_id)
+            diff = float(new_quantity) - float(current_stock)
+
+            if abs(diff) > 0.001:
+                m_type = "IN" if diff > 0 else "OUT"
+                self.movement_controller.add(product_id=product_id, user_id=user_id,
+                                             location_id=new_location_id or product.location_id or "W1", movement_type=m_type,
+                                             quantity=str(abs(diff)), description=f"Корекция ({m_type}) от редакция",
+                                             price=str(product.price), supplier_id=product.supplier_id or "system")
+                has_changes = True
 
         # Мерна единица
-        if new_unit and new_unit.strip() and new_unit != product.unit:
-            product.unit = ProductValidator.validate_unit(new_unit)
+        if new_unit is not None:
+            new_unit_clean = new_unit.strip()
+            if new_unit_clean and new_unit_clean != product.unit:
+                product.unit = ProductValidator.validate_unit(new_unit_clean)
+                has_changes = True
 
         # Категории
-        if new_category_ids:
+        if new_category_ids is not None:
             ProductValidator.validate_category_exists(new_category_ids, self.category_controller)
-            product.categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
+            new_categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
+            if new_categories != product.categories:
+                product.categories = new_categories
+                has_changes = True
 
-        if new_location_id is not None:
+        # Локация
+        if new_location_id is not None and new_location_id != product.location_id:
             product.location_id = new_location_id
+            has_changes = True
 
-        if new_supplier_id is not None:
+        # Доставчик
+        if new_supplier_id is not None and new_supplier_id != product.supplier_id:
             ProductValidator.validate_supplier_exists(new_supplier_id, self.supplier_controller)
             product.supplier_id = new_supplier_id
+            has_changes = True
 
-
+        # Tags
         if new_tags is not None:
             if not isinstance(new_tags, list):
                 raise ValueError("Tags трябва да са списък.")
-            product.tags = new_tags
+            if new_tags != product.tags:
+                product.tags = new_tags
+                has_changes = True
 
-        # Обновяваме датата на промяна
-        product.update_modified()
-        self.save_changes()
-        self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name}")
+        # Запис само ако има промени
+        if has_changes:
+            product.update_modified()
+            self.save_changes()
+            self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name}")
 
         return True
+
 
     # Изтриване на продукт
     def delete_by_id(self, product_id: str, user_id: str) -> bool:

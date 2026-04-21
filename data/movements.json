@@ -663,5 +663,24 @@
         "date": "2026-04-21 18:59:35",
         "created": "2026-04-21 18:59:35",
         "modified": "2026-04-21 18:59:35"
+    },
+    {
+        "movement_id": "ec8fc481-a6c9-4cd9-9d5f-367a8df2f6c9",
+        "product_id": "5818e19a-1c81-4b1a-8bd2-979c7e7e4370",
+        "product_name": "kqwl",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W3",
+        "movement_type": "IN",
+        "quantity": 79.0,
+        "unit": "кг",
+        "description": "Корекция (+) от редакция",
+        "price": 7.99,
+        "supplier_id": "system",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-21 19:25:14",
+        "created": "2026-04-21 19:25:14",
+        "modified": "2026-04-21 19:25:14"
     }
 ]

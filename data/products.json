@@ -387,18 +387,18 @@
     },
     {
         "product_id": "5818e19a-1c81-4b1a-8bd2-979c7e7e4370",
-        "name": "kqwl",
+        "name": "Kqwl",
         "categories": [
-            "bb22cc33-dd44-ee55-ff66-112233445566"
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
         ],
-        "unit": "кг",
-        "description": "wpqw",
-        "price": 3.0,
+        "unit": "бр.",
+        "description": "proba",
+        "price": 7.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W1",
+        "location_id": "W3",
         "created": "2026-04-19 19:12:11",
-        "modified": "2026-04-19 19:12:11"
+        "modified": "2026-04-21 19:31:31"
     },
     {
         "product_id": "d9645aea-001a-441c-b241-1cc01166d31b",
@@ -414,20 +414,5 @@
         "location_id": "W1",
         "created": "2026-04-19 19:40:07",
         "modified": "2026-04-19 19:40:07"
-    },
-    {
-        "product_id": "73d8fa1a-b3ed-47ae-b55b-fd195ab5fa45",
-        "name": "testov product",
-        "categories": [
-            "55efa88a-4403-4a86-bead-00311b9e4ed9"
-        ],
-        "unit": "бр.",
-        "description": "proben test",
-        "price": 16.99,
-        "supplier_id": null,
-        "tags": [],
-        "location_id": "W1",
-        "created": "2026-04-21 18:58:40",
-        "modified": "2026-04-21 18:58:40"
     }
 ]

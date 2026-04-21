@@ -212,9 +212,10 @@
         "5818e19a-1c81-4b1a-8bd2-979c7e7e4370": {
             "name": "kqwl",
             "unit": "кг",
-            "total_stock": 50.0,
+            "total_stock": 129.0,
             "locations": {
-                "W1": 50.0
+                "W1": 50.0,
+                "W3": 79.0
             }
         },
         "d9645aea-001a-441c-b241-1cc01166d31b": {
@@ -224,14 +225,6 @@
             "locations": {
                 "W1": 27.0,
                 "W3": 23.0
-            }
-        },
-        "73d8fa1a-b3ed-47ae-b55b-fd195ab5fa45": {
-            "name": "testov product",
-            "unit": "бр.",
-            "total_stock": 345.0,
-            "locations": {
-                "W1": 345.0
             }
         }
     }
