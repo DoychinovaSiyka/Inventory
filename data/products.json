@@ -414,5 +414,20 @@
         "location_id": "W1",
         "created": "2026-04-19 19:40:07",
         "modified": "2026-04-19 19:40:07"
+    },
+    {
+        "product_id": "73d8fa1a-b3ed-47ae-b55b-fd195ab5fa45",
+        "name": "testov product",
+        "categories": [
+            "55efa88a-4403-4a86-bead-00311b9e4ed9"
+        ],
+        "unit": "бр.",
+        "description": "proben test",
+        "price": 16.99,
+        "supplier_id": null,
+        "tags": [],
+        "location_id": "W1",
+        "created": "2026-04-21 18:58:40",
+        "modified": "2026-04-21 18:58:40"
     }
 ]

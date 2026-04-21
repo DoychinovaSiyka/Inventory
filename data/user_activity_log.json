@@ -1020,5 +1020,82 @@
         "action": "LOGOUT",
         "details": "Потребител admin излезе.",
         "timestamp": "2026-04-21 17:42:28"
+    },
+    {
+        "log_id": "b7b2eed6-beee-4633-9199-5551cfcfb0a6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 18:57:28"
+    },
+    {
+        "log_id": "48ec6128-c007-4f48-bd15-729b0e6e78a3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: testov product",
+        "timestamp": "2026-04-21 18:58:40"
+    },
+    {
+        "log_id": "90aaa19f-6f98-4a0e-9f4f-03ccdfdee1dd",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: proba",
+        "timestamp": "2026-04-21 18:59:35"
+    },
+    {
+        "log_id": "071fef9f-97df-4712-ba77-1dcfec6d73d6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID de5560e0-268e-404d-9bee-398817a2497f",
+        "timestamp": "2026-04-21 18:59:57"
+    },
+    {
+        "log_id": "ecb8bfac-54ec-4e4c-ad0f-873d44f2301f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:02:46"
+    },
+    {
+        "log_id": "aded013f-805b-4989-a646-6302316af349",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:06:01"
+    },
+    {
+        "log_id": "59af39c7-6511-4d11-b705-a7c063f65b7f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:09:56"
+    },
+    {
+        "log_id": "e7fd7303-6e9c-474b-b279-a129ff15040b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:18:43"
+    },
+    {
+        "log_id": "f89d9491-7d78-42ad-a249-cb93fadc0196",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 19:19:50"
+    },
+    {
+        "log_id": "852cf450-cc7a-45e9-be26-2a6871868a80",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-21 19:20:04"
+    },
+    {
+        "log_id": "b62bd4eb-5513-45c1-87c8-8a8d1e3ffd1c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-21 19:21:24"
     }
 ]

@@ -625,5 +625,43 @@
         "date": "2026-04-21 01:04:37",
         "created": "2026-04-21 01:04:37",
         "modified": "2026-04-21 01:04:37"
+    },
+    {
+        "movement_id": "fb23fc85-54d3-4fdc-b410-3bd0675ac371",
+        "product_id": "73d8fa1a-b3ed-47ae-b55b-fd195ab5fa45",
+        "product_name": "testov product",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W1",
+        "movement_type": "IN",
+        "quantity": 345.0,
+        "unit": "бр.",
+        "description": "Начално зареждане при създаване",
+        "price": 16.99,
+        "supplier_id": "system",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-21 18:58:40",
+        "created": "2026-04-21 18:58:40",
+        "modified": "2026-04-21 18:58:40"
+    },
+    {
+        "movement_id": "425cb4ea-ff58-4193-a427-5ae7034d5fa6",
+        "product_id": "de5560e0-268e-404d-9bee-398817a2497f",
+        "product_name": "proba",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W4",
+        "movement_type": "IN",
+        "quantity": 900.0,
+        "unit": "бр.",
+        "description": "Начално зареждане при създаване",
+        "price": 8.0,
+        "supplier_id": "system",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-21 18:59:35",
+        "created": "2026-04-21 18:59:35",
+        "modified": "2026-04-21 18:59:35"
     }
 ]

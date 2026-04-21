@@ -225,6 +225,14 @@
                 "W1": 27.0,
                 "W3": 23.0
             }
+        },
+        "73d8fa1a-b3ed-47ae-b55b-fd195ab5fa45": {
+            "name": "testov product",
+            "unit": "бр.",
+            "total_stock": 345.0,
+            "locations": {
+                "W1": 345.0
+            }
         }
     }
 }
