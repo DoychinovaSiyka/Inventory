@@ -146,6 +146,6 @@ class CategoryController:
             return []
         return filter_categories(self.categories, keyword)
 
-    # Записване обратно в JSON файла
+
     def _save_changes(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])
