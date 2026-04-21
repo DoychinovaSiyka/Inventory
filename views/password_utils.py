@@ -106,6 +106,7 @@ def require_password(correct_password):
 
 
 
+
 @require_password("parola123")  # защита с парола
 def show_products_menu(product_controller):
     products = product_controller.get_all()

@@ -13,7 +13,7 @@ class Category:
         self.created = created or now
         self.modified = modified or now
 
-        # Базови проверки за име и описание
+
         CategoryValidator.validate_name(self.name)
         CategoryValidator.validate_description(self.description)
 
