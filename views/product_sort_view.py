@@ -68,7 +68,6 @@ class ProductSortView:
 
         print(f"\nСортиране по: {title}")
         print(f"Алгоритъм: {algorithm}\n")
-
         rows = []
         inv = self.controller.inventory_controller.data["products"]
 

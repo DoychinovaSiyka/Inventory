@@ -43,8 +43,7 @@ class ReportsView:
             MenuItem("10", "Най-продавани продукти", self.report_top_products),
             MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
             MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
 
     # Помощни функции за форматиране

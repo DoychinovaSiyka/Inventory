@@ -77,7 +77,7 @@ class OperatorMenuView:
                                self.location_controller, self.supplier_controller)
         view.show_menu()
 
-    # справки – също защитено
+    # справки – защитено
     @require_password("parola123")
     def open_reports(self, user):
         view = self._open_view(ReportsView, self.report_controller)
@@ -89,7 +89,7 @@ class OperatorMenuView:
         view = self._open_view(InvoiceView, self.invoice_controller, self.activity_log)
         view.show_menu(user)
 
-    # локации – само за гледане
+    # локации – за гледане
     @require_password("parola123")
     def open_locations_readonly(self, user):
         print("\n--- СПИСЪК НА ЛОКАЦИИТЕ (READ-ONLY) ---")
