@@ -25,7 +25,6 @@ class SupplierValidator:
             raise ValueError("Контактната информация е задължителна.")
 
         clean_contact = str(contact).strip()
-        # Проверка чрез Regex
         is_email = SupplierValidator.email_regex.match(clean_contact)
         is_phone = SupplierValidator.phone_regex.match(clean_contact)
 

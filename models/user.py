@@ -18,7 +18,6 @@ class User:
         self.role = role
         # Статус на акаунта
         self.status = status
-        # Дати на създаване и последна промяна
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now

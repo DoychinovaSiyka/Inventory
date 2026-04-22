@@ -100,7 +100,6 @@ class MovementValidator:
             raise ValueError("Location ID е задължително.")
 
         loc = str(loc_id).strip()
-
         if loc.isdigit():
             num = int(loc)
             locations = location_controller.get_all()

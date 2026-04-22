@@ -19,7 +19,6 @@ class InventoryValidator:
 
     @staticmethod
     def _validate_number(qty, field_name="Количество"):
-        # Проверка за валидно число
         try:
             val = float(qty)
             if val < 0:
@@ -110,7 +109,6 @@ class InventoryValidator:
 
             qty = m.get("quantity")
             val = InventoryValidator._validate_number(qty, f"Количество в запис #{idx}")
-
             if val <= 0:
                 raise ValueError(f"Запис #{idx}: Количеството трябва да е над 0.")
 

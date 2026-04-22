@@ -1,4 +1,5 @@
 from views.menu import Menu, MenuItem
+from views.system_info_view import SystemInfoView
 from views.product_menu_view import ProductView
 from views.category_view import CategoryView
 from views.movement_view import MovementView
@@ -6,14 +7,13 @@ from views.user_view import UserView
 from views.reports_menu_view import ReportsView
 from views.invoice_view import InvoiceView
 from views.supplier_view import SupplierView
-from views.system_info_view import SystemInfoView
 from views.location_view import LocationView
 
 
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-        # view обекти
+        # view обекти - инициализираме ги веднъж, за да пазят състоянието си
         self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
                                         controllers["activity_log"])
 
@@ -28,11 +28,10 @@ class AdminMenuView:
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
         self.location_view = LocationView(controllers["location"])
-        self.graph_view = controllers.get("logistic") # логистичен модул
-        self.menu = self._build_menu()
-
+        self.graph_view = controllers.get("logistic")  # логистичен модул
 
     def _build_menu(self):
+        """ Изгражда пълното администраторско меню. """
         return Menu("Администраторско меню", [
             MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
             MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
@@ -44,23 +43,25 @@ class AdminMenuView:
             MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
             MenuItem("9", "Управление на локации (складове)", lambda u: self.location_view.show_menu(u)),
             MenuItem("10", "Най-кратък път между складове (Dijkstra)", lambda u: self.open_graph(u)),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
-
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user):
+        # Проверка за достъп - само администратор може да продължи
         if user.role.lower() != "admin":
-            print("Само администратор има достъп до това меню.")
+            print("[!] Достъпът е отказан. Само администратор има достъп до това меню.")
             return
 
         while True:
-            choice = self.menu.show()
-            result = self.menu.execute(choice, user)
+            # Превръщаме менюто в динамично за максимална сигурност и актуалност
+            current_menu = self._build_menu()
+            choice = current_menu.show()
+            result = current_menu.execute(choice, user)
+
             if result == "break":
                 break
 
-
     def open_graph(self, user):
+        """ Отваря логистичния модул, ако е наличен. """
         if self.graph_view:
             self.graph_view.show_menu(user)
         else:

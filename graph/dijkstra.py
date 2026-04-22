@@ -2,8 +2,6 @@ NodeType = str
 
 
 
-
-
 class Graph:
     def __init__(self, nodes: list[NodeType] = None,
                  edges: list[tuple[NodeType, NodeType, int]] = None) -> None:

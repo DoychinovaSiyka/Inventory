@@ -8,10 +8,8 @@ class LocationValidator:
         cleaned = name.strip()
         if not cleaned:
             raise ValueError("Името на локацията е задължително.")
-
         if len(cleaned) < 2:
             raise ValueError("Името е твърде кратко.")
-
         if len(cleaned) > 100:
             raise ValueError("Името на локацията е твърде дълго.")
 
@@ -29,7 +27,6 @@ class LocationValidator:
 
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
-
         cleaned = zone.strip()
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")

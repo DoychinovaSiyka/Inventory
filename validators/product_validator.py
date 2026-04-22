@@ -25,7 +25,7 @@ class ProductValidator:
             raise ValueError("Името трябва да е поне 3 символа.")
         return name
 
-    # Описание
+
     @staticmethod
     def validate_description(description):
         if description is None:
@@ -39,7 +39,7 @@ class ProductValidator:
             raise ValueError("Описанието е твърде дълго.")
         return desc
 
-    # Категории
+
     @staticmethod
     def validate_categories(categories):
         if not isinstance(categories, list):

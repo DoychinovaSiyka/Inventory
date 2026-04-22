@@ -1,6 +1,7 @@
 from views.menu import Menu, MenuItem
 from graph.warehouse import Warehouse
 from graph.warehouse_graph import WarehouseGraph
+from models.user import User
 
 
 class GraphView:
@@ -10,21 +11,6 @@ class GraphView:
         self.graph = WarehouseGraph()
         # Подготвяме мрежата от складове и разстоянията между тях
         self._setup_network()
-        # Създаваме менюто за логистичния модул
-        self.menu = self._build_menu()
-
-    def _build_menu(self):
-        # Менюто съдържа основната функция – търсене на най-близък склад
-        return Menu("Логистичен Модул (Dijkstra)", [
-            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
-
-    def show_menu(self, user):
-        while True:
-            choice = self.menu.show()
-            if choice == "0" or self.menu.execute(choice, user) == "break":
-                break
 
     def _setup_network(self):  # настройвам си складовете и разстоянията между тях
         """Създавам складовете и задавам примерни разстояния. Това е графът, върху който
@@ -44,11 +30,28 @@ class GraphView:
         self.graph.add_edge("W1", "W5", 250)
         self.graph.add_edge("W5", "W3", 350)
 
-    def calculate_best_delivery(self, _):  # основната логика за намиране на най-близкия склад
+    def _build_menu(self):
+        # Създаваме менюто за логистичния модул
+        # Менюто съдържа основната функция – търсене на най-близък склад
+        return Menu("Логистичен Модул (Dijkstra)", [
+            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
+
+    def show_menu(self, user: User):
+        while True:
+            # Изграждаме менюто динамично за по-голяма гъвкавост
+            menu = self._build_menu()
+            choice = menu.show()
+
+            if menu.execute(choice, user) == "break":
+                break
+
+    def calculate_best_delivery(self, user: User):  # основната логика за намиране на най-близкия склад
         """Проверявам дали продуктът е в стартовия склад. Ако не е – търся всички складове
         с наличност и Dijkstra избира най-близкия."""
 
-        product_name = input("Име на стока (Enter = отказ): ").strip()
+        product_name = input("\nИме на стока (Enter = отказ): ").strip()
         if not product_name:
             print("Операцията е отказана.")
             return
@@ -70,6 +73,7 @@ class GraphView:
         if my_location in possible_sources:
             print(f"\n[*] '{product_name}' е наличен в {my_location}. Няма нужда от доставка.")
             return
+
         print(f"\n[!] '{product_name}' не е наличен в {my_location}. Търся най-близкия склад...\n")
 
         # всички складове с наличност, различни от стартовия
@@ -83,11 +87,12 @@ class GraphView:
 
         # стартирам Dijkstra
         distances, predecessors = self.graph.dijkstra(my_location)
+
         # филтрирам складовете, до които реално има път
         reachable_sources = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
 
         if not reachable_sources:
-            print(f"\n[!] Има складове с наличност ({other_sources}), но няма път до тях.")
+            print(f"\n[!] Има складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return
 
         # най-близкият склад

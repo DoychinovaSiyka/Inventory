@@ -1,6 +1,7 @@
 class MenuItem:
     def __init__(self, key, text, action):
-        self.key = key
+        # Превръщаме ключа в текст (str), за да няма значение дали подаваш 1 или "1"
+        self.key = str(key)
         self.text = text
         self.action = action
 
@@ -11,29 +12,28 @@ class Menu:
         self.items = items
 
     def show(self):
-        print(f"\n   {self.title}   ")
+        print(f"\n   {self.title.upper()}   ")
         for item in self.items:
             print(f"{item.key}. {item.text}")
 
         while True:
-            choice = input("Избор (Enter = отказ): ").strip()
+            choice = input("Избор (Enter за назад): ").strip()
             if choice == "":
-                return "0"   # връща към предишното меню
-            if not choice.isdigit():
-                print("Моля, въведете валидна числова опция от менюто.\n")
-                continue
-            if choice not in [item.key for item in self.items]:
-                print("Няма такава опция в менюто. Опитайте отново.\n")
-                continue
+                return "0"
 
-            return choice
+            # Проверяваме дали това, което е написал, е някой от ключовете в менюто
+            valid_keys = [item.key for item in self.items]
+            if choice in valid_keys:
+                return choice
+
+            print(f"[!] '{choice}' не е валидна опция. Опитайте отново.\n")
 
     def execute(self, choice, user):
+        # Търсим кой елемент отговаря на избора и му викаме функцията
         for item in self.items:
             if item.key == choice:
                 return item.action(user)
 
-        print("Невалиден избор.")
         return None
 
 

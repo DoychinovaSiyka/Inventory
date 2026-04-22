@@ -11,10 +11,8 @@ class CategoryValidator:
         cleaned = name.strip()
         if not cleaned:
             raise ValueError("Името на категорията е задължително.")
-
         if len(cleaned) < 2:
             raise ValueError("Името е твърде кратко (минимум 2 символа).")
-
         if len(cleaned) > 50:
             raise ValueError("Името не може да надвишава 50 символа.")
 
@@ -42,13 +40,10 @@ class CategoryValidator:
             raise ValueError("Описанието трябва да е текст.")
 
         cleaned = description.strip()
-
         if len(cleaned) < 3:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
-
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
-
         if not re.match(r'^[A-Za-zА-Яа-я0-9 \-–—.,!?()\"„“]+$', cleaned):
             raise ValueError("Описанието съдържа невалидни символи.")
 
@@ -75,7 +70,6 @@ class CategoryValidator:
         cleaned = choice.strip()
         if cleaned.isdigit():
             return int(cleaned)
-
         if re.match(r"^[A-Za-z0-9\-\_]+$", cleaned):
             return cleaned
 

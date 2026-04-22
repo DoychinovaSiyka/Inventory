@@ -19,30 +19,33 @@ class MainMenuView:
         self.user_controller = controllers["user"]
         self.report_controller = controllers["report"]
         self.graph_controller = controllers["graph"]
-        self.menu = self._build_menu()
 
 
     def _build_menu(self):
-        return Menu("Главно меню", [MenuItem("1", "Продукти", self.open_products),
-                                    MenuItem("2", "Категории", self.open_categories),
-                                    MenuItem("3", "Доставчици", self.open_suppliers),
-                                    MenuItem("4", "Движения", self.open_movements),
-                                    MenuItem("5", "Фактури", self.open_invoices),
-                                    MenuItem("6", "Справки", self.open_reports),
-                                    MenuItem("7", "Потребители", self.open_users),
-                                    MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
-                                    MenuItem("0", "Изход", lambda u: "break")])
-
+        """ Изгражда структурата на менюто при всяко извикване. """
+        return Menu("Главно меню", [
+            MenuItem("1", "Продукти", self.open_products),
+            MenuItem("2", "Категории", self.open_categories),
+            MenuItem("3", "Доставчици", self.open_suppliers),
+            MenuItem("4", "Движения", self.open_movements),
+            MenuItem("5", "Фактури", self.open_invoices),
+            MenuItem("6", "Справки", self.open_reports),
+            MenuItem("7", "Потребители", self.open_users),
+            MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
+            MenuItem("0", "Изход", lambda u: "break")
+        ])
 
     def show_menu(self, user):
+        """ Показва менюто в безкраен цикъл до избор на 'Изход'. """
         while True:
-            choice = self.menu.show()
-            result = self.menu.execute(choice, user)
+            # Създаваме обекта на менюто тук, точно преди да го покажем
+            current_menu = self._build_menu()
+            choice = current_menu.show()
+            result = current_menu.execute(choice, user)
             if result == "break":
                 break
 
-
-    # Действия - всяко е отделен метод
+    # Действия - методи, които отварят съответните под-изгледи (Views)
     def open_products(self, user):
         ProductView(self.product_controller, self.category_controller).show_menu(user)
 
@@ -53,7 +56,8 @@ class MainMenuView:
         SupplierView(self.supplier_controller).show_menu(user)
 
     def open_movements(self, _):
-        MovementView( self.product_controller, self.movement_controller, self.user_controller).show_menu()
+        # Подаваме нужните контролери на MovementView
+        MovementView(self.product_controller, self.movement_controller, self.user_controller).show_menu()
 
     def open_invoices(self, user):
         InvoiceView(self.invoice_controller).show_menu(user)

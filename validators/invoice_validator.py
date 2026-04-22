@@ -20,7 +20,7 @@ class InvoiceValidator:
 
         return number
 
-    # Проверка за валиден UUID
+
     @staticmethod
     def validate_uuid(value, field_name="ID"):
         if value is None:
@@ -59,7 +59,7 @@ class InvoiceValidator:
         if p <= 0:
             raise ValueError("Единичната цена трябва да е положителна.")
 
-    # Проверка дали total = quantity * unit_price
+    # Проверка - total = quantity * unit_price
     @staticmethod
     def validate_total_price(total_price, quantity, unit_price):
         try:
@@ -123,7 +123,6 @@ class InvoiceValidator:
             InvoiceValidator.validate_date(start_date)
         if end_date:
             InvoiceValidator.validate_date(end_date)
-
 
         if min_total is not None:
             InvoiceValidator.parse_float(min_total, "Минимална сума")

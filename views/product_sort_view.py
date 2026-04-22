@@ -6,23 +6,29 @@ from controllers.product_controller import ProductController
 class ProductSortView:
     def __init__(self, controller: ProductController):
         self.controller = controller
-        self.menu = self._build_menu()
+
+
+    def show_menu(self, _=None):
+        """ Генерира менюто локално при извикване. """
+        menu = self._build_menu()
+        while True:
+            choice = menu.show()
+            result = menu.execute(choice, None)
+            if result == "break":
+                break
 
     # Меню за избор на метод за сортиране
     def _build_menu(self):
-        return Menu("Сортиране на продукти", [MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
-                                              MenuItem("2", "По цена (висока -> ниска) – selection sort", self.sort_price_desc),
-                                              MenuItem("3", "По цена (ниска -> висока) – bubble sort", self.sort_price_asc),
-                                              MenuItem("4", "По количество (високо -> ниско) – bubble sort", self.sort_qty_desc),
-                                              MenuItem("5", "По количество (ниско -> високо) – selection sort", self.sort_qty_asc),
-                                              MenuItem("0", "Назад", lambda u: "break")])
+        """ Дефинира опциите за сортиране. """
+        return Menu("Сортиране на продукти", [
+            MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
+            MenuItem("2", "По цена (висока -> ниска) – selection sort", self.sort_price_desc),
+            MenuItem("3", "По цена (ниска -> висока) – bubble sort", self.sort_price_asc),
+            MenuItem("4", "По количество (високо -> ниско) – bubble sort", self.sort_qty_desc),
+            MenuItem("5", "По количество (ниско -> високо) – selection sort", self.sort_qty_asc),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
-    def show_menu(self, _=None):
-        while True:
-            choice = self.menu.show()
-            result = self.menu.execute(choice, None)
-            if result == "break":
-                break
 
     def sort_by_name(self, _):
         products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())

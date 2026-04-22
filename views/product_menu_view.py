@@ -19,7 +19,7 @@ class ProductView:
         self.location_controller = location_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
-        self.menu = self._build_menu()
+        # self.menu вече не се инициира тук, за да се гарантира актуалност спрямо ролята
 
     @staticmethod
     def format_lv(value):
@@ -52,13 +52,15 @@ class ProductView:
         return False
 
     def show_menu(self, user: User):
+        # Менюто се изгражда локално, за да отразява правата на текущия потребител
+        menu = self._build_menu()
         readonly = user.role in ["Operator", "Anonymous"]
         while True:
-            choice = self.menu.show()
+            choice = menu.show()
             if readonly and choice in ["1", "2", "3"]:
-                print(f"[!] Функцията не е достъпна за роля: {user.role}")
+                print(f"\n[!] Функцията не е достъпна за роля: {user.role}")
                 continue
-            if self.menu.execute(choice, user) == "break":
+            if menu.execute(choice, user) == "break":
                 break
 
     # CRUD

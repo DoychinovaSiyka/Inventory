@@ -16,18 +16,20 @@ class ReportsView:
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
         self.movement_controller = controller.movement_controller
-        self.menu = self._build_menu() # Създаваме менюто за справки
 
     def show_menu(self, user: User):
+        """ Генерира и показва менюто само когато е необходимо. """
+        menu = self._build_menu() # Менюто се генерира локално
         while True:
-            choice = self.menu.show()
+            choice = menu.show()
             if choice == "0":
                 break
-            result = self.menu.execute(choice, user)
+            result = menu.execute(choice, user)
             if result == "break":
                 break
 
     def _build_menu(self):
+        """ Дефинира структурата на менюто за справки. """
         return Menu("Справки и Отчети", [
             MenuItem("1", "Обобщена справка за наличности", self.summary_report),
             MenuItem("2", "Справка за движения", self.report_movements),
@@ -43,6 +45,7 @@ class ReportsView:
             MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
             MenuItem("0", "Назад", lambda u: "break")
         ])
+
 
     # Помощни функции за форматиране
     @staticmethod

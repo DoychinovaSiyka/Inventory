@@ -2,7 +2,7 @@ from graph.dijkstra import Graph
 
 class WarehouseGraph(Graph):
     def __init__(self):
-        # Инициализирам базовия граф (алгоритмичната структура)
+        # Инициализирам базовия граф - алгоритмичната структура
         super().__init__(nodes=[], edges=[])
 
         # Презаписвам nodes и edges, за да пазим реални складове
