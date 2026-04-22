@@ -133,7 +133,7 @@ class MovementView:
         """Основен метод за показване на менюто."""
         user = self.user_controller.logged_user
         if not user:
-            print("Трябва да сте логнат.");
+            print("Трябва да сте логнат.")
             return
 
         # Създаваме менюто локално тук
@@ -340,12 +340,12 @@ class MovementView:
         qty_by_wh = {loc: (qty, unit) for (loc, qty, unit) in wh_list}
 
         if not wh_list:
-            print("Грешка: Няма наличност за този продукт в нито един склад.");
+            print("Грешка: Няма наличност за този продукт в нито един склад.")
             return
 
         all_locs = self.location_controller.get_all()
         if not all_locs:
-            print("Грешка: Няма дефинирани локации.");
+            print("Грешка: Няма дефинирани локации.")
             return
 
         print("\nИзберете ИЗХОДНА локация:")
@@ -365,17 +365,17 @@ class MovementView:
                 if loc.location_id.lower() == raw.lower(): from_loc = loc.location_id
 
         if not from_loc:
-            print("Невалидна изходна локация.");
+            print("Невалидна изходна локация.")
             return
 
         from_qty, _ = qty_by_wh.get(from_loc, (0.0, product.unit))
         if from_qty <= 0:
-            print("Грешка: Няма наличност в избраната изходна локация.");
+            print("Грешка: Няма наличност в избраната изходна локация.")
             return
 
         targets = [loc for loc in all_locs if loc.location_id != from_loc]
         if not targets:
-            print("Грешка: Няма друга локация, към която да се премести.");
+            print("Грешка: Няма друга локация, към която да се премести.")
             return
 
         print("\nИзберете ЦЕЛЕВА локация:")
@@ -394,7 +394,7 @@ class MovementView:
                 if loc.location_id.lower() == raw.lower(): to_loc = loc.location_id
 
         if not to_loc:
-            print("Невалидна целева локация.");
+            print("Невалидна целева локация.")
             return
 
         # количество – цикъл докато е валидно
@@ -428,7 +428,7 @@ class MovementView:
 
         results = self.movement_controller.search_by_description(kw)
         if not results:
-            print("Няма намерени движения.");
+            print("Няма намерени движения.")
             return
 
         def short(t, n=60):
@@ -441,7 +441,7 @@ class MovementView:
                  self._format_qty_unit(m.quantity, m.unit),
                  short(m.description, 60)] for m in results]
 
-        print(format_table(columns, rows));
+        print(format_table(columns, rows))
         print()
 
         choice = input("ID за детайли или Enter: ").strip()
@@ -449,7 +449,7 @@ class MovementView:
 
         mv = self.movement_controller.get_by_id(choice)
         if not mv:
-            print("\nНевалидно ID.\n");
+            print("\nНевалидно ID.\n")
             return
 
         print("\n--- Детайли за движение ---")
@@ -475,7 +475,7 @@ class MovementView:
     def show_all(self, _):
         mv = self.movement_controller.movements
         if not mv:
-            print("Няма движения.");
+            print("Няма движения.")
             return
 
         columns = ["ID", "Дата", "Тип", "Количество"]

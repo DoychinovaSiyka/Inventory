@@ -39,7 +39,7 @@ class MovementController:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]
         # НЯМА възстановяване на movements.
-        # Ако файлът липсва → raw = [] → movements = []
+        # Ако файлът липсва - raw = [] - movements = []
         # Историята НЕ може да се възстанови от инвентара.
 
 
@@ -127,7 +127,7 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        # ✔ Актуализиране на инвентара (в RAM)
+        #  Актуализиране на инвентара (в RAM)
         if m_type_str == "MOVE":
             self.inventory_controller.decrease_stock(product_id, from_location_id, qty, product.unit)
             self.inventory_controller.increase_stock(product_id, product.name, to_location_id, qty, product.unit)

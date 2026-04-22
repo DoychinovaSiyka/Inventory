@@ -19,7 +19,7 @@ class Product:
         self.supplier_id = str(supplier_id) if supplier_id else None
         # Тагове – ако не е списък, правя го на празен
         self.tags = tags if isinstance(tags, list) else []
-        # Локация на продукта (ако има)
+        # Локация на продукта - (ако има)
         self.location_id = location_id
         # Дати за създаване и промяна
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

@@ -44,7 +44,7 @@ def filter_deliveries(movements: List[Movement], keyword: str,
             results.append(m)
             continue
 
-        # Търсене по име на доставчик
+
         if m.supplier_id and supplier_controller:
             supplier = supplier_controller.get_by_id(m.supplier_id)
             if supplier and keyword in supplier.name.lower():
