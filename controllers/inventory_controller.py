@@ -6,7 +6,6 @@ from validators.inventory_validator import InventoryValidator
 
 class InventoryController:
     """Контролерът управлява наличностите. Работи коректно дори когато JSON файловете са празни."""
-
     def __init__(self, repo: JSONRepository):
         self.repo = repo
         # Зареждам инвентара от файла
@@ -153,3 +152,13 @@ class InventoryController:
 
         #  Един запис
         self._save()
+
+
+
+# Inventory се възстановява автоматично, защото:
+# rebuild_inventory_from_movements() пресмята всичко от movements.json
+# при стартиране MovementController извиква rebuild
+# при празен/липсващ inventory.json → започва с празна структура
+# при стара структура → мигрира
+# при липсващ продукт → създава го автоматично
+# Инвентарът е derived data → винаги може да се пресметне.

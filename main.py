@@ -23,7 +23,7 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-    #   ИНИЦИАЛИЗАЦИЯ НА ХРАНИЛИЩАТА
+    # ИНИЦИАЛИЗАЦИЯ НА ХРАНИЛИЩАТА
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -46,11 +46,7 @@ class InventoryApplication:
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
-
-
         self.inventory_controller = InventoryController(self.inventory_repo)
-
-
         self.product_controller = ProductController(self.product_repo,
                                                     self.category_controller, self.activity_log_controller)
         self.product_controller.supplier_controller = self.supplier_controller
@@ -73,7 +69,7 @@ class InventoryApplication:
         # Логистичен модул (Dijkstra)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
 
-    #   ИНИЦИАЛИЗАЦИЯ НА МЕНЮТАТА
+    # ИНИЦИАЛИЗАЦИЯ НА МЕНЮТАТА
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,
                             "category": self.category_controller,

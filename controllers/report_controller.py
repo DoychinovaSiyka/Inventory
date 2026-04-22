@@ -114,7 +114,6 @@ class ReportController:
     def report_sales_by_date(self, date_obj):
         invoices = self.invoice_controller.get_all() or []
         data = []
-
         date_str = date_obj.strftime("%Y-%m-%d")
 
         for inv in invoices:

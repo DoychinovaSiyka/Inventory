@@ -24,13 +24,24 @@ class MovementController:
 
         self.movements: List[Movement] = []
         self._load_movements()
+        # movements.json се зарежда директно.
+        # Ако movements.json е празен или изтрит → self.movements = []
+        # Движенията са "source of truth" - не се възстановяват автоматично.
 
         # Инвентарът ще се преизчислява само в паметта.
         self._sync_inventory_only_in_memory()
+        # inventory.json се ВЪЗСТАНОВЯВА автоматично.
+        # Инвентарът се пресмята от movements.json при всяко стартиране.
+        # Ако inventory.json липсва - няма проблем - пресмята се наново.
+
 
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]
+        # НЯМА възстановяване на movements.
+        # Ако файлът липсва → raw = [] → movements = []
+        # Историята НЕ може да се възстанови от инвентара.
+
 
     def _sync_inventory_only_in_memory(self) -> None:
         """Обновява инвентара в RAM паметта без да записва във файловете."""
@@ -42,12 +53,17 @@ class MovementController:
 
         try:
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
+            # inventory се пресмята от movements.
+            # Това е мястото, което ВЪЗСТАНОВЯВА инвентара.
+            # inventory.json НЕ се чете - винаги се пресмята от нулата.
         except Exception:
             pass
+
 
     @staticmethod
     def _now() -> str:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
 
     def save_changes(self) -> None:
         """Записва на диска само при реална промяна."""
@@ -60,12 +76,14 @@ class MovementController:
                 safe.append(m)
         return safe
 
+
     def get_by_id(self, movement_id: str) -> Optional[Movement]:
         movement_id = str(movement_id).strip()
         for m in self.movements:
             if m.movement_id == movement_id:
                 return m
         return None
+
 
     def move_product(self, product_id: str, user_id: str,
                      from_loc: str, to_loc: str,
@@ -77,7 +95,7 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        # Актуализиране на инвентара
+        # Актуализиране на инвентара (в RAM)
         self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
         self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)
 
@@ -91,7 +109,7 @@ class MovementController:
 
         self.movements.append(movement)
 
-        # ЗАПИСВАМЕ ПРИ НОВО ДВИЖЕНИЕ
+
         self.save_changes()
 
         return movement
@@ -109,7 +127,7 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        # Логика за движение...
+        # ✔ Актуализиране на инвентара (в RAM)
         if m_type_str == "MOVE":
             self.inventory_controller.decrease_stock(product_id, from_location_id, qty, product.unit)
             self.inventory_controller.increase_stock(product_id, product.name, to_location_id, qty, product.unit)
@@ -128,7 +146,7 @@ class MovementController:
 
         self.movements.append(movement)
 
-        # ЗАПИСВАМЕ ПРИ НОВО ДВИЖЕНИЕ
+        #  Записваме movements.json, но НЕ го възстановяваме ако липсва.
         self.save_changes()
 
         if MovementType[m_type_str] == MovementType.OUT:
@@ -136,14 +154,17 @@ class MovementController:
 
         return movement
 
+
     def search_by_description(self, keyword: str) -> List[Movement]:
         keyword = keyword.strip().lower()
         if len(keyword) < 3:
             return []
         return [m for m in self.movements if keyword in m.description.lower()]
 
+
     def advanced_filter(self, **criteria) -> List[Movement]:
         return filter_advanced(self.movements, **criteria)
+
 
     def rebuild_inventory(self) -> None:
         """Ръчно преизчисляване на всичко."""
@@ -152,3 +173,5 @@ class MovementController:
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
         self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
+        # ръчно възстановяване на инвентара.
+        # inventory се пресмята от movements.

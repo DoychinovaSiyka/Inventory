@@ -18,7 +18,6 @@ class JSONRepository(Repository):
 
     def load(self):
         """Чете JSON файла и връща съдържанието му. Ако е празен или повреден, връща подходяща празна структура."""
-
         if not self.filepath.exists():
             return {} if self.filepath.name == "inventory.json" else []
         try:
@@ -35,7 +34,6 @@ class JSONRepository(Repository):
 
     def save(self, data):
         """Записва данните обратно в JSON файла."""
-
         # Пишем само ако данните са различни.
         if self._last_saved_data is not None and self._last_saved_data == data:
             return

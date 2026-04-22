@@ -6,7 +6,7 @@ class WarehouseGraph(Graph):
         super().__init__(nodes=[], edges=[])
 
         # Презаписвам nodes и edges, за да пазим реални складове
-        self.nodes = {}   # Складове по ID → Warehouse обекти
+        self.nodes = {}   # Складове по ID - Warehouse обекти
         self.edges = {}   # Съседни складове и разстояния
 
     def add_warehouse(self, warehouse):
