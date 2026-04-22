@@ -1202,5 +1202,47 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-21 20:34:33"
+    },
+    {
+        "log_id": "deb69cde-921e-47a4-b16a-4735e3430fe9",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-22 12:25:15"
+    },
+    {
+        "log_id": "5609f340-b105-49f5-be77-ae6e63041467",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-22 12:28:48"
+    },
+    {
+        "log_id": "01fea17f-26ad-4df4-b257-33fb7e2a1589",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-22 12:28:55"
+    },
+    {
+        "log_id": "296ff217-0fc8-47ab-b8e3-fe893b3a9566",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-22 12:32:37"
+    },
+    {
+        "log_id": "498b6dcf-d1bd-4df2-abe1-0005e92ead3d",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGOUT",
+        "details": "Потребител operator излезе.",
+        "timestamp": "2026-04-22 12:36:58"
+    },
+    {
+        "log_id": "33b320f2-dc6e-4be8-a5f3-894461f7e328",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-22 12:38:29"
     }
 ]

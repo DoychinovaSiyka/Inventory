@@ -739,5 +739,24 @@
         "date": "2026-04-21 20:35:45",
         "created": "2026-04-21 20:35:45",
         "modified": "2026-04-21 20:35:45"
+    },
+    {
+        "movement_id": "f319f537-bf81-4738-868e-136f03e270e8",
+        "product_id": "14f7a2c9-d1b3-4e8f-8d1e-5a7c9b1e2f99",
+        "product_name": "Кори за баница 500g",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "location_id": "W1",
+        "movement_type": "IN",
+        "quantity": 14.0,
+        "unit": "бр.",
+        "description": "доставка на кори за баница",
+        "price": 4.01,
+        "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
+        "customer": null,
+        "from_location_id": null,
+        "to_location_id": null,
+        "date": "2026-04-22 12:35:05",
+        "created": "2026-04-22 12:35:05",
+        "modified": "2026-04-22 12:35:05"
     }
 ]

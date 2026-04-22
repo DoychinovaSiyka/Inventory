@@ -75,7 +75,7 @@ class OperatorMenuView:
         view = self._open_view(MovementView, self.product_controller,
                                self.movement_controller, self.user_controller,
                                self.location_controller, self.supplier_controller)
-        view.show_menu(user)
+        view.show_menu()
 
     # справки – също защитено
     @require_password("parola123")
