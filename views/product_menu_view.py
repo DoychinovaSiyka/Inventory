@@ -66,7 +66,6 @@ class ProductView:
         """ Създава нов продукт чрез въвеждане на име, описание, цена, количество,
         мерна единица, категория и начална локация. Валидира всички входни данни и записва продукта чрез ProductController."""
         print("\n  Създаване на продукт  ")
-        # Име – задължително, не допуска празно
         while True:
             name = input("Име: ").strip()
             try:
@@ -82,7 +81,6 @@ class ProductView:
                 break
             except ValueError as e:
                 print(f"[!] {e}")
-
 
         while True:
             price_raw = input("Цена: ").strip()
@@ -112,7 +110,6 @@ class ProductView:
         if not categories:
             print("Няма категории.")
             return
-
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")

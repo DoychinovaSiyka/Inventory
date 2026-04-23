@@ -19,7 +19,7 @@ class ReportsView:
 
     def show_menu(self, user: User):
         """ Генерира и показва менюто само когато е необходимо. """
-        menu = self._build_menu() # Менюто се генерира локално
+        menu = self._build_menu()  # Менюто се генерира локално
         while True:
             choice = menu.show()
             if choice == "0":

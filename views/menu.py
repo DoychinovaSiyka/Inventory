@@ -20,7 +20,6 @@ class Menu:
             choice = input("Избор (Enter за назад): ").strip()
             if choice == "":
                 return "0"
-
             # Проверяваме дали това, което е написал, е някой от ключовете в менюто
             valid_keys = [item.key for item in self.items]
             if choice in valid_keys:

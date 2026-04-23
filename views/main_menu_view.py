@@ -37,7 +37,7 @@ class MainMenuView:
 
     def show_menu(self, user):
         while True:
-            # Създаваме обекта на менюто тук, точно преди да го покажем
+            # Създаваме обекта на менюто преди да го покажем
             current_menu = self._build_menu()
             choice = current_menu.show()
             result = current_menu.execute(choice, user)

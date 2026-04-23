@@ -35,12 +35,10 @@ class GraphView:
         # Менюто съдържа основната функция – търсене на най-близък склад
         return Menu("Логистичен Модул (Dijkstra)", [
             MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user: User):
         while True:
-            # Изграждаме менюто динамично за по-голяма гъвкавост
             menu = self._build_menu()
             choice = menu.show()
 

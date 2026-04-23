@@ -70,7 +70,6 @@ class UserView:
         if not role:
             print("Операцията е отказана.\n")
             return
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print("[Успех] Потребителят е добавен успешно!")

@@ -19,7 +19,6 @@ class CategoryView:
 
     def _build_menu(self, is_admin: bool):
         menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
-
         # Проверка за права - само за администратори
         if is_admin:
             menu_items.extend([MenuItem("2", "Добавяне на категория", self.add_category),
@@ -50,7 +49,6 @@ class CategoryView:
             # рекурсивно намирам децата
             children = [c for c in categories if c.parent_id == cat.category_id]
             children.sort(key=lambda x: x.name.lower())
-
             for child in children:
                 print_tree(child, level + 1, prefix)
 
@@ -64,12 +62,10 @@ class CategoryView:
         if not name:
             print("Операцията е отказана.")
             return
-
         description = input("Описание (Enter = отказ): ").strip()
         if not description:
             print("Операцията е отказана.")
             return
-
         if len(description) < 3:
             print("Грешка: Описанието е твърде кратко (минимум 3 символа).")
             return
@@ -98,7 +94,6 @@ class CategoryView:
         print("\nОставете празно, ако не искате да променяте полето.")
         print(f"Текущо име: {category.name}")
         new_name = input("Ново име: ").strip()
-
         print(f"Текущо описание: {category.description}")
         new_desc = input("Ново описание: ").strip()
         if new_desc and len(new_desc) < 3:
@@ -120,6 +115,7 @@ class CategoryView:
         except Exception as e:
             print("Грешка:", e)
 
+
     def delete_category(self, user: User):
         print("\nИзберете категория за изтриване:")
         category = self.select_category()
@@ -129,7 +125,6 @@ class CategoryView:
         confirm = input(f"Наистина ли искате да изтриете '{category.name}'? (y/n): ").strip().lower()
         if confirm != "y":
             return
-
         current_uid = user.user_id if user else "unknown"
         try:
             self.controller.remove(category.category_id, current_uid)
@@ -143,14 +138,12 @@ class CategoryView:
         if not categories:
             print("Няма категории.")
             return None
-
         print("\nНалични категории:")
         for i, cat in enumerate(categories, 1):
             print(f"{i}. {cat.name} (ID: {cat.category_id})")
 
         while True:
             choice = input("Въведете номер или ID (Enter = отказ): ").strip()
-
             if choice == "":
                 return None
 
@@ -158,7 +151,6 @@ class CategoryView:
             for cat in categories:
                 if choice.lower() == cat.category_id.lower():
                     return cat
-
 
             if choice.isdigit():
                 index = int(choice) - 1

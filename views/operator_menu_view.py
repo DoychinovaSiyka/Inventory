@@ -20,12 +20,10 @@ class OperatorMenuView:
         self.report_controller = controllers["report"]
         self.user_controller = controllers["user"]
         self.activity_log = controllers["activity_log"]
-        self.supplier_controller = controllers.get("supplier")  # може и да няма доставчици
+        self.supplier_controller = controllers["supplier"]
 
-
-    # структурата на менюто
+    # Изгражда структурата на менюто при всяко извикване.
     def _build_menu(self):
-        """ Изгражда структурата на менюто при всяко извикване. """
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти", self.open_products),
             MenuItem("2", "Управление на категории", self.open_categories),
@@ -94,7 +92,6 @@ class OperatorMenuView:
 
         view = LocationView(self.location_controller)
         view.show_all(user)
-
         input("\nНатиснете Enter за връщане към менюто...")
 
     @staticmethod

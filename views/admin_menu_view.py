@@ -13,7 +13,7 @@ from views.location_view import LocationView
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-        # view обекти - инициализирам ги веднъж, за да пазят състоянието си
+        # view обекти - инициализирам ги, за да пазят състоянието си
         self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
                                         controllers["activity_log"])
 
