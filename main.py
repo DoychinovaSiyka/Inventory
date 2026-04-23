@@ -40,7 +40,7 @@ class InventoryApplication:
         # Логове на потребители
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
-        # Основни контролери
+
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
