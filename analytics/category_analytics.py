@@ -3,10 +3,9 @@ from models.category import Category
 
 
 def build_category_tree(categories: List[Category]) -> List[dict]:
-    """Дървовидна структура от плосък списък с категории.
-    Удобно за менюта и визуализации."""
+    """Дървовидна структура от плосък списък с категории."""
     tree = []
-    # Намирам категориите, които нямат родител – те са началото на дървото
+    # Категориите, които нямат родител – те са началото на дървото
     root_categories = [c for c in categories if c.parent_id is None]
     # За всеки корен добавям записа и после слизам надолу по децата
     for root in root_categories:

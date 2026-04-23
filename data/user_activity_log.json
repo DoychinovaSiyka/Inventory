@@ -1244,5 +1244,12 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-22 12:38:29"
+    },
+    {
+        "log_id": "cc85214d-8956-4781-9f2f-c50b6ab188c4",
+        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
+        "action": "LOGIN",
+        "details": "Потребител operator влезе.",
+        "timestamp": "2026-04-23 00:44:28"
     }
 ]

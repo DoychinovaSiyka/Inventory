@@ -1,6 +1,6 @@
 class MenuItem:
     def __init__(self, key, text, action):
-        # Превръщаме ключа в текст (str), за да няма значение дали подаваш 1 или "1"
+        # Превръщаме ключа в текст (str), за да няма значение дали подаваме 1 или "1"
         self.key = str(key)
         self.text = text
         self.action = action

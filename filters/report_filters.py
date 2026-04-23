@@ -56,7 +56,6 @@ def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
 
 
 def filter_sales_by_product(invoices: List[Invoice], product_name: str):
-    """Филтър за продажби по име на продукт."""
     return [inv for inv in invoices if _match_string(inv.product, product_name)]
 
 

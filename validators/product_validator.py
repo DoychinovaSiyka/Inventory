@@ -15,7 +15,7 @@ class ProductValidator:
             raise ValueError(f"Невалиден формат за {field_name}: {value}")
         return value
 
-    # Име на продукт
+
     @staticmethod
     def validate_name(name):
         if not name or not isinstance(name, str):
@@ -91,7 +91,7 @@ class ProductValidator:
         return u
 
     @staticmethod
-    def validate_price(price):  # цена – трябва да е число > 0
+    def validate_price(price):
         try:
             p = float(price)
         except (ValueError, TypeError):

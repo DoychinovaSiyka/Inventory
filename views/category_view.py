@@ -9,10 +9,9 @@ class CategoryView:
 
     def show_menu(self, user: User):
         while True:
-            # При всяко завъртане проверяваме ролята на потребителя
+            # При всяко завъртане проверявам ролята на потребителя
             is_admin = (user is not None and user.role == "Admin")
             menu = self._build_menu(is_admin)
-
             choice = menu.show()
             result = menu.execute(choice, user)
             if result == "break":

@@ -72,7 +72,6 @@ class ProductController:
 
     def add(self, product_data: dict, user_id: str) -> Product:
         """ Добавяме нов продукт.Началното количество се прави чрез IN движение."""
-
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
         ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
         ProductValidator.validate_name(product_data['name'])
@@ -133,7 +132,7 @@ class ProductController:
                 product.description = ProductValidator.validate_description(new_desc_clean)
                 has_changes = True
 
-        # Цена
+
         new_price_valid = ProductValidator.validate_price(new_price)
         if new_price_valid != product.price:
             product.price = new_price_valid
@@ -167,7 +166,7 @@ class ProductController:
                 product.categories = new_categories
                 has_changes = True
 
-        # Локация
+
         if new_location_id is not None and new_location_id != product.location_id:
             product.location_id = new_location_id
             has_changes = True

@@ -8,7 +8,7 @@ def sort_by_name_logic(products: List[Product]) -> List[Product]:
     return products
 
 def sort_by_price_desc_logic(products: List[Product]) -> List[Product]:
-    """Правя нов списък, подреден по цена - от най-скъпите надолу."""
+    """Нов списък, подреден по цена - от най-скъпите надолу."""
     return sorted(products, key=lambda p: p.price, reverse=True)
 
 def bubble_sort_logic(products: List[Product], key: Callable, reverse: bool) -> List[Product]:

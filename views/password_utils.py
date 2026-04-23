@@ -49,7 +49,7 @@ def format_table(columns, rows):
     col_widths = []
     for i in range(len(columns)):
         max_w = max(len(str(row[i])) for row in all_rows)
-        col_widths.append(max_w + 2)  # +2 за въздух
+        col_widths.append(max_w + 2)
 
     top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
     header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"

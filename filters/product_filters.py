@@ -158,7 +158,6 @@ def filter_combined(products, inventory_controller, keyword=None,
     if supplier_id:
         results = [p for p in results if p.supplier_id == supplier_id]
 
-
     if location_id:
         results = [p for p in results if p.location_id == location_id]
 

@@ -92,7 +92,6 @@ class LocationView:
             print(f"[Грешка] {e}")
 
     def delete_location(self, user: User):
-        """ Премахва локация след потвърждение. """
         print("\n--- ИЗТРИВАНЕ НА ЛОКАЦИЯ ---")
         loc_id = input("Въведете Код/ID за изтриване (Enter = отказ): ").strip()
         if not loc_id:

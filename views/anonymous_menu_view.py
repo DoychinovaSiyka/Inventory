@@ -8,7 +8,7 @@ class AnonymousMenuView:
     def __init__(self, controllers):
         # Запазвам контролерите, за да ги подадем на под-менютата
         self.controllers = controllers
-        # Инициализираме изгледите, които гостът може да достъпва
+        # Инициализирам изгледите, които гостът може да достъпва
         self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
                                         controllers["activity_log"])
 
@@ -44,5 +44,5 @@ class AnonymousMenuView:
         self.category_view.show_menu(user)
 
     def show_system_info(self, _):
-        # Подаваме None или празния аргумент, тъй като SystemInfo обикновено не изисква потребител
+        # Подавам None или празния аргумент, тъй като SystemInfo обикновено не изисква потребител
         self.system_info_view.show_menu()

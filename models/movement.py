@@ -34,7 +34,7 @@ class Movement:
         self.unit = unit or ""
         self.description = description or ""
 
-        # Цена – ако не може да се парсне - 0
+
         try:
             self.price = float(price) if price is not None else 0.0
         except (ValueError, TypeError):
@@ -86,6 +86,7 @@ class Movement:
                         supplier_id=data.get("supplier_id"), customer=data.get("customer"),
                         from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"),
                         date=data.get("date"), created=data.get("created"), modified=data.get("modified"))
+
 
     def __str__(self):
         m_type = self.movement_type.value if isinstance(self.movement_type, MovementType) else self.movement_type

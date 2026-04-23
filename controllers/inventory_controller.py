@@ -14,7 +14,7 @@ class InventoryController:
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
             return
-        # Ако е стара структура (списък) - мигрирам към нов формат
+        # Ако е стара структура (списък) - минавам към нов формат
         if isinstance(data, list):
             self.data = {"products": {}}
             return

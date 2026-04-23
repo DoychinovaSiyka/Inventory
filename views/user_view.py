@@ -77,7 +77,7 @@ class UserView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Промяна на роля
+
     def change_role(self, user):
         print("\n--- ПРОМЯНА НА ПОТРЕБИТЕЛСКА РОЛЯ ---")
         username = input("Потребителско име (Enter за отказ): ").strip()
@@ -96,7 +96,7 @@ class UserView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Деактивиране на потребител
+
     def deactivate_user(self, user):
         print("\n--- ДЕАКТИВИРАНЕ НА ПОТРЕБИТЕЛ ---")
         username = input("Потребителско име (Enter за отказ): ").strip()
@@ -123,7 +123,7 @@ class UserView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # Изтриване на потребител
+
     def delete_user(self, user):
         print("\n--- ПРЕМАХВАНЕ НА ПОТРЕБИТЕЛ ---")
         username = input("Потребителско име за изтриване (Enter за отказ): ").strip()

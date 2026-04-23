@@ -60,7 +60,7 @@ class CategoryController:
         if category.name == new_name:
             return True
 
-        # Проверка за уникалност
+
         CategoryValidator.validate_unique(new_name,
                                           [c for c in self.categories
                                            if c.category_id != category_id])

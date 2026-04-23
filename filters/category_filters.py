@@ -10,7 +10,6 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
     keyword = keyword.lower()
     results = []
     for c in categories:
-        # Проверяваме името
         name_match = keyword in c.name.lower()
         desc_match = False
         if c.description:

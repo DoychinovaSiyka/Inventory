@@ -11,7 +11,7 @@ class InvoiceView:
         self.invoice_controller = invoice_controller
         self.activity_log = activity_log_controller
 
-    # Твоята таблица с фиксирани ширини
+    # таблица с фиксирани ширини
     def _format_table_fixed(self, headers, rows, col_widths):
         line = "+" + "+".join("-" * w for w in col_widths) + "+"
         header_row = "|" + "|".join(f"{str(h):^{col_widths[i]}}" for i, h in enumerate(headers)) + "|"
@@ -32,7 +32,6 @@ class InvoiceView:
                 break
 
     def _build_menu(self):
-        # Всички опции точно както в твоя оригинал
         return Menu("Меню Фактури", [
             MenuItem("1", "Списък с всички фактури", self.show_all),
             MenuItem("2", "Преглед на фактура по ID", self.view_by_id),

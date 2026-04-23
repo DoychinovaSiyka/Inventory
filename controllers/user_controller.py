@@ -9,7 +9,6 @@ from validators.user_validator import UserValidator
 class UserController:
     """Контролерът управлява потребителите. Работи коректно при празен users.json.
     При първо стартиране създава един администратор и един оператор."""
-
     def __init__(self, repo):
         self.repo = repo
         raw_data = self.repo.load()
