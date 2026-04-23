@@ -9,7 +9,7 @@ class CategoryView:
 
     def show_menu(self, user: User):
         while True:
-            # При всяко завъртане проверявам ролята на потребителя
+            # Проверявам ролята на потребителя
             is_admin = (user is not None and user.role == "Admin")
             menu = self._build_menu(is_admin)
             choice = menu.show()
@@ -22,11 +22,9 @@ class CategoryView:
 
         # Проверка за права - само за администратори
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на категория", self.add_category),
-                MenuItem("3", "Редактиране на категория", self.edit_category),
-                MenuItem("4", "Изтриване на категория", self.delete_category)
-            ])
+            menu_items.extend([MenuItem("2", "Добавяне на категория", self.add_category),
+                               MenuItem("3", "Редактиране на категория", self.edit_category),
+                               MenuItem("4", "Изтриване на категория", self.delete_category)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Категории", menu_items)
@@ -38,7 +36,7 @@ class CategoryView:
             return
 
         print("\nКатегории (йерархия):\n")
-        # взимаме главните категории (без родител)
+        # взимам главните категории (без родител)
         roots = [c for c in categories if c.parent_id is None]
         roots.sort(key=lambda x: x.name.lower())
 
@@ -49,7 +47,7 @@ class CategoryView:
             else:
                 print(f"{indent}- {cat.name} (ID: {cat.category_id})")
 
-            # рекурсивно намираме децата
+            # рекурсивно намирам децата
             children = [c for c in categories if c.parent_id == cat.category_id]
             children.sort(key=lambda x: x.name.lower())
 
@@ -81,7 +79,7 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            # Използваме актуалното ID на потребителя вместо "system"
+            # Използвам актуалното ID на потребителя вместо "system"
             current_uid = user.user_id if user else "unknown"
             self.controller.add({"name": name, "description": description, "parent_id": parent_id},
                                 user_id=current_uid)
@@ -161,7 +159,7 @@ class CategoryView:
                 if choice.lower() == cat.category_id.lower():
                     return cat
 
-            # Търсене по пореден номер
+
             if choice.isdigit():
                 index = int(choice) - 1
                 if 0 <= index < len(categories):

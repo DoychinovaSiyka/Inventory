@@ -24,7 +24,6 @@ class InvoiceView:
 
     def show_menu(self, user: User):
         while True:
-            # Менюто се изгражда тук, за да е динамично
             menu = self._build_menu()
             choice = menu.show()
             result = menu.execute(choice, user)
@@ -43,7 +42,7 @@ class InvoiceView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # Показва всички фактури
+
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
         if not invoices:
@@ -133,7 +132,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 26, 12, 12, 12]))
 
-    # Търсене по дата
+
     def search_by_date(self, user):
         while True:
             date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
@@ -159,7 +158,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
-    # Разширено търсене
+
     def advanced_search(self, user):
         print("   Разширено търсене на фактури   ")
         customer = input("Клиент (или Enter): ").strip() or None
@@ -188,7 +187,7 @@ class InvoiceView:
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 12]))
 
-    # Търсене по сума / диапазон (Завършва с твоята таблица!)
+    # Търсене по сума / диапазон
     def search_by_total(self, user):
         print("   Търсене по сума / диапазон")
         min_total = input("Минимална сума (или Enter): ").strip()

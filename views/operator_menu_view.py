@@ -33,8 +33,6 @@ class OperatorMenuView:
             MenuItem("4", "Справки", self.open_reports),
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
-
-            # операторът може само да гледа локациите
             MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
             MenuItem("0", "Назад", lambda u: "break")
         ])

@@ -36,7 +36,6 @@ class MainMenuView:
         ])
 
     def show_menu(self, user):
-        """ Показва менюто в безкраен цикъл до избор на 'Изход'. """
         while True:
             # Създаваме обекта на менюто тук, точно преди да го покажем
             current_menu = self._build_menu()

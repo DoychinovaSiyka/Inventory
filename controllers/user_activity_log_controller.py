@@ -42,7 +42,7 @@ class UserActivityLogController:
             else:
                 logs = []
 
-            # Добавяме новия запис към списъка
+            # Добавям новия запис към списъка
             logs.append(log_entry)
             # Записваме обратно в JSON файла
             with open(self.filepath, 'w', encoding='utf-8') as f:

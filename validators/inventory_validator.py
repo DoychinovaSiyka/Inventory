@@ -97,7 +97,6 @@ class InventoryValidator:
 
     @staticmethod
     def validate_movements(movements):
-        # Проверка на списък с движения
         if not isinstance(movements, list):
             raise ValueError("Списъкът с движения е в невалиден формат.")
 

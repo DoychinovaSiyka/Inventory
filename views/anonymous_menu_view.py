@@ -16,7 +16,6 @@ class AnonymousMenuView:
         self.system_info_view = SystemInfoView()
 
 
-    # Създавам на менюто
     def _build_menu(self):
         """ Изгражда менюто за анонимен потребител. """
         return Menu("Меню за анонимен потребител", [
@@ -27,7 +26,6 @@ class AnonymousMenuView:
 
     def show_menu(self, user=None):
         while True:
-            # Превръщаме го в динамично меню, за да е в тон с професионалния стил на останалите
             menu = self._build_menu()
             choice = menu.show()
             result = menu.execute(choice, user)
@@ -44,5 +42,4 @@ class AnonymousMenuView:
         self.category_view.show_menu(user)
 
     def show_system_info(self, _):
-        # Подавам None или празния аргумент, тъй като SystemInfo обикновено не изисква потребител
         self.system_info_view.show_menu()

@@ -106,7 +106,6 @@ class ReportsView:
     def _input_valid_date(self):
         while True:
             value = input("Въведете дата (ГГГГ-ММ-ДД, Enter = отказ): ").strip()
-
             if not value:
                 print("[!] Операцията е отказана.\n")
                 return None
@@ -316,7 +315,6 @@ class ReportsView:
             return
 
         data = self.controller.product_lifecycle(name)
-
         if not data or "product" not in data:
             print("\n[!] Продуктът не е намерен или няма движения.\n")
             return
@@ -338,5 +336,4 @@ class ReportsView:
         print(f"[=] Очаквана наличност:      {expected_stock:.2f} {unit}")
         print(f"[=] Текуща наличност:        {current_stock:.2f} {unit}")
         print(f"Оборот от този продукт:      {self._format_lv(revenue)}\n")
-
         input("Натиснете Enter за връщане назад...")

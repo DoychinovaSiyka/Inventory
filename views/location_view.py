@@ -23,11 +23,9 @@ class LocationView:
         is_admin = user.role == "Admin"
         items = [MenuItem("1", "Списък с локации", self.show_all)]
         if is_admin:
-            items.extend([
-                MenuItem("2", "Добавяне на нова локация", self.add_location),
-                MenuItem("3", "Редактиране на съществуваща локация", self.edit_location),
-                MenuItem("4", "Изтриване на локация", self.delete_location)
-            ])
+            items.extend([MenuItem("2", "Добавяне на нова локация", self.add_location),
+                          MenuItem("3", "Редактиране на съществуваща локация", self.edit_location),
+                          MenuItem("4", "Изтриване на локация", self.delete_location)])
         items.append(MenuItem("0", "Назад към главното меню", lambda u: "break"))
         return Menu("Управление на складовата мрежа", items)
 

@@ -13,7 +13,7 @@ from views.location_view import LocationView
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-        # view обекти - инициализираме ги веднъж, за да пазят състоянието си
+        # view обекти - инициализирам ги веднъж, за да пазят състоянието си
         self.product_view = ProductView(controllers["product"], controllers["category"], controllers["location"],
                                         controllers["activity_log"])
 
@@ -28,7 +28,7 @@ class AdminMenuView:
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
         self.location_view = LocationView(controllers["location"])
-        self.graph_view = controllers.get("logistic")  # логистичен модул
+        self.graph_view = controllers.get("logistic")
 
     def _build_menu(self):
         """ Изгражда пълното администраторско меню. """
@@ -46,13 +46,11 @@ class AdminMenuView:
             MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user):
-        # Проверка за достъп - само администратор може да продължи
         if user.role.lower() != "admin":
             print("[!] Достъпът е отказан. Само администратор има достъп до това меню.")
             return
 
         while True:
-            # Превръщаме менюто в динамично за максимална сигурност и актуалност
             current_menu = self._build_menu()
             choice = current_menu.show()
             result = current_menu.execute(choice, user)

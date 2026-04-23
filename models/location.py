@@ -9,7 +9,6 @@ class Location:
                  capacity: int = 0, created: Optional[str] = None,
                  modified: Optional[str] = None):
 
-        # ID-то може да е число или текст, но го пазя като стринг, за да е еднакво навсякъде
         self.location_id = str(location_id) if location_id is not None else None
 
         # Ако от JSON дойде None, го обръщам в празен стринг, за да не се чупят принтове и UI

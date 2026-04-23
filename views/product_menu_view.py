@@ -19,33 +19,31 @@ class ProductView:
         self.location_controller = location_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
-        # self.menu вече не се инициира тук, за да се гарантира актуалност спрямо ролята
+
 
     @staticmethod
     def format_lv(value):
         return f"{value:.2f} лв."
 
     def _build_menu(self):
-        return Menu("МЕНЮ ПРОДУКТИ", [
-            MenuItem("1", "Създаване на продукт", self.create_product),
-            MenuItem("2", "Премахване на продукт", self.remove_product),
-            MenuItem("3", "Редактиране на продукт", self.edit_product),
-            MenuItem("4", "Покажи всички продукти",
-                     self.show_all_protected if self._is_operator() else self.show_all),
-            MenuItem("5", "Търсене", self.search),
-            MenuItem("6", "Сортиране на продукти",
-                     self.sort_menu_protected if self._is_operator() else self.sort_menu),
-            MenuItem("7", "Средна цена", self.average_price),
-            MenuItem("8", "Филтриране по категория", self.filter_by_category),
-            MenuItem("9", "Продукти с ниска наличност", self.low_stock),
-            MenuItem("10", "Най-скъп продукт", self.most_expensive),
-            MenuItem("11", "Най-евтин продукт", self.cheapest),
-            MenuItem("12", "Обща стойност на склада", self.total_value),
-            MenuItem("13", "Групиране по категории", self.group_by_category),
-            MenuItem("14", "Разширено търсене", self.advanced_search),
-            MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("МЕНЮ ПРОДУКТИ", [MenuItem("1", "Създаване на продукт", self.create_product),
+                                      MenuItem("2", "Премахване на продукт", self.remove_product),
+                                      MenuItem("3", "Редактиране на продукт", self.edit_product),
+                                      MenuItem("4", "Покажи всички продукти",
+                                                 self.show_all_protected if self._is_operator() else self.show_all),
+                                      MenuItem("5", "Търсене", self.search),
+                                      MenuItem("6", "Сортиране на продукти",
+                                                 self.sort_menu_protected if self._is_operator() else self.sort_menu),
+                                      MenuItem("7", "Средна цена", self.average_price),
+                                      MenuItem("8", "Филтриране по категория", self.filter_by_category),
+                                      MenuItem("9", "Продукти с ниска наличност", self.low_stock),
+                                      MenuItem("10", "Най-скъп продукт", self.most_expensive),
+                                      MenuItem("11", "Най-евтин продукт", self.cheapest),
+                                      MenuItem("12", "Обща стойност на склада", self.total_value),
+                                      MenuItem("13", "Групиране по категории", self.group_by_category),
+                                      MenuItem("14", "Разширено търсене", self.advanced_search),
+                                      MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
+                                      MenuItem("0", "Назад", lambda u: "break")])
 
     @staticmethod
     def _is_operator():
@@ -85,7 +83,7 @@ class ProductView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        # Цена – задължително
+
         while True:
             price_raw = input("Цена: ").strip()
             try:
@@ -185,7 +183,6 @@ class ProductView:
             product = self.product_controller.get_by_id(pid)
             if product:
                 break
-
             print("Няма такъв продукт.")
             print("Моля, опитайте отново.\n")
 
@@ -193,15 +190,14 @@ class ProductView:
         if confirm != "y":
             print("Операцията е отказана.")
             return
-
         self.product_controller.delete_by_id(product.product_id, user.user_id)
         print("Продуктът е премахнат.")
+
 
     def edit_product(self, user):
         """ Редактира съществуващ продукт: позволява промяна на име, описание, цена, количество, мерна единица,
         категория и локация. Валидира входа и обновява продукта в контролера."""
         print("\nРедактиране на продукт")
-        # цикъл докато не въведем валидно ID или Enter за отказ
         while True:
             pid = input("ID на продукт (Enter за отказ): ").strip()
             if pid == "":
@@ -331,7 +327,6 @@ class ProductView:
         if not categories:
             print("Няма категории.")
             return
-
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")

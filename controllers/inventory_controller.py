@@ -19,10 +19,9 @@ class InventoryController:
             self.data = {"products": {}}
             return
 
-        # Гарантирам, че ключът "products" съществува
+        # Ключът "products" съществува
         if "products" not in data:
             data["products"] = {}
-
         self.data = data
 
     def _save(self):
@@ -150,7 +149,7 @@ class InventoryController:
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 
-        #  Един запис
+
         self._save()
 
 

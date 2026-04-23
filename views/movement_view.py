@@ -397,7 +397,7 @@ class MovementView:
             print("Невалидна целева локация.")
             return
 
-        # количество – цикъл докато е валидно
+
         while True:
             qty_raw = input("Количество за преместване: ").strip()
             try:

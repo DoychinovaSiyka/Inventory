@@ -82,7 +82,7 @@ def group_turnover_by_day(invoices: List[Invoice]):
 
 
 def group_top_products(invoices: List[Invoice]):
-    """Правя статистика кои продукти се продават най-много."""
+    """Статистика кои продукти се продават най-много."""
     stats = {}
 
     for inv in invoices:

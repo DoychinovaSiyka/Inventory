@@ -110,5 +110,6 @@ class LocationController:
 
         return True
 
+
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

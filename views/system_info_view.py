@@ -3,10 +3,8 @@ class SystemInfoView:
     @staticmethod
     def show_menu():
         print("\n Информация за системата (WIMS) \n ")
-
         print("Име на проекта: ")
         print("  Warehouse Inventory Management System (WIMS)\n ")
-
         print("Версия: ")
         print("  1.0 – Финална учебна версия\n ")
 
@@ -38,5 +36,4 @@ class SystemInfoView:
 
         print("Допълнителни възможности: ")
         print("  Поддръжка на бъдещи модули – баркод скенери, ERP интеграции, оптимизация на маршрути\n ")
-
         print("   Край на системната информация   \n ")

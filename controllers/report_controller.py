@@ -13,7 +13,6 @@ class ReportController:
     """Контролер за справки. Не пази състояние и не променя модели."""
     def __init__(self, repo, product_controller, movement_controller,
                  invoice_controller, location_controller, inventory_controller):
-
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -229,9 +228,10 @@ class ReportController:
             pid, unit = product.product_id, product.unit
 
             current_stock = self.inventory_controller.get_total_stock(pid)
-
-            sold = sum(m.quantity for m in self.movement_controller.movements
-                       if m.product_id == pid and m.movement_type == MovementType.OUT)
+            sold = 0
+            for m in self.movement_controller.movements:
+                if m.product_id == pid and m.movement_type == MovementType.OUT:
+                    sold += m.quantity
 
             locations = products_data.get(pid, {}).get("locations", {})
             top3 = sorted(locations.items(), key=lambda x: x[1], reverse=True)[:3]
@@ -253,7 +253,6 @@ class ReportController:
             if p.name and name in p.name.lower():
                 product = p
                 break
-
         if not product:
             summary = {"found": False}
             self._save_report("product_lifecycle", {"name": name}, summary, [])
@@ -271,7 +270,6 @@ class ReportController:
             if m.movement_type == MovementType.IN:
                 if m.supplier_id and m.user_id != "system" and "начално" not in m.description.lower():
                     total_in += m.quantity
-
             elif m.movement_type == MovementType.OUT:
                 total_out += m.quantity
 

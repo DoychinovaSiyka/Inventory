@@ -8,7 +8,7 @@ class UserView:
     def __init__(self, controller: UserController):
         self.controller = controller
 
-    # Основно меню
+
     def show_menu(self, user: User):
         if user.role != "Admin":
             print("\n[Достъп отказан] Само администратор може да управлява потребители.")

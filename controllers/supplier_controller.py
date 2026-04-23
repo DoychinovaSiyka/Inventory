@@ -11,7 +11,7 @@ class SupplierController:
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
-    # Помощни методи, които използвам вътре в класа
+
     @staticmethod
     def _now() -> str:
         """Връща текущата дата и час в стандартен формат."""
@@ -20,7 +20,6 @@ class SupplierController:
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
         """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator."""
-
         SupplierValidator.validate_all(name, contact, address)
         now = self._now()
         supplier = Supplier(supplier_id=str(uuid.uuid4()), name=name.strip(),
@@ -38,13 +37,15 @@ class SupplierController:
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         """Намира доставчик по ID."""
         sid = str(supplier_id)
-        return next((s for s in self.suppliers if s.supplier_id == sid), None)
+        for supplier in self.suppliers:
+            if supplier.supplier_id == sid:
+                return supplier
+        return None
 
 
     def update(self, supplier_id: str, name: Optional[str] = None, contact: Optional[str] = None,
                address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
-
         supplier = SupplierValidator.validate_exists(supplier_id, self)
         if name is not None:
             SupplierValidator.validate_name(name)

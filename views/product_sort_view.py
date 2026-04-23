@@ -9,7 +9,6 @@ class ProductSortView:
 
 
     def show_menu(self, _=None):
-        """ Генерира менюто локално при извикване. """
         menu = self._build_menu()
         while True:
             choice = menu.show()
@@ -17,7 +16,7 @@ class ProductSortView:
             if result == "break":
                 break
 
-    # Меню за избор на метод за сортиране
+
     def _build_menu(self):
         """ Дефинира опциите за сортиране. """
         return Menu("Сортиране на продукти", [

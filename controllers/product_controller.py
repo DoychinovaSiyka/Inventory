@@ -24,9 +24,7 @@ class ProductController:
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log = activity_log_controller
-
-        # държим всички продукти в паметта
-        self.products: List[Product] = []
+        self.products: List[Product] = [] # държим всички продукти в паметта
         self._load_products()
 
         # контролерите се задават отвън, когато са налични
@@ -117,7 +115,7 @@ class ProductController:
         product = ProductValidator.validate_product_exists(product_id, self)
         has_changes = False
 
-        # Име
+
         if new_name is not None:
             new_name_clean = new_name.strip()
             if new_name_clean != product.name:
@@ -176,7 +174,6 @@ class ProductController:
             ProductValidator.validate_supplier_exists(new_supplier_id, self.supplier_controller)
             product.supplier_id = new_supplier_id
             has_changes = True
-
 
         if new_tags is not None:
             if not isinstance(new_tags, list):

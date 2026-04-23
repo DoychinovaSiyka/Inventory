@@ -140,7 +140,7 @@ class ProductValidator:
             raise ValueError(f"{field_name} не може да е отрицателно.")
         return i
 
-    # Проверки за съществуване
+
     @staticmethod
     def validate_product_exists(product_id, product_controller):  # продуктът трябва да съществува
         product = product_controller.get_by_id(product_id)
