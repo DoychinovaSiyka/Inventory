@@ -68,7 +68,13 @@ class InvoiceController:
         return self.invoices
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        return next((inv for inv in self.invoices if inv.invoice_id == invoice_id.strip()), None)
+        target_id = invoice_id.strip()
+
+        for inv in self.invoices:
+            if inv.invoice_id == target_id:
+                return inv
+
+        return None
 
     def update_customer(self, invoice_id: str, new_customer: str, user_id: str) -> bool:
         inv = self.get_by_id(invoice_id)

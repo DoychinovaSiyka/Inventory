@@ -34,7 +34,6 @@ def get_most_expensive_product(products: List[Product]) -> Optional[Product]:
 
 
 def get_cheapest_product(products: List[Product]) -> Optional[Product]:
-    """Намирам най-евтиния продукт. При празен списък – None."""
     if not products:
         return None
     return min(products, key=lambda p: p.price)

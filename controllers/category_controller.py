@@ -76,7 +76,6 @@ class CategoryController:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_description(new_description)
 
-        # Ако описанието е същото – пропускам
         if category.description == new_description:
             return True
 
@@ -129,7 +128,10 @@ class CategoryController:
         return self.categories
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
-        return next((c for c in self.categories if c.category_id == category_id), None)
+        for c in self.categories:
+            if c.category_id == category_id:
+                return c
+        return None
 
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]

@@ -65,7 +65,7 @@ class LocationController:
                 return loc
         return None
 
-    # UPDATE
+
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
 
@@ -92,7 +92,7 @@ class LocationController:
 
         return True
 
-    # DELETE
+
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:

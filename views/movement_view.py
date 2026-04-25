@@ -277,7 +277,6 @@ class MovementView:
 
             while True:
                 raw = input("Номер или ID (Enter = отказ): ").strip()
-
                 if raw == "":
                     print("Грешка: Доставката изисква избран доставчик.")
                     continue

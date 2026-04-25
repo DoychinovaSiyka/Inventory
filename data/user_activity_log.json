@@ -1251,5 +1251,47 @@
         "action": "LOGIN",
         "details": "Потребител operator влезе.",
         "timestamp": "2026-04-23 00:44:28"
+    },
+    {
+        "log_id": "5e3d0b84-d3b0-4b6e-a689-62a6ab3acbe2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-23 21:27:27"
+    },
+    {
+        "log_id": "62637718-02f3-4544-8da0-dbeaa5b38f6b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: ябълки",
+        "timestamp": "2026-04-23 21:28:03"
+    },
+    {
+        "log_id": "9bc777c8-f7a8-44d1-981c-c9e2a284a821",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: proba",
+        "timestamp": "2026-04-23 21:28:44"
+    },
+    {
+        "log_id": "dbee22bc-bb3a-42bb-8834-fa05dbde3a06",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 884643bf-46cd-4258-81c7-20074b2eb29f",
+        "timestamp": "2026-04-23 21:29:00"
+    },
+    {
+        "log_id": "0c34dafd-dd12-4521-b296-f5c9570e68c5",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-25 08:51:01"
+    },
+    {
+        "log_id": "8b521fa4-b069-427b-b8fd-ce3de36ffa25",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-25 08:57:18"
     }
 ]

@@ -37,5 +37,18 @@
         "date": "2026-04-21 20:19:09",
         "created": "2026-04-21 20:19:09",
         "modified": "2026-04-21 20:19:09"
+    },
+    {
+        "invoice_id": "8fea96ef-9eea-474b-86cd-c31e113cd9e2",
+        "movement_id": "a27eac95-30fb-47f1-97d1-37bb312f8b48",
+        "product": "ябълки",
+        "quantity": 3.0,
+        "unit": "кг.",
+        "unit_price": 8.0,
+        "total_price": 24.0,
+        "customer": "Иван Иванов",
+        "date": "2026-04-23 21:34:07",
+        "created": "2026-04-23 21:34:07",
+        "modified": "2026-04-23 21:34:07"
     }
 ]
