@@ -8,7 +8,7 @@ from filters.movement_filters import filter_by_description, filter_advanced
 
 
 class MovementController:
-    """Контролер за движенията. Оправен да не презаписва излишно."""
+    """Контролер за движенията."""
     def __init__(self, repo: JSONRepository, product_controller, user_controller,
                  location_controller, invoice_controller, activity_log_controller=None,
                  inventory_controller=None, supplier_controller=None):
@@ -50,7 +50,6 @@ class MovementController:
 
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
-
         try:
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
             # inventory се пресмята от movements.

@@ -19,6 +19,8 @@ class MainMenuView:
         self.user_controller = controllers["user"]
         self.report_controller = controllers["report"]
         self.graph_controller = controllers["graph"]
+        self.location_controller = controllers["location"]
+        self.activity_log_controller = controllers["activity_log"]
 
 
     def _build_menu(self):
@@ -35,6 +37,7 @@ class MainMenuView:
             MenuItem("0", "Изход", lambda u: "break")
         ])
 
+
     def show_menu(self, user):
         while True:
             # Създаваме обекта на менюто преди да го покажем
@@ -43,6 +46,7 @@ class MainMenuView:
             result = current_menu.execute(choice, user)
             if result == "break":
                 break
+
 
     # Действия - методи, които отварят съответните под-изгледи (Views)
     def open_products(self, user):
