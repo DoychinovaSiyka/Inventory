@@ -55,8 +55,8 @@ class MainMenuView:
         SupplierView(self.supplier_controller).show_menu(user)
 
     def open_movements(self, _):
-        # Подаваме нужните контролери на MovementView
-        MovementView(self.product_controller, self.movement_controller, self.user_controller).show_menu()
+        MovementView(self.product_controller, self.movement_controller, self.user_controller,
+                     self.location_controller, self.supplier_controller).show_menu()
 
     def open_invoices(self, user):
         InvoiceView(self.invoice_controller).show_menu(user)
