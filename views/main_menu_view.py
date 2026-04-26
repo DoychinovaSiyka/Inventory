@@ -46,7 +46,8 @@ class MainMenuView:
 
     # Действия - методи, които отварят съответните под-изгледи (Views)
     def open_products(self, user):
-        ProductView(self.product_controller, self.category_controller).show_menu(user)
+        ProductView(self.product_controller, self.category_controller, self.location_controller,
+                    self.activity_log_controller).show_menu(user)
 
     def open_categories(self, user):
         CategoryView(self.category_controller).show_menu(user)
