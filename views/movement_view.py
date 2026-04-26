@@ -207,7 +207,7 @@ class MovementView:
                 location = self.location_controller.get_by_id(chosen)
 
         else:
-            # IN – истинска доставка - позволяваме ВСЕКИ склад
+            # IN – доставка - позволявам ВСЕКИ склад
             all_locs = self.location_controller.get_all()
             if not all_locs:
                 print("Грешка: Няма дефинирани локации.")

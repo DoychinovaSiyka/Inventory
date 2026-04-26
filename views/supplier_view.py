@@ -93,7 +93,7 @@ class SupplierView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # изтриване на доставчик - admin only
+
     def delete_supplier(self, _):
         print("\n--- Изтриване на доставчик ---")
         while True:

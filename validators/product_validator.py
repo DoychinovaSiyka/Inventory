@@ -129,7 +129,7 @@ class ProductValidator:
         return f
 
     @staticmethod
-    def parse_int(value, field_name="стойност"):  # цяло число, не отрицателно
+    def parse_int(value, field_name="стойност"):
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително.")
         try:

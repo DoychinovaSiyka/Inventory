@@ -109,7 +109,7 @@ class CategoryController:
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
         CategoryValidator.validate_exists(category_id, self)
 
-        # Проверявам дали категорията е празна - ако има продукт контролер
+        # Дали категорията е празна - ако има продукт контролер
         products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category_id, self.categories, products)
 

@@ -11,8 +11,6 @@ class ReportsView:
     def __init__(self, controller: ReportController):
         # Запазваме контролера за справки
         self.controller = controller
-
-        # Контролерите са налични в ReportController
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
         self.movement_controller = controller.movement_controller

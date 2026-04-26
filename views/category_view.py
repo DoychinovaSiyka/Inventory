@@ -147,7 +147,7 @@ class CategoryView:
             if choice == "":
                 return None
 
-            # Търсене по точно ID
+            # Търсене по ID
             for cat in categories:
                 if choice.lower() == cat.category_id.lower():
                     return cat

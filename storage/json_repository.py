@@ -30,7 +30,7 @@ class JSONRepository(Repository):
 
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
-                # Четем съдържанието и проверяваме дали не е напълно празен файл
+                # Четем съдържанието и проверявам дали не е напълно празен файл
                 content = f.read().strip()
                 if not content:
                     return {} if self.filepath.name == "inventory.json" else []

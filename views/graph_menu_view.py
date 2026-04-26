@@ -114,7 +114,7 @@ class GraphView:
         print(f"  Продукт:    {product_name}")
         print(f"  Източник:   {source_name} ({best_source})")
         print(f"  Разстояние: {shortest_distance} км")
-        print(f"  Маршрут:    {' ➔ '.join(path)}")
+        print(f"  Маршрут:    {' -> '.join(path)}")
         print("═" * 45)
 
         input("\nНатиснете Enter за връщане към менюто...")

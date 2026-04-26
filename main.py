@@ -35,7 +35,7 @@ class InventoryApplication:
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-    #   ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
+    # ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
     def _init_controllers(self):
         # Логове на потребители
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
