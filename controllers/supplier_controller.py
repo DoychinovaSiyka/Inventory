@@ -26,6 +26,7 @@ class SupplierController:
         """Връща всички доставчици."""
         return self.suppliers
 
+
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         """Намира доставчик по ID."""
         sid = str(supplier_id)

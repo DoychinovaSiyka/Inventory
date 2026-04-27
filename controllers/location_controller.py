@@ -1,5 +1,4 @@
 from typing import Optional, List
-from datetime import datetime
 from models.location import Location
 from storage.json_repository import JSONRepository
 from validators.location_validator import LocationValidator
@@ -22,20 +21,6 @@ class LocationController:
         if self.activity_log:
             self.activity_log.add_log("system", action, message)
 
-    def _generate_id(self) -> str:
-        """Генерира W1, W2, W3..."""
-        if not self.locations:
-            return "W1"
-
-        numeric_ids = []
-        for loc in self.locations:
-            num = str(loc.location_id).replace("W", "")
-            if num.isdigit():
-                numeric_ids.append(int(num))
-
-        next_id = max(numeric_ids) + 1 if numeric_ids else 1
-        return f"W{next_id}"
-
     # CREATE
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
@@ -44,9 +29,8 @@ class LocationController:
 
         LocationValidator.validate_unique_name(name, self.locations)
 
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity,
-                            created=now, modified=now)
+        # Моделът сам генерира ID и дати
+        location = Location(location_id=None, name=name, zone=zone, capacity=capacity)
 
         self.locations.append(location)
         self.save_changes()
@@ -65,7 +49,7 @@ class LocationController:
                 return loc
         return None
 
-
+    # UPDATE
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
 
@@ -81,7 +65,6 @@ class LocationController:
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
-
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
@@ -92,13 +75,13 @@ class LocationController:
 
         return True
 
-
+    # DELETE
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Дали в склада има наличности
+        # Проверка за наличности
         if self.inventory_controller:
             stock = self.inventory_controller.get_stock_by_location(location_id)
             if stock and sum(item.quantity for item in stock) > 0:
@@ -109,7 +92,6 @@ class LocationController:
         self._log("DELETE_LOCATION", f"Изтрита локация {location_id}")
 
         return True
-
 
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

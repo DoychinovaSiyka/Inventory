@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import Optional, Union
 
@@ -9,19 +10,31 @@ class Location:
                  capacity: int = 0, created: Optional[str] = None,
                  modified: Optional[str] = None):
 
-        self.location_id = str(location_id) if location_id is not None else None
+        # Ако няма подадено ID – генерирам ново
+        self.location_id = str(location_id) if location_id else Location.generate_id()
 
-        # Ако от JSON дойде None, го обръщам в празен стринг, за да не се чупят принтове и UI
+        # Ако от JSON дойде None, го обръщам в празен стринг
         self.name = name if name is not None else ""
         self.zone = zone if zone is not None else ""
         self.capacity = capacity
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # Дати
+        now = Location.now()
         self.created = created or now
         self.modified = modified or now
 
+    # Генерираме ново ID за локация (W1, W2, W3...)
+    @staticmethod
+    def generate_id() -> str:
+        return f"W{uuid.uuid4().int % 1000000}"
+
+    # Текущ момент
+    @staticmethod
+    def now() -> str:
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     def update_modified(self):
         """Обновявам датата при промяна на локацията."""
-        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.modified = Location.now()
 
     def to_dict(self):
         """Правя обекта на речник, за да може да се запише в JSON."""

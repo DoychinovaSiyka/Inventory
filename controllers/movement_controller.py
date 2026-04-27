@@ -22,23 +22,14 @@ class MovementController:
 
         self.movements: List[Movement] = []
         self._load_movements()
-        # movements.json се зарежда директно.
-        # Ако movements.json е празен или изтрит → self.movements = []
-        # Движенията са "source of truth" - не се възстановяват автоматично.
 
-        # Инвентарът ще се преизчислява само в паметта.
+        # Инвентарът се пресмята само в паметта
         self._sync_inventory_only_in_memory()
-        # inventory.json се ВЪЗСТАНОВЯВА автоматично.
-        # Инвентарът се пресмята от movements.json при всяко стартиране.
-        # Ако inventory.json липсва - няма проблем - пресмята се наново.
 
 
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
         self.movements = [Movement.from_dict(m) for m in raw]
-        # НЯМА възстановяване на movements.
-        # Ако файлът липсва - raw = [] - movements = []
-        # Историята НЕ може да се възстанови от инвентара.
 
 
     def _sync_inventory_only_in_memory(self) -> None:
@@ -48,11 +39,9 @@ class MovementController:
 
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
+
         try:
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
-            # inventory се пресмята от movements.
-            # Това е мястото, което ВЪЗСТАНОВЯВА инвентара.
-            # inventory.json НЕ се чете - винаги се пресмята от нулата.
         except Exception:
             pass
 
@@ -63,11 +52,8 @@ class MovementController:
 
 
     def _inventory_safe_movements(self) -> List[Movement]:
-        safe = []
-        for m in self.movements:
-            if self.product_controller.get_by_id(m.product_id):
-                safe.append(m)
-        return safe
+        return [m for m in self.movements
+                if self.product_controller.get_by_id(m.product_id)]
 
 
     def get_by_id(self, movement_id: str) -> Optional[Movement]:
@@ -92,12 +78,11 @@ class MovementController:
         self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
         self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)
 
-
-        movement = Movement(movement_id = None, product_id=product_id,
-                            product_name=product.name, user_id=user_id, location_id=None,
-                            movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
-                            description=description, price=None, supplier_id=None, customer=None,
-                            date=now, created=now, modified=now, from_location_id=from_loc, to_location_id=to_loc)
+        # Моделът Movement сам генерира ID и дати
+        movement = Movement(movement_id=None, product_id=product_id, product_name=product.name,
+                            user_id=user_id, location_id=None, movement_type=MovementType.MOVE,
+                            quantity=qty, unit=product.unit, description=description, price=None,
+                            supplier_id=None, customer=None, from_location_id=from_loc, to_location_id=to_loc)
 
         self.movements.append(movement)
         self.save_changes()
@@ -105,43 +90,36 @@ class MovementController:
         return movement
 
 
-    def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str, quantity: str,
-            description: str, price: str, customer: Optional[str] = None, supplier_id: Optional[str] = None,
-            from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
+    def add(self, product_data: dict, user_id: str) -> Product:
+        ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
+        ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
+        ProductValidator.validate_name(product_data['name'])
 
-        m_type_str = MovementValidator.normalize_movement_type(movement_type)
-        MovementValidator.validate_movement_type(m_type_str)
-        qty = MovementValidator.parse_quantity(quantity)
-        prc = None if m_type_str == "MOVE" else MovementValidator.parse_price(price)
+        now = Product.now()
+        categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
-        product = self.product_controller.get_by_id(product_id)
+        product = Product(product_id=self._generate_id(), name=product_data['name'],
+                          categories=categories, unit=product_data['unit'],
+                          description=product_data['description'], price=float(product_data['price']),
+                          supplier_id=product_data.get('supplier_id'), tags=product_data.get('tags', []),
+                          location_id=product_data.get('location_id'), created=now, modified=now)
 
-        #  Актуализиране на инвентара (в RAM)
-        if m_type_str == "MOVE":
-            self.inventory_controller.decrease_stock(product_id, from_location_id, qty, product.unit)
-            self.inventory_controller.increase_stock(product_id, product.name, to_location_id, qty, product.unit)
-            location_id = None
-        else:
-            if m_type_str == "IN":
-                self.inventory_controller.increase_stock(product_id, product.name, location_id, qty, product.unit)
-            elif m_type_str == "OUT":
-                self.inventory_controller.decrease_stock(product_id, location_id, qty, product.unit)
-
-        now = self._now()
-        movement = Movement(movement_id= None, product_id=product_id, product_name=product.name,
-                            user_id=user_id, location_id=location_id, movement_type=MovementType[m_type_str],
-                            quantity=qty, unit=product.unit, description=description, price=prc,
-                            supplier_id=supplier_id, customer=customer, date=now, created=now, modified=now)
-
-        self.movements.append(movement)
-
-        #  Записваме movements.json, но НЕ го възстановяваме ако липсва.
+        self.products.append(product)
         self.save_changes()
+        self._log(user_id, "ADD_PRODUCT", f"Добавен продукт: {product.name}")
 
-        if MovementType[m_type_str] == MovementType.OUT:
-            self.invoice_controller.create_from_movement(movement, product, customer, user_id)
+        quantity = product_data.get("quantity")
+        location_id = product_data.get("location_id")
 
-        return movement
+        if quantity and location_id and self.movement_controller:
+            qty = float(quantity)
+            if qty > 0:
+                self.movement_controller.add(product_id=product.product_id, user_id=user_id,
+                                             location_id=location_id, movement_type="IN",
+                                             quantity=str(qty), description="Начално зареждане при създаване на продукт",
+                                             price=str(product.price), supplier_id=product.supplier_id or "system")
+
+        return product
 
 
     def search_by_description(self, keyword: str) -> List[Movement]:
@@ -159,8 +137,7 @@ class MovementController:
         """Ръчно преизчисляване на всичко."""
         if not self.inventory_controller:
             return
+
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
         self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
-        # ръчно възстановяване на инвентара.
-        # inventory се пресмята от movements.

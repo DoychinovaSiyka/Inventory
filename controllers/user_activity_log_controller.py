@@ -12,6 +12,7 @@ class UserActivityLogController:
         # Репозитори за четене на JSON съдържанието
         self.repo = JSONRepository(filepath)
 
+
     def _generate_log_id(self):
         # Генерира уникален идентификатор за всеки лог запис
         return str(uuid.uuid4())

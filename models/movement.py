@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from validators.movement_validator import MovementValidator
-from models.movement_type import MovementType   # ако имаш отделен enum
+from models.movement_type import MovementType
 
 
 class Movement:
@@ -15,7 +15,6 @@ class Movement:
 
         # Ако няма подадено ID – генерирам ново
         self.movement_id = str(movement_id) if movement_id else Movement.generate_id()
-
         # Основни данни
         self.product_id = str(product_id)
         self.product_name = product_name
@@ -70,18 +69,16 @@ class Movement:
         if not d:
             return None
 
-        # Пробвам да възстановя типа движение (Enum)
-        mt_raw = data.get("movement_type")
+        # Възстановяване на movement_type
+        mt_raw = d.get("movement_type")
         mt = MovementType.IN  # по подразбиране
 
         if mt_raw:
             try:
-                # Пробвам да го конвертирам като стойност на Enum
-                mt = MovementType(mt_raw)
+                mt = MovementType(mt_raw)  # пробвам като стойност
             except Exception:
                 try:
-                    # Пробвам като име на Enum (IN, OUT, MOVE)
-                    mt = MovementType[mt_raw]
+                    mt = MovementType[mt_raw]  # пробвам като име
                 except Exception:
                     mt = MovementType.IN
 
@@ -96,5 +93,5 @@ class Movement:
 
     def __str__(self):
         m_type = self.movement_type.value if isinstance(self.movement_type, MovementType) else self.movement_type
-        return (f"Движение {self.movement_id} | {m_type} | {self.quantity} {self.unit} | Продукт: {self.product_name} | " 
-                f"Склад ID: {self.location_id}")
+        return (f"Движение {self.movement_id} | {m_type} | {self.quantity} {self.unit} | "
+                f"Продукт: {self.product_name} | Склад ID: {self.location_id}")

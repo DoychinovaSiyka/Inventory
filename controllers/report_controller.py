@@ -38,6 +38,7 @@ class ReportController:
         return {"total_records": len(data), "total_quantity": round(total_qty, 2),
                 "total_value": round(total_value, 2)}
 
+
     # Справка - всички движения
     def report_movements(self):
         data = []

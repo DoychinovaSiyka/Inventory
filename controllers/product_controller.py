@@ -61,6 +61,19 @@ class ProductController:
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
+    def _generate_id(self) -> str:
+        """Генерира P1, P2, P3..."""
+        if not self.products:
+            return "P1"
+        numeric_ids = []
+        for p in self.products:
+            pid = str(p.product_id).replace("P", "")
+            if pid.isdigit():
+                numeric_ids.append(int(pid))
+        next_id = max(numeric_ids) + 1 if numeric_ids else 1
+        return f"P{next_id}"
+
+
     def add(self, product_data: dict, user_id: str) -> Product:
         """ Добавяме нов продукт. Началното количество се прави чрез IN движение. """
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)

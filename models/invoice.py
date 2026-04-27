@@ -12,7 +12,6 @@ class Invoice:
 
         # Свързано движение (OUT)
         self.movement_id = str(movement_id) if movement_id else None
-
         # Данни за продажбата
         self.product = product
         self.customer = customer
@@ -20,7 +19,6 @@ class Invoice:
         self.unit = unit
         self.unit_price = unit_price
         self.total_price = total_price
-
         # Дати
         now = Invoice.now()
         self.date = date or now

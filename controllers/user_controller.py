@@ -42,6 +42,7 @@ class UserController:
             if not admin_exists:
                 self._create_default_admin()
 
+
             if not operator_exists:
                 self._create_default_operator()
 

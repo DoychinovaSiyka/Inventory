@@ -14,7 +14,6 @@ class Supplier:
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
-
         # Дати за създаване и промяна
         now = Supplier.now()
         self.created = created or now

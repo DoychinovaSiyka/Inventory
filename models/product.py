@@ -90,5 +90,6 @@ class Product:
                        supplier_id=data.get("supplier_id"), tags=data.get("tags", []),
                        location_id=data.get("location_id"), created=data.get("created"), modified=data.get("modified"))
 
+
     def __str__(self):
         return f"{self.name} | {self.price} лв. | {self.unit}"

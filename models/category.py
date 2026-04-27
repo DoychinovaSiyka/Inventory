@@ -1,24 +1,36 @@
+import uuid
 from datetime import datetime
-from validators.category_validator import CategoryValidator
 
 
 class Category:
-    def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
-        # ID-то и датите идват от контролера. Моделът ги приема.
-        self.category_id = str(category_id) if category_id else None
+    def __init__(self, category_id, name, description="", parent_id=None,
+                 created=None, modified=None):
+        """Модел за категория. Тук държа само данните и логиката за ID и датите."""
+
+        # Ако няма подадено ID – генерирам ново
+        self.category_id = str(category_id) if category_id else Category.generate_id()
         self.name = name
         self.description = description
-        self.parent_id = str(parent_id) if parent_id else None
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.parent_id = parent_id
+
+        # Дати
+        now = Category.now()
         self.created = created or now
         self.modified = modified or now
 
+    # Генерираме ново ID
+    @staticmethod
+    def generate_id() -> str:
+        return str(uuid.uuid4())
 
-        CategoryValidator.validate_name(self.name)
-        CategoryValidator.validate_description(self.description)
+    # Текущ момент
+    @staticmethod
+    def now() -> str:
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def update_modified(self):
-        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        """Обновявам датата при промяна."""
+        self.modified = Category.now()
 
     def to_dict(self):
         """Превръщам обекта в dict, за да може да се запише в JSON."""
