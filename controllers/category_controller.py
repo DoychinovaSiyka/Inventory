@@ -9,8 +9,9 @@ from analytics.category_analytics import build_category_tree
 
 
 class CategoryController:
-    """Контролерът управлява категориите и координира работата между валидаторите, модела и хранилището.
-    Тук има CRUD и свързващи операции."""
+    """Контролерът управлява категориите и свързва работата между модела, валидаторите и хранилището.
+    Тук се изпълняват основните операции за добавяне, редактиране, изтриване и извличане на категории."""
+
     def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller

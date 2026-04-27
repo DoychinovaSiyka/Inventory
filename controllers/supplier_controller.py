@@ -1,6 +1,4 @@
 from typing import Optional, List
-from datetime import datetime
-import uuid
 from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
@@ -11,20 +9,14 @@ class SupplierController:
         self.repo = repo
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
 
-
-    @staticmethod
-    def _now() -> str:
-        """Връща текущата дата и час в стандартен формат."""
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
-        """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator."""
+        """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
-        now = self._now()
-        supplier = Supplier(supplier_id=str(uuid.uuid4()), name=name.strip(),
-                            contact=contact.strip(), address=address.strip(),
-                            created=now, modified=now)
+
+        # Нов доставчик – моделът сам генерира ID и дати
+        supplier = Supplier(supplier_id=None, name=name.strip(), contact=contact.strip(), address=address.strip())
+
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier
@@ -42,9 +34,9 @@ class SupplierController:
                 return supplier
         return None
 
-
-    def update(self, supplier_id: str, name: Optional[str] = None, contact: Optional[str] = None,
-               address: Optional[str] = None) -> Supplier:
+    # UPDATE
+    def update(self, supplier_id: str, name: Optional[str] = None,
+               contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
         supplier = SupplierValidator.validate_exists(supplier_id, self)
         if name is not None:
@@ -56,13 +48,16 @@ class SupplierController:
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
-        supplier.modified = self._now()
+
+        # Обновявам датата на промяна чрез модела
+        supplier.update_modified()
+
         self.save_changes()
         return supplier
 
-
+    # DELETE
     def remove(self, supplier_id: str) -> bool:
-        """ Изтрива доставчик след проверка за съществуване."""
+        """ Изтрива доставчик след проверка за съществуване. """
         SupplierValidator.validate_exists(supplier_id, self)
         supplier = self.get_by_id(supplier_id)
         self.suppliers.remove(supplier)

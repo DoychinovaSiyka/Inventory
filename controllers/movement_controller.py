@@ -1,6 +1,4 @@
-import uuid
 from typing import Optional, List
-from datetime import datetime
 from models.movement import Movement, MovementType
 from storage.json_repository import JSONRepository
 from validators.movement_validator import MovementValidator
@@ -59,14 +57,10 @@ class MovementController:
             pass
 
 
-    @staticmethod
-    def _now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-
     def save_changes(self) -> None:
         """Записва на диска само при реална промяна."""
         self.repo.save([m.to_dict() for m in self.movements])
+
 
     def _inventory_safe_movements(self) -> List[Movement]:
         safe = []
@@ -98,21 +92,17 @@ class MovementController:
         self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
         self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)
 
-        now = self._now()
 
-        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
+        movement = Movement(movement_id = None, product_id=product_id,
                             product_name=product.name, user_id=user_id, location_id=None,
                             movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
                             description=description, price=None, supplier_id=None, customer=None,
                             date=now, created=now, modified=now, from_location_id=from_loc, to_location_id=to_loc)
 
         self.movements.append(movement)
-
-
         self.save_changes()
 
         return movement
-
 
 
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str, quantity: str,
@@ -138,7 +128,7 @@ class MovementController:
                 self.inventory_controller.decrease_stock(product_id, location_id, qty, product.unit)
 
         now = self._now()
-        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name,
+        movement = Movement(movement_id= None, product_id=product_id, product_name=product.name,
                             user_id=user_id, location_id=location_id, movement_type=MovementType[m_type_str],
                             quantity=qty, unit=product.unit, description=description, price=prc,
                             supplier_id=supplier_id, customer=customer, date=now, created=now, modified=now)

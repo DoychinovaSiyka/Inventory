@@ -1,6 +1,4 @@
-import uuid
 from typing import Optional, List
-from datetime import datetime
 from models.product import Product
 from validators.product_validator import ProductValidator
 from filters.product_filters import (filter_search, filter_by_multiple_category_ids,
@@ -16,7 +14,6 @@ from analytics.product_analytics import (calculate_average_price, calculate_tota
                                          group_products_by_category)
 
 
-
 class ProductController:
     """Контролерът отговаря за работа с продуктите – добавяне, редакция, триене и справки."""
     def __init__(self, repo, category_controller, activity_log_controller=None):
@@ -24,23 +21,13 @@ class ProductController:
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log = activity_log_controller
-        self.products: List[Product] = [] # държим всички продукти в паметта
+        self.products: List[Product] = []  # държим всички продукти в паметта
         self._load_products()
 
         # контролерите се задават отвън, когато са налични
         self.supplier_controller = None
         self.inventory_controller = None
         self.movement_controller = None
-
-    # Генерираме ново ID за продукт
-    @staticmethod
-    def _generate_id() -> str:
-        return str(uuid.uuid4())
-
-    # Връщаме текущия момент като текст
-    @staticmethod
-    def _now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Записваме действие в логовете, ако има лог контролер
     def _log(self, user_id, action, message):
@@ -58,23 +45,29 @@ class ProductController:
         return self.products
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
-        return next((p for p in self.products if str(p.product_id) == str(product_id)), None)
+        product_id = str(product_id)
+        for p in self.products:
+            if str(p.product_id) == product_id:
+                return p
+        return None
 
     def get_by_name(self, name: str) -> Optional[Product]:
         name = name.strip().lower()
-        return next((p for p in self.products if p.name.lower() == name), None)
+        for p in self.products:
+            if p.name.lower() == name:
+                return p
+        return None
 
     def exists_by_name(self, name: str) -> bool:
         return any(p.name.lower() == name.lower() for p in self.products)
 
-
     def add(self, product_data: dict, user_id: str) -> Product:
-        """ Добавяме нов продукт.Началното количество се прави чрез IN движение."""
+        """ Добавяме нов продукт. Началното количество се прави чрез IN движение. """
         ProductValidator.validate_category_exists(product_data['category_ids'], self.category_controller)
         ProductValidator.validate_supplier_exists(product_data.get('supplier_id'), self.supplier_controller)
         ProductValidator.validate_name(product_data['name'])
 
-        now = self._now()
+        now = Product.now()
 
         # Взимаме обектите на категориите
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
@@ -115,7 +108,7 @@ class ProductController:
         product = ProductValidator.validate_product_exists(product_id, self)
         has_changes = False
 
-
+        # Име
         if new_name is not None:
             new_name_clean = new_name.strip()
             if new_name_clean != product.name:
@@ -130,7 +123,7 @@ class ProductController:
                 product.description = ProductValidator.validate_description(new_desc_clean)
                 has_changes = True
 
-
+        # Цена
         new_price_valid = ProductValidator.validate_price(new_price)
         if new_price_valid != product.price:
             product.price = new_price_valid
@@ -149,7 +142,7 @@ class ProductController:
                                              price=str(product.price), supplier_id=product.supplier_id or "system")
                 has_changes = True
 
-        # Мерна единица
+
         if new_unit is not None:
             new_unit_clean = new_unit.strip()
             if new_unit_clean and new_unit_clean != product.unit:
@@ -164,7 +157,7 @@ class ProductController:
                 product.categories = new_categories
                 has_changes = True
 
-
+        # Локация
         if new_location_id is not None and new_location_id != product.location_id:
             product.location_id = new_location_id
             has_changes = True
@@ -175,6 +168,7 @@ class ProductController:
             product.supplier_id = new_supplier_id
             has_changes = True
 
+        # Тагове
         if new_tags is not None:
             if not isinstance(new_tags, list):
                 raise ValueError("Tags трябва да са списък.")
@@ -189,7 +183,6 @@ class ProductController:
             self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name}")
 
         return True
-
 
     # Изтриване на продукт
     def delete_by_id(self, product_id: str, user_id: str) -> bool:
@@ -240,8 +233,9 @@ class ProductController:
     def search_by_supplier(self, supplier_id: str):
         return filter_by_supplier(self.products, supplier_id)
 
-    def search_combined(self, keyword=None, min_price=None, max_price=None, min_quantity=None,
-                        max_quantity=None, category_id=None, supplier_id=None, location_id=None):
+    def search_combined(self, keyword=None, min_price=None, max_price=None,
+                        min_quantity=None, max_quantity=None,
+                        category_id=None, supplier_id=None, location_id=None):
 
         return filter_combined(self.products, self.inventory_controller, keyword=keyword,
                                min_price=min_price, max_price=max_price,

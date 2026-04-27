@@ -1,9 +1,8 @@
-from typing import Optional, List
+from typing import List
 from datetime import datetime
 import uuid
 from models.user import User
 from validators.user_validator import UserValidator
-
 
 
 class UserController:
@@ -12,42 +11,57 @@ class UserController:
     def __init__(self, repo):
         self.repo = repo
         raw_data = self.repo.load()
-        if not raw_data or not isinstance(raw_data, list):
+
+        if raw_data is None or not isinstance(raw_data, list):
             raw_data = []
 
-        # Зареждам потребителите от JSON файла
         self.users: List[User] = []
-        for u in raw_data:
-            if isinstance(u, dict):
-                self.users.append(User.from_dict(u))
 
-        self.logged_user: Optional[User] = None
+        # Зареждане на потребителите от JSON
+        for item in raw_data:
+            if isinstance(item, dict):
+                user = User.from_dict(item)
+                self.users.append(user)
 
-        # Ако няма нито един потребител – създавам админ и оператор
-        if not self.users:
+        self.logged_user = None
+
+        # Проверка за начални потребители
+        if len(self.users) == 0:
             self._create_default_admin()
             self._create_default_operator()
         else:
-            # Ако липсва администратор – добавям един
-            if not any(u.role == "Admin" for u in self.users):
+            admin_exists = False
+            operator_exists = False
+
+            for u in self.users:
+                if u.role == "Admin":
+                    admin_exists = True
+                if u.role == "Operator":
+                    operator_exists = True
+
+            if not admin_exists:
                 self._create_default_admin()
 
-            # Ако липсва оператор – добавям един
-            if not any(u.role == "Operator" for u in self.users):
+            if not operator_exists:
                 self._create_default_operator()
 
-    # Помощни методи, които използвам вътре в класа
     def _get_now(self):
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def _hash_password(self, password: str) -> str:
-        return "".join(str(ord(c)) for c in password)
+        result = ""
+        for c in password:
+            result += str(ord(c))
+        return result
 
     def save_changes(self):
-        self.repo.save([u.to_dict() for u in self.users])
+        data = []
+        for u in self.users:
+            data.append(u.to_dict())
+        self.repo.save(data)
 
     # READ операции
-    def get_by_username(self, username: str) -> Optional[User]:
+    def get_by_username(self, username: str):
         for u in self.users:
             if u.username == username:
                 return u
@@ -56,27 +70,26 @@ class UserController:
     def get_all(self):
         return self.users
 
-    def get_by_id(self, user_id: str) -> Optional[User]:
+    def get_by_id(self, user_id: str):
         for u in self.users:
             if u.user_id == user_id:
                 return u
         return None
 
-    # Логин логика – само проверка и връщане на потребител
-    def login(self, username: str, password: str) -> Optional[User]:
-        if not self.users:
+    # Логин
+    def login(self, username: str, password: str):
+        if len(self.users) == 0:
             return None
 
         user = UserValidator.validate_login(username, password, self)
         hashed = self._hash_password(password)
-
         if user.password == hashed:
             self.logged_user = user
             return user
 
         return None
 
-    # Администраторски действия
+    # Регистрация
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
@@ -92,31 +105,34 @@ class UserController:
         self.save_changes()
         return new_user
 
+    # Смяна на роля
     def change_role(self, username, new_role):
         user = UserValidator.validate_exists(username, self)
         UserValidator.validate_role(new_role)
 
         if user.role == new_role:
-            raise ValueError(f"Потребителят вече има роля '{new_role}'.")
+            raise ValueError("Потребителят вече има тази роля.")
 
         user.role = new_role
         user.modified = self._get_now()
         self.save_changes()
 
-    def change_status(self, acting_user: User, target_username: str, new_status: str):
+    # Смяна на статус
+    def change_status(self, acting_user, target_username, new_status):
         UserValidator.confirm_admin(acting_user)
         UserValidator.validate_status(new_status)
 
         user = UserValidator.validate_exists(target_username, self)
         if user.status == new_status:
-            raise ValueError(f"Потребителят вече е в статус '{new_status}'.")
+            raise ValueError("Потребителят вече е в този статус.")
 
         user.status = new_status
         user.modified = self._get_now()
         self.save_changes()
         return True
 
-    def delete_user(self, acting_user: User, target_username: str):
+    # Изтриване
+    def delete_user(self, acting_user, target_username):
         UserValidator.confirm_admin(acting_user)
         UserValidator.validate_not_self(acting_user.username, target_username)
 
@@ -126,7 +142,7 @@ class UserController:
         self.save_changes()
         return True
 
-    # Създаване на начални потребители при празен файл
+    # Начални потребители
     def _create_default_admin(self):
         """Създава администратор при първо стартиране."""
         admin = User(user_id=str(uuid.uuid4()), first_name="Admin",
@@ -150,8 +166,8 @@ class UserController:
         self.users.append(operator)
         self.save_changes()
 
-    # Анонимен потребител за гост режим
-    def create_anonymous_user(self) -> User:
+    # Гост потребител
+    def create_anonymous_user(self):
         now = self._get_now()
         return User(user_id="guest-0000", first_name="Anonymous", last_name="",
                     email="", username="guest", password="", role="Anonymous",
