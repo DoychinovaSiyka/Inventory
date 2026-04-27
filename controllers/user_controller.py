@@ -11,7 +11,6 @@ class UserController:
     def __init__(self, repo):
         self.repo = repo
         raw_data = self.repo.load()
-
         if raw_data is None or not isinstance(raw_data, list):
             raw_data = []
 

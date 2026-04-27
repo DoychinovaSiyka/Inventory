@@ -82,13 +82,13 @@ class Movement:
                 except Exception:
                     mt = MovementType.IN
 
-        return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
-                        product_name=data.get("product_name") or data.get("product"), user_id=data.get("user_id"),
-                        location_id=data.get("location_id"), movement_type=mt, quantity=data.get("quantity", 0),
-                        unit=data.get("unit", "бр."), description=data.get("description", ""), price=data.get("price", 0.0),
-                        supplier_id=data.get("supplier_id"), customer=data.get("customer"),
-                        from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"),
-                        date=data.get("date"), created=data.get("created"), modified=data.get("modified"))
+        return Movement(movement_id=d.get("movement_id"), product_id=d.get("product_id"),
+                        product_name=d.get("product_name") or d.get("product"), user_id=d.get("user_id"),
+                        location_id=d.get("location_id"), movement_type=mt, quantity=d.get("quantity", 0),
+                        unit=d.get("unit", "бр."), description=d.get("description", ""), price=d.get("price", 0.0),
+                        supplier_id=d.get("supplier_id"), customer=d.get("customer"),
+                        from_location_id=d.get("from_location_id"), to_location_id=d.get("to_location_id"),
+                        date=d.get("date"), created=d.get("created"), modified=d.get("modified"))
 
 
     def __str__(self):
