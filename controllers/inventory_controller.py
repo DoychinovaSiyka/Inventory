@@ -27,9 +27,7 @@ class InventoryController:
 
     def _ensure_product(self, product_id: str, name: str, unit: str):
         if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {"name": name,
-                                                 "unit": unit,
-                                                 "total_stock": 0.0, "locations": {}}
+            self.data["products"][product_id] = {"name": name, "unit": unit, "total_stock": 0.0, "locations": {}}
 
     # СПРАВКИ
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
@@ -41,8 +39,8 @@ class InventoryController:
                 for loc_id, qty in p_info.get("locations", {}).items():
                     if float(qty) > 0:
                         warehouses.append(loc_id)
-
         return list(set(warehouses))
+
 
     def get_total_stock(self, product_id: str) -> float:
         p = self._get_product(product_id)
@@ -57,24 +55,20 @@ class InventoryController:
         return float(p["locations"].get(warehouse_id, 0.0))
 
 
-    def increase_stock(self, product_id: str, product_name: str, warehouse_id: str,
-                       qty: float, unit: str) -> None:
-
+    def increase_stock(self, product_id: str, product_name: str, warehouse_id: str, qty: float, unit: str) -> None:
         if qty <= 0:
             return
-
         self._ensure_product(product_id, product_name, unit)
         p = self._get_product(product_id)
         qty = float(qty)
 
         p["total_stock"] = float(p.get("total_stock", 0.0)) + qty
         p["locations"][warehouse_id] = float(p["locations"].get(warehouse_id, 0.0)) + qty
-        self._save()
+
 
     def decrease_stock(self, product_id: str, warehouse_id: str, qty: float, unit: str) -> None:
         if qty <= 0:
             return
-
         p = self._get_product(product_id)
         if not p:
             return
@@ -91,11 +85,8 @@ class InventoryController:
             else:
                 del p["locations"][warehouse_id]
 
-        self._save()
 
-    def move_stock(self, product_id: str, product_name: str, from_wh: str, to_wh: str,
-                   qty: float, unit: str) -> None:
-
+    def move_stock(self, product_id: str, product_name: str, from_wh: str, to_wh: str, qty: float, unit: str) -> None:
         if qty <= 0:
             return
         p = self._get_product(product_id)
@@ -109,9 +100,8 @@ class InventoryController:
             p["locations"][from_wh] = new_qty
         else:
             del p["locations"][from_wh]
-
         p["locations"][to_wh] = float(p["locations"].get(to_wh, 0.0)) + qty
-        self._save()
+
 
     # ПЪЛНО ПРЕСМЯТАНЕ
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
@@ -120,15 +110,29 @@ class InventoryController:
             self._save()
             return
         for m in movements:
-            pid = m.product_id
-            pname = m.product_name
-            qty = float(m.quantity)
-            unit = m.unit
+            if isinstance(m, dict):
+                pid = m.get("product_id")
+                pname = m.get("product_name")
+                qty = float(m.get("quantity", 0))
+                unit = m.get("unit")
+                mtype = m.get("movement_type")
+                from_loc = m.get("from_location_id")
+                to_loc = m.get("to_location_id")
+                loc = m.get("location_id")
+            else:
+                pid = m.product_id
+                pname = m.product_name
+                qty = float(m.quantity)
+                unit = m.unit
+                mtype = m.movement_type.name
+                from_loc = m.from_location_id
+                to_loc = m.to_location_id
+                loc = m.location_id
 
-            if m.movement_type.name == "IN":
-                self.increase_stock(pid, pname, m.location_id, qty, unit)
-            elif m.movement_type.name == "OUT":
-                self.decrease_stock(pid, m.location_id, qty, unit)
-            elif m.movement_type.name == "MOVE":
-                self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
+            if mtype == "IN":
+                self.increase_stock(pid, pname, loc, qty, unit)
+            elif mtype == "OUT":
+                self.decrease_stock(pid, loc, qty, unit)
+            elif mtype == "MOVE":
+                self.move_stock(pid, pname, from_loc, to_loc, qty, unit)
         self._save()

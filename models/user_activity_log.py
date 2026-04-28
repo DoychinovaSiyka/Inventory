@@ -9,6 +9,7 @@ class UserActivityLog:
         self.user_id = str(user_id)
         self.action = str(action) # Какво действие е извършено
         self.details = str(details) # Допълнителни детайли
+
         if timestamp:  # Време на извършване
             self.timestamp = timestamp
         else:

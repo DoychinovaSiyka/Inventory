@@ -4,6 +4,7 @@ class CategoryValidator:
     def validate_name(name):
         if not isinstance(name, str):
             raise ValueError("Името на категорията трябва да е текст.")
+
         cleaned = name.strip()
         if cleaned == "":
             raise ValueError("Името на категорията е задължително.")
@@ -12,7 +13,8 @@ class CategoryValidator:
         if len(cleaned) > 50:
             raise ValueError("Името не може да надвишава 50 символа.")
 
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,\"„“"
+
+        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,\"„“–—"
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError("Името съдържа невалидни символи.")
@@ -43,8 +45,8 @@ class CategoryValidator:
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-        # Проверка за позволени символи
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,!?:\"„“"
+
+        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,!?:\"„“–—"
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError("Описанието съдържа невалидни символи.")
@@ -80,6 +82,7 @@ class CategoryValidator:
         for ch in cleaned:
             if not (ch.isalnum() or ch in "-_"):
                 raise ValueError("Невалиден формат за родителска категория.")
+
         return cleaned
 
     @staticmethod
@@ -90,7 +93,6 @@ class CategoryValidator:
         current = parent_id
         while current:
             parent = None
-            # Търсим родителя
             for c in all_categories:
                 if str(c.category_id) == str(current):
                     parent = c
@@ -105,11 +107,10 @@ class CategoryValidator:
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
         target_id = str(category_id)
-        # Проверка за подкатегории
+
         for c in all_categories:
             if str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
-
         for p in products:
             product_cat_ids = []
             for cat in p.categories:

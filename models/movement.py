@@ -13,7 +13,6 @@ class Movement:
 
     @staticmethod
     def now():
-        """Връща текущата дата/час във формат YYYY-MM-DD HH:MM:SS."""
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def __init__(self, movement_id, product_id, product_name, user_id,
@@ -52,18 +51,18 @@ class Movement:
                 "created": self.created, "modified": self.modified, "from_location_id": self.from_location_id,
                 "to_location_id": self.to_location_id}
 
-
-
     @staticmethod
     def from_dict(data):
         if not data:
             return None
 
+        mtype = data.get("movement_type")
+        if mtype not in ("IN", "OUT", "MOVE"):
+            return None
         return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
-                        product_name=data.get("product_name"), user_id=data.get("user_id"),
-                        location_id=data.get("location_id"), movement_type=MovementType(data.get("movement_type")),
-                        quantity=data.get("quantity"), unit=data.get("unit"),
-                        description=data.get("description"), price=data.get("price"),
-                        supplier_id=data.get("supplier_id"), customer=data.get("customer"), date=data.get("date"),
-                        created=data.get("created"), modified=data.get("modified"),
+                        product_name=data.get("product_name"), user_id=data.get("user_id"), location_id=data.get("location_id"),
+                        movement_type=MovementType[mtype], quantity=data.get("quantity"),
+                        unit=data.get("unit"), description=data.get("description"),
+                        price=data.get("price"), supplier_id=data.get("supplier_id"), customer=data.get("customer"),
+                        date=data.get("date"), created=data.get("created"), modified=data.get("modified"),
                         from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"))

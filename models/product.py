@@ -23,11 +23,9 @@ class Product:
 
     @staticmethod
     def now():
-        """Връща текущата дата/час във формат YYYY-MM-DD HH:MM:SS."""
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def update_modified(self):
-        """Обновявам датата при промяна на продукта."""
         self.modified = Product.now()
 
     def to_dict(self):
