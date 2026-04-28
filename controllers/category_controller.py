@@ -33,7 +33,7 @@ class CategoryController:
         description = category_data.get("description", "")
         parent_id = category_data.get("parent_id")
 
-        # Валидации
+
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
@@ -51,7 +51,7 @@ class CategoryController:
 
         return category
 
-    # UPDATE – промяна на име
+
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
@@ -128,6 +128,7 @@ class CategoryController:
 
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]
+
 
     # Дървовидна структура
     def get_category_tree(self) -> List[dict]:

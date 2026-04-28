@@ -40,31 +40,39 @@ class InventoryApplication:
         # Логове на потребители
         self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
 
-
+        # Основни контролери
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
+
+        # Инвентар
         self.inventory_controller = InventoryController(self.inventory_repo)
-        self.product_controller = ProductController(self.product_repo,
-                                                    self.category_controller, self.activity_log_controller)
+
+
+        self.product_controller = ProductController(self.product_repo, self.category_controller, self.activity_log_controller)
+
+
         self.product_controller.supplier_controller = self.supplier_controller
         self.product_controller.inventory_controller = self.inventory_controller
 
+        # Движения
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller, self.user_controller,
+                                                      self.location_controller, self.invoice_controller,
+                                                      self.activity_log_controller, self.inventory_controller, self.supplier_controller)
 
-        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
-                                                      self.user_controller, self.location_controller,
-                                                      self.invoice_controller, self.activity_log_controller,
-                                                      self.inventory_controller, self.supplier_controller)
 
-        # Закачам movement_controller към product_controller
         self.product_controller.movement_controller = self.movement_controller
 
+
+        self.movement_controller.product_controller = self.product_controller
+        self.movement_controller.inventory_controller = self.inventory_controller
+        self.movement_controller.supplier_controller = self.supplier_controller
+
         # ReportController
-        self.report_controller = ReportController(self.report_repo, self.product_controller,
-                                                  self.movement_controller, self.invoice_controller,
-                                                  self.location_controller, self.inventory_controller)
+        self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
+                                                  self.invoice_controller, self.location_controller, self.inventory_controller)
 
         # Логистичен модул (Dijkstra)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)

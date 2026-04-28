@@ -50,5 +50,18 @@
         "date": "2026-04-23 21:34:07",
         "created": "2026-04-23 21:34:07",
         "modified": "2026-04-23 21:34:07"
+    },
+    {
+        "invoice_id": "ffcda269-93a0-406f-be18-cec518605dbd",
+        "movement_id": "ed50ad63-b9c1-43cb-9ed3-2976495c85ac",
+        "product": "вафли",
+        "quantity": 10.0,
+        "unit": "бр.",
+        "unit_price": 2.02,
+        "total_price": 20.2,
+        "customer": "Димитър",
+        "date": "2026-04-28 15:46:21",
+        "created": "2026-04-28 15:46:21",
+        "modified": "2026-04-28 15:46:21"
     }
 ]

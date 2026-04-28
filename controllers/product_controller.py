@@ -58,15 +58,29 @@ class ProductController:
         return self.products
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
-        return next((p for p in self.products if str(p.product_id) == str(product_id)), None)
+        product_id = str(product_id)
+        for p in self.products:
+            if str(p.product_id) == product_id:
+                return p
+
+        return None
 
     def get_by_name(self, name: str) -> Optional[Product]:
         name = name.strip().lower()
-        return next((p for p in self.products if p.name.lower() == name), None)
+
+        for p in self.products:
+            if p.name.lower() == name:
+                return p
+
+        return None
 
     def exists_by_name(self, name: str) -> bool:
-        return any(p.name.lower() == name.lower() for p in self.products)
+        name = name.strip().lower()
+        for p in self.products:
+            if p.name.lower() == name:
+                return True
 
+        return False
 
     def add(self, product_data: dict, user_id: str) -> Product:
         """ Добавяме нов продукт.Началното количество се прави чрез IN движение."""
@@ -84,7 +98,7 @@ class ProductController:
                           categories=categories, unit=product_data['unit'],
                           description=product_data['description'], price=float(product_data['price']),
                           supplier_id=product_data.get('supplier_id'), tags=product_data.get('tags', []),
-                          location_id=product_data.get('location_id'), created=now, modified=now)
+                          created=now, modified=now)
 
         # Добавяме продукта в списъка
         self.products.append(product)
@@ -99,8 +113,8 @@ class ProductController:
             qty = float(quantity)
             if qty > 0:
                 self.movement_controller.add(product_id=product.product_id, user_id=user_id,
-                                             location_id=location_id, movement_type="IN", quantity=str(qty),
-                                             description="Начално зареждане при създаване на продукт",
+                                             location_id=location_id, movement_type="IN",
+                                             quantity=str(qty), description="Начално зареждане при създаване на продукт",
                                              price=str(product.price), supplier_id=product.supplier_id or "system")
 
         return product
@@ -114,7 +128,6 @@ class ProductController:
 
         product = ProductValidator.validate_product_exists(product_id, self)
         has_changes = False
-
 
         if new_name is not None:
             new_name_clean = new_name.strip()
@@ -130,31 +143,10 @@ class ProductController:
                 product.description = ProductValidator.validate_description(new_desc_clean)
                 has_changes = True
 
-
         new_price_valid = ProductValidator.validate_price(new_price)
         if new_price_valid != product.price:
             product.price = new_price_valid
             has_changes = True
-
-        # Количество чрез движение
-        if new_quantity is not None and self.inventory_controller and self.movement_controller:
-            current_stock = self.inventory_controller.get_total_stock(product_id)
-            diff = float(new_quantity) - float(current_stock)
-
-            if abs(diff) > 0.001:
-                m_type = "IN" if diff > 0 else "OUT"
-                self.movement_controller.add(product_id=product_id, user_id=user_id,
-                                             location_id=new_location_id or product.location_id or "W1", movement_type=m_type,
-                                             quantity=str(abs(diff)), description=f"Корекция ({m_type}) от редакция",
-                                             price=str(product.price), supplier_id=product.supplier_id or "system")
-                has_changes = True
-
-        # Мерна единица
-        if new_unit is not None:
-            new_unit_clean = new_unit.strip()
-            if new_unit_clean and new_unit_clean != product.unit:
-                product.unit = ProductValidator.validate_unit(new_unit_clean)
-                has_changes = True
 
         # Категории
         if new_category_ids is not None:
@@ -165,15 +157,11 @@ class ProductController:
                 has_changes = True
 
 
-        if new_location_id is not None and new_location_id != product.location_id:
-            product.location_id = new_location_id
-            has_changes = True
-
-        # Доставчик
         if new_supplier_id is not None and new_supplier_id != product.supplier_id:
             ProductValidator.validate_supplier_exists(new_supplier_id, self.supplier_controller)
             product.supplier_id = new_supplier_id
             has_changes = True
+
 
         if new_tags is not None:
             if not isinstance(new_tags, list):
@@ -189,7 +177,6 @@ class ProductController:
             self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name}")
 
         return True
-
 
     # Изтриване на продукт
     def delete_by_id(self, product_id: str, user_id: str) -> bool:
@@ -247,7 +234,6 @@ class ProductController:
                                min_price=min_price, max_price=max_price,
                                min_quantity=min_quantity, max_quantity=max_quantity,
                                category_id=category_id, supplier_id=supplier_id, location_id=location_id)
-
 
     def get_warehouses_with_product(self, product_name: str):
         return filter_warehouses(self.products, product_name)

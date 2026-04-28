@@ -8,7 +8,6 @@
         "price": 3.89,
         "supplier_id": "f4c8e6a7-ad77-4e4c-b8d4-5f9a0b3d4444",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:28:50",
         "modified": "2026-04-18 22:28:50"
     },
@@ -23,7 +22,6 @@
         "price": 1.19,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:32:04",
         "modified": "2026-04-18 22:32:04"
     },
@@ -38,7 +36,6 @@
         "price": 1.79,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:35:33",
         "modified": "2026-04-18 22:35:33"
     },
@@ -53,7 +50,6 @@
         "price": 1.59,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:39:02",
         "modified": "2026-04-18 22:39:02"
     },
@@ -68,7 +64,6 @@
         "price": 8.99,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:42:18",
         "modified": "2026-04-18 22:42:18"
     },
@@ -83,7 +78,6 @@
         "price": 1.49,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:45:47",
         "modified": "2026-04-18 22:45:47"
     },
@@ -98,7 +92,6 @@
         "price": 5.49,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:49:11",
         "modified": "2026-04-18 22:49:11"
     },
@@ -113,7 +106,6 @@
         "price": 2.99,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:52:36",
         "modified": "2026-04-18 22:52:36"
     },
@@ -128,7 +120,6 @@
         "price": 7.49,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:55:58",
         "modified": "2026-04-18 22:55:58"
     },
@@ -143,7 +134,6 @@
         "price": 13.49,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 22:59:41",
         "modified": "2026-04-18 22:59:41"
     },
@@ -158,7 +148,6 @@
         "price": 1.39,
         "supplier_id": "f4c8e6a7-ad77-4e4c-b8d4-5f9a0b3d4444",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:03:02",
         "modified": "2026-04-18 23:03:02"
     },
@@ -171,7 +160,6 @@
         "price": 9.49,
         "supplier_id": "f4c8e6a7-ad77-4e4c-b8d4-5f9a0b3d4444",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:06:41",
         "modified": "2026-04-18 23:06:41"
     },
@@ -186,7 +174,6 @@
         "price": 1.49,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:10:03",
         "modified": "2026-04-18 23:10:03"
     },
@@ -201,7 +188,6 @@
         "price": 2.29,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:13:22",
         "modified": "2026-04-18 23:13:22"
     },
@@ -216,7 +202,6 @@
         "price": 2.59,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:16:44",
         "modified": "2026-04-18 23:16:44"
     },
@@ -231,7 +216,6 @@
         "price": 3.99,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:20:11",
         "modified": "2026-04-18 23:20:11"
     },
@@ -246,7 +230,6 @@
         "price": 1.69,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:23:33",
         "modified": "2026-04-18 23:23:33"
     },
@@ -261,7 +244,6 @@
         "price": 1.49,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:26:58",
         "modified": "2026-04-18 23:26:58"
     },
@@ -276,7 +258,6 @@
         "price": 6.29,
         "supplier_id": "e3b7d5f6-9c66-4d3b-a7c3-4e8f9a2c3333",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:30:21",
         "modified": "2026-04-18 23:30:21"
     },
@@ -291,7 +272,6 @@
         "price": 6.79,
         "supplier_id": "e3b7d5f6-9c66-4d3b-a7c3-4e8f9a2c3333",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:33:44",
         "modified": "2026-04-18 23:33:44"
     },
@@ -306,7 +286,6 @@
         "price": 1.89,
         "supplier_id": "e3b7d5f6-9c66-4d3b-a7c3-4e8f9a2c3333",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:37:02",
         "modified": "2026-04-18 23:37:02"
     },
@@ -321,7 +300,6 @@
         "price": 3.29,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:40:28",
         "modified": "2026-04-18 23:40:28"
     },
@@ -336,7 +314,6 @@
         "price": 2.39,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-18 23:43:59",
         "modified": "2026-04-18 23:43:59"
     },
@@ -351,7 +328,6 @@
         "price": 1.99,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-19 00:29:06",
         "modified": "2026-04-19 00:29:06"
     },
@@ -366,7 +342,6 @@
         "price": 7.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
         "created": "2026-04-19 10:30:23",
         "modified": "2026-04-19 10:32:02"
     },
@@ -381,7 +356,6 @@
         "price": 12.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
         "created": "2026-04-19 18:37:38",
         "modified": "2026-04-19 18:39:58"
     },
@@ -396,7 +370,6 @@
         "price": 7.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W3",
         "created": "2026-04-19 19:12:11",
         "modified": "2026-04-21 19:31:31"
     },
@@ -411,7 +384,6 @@
         "price": 6.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-19 19:40:07",
         "modified": "2026-04-19 19:40:07"
     },
@@ -426,8 +398,63 @@
         "price": 2.99,
         "supplier_id": null,
         "tags": [],
-        "location_id": "W1",
         "created": "2026-04-23 21:28:03",
         "modified": "2026-04-23 21:28:03"
+    },
+    {
+        "product_id": "3a1e2a46-6d12-4b3a-8fa0-a4cfd870e82d",
+        "name": "мандарини",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "unit": "кг.",
+        "description": "плодове",
+        "price": 3.09,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-04-28 13:01:20",
+        "modified": "2026-04-28 13:01:20"
+    },
+    {
+        "product_id": "4f82e474-ef8b-4c7a-a60a-de0135293f09",
+        "name": "киви",
+        "categories": [
+            "2ed81812-7f7e-48bb-a446-4c96da251856"
+        ],
+        "unit": "кг.",
+        "description": "плод",
+        "price": 2.0,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-04-28 13:06:58",
+        "modified": "2026-04-28 13:06:58"
+    },
+    {
+        "product_id": "38e8a901-6f51-4945-bf12-26db897e296b",
+        "name": "вафли",
+        "categories": [
+            "c1e7a9d3-4b2f-4c8e-9d1f-1e2f3a4b5c77"
+        ],
+        "unit": "бр.",
+        "description": "шоколадови",
+        "price": 1.23,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-04-28 15:16:55",
+        "modified": "2026-04-28 15:17:31"
+    },
+    {
+        "product_id": "8b32e65b-2129-496c-8b79-abf9b1068392",
+        "name": "PROBA",
+        "categories": [
+            "d1f3a7c9-6b4e-4c8f-9d1e-8c9b1e2f3a55"
+        ],
+        "unit": "бр.",
+        "description": "PROBEN TEST",
+        "price": 9.0,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-04-28 15:23:06",
+        "modified": "2026-04-28 15:24:04"
     }
 ]

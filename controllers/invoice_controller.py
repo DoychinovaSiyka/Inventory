@@ -1,5 +1,3 @@
-import uuid
-from datetime import datetime
 from typing import List, Optional
 from storage.json_repository import JSONRepository
 from models.invoice import Invoice
@@ -17,14 +15,6 @@ class InvoiceController:
         self.invoices: List[Invoice] = []
         self._load_invoices()
 
-    @staticmethod
-    def _generate_id() -> str:
-        return str(uuid.uuid4())
-
-    @staticmethod
-    def _now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
     def _load_invoices(self):
         raw = self.repo.load() or []
         self.invoices = [Invoice.from_dict(inv) for inv in raw]
@@ -36,12 +26,12 @@ class InvoiceController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-
     # CRUD
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         InvoiceValidator.validate_all(**invoice_data)
-        now = self._now()
-        invoice = Invoice(invoice_id=self._generate_id(), created=now, modified=now, **invoice_data)
+
+        # ID и дати вече се генерират в модела
+        invoice = Invoice(**invoice_data)
 
         self.invoices.append(invoice)
         self._save_changes()
@@ -54,10 +44,9 @@ class InvoiceController:
         qty = float(movement.quantity)
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)
-        now = self._now()
-        invoice = Invoice(invoice_id=self._generate_id(), movement_id=movement.movement_id,
-                          product=product.name, quantity=qty, unit=movement.unit, unit_price=unit_price,
-                          total_price=total_price, customer=customer, date=now, created=now, modified=now)
+
+        invoice = Invoice(movement_id=movement.movement_id, product=product.name, quantity=qty,
+                          unit=movement.unit, unit_price=unit_price, total_price=total_price, customer=customer)
 
         self.invoices.append(invoice)
         self._save_changes()
@@ -69,11 +58,9 @@ class InvoiceController:
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
         target_id = invoice_id.strip()
-
         for inv in self.invoices:
             if inv.invoice_id == target_id:
                 return inv
-
         return None
 
     def update_customer(self, invoice_id: str, new_customer: str, user_id: str) -> bool:
@@ -96,9 +83,7 @@ class InvoiceController:
             self._save_changes()
             self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {invoice_id}")
             return True
-
         return False
-
 
     def search_by_customer(self, keyword: str):
         return filter_by_customer(self.invoices, keyword)

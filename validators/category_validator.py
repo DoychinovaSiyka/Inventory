@@ -1,6 +1,8 @@
 import re
 
+
 class CategoryValidator:
+    """Валидатор за категории - запазени коментари и изчистени парадокси."""
 
     @staticmethod
     def validate_name(name):
@@ -43,6 +45,8 @@ class CategoryValidator:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
+
+        # Тук също поддържаме твоите разрешени символи
         if not re.match(r'^[A-Za-zА-Яа-я0-9 \-–—.,!?()\"„“]+$', cleaned):
             raise ValueError("Описанието съдържа невалидни символи.")
 
@@ -76,26 +80,34 @@ class CategoryValidator:
 
     @staticmethod
     def validate_no_cycle(category_id, parent_id, all_categories):
-        if parent_id is None:
+        # Проверка за безкраен цикъл
+        if parent_id is None or parent_id == "":
             return
         current = parent_id
         while current:
-            parent = next((c for c in all_categories if c.category_id == current), None)
+            parent = next((c for c in all_categories if str(c.category_id) == str(current)), None)
             if not parent:
                 break
-            if parent.category_id == category_id:
+            if str(parent.category_id) == str(category_id):
                 raise ValueError("Открита циклична зависимост между категориите.")
             current = parent.parent_id
 
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
+        target_id = str(category_id)
+
+        # Проверка за подкатегории
         for c in all_categories:
-            if c.parent_id == category_id:
+            if str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
 
+        # Проверка за продукти (Обновено за новия модел със списък от категории)
         for p in products:
-            if p.category_id == category_id:
-                raise ValueError("Категорията съдържа продукти и не може да бъде изтрита.")
+            # Правим списък от ID-та на категориите на продукта
+            product_cat_ids = [str(cat.category_id if hasattr(cat, 'category_id') else cat) for cat in p.categories]
+
+            if target_id in product_cat_ids:
+                raise ValueError(f"Категорията не може да бъде изтрита, защото продуктът '{p.name}' я ползва.")
 
     @staticmethod
     def validate_exists(category_id, controller):

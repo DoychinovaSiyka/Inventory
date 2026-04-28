@@ -1293,5 +1293,194 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-25 08:57:18"
+    },
+    {
+        "log_id": "0f6f6f5b-8a1e-45b7-93e9-8b44ff02d6e8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 13:00:13"
+    },
+    {
+        "log_id": "72788c71-545b-4ac7-8180-b808c1dc7cd8",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: мандарини",
+        "timestamp": "2026-04-28 13:01:20"
+    },
+    {
+        "log_id": "6b48484c-c48a-4d4e-8524-a1346cf23085",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: proba",
+        "timestamp": "2026-04-28 13:02:27"
+    },
+    {
+        "log_id": "e8a5040d-00f8-446a-88b7-a875de84780f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: проба1",
+        "timestamp": "2026-04-28 13:03:16"
+    },
+    {
+        "log_id": "781f78cb-99c2-4afc-9be9-bb7a2c08339c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 31b79bc8-8fe5-44b3-9e73-68325ff2d0cb",
+        "timestamp": "2026-04-28 13:03:46"
+    },
+    {
+        "log_id": "7377ee94-77e2-40b6-8a80-55d2d7db8f0f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: PROBA",
+        "timestamp": "2026-04-28 13:05:10"
+    },
+    {
+        "log_id": "b9909519-6d6e-460f-a3f8-0f4a98e0caca",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: киви",
+        "timestamp": "2026-04-28 13:06:58"
+    },
+    {
+        "log_id": "9eb3b75e-0da5-40db-83d3-3faac683e73b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 14:40:14"
+    },
+    {
+        "log_id": "f4c333ef-8234-4702-ab2a-44b7ebf6f1ea",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: вафли",
+        "timestamp": "2026-04-28 14:41:12"
+    },
+    {
+        "log_id": "5b5e1c71-a9d1-45ec-8f2b-ef7286be4fec",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 14:47:22"
+    },
+    {
+        "log_id": "628fb865-ff0e-4c9d-b5e7-1f56ce16ef64",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 14:59:16"
+    },
+    {
+        "log_id": "03c22f72-538a-4d54-8954-23a162b23652",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:03:28"
+    },
+    {
+        "log_id": "058d2c88-5cc4-4c04-8f84-e3afad4118d7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:06:17"
+    },
+    {
+        "log_id": "3e805fe0-6d4e-4562-b0a1-811b257fa529",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:08:40"
+    },
+    {
+        "log_id": "3b12ff28-3af1-4d99-95b1-29e265d6e957",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:11:02"
+    },
+    {
+        "log_id": "fe3b406b-2e30-4abe-b3f8-536810a65d25",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:12:54"
+    },
+    {
+        "log_id": "06b62680-b916-46d1-a950-2add7cea13a2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: круша",
+        "timestamp": "2026-04-28 15:13:58"
+    },
+    {
+        "log_id": "de0928c5-ab62-49cf-b315-3c75c8076376",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:15:51"
+    },
+    {
+        "log_id": "c320a860-2336-4833-b62d-1e8eacafd0f2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 6e8265f9-b166-4117-919e-3fa0ae149811",
+        "timestamp": "2026-04-28 15:16:23"
+    },
+    {
+        "log_id": "2b6fe4c4-a49f-4eb6-b5f0-0d725edb95a0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: вафли",
+        "timestamp": "2026-04-28 15:16:55"
+    },
+    {
+        "log_id": "69653079-d2b0-48b7-901a-9267575d023f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: вафли",
+        "timestamp": "2026-04-28 15:17:31"
+    },
+    {
+        "log_id": "28cb8369-d6fc-43a3-96c5-f71a8fcb8a4d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "DELETE_PRODUCT",
+        "details": "Изтрит продукт ID 8c8cb1a6-ffda-4b08-9c4b-103741ef63b1",
+        "timestamp": "2026-04-28 15:22:01"
+    },
+    {
+        "log_id": "41ba6b4f-f085-4cce-a889-cc3fe15a3efd",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "ADD_PRODUCT",
+        "details": "Добавен продукт: PROBA",
+        "timestamp": "2026-04-28 15:23:06"
+    },
+    {
+        "log_id": "026c9fbc-9dd0-4a90-b9cc-43d1d7791e89",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "EDIT_PRODUCT",
+        "details": "Обновен продукт: PROBA",
+        "timestamp": "2026-04-28 15:24:04"
+    },
+    {
+        "log_id": "bf77b669-e711-42a4-8108-0d96836dba70",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:35:05"
+    },
+    {
+        "log_id": "3888d030-3226-4c42-b089-79e91d21dad6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:39:23"
+    },
+    {
+        "log_id": "20ea3f7e-f524-44bd-b86b-172ea738c0f0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-28 15:41:29"
     }
 ]

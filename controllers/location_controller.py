@@ -26,7 +26,6 @@ class LocationController:
         """Генерира W1, W2, W3..."""
         if not self.locations:
             return "W1"
-
         numeric_ids = []
         for loc in self.locations:
             num = str(loc.location_id).replace("W", "")

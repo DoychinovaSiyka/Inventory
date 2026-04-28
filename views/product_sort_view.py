@@ -36,27 +36,30 @@ class ProductSortView:
     # Цена висока - ниска
     def sort_price_desc(self, _):
         products = self.controller.selection_sort()
-        self._print_sorted(products, "Цена (висока → ниска)", "Selection Sort")
+        self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
 
     def sort_price_asc(self, _):
         products = self.controller.bubble_sort()
         products.reverse()
-        self._print_sorted(products, "Цена (ниска → висока)", "Bubble Sort")
+        self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
+    # Количество високо - ниско
     def sort_qty_desc(self, _):
-        inv = self.controller.inventory_controller.data["products"]
-        products = sorted(self.controller.get_all(),
-                          key=lambda p: inv.get(p.product_id, {}).get("total_stock", 0),
-                          reverse=True)
-        self._print_sorted(products, "Количество (високо → ниско)", "Bubble Sort")
+        products = sorted(
+            self.controller.get_all(),
+            key=lambda p: self.controller.get_total_stock(p.product_id),
+            reverse=True
+        )
+        self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
     # Количество ниско - високо
     def sort_qty_asc(self, _):
-        inv = self.controller.inventory_controller.data["products"]
-        products = sorted(self.controller.get_all(),
-                          key=lambda p: inv.get(p.product_id, {}).get("total_stock", 0))
-        self._print_sorted(products, "Количество (ниско → високо)", "Selection Sort")
+        products = sorted(
+            self.controller.get_all(),
+            key=lambda p: self.controller.get_total_stock(p.product_id)
+        )
+        self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
 
     # Общ метод за визуализация
@@ -67,13 +70,15 @@ class ProductSortView:
 
         print(f"\nСортиране по: {title}")
         print(f"Алгоритъм: {algorithm}\n")
+
         rows = []
-        inv = self.controller.inventory_controller.data["products"]
 
         for p in products:
-            stock = inv.get(p.product_id, {}).get("total_stock", 0)
-            rows.append([p.name, p.location_id,
-                         f"{p.price:.2f} лв.",
-                         f"{stock:.2f} {p.unit}"])
+            stock = self.controller.get_total_stock(p.product_id)
+            rows.append([
+                p.name,
+                f"{p.price:.2f} лв.",
+                f"{stock:.2f} {p.unit}"
+            ])
 
-        print(format_table(["Име", "Склад", "Цена", "Количество"], rows))
+        print(format_table(["Име", "Цена", "Количество"], rows))

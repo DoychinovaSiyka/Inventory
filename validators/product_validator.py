@@ -65,6 +65,7 @@ class ProductValidator:
             raise ValueError("Количеството трябва да е над 0.")
         return round(q, 2)
 
+
     @staticmethod
     def validate_unit(unit):  # проверка и нормализиране на мерната единица
         if not unit or not isinstance(unit, str):
@@ -90,6 +91,7 @@ class ProductValidator:
 
         return u
 
+
     @staticmethod
     def validate_price(price):
         try:
@@ -99,6 +101,7 @@ class ProductValidator:
         if p <= 0:
             raise ValueError("Цената трябва да е над 0.")
         return round(p, 2)
+
 
     # Помощни парсери
     @staticmethod
@@ -112,6 +115,7 @@ class ProductValidator:
             raise ValueError(f"{field_name} трябва да е число.")
         return round(f, 2)
 
+
     @staticmethod
     def parse_float(value, field_name="стойност"):
         f = ProductValidator._parse_float_internal(value, field_name)
@@ -119,14 +123,6 @@ class ProductValidator:
             raise ValueError(f"{field_name} трябва да е над 0.")
         return f
 
-    @staticmethod
-    def parse_optional_float(value, field_name="стойност"):  # може да липсва, но ако има – > 0
-        if value is None or str(value).strip() == "":
-            return None
-        f = ProductValidator._parse_float_internal(value, field_name)
-        if f <= 0:
-            raise ValueError(f"{field_name} трябва да е над 0.")
-        return f
 
     @staticmethod
     def parse_int(value, field_name="стойност"):
@@ -141,6 +137,21 @@ class ProductValidator:
         return i
 
 
+    # ⭐ НОВО — нужно за разширено търсене
+    @staticmethod
+    def parse_optional_float(value: str | None):
+        """Парсира число или връща None при празен вход."""
+        if value is None:
+            return None
+        value = value.strip()
+        if value == "":
+            return None
+        try:
+            return float(value)
+        except ValueError:
+            raise ValueError("Моля, въведете валидно число.")
+
+
     @staticmethod
     def validate_product_exists(product_id, product_controller):  # продуктът трябва да съществува
         product = product_controller.get_by_id(product_id)
@@ -148,11 +159,13 @@ class ProductValidator:
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
         return product
 
+
     @staticmethod
     def validate_category_exists(category_ids, category_controller):  # проверка за категории
         for cid in category_ids:
             if not category_controller.get_by_id(cid):
                 raise ValueError(f"Категория с ID {cid} не съществува.")
+
 
     @staticmethod
     def validate_supplier_exists(supplier_id, supplier_controller):  # доставчик – ако има, трябва да е валиден
@@ -162,9 +175,30 @@ class ProductValidator:
         if not supplier:
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
+
     # Проверка за дублиране в склад
     @staticmethod
     def validate_unique_name_in_location(name, location_id, products):  # име + склад → уникално
         for p in products:
             if p.name.lower() == name.lower() and getattr(p, "location_id", None) == location_id:
                 raise ValueError("Продуктът вече съществува в този склад.")
+
+
+    # Проверка за уникално име в целия каталог
+    @staticmethod
+    def validate_unique_name(name, products, exclude_product_id=None):
+        """Проверява дали името вече съществува в глобалния каталог."""
+        if not name:
+            return
+
+        name_lower = name.strip().lower()
+
+        for p in products:
+            # Ако редактираме, пропускаме текущия продукт
+            if exclude_product_id is not None and str(p.product_id) == str(exclude_product_id):
+                continue
+
+            if p.name.lower() == name_lower:
+                raise ValueError(f"Продукт с име '{name}' вече съществува в каталога.")
+
+        return True

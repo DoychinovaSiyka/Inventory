@@ -8,35 +8,37 @@ class InventoryController:
     """Контролерът управлява наличностите. Работи коректно дори когато JSON файловете са празни."""
     def __init__(self, repo: JSONRepository):
         self.repo = repo
-        # Зареждам инвентара от файла
         data = self.repo.load()
-        # Ако файлът е празен или структурата е грешна - започвам с празен инвентар
+
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
             return
-        # Ако е стара структура (списък) - минавам към нов формат
+
         if isinstance(data, list):
             self.data = {"products": {}}
             return
 
-        # Ключът "products" съществува
         if "products" not in data:
             data["products"] = {}
+
         self.data = data
 
     def _save(self):
         self.repo.save(self.data)
 
-    # Помощни методи
     def _get_product(self, product_id: str) -> Dict[str, Any] | None:
         return self.data["products"].get(product_id)
 
     def _ensure_product(self, product_id: str, name: str, unit: str):
-        """Създава празен запис за продукт, ако липсва."""
         if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {"name": name, "unit": unit, "total_stock": 0.0, "locations": {}}
+            self.data["products"][product_id] = {
+                "name": name,
+                "unit": unit,
+                "total_stock": 0.0,
+                "locations": {}
+            }
 
-    # Методи за справки
+    # СПРАВКИ
     def get_warehouses_with_product(self, product_name: str) -> List[str]:
         warehouses = []
         name_lower = product_name.lower()
@@ -61,7 +63,7 @@ class InventoryController:
             return 0.0
         return float(p["locations"].get(warehouse_id, 0.0))
 
-    # Операции за наличности
+    # ОПЕРАЦИИ
     def increase_stock(self, product_id: str, product_name: str, warehouse_id: str,
                        qty: float, unit: str) -> None:
 
@@ -76,7 +78,7 @@ class InventoryController:
         p["total_stock"] = float(p.get("total_stock", 0.0)) + qty
         p["locations"][warehouse_id] = float(p["locations"].get(warehouse_id, 0.0)) + qty
 
-
+        self._save()
 
     def decrease_stock(self, product_id: str, warehouse_id: str, qty: float, unit: str) -> None:
         if qty <= 0:
@@ -85,6 +87,7 @@ class InventoryController:
         p = self._get_product(product_id)
         if not p:
             return
+
         qty = float(qty)
         current = float(p.get("total_stock", 0.0))
 
@@ -100,40 +103,41 @@ class InventoryController:
             else:
                 del p["locations"][warehouse_id]
 
+        self._save()   # ← ЛИПСВАШЕ
 
     def move_stock(self, product_id: str, product_name: str, from_wh: str,
                    to_wh: str, qty: float, unit: str) -> None:
+
         if qty <= 0:
             return
 
         p = self._get_product(product_id)
         if not p:
             return
+
         qty = float(qty)
+
         if from_wh not in p["locations"]:
             return
 
-        # Махам от изходния склад
         new_qty = float(p["locations"][from_wh]) - qty
         if new_qty > 0:
             p["locations"][from_wh] = new_qty
         else:
             del p["locations"][from_wh]
 
-        # Добавям в целевия склад
         p["locations"][to_wh] = float(p["locations"].get(to_wh, 0.0)) + qty
 
+        self._save()
 
-
-    # Пълно пресмятане на инвентара от movements.json
+    # ПЪЛНО ПРЕСМЯТАНЕ
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
-        # Започвам с празна структура
         self.data = {"products": {}}
+
         if not movements:
             self._save()
             return
 
-        # Обхождам движенията по ред
         for m in movements:
             pid = m.product_id
             pname = m.product_name
@@ -149,15 +153,4 @@ class InventoryController:
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 
-
         self._save()
-
-
-
-# Inventory се възстановява автоматично, защото:
-# rebuild_inventory_from_movements() пресмята всичко от movements.json
-# при стартиране MovementController извиква rebuild
-# при празен/липсващ inventory.json → започва с празна структура
-# при стара структура → мигрира
-# при липсващ продукт → създава го автоматично
-# Инвентарът е derived data → винаги може да се пресметне.
