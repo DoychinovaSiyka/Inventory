@@ -2,17 +2,12 @@ import uuid
 from typing import Optional, List
 from models.product import Product
 from validators.product_validator import ProductValidator
-from filters.product_filters import (filter_search, filter_by_multiple_category_ids,
-                                     filter_by_category, filter_by_supplier,
-                                     filter_by_price_range, filter_low_stock,
-                                     filter_warehouses, filter_combined)
+from filters.product_filters import (filter_search, filter_by_multiple_category_ids, filter_by_category, filter_by_supplier,
+                                     filter_by_price_range, filter_low_stock, filter_warehouses, filter_combined)
 
-from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic,
-                                     bubble_sort_logic, selection_sort_logic)
-
+from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic, bubble_sort_logic, selection_sort_logic)
 from analytics.product_analytics import (calculate_average_price, calculate_total_inventory_value,
-                                         get_most_expensive_product, get_cheapest_product,
-                                         group_products_by_category)
+                                         get_most_expensive_product, get_cheapest_product, group_products_by_category)
 
 
 class ProductController:
@@ -239,7 +234,6 @@ class ProductController:
 
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
-
 
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])
