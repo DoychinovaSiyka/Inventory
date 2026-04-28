@@ -18,7 +18,7 @@ class UserActivityLog:
         # Допълнителни детайли
         self.details = str(details)
 
-        # Време на извършване - Ако не е подадено, моделът сам взима текущото време
+        # Време на извършване
         if timestamp:
             self.timestamp = timestamp
         else:
