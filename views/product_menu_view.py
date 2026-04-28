@@ -10,6 +10,7 @@ from validators.product_validator import ProductValidator
 from validators.movement_validator import MovementValidator
 
 
+
 class ProductView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController,
                  location_controller: LocationController, activity_log_controller=None):
@@ -25,26 +26,25 @@ class ProductView:
         return f"{value:.2f} лв."
 
     def _build_menu(self):
-        return Menu("МЕНЮ ПРОДУКТИ", [
-            MenuItem("1", "Създаване на продукт", self.create_product),
-            MenuItem("2", "Премахване на продукт", self.remove_product),
-            MenuItem("3", "Редактиране на продукт", self.edit_product),
-            MenuItem("4", "Покажи всички продукти",
-                     self.show_all_protected if self._is_operator() else self.show_all),
-            MenuItem("5", "Търсене", self.search),
-            MenuItem("6", "Сортиране на продукти",
-                     self.sort_menu_protected if self._is_operator() else self.sort_menu),
-            MenuItem("7", "Средна цена", self.average_price),
-            MenuItem("8", "Филтриране по категория", self.filter_by_category),
-            MenuItem("9", "Критични наличности / Зареждане", self.low_stock),
-            MenuItem("10", "Най-скъп продукт", self.most_expensive),
-            MenuItem("11", "Най-евтин продукт", self.cheapest),
-            MenuItem("12", "Обща стойност на склада", self.total_value),
-            MenuItem("13", "Групиране по категории", self.group_by_category),
-            MenuItem("14", "Разширено търсене", self.advanced_search),
-            MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("МЕНЮ ПРОДУКТИ", [MenuItem("1", "Създаване на продукт", self.create_product),
+                                      MenuItem("2", "Премахване на продукт", self.remove_product),
+                                      MenuItem("3", "Редактиране на продукт", self.edit_product),
+                                      MenuItem("4", "Покажи всички продукти", self.show_all_protected
+                                      if self._is_operator() else self.show_all),
+                                      MenuItem("5", "Търсене", self.search),
+                                      MenuItem("6", "Сортиране на продукти", self.sort_menu_protected
+                                      if self._is_operator() else self.sort_menu),
+                                     MenuItem("7", "Средна цена", self.average_price),
+                                     MenuItem("8", "Филтриране по категория", self.filter_by_category),
+                                     MenuItem("9", "Критични наличности / Зареждане", self.low_stock),
+                                     MenuItem("10", "Най-скъп продукт", self.most_expensive),
+                                     MenuItem("11", "Най-евтин продукт", self.cheapest),
+                                     MenuItem("12", "Обща стойност на склада", self.total_value),
+                                     MenuItem("13", "Групиране по категории", self.group_by_category),
+                                     MenuItem("14", "Разширено търсене", self.advanced_search),
+                                     MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
+                                    MenuItem("0", "Назад", lambda u: "break")])
+
 
     @staticmethod
     def _is_operator():
@@ -158,16 +158,9 @@ class ProductView:
 
         try:
             u_id = user.user_id
-            product_data = {
-                "name": name,
-                "category_ids": [category_id],
-                "quantity": quantity,
-                "unit": unit,
-                "description": description,
-                "price": price,
-                "supplier_id": None,
-                "location_id": location_id
-            }
+            product_data = {"name": name, "category_ids": [category_id], "quantity": quantity,
+                            "unit": unit, "description": description, "price": price, "supplier_id": None,
+                            "location_id": location_id}
 
             product = self.product_controller.add(product_data, u_id)
             print("Продуктът е създаден успешно.")
@@ -246,15 +239,9 @@ class ProductView:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
 
             self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_desc,
-                                                   new_price=new_price,
-                new_quantity=None,
-                new_unit=None,
-                new_category_ids=new_category_ids,
-                new_location_id=None,
-                new_supplier_id=None,
-                new_tags=None,
-                user_id=user.user_id
-            )
+                                                   new_price=new_price, new_quantity=None, new_unit=None,
+                                                   new_category_ids=new_category_ids, new_location_id=None,
+                                                   new_supplier_id=None, new_tags=None, user_id=user.user_id)
 
             print("Продуктът е обновен.")
 
@@ -345,9 +332,9 @@ class ProductView:
             stock = self.product_controller.get_total_stock(p.product_id)
             print(f"{p.name} | {stock} {p.unit}")
 
+
     def low_stock(self, _):
         print("   ПРОВЕРКА ЗА КРИТИЧНИ НАЛИЧНОСТИ")
-
         raw_threshold = input("Въведете критична граница (Enter за стандартно < 5): ").strip()
         if raw_threshold == "":
             threshold = 5.0
@@ -359,12 +346,9 @@ class ProductView:
                 threshold = 5.0
 
         low_products = self.product_controller.check_low_stock(threshold)
-
         if not low_products:
-            print(
-                f"\n Всичко е наред! Няма продукти под {threshold:.2f} {low_products[0].unit if low_products else ''}.")
+            print(f"\n Всичко е наред! Няма продукти под {threshold:.2f} {low_products[0].unit if low_products else ''}.")
             return
-
         print(f"\n[!] Намерени са {len(low_products)} продукта под лимита от {threshold:.2f}:")
 
         columns = ["ПРОДУКТ", "НАЛИЧНОСТ", "МЯРКА", "СТАТУС"]
@@ -372,7 +356,6 @@ class ProductView:
 
         for p in low_products:
             stock = self.product_controller.get_total_stock(p.product_id)
-
             if stock == 0:
                 status = " ИЗЧЕРПАН"
             elif stock <= (threshold * 0.3):
@@ -474,7 +457,6 @@ class ProductView:
                 return
 
             print(f"\nНамерени резултати ({len(results)}):\n")
-
             rows = []
 
             for p in results:
@@ -491,14 +473,9 @@ class ProductView:
                 warehouses = self.product_controller.inventory_controller.get_warehouses_with_product(p.name)
                 warehouse_str = ", ".join(warehouses) if warehouses else "—"
 
-                rows.append([
-                    p.name,
-                    f"{p.price:.2f} лв.",
-                    f"{stock} {p.unit}",
-                    ", ".join([c.name for c in p.categories]) if p.categories else "-",
-                    warehouse_str,
-                    supplier_name
-                ])
+                rows.append([p.name, f"{p.price:.2f} лв.", f"{stock} {p.unit}",
+                             ", ".join([c.name for c in p.categories]) if p.categories else "-",
+                             warehouse_str, supplier_name])
 
             print(format_table(["Продукт", "Цена", "Наличност", "Категории", "Локации", "Доставчик"], rows))
             print()

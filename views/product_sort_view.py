@@ -19,14 +19,13 @@ class ProductSortView:
 
     def _build_menu(self):
         """ Дефинира опциите за сортиране. """
-        return Menu("Сортиране на продукти", [
-            MenuItem("1", "По име (A–Z) – вградено сортиране", self.sort_by_name),
-            MenuItem("2", "По цена (висока -> ниска) – selection sort", self.sort_price_desc),
-            MenuItem("3", "По цена (ниска -> висока) – bubble sort", self.sort_price_asc),
-            MenuItem("4", "По количество (високо -> ниско) – bubble sort", self.sort_qty_desc),
-            MenuItem("5", "По количество (ниско -> високо) – selection sort", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Сортиране на продукти", [MenuItem("1", "По име (A–Z) – вградено сортиране",
+                                                       self.sort_by_name),
+                                              MenuItem("2", "По цена (висока -> ниска) – selection sort", self.sort_price_desc),
+                                              MenuItem("3", "По цена (ниска -> висока) – bubble sort", self.sort_price_asc),
+                                              MenuItem("4", "По количество (високо -> ниско) – bubble sort", self.sort_qty_desc),
+                                              MenuItem("5", "По количество (ниско -> високо) – selection sort", self.sort_qty_asc),
+                                              MenuItem("0", "Назад", lambda u: "break")])
 
 
     def sort_by_name(self, _):
@@ -46,20 +45,14 @@ class ProductSortView:
 
     # Количество високо - ниско
     def sort_qty_desc(self, _):
-        products = sorted(
-            self.controller.get_all(),
-            key=lambda p: self.controller.get_total_stock(p.product_id),
-            reverse=True
-        )
+        products = sorted(self.controller.get_all(), key=lambda p: self.controller.get_total_stock(p.product_id), reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
     # Количество ниско - високо
     def sort_qty_asc(self, _):
-        products = sorted(
-            self.controller.get_all(),
-            key=lambda p: self.controller.get_total_stock(p.product_id)
-        )
+        products = sorted(self.controller.get_all(), key=lambda p: self.controller.get_total_stock(p.product_id))
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
+
 
 
     # Общ метод за визуализация
@@ -75,10 +68,6 @@ class ProductSortView:
 
         for p in products:
             stock = self.controller.get_total_stock(p.product_id)
-            rows.append([
-                p.name,
-                f"{p.price:.2f} лв.",
-                f"{stock:.2f} {p.unit}"
-            ])
+            rows.append([p.name, f"{p.price:.2f} лв.", f"{stock:.2f} {p.unit}"])
 
         print(format_table(["Име", "Цена", "Количество"], rows))
