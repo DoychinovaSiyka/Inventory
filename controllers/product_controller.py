@@ -32,12 +32,12 @@ class ProductController:
         self.inventory_controller = None
         self.movement_controller = None
 
-    # Генерираме ново ID за продукт
+    # Генерирам ново ID за продукт
     @staticmethod
     def _generate_id() -> str:
         return str(uuid.uuid4())
 
-    # Връщаме текущия момент като текст
+    # Връщам текущия момент като текст
     @staticmethod
     def _now() -> str:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
