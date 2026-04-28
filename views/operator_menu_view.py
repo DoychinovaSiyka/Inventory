@@ -22,7 +22,7 @@ class OperatorMenuView:
         self.activity_log = controllers["activity_log"]
         self.supplier_controller = controllers["supplier"]
 
-    # Изгражда структурата на менюто при всяко извикване.
+
     def _build_menu(self):
         return Menu("Операторско меню", [MenuItem("1", "Управление на продукти", self.open_products),
                                          MenuItem("2", "Управление на категории", self.open_categories),
@@ -33,13 +33,13 @@ class OperatorMenuView:
                                          MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
                                          MenuItem("0", "Назад", lambda u: "break")])
 
-    # основен цикъл
+
     def show_menu(self, user):
         if user.role.lower() == "guest":  # гост - няма достъп
             print("Нямате достъп до операторското меню.")
             return
 
-        # Генерираме менюто локално
+        # Генерирам менюто локално
         menu = self._build_menu()
         while True:
             choice = menu.show()
