@@ -21,6 +21,7 @@ class ProductView:
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller)
 
+
     @staticmethod
     def format_lv(value):
         return f"{value:.2f} лв."
@@ -218,7 +219,6 @@ class ProductView:
 
         cat_raw = input("Нова категория (Enter за пропуск): ").strip()
         new_category_ids = None
-
         if cat_raw:
             try:
                 if cat_raw.isdigit():
