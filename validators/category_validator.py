@@ -90,12 +90,11 @@ class CategoryValidator:
         current = parent_id
         while current:
             parent = None
-            # Търсим родителя по най-обикновен начин
+            # Търсим родителя
             for c in all_categories:
                 if str(c.category_id) == str(current):
                     parent = c
                     break
-
             if parent is None:
                 break
             if str(parent.category_id) == str(category_id):
@@ -118,7 +117,6 @@ class CategoryValidator:
                     product_cat_ids.append(str(cat.category_id))
                 else:
                     product_cat_ids.append(str(cat))
-
             if target_id in product_cat_ids:
                 raise ValueError(f"Категорията не може да бъде изтрита, защото продуктът '{p.name}' я използва.")
 

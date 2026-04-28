@@ -59,7 +59,6 @@ class SupplierValidator:
 
     @staticmethod
     def validate_all(name, contact, address):
-        """ Изпълнява всички проверки наведнъж. """
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
         SupplierValidator.validate_address(address)

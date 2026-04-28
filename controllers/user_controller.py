@@ -114,7 +114,7 @@ class UserController:
         self.save_changes()
         return True
 
-    # Създаване на начални потребители
+
     def _create_default_admin(self):
         admin = User(first_name="Admin", last_name="System", email="admin@system.local", username="admin",
                      password=self._hash_password("admin123"), role="Admin", status="Active")

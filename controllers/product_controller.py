@@ -240,6 +240,6 @@ class ProductController:
     def selection_sort(self, key=lambda p: p.price, reverse=True) -> List[Product]:
         return selection_sort_logic(self.products, key, reverse)
 
-    # Записване на промените
+
     def save_changes(self) -> None:
         self.repo.save([p.to_dict() for p in self.products])

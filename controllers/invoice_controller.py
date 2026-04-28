@@ -95,6 +95,6 @@ class InvoiceController:
         return filter_by_total_range(self.invoices, min_total, max_total)
 
     def advanced_search(self, **kwargs):
-        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"),
-                                                 kwargs.get("min_total"), kwargs.get("max_total"))
+        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"), kwargs.get("min_total"),
+                                                 kwargs.get("max_total"))
         return filter_advanced(self.invoices, **kwargs)

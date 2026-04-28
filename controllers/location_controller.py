@@ -22,7 +22,6 @@ class LocationController:
             self.activity_log.add_log("system", action, message)
 
     def _generate_id(self) -> str:
-        """Генерира W1, W2, W3..."""
         if not self.locations:
             return "W1"
         numeric_ids = []
@@ -98,7 +97,6 @@ class LocationController:
         self.locations = [l for l in self.locations if l.location_id != location_id]
         self.save_changes()
         self._log("DELETE_LOCATION", f"Изтрита локация {location_id}")
-
         return True
 
     def save_changes(self) -> None:

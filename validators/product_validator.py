@@ -192,8 +192,6 @@ class ProductValidator:
             # Ако редактираме, пропускаме текущия продукт
             if exclude_product_id is not None and str(p.product_id) == str(exclude_product_id):
                 continue
-
             if p.name.lower() == name_lower:
                 raise ValueError(f"Продукт с име '{name}' вече съществува в каталога.")
-
         return True

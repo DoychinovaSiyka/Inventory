@@ -4,7 +4,7 @@ from datetime import datetime
 
 class InvoiceValidator:
 
-    # Парсване на числа от текст (пример: "12,50 лв")
+    # Парсване на числа от текст: "12,50 лв"
     @staticmethod
     def parse_float(value, field_name="Стойност"):
         if value is None or str(value).strip() == "":

@@ -85,7 +85,7 @@ class MovementController:
         prc = None if m_type_str == "MOVE" else MovementValidator.parse_price(price)
         product = self.product_controller.get_by_id(product_id)
 
-        # Актуализиране на инвентара (в RAM)
+        # Актуализиране на инвентара - в RAM
         if self.inventory_controller:
             if m_type_str == "MOVE":
                 self.inventory_controller.decrease_stock(product_id, from_location_id, qty, product.unit)

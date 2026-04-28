@@ -87,7 +87,6 @@ class InventoryValidator:
         for p_id, data in products.items():
             wh_sum = sum(float(v) for v in data.get("locations", {}).values())
             total_recorded = float(data.get("total_stock", 0.0))
-
             if abs(wh_sum - total_recorded) > 0.0001:
                 raise ValueError(f"Разсинхронизация при {data['name']}! " 
                                  f"Сума по локации: {wh_sum}, "

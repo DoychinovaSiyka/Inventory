@@ -69,7 +69,6 @@ class InventoryController:
 
         p["total_stock"] = float(p.get("total_stock", 0.0)) + qty
         p["locations"][warehouse_id] = float(p["locations"].get(warehouse_id, 0.0)) + qty
-
         self._save()
 
     def decrease_stock(self, product_id: str, warehouse_id: str, qty: float, unit: str) -> None:

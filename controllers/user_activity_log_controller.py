@@ -11,7 +11,6 @@ class UserActivityLogController:
         self.logs: List[UserActivityLog] = [UserActivityLog.from_dict(l) for l in raw_data]
 
     def add_log(self, user_id, action, details=""):
-        """ Създава нов лог запис. Вече не генерираме UUID и дати тук - моделът UserActivityLog. """
         new_log = UserActivityLog(user_id=user_id, action=action, details=details)
         self.logs.append(new_log)
         self.save_changes()
@@ -37,6 +36,7 @@ class UserActivityLogController:
     def save_changes(self):
         """Записва всички лог записи обратно в JSON файла."""
         self.repo.save([log.to_dict() for log in self.logs])
+
 
     # Изчистване на логове - полезно при администрация
     def clear_logs(self):
