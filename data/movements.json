@@ -12,11 +12,11 @@
         "price": 3.89,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "36856781-c07e-42a0-957a-545301130731",
@@ -31,11 +31,11 @@
         "price": 1.19,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "f26e6f0c-ea73-4fbd-9860-0fa838d30123",
@@ -50,11 +50,11 @@
         "price": 1.79,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "14741925-8eed-40c5-8ce3-75511bbae48a",
@@ -69,11 +69,11 @@
         "price": 1.59,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "56b8f808-0569-4436-98d1-dd43bd866768",
@@ -88,11 +88,11 @@
         "price": 8.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "bac75877-00a3-44f1-9bf2-22381b801911",
@@ -107,11 +107,11 @@
         "price": 1.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "12f4d919-387c-4d43-bff5-c088b2445ef5",
@@ -126,11 +126,11 @@
         "price": 5.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "4fb843f6-82aa-4bb4-941f-b327e488d053",
@@ -145,11 +145,11 @@
         "price": 2.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "704a133c-c78f-4ba2-92c5-701a85e04122",
@@ -164,11 +164,11 @@
         "price": 7.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "c4fc46a2-b727-4387-9914-0477236c0e2e",
@@ -183,11 +183,11 @@
         "price": 13.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "534bd9b3-8909-4a1f-872e-4095cc8da288",
@@ -202,11 +202,11 @@
         "price": 1.39,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "e6278227-e582-4f64-af34-8254fd35ae9b",
@@ -221,11 +221,11 @@
         "price": 9.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "45c0de59-e91c-4688-96ff-7398c588f5c1",
@@ -240,11 +240,11 @@
         "price": 1.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "0553b8af-7281-457d-904b-8bdb3f1176d3",
@@ -259,11 +259,11 @@
         "price": 2.29,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "7756c861-db59-4df7-8e7b-67ed23b39208",
@@ -278,11 +278,11 @@
         "price": 2.59,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "b24fdf17-8f21-4a8f-9f4c-0221daffc082",
@@ -297,11 +297,11 @@
         "price": 3.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "bf68983f-1a7a-4c87-801b-2c2352d63946",
@@ -316,11 +316,11 @@
         "price": 1.69,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "72373b3f-77c2-445b-9590-06f03b5a10fb",
@@ -335,11 +335,11 @@
         "price": 1.49,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "ad0c07e8-b08f-4483-a210-c667e46451bf",
@@ -354,11 +354,11 @@
         "price": 6.29,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "78981b42-6686-44d4-b29a-62013bd5a9ea",
@@ -373,11 +373,11 @@
         "price": 6.79,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "732b8904-fef3-4add-92fb-d9f485ec0807",
@@ -392,11 +392,11 @@
         "price": 1.89,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "cb064f2b-5b20-44a2-bd8a-de5ab3e97480",
@@ -411,11 +411,11 @@
         "price": 3.29,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "6ee2d2e7-52ea-44b9-b854-09591331dc24",
@@ -430,11 +430,11 @@
         "price": 2.39,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "b4f6ce7a-11ad-4194-8988-938fec1d931f",
@@ -449,11 +449,11 @@
         "price": 1.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "4f170587-0572-423a-b5f8-0560654b3ad6",
@@ -468,11 +468,11 @@
         "price": 7.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "04a34b3c-c777-4274-a172-fa33c2235374",
@@ -487,11 +487,11 @@
         "price": 12.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "c586526d-f48b-4c55-bb14-6074ed556b64",
@@ -506,11 +506,11 @@
         "price": 3.0,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "56f3f0e9-18db-47f1-8b9f-402d3d63e787",
@@ -525,11 +525,11 @@
         "price": 6.99,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:56:23",
         "created": "2026-04-21 00:56:23",
-        "modified": "2026-04-21 00:56:23"
+        "modified": "2026-04-21 00:56:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "ca8444dd-a084-4bcf-9f52-f25b2800da78",
@@ -544,11 +544,11 @@
         "price": 3.9,
         "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 00:57:55",
         "created": "2026-04-21 00:57:55",
-        "modified": "2026-04-21 00:57:55"
+        "modified": "2026-04-21 00:57:55",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "c7a9da69-cb69-4a67-a70e-f6fa8ba43aae",
@@ -563,11 +563,11 @@
         "price": 3.09,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 01:02:02",
         "created": "2026-04-21 01:02:02",
-        "modified": "2026-04-21 01:02:02"
+        "modified": "2026-04-21 01:02:02",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "552fad26-5082-45df-a526-9ef0cd7342ac",
@@ -582,11 +582,11 @@
         "price": 7.99,
         "supplier_id": null,
         "customer": "Калин Красимиров",
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 01:03:25",
         "created": "2026-04-21 01:03:25",
-        "modified": "2026-04-21 01:03:25"
+        "modified": "2026-04-21 01:03:25",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "bfea16ba-5184-499f-be1b-949d538891c5",
@@ -601,11 +601,11 @@
         "price": 1.23,
         "supplier_id": null,
         "customer": "Елена Кирева",
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 01:04:11",
         "created": "2026-04-21 01:04:11",
-        "modified": "2026-04-21 01:04:11"
+        "modified": "2026-04-21 01:04:11",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "d9e08c0b-d803-4169-b478-6a603af6b24b",
@@ -620,11 +620,11 @@
         "price": 0.0,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": "W1",
-        "to_location_id": "W3",
         "date": "2026-04-21 01:04:37",
         "created": "2026-04-21 01:04:37",
-        "modified": "2026-04-21 01:04:37"
+        "modified": "2026-04-21 01:04:37",
+        "from_location_id": "W1",
+        "to_location_id": "W3"
     },
     {
         "movement_id": "fb23fc85-54d3-4fdc-b410-3bd0675ac371",
@@ -639,11 +639,11 @@
         "price": 16.99,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 18:58:40",
         "created": "2026-04-21 18:58:40",
-        "modified": "2026-04-21 18:58:40"
+        "modified": "2026-04-21 18:58:40",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "425cb4ea-ff58-4193-a427-5ae7034d5fa6",
@@ -658,11 +658,11 @@
         "price": 8.0,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 18:59:35",
         "created": "2026-04-21 18:59:35",
-        "modified": "2026-04-21 18:59:35"
+        "modified": "2026-04-21 18:59:35",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "ec8fc481-a6c9-4cd9-9d5f-367a8df2f6c9",
@@ -677,11 +677,11 @@
         "price": 7.99,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 19:25:14",
         "created": "2026-04-21 19:25:14",
-        "modified": "2026-04-21 19:25:14"
+        "modified": "2026-04-21 19:25:14",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "f49b25e9-403b-43d3-8eb8-2bd6d492f003",
@@ -696,11 +696,11 @@
         "price": 4.56,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 20:16:43",
         "created": "2026-04-21 20:16:43",
-        "modified": "2026-04-21 20:16:43"
+        "modified": "2026-04-21 20:16:43",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "3a459142-0d89-4509-9569-8750835146b7",
@@ -715,11 +715,11 @@
         "price": 14.99,
         "supplier_id": null,
         "customer": "Тодор Иванов",
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-21 20:19:09",
         "created": "2026-04-21 20:19:09",
-        "modified": "2026-04-21 20:19:09"
+        "modified": "2026-04-21 20:19:09",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "be925082-fb97-49d9-8ff7-3a69e51d7b64",
@@ -734,11 +734,11 @@
         "price": 0.0,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": "W1",
-        "to_location_id": "W4",
         "date": "2026-04-21 20:35:45",
         "created": "2026-04-21 20:35:45",
-        "modified": "2026-04-21 20:35:45"
+        "modified": "2026-04-21 20:35:45",
+        "from_location_id": "W1",
+        "to_location_id": "W4"
     },
     {
         "movement_id": "f319f537-bf81-4738-868e-136f03e270e8",
@@ -753,11 +753,11 @@
         "price": 4.01,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-22 12:35:05",
         "created": "2026-04-22 12:35:05",
-        "modified": "2026-04-22 12:35:05"
+        "modified": "2026-04-22 12:35:05",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "64df1913-26b4-4129-ab81-64a3fd646410",
@@ -772,11 +772,11 @@
         "price": 2.99,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-23 21:28:03",
         "created": "2026-04-23 21:28:03",
-        "modified": "2026-04-23 21:28:03"
+        "modified": "2026-04-23 21:28:03",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "2a75bdc4-6974-4eea-9aa7-a4c923240eb1",
@@ -791,11 +791,11 @@
         "price": 32.0,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-23 21:28:44",
         "created": "2026-04-23 21:28:44",
-        "modified": "2026-04-23 21:28:44"
+        "modified": "2026-04-23 21:28:44",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "3de3aa51-fd7d-4238-b22a-7f772fa321f6",
@@ -810,11 +810,11 @@
         "price": 8.0,
         "supplier_id": "c1f8a1b2-7e4d-4c91-9a77-2f6b9c0a1111",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-23 21:33:23",
         "created": "2026-04-23 21:33:23",
-        "modified": "2026-04-23 21:33:23"
+        "modified": "2026-04-23 21:33:23",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "a27eac95-30fb-47f1-97d1-37bb312f8b48",
@@ -829,11 +829,11 @@
         "price": 8.0,
         "supplier_id": null,
         "customer": "Иван Иванов",
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-23 21:34:07",
         "created": "2026-04-23 21:34:07",
-        "modified": "2026-04-23 21:34:07"
+        "modified": "2026-04-23 21:34:07",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "b2cbec1f-71f1-423e-a4c5-7a2d7fdc11af",
@@ -848,11 +848,11 @@
         "price": 0.0,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": "W1",
-        "to_location_id": "W4",
         "date": "2026-04-23 21:34:48",
         "created": "2026-04-23 21:34:48",
-        "modified": "2026-04-23 21:34:48"
+        "modified": "2026-04-23 21:34:48",
+        "from_location_id": "W1",
+        "to_location_id": "W4"
     },
     {
         "movement_id": "1c09de98-bb71-4724-a1fe-86358de58c57",
@@ -867,11 +867,11 @@
         "price": 3.09,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 13:01:20",
         "created": "2026-04-28 13:01:20",
-        "modified": "2026-04-28 13:01:20"
+        "modified": "2026-04-28 13:01:20",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "0d4d4895-29e4-4b33-bdaf-af7c0bdea961",
@@ -886,11 +886,11 @@
         "price": 3.09,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 13:02:27",
         "created": "2026-04-28 13:02:27",
-        "modified": "2026-04-28 13:02:27"
+        "modified": "2026-04-28 13:02:27",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "91bec966-9418-4b10-aeb3-9765807bb828",
@@ -905,11 +905,11 @@
         "price": 4.99,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 13:03:16",
         "created": "2026-04-28 13:03:16",
-        "modified": "2026-04-28 13:03:16"
+        "modified": "2026-04-28 13:03:16",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "80eb1cd1-479e-4bfa-ab28-563b17160e04",
@@ -924,11 +924,11 @@
         "price": 4.99,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 13:05:10",
         "created": "2026-04-28 13:05:10",
-        "modified": "2026-04-28 13:05:10"
+        "modified": "2026-04-28 13:05:10",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "d3e44e2a-6e41-4495-884d-9799ea133232",
@@ -943,11 +943,11 @@
         "price": 2.0,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 13:06:58",
         "created": "2026-04-28 13:06:58",
-        "modified": "2026-04-28 13:06:58"
+        "modified": "2026-04-28 13:06:58",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "c26e6c9a-b219-42f1-b769-0e1133f02f8c",
@@ -962,11 +962,11 @@
         "price": 12.0,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 15:16:55",
         "created": "2026-04-28 15:16:55",
-        "modified": "2026-04-28 15:16:55"
+        "modified": "2026-04-28 15:16:55",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "b65eed6b-b16a-4d63-9368-2510acd1b885",
@@ -981,11 +981,11 @@
         "price": 8.0,
         "supplier_id": "system",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 15:23:06",
         "created": "2026-04-28 15:23:06",
-        "modified": "2026-04-28 15:23:06"
+        "modified": "2026-04-28 15:23:06",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "50166c47-0447-4100-9968-92278bbc967e",
@@ -1000,11 +1000,11 @@
         "price": 9.0,
         "supplier_id": "d2a9c3e4-8b55-4c2a-b6f2-3d7e8f1b2222",
         "customer": null,
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 15:45:35",
         "created": "2026-04-28 15:45:35",
-        "modified": "2026-04-28 15:45:35"
+        "modified": "2026-04-28 15:45:35",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "ed50ad63-b9c1-43cb-9ed3-2976495c85ac",
@@ -1019,11 +1019,11 @@
         "price": 2.02,
         "supplier_id": null,
         "customer": "Димитър",
-        "from_location_id": null,
-        "to_location_id": null,
         "date": "2026-04-28 15:46:21",
         "created": "2026-04-28 15:46:21",
-        "modified": "2026-04-28 15:46:21"
+        "modified": "2026-04-28 15:46:21",
+        "from_location_id": null,
+        "to_location_id": null
     },
     {
         "movement_id": "30699f12-ccf2-49c9-82f4-098945ec8b45",
@@ -1038,10 +1038,48 @@
         "price": 0.0,
         "supplier_id": null,
         "customer": null,
-        "from_location_id": "W1",
-        "to_location_id": "W2",
         "date": "2026-04-28 15:47:24",
         "created": "2026-04-28 15:47:24",
-        "modified": "2026-04-28 15:47:24"
+        "modified": "2026-04-28 15:47:24",
+        "from_location_id": "W1",
+        "to_location_id": "W2"
+    },
+    {
+        "movement_id": "4aee4a0c-c42f-4fa7-a87b-3b3233cc6b7f",
+        "product_id": "60410d16-5249-42f6-81f2-1249f9fb6bc9",
+        "product_name": "PROBA 1",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W1",
+        "movement_type": "IN",
+        "quantity": 190.0,
+        "unit": "бр.",
+        "description": "Начално зареждане при създаване на продукт",
+        "price": 45.0,
+        "supplier_id": "system",
+        "customer": null,
+        "date": "2026-04-29 00:13:39",
+        "created": "2026-04-29 00:13:39",
+        "modified": "2026-04-29 00:13:39",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "46d9824d-e3dc-42eb-9dbf-6a468f81d594",
+        "product_id": "9b362f8b-7c4e-40e5-b2e4-6960c31244a3",
+        "product_name": "PROBA 2",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "location_id": "W5",
+        "movement_type": "IN",
+        "quantity": 100.0,
+        "unit": "бр.",
+        "description": "Начално зареждане при създаване на продукт",
+        "price": 9.0,
+        "supplier_id": "system",
+        "customer": null,
+        "date": "2026-04-29 00:14:16",
+        "created": "2026-04-29 00:14:16",
+        "modified": "2026-04-29 00:14:16",
+        "from_location_id": null,
+        "to_location_id": null
     }
 ]

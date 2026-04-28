@@ -6,12 +6,11 @@ from models.category import Category
 class Product:
     def __init__(self, product_id, name, categories, unit, description, price,
                  supplier_id=None, tags=None, created=None, modified=None):
-        """ Моделът описва само продукта като елемент от каталога. """
 
         self.product_id = str(product_id) if product_id else str(uuid.uuid4())
         self.name = name
-        self.categories = categories if isinstance(categories, list) else []
-        self.unit = unit
+        self.categories = [c for c in categories if isinstance(c, Category)]
+        self.unit = unit.strip().lower().replace(".", "")  # Нормализирана мерна единица
         self.description = description
         self.price = float(price)
         self.supplier_id = str(supplier_id) if supplier_id else None
@@ -29,13 +28,7 @@ class Product:
         self.modified = Product.now()
 
     def to_dict(self):
-        """Правя обекта на речник за JSON. Категориите ги превръщам в ID-та."""
-        json_categories = []
-        for c in self.categories:
-            if isinstance(c, Category):
-                json_categories.append(str(c.category_id))
-            else:
-                json_categories.append(str(c))
+        json_categories = [str(c.category_id) for c in self.categories]
 
         return {"product_id": self.product_id, "name": self.name, "categories": json_categories,
                 "unit": self.unit, "description": self.description, "price": self.price,
@@ -44,8 +37,6 @@ class Product:
 
     @staticmethod
     def from_dict(data, category_controller=None):
-        """Създавам Product от JSON речник. Ако има контролер – връщам Category обекти.
-        Ако няма – запазвам ID-тата като стрингове."""
         if not data:
             return None
 
@@ -54,13 +45,9 @@ class Product:
 
         if category_controller:
             for cid in raw_categories:
-                if isinstance(cid, dict):
-                    fixed_categories.append(Category.from_dict(cid))
-                else:
-                    cat = category_controller.get_by_id(str(cid))
-                    fixed_categories.append(cat if cat else str(cid))
-        else:
-            fixed_categories = [str(c) for c in raw_categories]
+                cat = category_controller.get_by_id(str(cid))
+                if cat:
+                    fixed_categories.append(cat)
 
         return Product(product_id=data.get("product_id"), name=data.get("name", "Неизвестен"),
                        categories=fixed_categories, unit=data.get("unit"),

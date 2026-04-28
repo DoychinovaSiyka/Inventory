@@ -456,5 +456,19 @@
         "tags": [],
         "created": "2026-04-28 15:23:06",
         "modified": "2026-04-28 15:24:04"
+    },
+    {
+        "product_id": "60410d16-5249-42f6-81f2-1249f9fb6bc9",
+        "name": "PROBA 12",
+        "categories": [
+            "8f1c2d34-7b22-4e8f-9a11-0c4d3b2a5f77"
+        ],
+        "unit": "бр.",
+        "description": "PROBATA NA SIYKA",
+        "price": 120.0,
+        "supplier_id": null,
+        "tags": [],
+        "created": "2026-04-29 00:13:39",
+        "modified": "2026-04-29 00:15:29"
     }
 ]

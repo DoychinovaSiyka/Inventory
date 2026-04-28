@@ -142,7 +142,7 @@ class ProductView:
             return
 
         print("\nЛокации:")
-        for i, loc in enumerate(locations):
+        for i, loc in enumerate(locations, start=1):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
 
         while True:
@@ -151,8 +151,13 @@ class ProductView:
                 print("Операцията е отказана.")
                 return
             try:
-                # Използваме строгия валидатор -> нормализира към W1–Wn
-                location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
+                if loc_raw.isdigit():
+                    idx = int(loc_raw)
+                    if idx < 1 or idx > len(locations):
+                        raise ValueError("Невалиден избор за Локация.")
+                    location_id = locations[idx - 1].location_id
+                else:
+                    location_id = MovementValidator.validate_location_id(loc_raw, self.location_controller)
                 break
             except Exception as e:
                 print(f"[!] {e}")
@@ -397,8 +402,7 @@ class ProductView:
 
     def advanced_search(self, _):
         """ Извършва разширено търсене по множество критерии:
-        ключова дума, цена, количество, категория, локация и доставчик. Валидира входните стойности и
-        показва резултатите във формат таблица."""
+        ключова дума, цена, количество, категория, локация и доставчик. """
 
         print("\n  Разширено търсене  ")
         keyword = input("Ключова дума (Enter за пропуск): ").strip()
@@ -414,6 +418,7 @@ class ProductView:
         categories = self.category_controller.get_all()
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
+
         cat_raw = input("Категория (Enter за пропуск): ").strip()
         category_id = None
         if cat_raw:
@@ -428,6 +433,7 @@ class ProductView:
         locations = self.location_controller.get_all()
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
         loc_raw = input("Локация (Enter за пропуск): ").strip()
         location_id = None
         if loc_raw:
@@ -458,6 +464,7 @@ class ProductView:
 
             print(f"\nНамерени резултати ({len(results)}):\n")
             rows = []
+
             for p in results:
                 stock = self.product_controller.get_total_stock(p.product_id)
 
@@ -468,12 +475,14 @@ class ProductView:
                     if supplier:
                         supplier_name = supplier.name
 
-                # Складове, в които продуктът има наличност
-                warehouses = self.product_controller.inventory_controller.get_warehouses_with_product(p.name)
+                # Складове с реална наличност (> 0)
+                inv = self.product_controller.inventory_controller.data["products"].get(p.product_id, {})
+                locs = inv.get("locations", {})
+                warehouses = [loc_id for loc_id, qty in locs.items() if float(qty) > 0]
                 warehouse_str = ", ".join(warehouses) if warehouses else "—"
+
                 rows.append([p.name, f"{p.price:.2f} лв.", f"{stock} {p.unit}",
-                             ", ".join([c.name for c in p.categories]) if p.categories else "-",
-                             warehouse_str, supplier_name])
+                             ", ".join([c.name for c in p.categories]) if p.categories else "-", warehouse_str, supplier_name])
 
             print(format_table(["Продукт", "Цена", "Наличност", "Категории", "Локации", "Доставчик"], rows))
             print()
