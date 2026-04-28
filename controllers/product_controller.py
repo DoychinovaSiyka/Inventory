@@ -18,7 +18,6 @@ from analytics.product_analytics import (calculate_average_price, calculate_tota
 class ProductController:
     """Контролерът отговаря за работа с продуктите – добавяне, редакция, триене и справки."""
     def __init__(self, repo, category_controller, activity_log_controller=None):
-
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log = activity_log_controller
@@ -83,8 +82,6 @@ class ProductController:
                           categories=categories, unit=product_data['unit'], description=product_data['description'],
                           price=float(product_data['price']), supplier_id=product_data.get('supplier_id'),
                           tags=product_data.get('tags', []))
-
-        # Добавяме продукта в списъка
         self.products.append(product)
         self.save_changes()
         self._log(user_id, "ADD_PRODUCT", f"Добавен продукт: {product.name}")
@@ -131,7 +128,6 @@ class ProductController:
             product.price = new_price_valid
             has_changes = True
 
-        # Категории
         if new_category_ids is not None:
             ProductValidator.validate_category_exists(new_category_ids, self.category_controller)
             new_categories = [self.category_controller.get_by_id(cid) for cid in new_category_ids]
@@ -156,7 +152,6 @@ class ProductController:
             product.update_modified()
             self.save_changes()
             self._log(user_id, "EDIT_PRODUCT", f"Обновен продукт: {product.name}")
-
         return True
 
     # Изтриване на продукт
@@ -169,7 +164,6 @@ class ProductController:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт ID {product_id}")
             return True
-
         return False
 
     def remove_by_name(self, name: str, user_id: str) -> bool:
@@ -180,7 +174,6 @@ class ProductController:
             self.save_changes()
             self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт '{name}'")
             return True
-
         return False
 
     # Информация за наличности

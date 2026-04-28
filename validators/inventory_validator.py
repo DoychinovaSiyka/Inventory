@@ -5,10 +5,8 @@ class InventoryValidator:
 
     @staticmethod
     def validate_string(text, field_name, min_len=2):
-        # Проверка за нормален текст (не празен, не само цифри)
         if not text or not isinstance(text, str):
             raise ValueError(f"{field_name} трябва да бъде текстово поле.")
-
         clean_text = text.strip()
         if len(clean_text) < min_len:
             raise ValueError(f"{field_name} трябва да е поне {min_len} символа.")
@@ -110,7 +108,6 @@ class InventoryValidator:
             val = InventoryValidator._validate_number(qty, f"Количество в запис #{idx}")
             if val <= 0:
                 raise ValueError(f"Запис #{idx}: Количеството трябва да е над 0.")
-
             if mtype == "MOVE":
                 if not m.get("from_warehouse") or not m.get("to_warehouse"):
                     raise ValueError(f"Запис #{idx}: Липсва склад при MOVE.")

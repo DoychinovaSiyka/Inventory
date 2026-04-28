@@ -21,11 +21,10 @@ class MovementController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
+
         self.movements: List[Movement] = []
         self._load_movements()
-
-        # Инвентарът се пресмята само в паметта
-        self._sync_inventory_only_in_memory()
+        self._sync_inventory_only_in_memory()   # Инвентарът се пресмята само в паметта
 
     def _load_movements(self) -> None:
         raw = self.repo.load() or []
@@ -36,7 +35,6 @@ class MovementController:
             return
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
-
         try:
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
         except Exception:
@@ -87,7 +85,6 @@ class MovementController:
 
         qty = MovementValidator.parse_quantity(quantity)
         prc = None if m_type_str == "MOVE" else MovementValidator.parse_price(price)
-
         product = self.product_controller.get_by_id(product_id)
 
         # Актуализиране на инвентара (в RAM)
@@ -113,7 +110,6 @@ class MovementController:
 
         if MovementType[m_type_str] == MovementType.OUT:
             self.invoice_controller.create_from_movement(movement, product, customer, user_id)
-
         self.rebuild_inventory()
         return movement
 
@@ -123,15 +119,12 @@ class MovementController:
             return []
         return [m for m in self.movements if keyword in m.description.lower()]
 
-
     def advanced_filter(self, **criteria) -> List[Movement]:
         return filter_advanced(self.movements, **criteria)
-
 
     def rebuild_inventory(self) -> None:
         if not self.inventory_controller:
             return
-
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
         self.inventory_controller.rebuild_inventory_from_movements(safe_movements)

@@ -51,7 +51,6 @@ class ProductValidator:
             cid = str(c.category_id) if isinstance(c, Category) else str(c)
             if not cid.strip():
                 raise ValueError("Има празна или невалидна категория.")
-
         return categories
 
 
@@ -72,7 +71,6 @@ class ProductValidator:
             raise ValueError("Мерната единица е задължителна.")
 
         u = unit.strip().lower()
-
         mapping = {"кг": "кг.", "kg": "кг.", "килограм": "кг.", "килограма": "кг.",
                    "килограми": "кг.", "бр": "бр.", "бр.": "бр.", "брой": "бр.", "l": "л.",
                    "л": "л.", "литър": "л.", "литра": "л.", "литри": "л.", "пакет": "пакет",
@@ -88,7 +86,6 @@ class ProductValidator:
         allowed = ["кг.", "бр.", "л.", "пакет"]
         if u not in allowed:
             raise ValueError(f"Невалидна мерна единица. Разрешени: {', '.join(allowed)}")
-
         return u
 
 
@@ -137,7 +134,6 @@ class ProductValidator:
         return i
 
 
-    # ⭐ НОВО — нужно за разширено търсене
     @staticmethod
     def parse_optional_float(value: str | None):
         """Парсира число или връща None при празен вход."""
@@ -192,7 +188,6 @@ class ProductValidator:
             return
 
         name_lower = name.strip().lower()
-
         for p in products:
             # Ако редактираме, пропускаме текущия продукт
             if exclude_product_id is not None and str(p.product_id) == str(exclude_product_id):

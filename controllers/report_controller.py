@@ -11,8 +11,8 @@ class ReportResult:
 
 class ReportController:
     """Контролер за справки. Не пази състояние и не променя модели."""
-    def __init__(self, repo, product_controller, movement_controller,
-                 invoice_controller, location_controller, inventory_controller):
+    def __init__(self, repo, product_controller, movement_controller, invoice_controller,
+                 location_controller, inventory_controller):
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -22,9 +22,7 @@ class ReportController:
 
     # вътрешен метод – автоматично записване на отчет чрез модела Report
     def _save_report(self, report_type, parameters, summary, data):
-        report = Report(report_type=report_type, parameters=parameters,
-                        data={"summary": summary, "data": data})
-
+        report = Report(report_type=report_type, parameters=parameters, data={"summary": summary, "data": data})
         all_reports_raw = self.repo.load() or []
         all_reports_raw.append(report.to_dict())
         self.repo.save(all_reports_raw)
@@ -33,7 +31,6 @@ class ReportController:
     def _build_summary(self, data):
         total_qty = 0.0
         total_value = 0.0
-
         for item in data:
             qty = item.get("quantity", 0)
             price = item.get("price", 0)
@@ -139,10 +136,8 @@ class ReportController:
             product = self.product_controller.get_by_id(m.product_id)
             if not product:
                 continue
-
             location = self.location_controller.get_by_id(m.location_id)
             location_name = location.name if location else "-"
-
             supplier_name = "-"
             if self.movement_controller.supplier_controller:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
@@ -185,8 +180,8 @@ class ReportController:
             if m.movement_type != MovementType.OUT:
                 continue
             product = self.product_controller.get_by_id(m.product_id)
-            if not product: continue
-
+            if not product:
+                continue
             name = product.name
             if name not in stats:
                 stats[name] = {"quantity": 0, "total": 0.0, "unit": product.unit}
@@ -214,7 +209,6 @@ class ReportController:
         for product in self.product_controller.get_all():
             pid, unit = product.product_id, product.unit
             current_stock = self.inventory_controller.get_total_stock(pid)
-
             sold = 0
             for m in self.movement_controller.movements:
                 if m.product_id == pid and m.movement_type == MovementType.OUT:
@@ -239,7 +233,6 @@ class ReportController:
             if p.name and name_clean in p.name.lower():
                 product = p
                 break
-
         if product is None:
             summary = {"found": False}
             self._save_report("product_lifecycle", {"name": name}, summary, [])
@@ -249,7 +242,6 @@ class ReportController:
         current_stock = self.inventory_controller.get_total_stock(pid)
         total_in = 0.0
         total_out = 0.0
-
         for m in self.movement_controller.movements:
             if m.product_id != pid: continue
             if m.movement_type == MovementType.IN:
@@ -259,8 +251,7 @@ class ReportController:
                 total_out += m.quantity
 
         initial_stock = current_stock + total_out - total_in
-        data = {"product": product.name, "unit": unit,
-                "initial_stock": initial_stock, "total_in": total_in,
+        data = {"product": product.name, "unit": unit, "initial_stock": initial_stock, "total_in": total_in,
                 "total_out": total_out, "expected_stock": current_stock, "current_stock": current_stock,
                 "revenue": round(total_out * product.price, 2)}
 

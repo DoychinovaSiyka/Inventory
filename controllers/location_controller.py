@@ -30,7 +30,6 @@ class LocationController:
             num = str(loc.location_id).replace("W", "")
             if num.isdigit():
                 numeric_ids.append(int(num))
-
         next_id = max(numeric_ids) + 1 if numeric_ids else 1
         return f"W{next_id}"
 

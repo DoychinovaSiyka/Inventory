@@ -5,14 +5,13 @@ from validators.supplier_validator import SupplierValidator
 
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
-
     def __init__(self, repo):
         self.repo = repo
         # Зареждаме съществуващите данни от репозиториума
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
-    # CREATE
+
     def add(self, name: str, contact: str, address: str) -> Supplier:
         """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
@@ -35,7 +34,7 @@ class SupplierController:
                 return supplier
         return None
 
-    # UPDATE
+
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
@@ -52,13 +51,10 @@ class SupplierController:
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
-
         supplier.update_modified()
-
         self.save_changes()
         return supplier
 
-    # DELETE
     def remove(self, supplier_id: str) -> bool:
         """ Изтрива доставчик след проверка за съществуване. """
         SupplierValidator.validate_exists(supplier_id, self)

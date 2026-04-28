@@ -2,7 +2,6 @@ import re
 
 
 class SupplierValidator:
-    # Регулярен израз за имейл
     email_regex = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
     # Регулярен израз за телефон - поддържа формати като +359... или 08...
@@ -30,7 +29,6 @@ class SupplierValidator:
 
         if not (is_email or is_phone):
             raise ValueError("Контактът трябва да бъде валиден имейл или телефон (напр. +359...).")
-
         return clean_contact
 
     @staticmethod

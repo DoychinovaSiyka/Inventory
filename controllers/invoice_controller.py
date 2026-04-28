@@ -30,7 +30,6 @@ class InvoiceController:
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         InvoiceValidator.validate_all(**invoice_data)
 
-        # ID и дати се генерират в модела
         invoice = Invoice(**invoice_data)
         self.invoices.append(invoice)
         self._save_changes()

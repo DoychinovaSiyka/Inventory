@@ -15,7 +15,6 @@ class InventoryController:
         if isinstance(data, list):
             self.data = {"products": {}}
             return
-
         if "products" not in data:
             data["products"] = {}
         self.data = data
@@ -81,12 +80,10 @@ class InventoryController:
         p = self._get_product(product_id)
         if not p:
             return
-
         qty = float(qty)
         current = float(p.get("total_stock", 0.0))
         if current < qty:
             return
-
         p["total_stock"] = current - qty
 
         if warehouse_id in p["locations"]:
@@ -109,7 +106,6 @@ class InventoryController:
             return
 
         qty = float(qty)
-
         if from_wh not in p["locations"]:
             return
 
@@ -126,7 +122,6 @@ class InventoryController:
     # ПЪЛНО ПРЕСМЯТАНЕ
     def rebuild_inventory_from_movements(self, movements: List[Any]) -> None:
         self.data = {"products": {}}
-
         if not movements:
             self._save()
             return
@@ -142,5 +137,4 @@ class InventoryController:
                 self.decrease_stock(pid, m.location_id, qty, unit)
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
-
         self._save()

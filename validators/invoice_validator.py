@@ -30,7 +30,7 @@ class InvoiceValidator:
         except:
             raise ValueError(f"Невалиден UUID формат за {field_name}: {value}")
 
-    # Основни проверки за полета
+
     @staticmethod
     def validate_product(product):
         if not product or not isinstance(product, str):
@@ -123,7 +123,6 @@ class InvoiceValidator:
             InvoiceValidator.validate_date(start_date)
         if end_date:
             InvoiceValidator.validate_date(end_date)
-
         if min_total is not None:
             InvoiceValidator.parse_float(min_total, "Минимална сума")
         if max_total is not None:

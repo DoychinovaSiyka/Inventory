@@ -3,16 +3,13 @@ from models.user_activity_log import UserActivityLog
 
 
 class UserActivityLogController:
-    """Контролерът управлява лог записите на потребителската активност.
-    Координира записването и зареждането от JSON хранилището."""
-
+    """Контролерът управлява логовете и ги записва в JSON."""
     def __init__(self, repo):
         self.repo = repo
         # Зареждаме съществуващите логове от репозиториума
         raw_data = self.repo.load() or []
         self.logs: List[UserActivityLog] = [UserActivityLog.from_dict(l) for l in raw_data]
 
-    # CREATE - Добавяне на нов лог
     def add_log(self, user_id, action, details=""):
         """ Създава нов лог запис. Вече не генерираме UUID и дати тук - моделът UserActivityLog. """
         new_log = UserActivityLog(user_id=user_id, action=action, details=details)

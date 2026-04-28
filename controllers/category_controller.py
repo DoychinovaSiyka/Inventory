@@ -8,8 +8,7 @@ from analytics.category_analytics import build_category_tree
 
 
 class CategoryController:
-    """Контролерът управлява категориите и координира работата между модела,
-    валидаторите и хранилището, като изпълнява основните CRUD операции."""
+    """Контролерът управлява категориите и координира CRUD операциите."""
     def __init__(self, repo: Repository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -26,7 +25,7 @@ class CategoryController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # CREATE
+
     def add(self, category_data: dict, user_id: str) -> Category:
         name = category_data.get("name")
         description = category_data.get("description", "")
@@ -42,9 +41,7 @@ class CategoryController:
         self.categories.append(category)
         self._save_changes()
         self._log(user_id, "ADD_CATEGORY", f"Добавена категория: {name}")
-
         return category
-
 
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
@@ -53,13 +50,11 @@ class CategoryController:
         if category.name == new_name:
             return True
         CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
-
         category.name = new_name
         category.update_modified()
         self._save_changes()
         self._log(user_id, "EDIT_CATEGORY", f"Име променено на {new_name}")
         return True
-
 
     def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
@@ -67,7 +62,6 @@ class CategoryController:
 
         if category.description == new_description:
             return True
-
         category.description = new_description
         category.update_modified()
         self._save_changes()
@@ -77,7 +71,6 @@ class CategoryController:
     # UPDATE – промяна на родител
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
-
         if category.parent_id == parent_id:
             return True
 
@@ -91,7 +84,7 @@ class CategoryController:
         self._log(user_id, "EDIT_CATEGORY", "Родител променен")
         return True
 
-    # DELETE
+
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
         CategoryValidator.validate_exists(category_id, self)
 
@@ -100,12 +93,10 @@ class CategoryController:
 
         before = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
-
         deleted = len(self.categories) < before
         if deleted:
             self._save_changes()
             self._log(user_id, "DELETE_CATEGORY", f"Категория {category_id} изтрита")
-
         return deleted
 
     # Публични методи за достъп

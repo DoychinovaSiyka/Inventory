@@ -17,20 +17,17 @@ class LocationValidator:
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError("Името съдържа невалидни символи.")
-
         return cleaned
 
     @staticmethod
     def validate_zone(zone):
         if zone is None:
             return ""
-
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
         cleaned = zone.strip()
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
-
         return cleaned
 
     @staticmethod
@@ -42,10 +39,8 @@ class LocationValidator:
 
         if not isinstance(capacity, int):
             raise ValueError("Капацитетът трябва да е цяло число.")
-
         if capacity <= 0:
             raise ValueError("Капацитетът трябва да е положително число.")
-
         return capacity
 
     @staticmethod

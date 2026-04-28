@@ -5,7 +5,6 @@ from validators.user_validator import UserValidator
 
 class UserController:
     """Контролерът управлява потребителите. При първо стартиране създава админ и оператор."""
-
     def __init__(self, repo):
         self.repo = repo
         raw_data = self.repo.load()
@@ -19,8 +18,6 @@ class UserController:
                 self.users.append(User.from_dict(u))
 
         self.logged_user: Optional[User] = None
-
-
         has_admin = False
         has_operator = False
         for u in self.users:
@@ -28,7 +25,6 @@ class UserController:
                 has_admin = True
             if u.role == "Operator":
                 has_operator = True
-
 
         if not self.users:
             self._create_default_admin()
@@ -40,7 +36,6 @@ class UserController:
                 self._create_default_operator()
 
     def _hash_password(self, password: str) -> str:
-        """Прост хеш механизъм за пароли."""
         return "".join(str(ord(c)) for c in password)
 
     def save_changes(self):
@@ -68,7 +63,6 @@ class UserController:
     def login(self, username: str, password: str) -> Optional[User]:
         if not self.users:
             return None
-
         user = UserValidator.validate_login(username, password, self)
         hashed = self._hash_password(password)
         if user.password == hashed:
@@ -81,11 +75,8 @@ class UserController:
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-
-        new_user = User(first_name=first_name.strip(), last_name=last_name.strip(),
-                        email=email.strip(), username=username.strip(),
-                        password=self._hash_password(password), role=role, status="Active")
-
+        new_user = User(first_name=first_name.strip(), last_name=last_name.strip(), email=email.strip(),
+                        username=username.strip(), password=self._hash_password(password), role=role, status="Active")
         self.users.append(new_user)
         self.save_changes()
         return new_user
@@ -96,7 +87,6 @@ class UserController:
 
         if user.role == new_role:
             raise ValueError(f"Потребителят вече има роля '{new_role}'.")
-
         user.role = new_role
         user.update_modified()
         self.save_changes()
@@ -120,23 +110,20 @@ class UserController:
 
         user = UserValidator.validate_exists(target_username, self)
         UserValidator.validate_not_last_admin(user, self.users)
-
         self.users.remove(user)
         self.save_changes()
         return True
 
     # Създаване на начални потребители
     def _create_default_admin(self):
-        admin = User(first_name="Admin", last_name="System",
-                     email="admin@system.local", username="admin",
+        admin = User(first_name="Admin", last_name="System", email="admin@system.local", username="admin",
                      password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_changes()
 
     def _create_default_operator(self):
         operator = User(first_name="Operator", last_name="User", email="operator@example.com",
-                        username="operator", password=self._hash_password("operator123"),
-                        role="Operator", status="Active")
+                        username="operator", password=self._hash_password("operator123"), role="Operator", status="Active")
         self.users.append(operator)
         self.save_changes()
 
@@ -144,6 +131,5 @@ class UserController:
     # Анонимен потребител
     def create_anonymous_user(self) -> User:
         now = User.now()
-        return User(user_id="guest-0000", first_name="Anonymous", last_name="",
-                    email="", username="guest", password="", role="Anonymous", status="Active",
-                    created=now, modified=now)
+        return User(user_id="guest-0000", first_name="Anonymous", last_name="", email="",
+                    username="guest", password="", role="Anonymous", status="Active", created=now, modified=now)

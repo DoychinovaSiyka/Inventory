@@ -49,7 +49,6 @@ class MovementValidator:
         # премахваме мерни единици
         for token in ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]:
             raw = raw.replace(token, "")
-
         try:
             q = float(raw)
         except Exception:
@@ -64,7 +63,6 @@ class MovementValidator:
     def parse_price(price):
         if price is None or str(price).strip() == "":
             raise ValueError("Цената е задължителна.")
-
         p = str(price).lower().strip()
         for token in ["лв.", "лв", "lv.", "lv", " "]:
             p = p.replace(token, "")
