@@ -5,7 +5,6 @@ from validators.invoice_validator import InvoiceValidator
 
 class Invoice:
 
-
     @staticmethod
     def generate_id():
         return str(uuid.uuid4())

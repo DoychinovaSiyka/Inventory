@@ -42,13 +42,7 @@ class LocationController:
 
         LocationValidator.validate_unique_name(name, self.locations)
 
-        location = Location(
-            location_id=self._generate_id(),
-            name=name,
-            zone=zone,
-            capacity=capacity
-        )
-
+        location = Location(location_id = self._generate_id(), name=name, zone=zone, capacity=capacity)
         self.locations.append(location)
         self.save_changes()
         self._log("ADD_LOCATION", f"Добавена локация: {name}")

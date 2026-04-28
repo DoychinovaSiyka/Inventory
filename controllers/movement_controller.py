@@ -126,8 +126,10 @@ class MovementController:
             return []
         return [m for m in self.movements if keyword in m.description.lower()]
 
+
     def advanced_filter(self, **criteria) -> List[Movement]:
         return filter_advanced(self.movements, **criteria)
+
 
     def rebuild_inventory(self) -> None:
         if not self.inventory_controller:

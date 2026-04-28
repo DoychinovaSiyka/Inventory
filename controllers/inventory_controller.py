@@ -9,7 +9,6 @@ class InventoryController:
     def __init__(self, repo: JSONRepository):
         self.repo = repo
         data = self.repo.load()
-
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
             return
@@ -20,7 +19,6 @@ class InventoryController:
 
         if "products" not in data:
             data["products"] = {}
-
         self.data = data
 
     def _save(self):
@@ -87,7 +85,6 @@ class InventoryController:
 
         qty = float(qty)
         current = float(p.get("total_stock", 0.0))
-
         if current < qty:
             return
 

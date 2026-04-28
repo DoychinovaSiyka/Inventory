@@ -4,8 +4,7 @@ from validators.user_validator import UserValidator
 
 
 class UserController:
-    """Контролерът управлява потребителите. Работи коректно при празен users.json.
-    При първо стартиране създава един администратор и един оператор."""
+    """Контролерът управлява потребителите. При първо стартиране създава админ и оператор."""
 
     def __init__(self, repo):
         self.repo = repo
@@ -21,15 +20,24 @@ class UserController:
 
         self.logged_user: Optional[User] = None
 
-        # Ако няма нито един потребител – създавам админ и оператор
+        # Проверявам дали има админ и оператор – по студентски, без any()
+        has_admin = False
+        has_operator = False
+
+        for u in self.users:
+            if u.role == "Admin":
+                has_admin = True
+            if u.role == "Operator":
+                has_operator = True
+
+        # Ако няма потребители – създавам и двамата
         if not self.users:
             self._create_default_admin()
             self._create_default_operator()
         else:
-            if not any(u.role == "Admin" for u in self.users):
+            if not has_admin:
                 self._create_default_admin()
-
-            if not any(u.role == "Operator" for u in self.users):
+            if not has_operator:
                 self._create_default_operator()
 
     def _hash_password(self, password: str) -> str:
@@ -37,7 +45,7 @@ class UserController:
         return "".join(str(ord(c)) for c in password)
 
     def save_changes(self):
-        """Записва промените в репозиториума."""
+        """Записва промените в JSON файла."""
         self.repo.save([u.to_dict() for u in self.users])
 
     # READ операции
@@ -51,9 +59,9 @@ class UserController:
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        target_id = str(user_id)
+        user_id = str(user_id)
         for u in self.users:
-            if u.user_id == target_id:
+            if u.user_id == user_id:
                 return u
         return None
 
@@ -114,11 +122,12 @@ class UserController:
 
         user = UserValidator.validate_exists(target_username, self)
         UserValidator.validate_not_last_admin(user, self.users)
+
         self.users.remove(user)
         self.save_changes()
         return True
 
-    # Създаване на начални потребители при празен файл
+    # Създаване на начални потребители
     def _create_default_admin(self):
         admin = User(first_name="Admin", last_name="System",
                      email="admin@system.local", username="admin",
@@ -133,7 +142,8 @@ class UserController:
         self.users.append(operator)
         self.save_changes()
 
-    # Анонимен потребител за гост режим
+
+    # Анонимен потребител
     def create_anonymous_user(self) -> User:
         now = User.now()
         return User(user_id="guest-0000", first_name="Anonymous", last_name="",

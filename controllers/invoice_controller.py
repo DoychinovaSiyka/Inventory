@@ -8,7 +8,7 @@ from filters.invoice_filters import (filter_by_customer, filter_by_product,
 
 
 class InvoiceController:
-    """Контролерът се грижи само за CRUD операциите и координацията между слоевете."""
+    """Контролерът се само за CRUD операциите и координацията между слоевете."""
     def __init__(self, repo: JSONRepository, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -32,7 +32,6 @@ class InvoiceController:
 
         # ID и дати се генерират в модела
         invoice = Invoice(**invoice_data)
-
         self.invoices.append(invoice)
         self._save_changes()
         self._log(user_id, "GENERATE_INVOICE", f"Ръчно генерирана фактура за {invoice.customer}")

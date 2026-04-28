@@ -15,7 +15,6 @@ class Category:
         self.created = created or now
         self.modified = modified or now
 
-
         CategoryValidator.validate_name(self.name)
         CategoryValidator.validate_description(self.description)
 

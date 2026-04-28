@@ -17,7 +17,6 @@ class SupplierController:
         """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
 
-
         supplier = Supplier(name=name.strip(), contact=contact.strip(), address=address.strip())
         self.suppliers.append(supplier)
         self.save_changes()

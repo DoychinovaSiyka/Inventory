@@ -26,6 +26,7 @@ class Supplier:
                 "contact": self.contact, "address": self.address,
                 "created": self.created, "modified": self.modified}
 
+
     @staticmethod
     def from_dict(d):
         if not d:

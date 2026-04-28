@@ -6,7 +6,6 @@ class User:
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
 
-        # Ако user_id е подаден (от JSON), го ползваме, иначе правим нов.
         self.user_id = str(user_id) if user_id else str(uuid.uuid4())
         self.first_name = first_name
         self.last_name = last_name

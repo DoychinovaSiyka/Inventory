@@ -26,26 +26,17 @@ class UserActivityLog:
 
     def to_dict(self):
         """Превръща лог записа в речник за JSON."""
-        return {
-            "log_id": self.log_id,
-            "user_id": self.user_id,
-            "action": self.action,
-            "details": self.details,
-            "timestamp": self.timestamp
-        }
+        return {"log_id": self.log_id, "user_id": self.user_id,
+                "action": self.action, "details": self.details, "timestamp": self.timestamp}
 
     @staticmethod
     def from_dict(data):
         """Възстановява лог запис от речник."""
         if not data:
             return None
-        return UserActivityLog(
-            log_id=data.get("log_id"),
-            user_id=data.get("user_id"),
-            action=data.get("action"),
-            details=data.get("details", ""),
-            timestamp=data.get("timestamp")
-        )
+        return UserActivityLog(log_id=data.get("log_id"),
+                               user_id=data.get("user_id"), action=data.get("action"),
+                               details=data.get("details", ""), timestamp=data.get("timestamp"))
 
     def __str__(self):
         return f"[{self.timestamp}] Потребител: {self.user_id} -> Действие: {self.action}"

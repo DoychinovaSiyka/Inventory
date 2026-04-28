@@ -80,7 +80,7 @@ class ProductController:
         # Взимаме обектите на категориите
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
-        # Създаваме продукта (моделът генерира created/modified)
+        # Създаваме продукта
         product = Product(product_id=self._generate_id(), name=product_data['name'],
                           categories=categories, unit=product_data['unit'], description=product_data['description'],
                           price=float(product_data['price']), supplier_id=product_data.get('supplier_id'),
@@ -122,7 +122,7 @@ class ProductController:
                 product.name = new_name_clean
                 has_changes = True
 
-        # Описание
+
         if new_description is not None:
             new_desc_clean = new_description.strip()
             if new_desc_clean != product.description:

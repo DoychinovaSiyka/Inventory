@@ -14,15 +14,10 @@ class UserActivityLogController:
 
     # CREATE - Добавяне на нов лог
     def add_log(self, user_id, action, details=""):
-        """ Създава нов лог запис. Вече не генерираме UUID и дати тук –
-        моделът UserActivityLog се грижи за това автоматично в своя __init__. """
+        """ Създава нов лог запис. Вече не генерираме UUID и дати тук - моделът UserActivityLog. """
 
         # Създаваме обекта – той сам ще си сложи timestamp и log_id (чрез модела)
-        new_log = UserActivityLog(
-            user_id=user_id,
-            action=action,
-            details=details
-        )
+        new_log = UserActivityLog(user_id=user_id, action=action, details=details)
 
         self.logs.append(new_log)
         self.save_changes()
@@ -49,7 +44,7 @@ class UserActivityLogController:
         """Записва всички лог записи обратно в JSON файла."""
         self.repo.save([log.to_dict() for log in self.logs])
 
-    # Изчистване на логове (полезно при администрация)
+    # Изчистване на логове - полезно при администрация
     def clear_logs(self):
         """Изтрива всички записи от историята."""
         self.logs = []

@@ -47,5 +47,6 @@ class Location:
                         capacity=data.get("capacity", 0), created=data.get("created"),
                         modified=data.get("modified"))
 
+
     def __str__(self):
         return f"Локация: {self.name} | Зона: {self.zone} | Капацитет: {self.capacity}"
