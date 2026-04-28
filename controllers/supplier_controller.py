@@ -5,23 +5,20 @@ from validators.supplier_validator import SupplierValidator
 
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
+
     def __init__(self, repo):
         self.repo = repo
-        self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in self.repo.load()]
+        # Зареждаме съществуващите данни от репозиториума
+        data = self.repo.load() or []
+        self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
     # CREATE
     def add(self, name: str, contact: str, address: str) -> Supplier:
         """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
 
-        # Създавам нов доставчик – моделът сам генерира ID и дати
-        supplier = Supplier(
-            supplier_id=None,
-            name=name.strip(),
-            contact=contact.strip(),
-            address=address.strip()
-        )
 
+        supplier = Supplier(name=name.strip(), contact=contact.strip(), address=address.strip())
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier
@@ -68,9 +65,11 @@ class SupplierController:
         """ Изтрива доставчик след проверка за съществуване. """
         SupplierValidator.validate_exists(supplier_id, self)
         supplier = self.get_by_id(supplier_id)
-        self.suppliers.remove(supplier)
-        self.save_changes()
-        return True
+        if supplier:
+            self.suppliers.remove(supplier)
+            self.save_changes()
+            return True
+        return False
 
     def save_changes(self) -> None:
         """Записва всички доставчици в JSON хранилището."""

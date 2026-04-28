@@ -15,13 +15,19 @@ class Location:
         self.name = name if name is not None else ""
         self.zone = zone if zone is not None else ""
         self.capacity = capacity
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        now = Location.now()
         self.created = created or now
         self.modified = modified or now
 
+    @staticmethod
+    def now():
+        """Връща текущата дата/час във формат YYYY-MM-DD HH:MM:SS."""
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     def update_modified(self):
         """Обновявам датата при промяна на локацията."""
-        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.modified = Location.now()
 
     def to_dict(self):
         """Правя обекта на речник, за да може да се запише в JSON."""

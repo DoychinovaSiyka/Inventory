@@ -1,65 +1,59 @@
-import uuid
-import json  # Използва се за директен запис в JSON файла
-from datetime import datetime
+from typing import List, Optional
 from models.user_activity_log import UserActivityLog
-from storage.json_repository import JSONRepository
 
 
 class UserActivityLogController:
-    def __init__(self, filepath="data/user_activity_log.json"):
-        # Път до файла, в който се съхраняват логовете
-        self.filepath = filepath
-        # Репозитори за четене на JSON съдържанието
-        self.repo = JSONRepository(filepath)
+    """Контролерът управлява лог записите на потребителската активност.
+    Координира записването и зареждането от JSON хранилището."""
 
-    @staticmethod
-    def _generate_log_id():
-        # Генерира уникален идентификатор за всеки лог запис
-        return str(uuid.uuid4())
+    def __init__(self, repo):
+        self.repo = repo
+        # Зареждаме съществуващите логове от репозиториума
+        raw_data = self.repo.load() or []
+        self.logs: List[UserActivityLog] = [UserActivityLog.from_dict(l) for l in raw_data]
 
-    @staticmethod
-    def _now() -> str:
-        # Връща текущата дата и час във формат YYYY-MM-DD HH:MM:SS
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    # CREATE
+    # CREATE - Добавяне на нов лог
     def add_log(self, user_id, action, details=""):
-        """Добавя нов запис в лог файла, без да изтрива или презаписва старите записи."""
+        """ Създава нов лог запис. Вече не генерираме UUID и дати тук –
+        моделът UserActivityLog се грижи за това автоматично в своя __init__. """
 
-        # Създаваме нов лог запис като речник
-        log_entry = UserActivityLog(user_id, action, details, timestamp=self._now()).to_dict()
-        log_entry["log_id"] = self._generate_log_id()
+        # Създаваме обекта – той сам ще си сложи timestamp и log_id (чрез модела)
+        new_log = UserActivityLog(
+            user_id=user_id,
+            action=action,
+            details=details
+        )
 
-        try:
-            # Зареждаме текущото съдържание на лог файла
-            data = self.repo.get_all()
+        self.logs.append(new_log)
+        self.save_changes()
+        return new_log
 
-            # Уеднаквяване на структурата – ако е речник, го превръщаме в списък
-            if isinstance(data, dict):
-                logs = list(data.values())
-            elif isinstance(data, list):
-                logs = data
-            else:
-                logs = []
+    # READ - Получаване на всички логове
+    def get_all(self) -> List[UserActivityLog]:
+        """Връща пълната история на действията."""
+        return self.logs
 
-            # Добавям новия запис към списъка
-            logs.append(log_entry)
-            # Записваме обратно в JSON файла
-            with open(self.filepath, 'w', encoding='utf-8') as f:
-                json.dump(logs, f, indent=4, ensure_ascii=False)
+    # READ - Филтриране по потребител
+    def get_by_user(self, user_id: str) -> List[UserActivityLog]:
+        """Връща всички действия на конкретен потребител."""
+        uid = str(user_id)
+        return [log for log in self.logs if log.user_id == uid]
 
-        except Exception as e:
-            print(f"Грешка при запис на лог: {e}")
+    # READ - Търсене по действие
+    def search_by_action(self, action_keyword: str) -> List[UserActivityLog]:
+        """Търси логове по ключова дума в действието."""
+        keyword = action_keyword.lower()
+        return [log for log in self.logs if keyword in log.action.lower()]
 
-    # READ
-    def get_all(self):
-        # Връща всички логове като списък, независимо от формата в JSON файла
-        data = self.repo.get_all()
-        if isinstance(data, dict):
-            return list(data.values())
-        return data if isinstance(data, list) else []
+    def save_changes(self):
+        """Записва всички лог записи обратно в JSON файла."""
+        self.repo.save([log.to_dict() for log in self.logs])
 
-
+    # Изчистване на логове (полезно при администрация)
+    def clear_logs(self):
+        """Изтрива всички записи от историята."""
+        self.logs = []
+        self.save_changes()
 
 
 # UserActivityLogController е единственият контролер, който не използва dependency injection.

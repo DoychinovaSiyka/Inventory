@@ -1,14 +1,12 @@
 from typing import Optional, List
-from datetime import datetime
-import uuid
 from models.user import User
 from validators.user_validator import UserValidator
-
 
 
 class UserController:
     """Контролерът управлява потребителите. Работи коректно при празен users.json.
     При първо стартиране създава един администратор и един оператор."""
+
     def __init__(self, repo):
         self.repo = repo
         raw_data = self.repo.load()
@@ -28,22 +26,18 @@ class UserController:
             self._create_default_admin()
             self._create_default_operator()
         else:
-            # Ако липсва администратор – добавям един
             if not any(u.role == "Admin" for u in self.users):
                 self._create_default_admin()
 
-            # Ако липсва оператор – добавям един
             if not any(u.role == "Operator" for u in self.users):
                 self._create_default_operator()
 
-    # Помощни методи, които използвам вътре в класа
-    def _get_now(self):
-        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     def _hash_password(self, password: str) -> str:
+        """Прост хеш механизъм за пароли."""
         return "".join(str(ord(c)) for c in password)
 
     def save_changes(self):
+        """Записва промените в репозиториума."""
         self.repo.save([u.to_dict() for u in self.users])
 
     # READ операции
@@ -57,12 +51,13 @@ class UserController:
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
+        target_id = str(user_id)
         for u in self.users:
-            if u.user_id == user_id:
+            if u.user_id == target_id:
                 return u
         return None
 
-    # Логин логика – само проверка и връщане на потребител
+    # Логин логика
     def login(self, username: str, password: str) -> Optional[User]:
         if not self.users:
             return None
@@ -73,7 +68,6 @@ class UserController:
         if user.password == hashed:
             self.logged_user = user
             return user
-
         return None
 
     # Администраторски действия
@@ -81,12 +75,10 @@ class UserController:
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        new_user = User(user_id=str(uuid.uuid4()), first_name=first_name.strip(),
-                        last_name=last_name.strip(), email=email.strip(),
-                        username=username.strip(),
-                        password=self._hash_password(password),
-                        role=role, status="Active", created=self._get_now(),
-                        modified=self._get_now())
+
+        new_user = User(first_name=first_name.strip(), last_name=last_name.strip(),
+                        email=email.strip(), username=username.strip(),
+                        password=self._hash_password(password), role=role, status="Active")
 
         self.users.append(new_user)
         self.save_changes()
@@ -100,7 +92,7 @@ class UserController:
             raise ValueError(f"Потребителят вече има роля '{new_role}'.")
 
         user.role = new_role
-        user.modified = self._get_now()
+        user.update_modified()
         self.save_changes()
 
     def change_status(self, acting_user: User, target_username: str, new_status: str):
@@ -112,7 +104,7 @@ class UserController:
             raise ValueError(f"Потребителят вече е в статус '{new_status}'.")
 
         user.status = new_status
-        user.modified = self._get_now()
+        user.update_modified()
         self.save_changes()
         return True
 
@@ -128,32 +120,22 @@ class UserController:
 
     # Създаване на начални потребители при празен файл
     def _create_default_admin(self):
-        """Създава администратор при първо стартиране."""
-        admin = User(user_id=str(uuid.uuid4()), first_name="Admin",
-                     last_name="System", email="admin@system.local",
-                     username="admin", password=self._hash_password("admin123"),
-                     role="Admin", status="Active", created=self._get_now(),
-                     modified=self._get_now())
-
+        admin = User(first_name="Admin", last_name="System",
+                     email="admin@system.local", username="admin",
+                     password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_changes()
 
     def _create_default_operator(self):
-        """Създава оператор, ако липсва такъв."""
-        operator = User(user_id=str(uuid.uuid4()), first_name="Operator",
-                        last_name="User", email="operator@example.com",
-                        username="operator",
-                        password=self._hash_password("operator123"),
-                        role="Operator", status="Active",
-                        created=self._get_now(), modified=self._get_now())
-
+        operator = User(first_name="Operator", last_name="User", email="operator@example.com",
+                        username="operator", password=self._hash_password("operator123"),
+                        role="Operator", status="Active")
         self.users.append(operator)
         self.save_changes()
 
     # Анонимен потребител за гост режим
     def create_anonymous_user(self) -> User:
-        now = self._get_now()
+        now = User.now()
         return User(user_id="guest-0000", first_name="Anonymous", last_name="",
-                    email="", username="guest", password="", role="Anonymous",
-                    status="Active", created=now, modified=now)
-
+                    email="", username="guest", password="", role="Anonymous", status="Active",
+                    created=now, modified=now)

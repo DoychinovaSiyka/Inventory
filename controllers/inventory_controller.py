@@ -31,12 +31,9 @@ class InventoryController:
 
     def _ensure_product(self, product_id: str, name: str, unit: str):
         if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {
-                "name": name,
-                "unit": unit,
-                "total_stock": 0.0,
-                "locations": {}
-            }
+            self.data["products"][product_id] = {"name": name,
+                                                 "unit": unit,
+                                                 "total_stock": 0.0, "locations": {}}
 
     # СПРАВКИ
     def get_warehouses_with_product(self, product_name: str) -> List[str]:

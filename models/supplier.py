@@ -1,13 +1,25 @@
-class Supplier:
+import uuid
+from datetime import datetime
 
-    def __init__(self, supplier_id, name, contact, address, created, modified):
-        """ Модел за доставчик. Датите (created/modified) идват от контролера."""
-        self.supplier_id = str(supplier_id)
+
+class Supplier:
+    def __init__(self, supplier_id=None, name="", contact="", address="", created=None, modified=None):
+        """ Модел за доставчик. Датите (created/modified) идват от контролера. """
+
+        # Уникален идентификатор - генерира се, ако липсва
+        self.supplier_id = str(supplier_id) if supplier_id else str(uuid.uuid4())
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
-        self.created = created
-        self.modified = modified
+
+        # Генериране на времеви клейма
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.created = created or now
+        self.modified = modified or now
+
+    def update_modified(self):
+        """Обновявам датата при промяна на обекта."""
+        self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
         return {"supplier_id": self.supplier_id, "name": self.name,

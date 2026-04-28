@@ -1,6 +1,5 @@
 import uuid
 from typing import Optional, List
-from datetime import datetime
 from models.movement import Movement, MovementType
 from storage.json_repository import JSONRepository
 from validators.movement_validator import MovementValidator
@@ -33,30 +32,22 @@ class MovementController:
         self.movements = [Movement.from_dict(m) for m in raw]
 
     def _sync_inventory_only_in_memory(self) -> None:
-        """Обновява инвентара в RAM паметта без да записва във файловете."""
         if not self.inventory_controller:
             return
 
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
+
         try:
             self.inventory_controller.rebuild_inventory_from_movements(safe_movements)
         except Exception:
             pass
 
-    @staticmethod
-    def _now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
     def _inventory_safe_movements(self) -> List[Movement]:
-        safe = []
-        for m in self.movements:
-            if self.product_controller.get_by_id(m.product_id):
-                safe.append(m)
-        return safe
+        return [m for m in self.movements if self.product_controller.get_by_id(m.product_id)]
 
     def get_by_id(self, movement_id: str) -> Optional[Movement]:
         movement_id = str(movement_id).strip()
@@ -68,7 +59,6 @@ class MovementController:
     def move_product(self, product_id: str, user_id: str,
                      from_loc: str, to_loc: str,
                      quantity: str, description: str) -> Movement:
-        """Преместване между локации (MOVE)."""
 
         qty = MovementValidator.parse_quantity(quantity)
         MovementValidator.validate_movement_type("MOVE")
@@ -80,34 +70,15 @@ class MovementController:
             self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
             self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)
 
-        now = self._now()
-
-        movement = Movement(
-            movement_id=str(uuid.uuid4()),
-            product_id=product_id,
-            product_name=product.name,
-            user_id=user_id,
-            location_id=None,
-            movement_type=MovementType.MOVE,
-            quantity=qty,
-            unit=product.unit,
-            description=description,
-            price=None,
-            supplier_id=None,
-            customer=None,
-            date=now,
-            created=now,
-            modified=now,
-            from_location_id=from_loc,
-            to_location_id=to_loc
-        )
+        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
+                            product_name=product.name, user_id=user_id, location_id=None,
+                            movement_type=MovementType.MOVE, quantity=qty, unit=product.unit,
+                            description=description, price=None, supplier_id=None,
+                            customer=None, from_location_id=from_loc, to_location_id=to_loc)
 
         self.movements.append(movement)
         self.save_changes()
-
-        # Пресмятаме целия инвентар наново от движенията
         self.rebuild_inventory()
-
         return movement
 
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str, quantity: str,
@@ -134,25 +105,11 @@ class MovementController:
                 elif m_type_str == "OUT":
                     self.inventory_controller.decrease_stock(product_id, location_id, qty, product.unit)
 
-        now = self._now()
-
-        movement = Movement(
-            movement_id=str(uuid.uuid4()),
-            product_id=product_id,
-            product_name=product.name,
-            user_id=user_id,
-            location_id=location_id,
-            movement_type=MovementType[m_type_str],
-            quantity=qty,
-            unit=product.unit,
-            description=description,
-            price=prc,
-            supplier_id=supplier_id,
-            customer=customer,
-            date=now,
-            created=now,
-            modified=now
-        )
+        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
+                            product_name=product.name, user_id=user_id, location_id=location_id,
+                            movement_type=MovementType[m_type_str], quantity=qty,
+                            unit=product.unit, description=description, price=prc, supplier_id=supplier_id,
+                            customer=customer, from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()
@@ -160,9 +117,7 @@ class MovementController:
         if MovementType[m_type_str] == MovementType.OUT:
             self.invoice_controller.create_from_movement(movement, product, customer, user_id)
 
-        # Пресмятаме целия инвентар наново от движенията
         self.rebuild_inventory()
-
         return movement
 
     def search_by_description(self, keyword: str) -> List[Movement]:
@@ -175,11 +130,9 @@ class MovementController:
         return filter_advanced(self.movements, **criteria)
 
     def rebuild_inventory(self) -> None:
-        """Ръчно преизчисляване на всичко."""
         if not self.inventory_controller:
             return
 
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
-
         self.inventory_controller.rebuild_inventory_from_movements(safe_movements)

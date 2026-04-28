@@ -245,10 +245,8 @@ class ProductView:
         try:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
 
-            self.product_controller.update_product(product_id=pid,
-                new_name=new_name,
-                new_description=new_desc,
-                new_price=new_price,
+            self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_desc,
+                                                   new_price=new_price,
                 new_quantity=None,
                 new_unit=None,
                 new_category_ids=new_category_ids,

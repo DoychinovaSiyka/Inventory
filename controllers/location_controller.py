@@ -1,5 +1,4 @@
 from typing import Optional, List
-from datetime import datetime
 from models.location import Location
 from storage.json_repository import JSONRepository
 from validators.location_validator import LocationValidator
@@ -43,9 +42,12 @@ class LocationController:
 
         LocationValidator.validate_unique_name(name, self.locations)
 
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        location = Location(location_id=self._generate_id(), name=name, zone=zone, capacity=capacity,
-                            created=now, modified=now)
+        location = Location(
+            location_id=self._generate_id(),
+            name=name,
+            zone=zone,
+            capacity=capacity
+        )
 
         self.locations.append(location)
         self.save_changes()
@@ -63,7 +65,6 @@ class LocationController:
             if loc.location_id == location_id:
                 return loc
         return None
-
 
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
@@ -91,7 +92,6 @@ class LocationController:
 
         return True
 
-
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
@@ -108,7 +108,6 @@ class LocationController:
         self._log("DELETE_LOCATION", f"Изтрита локация {location_id}")
 
         return True
-
 
     def save_changes(self) -> None:
         self.repo.save([l.to_dict() for l in self.locations])

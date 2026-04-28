@@ -11,17 +11,22 @@ class Category:
         self.parent_id = str(parent_id) if parent_id else None
 
         # Дати – ако не са подадени, се задават текущи
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now = Category.now()
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация на име и описание
+
         CategoryValidator.validate_name(self.name)
         CategoryValidator.validate_description(self.description)
 
+    @staticmethod
+    def now():
+        """Връща текущата дата/час във формат YYYY-MM-DD HH:MM:SS."""
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     def update_modified(self):
         """Обновявам датата при промяна."""
-        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.modified = Category.now()
 
     def to_dict(self):
         """Превръщам обекта в dict, за да може да се запише в JSON."""
