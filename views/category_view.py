@@ -69,11 +69,9 @@ class CategoryView:
         if len(description) < 3:
             print("Грешка: Описанието е твърде кратко (минимум 3 символа).")
             return
-
         print("\nОставете празно за главна категория или въведете НОМЕР или ID на родител:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
-
         try:
             # Използвам актуалното ID на потребителя вместо "system"
             current_uid = user.user_id if user else "unknown"
@@ -88,7 +86,6 @@ class CategoryView:
         category = self.select_category()
         if not category:
             return
-
         category_id = category.category_id
         current_uid = user.user_id if user else "unknown"
         print("\nОставете празно, ако не искате да променяте полето.")
@@ -147,7 +144,6 @@ class CategoryView:
             if choice == "":
                 return None
 
-            # Търсене по ID
             for cat in categories:
                 if choice.lower() == cat.category_id.lower():
                     return cat
@@ -156,5 +152,4 @@ class CategoryView:
                 index = int(choice) - 1
                 if 0 <= index < len(categories):
                     return categories[index]
-
             print("[!] Невалиден избор. Опитайте отново.\n")

@@ -458,7 +458,6 @@ class ProductView:
 
             print(f"\nНамерени резултати ({len(results)}):\n")
             rows = []
-
             for p in results:
                 stock = self.product_controller.get_total_stock(p.product_id)
 
@@ -490,10 +489,8 @@ class ProductView:
         if not products:
             print("Няма продукти.")
             return
-
         inventory = self.product_controller.inventory_controller.data["products"]
         all_locations = self.location_controller.get_all()
-
         for p in products:
             print(f"\n   {p.name}   ")
             inv_entry = inventory.get(p.product_id, None)

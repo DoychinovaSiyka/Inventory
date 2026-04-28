@@ -41,7 +41,6 @@ class GraphView:
         while True:
             menu = self._build_menu()
             choice = menu.show()
-
             if menu.execute(choice, user) == "break":
                 break
 
@@ -107,7 +106,6 @@ class GraphView:
         path.reverse()
 
         source_name = self.graph.nodes[best_source].name
-
         print("\n" + "═" * 45)
         print("         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")
         print("═" * 45)
@@ -116,5 +114,4 @@ class GraphView:
         print(f"  Разстояние: {shortest_distance} км")
         print(f"  Маршрут:    {' -> '.join(path)}")
         print("═" * 45)
-
         input("\nНатиснете Enter за връщане към менюто...")

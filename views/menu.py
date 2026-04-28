@@ -19,18 +19,16 @@ class Menu:
             choice = input("Избор (Enter за назад): ").strip()
             if choice == "":
                 return "0"
-
             valid_keys = [item.key for item in self.items]
             if choice in valid_keys:
                 return choice
-
             print(f"[!] '{choice}' не е валидна опция. Опитайте отново.\n")
+
 
     def execute(self, choice, user):
         for item in self.items:
             if item.key == choice:
                 return item.action(user)
-
         return None
 
 

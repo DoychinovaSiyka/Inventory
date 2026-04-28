@@ -78,7 +78,6 @@ class InvoiceView:
                 print("Фактурата не е намерена.")
                 print("Моля, опитайте отново.\n")
                 continue
-
             break
 
         columns = ["Поле", "Стойност"]
@@ -123,7 +122,6 @@ class InvoiceView:
         if not results:
             print("[!] Няма такъв продукт.")
             return
-
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
         rows = [[inv.invoice_id, inv.customer, f"{inv.quantity} {inv.unit}",
                  f"{inv.total_price} лв.", inv.date] for inv in results]
@@ -137,7 +135,6 @@ class InvoiceView:
             if not date_str:
                 print("[!] Прекъснато – празен вход.\n")
                 return
-
             try:
                 InvoiceValidator.validate_date(date_str)
                 break
@@ -201,7 +198,6 @@ class InvoiceView:
         if not results:
             print("\nНяма фактури в този диапазон.\n")
             return
-
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
         rows = [[inv.invoice_id, inv.product, inv.customer,
                  f"{inv.quantity} {inv.unit}", f"{float(inv.total_price):.2f} лв.", inv.date] for inv in results]

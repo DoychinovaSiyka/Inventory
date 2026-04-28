@@ -49,14 +49,11 @@ class LocationView:
         if not name:
             print("Операцията е отказана.")
             return
-
         zone = input("Зона/Сектор (Enter = пропуск): ").strip() or ""
-
         capacity_raw = input("Капацитет (число, Enter = отказ): ").strip()
         if not capacity_raw:
             print("Операцията е отказана.")
             return
-
         try:
             capacity = LocationValidator.validate_capacity(capacity_raw)
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity)
@@ -70,17 +67,14 @@ class LocationView:
         loc_id = input("Въведете Код/ID на локацията (Enter = отказ): ").strip()
         if not loc_id:
             return
-
         location = self.location_controller.get_by_id(loc_id)
         if location is None:
             print("[Грешка] Локация с такъв ID не съществува.")
             return
-
         print(f"\nРедактиране на {loc_id}. Оставете празно за запазване на старата стойност.")
         new_name = input(f"Ново име ({location.name}): ").strip() or None
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or None
         new_cap_raw = input(f"Нов капацитет ({location.capacity}): ").strip() or None
-
         try:
             # Обновяваме само ако има подадени нови данни
             self.location_controller.update(loc_id, name=new_name, zone=new_zone, capacity=new_cap_raw)
@@ -93,7 +87,6 @@ class LocationView:
         loc_id = input("Въведете Код/ID за изтриване (Enter = отказ): ").strip()
         if not loc_id:
             return
-
         confirm = input(f"Сигурни ли сте, че искате да изтриете {loc_id}? (y/n): ").lower()
         if confirm != 'y':
             print("Операцията е отказана.")

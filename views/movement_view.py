@@ -114,7 +114,6 @@ class MovementView:
                     print("Невалиден номер. Опитайте отново.\n")
                     continue
 
-            # Избор по ID
             raw_l = raw.lower()
             for item in items:
                 if isinstance(item, Product):
@@ -134,7 +133,7 @@ class MovementView:
             print("Трябва да сте логнат.")
             return
 
-        # Създаваме менюто локално тук
+        # Създаваме менюто локално
         menu = self._build_menu()
         while True:
             choice = menu.show()
@@ -544,7 +543,6 @@ class MovementView:
 
         rows = []
         columns = ["Дата", "Тип", "Продукт", "Количество", "Цена/Инфо", "Локация"]
-
         for m in results:
             product = self.product_controller.get_by_id(m.product_id)
             pname = product.name if product else m.product_id
