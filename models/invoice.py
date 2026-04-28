@@ -19,9 +19,7 @@ class Invoice:
         # Уникален идентификатор на фактурата
         self.invoice_id = invoice_id or Invoice.generate_id()
 
-        # Свързано движение (OUT)
-        self.movement_id = str(movement_id) if movement_id else None
-
+        self.movement_id = str(movement_id) if movement_id else None  # Свързано движение (OUT)
         self.product = product
         self.customer = customer
         self.quantity = quantity
