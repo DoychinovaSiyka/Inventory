@@ -60,7 +60,7 @@ class CategoryController:
         self._log(user_id, "EDIT_CATEGORY", f"Име променено на {new_name}")
         return True
 
-    # UPDATE – промяна на описание
+
     def update_description(self, category_id: str, new_description: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_description(new_description)
@@ -121,11 +121,9 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]
 
-
     def get_category_tree(self) -> List[dict]:
         return build_category_tree(self.categories)
 
-    # Търсене
     def search(self, keyword: str) -> List[Category]:
         if not keyword or len(keyword.strip()) < 3:
             return []

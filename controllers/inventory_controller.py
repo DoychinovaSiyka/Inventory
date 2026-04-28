@@ -96,10 +96,10 @@ class InventoryController:
             else:
                 del p["locations"][warehouse_id]
 
-        self._save()   # ← ЛИПСВАШЕ
+        self._save()
 
-    def move_stock(self, product_id: str, product_name: str, from_wh: str,
-                   to_wh: str, qty: float, unit: str) -> None:
+    def move_stock(self, product_id: str, product_name: str, from_wh: str, to_wh: str,
+                   qty: float, unit: str) -> None:
 
         if qty <= 0:
             return
@@ -130,7 +130,6 @@ class InventoryController:
         if not movements:
             self._save()
             return
-
         for m in movements:
             pid = m.product_id
             pname = m.product_name
@@ -139,10 +138,8 @@ class InventoryController:
 
             if m.movement_type.name == "IN":
                 self.increase_stock(pid, pname, m.location_id, qty, unit)
-
             elif m.movement_type.name == "OUT":
                 self.decrease_stock(pid, m.location_id, qty, unit)
-
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 

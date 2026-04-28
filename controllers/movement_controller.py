@@ -55,13 +55,11 @@ class MovementController:
                 return m
         return None
 
-    def move_product(self, product_id: str, user_id: str,
-                     from_loc: str, to_loc: str,
-                     quantity: str, description: str) -> Movement:
+    def move_product(self, product_id: str, user_id: str, from_loc: str,
+                     to_loc: str, quantity: str, description: str) -> Movement:
 
         qty = MovementValidator.parse_quantity(quantity)
         MovementValidator.validate_movement_type("MOVE")
-
         product = self.product_controller.get_by_id(product_id)
 
         # Актуализиране на инвентара - в RAM

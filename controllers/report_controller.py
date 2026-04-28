@@ -11,7 +11,6 @@ class ReportResult:
 
 class ReportController:
     """Контролер за справки. Не пази състояние и не променя модели."""
-
     def __init__(self, repo, product_controller, movement_controller,
                  invoice_controller, location_controller, inventory_controller):
         self.repo = repo

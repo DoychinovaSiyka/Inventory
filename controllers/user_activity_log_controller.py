@@ -15,7 +15,6 @@ class UserActivityLogController:
     # CREATE - Добавяне на нов лог
     def add_log(self, user_id, action, details=""):
         """ Създава нов лог запис. Вече не генерираме UUID и дати тук - моделът UserActivityLog. """
-
         new_log = UserActivityLog(user_id=user_id, action=action, details=details)
         self.logs.append(new_log)
         self.save_changes()

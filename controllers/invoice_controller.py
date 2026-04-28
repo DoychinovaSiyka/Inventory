@@ -39,7 +39,6 @@ class InvoiceController:
 
     def create_from_movement(self, movement, product, customer: str, user_id: str) -> Invoice:
         InvoiceValidator.validate_movement_for_invoice(movement)
-
         qty = float(movement.quantity)
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)

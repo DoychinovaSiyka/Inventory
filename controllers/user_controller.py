@@ -20,17 +20,16 @@ class UserController:
 
         self.logged_user: Optional[User] = None
 
-        # Проверявам дали има админ и оператор – по студентски, без any()
+
         has_admin = False
         has_operator = False
-
         for u in self.users:
             if u.role == "Admin":
                 has_admin = True
             if u.role == "Operator":
                 has_operator = True
 
-        # Ако няма потребители – създавам и двамата
+
         if not self.users:
             self._create_default_admin()
             self._create_default_operator()

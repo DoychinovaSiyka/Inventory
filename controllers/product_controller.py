@@ -24,8 +24,6 @@ class ProductController:
         self.activity_log = activity_log_controller
         self.products: List[Product] = []  # държим всички продукти в паметта
         self._load_products()
-
-        # контролерите се задават отвън, когато са налични
         self.supplier_controller = None
         self.inventory_controller = None
         self.movement_controller = None
@@ -80,7 +78,7 @@ class ProductController:
         # Взимаме обектите на категориите
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
 
-        # Създаваме продукта
+
         product = Product(product_id=self._generate_id(), name=product_data['name'],
                           categories=categories, unit=product_data['unit'], description=product_data['description'],
                           price=float(product_data['price']), supplier_id=product_data.get('supplier_id'),

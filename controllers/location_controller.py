@@ -34,6 +34,7 @@ class LocationController:
         next_id = max(numeric_ids) + 1 if numeric_ids else 1
         return f"W{next_id}"
 
+
     # CREATE
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
