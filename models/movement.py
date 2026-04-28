@@ -10,6 +10,7 @@ class MovementType(Enum):
 
 
 class Movement:
+
     @staticmethod
     def now():
         """Връща текущата дата/час във формат YYYY-MM-DD HH:MM:SS."""
