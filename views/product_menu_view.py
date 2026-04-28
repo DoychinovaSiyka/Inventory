@@ -245,8 +245,7 @@ class ProductView:
         try:
             new_price = ProductValidator.parse_float(new_price_raw, "Цена") if new_price_raw else product.price
 
-            self.product_controller.update_product(
-                product_id=pid,
+            self.product_controller.update_product(product_id=pid,
                 new_name=new_name,
                 new_description=new_desc,
                 new_price=new_price,
@@ -467,16 +466,10 @@ class ProductView:
             min_qty = ProductValidator.parse_optional_float(min_qty_raw)
             max_qty = ProductValidator.parse_optional_float(max_qty_raw)
 
-            results = self.product_controller.search_combined(
-                keyword=keyword,
-                min_price=min_price,
-                max_price=max_price,
-                min_quantity=min_qty,
-                max_quantity=max_qty,
-                category_id=category_id,
-                supplier_id=supplier_id,
-                location_id=location_id
-            )
+            results = self.product_controller.search_combined(keyword=keyword, min_price=min_price,
+                                                              max_price=max_price, min_quantity=min_qty,
+                                                              max_quantity=max_qty, category_id=category_id,
+                                                              supplier_id=supplier_id, location_id=location_id)
 
             if not results:
                 print("\n[!] Няма намерени продукти по тези критерии.\n")
