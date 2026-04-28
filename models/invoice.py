@@ -3,15 +3,15 @@ from validators.invoice_validator import InvoiceValidator
 
 
 class Invoice:
-    def __init__(self, invoice_id, movement_id, product, quantity, unit,
-                 unit_price, total_price, customer, date=None,
+    def __init__(self, invoice_id, movement_id, product, quantity, unit, unit_price, total_price, customer, date,
                  created=None, modified=None):
 
         # Уникален идентификатор на фактурата
-        self.invoice_id = str(invoice_id) if invoice_id else Invoice.generate_id()
+        self.invoice_id = str(invoice_id) if invoice_id else None
 
         # Свързано движение (OUT)
         self.movement_id = str(movement_id) if movement_id else None
+
         # Данни за продажбата
         self.product = product
         self.customer = customer
@@ -19,32 +19,19 @@ class Invoice:
         self.unit = unit
         self.unit_price = unit_price
         self.total_price = total_price
-        # Дати
-        now = Invoice.now()
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
 
-        # Валидация на всички полета
-        InvoiceValidator.validate_all(product=self.product, customer=self.customer,
-                                      quantity=self.quantity, unit=self.unit,
-                                      unit_price=self.unit_price, movement_id=self.movement_id, date=self.date,
-                                      total_price=self.total_price)
 
-    # Генерираме ново ID за фактура
-    @staticmethod
-    def generate_id():
-        import uuid
-        return str(uuid.uuid4())
-
-    # Връщаме текущия момент като текст
-    @staticmethod
-    def now():
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        InvoiceValidator.validate_all(product=self.product, customer=self.customer, quantity=self.quantity,
+                                      unit=self.unit, unit_price=self.unit_price,
+                                      movement_id=self.movement_id, date=self.date, total_price=self.total_price)
 
     def update_modified(self):
         """Обновява датата на последна промяна."""
-        self.modified = Invoice.now()
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self):
         """Конвертиране към речник за JSON."""

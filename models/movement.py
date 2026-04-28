@@ -1,60 +1,55 @@
-import uuid
-from datetime import datetime
-from validators.movement_validator import MovementValidator
-from models.movement_type import MovementType
+from enum import Enum
+
+
+class MovementType(Enum):
+    IN = "IN"
+    OUT = "OUT"
+    MOVE = "MOVE"
 
 
 class Movement:
+    def __init__(self, movement_id, product_id, product_name, user_id, location_id, movement_type, quantity, unit,
+                 description, price, date, created=None, modified=None, supplier_id=None, customer=None, from_location_id=None,
+                 to_location_id=None, location_name=None):
 
-    def __init__(self, movement_id, product_id, product_name, user_id,
-                 location_id, movement_type, quantity, unit, description,
-                 price=None, supplier_id=None, customer=None,
-                 date=None, created=None, modified=None,
-                 from_location_id=None, to_location_id=None):
-        """Модел за движение. Тук държа само данните и логиката за ID и датите."""
 
-        # Ако няма подадено ID – генерирам ново
-        self.movement_id = str(movement_id) if movement_id else Movement.generate_id()
-        # Основни данни
+        self.movement_id = str(movement_id)
+        # Продукт – ако няма име, слагам нещо смислено, за да не се чупят справките
         self.product_id = str(product_id)
-        self.product_name = product_name
+        self.product_name = product_name if product_name else "Неизвестен продукт"
+        # Потребителят, който е направил движението
         self.user_id = str(user_id)
-        self.location_id = location_id
+        # Основна локация – само ID, без име
+        self.location_id = str(location_id) if location_id else None
+        # При MOVE движения – от къде и към къде
+        self.from_location_id = str(from_location_id) if from_location_id else None
+        self.to_location_id = str(to_location_id) if to_location_id else None
+        # Тип движение – IN, OUT или MOVE
         self.movement_type = movement_type
-        self.quantity = quantity
-        self.unit = unit
-        self.description = description
-        self.price = price
+        try:
+            self.quantity = float(quantity)
+        except (ValueError, TypeError):
+            self.quantity = 0.0
+
+        self.unit = unit or ""
+        self.description = description or ""
+
+
+        try:
+            self.price = float(price) if price is not None else 0.0
+        except (ValueError, TypeError):
+            self.price = 0.0
+
+        # Доставчик или клиент – според типа движение
         self.supplier_id = supplier_id
         self.customer = customer
 
-        # Локации при MOVE
-        self.from_location_id = from_location_id
-        self.to_location_id = to_location_id
+        # Дати – ако не са подадени, ползвам датата на движението
+        self.date = date
+        self.created = created or date
+        self.modified = modified or date
 
-        # Дати
-        now = Movement.now()
-        self.date = date or now
-        self.created = created or now
-        self.modified = modified or now
-
-        # Валидация
-        MovementValidator.validate_all_fields(self)
-
-    # Генерираме ново ID
-    @staticmethod
-    def generate_id() -> str:
-        return str(uuid.uuid4())
-
-    # Текущ момент
-    @staticmethod
-    def now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    def update_modified(self):
-        """Обновявам датата при промяна."""
-        self.modified = Movement.now()
-
+    # SAVE - JSON
     def to_dict(self):
         return {"movement_id": self.movement_id, "product_id": self.product_id, "product_name": self.product_name,
                 "user_id": self.user_id, "location_id": self.location_id, "movement_type": self.movement_type.value
@@ -63,35 +58,37 @@ class Movement:
                 "supplier_id": self.supplier_id, "customer": self.customer, "from_location_id": self.from_location_id,
                 "to_location_id": self.to_location_id, "date": self.date, "created": self.created, "modified": self.modified}
 
+    # LOAD <- JSON
     @staticmethod
-    def from_dict(d):
-        """Създавам Movement от JSON речник."""
-        if not d:
+    def from_dict(data):
+        if not data:
             return None
 
-        # Възстановяване на movement_type
-        mt_raw = d.get("movement_type")
+        # Пробвам да възстановя типа движение (Enum)
+        mt_raw = data.get("movement_type")
         mt = MovementType.IN  # по подразбиране
 
         if mt_raw:
             try:
-                mt = MovementType(mt_raw)  # пробвам като стойност
+                # Пробвам да го конвертирам като стойност на Enum
+                mt = MovementType(mt_raw)
             except Exception:
                 try:
-                    mt = MovementType[mt_raw]  # пробвам като име
+                    # Пробвам като име на Enum (IN, OUT, MOVE)
+                    mt = MovementType[mt_raw]
                 except Exception:
                     mt = MovementType.IN
 
-        return Movement(movement_id=d.get("movement_id"), product_id=d.get("product_id"),
-                        product_name=d.get("product_name") or d.get("product"), user_id=d.get("user_id"),
-                        location_id=d.get("location_id"), movement_type=mt, quantity=d.get("quantity", 0),
-                        unit=d.get("unit", "бр."), description=d.get("description", ""), price=d.get("price", 0.0),
-                        supplier_id=d.get("supplier_id"), customer=d.get("customer"),
-                        from_location_id=d.get("from_location_id"), to_location_id=d.get("to_location_id"),
-                        date=d.get("date"), created=d.get("created"), modified=d.get("modified"))
+        return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
+                        product_name=data.get("product_name") or data.get("product"), user_id=data.get("user_id"),
+                        location_id=data.get("location_id"), movement_type=mt, quantity=data.get("quantity", 0),
+                        unit=data.get("unit", "бр."), description=data.get("description", ""), price=data.get("price", 0.0),
+                        supplier_id=data.get("supplier_id"), customer=data.get("customer"),
+                        from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"),
+                        date=data.get("date"), created=data.get("created"), modified=data.get("modified"))
 
 
     def __str__(self):
         m_type = self.movement_type.value if isinstance(self.movement_type, MovementType) else self.movement_type
-        return (f"Движение {self.movement_id} | {m_type} | {self.quantity} {self.unit} | "
-                f"Продукт: {self.product_name} | Склад ID: {self.location_id}")
+        return (f"Движение {self.movement_id} | {m_type} | {self.quantity} {self.unit} | Продукт: {self.product_name} | " 
+                f"Склад ID: {self.location_id}")

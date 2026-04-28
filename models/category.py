@@ -1,51 +1,42 @@
-import uuid
 from datetime import datetime
+from validators.category_validator import CategoryValidator
 
 
 class Category:
-    def __init__(self, category_id, name, description="", parent_id=None,
-                 created=None, modified=None):
-        """Модел за категория. Тук държа само данните и логиката за ID и датите."""
-
-        # Ако няма подадено ID – генерирам ново
-        self.category_id = str(category_id) if category_id else Category.generate_id()
+    def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
+        # ID-то и датите идват от контролера. Моделът ги приема.
+        self.category_id = str(category_id) if category_id else None
         self.name = name
         self.description = description
-        self.parent_id = parent_id
+        self.parent_id = str(parent_id) if parent_id else None
 
-        # Дати
-        now = Category.now()
+        # Дати – ако не са подадени, се задават текущи
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.created = created or now
         self.modified = modified or now
 
-    # Генерираме ново ID
-    @staticmethod
-    def generate_id() -> str:
-        return str(uuid.uuid4())
-
-    # Текущ момент
-    @staticmethod
-    def now() -> str:
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # Валидация на име и описание
+        CategoryValidator.validate_name(self.name)
+        CategoryValidator.validate_description(self.description)
 
     def update_modified(self):
         """Обновявам датата при промяна."""
-        self.modified = Category.now()
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def to_dict(self):
         """Превръщам обекта в dict, за да може да се запише в JSON."""
         return {"category_id": self.category_id, "name": self.name,
-                "description": self.description, "parent_id": self.parent_id,
-                "created": self.created, "modified": self.modified}
+                "description": self.description,
+                "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
         """Създавам Category от речник, зареден от JSON файла."""
         if not data:
             return None
-        return Category(category_id=data.get("category_id"),
-                        name=data.get("name"), description=data.get("description", ""),
-                        parent_id=data.get("parent_id"),
+
+        return Category(category_id=data.get("category_id"), name=data.get("name"),
+                        description=data.get("description", ""), parent_id=data.get("parent_id"),
                         created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):

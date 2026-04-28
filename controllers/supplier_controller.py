@@ -14,8 +14,13 @@ class SupplierController:
         """ Добавя нов доставчик след пълна валидация. Контролерът не валидира сам – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
 
-        # Нов доставчик – моделът сам генерира ID и дати
-        supplier = Supplier(supplier_id=None, name=name.strip(), contact=contact.strip(), address=address.strip())
+        # Създавам нов доставчик – моделът сам генерира ID и дати
+        supplier = Supplier(
+            supplier_id=None,
+            name=name.strip(),
+            contact=contact.strip(),
+            address=address.strip()
+        )
 
         self.suppliers.append(supplier)
         self.save_changes()
@@ -25,7 +30,6 @@ class SupplierController:
     def get_all(self) -> List[Supplier]:
         """Връща всички доставчици."""
         return self.suppliers
-
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         """Намира доставчик по ID."""
@@ -40,12 +44,15 @@ class SupplierController:
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
         """ Актуализира доставчик след валидация на подадените полета. """
         supplier = SupplierValidator.validate_exists(supplier_id, self)
+
         if name is not None:
             SupplierValidator.validate_name(name)
             supplier.name = name.strip()
+
         if contact is not None:
             SupplierValidator.validate_contact(contact)
             supplier.contact = contact.strip()
+
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()

@@ -87,9 +87,12 @@ class InventoryController:
             return
         qty = float(qty)
         current = float(p.get("total_stock", 0.0))
+
         if current < qty:
             return
+
         p["total_stock"] = current - qty
+
         if warehouse_id in p["locations"]:
             new_qty = float(p["locations"][warehouse_id]) - qty
             if new_qty > 0:
@@ -139,8 +142,10 @@ class InventoryController:
 
             if m.movement_type.name == "IN":
                 self.increase_stock(pid, pname, m.location_id, qty, unit)
+
             elif m.movement_type.name == "OUT":
                 self.decrease_stock(pid, m.location_id, qty, unit)
+
             elif m.movement_type.name == "MOVE":
                 self.move_stock(pid, pname, m.from_location_id, m.to_location_id, qty, unit)
 

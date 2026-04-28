@@ -3,7 +3,7 @@ from models.category import Category
 
 
 def build_category_tree(categories: List[Category]) -> List[dict]:
-    """Дървовидна структура от плосък списък с категории."""
+    """Дървовидна структура от списък с категории."""
     tree = []
     # Категориите, които нямат родител – те са началото на дървото
     root_categories = [c for c in categories if c.parent_id is None]
