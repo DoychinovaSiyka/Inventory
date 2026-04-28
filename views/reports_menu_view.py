@@ -9,7 +9,6 @@ from models.movement import MovementType
 class ReportsView:
     """ Клас за справки – тук четем и показваме данни."""
     def __init__(self, controller: ReportController):
-        # Запазваме контролера за справки
         self.controller = controller
         self.location_controller = controller.location_controller
         self.inventory_controller = controller.inventory_controller
@@ -48,7 +47,7 @@ class ReportsView:
     @staticmethod
     def _truncate(text, length=20):
         if text is None:
-            t = "N/A"
+            t = "-"
         else:
             t = str(text)
         if len(t) > length:
@@ -129,12 +128,12 @@ class ReportsView:
         rows = []
         for item in result.data:
             movement_id = item.get("movement_id", "-")
-            m_type = str(item.get("type", "N/A")).upper()
+            m_type = str(item.get("type", "-")).upper()
             date_str = str(item.get("date", ""))[:10]
-            product_name = self._truncate(item.get("product", "N/A"), 20)
+            product_name = self._truncate(item.get("product", "-"), 20)
             qty = self._format_qty_unit(item.get("quantity", 0), item.get("unit"))
             price_str = "-" if m_type == "MOVE" else self._format_lv(item.get("price"))
-            location = self._truncate(item.get("location", "N/A"), 25)
+            location = self._truncate(item.get("location", "-"), 25)
 
             rows.append([movement_id, date_str, m_type, product_name,
                          qty, price_str, location])
@@ -149,9 +148,8 @@ class ReportsView:
 
         rows = []
         products = self.inventory_controller.data["products"]
-
         for pid, pdata in products.items():
-            name = pdata.get("name", "N/A")
+            name = pdata.get("name", "-")
             unit = pdata.get("unit", "")
             locations = pdata.get("locations", {})
 
@@ -230,8 +228,8 @@ class ReportsView:
         for item in data:
             invoice_number = item.get("invoice_number", "-")
             date_str = str(item.get("date", ""))[:10]
-            client_name = self._truncate(item.get("client", "N/A"), 20)
-            product_name = self._truncate(item.get("product", "N/A"), 25)
+            client_name = self._truncate(item.get("client", "-"), 20)
+            product_name = self._truncate(item.get("product", "-"), 25)
             total_price = self._format_lv(item.get("total_price", 0))
 
             rows.append([invoice_number, date_str, client_name, product_name, total_price])
@@ -263,12 +261,12 @@ class ReportsView:
         for item in data:
             date_str = str(item.get("date", ""))[:10]
             movement_id = item.get("movement_id", "-")
-            product_name = self._truncate(item.get("product", "N/A"), 20)
+            product_name = self._truncate(item.get("product", "-"), 20)
             qty = self._format_qty_unit(item.get("quantity", 0), item.get("unit"))
-            supplier_name = self._truncate(item.get("supplier", "N/A"), 15)
-            location_name = self._truncate(item.get("location", "N/A"), 15)
+            supplier_name = self._truncate(item.get("supplier", "-"), 15)
+            location_name = self._truncate(item.get("location", "-"), 15)
 
-            rows.append([date_str, movement_id, product_name, qty, supplier_name,location_name])
+            rows.append([date_str, movement_id, product_name, qty, supplier_name, location_name])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
@@ -281,7 +279,7 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            date_str = item.get("date", "N/A")
+            date_str = item.get("date", "-")
             count = item.get("count", 0)
             total = self._format_lv(item.get("total", 0))
 
@@ -298,12 +296,11 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            product_name = self._truncate(item.get("product", "N/A"), 25)
+            product_name = self._truncate(item.get("product", "-"), 25)
             qty = self._format_qty_unit(item.get("quantity", 0), item.get("unit"))
             total = self._format_lv(item.get("total", 0))
 
             rows.append([product_name, qty, total])
-
         print(format_table(["Продукт", "Количество", "Оборот"], rows))
 
     # Жизнен цикъл на продукт
@@ -317,9 +314,8 @@ class ReportsView:
             print("\n[!] Продуктът не е намерен или няма движения.\n")
             return
 
-        product_name = data.get("product", "N/A")
+        product_name = data.get("product", "-")
         unit = data.get("unit", "")
-
         initial_stock = float(data.get("initial_stock", 0))
         total_in = float(data.get("total_in", 0))
         total_out = float(data.get("total_out", 0))

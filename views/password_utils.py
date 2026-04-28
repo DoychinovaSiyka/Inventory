@@ -8,6 +8,7 @@ def input_password(prompt="Въведете парола: "):
     print(prompt, end="", flush=True)
     password = ""
 
+
     while True:
         ch = msvcrt.getch()  # getch() връща байт — не буква, а суров код от клавиатурата
         code = ord(ch)       # превръщаме байта в число, за да не пишем хардкоднати \x08, \x00, \xe0
@@ -63,7 +64,7 @@ def format_table(columns, rows):
                           or cell_str.endswith("кг") or cell_str.endswith("кг.") or cell_str.endswith("бр")
                           or cell_str.endswith("бр.") or cell_str.endswith("л") or cell_str.endswith("л."))
 
-            # UUID и дати ->  текст
+
             if "-" in cell_str and len(cell_str) > 15:
                 is_numeric = False
 

@@ -13,7 +13,6 @@ class UserView:
         if user.role != "Admin":
             print("\n[Достъп отказан] Само администратор може да управлява потребители.")
             return
-
         menu = self._build_menu()
         while True:
             choice = menu.show()
@@ -23,14 +22,13 @@ class UserView:
 
     # Създаване на менюто отделно
     def _build_menu(self):
-        return Menu("МЕНЮ ПОТРЕБИТЕЛИ", [
-            MenuItem("1", "Списък на потребители", self.show_users),
-            MenuItem("2", "Добавяне на потребител", self.add_user),
-            MenuItem("3", "Промяна на роля", self.change_role),
-            MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
-            MenuItem("5", "Активиране на потребител", self.activate_user),
-            MenuItem("6", "Премахване на потребител", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("МЕНЮ ПОТРЕБИТЕЛИ", [MenuItem("1", "Списък на потребители", self.show_users),
+                                         MenuItem("2", "Добавяне на потребител", self.add_user),
+                                         MenuItem("3", "Промяна на роля", self.change_role),
+                                         MenuItem("4", "Деактивиране на потребител", self.deactivate_user),
+                                         MenuItem("5", "Активиране на потребител", self.activate_user),
+                                         MenuItem("6", "Премахване на потребител", self.delete_user),
+                                         MenuItem("0", "Назад", lambda u: "break")])
 
     # Показване на всички потребители
     def show_users(self, _):
@@ -45,27 +43,22 @@ class UserView:
         if not fn:
             print("Операцията е отказана.\n")
             return
-
         ln = input("Фамилия (Enter за отказ): ").strip()
         if not ln:
             print("Операцията е отказана.")
             return
-
         email = input("Email (Enter за отказ): ").strip()
         if not email:
             print("Операцията е отказана.\n")
             return
-
         username = input("Потребителско име (Enter за отказ): ").strip()
         if not username:
             print("Операцията е отказана.\n")
             return
-
         password = input_password("Парола (Enter за отказ): ").strip()
         if not password:
             print("Операцията е отказана.\n")
             return
-
         role = input("Роля (Admin/Operator, Enter за отказ): ").strip()
         if not role:
             print("Операцията е отказана.\n")
@@ -88,7 +81,6 @@ class UserView:
         if not new_role:
             print("Операцията е отказана.\n")
             return
-
         try:
             self.controller.change_role(username, new_role)
             print(f"[Успех] Ролята на '{username}' е променена на {new_role}.")
@@ -102,7 +94,6 @@ class UserView:
         if not username:
             print("Операцията е отказана.\n")
             return
-
         try:
             self.controller.change_status(user, username, "Inactive")
             print(f"[Успех] Потребителят '{username}' е деактивиран.")
@@ -115,7 +106,6 @@ class UserView:
         if not username:
             print("Операцията е отказана.\n")
             return
-
         try:
             self.controller.change_status(user, username, "Active")
             print(f"[Успех] Потребителят '{username}' е активиран.")
@@ -129,12 +119,10 @@ class UserView:
         if not username:
             print("Операцията е отказана.\n")
             return
-
         confirm = input(f"Наистина ли искате окончателно да изтриете '{username}'? (y/n): ").strip().lower()
         if confirm != "y":
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.delete_user(user, username)
             print(f"[Успех] Потребителят '{username}' е изтрит от системата.")

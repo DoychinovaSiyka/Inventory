@@ -24,7 +24,6 @@ class Movement:
         self.product_id = product_id
         self.product_name = product_name
         self.user_id = user_id
-
         self.location_id = location_id
         self.movement_type = movement_type
         self.quantity = quantity
@@ -38,7 +37,6 @@ class Movement:
         self.date = date or now
         self.created = created or now
         self.modified = modified or now
-
         self.from_location_id = from_location_id
         self.to_location_id = to_location_id
 

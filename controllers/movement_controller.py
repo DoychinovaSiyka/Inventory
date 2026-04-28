@@ -34,7 +34,6 @@ class MovementController:
     def _sync_inventory_only_in_memory(self) -> None:
         if not self.inventory_controller:
             return
-
         safe_movements = self._inventory_safe_movements()
         safe_movements.sort(key=lambda m: m.date)
 
@@ -65,7 +64,7 @@ class MovementController:
 
         product = self.product_controller.get_by_id(product_id)
 
-        # Актуализиране на инвентара (в RAM)
+        # Актуализиране на инвентара - в RAM
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, from_loc, qty, product.unit)
             self.inventory_controller.increase_stock(product_id, product.name, to_loc, qty, product.unit)

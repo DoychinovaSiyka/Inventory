@@ -26,7 +26,6 @@ class ReportController:
         report = Report(report_type=report_type, parameters=parameters,
                         data={"summary": summary, "data": data})
 
-        # Зареждаме съществуващите отчети, добавяме новия и записваме целия списък
         all_reports_raw = self.repo.load() or []
         all_reports_raw.append(report.to_dict())
         self.repo.save(all_reports_raw)
@@ -42,8 +41,7 @@ class ReportController:
             total_qty += qty
             total_value += (qty * price)
 
-        return {"total_records": len(data), "total_quantity": round(total_qty, 2),
-                "total_value": round(total_value, 2)}
+        return {"total_records": len(data), "total_quantity": round(total_qty, 2), "total_value": round(total_value, 2)}
 
     # Справка - всички движения
     def report_movements(self):
@@ -53,7 +51,7 @@ class ReportController:
             product_name = product.name if product else "Неизвестен продукт"
 
             location = self.location_controller.get_by_id(m.location_id)
-            location_name = location.name if location else "N/A"
+            location_name = location.name if location else "-"
 
             data.append({"movement_id": m.movement_id, "product": product_name,
                          "type": m.movement_type.name, "quantity": m.quantity, "unit": m.unit,
@@ -63,13 +61,13 @@ class ReportController:
         self._save_report("movements", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка - всички продажби
+    # Справка - всички продажби (ВЕЧЕ Е ИЗВЪН report_movements)
     def report_sales(self):
         invoices = self.invoice_controller.get_all() or []
         data = []
         for inv in invoices:
             data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10],
-                         "client": inv.customer, "product": inv.product, "quantity": inv.quantity,
+                         "client": inv.customer or "-", "product": inv.product, "quantity": inv.quantity,
                          "unit_price": inv.unit_price, "total_price": inv.total_price})
 
         summary = {"total_sales": len(data), "total_revenue": round(sum(i["total_price"] for i in data), 2)}
@@ -102,7 +100,7 @@ class ReportController:
         for inv in invoices:
             if inv.product and product_clean in inv.product.lower():
                 data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10],
-                             "client": inv.customer, "product": inv.product, "quantity": inv.quantity,
+                             "client": inv.customer or "-", "product": inv.product, "quantity": inv.quantity,
                              "total_price": inv.total_price})
 
         summary = {"product": product, "total_sales": len(data),
@@ -119,7 +117,7 @@ class ReportController:
         for inv in invoices:
             if inv.date and inv.date.startswith(date_str):
                 data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10],
-                             "client": inv.customer, "product": inv.product, "quantity": inv.quantity,
+                             "client": inv.customer or "-", "product": inv.product, "quantity": inv.quantity,
                              "total_price": inv.total_price})
 
         summary = {"date": date_str, "total_sales": len(data),
@@ -144,12 +142,12 @@ class ReportController:
                 continue
 
             location = self.location_controller.get_by_id(m.location_id)
-            location_name = location.name if location else "N/A"
+            location_name = location.name if location else "-"
 
-            supplier_name = "N/A"
+            supplier_name = "-"
             if self.movement_controller.supplier_controller:
                 supplier = self.movement_controller.supplier_controller.get_by_id(m.supplier_id)
-                supplier_name = supplier.name if supplier else "N/A"
+                supplier_name = supplier.name if supplier else "-"
 
             row = {"movement_id": m.movement_id, "date": m.date[:10], "product": product.name,
                    "quantity": m.quantity, "unit": m.unit, "supplier": supplier_name, "location": location_name}
@@ -158,7 +156,6 @@ class ReportController:
                 k = keyword.lower()
                 if k not in product.name.lower() and k not in supplier_name.lower() and k not in location_name.lower():
                     continue
-
             data.append(row)
 
         summary = self._build_summary(data)
@@ -170,7 +167,7 @@ class ReportController:
         invoices = self.invoice_controller.get_all() or []
         daily = {}
         for inv in invoices:
-            day = inv.date[:10] if inv.date else "N/A"
+            day = inv.date[:10] if inv.date else "-"
             if day not in daily:
                 daily[day] = {"count": 0, "total": 0.0}
             daily[day]["count"] += 1
@@ -239,8 +236,6 @@ class ReportController:
     def product_lifecycle(self, name):
         name_clean = name.lower()
         product = None
-
-        # Студентски начин: Търсене с цикъл
         for p in self.product_controller.get_all():
             if p.name and name_clean in p.name.lower():
                 product = p

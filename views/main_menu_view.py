@@ -25,17 +25,15 @@ class MainMenuView:
 
     def _build_menu(self):
         """ Изгражда структурата на менюто при всяко извикване. """
-        return Menu("Главно меню", [
-            MenuItem("1", "Продукти", self.open_products),
-            MenuItem("2", "Категории", self.open_categories),
-            MenuItem("3", "Доставчици", self.open_suppliers),
-            MenuItem("4", "Движения", self.open_movements),
-            MenuItem("5", "Фактури", self.open_invoices),
-            MenuItem("6", "Справки", self.open_reports),
-            MenuItem("7", "Потребители", self.open_users),
-            MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
-            MenuItem("0", "Изход", lambda u: "break")
-        ])
+        return Menu("Главно меню", [MenuItem("1", "Продукти", self.open_products),
+                                    MenuItem("2", "Категории", self.open_categories),
+                                    MenuItem("3", "Доставчици", self.open_suppliers),
+                                    MenuItem("4", "Движения", self.open_movements),
+                                    MenuItem("5", "Фактури", self.open_invoices), MenuItem("6", "Справки",
+                                                                                           self.open_reports),
+                                    MenuItem("7", "Потребители", self.open_users),
+                                    MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
+                                    MenuItem("0", "Изход", lambda u: "break")])
 
 
     def show_menu(self, user):

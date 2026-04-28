@@ -37,10 +37,7 @@ class InventoryApplication:
 
     # ИНИЦИАЛИЗАЦИЯ НА КОНТРОЛЕРИТЕ
     def _init_controllers(self):
-        # Логове на потребители
-        self.activity_log_controller = UserActivityLogController("data/user_activity_log.json")
-
-        # Основни контролери
+        self.activity_log_controller = UserActivityLogController("data/user_activity_log.json") # Логове на потребители
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -49,28 +46,23 @@ class InventoryApplication:
 
         # Инвентар
         self.inventory_controller = InventoryController(self.inventory_repo)
-
-
         self.product_controller = ProductController(self.product_repo, self.category_controller, self.activity_log_controller)
-
-
         self.product_controller.supplier_controller = self.supplier_controller
         self.product_controller.inventory_controller = self.inventory_controller
 
         # Движения
         self.movement_controller = MovementController(self.movement_repo, self.product_controller, self.user_controller,
                                                       self.location_controller, self.invoice_controller,
-                                                      self.activity_log_controller, self.inventory_controller, self.supplier_controller)
+                                                      self.activity_log_controller, self.inventory_controller,
+                                                      self.supplier_controller)
 
 
         self.product_controller.movement_controller = self.movement_controller
-
-
         self.movement_controller.product_controller = self.product_controller
         self.movement_controller.inventory_controller = self.inventory_controller
         self.movement_controller.supplier_controller = self.supplier_controller
 
-        # ReportController
+
         self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
                                                   self.invoice_controller, self.location_controller, self.inventory_controller)
 
@@ -90,7 +82,7 @@ class InventoryApplication:
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
-    #   ПРОЦЕС НА ВХОД
+    # ПРОЦЕС НА ВХОД
     def _login_flow(self):
         while True:
             try:
@@ -117,7 +109,7 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"\n[!] {e}\nОпитайте отново.\n")
 
-    #   АНОНИМЕН ДОСТЪП
+    # АНОНИМЕН ДОСТЪП
     def _anonymous_flow(self):
         guest_user = self.user_controller.create_anonymous_user()
         self.activity_log_controller.add_log(guest_user.user_id,

@@ -5,19 +5,14 @@ class User:
     def __init__(self, first_name, last_name, email, username, password,
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
-
         self.user_id = str(user_id) if user_id else str(uuid.uuid4())
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.username = username
         self.password = password
-
-        # Роля в системата
-        self.role = role
-
-        # Статус на акаунта
-        self.status = status
+        self.role = role # Роля в системата
+        self.status = status # Статус на акаунта
 
         now = User.now()
         self.created = created or now

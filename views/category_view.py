@@ -35,7 +35,7 @@ class CategoryView:
             return
 
         print("\nКатегории (йерархия):\n")
-        # взимам главните категории (без родител)
+        # взимам главните категории - без родител
         roots = [c for c in categories if c.parent_id is None]
         roots.sort(key=lambda x: x.name.lower())
 

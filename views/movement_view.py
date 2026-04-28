@@ -126,11 +126,9 @@ class MovementView:
 
                 if iid.lower() == raw_l:
                     return item
-
             print("Невалиден ID. Опитайте отново.\n")
 
     def show_menu(self):
-        """Основен метод за показване на менюто."""
         user = self.user_controller.logged_user
         if not user:
             print("Трябва да сте логнат.")
@@ -222,7 +220,6 @@ class MovementView:
                 return
 
             chosen_loc = None
-
             if raw.isdigit():
                 num = int(raw)
                 for idx, loc in enumerate(all_locs, start=1):
@@ -235,11 +232,9 @@ class MovementView:
                     if loc.location_id.lower() == raw_l:
                         chosen_loc = loc
                         break
-
             if not chosen_loc:
                 print("Грешка: Невалиден избор на локация.")
                 return
-
             location = chosen_loc
 
         while True:
@@ -320,16 +315,14 @@ class MovementView:
             print("Грешка:", e)
 
     def move_between_locations(self, user):
-        """
-            Извършва вътрешно преместване (MOVE) на продукт между две локации.
-            1) Потребителят избира продукт.
-            2) Показват се всички складове и наличностите му в тях.
-            3) Избира се изходна локация – позволени са само локации с наличност.
-            4) Избира се целева локация – всяка различна от изходната.
-            5) Въвежда се количество за преместване (валидира се).
-            6) По желание се въвежда описание.
-            7) Данните се предават към MovementController, който записва MOVE движението.
-            """
+        """ Извършва вътрешно преместване (MOVE) на продукт между две локации.
+        1) Потребителят избира продукт.
+        2) Показват се всички складове и наличностите му в тях.
+        3) Избира се изходна локация – позволени са само локации с наличност.
+        4) Избира се целева локация – всяка различна от изходната.
+        5) Въвежда се количество за преместване (валидира се).
+        6) По желание се въвежда описание.
+        7) Данните се предават към MovementController, който записва MOVE движението."""
 
         print("\n   Преместване между локации (MOVE)   ")
         product = self._select_item(self.product_controller.get_all(), "продукт")
@@ -337,7 +330,6 @@ class MovementView:
 
         wh_list = self._get_product_warehouses_with_qty(product)
         qty_by_wh = {loc: (qty, unit) for (loc, qty, unit) in wh_list}
-
         if not wh_list:
             print("Грешка: Няма наличност за този продукт в нито един склад.")
             return
@@ -395,7 +387,6 @@ class MovementView:
         if not to_loc:
             print("Невалидна целева локация.")
             return
-
 
         while True:
             qty_raw = input("Количество за преместване: ").strip()

@@ -53,7 +53,7 @@ class SupplierController:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
 
-        # Обновявам датата на промяна чрез модела
+        # Обновявам датата на промяна
         supplier.update_modified()
 
         self.save_changes()

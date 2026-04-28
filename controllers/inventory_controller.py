@@ -12,7 +12,6 @@ class InventoryController:
         if not data or not isinstance(data, dict):
             self.data = {"products": {}}
             return
-
         if isinstance(data, list):
             self.data = {"products": {}}
             return

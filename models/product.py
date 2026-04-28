@@ -8,7 +8,6 @@ class Product:
                  supplier_id=None, tags=None, created=None, modified=None):
         """ Моделът описва само продукта като елемент от каталога. """
 
-
         self.product_id = str(product_id) if product_id else str(uuid.uuid4())
         self.name = name
         self.categories = categories if isinstance(categories, list) else []

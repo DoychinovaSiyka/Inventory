@@ -16,9 +16,7 @@ class UserActivityLogController:
     def add_log(self, user_id, action, details=""):
         """ Създава нов лог запис. Вече не генерираме UUID и дати тук - моделът UserActivityLog. """
 
-        # Създаваме обекта – той сам ще си сложи timestamp и log_id (чрез модела)
         new_log = UserActivityLog(user_id=user_id, action=action, details=details)
-
         self.logs.append(new_log)
         self.save_changes()
         return new_log
@@ -49,6 +47,7 @@ class UserActivityLogController:
         """Изтрива всички записи от историята."""
         self.logs = []
         self.save_changes()
+
 
 
 # UserActivityLogController е единственият контролер, който не използва dependency injection.

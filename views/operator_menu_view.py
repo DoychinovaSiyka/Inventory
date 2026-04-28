@@ -24,16 +24,14 @@ class OperatorMenuView:
 
     # Изгражда структурата на менюто при всяко извикване.
     def _build_menu(self):
-        return Menu("Операторско меню", [
-            MenuItem("1", "Управление на продукти", self.open_products),
-            MenuItem("2", "Управление на категории", self.open_categories),
-            MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
-            MenuItem("4", "Справки", self.open_reports),
-            MenuItem("5", "Фактури", self.open_invoices),
-            MenuItem("6", "Информация за системата", self.open_system_info),
-            MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Операторско меню", [MenuItem("1", "Управление на продукти", self.open_products),
+                                         MenuItem("2", "Управление на категории", self.open_categories),
+                                         MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
+                                         MenuItem("4", "Справки", self.open_reports),
+                                         MenuItem("5", "Фактури", self.open_invoices),
+                                         MenuItem("6", "Информация за системата", self.open_system_info),
+                                         MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
+                                         MenuItem("0", "Назад", lambda u: "break")])
 
     # основен цикъл
     def show_menu(self, user):

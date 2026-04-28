@@ -10,7 +10,6 @@ class Report:
         self.report_id = str(report_id) if report_id else str(uuid.uuid4())
         self.generated_on = generated_on or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.report_type = report_type
-
         self.parameters = parameters if parameters is not None else {}
         self.data = data if data is not None else {}
 

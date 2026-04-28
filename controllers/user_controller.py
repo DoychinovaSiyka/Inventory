@@ -72,7 +72,6 @@ class UserController:
 
         user = UserValidator.validate_login(username, password, self)
         hashed = self._hash_password(password)
-
         if user.password == hashed:
             self.logged_user = user
             return user

@@ -38,7 +38,6 @@ class CategoryController:
         CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
-
         category = Category(category_id=str(uuid.uuid4()), name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
         self._save_changes()
@@ -46,13 +45,13 @@ class CategoryController:
 
         return category
 
+
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
 
         if category.name == new_name:
             return True
-
         CategoryValidator.validate_unique(new_name, [c for c in self.categories if c.category_id != category_id])
 
         category.name = new_name
@@ -122,7 +121,7 @@ class CategoryController:
     def get_subcategories(self, parent_id: str) -> List[Category]:
         return [c for c in self.categories if c.parent_id == parent_id]
 
-    # Дървовидна структура
+
     def get_category_tree(self) -> List[dict]:
         return build_category_tree(self.categories)
 

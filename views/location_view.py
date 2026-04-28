@@ -77,7 +77,6 @@ class LocationView:
             return
 
         print(f"\nРедактиране на {loc_id}. Оставете празно за запазване на старата стойност.")
-
         new_name = input(f"Ново име ({location.name}): ").strip() or None
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or None
         new_cap_raw = input(f"Нов капацитет ({location.capacity}): ").strip() or None

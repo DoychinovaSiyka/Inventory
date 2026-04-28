@@ -21,7 +21,6 @@ class SupplierView:
     def _build_menu(self, user: User):
         is_admin = user.role == "Admin"
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
-        # admin-only функции
         if is_admin:
             menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
                                MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
@@ -114,7 +113,6 @@ class SupplierView:
         if confirm != "y":
             print("Операцията е отказана.")
             return
-
         try:
             self.controller.remove(supplier_id)
             print(f"[Успех] Доставчик '{supplier.name}' беше изтрит.")

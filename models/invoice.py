@@ -13,8 +13,8 @@ class Invoice:
     def now():
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def __init__(self, product, quantity, unit, unit_price, total_price, customer,
-                 movement_id=None, date=None, created=None, modified=None, invoice_id=None):
+    def __init__(self, product, quantity, unit, unit_price, total_price, customer, movement_id=None,
+                 date=None, created=None, modified=None, invoice_id=None):
 
         # Уникален идентификатор на фактурата
         self.invoice_id = invoice_id or Invoice.generate_id()

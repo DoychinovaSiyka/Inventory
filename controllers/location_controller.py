@@ -14,8 +14,8 @@ class LocationController:
         raw = self.repo.load()
         if not raw or not isinstance(raw, list):
             raw = []
-
         self.locations: List[Location] = [Location.from_dict(l) for l in raw]
+
 
     def _log(self, action: str, message: str):
         if self.activity_log:
@@ -71,11 +71,9 @@ class LocationController:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
             location.name = name
-
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
-
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity

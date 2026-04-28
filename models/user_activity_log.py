@@ -5,21 +5,11 @@ from datetime import datetime
 class UserActivityLog:
     def __init__(self, user_id, action, details="", timestamp=None, log_id=None):
         """ Модел за лог запис. Генерирането на UUID и време се случва тук, ако не са подадени. """
-
-        # Уникален идентификатор на лог записа (UUID)
         self.log_id = str(log_id) if log_id else str(uuid.uuid4())
-
-        # Кой потребител е извършил действието
         self.user_id = str(user_id)
-
-        # Какво действие е извършено
-        self.action = str(action)
-
-        # Допълнителни детайли
-        self.details = str(details)
-
-        # Време на извършване
-        if timestamp:
+        self.action = str(action) # Какво действие е извършено
+        self.details = str(details) # Допълнителни детайли
+        if timestamp:  # Време на извършване
             self.timestamp = timestamp
         else:
             self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

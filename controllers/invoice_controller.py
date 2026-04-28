@@ -70,7 +70,6 @@ class InvoiceController:
         InvoiceValidator.validate_customer(new_customer)
         inv.customer = new_customer
         inv.update_modified()
-
         self._save_changes()
         self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {invoice_id}")
         return True

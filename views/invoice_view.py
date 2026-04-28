@@ -31,16 +31,14 @@ class InvoiceView:
                 break
 
     def _build_menu(self):
-        return Menu("Меню Фактури", [
-            MenuItem("1", "Списък с всички фактури", self.show_all),
-            MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
-            MenuItem("3", "Търсене по клиент", self.search_by_customer),
-            MenuItem("4", "Търсене по продукт", self.search_by_product),
-            MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
-            MenuItem("6", "Разширено търсене", self.advanced_search),
-            MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Меню Фактури", [MenuItem("1", "Списък с всички фактури", self.show_all),
+                                     MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
+                                     MenuItem("3", "Търсене по клиент", self.search_by_customer),
+                                     MenuItem("4", "Търсене по продукт", self.search_by_product),
+                                     MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
+                                     MenuItem("6", "Разширено търсене", self.advanced_search),
+                                     MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
+                                     MenuItem("0", "Назад", lambda u: "break")])
 
 
     def show_all(self, user):
@@ -207,6 +205,5 @@ class InvoiceView:
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
         rows = [[inv.invoice_id, inv.product, inv.customer,
                  f"{inv.quantity} {inv.unit}", f"{float(inv.total_price):.2f} лв.", inv.date] for inv in results]
-
 
         print(self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 12]))

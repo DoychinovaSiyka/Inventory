@@ -472,7 +472,6 @@ class ProductView:
                 # Складове, в които продуктът има наличност
                 warehouses = self.product_controller.inventory_controller.get_warehouses_with_product(p.name)
                 warehouse_str = ", ".join(warehouses) if warehouses else "—"
-
                 rows.append([p.name, f"{p.price:.2f} лв.", f"{stock} {p.unit}",
                              ", ".join([c.name for c in p.categories]) if p.categories else "-",
                              warehouse_str, supplier_name])
@@ -497,7 +496,6 @@ class ProductView:
 
         for p in products:
             print(f"\n   {p.name}   ")
-
             inv_entry = inventory.get(p.product_id, None)
             if not inv_entry:
                 print("  Няма наличности в нито един склад.")

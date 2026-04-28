@@ -6,12 +6,9 @@ class Location:
     """Модел за складова локация. Държа name и zone винаги като текст, за да няма None."""
     def __init__(self, location_id: Optional[Union[str, int]] = None,
                  name: Optional[str] = "", zone: Optional[str] = "",
-                 capacity: int = 0, created: Optional[str] = None,
-                 modified: Optional[str] = None):
+                 capacity: int = 0, created: Optional[str] = None, modified: Optional[str] = None):
 
         self.location_id = str(location_id) if location_id is not None else None
-
-        # Ако от JSON дойде None, го обръщам в празен стринг, за да не се чупят принтове и UI
         self.name = name if name is not None else ""
         self.zone = zone if zone is not None else ""
         self.capacity = capacity

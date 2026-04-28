@@ -12,7 +12,6 @@ class Supplier:
         self.contact = str(contact).strip()
         self.address = str(address).strip()
 
-        # Генериране на времеви клейма
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.created = created or now
         self.modified = modified or now

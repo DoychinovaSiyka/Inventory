@@ -122,7 +122,6 @@ class ProductController:
                 product.name = new_name_clean
                 has_changes = True
 
-
         if new_description is not None:
             new_desc_clean = new_description.strip()
             if new_desc_clean != product.description:
