@@ -54,7 +54,6 @@ class AdminMenuView:
             current_menu = self._build_menu()
             choice = current_menu.show()
             result = current_menu.execute(choice, user)
-
             if result == "break":
                 break
 
