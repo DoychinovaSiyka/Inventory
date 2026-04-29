@@ -100,7 +100,6 @@ class ProductController:
                     continue
 
             results.append(p)
-
         return results
 
 
@@ -124,14 +123,11 @@ class ProductController:
         if new_supplier_id is not None:
             product.supplier_id = new_supplier_id
 
-        # Запис в products.json
         self.save_changes()
-
 
         return True
 
 
-    # ФИЛТРИРАНЕ ПО CATEGORY_ID
     def filter_by_category(self, category_id):
         """Връща всички продукти, които имат дадената категория."""
         results = []
@@ -141,11 +137,9 @@ class ProductController:
                 if c.category_id == category_id:
                     results.append(p)
                     break
-
         return results
 
 
-    # GETTERS
     def get_all(self):
         return self.products
 
