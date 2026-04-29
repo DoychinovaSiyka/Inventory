@@ -22,7 +22,6 @@ class AdminMenuView:
                                              controllers["supplier"], controllers["activity_log"])
 
         self.category_view = CategoryView(controllers["category"])
-
         self.movement_view = MovementView(controllers["product"], controllers["movement"], controllers["user"],
                                           controllers["location"],controllers["supplier"])
 
