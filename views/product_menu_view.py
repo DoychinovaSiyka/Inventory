@@ -163,7 +163,6 @@ class ProductMenuView:
         if confirm != "y":
             print("Операцията е отказана.")
             return
-
         try:
             self.product_controller.delete_by_id(pid, user.user_id)
             print(f"[+] Продуктът '{product.name}' беше премахнат успешно.")

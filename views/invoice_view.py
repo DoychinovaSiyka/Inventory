@@ -11,7 +11,7 @@ class InvoiceView:
         self.invoice_controller = invoice_controller
         self.activity_log = activity_log_controller
 
-    # таблица с фиксирани ширини
+
     def _format_table_fixed(self, headers, rows, col_widths):
         line = "+" + "+".join("-" * w for w in col_widths) + "+"
         header_row = "|" + "|".join(f"{str(h):^{col_widths[i]}}" for i, h in enumerate(headers)) + "|"
@@ -39,8 +39,7 @@ class InvoiceView:
             MenuItem("5", "Търсене по дата (ГГГГ-ММ-ДД)", self.search_by_date),
             MenuItem("6", "Разширено търсене", self.advanced_search),
             MenuItem("7", "Търсене по сума / диапазон", self.search_by_total),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_all(self, user):
         invoices = self.invoice_controller.get_all()
@@ -102,16 +101,8 @@ class InvoiceView:
             return
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id[:8],
-                inv.product,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв.",
-                inv.date[:16]
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id[:8], inv.product, f"{inv.quantity} {inv.unit}",
+                 f"{float(inv.total_price):.2f} лв.", inv.date[:16]] for inv in results]
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 12, 12, 16]))
 
@@ -128,16 +119,8 @@ class InvoiceView:
             return
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id[:8],
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв.",
-                inv.date[:16]
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id[:8], inv.customer, f"{inv.quantity} {inv.unit}",
+                 f"{float(inv.total_price):.2f} лв.", inv.date[:16]] for inv in results]
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 26, 12, 12, 16]))
 
@@ -160,16 +143,8 @@ class InvoiceView:
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
-        rows = [
-            [
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв."
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
+                 f"{float(inv.total_price):.2f} лв."] for inv in results]
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12]))
 
@@ -196,17 +171,8 @@ class InvoiceView:
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв.",
-                inv.date[:16]
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
+                 f"{float(inv.total_price):.2f} лв.", inv.date[:16]] for inv in results]
 
         print("\n" + self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 16]))
 
@@ -228,16 +194,7 @@ class InvoiceView:
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]
-        rows = [
-            [
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв.",
-                inv.date[:16]
-            ]
-            for inv in results
-        ]
+        rows = [[inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
+                 f"{float(inv.total_price):.2f} лв.", inv.date[:16]] for inv in results]
 
         print(self._format_table_fixed(columns, rows, [12, 40, 26, 12, 12, 16]))

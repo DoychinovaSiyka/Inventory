@@ -82,7 +82,7 @@ class ReportsView:
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
 
-    # 4) ПРОДАЖБИ ПО КЛИЕНТ
+
     def report_sales_by_customer(self, _):
         name = input("Клиент: ").strip()
         if not name:
@@ -107,7 +107,7 @@ class ReportsView:
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
 
-    # 5) ПРОДАЖБИ ПО ПРОДУКТ
+
     def report_sales_by_product(self, _):
         name = input("Продукт: ").strip()
         if not name:
@@ -132,7 +132,7 @@ class ReportsView:
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
 
-    # 6) ПРОДАЖБИ ПО ДАТА
+    # ПРОДАЖБИ ПО ДАТА
     def report_sales_by_date(self, _):
         val = input("Дата (ГГГГ-ММ-ДД): ").strip()
         if not val:
@@ -163,7 +163,7 @@ class ReportsView:
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
 
-    # 7) ВСИЧКИ ДОСТАВКИ
+    # ВСИЧКИ ДОСТАВКИ
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if not res.data:
@@ -184,7 +184,7 @@ class ReportsView:
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
 
-    # 8) ТЪРСЕНЕ НА ДОСТАВКА
+    #  ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         key = input("Търсене: ").strip()
         if not key:
@@ -210,7 +210,7 @@ class ReportsView:
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
 
-    # 9) ОБОРОТ ПО ДНИ
+    # ОБОРОТ ПО ДНИ
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
@@ -228,7 +228,7 @@ class ReportsView:
         print(format_table(["Дата", "Брой", "Оборот"], rows))
 
 
-    # 10) НАЙ-ПРОДАВАНИ ПРОДУКТИ
+    # НАЙ-ПРОДАВАНИ ПРОДУКТИ
     def report_top_products(self, _):
         res = self.controller.report_top_products()
         if not res.data:
@@ -246,7 +246,7 @@ class ReportsView:
         print(format_table(["Продукт", "Количество", "Оборот"], rows))
 
 
-    # 11) ИНВЕНТАР ПО СКЛАДОВЕ
+    # ИНВЕНТАР ПО СКЛАДОВЕ
     def inventory_by_warehouse(self, user):
         inventory_data = self.controller.inventory_controller.data.get("products", {})
         all_products = self.controller.product_controller.get_all()
@@ -283,7 +283,7 @@ class ReportsView:
 
 
 
-    # 12) ЖИЗНЕН ЦИКЪЛ
+    # ЖИЗНЕН ЦИКЪЛ
     def report_lifecycle(self, _):
         name = input("Продукт: ").strip()
         if not name:

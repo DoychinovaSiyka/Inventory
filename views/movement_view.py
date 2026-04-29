@@ -317,9 +317,10 @@ class MovementView:
         desc = input("Описание: ")
 
         try:
-            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
-                                              location_id=None, movement_type="MOVE", quantity=str(qty),
-                                              description=desc, price="0", from_location_id = from_loc, to_location_id=to_loc)
+            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id, location_id=None,
+                                              movement_type="MOVE", quantity=str(qty), description=desc,
+                                              price="0", from_location_id = from_loc, to_location_id=to_loc)
+
             print(f"\n[OK] Преместено! ID: {mv.movement_id}")
         except ValueError as e:
             print("Грешка:", e)

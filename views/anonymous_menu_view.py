@@ -31,9 +31,9 @@ class AnonymousMenuView:
             if result == "break":
                 break
 
-    # Гостът може да вижда продуктите
+
+    # Гостът може да вижда само списъка, без меню
     def open_products(self, user):
-        # За госта показваме само списъка, без меню
         self.product_view.show_all(user)
 
     # Гостът може да вижда категориите

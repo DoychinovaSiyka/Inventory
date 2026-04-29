@@ -121,6 +121,7 @@ class CategoryValidator:
             if target_id in product_cat_ids:
                 raise ValueError(f"Категорията не може да бъде изтрита, защото продуктът '{p.name}' я използва.")
 
+
     @staticmethod
     def validate_exists(category_id, controller):
         category = controller.get_by_id(category_id)

@@ -33,16 +33,13 @@ class ProductSortView:
         products = sort_by_name_logic(self.product_controller.get_all())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
-
     def sort_price_desc(self, _):
         products = selection_sort_logic(self.product_controller.get_all(), key=lambda p: p.price, reverse=True)
         self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
-
     def sort_price_asc(self, _):
         products = bubble_sort_logic(self.product_controller.get_all(), key=lambda p: p.price, reverse=False)
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
-
 
 
     def sort_qty_desc(self, _):
@@ -55,7 +52,6 @@ class ProductSortView:
         products = selection_sort_logic(self.product_controller.get_all(),
                                         key=lambda p: self.inventory_controller.get_total_stock(p.product_id), reverse=False)
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
-
 
 
     def _print_sorted(self, products, title, algorithm):
