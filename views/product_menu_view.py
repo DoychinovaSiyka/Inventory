@@ -52,6 +52,8 @@ class ProductMenuView:
             MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
             MenuItem("0", "Назад", lambda u: "break")])
 
+
+
     @staticmethod
     def _is_operator():
         return False

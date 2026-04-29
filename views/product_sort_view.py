@@ -57,7 +57,7 @@ class ProductSortView:
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
 
-    # Печат
+
     def _print_sorted(self, products, title, algorithm):
         if not products:
             print("\n[!] Няма продукти за показване.")

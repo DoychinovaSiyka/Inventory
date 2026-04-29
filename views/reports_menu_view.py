@@ -29,8 +29,8 @@ class ReportsView:
             MenuItem("10", "Най-продавани продукти", self.report_top_products),
             MenuItem("11", "Инвентар – наличност по складове", self.inventory_by_warehouse),
             MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
 
 
     # ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ
@@ -42,8 +42,7 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"),
-                         item.get("top_locations", "-")])
+            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"), item.get("top_locations", "-")])
 
         print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
@@ -311,7 +310,6 @@ class ReportsView:
 
         # Реална стойност на стоката в склада
         in_stock_value = current_stock * avg_purchase_price
-
         print("\n" + "═" * 45)
         print(f"   ФИНАНСОВ ОТЧЕТ: {data['product'].upper()}")
         print("═" * 45)
@@ -325,5 +323,4 @@ class ReportsView:
         print("═" * 45)
         print(f"  * Стойност на стоката в склада: {in_stock_value:.2f} лв.")
         print("═" * 45)
-
         input("\nНатиснете Enter за продължение...")
