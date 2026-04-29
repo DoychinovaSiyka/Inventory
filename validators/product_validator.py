@@ -136,14 +136,26 @@ class ProductValidator:
 
     @staticmethod
     def parse_optional_float(value: str | None):
-        """Парсира число или връща None при празен вход."""
+        """Парсира число, приема '10', '10.5', '10,5', '10 лв', '10лв', връща None при празен вход."""
         if value is None:
             return None
+
         value = value.strip()
         if value == "":
             return None
+
+        # Почистване на валутни символи и текст
+        cleaned = (value.replace("лв.", "")
+                         .replace("лв", "")
+                         .replace("lv.", "")
+                         .replace("lv", "")
+                         .replace("BGN", "")
+                         .replace("bgn", "")
+                         .replace(",", ".")
+                         .strip())
+
         try:
-            return float(value)
+            return float(cleaned)
         except ValueError:
             raise ValueError("Моля, въведете валидно число.")
 

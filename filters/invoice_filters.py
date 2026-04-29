@@ -40,12 +40,17 @@ def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
 
     for inv in invoices:
         client_name = inv.customer.lower() if inv.customer else ""
-        # Позволявам търсене по части от името, по няколко думи, в
-        # произволен ред
-        if all(part in client_name for part in search_parts):
-            results.append(inv)
 
+        # Проверяваме всяка част от търсенето поотделно
+        match = True
+        for part in search_parts:
+            if part not in client_name:
+                match = False
+                break
+        if match:
+            results.append(inv)
     return results
+
 
 
 def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
@@ -84,9 +89,7 @@ def filter_by_total_range(invoices: List[Invoice],
     return results
 
 
-def filter_by_date_range(invoices: List[Invoice],
-                         start_date: Optional[str],
-                         end_date: Optional[str]) -> List[Invoice]:
+def filter_by_date_range(invoices: List[Invoice], start_date: Optional[str], end_date: Optional[str]) -> List[Invoice]:
 
     if not start_date and not end_date:
         return invoices
@@ -122,10 +125,8 @@ def filter_by_date_range(invoices: List[Invoice],
 
 # Комбиниран филтър – прилага всички критерии един след друг
 def filter_advanced(invoices: List[Invoice], customer: Optional[str] = None,
-                    product: Optional[str] = None,
-                    start_date: Optional[str] = None,
-                    end_date: Optional[str] = None, min_total: Optional[float] = None,
-                    max_total: Optional[float] = None) -> List[Invoice]:
+                    product: Optional[str] = None, start_date: Optional[str] = None, end_date: Optional[str] = None,
+                    min_total: Optional[float] = None, max_total: Optional[float] = None) -> List[Invoice]:
 
     results = invoices
     if customer:
@@ -135,5 +136,4 @@ def filter_advanced(invoices: List[Invoice], customer: Optional[str] = None,
 
     results = filter_by_date_range(results, start_date, end_date)
     results = filter_by_total_range(results, min_total, max_total)
-
     return results

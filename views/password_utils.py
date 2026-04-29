@@ -42,42 +42,53 @@ def input_password(prompt="Въведете парола: "):
 
 
 def format_table(columns, rows):
-    if rows is None:
-        rows = []
+    if not rows:
+        return "\n[!] Няма налични данни.\n"
 
-    # Изчисляване на ширините
-    all_rows = [columns] + rows
-    col_widths = []
-    for i in range(len(columns)):
-        max_w = max(len(str(row[i])) for row in all_rows)
-        col_widths.append(max_w + 2)
+    # 1. Изчисляваме максималната ширина за всяка колона
+    # Стартираме с дължината на заглавията
+    col_widths = [len(str(c)) for c in columns]
 
-    top_border = "+" + "+".join("-" * w for w in col_widths) + "+"
-    header = "|" + "|".join(columns[i].center(col_widths[i]) for i in range(len(columns))) + "|"
-    separator = "+" + "+".join("-" * w for w in col_widths) + "+"
-    data_rows = []
+    # Обхождаме редовете, за да намерим най-дългия елемент във всяка колона
     for row in rows:
-        line = "|"
-        for i, cell in enumerate(row):
-            cell_str = str(cell)
-            is_numeric = (cell_str.replace('.', '', 1).isdigit() or cell_str.endswith("лв.")
-                          or cell_str.endswith("кг") or cell_str.endswith("кг.") or cell_str.endswith("бр")
-                          or cell_str.endswith("бр.") or cell_str.endswith("л") or cell_str.endswith("л."))
+        for i, val in enumerate(row):
+            val_str = str(val)
+            if len(val_str) > col_widths[i]:
+                col_widths[i] = len(val_str)
 
+    # 2. Добавяме фиксиран "въздух" (padding) от общо 2 интервала (един отляво, един отдясно)
+    # Така колоната ще е с 2 символа по-широка от най-дългия си елемент
+    col_widths = [w + 2 for w in col_widths]
 
-            if "-" in cell_str and len(cell_str) > 15:
-                is_numeric = False
+    # 3. Дефинираме разделителната линия
+    # Пример: +------------+-------+
+    separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 
-            if is_numeric:
-                line += cell_str.rjust(col_widths[i] - 1) + " |"
-            else:
-                line += " " + cell_str.ljust(col_widths[i] - 1) + "|"
+    # 4. Форматираме заглавния ред
+    # Центрираме или подравняваме вляво заглавията
+    header_parts = []
+    for i, col_name in enumerate(columns):
+        # {:<{w}} подравнява вляво в рамките на 'w' пространства
+        # Слагаме по един интервал в началото за естетика
+        cell = f" {col_name}".ljust(col_widths[i])
+        header_parts.append(cell)
+    header_row = "|" + "|".join(header_parts) + "|"
 
-        data_rows.append(line)
+    # 5. Сглобяваме таблицата
+    table_lines = [separator, header_row, separator]
 
-    return "\n".join([top_border, header, separator] + data_rows + [top_border])
+    for row in rows:
+        row_parts = []
+        for i, cell_val in enumerate(row):
+            # Подравняваме съдържанието на всяка клетка спрямо col_widths[i]
+            cell_str = f" {cell_val}".ljust(col_widths[i])
+            row_parts.append(cell_str)
+        table_lines.append("|" + "|".join(row_parts) + "|")
 
+    # Добавяме финалната линия
+    table_lines.append(separator)
 
+    return "\n" + "\n".join(table_lines) + "\n"
 
 #  Декоратор за защита с парола
 def require_password(correct_password):
