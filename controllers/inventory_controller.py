@@ -13,7 +13,7 @@ class InventoryController:
     def _save(self):
         self.repo.save(self.data)
 
-    # --- ВИНАГИ СМЯТА ОБЩОТО ОТ locations ---
+    # СМЯТА ОБЩОТО ОТ locations
     def get_total_stock(self, product_id):
         product_id = str(product_id)
         if product_id not in self.data["products"]:
@@ -22,7 +22,7 @@ class InventoryController:
         locations = self.data["products"][product_id].get("locations", {})
         return sum(float(qty) for qty in locations.values())
 
-    # --- УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ ---
+
     def increase_stock(self, product_id, quantity, location_id):
         product_id = str(product_id)
         quantity = float(quantity)
@@ -34,7 +34,7 @@ class InventoryController:
         prod_entry["locations"][location_id] = prod_entry["locations"].get(location_id, 0) + quantity
         self._save()
 
-    # --- НАМАЛЯВАНЕ НА НАЛИЧНОСТ ---
+    # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
     def decrease_stock(self, product_id, quantity, location_id):
         product_id = str(product_id)
         quantity = float(quantity)
@@ -50,7 +50,7 @@ class InventoryController:
         self._save()
         return True
 
-    # --- ПЪЛНО ПРЕСМЯТАНЕ ОТ ДВИЖЕНИЯ ---
+    # ПЪЛНО ПРЕСМЯТАНЕ ОТ ДВИЖЕНИЯ
     def rebuild_inventory_from_movements(self, movements):
         self.data = {"products": {}}
 
@@ -67,12 +67,10 @@ class InventoryController:
                 loc = m.location_id
                 self.data["products"][pid]["locations"][loc] = \
                     self.data["products"][pid]["locations"].get(loc, 0) + qty
-
             elif m_type == "OUT":
                 loc = m.location_id
                 self.data["products"][pid]["locations"][loc] = \
                     self.data["products"][pid]["locations"].get(loc, 0) - qty
-
             elif m_type == "MOVE":
                 # OUT от from_location
                 from_loc = m.from_location_id
@@ -86,31 +84,16 @@ class InventoryController:
 
         self._save()
 
-    # НАЧАЛНО ЗАРЕЖДАНЕ БЕЗ ДВИЖЕНИЯ
-    def auto_seed_initial_stock(self, default_location_id):
-        print(" Зареждам началните количества от products.json (без движения)...")
-
-        for p in self.product_controller.get_all():
-            qty = float(getattr(p, "quantity", 0))
-            if qty <= 0:
-                continue
-
-            pid = p.product_id
-
-            self.data["products"][pid] = {
-                "locations": {default_location_id: qty}
-            }
-
-        self._save()
-        print(" Началните количества са заредени в инвентара.")
 
 
     def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):
+        """ Смятам себестойността на продаденото по FIFO. Подреждам всички движения по дата и водя списък с партиди от доставки.
+        При продажба изписвам количества от най-старите налични партиди и така получавам
+        реалната себестойност на продадените бройки."""
         product_id = str(product_id)
         batches = []
         total_cost = 0.0
 
-        # сортираме движенията по дата (за всеки случай)
         relevant = [m for m in movements if str(m.product_id) == product_id]
         relevant.sort(key=lambda x: x.date)
 
@@ -121,7 +104,6 @@ class InventoryController:
             if mtype == "IN":
                 price = float(m.price if m.price is not None else fallback_price)
                 batches.append({"qty": qty, "price": price})
-
             elif mtype == "OUT":
                 need = qty
                 while need > 0 and batches:
@@ -134,34 +116,57 @@ class InventoryController:
                         total_cost += need * b["price"]
                         b["qty"] -= need
                         need = 0
-
         return total_cost
 
     def get_warehouses_with_product(self, product_name):
-        """
-        Връща списък от (warehouse_id, quantity) за всички складове,
-        в които продуктът съществува с количество > 0.
-        """
+        """ Връща списък от (warehouse_id, quantity) за всички складове, в които продуктът съществува с количество > 0."""
         result = []
-
-        # inventory структурата е:
-        # data["products"][product_id]["locations"][warehouse_id] = qty
-
         for product_id, pdata in self.data.get("products", {}).items():
-
-            # Взимаме истинския продукт от ProductController
             product = self.product_controller.get_by_id(product_id)
             if not product:
                 continue
 
-            # Сравняваме по име
             if product.name.lower() == product_name.lower():
-
                 locations = pdata.get("locations", {})
                 for warehouse_id, qty in locations.items():
                     if qty > 0:
                         result.append((warehouse_id, qty))
 
-                return result  # намерихме продукта → връщаме
+                return result  # намерихме продукта -> връщаме
 
         return []  # продуктът не е намерен
+
+    def get_total_inventory_value_fifo(self, movement_controller):
+        """ Изчислява общата стойност на целия склад на база реалните доставки (FIFO/Средна цена)."""
+        total_value = 0.0
+
+        # Минавам през всички продукти, които имат наличност в инвентара
+        for pid, pdata in self.data.get("products", {}).items():
+            product = self.product_controller.get_by_id(pid)
+            if not product:
+                continue
+
+            # Взимам текущата наличност
+            current_stock = self.get_total_stock(pid)
+            if current_stock <= 0:
+                continue
+
+            # Смятам колко пари реално сме дали за този продукт (от движенията)
+            total_purchase_expense = 0.0
+            total_in_qty = 0.0
+            for m in movement_controller.movements:
+                if str(m.product_id) == str(pid) and m.movement_type.name == "IN":
+                    qty = float(m.quantity or 0)
+                    price = float(m.price if m.price is not None else product.price)
+                    total_purchase_expense += qty * price
+                    total_in_qty += qty
+
+            # Изчислявам средната покупна цена и умножавам по наличността
+            if total_in_qty > 0:
+                avg_price = total_purchase_expense / total_in_qty
+                total_value += current_stock * avg_price
+            else:
+                # Ако няма движения (начално зареждане), ползвам базовата цена
+                total_value += current_stock * float(product.price or 0)
+
+        return total_value

@@ -76,7 +76,7 @@ class LocationView:
         new_zone = input(f"Нова зона ({location.zone}): ").strip() or None
         new_cap_raw = input(f"Нов капацитет ({location.capacity}): ").strip() or None
         try:
-            # Обновяваме само ако има подадени нови данни
+            # Обновявам само ако има подадени нови данни
             self.location_controller.update(loc_id, name=new_name, zone=new_zone, capacity=new_cap_raw)
             print(f"[Успех] Данните за '{loc_id}' бяха обновени успешно!")
         except ValueError as e:

@@ -9,7 +9,6 @@ class SupplierView:
         self.controller = controller
 
     def show_menu(self, user: User):
-        """Показва динамичното меню според ролята на потребителя."""
         menu = self._build_menu(user)
         while True:
             choice = menu.show()

@@ -19,8 +19,8 @@ class JSONRepository(Repository):
         self._last_saved_data = None
 
     def load(self):
-        """Чете JSON файла и връща съдържанието му. Ако е празен или повреден,
-        връща подходяща празна структура и създава файла автоматично."""
+        """Чете JSON файла и връща съдържанието му. Ако е празен или повреден, връща подходяща
+        празна структура и създава файла автоматично."""
 
         # Ако файлът изобщо не съществува, го създаваме празен веднага
         if not self.filepath.exists():
@@ -48,14 +48,13 @@ class JSONRepository(Repository):
 
     def save(self, data):
         """Записва данните обратно в JSON файла."""
-        # Пишем само ако данните са различни от кешираните.
-        if self._last_saved_data is not None and self._last_saved_data == data:
-            return
+        try:
+            with open(self.filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
 
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-
-        self._last_saved_data = data
+            self._last_saved_data = data
+        except Exception as e:
+            print(f"Грешка при запис във файл {self.filepath.name}: {e}")
 
     def get_all(self):
         """ Връща всички данни от файла. """

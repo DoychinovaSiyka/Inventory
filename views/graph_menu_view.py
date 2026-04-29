@@ -13,37 +13,25 @@ class GraphView:
         self._setup_network()
 
     def _setup_network(self):
-        warehouses = [
-            Warehouse("W1", "София"),
-            Warehouse("W2", "Пловдив"),
-            Warehouse("W3", "Варна"),
-            Warehouse("W4", "Бургас"),
-            Warehouse("W5", "Магазин Смолян")
-        ]
+        warehouses = [Warehouse("W1", "София"), Warehouse("W2", "Пловдив"),
+                      Warehouse("W3", "Варна"), Warehouse("W4", "Бургас"),
+                      Warehouse("W5", "Магазин Смолян")]
 
         for w in warehouses:
             self.graph.add_warehouse(w)
 
-        # ПРАВИМ ПЪТИЩАТА ДВУПОСОЧНИ (Отиване и връщане)
-        edges = [
-            ("W1", "W2", 150),  # София - Пловдив
-            ("W2", "W4", 250),  # Пловдив - Бургас
-            ("W4", "W3", 130),  # Бургас - Варна
-            ("W1", "W5", 250),  # София - Смолян
-            ("W5", "W3", 350)   # Смолян - Варна
-        ]
+        # ПРАВИМ ПЪТИЩАТА ДВУПОСОЧНИ
+        edges = [("W1", "W2", 150), ("W2", "W4", 250), ("W4", "W3", 130), ("W1", "W5", 250), ("W5", "W3", 350)]
 
         for start, end, dist in edges:
             self.graph.add_edge(start, end, dist)
-            self.graph.add_edge(end, start, dist)  # ТОВА Е ВАЖНИЯТ РЕД!
+            self.graph.add_edge(end, start, dist)
 
     def _build_menu(self):
-        # Създаваме менюто за логистичния модул
         # Менюто съдържа основната функция – търсене на най-близък склад
-        return Menu("Логистичен Модул (Dijkstra)", [
-            MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Логистичен Модул (Dijkstra)",
+                    [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+                     MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user: User):
         while True:
@@ -53,9 +41,8 @@ class GraphView:
                 break
 
     def calculate_best_delivery(self, user: User):
-        """Намира най-близкия склад, в който се среща продуктът.
-        Разглежда всички случаи: наличен / неналичен / един склад / много складове / няма път.
-        """
+        """Намира най-близкия склад, в който се среща продуктът. Разглежда всички случаи:
+        наличен / неналичен / един склад / много складове / няма път."""
 
         product_name = input("\nИме на стока (Enter = отказ): ").strip()
         if not product_name:
@@ -71,7 +58,7 @@ class GraphView:
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
-        # 1) Взимаме всички складове, които имат продукта
+        # Взимаме всички складове, които имат продукта
         sources = self.inventory_controller.get_warehouses_with_product(product_name)
 
         # ако няма никъде наличност
@@ -85,7 +72,7 @@ class GraphView:
             wid_up = str(wid).upper()
             all_sources.append(wid_up)
 
-        # 2) Премахваме стартовия склад – търсим най-близкия ДРУГ склад
+        # Премахваме стартовия склад – търсим най-близкия ДРУГ склад
         other_sources = []
         for s in all_sources:
             if s != my_location:
@@ -100,10 +87,10 @@ class GraphView:
         if len(other_sources) == 1:
             print(f"[*] Продуктът е наличен само в {other_sources[0]}. Изчислявам разстоянието...\n")
 
-        # 3) Стартираме Dijkstra
+        # Стартираме Dijkstra
         distances, predecessors = self.graph.dijkstra(my_location)
 
-        # 4) Филтрираме складовете, до които има път
+        # Филтрираме складовете, до които има път
         reachable = []
         for s in other_sources:
             d = distances.get(s, float('inf'))
@@ -114,17 +101,16 @@ class GraphView:
             print(f"\n[!] Има складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return
 
-        # 5) Избираме най-близкия склад
+        # Избираме най-близкия склад
         best_source = reachable[0]
         best_distance = distances[best_source]
         for s in reachable:
             if distances[s] < best_distance:
                 best_distance = distances[s]
                 best_source = s
-
         shortest_distance = best_distance
 
-        # 6) Възстановяваме маршрута
+        # Възстановяваме маршрута
         path = []
         step = best_source
         while step is not None:
@@ -134,7 +120,7 @@ class GraphView:
             step = predecessors.get(step)
         path.reverse()
 
-        # 7) Показваме резултата
+        # Показваме резултата
         source_name = self.graph.nodes[best_source].name
 
         print("\n" + "═" * 45)

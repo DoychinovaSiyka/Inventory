@@ -9,11 +9,10 @@ class ProductController:
         self.category_controller = category_controller
         self.activity_log_controller = activity_log_controller
         self.products = self.load()
-        self.movement_controller = None  # свързва се от main.py
+        self.movement_controller = None
 
-    # ---------------------------------------------------------
+
     # ЗАРЕЖДАНЕ / ЗАПИС
-    # ---------------------------------------------------------
     def load(self):
         data = self.repo.load() or []
         return [Product.from_dict(p, self.category_controller) for p in data]
@@ -25,27 +24,16 @@ class ProductController:
     def _generate_id(self):
         return str(uuid.uuid4())
 
-    # ---------------------------------------------------------
+
     # СЪЗДАВАНЕ НА ПРОДУКТ
-    # ---------------------------------------------------------
     def add(self, product_data: dict, user_id: str) -> Product:
         ProductValidator.validate_name(product_data['name'])
 
-        # Категории → списък от Category обекти
-        categories = [
-            self.category_controller.get_by_id(cid)
-            for cid in product_data['category_ids']
-        ]
-
-        product = Product(
-            product_id=self._generate_id(),
-            name=product_data['name'],
-            categories=categories,
-            unit=product_data['unit'],
-            description=product_data['description'],
-            price=float(product_data['price']),
-            supplier_id=product_data.get('supplier_id', None)
-        )
+        # Категории - списък от Category обекти
+        categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
+        product = Product(product_id=self._generate_id(), name=product_data['name'], categories=categories,
+                          unit=product_data['unit'], description=product_data['description'],
+                          price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
 
         self.products.append(product)
         self.save_changes()
@@ -55,23 +43,14 @@ class ProductController:
         location_id = product_data.get("location_id")
 
         if initial_qty > 0 and location_id and self.movement_controller:
-            self.movement_controller.add(
-                product_id=product.product_id,
-                user_id=user_id,
-                location_id=location_id,
-                movement_type="IN",
-                quantity=str(initial_qty),
-                description="Начално зареждане при създаване на продукт",
-                price=str(product.price)
-            )
+            self.movement_controller.add(product_id=product.product_id, user_id=user_id, location_id=location_id,
+                                         movement_type="IN", quantity=str(initial_qty),
+                                         description="Начално зареждане при създаване на продукт", price=str(product.price))
 
         return product
 
 
-
-    # ---------------------------------------------------------
     # ТЪРСЕНЕ
-    # ---------------------------------------------------------
     def search(self, keyword):
         keyword = keyword.lower()
         results = []
@@ -81,7 +60,6 @@ class ProductController:
             category_text = " ".join([c.name.lower() for c in p.categories]) if p.categories else ""
             description = p.description.lower() if p.description else ""
             supplier = str(p.supplier_id).lower() if p.supplier_id else ""
-
             tags = ""
             try:
                 if p.tags:
@@ -89,25 +67,20 @@ class ProductController:
             except:
                 tags = ""
 
-            if (keyword in name or
-                keyword in category_text or
-                keyword in description or
-                keyword in supplier or
-                keyword in tags):
+            if (keyword in name or keyword in category_text or keyword in description or
+                    keyword in supplier or keyword in tags):
                 results.append(p)
 
         return results
 
-    # ---------------------------------------------------------
-    # КОМБИНИРАНО ТЪРСЕНЕ
-    # ---------------------------------------------------------
+
+
     def search_combined(self, keyword=None, min_price=None, max_price=None,
                         category_id=None, location_id=None, inventory_controller=None):
 
         results = []
 
         for p in self.products:
-
             if keyword:
                 if keyword.lower() not in p.name.lower() and keyword.lower() not in p.description.lower():
                     continue
@@ -120,7 +93,6 @@ class ProductController:
             if category_id:
                 if not any(c.category_id == category_id for c in p.categories):
                     continue
-
             if location_id and inventory_controller:
                 stock = inventory_controller.data["products"].get(p.product_id, {})
                 loc_stock = stock.get("locations", {}).get(location_id, 0)
@@ -139,23 +111,19 @@ class ProductController:
         if not product:
             return False
 
-        # Име
         if new_name is not None:
             ProductValidator.validate_name(new_name)
             product.name = new_name
 
-        # Описание
         if new_description is not None:
             product.description = new_description
 
-        # Цена
         if new_price is not None:
             try:
                 product.price = float(new_price)
             except:
                 return False
 
-        # Доставчик
         if new_supplier_id is not None:
             product.supplier_id = new_supplier_id
 
@@ -163,13 +131,10 @@ class ProductController:
         self.save_changes()
 
 
-
         return True
 
 
-    # ---------------------------------------------------------
     # ФИЛТРИРАНЕ ПО CATEGORY_ID
-    # ---------------------------------------------------------
     def filter_by_category(self, category_id):
         """Връща всички продукти, които имат дадената категория."""
         results = []
@@ -182,9 +147,8 @@ class ProductController:
 
         return results
 
-    # ---------------------------------------------------------
+
     # GETTERS
-    # ---------------------------------------------------------
     def get_all(self):
         return self.products
 

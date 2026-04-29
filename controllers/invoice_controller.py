@@ -3,11 +3,8 @@ from typing import List, Optional
 from storage.json_repository import JSONRepository
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
-from filters.invoice_filters import (
-    filter_by_customer, filter_by_product,
-    filter_by_date, filter_by_total_range,
-    filter_by_date_range, filter_advanced
-)
+from filters.invoice_filters import (filter_by_customer, filter_by_product, filter_by_date,
+                                     filter_by_total_range, filter_by_date_range, filter_advanced)
 
 
 class InvoiceController:
@@ -29,9 +26,8 @@ class InvoiceController:
         if self.activity_log:
             self.activity_log.add_log(user_id, action, message)
 
-    # -------------------------
-    # РЪЧНО СЪЗДАВАНЕ НА ФАКТУРА
-    # -------------------------
+
+    # СЪЗДАВАНЕ НА ФАКТУРА
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         InvoiceValidator.validate_all(**invoice_data)
 
@@ -41,27 +37,17 @@ class InvoiceController:
         self._log(user_id, "GENERATE_INVOICE", f"Ръчно генерирана фактура за {invoice.customer}")
         return invoice
 
-    # -------------------------
+
     # АВТОМАТИЧНА ФАКТУРА ОТ OUT ДВИЖЕНИЕ
-    # -------------------------
     def create_from_movement(self, movement, product, customer: str, user_id: str) -> Invoice:
         qty = float(movement.quantity)
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)
 
-        invoice = Invoice(
-            product=product.name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            movement_id=movement.movement_id,
-            date=movement.date,
-            created=movement.date,
-            modified=movement.date,
-            invoice_id=str(uuid.uuid4())
-        )
+        invoice = Invoice(product=product.name, quantity=qty, unit=movement.unit,
+                           unit_price=unit_price, total_price=total_price, customer=customer,
+                           movement_id=movement.movement_id,
+                           date=movement.date, created=movement.date, modified=movement.date, invoice_id=str(uuid.uuid4()))
 
         self.invoices.append(invoice)
         self._save_changes()
@@ -69,9 +55,7 @@ class InvoiceController:
 
         return invoice
 
-    # -------------------------
-    # CRUD + ТЪРСЕНЕ
-    # -------------------------
+
     def get_all(self) -> List[Invoice]:
         return self.invoices
 
@@ -117,10 +101,6 @@ class InvoiceController:
         return filter_by_total_range(self.invoices, min_total, max_total)
 
     def advanced_search(self, **kwargs):
-        InvoiceValidator.validate_search_filters(
-            kwargs.get("start_date"),
-            kwargs.get("end_date"),
-            kwargs.get("min_total"),
-            kwargs.get("max_total")
-        )
+        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"),
+                                                 kwargs.get("min_total"), kwargs.get("max_total"))
         return filter_advanced(self.invoices, **kwargs)

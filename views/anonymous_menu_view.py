@@ -9,26 +9,19 @@ class AnonymousMenuView:
         # Запазвам контролерите, за да ги подадем на под-менютата
         self.controllers = controllers
 
-        self.product_view = ProductMenuView(
-            controllers["product"],       # product_controller
-            controllers["category"],      # category_controller
-            controllers["location"],      # location_controller
-            controllers["inventory"],     # inventory_controller  ← ДОБАВЕНО
-            controllers["supplier"],      # supplier_controller
-            controllers["activity_log"]   # activity_log_controller
-        )
+        self.product_view = ProductMenuView(controllers["product"], controllers["category"], controllers["location"],
+                                            controllers["inventory"], controllers["supplier"], controllers["activity_log"])
 
         self.category_view = CategoryView(controllers["category"])
         self.system_info_view = SystemInfoView()
 
     def _build_menu(self):
         """ Изгражда менюто за анонимен потребител. """
-        return Menu("Меню за анонимен потребител", [
-            MenuItem("1", "Разглеждане на продукти", self.open_products),
-            MenuItem("2", "Разглеждане на категории", self.open_categories),
-            MenuItem("3", "Информация за системата", self.show_system_info),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Меню за анонимен потребител", [MenuItem("1", "Разглеждане на продукти", self.open_products),
+                                                    MenuItem("2", "Разглеждане на категории", self.open_categories),
+                                                    MenuItem("3", "Информация за системата", self.show_system_info),
+                                                    MenuItem("0", "Назад", lambda u: "break")])
+
 
     def show_menu(self, user=None):
         while True:

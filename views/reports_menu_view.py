@@ -32,9 +32,8 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
-    # ---------------------------------------------------------
-    # 1) ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ
-    # ---------------------------------------------------------
+
+    # ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ
     def summary_report(self, _):
         res = self.controller.report_inventory_summary()
         if not res.data:
@@ -43,18 +42,13 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item.get("product", "-"),
-                item.get("available", "-"),
-                item.get("sold", "-"),
-                item.get("top_locations", "-")
-            ])
+            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"),
+                         item.get("top_locations", "-")])
 
         print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
-    # ---------------------------------------------------------
-    # 2) СПРАВКА ЗА ДВИЖЕНИЯ
-    # ---------------------------------------------------------
+
+    # СПРАВКА ЗА ДВИЖЕНИЯ
     def report_movements(self, _):
         res = self.controller.report_movements()
         if not res.data:
@@ -63,21 +57,13 @@ class ReportsView:
 
         rows = []
         for m in res.data:
-            rows.append([
-                m.get("movement_id", "-"),
-                m.get("date", "-"),
-                m.get("type", "-"),
-                m.get("product", "-"),
-                f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                m.get("from", "-"),
-                m.get("to", "-")
-            ])
+            rows.append([m.get("movement_id", "-"), m.get("date", "-"), m.get("type", "-"), m.get("product", "-"),
+                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
 
         print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows))
 
-    # ---------------------------------------------------------
-    # 3) ВСИЧКИ ПРОДАЖБИ
-    # ---------------------------------------------------------
+
+    # ВСИЧКИ ПРОДАЖБИ
     def report_sales(self, _):
         res = self.controller.report_sales()
         if not res.data:
@@ -96,9 +82,8 @@ class ReportsView:
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
-    # ---------------------------------------------------------
+
     # 4) ПРОДАЖБИ ПО КЛИЕНТ
-    # ---------------------------------------------------------
     def report_sales_by_customer(self, _):
         name = input("Клиент: ").strip()
         if not name:
@@ -122,9 +107,8 @@ class ReportsView:
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
-    # ---------------------------------------------------------
+
     # 5) ПРОДАЖБИ ПО ПРОДУКТ
-    # ---------------------------------------------------------
     def report_sales_by_product(self, _):
         name = input("Продукт: ").strip()
         if not name:
@@ -148,9 +132,8 @@ class ReportsView:
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
-    # ---------------------------------------------------------
+
     # 6) ПРОДАЖБИ ПО ДАТА
-    # ---------------------------------------------------------
     def report_sales_by_date(self, _):
         val = input("Дата (ГГГГ-ММ-ДД): ").strip()
         if not val:
@@ -180,9 +163,8 @@ class ReportsView:
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
-    # ---------------------------------------------------------
+
     # 7) ВСИЧКИ ДОСТАВКИ
-    # ---------------------------------------------------------
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if not res.data:
@@ -202,9 +184,8 @@ class ReportsView:
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
-    # ---------------------------------------------------------
+
     # 8) ТЪРСЕНЕ НА ДОСТАВКА
-    # ---------------------------------------------------------
     def search_delivery(self, _):
         key = input("Търсене: ").strip()
         if not key:
@@ -229,9 +210,8 @@ class ReportsView:
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
-    # ---------------------------------------------------------
+
     # 9) ОБОРОТ ПО ДНИ
-    # ---------------------------------------------------------
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
@@ -248,9 +228,8 @@ class ReportsView:
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
 
-    # ---------------------------------------------------------
+
     # 10) НАЙ-ПРОДАВАНИ ПРОДУКТИ
-    # ---------------------------------------------------------
     def report_top_products(self, _):
         res = self.controller.report_top_products()
         if not res.data:
@@ -267,9 +246,8 @@ class ReportsView:
 
         print(format_table(["Продукт", "Количество", "Оборот"], rows))
 
-    # ---------------------------------------------------------
+
     # 11) ИНВЕНТАР ПО СКЛАДОВЕ
-    # ---------------------------------------------------------
     def inventory_by_warehouse(self, user):
         inventory_data = self.controller.inventory_controller.data.get("products", {})
         all_products = self.controller.product_controller.get_all()
@@ -304,12 +282,9 @@ class ReportsView:
         print("\n   Инвентар – наличност по складове\n")
         print(format_table(columns, rows))
 
-    # ---------------------------------------------------------
-    # 12) ЖИЗНЕН ЦИКЪЛ (С ДОБАВЕН РАЗХОД И ПЕЧАЛБА)
-    # ---------------------------------------------------------
-    # ---------------------------------------------------------
-    # 12) ЖИЗНЕН ЦИКЪЛ (ПО-РАЗБИРАЕМИ ТЕРМИНИ)
-    # ---------------------------------------------------------
+
+
+    # 12) ЖИЗНЕН ЦИКЪЛ
     def report_lifecycle(self, _):
         name = input("Продукт: ").strip()
         if not name:

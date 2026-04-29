@@ -47,7 +47,6 @@ class InvoiceView:
         if not invoices:
             print("Няма налични фактури.")
             return
-
         for inv in invoices:
             print("\n========== ФАКТУРА ==========")
             print(f"ID: {inv.invoice_id}")
@@ -60,7 +59,7 @@ class InvoiceView:
             print(f"Дата: {inv.date}")
             print("==============================")
 
-    # Преглед по ID
+
     def view_by_id(self, user):
         print("\nПреглед на фактура по ID")
         while True:
@@ -83,20 +82,14 @@ class InvoiceView:
             break
 
         columns = ["Поле", "Стойност"]
-        rows = [
-            ["ID", invoice.invoice_id],
-            ["Movement ID", invoice.movement_id],
-            ["Продукт", invoice.product],
-            ["Количество", f"{invoice.quantity} {invoice.unit}"],
-            ["Единична цена", f"{invoice.unit_price} лв."],
-            ["Обща цена", f"{invoice.total_price} лв."],
-            ["Клиент", invoice.customer],
-            ["Дата", invoice.date]
-        ]
+        rows = [["ID", invoice.invoice_id], ["Movement ID", invoice.movement_id],
+                 ["Продукт", invoice.product], ["Количество", f"{invoice.quantity} {invoice.unit}"],
+                 ["Единична цена", f"{invoice.unit_price} лв."], ["Обща цена", f"{invoice.total_price} лв."],
+                 ["Клиент", invoice.customer], ["Дата", invoice.date]]
 
         print("\n" + format_table(columns, rows))
 
-    # Търсене по клиент
+
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
         if not keyword:
@@ -195,14 +188,8 @@ class InvoiceView:
             print(f"[!] {e}")
             return
 
-        results = self.invoice_controller.advanced_search(
-            customer=customer,
-            product=product,
-            start_date=start_date,
-            end_date=end_date,
-            min_total=min_total,
-            max_total=max_total
-        )
+        results = self.invoice_controller.advanced_search(customer=customer, product=product, start_date=start_date,
+                                                          end_date=end_date,min_total=min_total,max_total=max_total)
 
         if not results:
             print("\n[!] Няма фактури по тези критерии.")

@@ -19,7 +19,6 @@ class CategoryView:
 
     def _build_menu(self, is_admin: bool):
         menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
-        # Проверка за права - само за администратори
         if is_admin:
             menu_items.extend([MenuItem("2", "Добавяне на категория", self.add_category),
                                MenuItem("3", "Редактиране на категория", self.edit_category),
@@ -152,4 +151,4 @@ class CategoryView:
                 index = int(choice) - 1
                 if 0 <= index < len(categories):
                     return categories[index]
-            print("[!] Невалиден избор. Опитайте отново.\n")
+            print(" Невалиден избор. Опитайте отново.\n")

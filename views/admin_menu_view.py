@@ -14,25 +14,18 @@ class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
 
-
-        self.product_view = ProductMenuView(
-            controllers["product"],
-            controllers["category"],
-            controllers["location"],
-            controllers["inventory"],
-            controllers["supplier"],
-            controllers["activity_log"]
-        )
+        # За по-лесен достъп до контролерите при синхронизация
+        self.inventory_controller = controllers["inventory"]
+        self.movement_controller = controllers["movement"]
+        self.product_view = ProductMenuView(controllers["product"], controllers["category"],
+                                             controllers["location"], controllers["inventory"],
+                                             controllers["supplier"], controllers["activity_log"])
 
         self.category_view = CategoryView(controllers["category"])
 
-        self.movement_view = MovementView(
-            controllers["product"],
-            controllers["movement"],
-            controllers["user"],
-            controllers["location"],
-            controllers["supplier"]
-        )
+        self.movement_view = MovementView(controllers["product"], controllers["movement"], controllers["user"],
+                                          controllers["location"],controllers["supplier"])
+
 
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
@@ -42,20 +35,22 @@ class AdminMenuView:
         self.location_view = LocationView(controllers["location"])
         self.graph_view = controllers.get("logistic")
 
+
     def _build_menu(self):
-        return Menu("Администраторско меню", [
-            MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
-            MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
-            MenuItem("3", "Доставки и продажби (IN/OUT движения)", lambda u: self.movement_view.show_menu()),
-            MenuItem("4", "Управление на потребители", lambda u: self.user_view.show_menu(u)),
-            MenuItem("5", "Справки", lambda u: self.reports_view.show_menu(u)),
-            MenuItem("6", "Фактури", lambda u: self.invoice_view.show_menu(u)),
-            MenuItem("7", "Информация за системата", lambda u: self.system_info_view.show_menu()),
-            MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
-            MenuItem("9", "Управление на локации (складове)", lambda u: self.location_view.show_menu(u)),
-            MenuItem("10", "Най-кратък път между складове (Dijkstra)", lambda u: self.open_graph(u)),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Администраторско меню", [MenuItem("1", "Управление на продукти",
+                                                       lambda u: self.product_view.show_menu(u)),
+                                              MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
+                                              MenuItem("3", "Доставки и продажби (IN/OUT движения)", lambda u: self.movement_view.show_menu()),
+                                              MenuItem("4", "Управление на потребители", lambda u: self.user_view.show_menu(u)),
+                                              MenuItem("5", "Справки", lambda u: self.reports_view.show_menu(u)),
+                                              MenuItem("6", "Фактури", lambda u: self.invoice_view.show_menu(u)),
+                                              MenuItem("7", "Информация за системата", lambda u: self.system_info_view.show_menu()),
+                                              MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
+                                              MenuItem("9", "Управление на локации (складове)", lambda u: self.location_view.show_menu(u)),
+                                              MenuItem("10", "Най-кратък път между складове (Dijkstra)", lambda u: self.open_graph(u)),
+                                              MenuItem("11", "СИНХРОНИЗИРАНЕ НА ИНВЕНТАРА (Rebuild)", lambda u: self.sync_inventory_action(u)),
+                                              MenuItem("0", "Назад", lambda u: "break")])
+
 
     def show_menu(self, user):
         if user.role.lower() != "admin":
@@ -69,8 +64,25 @@ class AdminMenuView:
             if result == "break":
                 break
 
+
+    def sync_inventory_action(self, user):
+        print("   СИНХРОНИЗАЦИЯ НА СКЛАДА (REBUILD)")
+        print(" Внимание: Текущите наличности в инвентара ще бъдат")
+        print("    изтрити и преизчислени на база ВСИЧКИ движения (IN/OUT).")
+
+        confirm = input("\nЖелаете ли да продължите? (y/n): ").lower()
+        if confirm == 'y':
+            self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
+            print(" Всички наличности са актуализирани спрямо документите.")
+        else:
+            print("\n Операцията е отказана.")
+
+        input("\nНатиснете Enter за продължение...")
+
+
+
     def open_graph(self, user):
         if self.graph_view:
             self.graph_view.show_menu(user)
         else:
-            print("\n[!] Грешка: Логистичният модул (Dijkstra) не е инициализиран.")
+            print("\n Грешка: Логистичният модул (Dijkstra) не е инициализиран.")

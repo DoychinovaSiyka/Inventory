@@ -6,7 +6,7 @@ class Supplier:
     def __init__(self, supplier_id=None, name="", contact="", address="", created=None, modified=None):
         """ Модел за доставчик. Датите (created/modified) идват от контролера. """
 
-        # Уникален идентификатор - генерира се, ако липсва
+
         self.supplier_id = str(supplier_id) if supplier_id else str(uuid.uuid4())
         self.name = str(name).strip()
         self.contact = str(contact).strip()

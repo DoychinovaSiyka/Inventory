@@ -65,7 +65,6 @@ class LocationController:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
-
         if name is not None:
             name = LocationValidator.validate_name(name)
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
