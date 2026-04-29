@@ -114,16 +114,13 @@ class ProductController:
         if new_name is not None:
             ProductValidator.validate_name(new_name)
             product.name = new_name
-
         if new_description is not None:
             product.description = new_description
-
         if new_price is not None:
             try:
                 product.price = float(new_price)
             except:
                 return False
-
         if new_supplier_id is not None:
             product.supplier_id = new_supplier_id
 
