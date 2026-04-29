@@ -46,7 +46,6 @@ def group_products_by_category(products: List[Product]) -> Dict[str, List[Produc
     for p in products:
         for c in p.categories:
             cname = c.name
-
             if cname not in grouped:
                 grouped[cname] = []
 
