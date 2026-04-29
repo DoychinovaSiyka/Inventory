@@ -38,9 +38,8 @@ class UserActivityLogController:
         self.repo.save([log.to_dict() for log in self.logs])
 
 
-    # Изчистване на логове - полезно при администрация
+    # Изчистване на логове /записи от историята/ - полезно при администрация
     def clear_logs(self):
-        """Изтрива всички записи от историята."""
         self.logs = []
         self.save_changes()
 
