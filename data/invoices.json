@@ -1,3 +1,15 @@
 [
-
+    {
+        "invoice_id": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+        "movement_id": "97287976-ff9e-4690-a7f0-502165d45e6f",
+        "product": "Диня",
+        "quantity": 18.0,
+        "unit": "бр.",
+        "unit_price": 7.89,
+        "total_price": 142.02,
+        "customer": "Мария Димитрова",
+        "date": "2026-04-29 16:07:48",
+        "created": "2026-04-29 16:07:48",
+        "modified": "2026-04-29 16:07:48"
+    }
 ]

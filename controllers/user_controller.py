@@ -133,3 +133,5 @@ class UserController:
         now = User.now()
         return User(user_id="guest-0000", first_name="Anonymous", last_name="", email="",
                     username="guest", password="", role="Anonymous", status="Active", created=now, modified=now)
+
+# dimitar01

@@ -103,3 +103,36 @@ class InventoryController:
 
         self._save()
         print(" Началните количества са заредени в инвентара.")
+
+
+    def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):
+        product_id = str(product_id)
+        batches = []
+        total_cost = 0.0
+
+        # сортираме движенията по дата (за всеки случай)
+        relevant = [m for m in movements if str(m.product_id) == product_id]
+        relevant.sort(key=lambda x: x.date)
+
+        for m in relevant:
+            mtype = m.movement_type.name
+            qty = float(m.quantity)
+
+            if mtype == "IN":
+                price = float(m.price if m.price is not None else fallback_price)
+                batches.append({"qty": qty, "price": price})
+
+            elif mtype == "OUT":
+                need = qty
+                while need > 0 and batches:
+                    b = batches[0]
+                    if b["qty"] <= need:
+                        total_cost += b["qty"] * b["price"]
+                        need -= b["qty"]
+                        batches.pop(0)
+                    else:
+                        total_cost += need * b["price"]
+                        b["qty"] -= need
+                        need = 0
+
+        return total_cost

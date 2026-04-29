@@ -45,18 +45,21 @@ class ReportController:
             product = self.product_controller.get_by_id(m.product_id)
             product_name = product.name if product else "-"
 
+            # Нормализиран тип: IN / OUT / MOVE
+            mtype = m.movement_type.name
+
             # Логика за "От" и "Към"
-            if m.movement_type == MovementType.IN:
+            if mtype == "IN":
                 from_loc = "Доставчик"
                 loc = self.location_controller.get_by_id(m.location_id)
                 to_loc = loc.name if loc else m.location_id
 
-            elif m.movement_type == MovementType.OUT:
+            elif mtype == "OUT":
                 loc = self.location_controller.get_by_id(m.location_id)
                 from_loc = loc.name if loc else m.location_id
                 to_loc = m.customer or "Клиент"
 
-            elif m.movement_type == MovementType.MOVE:
+            elif mtype == "MOVE":
                 loc_from = self.location_controller.get_by_id(m.from_location_id)
                 loc_to = self.location_controller.get_by_id(m.to_location_id)
                 from_loc = loc_from.name if loc_from else m.from_location_id
@@ -69,12 +72,12 @@ class ReportController:
             data.append({
                 "movement_id": m.movement_id,
                 "date": m.date[:10],
-                "type": m.movement_type,
+                "type": mtype,  # ← ВАЖНО! Вече е "IN", "OUT", "MOVE"
                 "product": product_name,
                 "quantity": m.quantity,
                 "unit": m.unit,
-                "from": from_loc,
-                "to": to_loc
+                "from": from_loc,  # ← ВАЖНО! View го очаква
+                "to": to_loc  # ← ВАЖНО! View го очаква
             })
 
         summary = {"total": len(data)}
@@ -298,13 +301,14 @@ class ReportController:
         self._save_report("inventory_summary", {}, summary, data)
         return ReportResult(summary, data)
 
-    # ---------------------------------------------------------
+
     # 10) Жизнен цикъл
     # ---------------------------------------------------------
     def product_lifecycle(self, name):
         name = name.lower()
         product = None
 
+        # намираме продукта
         for p in self.product_controller.get_all():
             if p.name and name in p.name.lower():
                 product = p
@@ -315,12 +319,15 @@ class ReportController:
 
         pid = product.product_id
         unit = product.unit
+
+        # текущо количество от инвентара
         current_stock = self.inventory_controller.get_total_stock(pid)
 
         total_in = 0.0
         total_out_qty = 0.0
         revenue = 0.0
 
+        # събираме IN, OUT и приход
         for m in self.movement_controller.movements:
             if m.product_id != pid:
                 continue
@@ -330,11 +337,23 @@ class ReportController:
 
             elif m.movement_type == MovementType.OUT:
                 qty = float(m.quantity or 0)
-                price = float(m.price or product.price or 0)
+                price = float(m.price if m.price is not None else product.price)
                 total_out_qty += qty
                 revenue += qty * price
 
+        # начално количество
         initial_stock = current_stock + total_out_qty - total_in
+
+        # FIFO разход (себестойност)
+        cost = self.inventory_controller.calculate_fifo_cost(
+            pid,
+            self.movement_controller.movements,
+            fallback_price=product.price
+        )
+
+        # печалба и марж
+        profit = revenue - cost
+        margin = (profit / revenue * 100) if revenue > 0 else 0.0
 
         data = {
             "product": product.name,
@@ -343,7 +362,10 @@ class ReportController:
             "total_in": total_in,
             "total_out": total_out_qty,
             "current_stock": current_stock,
-            "revenue": revenue
+            "revenue": revenue,
+            "cost": cost,
+            "profit": profit,
+            "margin": margin
         }
 
         summary = {"found": True}

@@ -1,3 +1,21 @@
 [
-
+    {
+        "report_id": "6edd74cb-2987-44ac-9c76-707eb0026bf6",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-04-29 16:09:48",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 1
+            },
+            "data": [
+                {
+                    "product": "Диня",
+                    "available": "189.0 бр.",
+                    "sold": "18.0 бр.",
+                    "top_locations": "W1:129.0, W2:34.0, W5:26.0"
+                }
+            ]
+        }
+    }
 ]

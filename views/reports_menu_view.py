@@ -13,7 +13,7 @@ class ReportsView:
             choice = menu.show()
             if choice == "0":
                 break
-            menu.execute(choice, user)
+            menu.execute(choice, user)   # ❗ Премахнато е result == "break"
 
     def _build_menu(self):
         return Menu("Справки и Отчети", [
@@ -27,7 +27,7 @@ class ReportsView:
             MenuItem("8", "Търсене на доставка", self.search_delivery),
             MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
             MenuItem("10", "Най-продавани продукти", self.report_top_products),
-            MenuItem("11", "Инвентар – наличност по складове", self.report_inventory),
+            MenuItem("11", "Инвентар – наличност по складове", self.inventory_by_warehouse),
             MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
             MenuItem("0", "Назад", lambda u: "break")
         ])
@@ -53,7 +53,7 @@ class ReportsView:
         print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
     # ---------------------------------------------------------
-    # 2) СПРАВКА ЗА ДВИЖЕНИЯ (ОПРАВЕНА)
+    # 2) СПРАВКА ЗА ДВИЖЕНИЯ
     # ---------------------------------------------------------
     def report_movements(self, _):
         res = self.controller.report_movements()
@@ -63,39 +63,14 @@ class ReportsView:
 
         rows = []
         for m in res.data:
-
-            # Нормализираме типа: "MovementType.IN" -> "IN"
-            raw_type = m.get("type", "-")
-            if isinstance(raw_type, str) and "." in raw_type:
-                mtype = raw_type.split(".")[-1]
-            else:
-                mtype = raw_type
-
-            # Логика за колони "От" и "Към"
-            if mtype == "IN":
-                from_loc = "Доставчик"
-                to_loc = m.get("to", "-") or m.get("location", "-")
-
-            elif mtype == "OUT":
-                from_loc = m.get("from", "-") or m.get("location", "-")
-                to_loc = m.get("customer", "-") or "Клиент"
-
-            elif mtype == "MOVE":
-                from_loc = m.get("from", "-")
-                to_loc = m.get("to", "-")
-
-            else:
-                from_loc = "-"
-                to_loc = "-"
-
             rows.append([
                 m.get("movement_id", "-"),
                 m.get("date", "-"),
-                mtype,
+                m.get("type", "-"),
                 m.get("product", "-"),
                 f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                from_loc,
-                to_loc
+                m.get("from", "-"),
+                m.get("to", "-")
             ])
 
         print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows))
@@ -256,6 +231,7 @@ class ReportsView:
 
     # ---------------------------------------------------------
     # 9) ОБОРОТ ПО ДНИ
+    # ---------------------------------------------------------
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
@@ -294,8 +270,42 @@ class ReportsView:
     # ---------------------------------------------------------
     # 11) ИНВЕНТАР ПО СКЛАДОВЕ
     # ---------------------------------------------------------
-    def report_inventory(self, _):
-        print("\n[!] Тази справка е обединена с №1.\n")
+    def inventory_by_warehouse(self, user):
+        """ Справка 11: Инвентар – наличност по складове """
+        # Важно: Използваме контролерите през self.controller
+        inventory_data = self.controller.inventory_controller.data.get("products", {})
+        all_products = self.controller.product_controller.get_all()
+        locations_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
+
+        rows = []
+        for product in all_products:
+            pid = product.product_id
+            p_inv = inventory_data.get(pid, {})
+            locs = p_inv.get("locations", {})
+
+            if not locs:
+                total_stock = self.controller.inventory_controller.get_total_stock(pid)
+                if total_stock > 0:
+                    initial_loc_id = getattr(product, 'location_id', 'W1')
+                    loc_obj = locations_map.get(initial_loc_id)
+                    loc_name = loc_obj.name if loc_obj else initial_loc_id
+                    rows.append([loc_name, product.name, f"{total_stock} {product.unit}"])
+            else:
+                for loc_id, qty in locs.items():
+                    if float(qty) > 0:
+                        loc = locations_map.get(loc_id)
+                        loc_name = loc.name if loc else loc_id
+                        rows.append([loc_name, product.name, f"{qty} {product.unit}"])
+
+        if not rows:
+            print("\n[!] Няма налични продукти.\n")
+            return
+
+        rows.sort(key=lambda r: (r[0], r[1]))
+        columns = ["Склад", "Продукт", "Наличност"]
+        print("\n   Инвентар – наличност по складове\n")
+        from views.password_utils import format_table
+        print(format_table(columns, rows))
 
     # ---------------------------------------------------------
     # 12) ЖИЗНЕН ЦИКЪЛ

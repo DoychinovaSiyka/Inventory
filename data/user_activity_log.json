@@ -2301,5 +2301,173 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-29 15:49:33"
+    },
+    {
+        "log_id": "c99f2141-af44-4a4d-b585-163fffe98996",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:03:22"
+    },
+    {
+        "log_id": "b18d96fa-f9dc-44d3-b540-26ca16e2f9c0",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:03:47"
+    },
+    {
+        "log_id": "ac367571-58ff-4dfe-8897-735ee5d64805",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:18:02"
+    },
+    {
+        "log_id": "f3dc95b4-1b83-447b-8d04-24d4d457c801",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:23:46"
+    },
+    {
+        "log_id": "006fa218-ae2e-46cd-abe6-bab480be5eee",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:24:27"
+    },
+    {
+        "log_id": "46af3b59-d809-4599-a9e3-94178b867ee9",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:32:03"
+    },
+    {
+        "log_id": "59d2ed81-2eb5-49e7-b9cf-741a86d767cf",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:39:28"
+    },
+    {
+        "log_id": "110a3279-b57e-40df-ab5f-f9e47b884414",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-29 16:53:57"
+    },
+    {
+        "log_id": "c02dd070-4f33-4380-af4e-37150967e89b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:54:54"
+    },
+    {
+        "log_id": "9b3f93d3-f220-4fd7-bbeb-10a8384adf48",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 16:58:36"
+    },
+    {
+        "log_id": "53f6d56b-f3b8-4bef-b9fe-d561afdfbff9",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:02:40"
+    },
+    {
+        "log_id": "c6bb5f6c-05d5-46b8-add9-2b9dcdbf04c5",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-29 17:05:48"
+    },
+    {
+        "log_id": "c145dc02-3065-4cc6-8047-e6c7dd2d4a48",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:06:03"
+    },
+    {
+        "log_id": "248787e4-1383-4517-ab71-d8746aa6273b",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:15:40"
+    },
+    {
+        "log_id": "818d10cc-8a84-4a8b-b727-6b975fef966d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:20:38"
+    },
+    {
+        "log_id": "5bb04011-1f71-49f0-be9d-8cde1d37a808",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGOUT",
+        "details": "Потребител admin излезе.",
+        "timestamp": "2026-04-29 17:33:44"
+    },
+    {
+        "log_id": "406efdfb-7778-472c-8b2a-2c66863b00fe",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:34:08"
+    },
+    {
+        "log_id": "3db562d6-6c5c-474f-9af7-c158ae72e24d",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:46:00"
+    },
+    {
+        "log_id": "fe5f6e82-a40a-4887-9ddc-5a87975826d4",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:49:29"
+    },
+    {
+        "log_id": "bb101bdd-9611-423c-9d86-77aff7eae128",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:51:28"
+    },
+    {
+        "log_id": "84a5c582-2f6e-443c-b002-38f52392a7b7",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:52:46"
+    },
+    {
+        "log_id": "14f22070-3728-45c8-8df1-73847b2fde09",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 17:53:59"
+    },
+    {
+        "log_id": "a3406fc6-0435-448c-b070-f1db37ef1d4c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 18:10:34"
+    },
+    {
+        "log_id": "e4d01d53-1c95-46b7-9bed-4effa2b5afae",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-29 18:15:19"
     }
 ]

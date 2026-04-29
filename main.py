@@ -23,6 +23,7 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
+
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -33,6 +34,7 @@ class InventoryApplication:
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
+
 
     def _init_controllers(self):
         self.activity_log_controller = UserActivityLogController(JSONRepository("data/user_activity_log.json"))
@@ -72,9 +74,8 @@ class InventoryApplication:
         self.inventory_controller.movement_controller = self.movement_controller
         self.inventory_controller.location_controller = self.location_controller
 
-        # ---------------------------------------------------------
+
         # ЗАРЕЖДАНЕ НА ИНВЕНТАРА
-        # ---------------------------------------------------------
         if not self.movement_controller.movements:
             print(" Няма движения → зареждаме началните количества от products.json")
 
@@ -106,19 +107,11 @@ class InventoryApplication:
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
 
     def _init_menus(self):
-        self.controllers = {
-            "user": self.user_controller,
-            "product": self.product_controller,
-            "category": self.category_controller,
-            "supplier": self.supplier_controller,
-            "location": self.location_controller,
-            "movement": self.movement_controller,
-            "invoice": self.invoice_controller,
-            "report": self.report_controller,
-            "activity_log": self.activity_log_controller,
-            "logistic": self.logistic_service,
-            "inventory": self.inventory_controller
-        }
+        self.controllers = { "user": self.user_controller, "product": self.product_controller, "category": self.category_controller,
+                             "supplier": self.supplier_controller, "location": self.location_controller,
+                             "movement": self.movement_controller, "invoice": self.invoice_controller,
+                             "report": self.report_controller, "activity_log": self.activity_log_controller,
+                             "logistic": self.logistic_service, "inventory": self.inventory_controller}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
