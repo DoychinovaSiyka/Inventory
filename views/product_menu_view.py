@@ -8,6 +8,15 @@ from views.password_utils import require_password, format_table
 from validators.product_validator import ProductValidator
 from textwrap import wrap
 
+# 👉 Импорт на твоите аналитики
+from analytics.product_analytics import (
+    calculate_average_price,
+    calculate_total_inventory_value,
+    get_most_expensive_product,
+    get_cheapest_product,
+    group_products_by_category
+)
+
 
 def _wrap(text, width=45):
     return "\n".join(wrap(text, width=width))
@@ -29,7 +38,9 @@ class ProductMenuView:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
-        self.sort_view = ProductSortView(product_controller)
+
+
+        self.sort_view = ProductSortView(product_controller, inventory_controller)
 
     @staticmethod
     def format_lv(value):
@@ -65,7 +76,7 @@ class ProductMenuView:
             choice = menu.show()
             if choice == "0":
                 break
-            menu.execute(choice, user)   # ❗ Премахнато е result == "break"
+            menu.execute(choice, user)
 
     # ---------------------------------------------------------
     # 1. СЪЗДАВАНЕ НА ПРОДУКТ
@@ -196,20 +207,32 @@ class ProductMenuView:
             print(f"[!] Продукт с ID {pid} не съществува.")
             return
 
+        # --- Име ---
         new_name = input(f"Ново име ({product.name}) [Enter за запазване]: ").strip() or None
-        new_description = input(f"Ново описание ({product.description or 'няма'}) [Enter за запазване]: ").strip() or None
 
+        # --- Описание ---
+        new_description = input(
+            f"Ново описание ({product.description or 'няма'}) [Enter за запазване]: "
+        ).strip() or None
+
+        # --- Цена ---
         new_price = None
         while True:
-            price_raw = input(f"Нова цена ({product.price}) [Enter за запазване]: ").strip()
-            if not price_raw:
-                break
-            try:
-                new_price = float(price_raw)
-                break
-            except ValueError:
-                print("[!] Моля, въведете валидно число за цена.")
+            new_price_raw = input(
+                f"Нова цена ({product.price}) [Enter за запазване]: "
+            ).strip()
 
+            if new_price_raw == "":
+                new_price = None
+                break
+
+            try:
+                new_price = ProductValidator.parse_float(new_price_raw, "Цена")
+                break
+            except ValueError as e:
+                print(f"[!] {e}")
+
+        # --- Доставчик ---
         new_supplier_id = product.supplier_id
         if self.supplier_controller:
             print("\nСмяна на доставчик:")
@@ -217,10 +240,14 @@ class ProductMenuView:
             for i, s in enumerate(suppliers):
                 print(f"{i}. {s.name}")
 
-            supp_raw = input(f"Изберете номер на доставчик (Текущ: {product.supplier_id or 'няма'}) [Enter за запазване]: ").strip()
+            supp_raw = input(
+                f"Изберете номер на доставчик (Текущ: {product.supplier_id or 'няма'}) [Enter за запазване]: "
+            ).strip()
+
             if supp_raw.isdigit() and int(supp_raw) < len(suppliers):
                 new_supplier_id = suppliers[int(supp_raw)].supplier_id
 
+        # --- Запис ---
         try:
             success = self.product_controller.update_product(
                 product_id=pid,
@@ -285,46 +312,64 @@ class ProductMenuView:
     # 7. СРЕДНА ЦЕНА
     # ---------------------------------------------------------
     def average_price(self, _):
-        print(f"Средна цена: {self.format_lv(self.product_controller.average_price())}")
+        avg = calculate_average_price(self.product_controller.get_all())
+        print(f"Средна цена: {self.format_lv(avg)}")
 
     # ---------------------------------------------------------
     # 8. ФИЛТРИРАНЕ ПО КАТЕГОРИЯ
     # ---------------------------------------------------------
     def filter_by_category(self, _):
         categories = self.category_controller.get_all()
-        for i, c in enumerate(categories):
-            print(f"{i}. {c.name}")
 
-        raw = input("Категория (номер): ").strip()
+        print("\nКатегории:")
+        for i, c in enumerate(categories):
+            print(f"{i}. {c.name} (ID: {c.category_id})")
+
+        raw = input("Категория (номер или ID): ").strip()
         if not raw:
             return
 
-        try:
-            selected_id = categories[int(raw)].category_id
-            results = self.product_controller.search_by_category(selected_id)
-
-            if not results:
-                print("Няма продукти в тази категория.")
+        # 👉 Ако е число – използваме индекс
+        if raw.isdigit():
+            idx = int(raw)
+            if 0 <= idx < len(categories):
+                category_id = categories[idx].category_id
+            else:
+                print("[!] Невалиден номер на категория.")
                 return
+        else:
+            # 👉 Ако е текст – приемаме го като ID
+            category_id = raw
 
-            for p in results:
-                print(f"{p.name} | {self.inventory_controller.get_total_stock(p.product_id)} {p.unit}")
+        # 👉 ОПРАВЕНО: използваме filter_by_category(), не search_by_category()
+        results = self.product_controller.filter_by_category(category_id)
 
-        except:
-            print("[!] Невалиден избор.")
+        if not results:
+            print("Няма продукти в тази категория.")
+            return
+
+        for p in results:
+            qty = self.inventory_controller.get_total_stock(p.product_id)
+            print(f"{p.name} | {qty} {p.unit}")
 
     # ---------------------------------------------------------
     # 9. КРИТИЧНИ НАЛИЧНОСТИ
     # ---------------------------------------------------------
     def low_stock(self, _):
         threshold = float(input("Граница (Enter за 5): ") or 5.0)
-        low = self.product_controller.check_low_stock(threshold)
 
-        rows = [[
-            p.name,
-            f"{self.inventory_controller.get_total_stock(p.product_id):.2f}",
-            p.unit
-        ] for p in low]
+        products = self.product_controller.get_all()
+        low = []
+
+        for p in products:
+            qty = self.inventory_controller.get_total_stock(p.product_id)
+            if qty < threshold:
+                low.append(p)
+
+        rows = [
+            [p.name, f"{self.inventory_controller.get_total_stock(p.product_id):.2f}", p.unit]
+            for p in low
+        ]
 
         print(format_table(["ПРОДУКТ", "НАЛИЧНОСТ", "МЯРКА"], rows))
 
@@ -332,7 +377,7 @@ class ProductMenuView:
     # 10. НАЙ-СКЪП
     # ---------------------------------------------------------
     def most_expensive(self, _):
-        p = self.product_controller.most_expensive()
+        p = get_most_expensive_product(self.product_controller.get_all())
         if p:
             print(f"Най-скъп: {p.name} - {self.format_lv(p.price)}")
 
@@ -340,7 +385,7 @@ class ProductMenuView:
     # 11. НАЙ-ЕВТИН
     # ---------------------------------------------------------
     def cheapest(self, _):
-        p = self.product_controller.cheapest()
+        p = get_cheapest_product(self.product_controller.get_all())
         if p:
             print(f"Най-евтин: {p.name} - {self.format_lv(p.price)}")
 
@@ -348,18 +393,17 @@ class ProductMenuView:
     # 12. ОБЩА СТОЙНОСТ
     # ---------------------------------------------------------
     def total_value(self, _):
-        print(f"Обща стойност: {self.format_lv(self.product_controller.total_values())}")
+        total = calculate_total_inventory_value(
+            self.product_controller.get_all(),
+            self.inventory_controller
+        )
+        print(f"Обща стойност: {self.format_lv(total)}")
 
     # ---------------------------------------------------------
     # 13. ГРУПИРАНЕ ПО КАТЕГОРИИ
     # ---------------------------------------------------------
     def group_by_category(self, _):
-        products = self.product_controller.get_all()
-        grouped = {}
-
-        for p in products:
-            cat = ", ".join([c.name for c in p.categories]) if p.categories else "Без категория"
-            grouped.setdefault(cat, []).append(p)
+        grouped = group_products_by_category(self.product_controller.get_all())
 
         for cat, items in grouped.items():
             print(f"\n--- {cat} ---")
@@ -470,11 +514,11 @@ class ProductMenuView:
         headers = ["Продукт", "Цена", "Наличност", "Категории", "Локации", "Доставчик"]
         print(format_table(headers, rows))
 
-    # ---------------------------------------------------------
-    # 15. НАЛИЧНОСТИ ПО СКЛАДОВЕ (ОПРАВЕНО)
+
+
+    # 15. НАЛИЧНОСТИ ПО СКЛАДОВЕ
     # ---------------------------------------------------------
     def show_stock_by_warehouses(self, _):
-        """Показва наличностите на всеки продукт по всички складове + общо количество."""
         products = self.product_controller.get_all()
         if not products:
             print("Няма продукти.")
@@ -505,3 +549,4 @@ class ProductMenuView:
 
             print(format_table(["Склад", "Наличност"], rows))
             print(f"\n  Общо: {total:.1f} {p.unit}\n")
+

@@ -1,10 +1,19 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
+# 👉 Импорт на твоите сортировки
+from sorting.product_sorters import (
+    sort_by_name_logic,
+    sort_by_price_desc_logic,
+    bubble_sort_logic,
+    selection_sort_logic
+)
+
 
 class ProductSortView:
-    def __init__(self, controller):
-        self.controller = controller
+    def __init__(self, product_controller, inventory_controller):
+        self.product_controller = product_controller
+        self.inventory_controller = inventory_controller
 
     def show_menu(self, _=None):
         menu = self._build_menu()
@@ -24,34 +33,60 @@ class ProductSortView:
             MenuItem("0", "Назад", lambda u: "break")
         ])
 
+    # ---------------------------------------------------------
+    # 1. Име (A–Z)
+    # ---------------------------------------------------------
     def sort_by_name(self, _):
-        products = sorted(self.controller.get_all(), key=lambda p: p.name.lower())
+        products = sort_by_name_logic(self.product_controller.get_all())
         self._print_sorted(products, "Име (A–Z) ↑", "Вградено сортиране")
 
+    # ---------------------------------------------------------
+    # 2. Цена ↓ (Selection Sort)
+    # ---------------------------------------------------------
     def sort_price_desc(self, _):
-        products = self.controller.selection_sort()
+        products = selection_sort_logic(
+            self.product_controller.get_all(),
+            key=lambda p: p.price,
+            reverse=True
+        )
         self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
+    # ---------------------------------------------------------
+    # 3. Цена ↑ (Bubble Sort)
+    # ---------------------------------------------------------
     def sort_price_asc(self, _):
-        products = self.controller.bubble_sort()
-        products.reverse()
+        products = bubble_sort_logic(
+            self.product_controller.get_all(),
+            key=lambda p: p.price,
+            reverse=False
+        )
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
+    # ---------------------------------------------------------
+    # 4. Количество ↓
+    # ---------------------------------------------------------
     def sort_qty_desc(self, _):
-        products = sorted(
-            self.controller.get_all(),
-            key=lambda p: self.controller.get_total_stock(p.product_id),
+        products = bubble_sort_logic(
+            self.product_controller.get_all(),
+            key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
             reverse=True
         )
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
+    # ---------------------------------------------------------
+    # 5. Количество ↑
+    # ---------------------------------------------------------
     def sort_qty_asc(self, _):
-        products = sorted(
-            self.controller.get_all(),
-            key=lambda p: self.controller.get_total_stock(p.product_id)
+        products = selection_sort_logic(
+            self.product_controller.get_all(),
+            key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
+            reverse=False
         )
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
+    # ---------------------------------------------------------
+    # Печат
+    # ---------------------------------------------------------
     def _print_sorted(self, products, title, algorithm):
         if not products:
             print("\n[!] Няма продукти за показване.")
@@ -62,7 +97,7 @@ class ProductSortView:
 
         rows = []
         for p in products:
-            stock = self.controller.get_total_stock(p.product_id)
+            stock = self.inventory_controller.get_total_stock(p.product_id)
             rows.append([p.name, f"{p.price:.2f} лв.", f"{stock:.2f} {p.unit}"])
 
         print(format_table(["Име", "Цена", "Количество"], rows))

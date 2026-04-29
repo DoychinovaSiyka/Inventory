@@ -414,15 +414,25 @@ class MovementView:
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
         print("0=IN, 1=OUT, 2=MOVE")
-        m_type_input = input("Тип movement: ").strip()
-        m_type = {"0": "IN", "1": "OUT", "2": "MOVE"}.get(m_type_input)
 
-        results = self.movement_controller.advanced_filter(movement_type=m_type)
-        if not results:
+        # --- ВАЛИДАЦИЯ НА MOVEMENT TYPE ---
+        m_type_input = input("Тип movement: ").strip()
+
+        if m_type_input not in ["", "0", "1", "2"]:
+            print("[!] Невалиден тип движение. Допустими: 0=IN, 1=OUT, 2=MOVE.")
             return
 
-        rows = []
+        m_type = {"0": "IN", "1": "OUT", "2": "MOVE"}.get(m_type_input)
+
+        # --- ИЗВИКВАНЕ НА КОНТРОЛЕРА ---
+        results = self.movement_controller.advanced_filter(movement_type=m_type)
+        if not results:
+            print("\nНяма движения по зададените критерии.")
+            return
+
+        # --- ТАБЛИЦА ---
         columns = ["Дата", "Тип", "Продукт", "Количество", "Партньор", "Склад/Път"]
+        rows = []
 
         for m in results:
             product = self.product_controller.get_by_id(m.product_id)
@@ -452,10 +462,12 @@ class MovementView:
                 to_name = loc_t.name if loc_t else (m.to_location_id or "?")
 
                 loc_disp = f"{from_name} -> {to_name}"
+
             else:
                 loc = self.location_controller.get_by_id(m.location_id)
                 loc_disp = loc.name if loc else "-"
 
+            # --- ДОБАВЯМЕ РЕД ---
             rows.append([
                 m.date[:16],
                 m.movement_type.name,
@@ -465,4 +477,5 @@ class MovementView:
                 loc_disp
             ])
 
-        print(format_table(columns, rows))
+        # --- ПЕЧАТ НА ТАБЛИЦАТА ---
+        print(format_table(columns, rows, col_widths=[18, 6, 20, 12, 28, 70]))

@@ -136,3 +136,32 @@ class InventoryController:
                         need = 0
 
         return total_cost
+
+    def get_warehouses_with_product(self, product_name):
+        """
+        Връща списък от (warehouse_id, quantity) за всички складове,
+        в които продуктът съществува с количество > 0.
+        """
+        result = []
+
+        # inventory структурата е:
+        # data["products"][product_id]["locations"][warehouse_id] = qty
+
+        for product_id, pdata in self.data.get("products", {}).items():
+
+            # Взимаме истинския продукт от ProductController
+            product = self.product_controller.get_by_id(product_id)
+            if not product:
+                continue
+
+            # Сравняваме по име
+            if product.name.lower() == product_name.lower():
+
+                locations = pdata.get("locations", {})
+                for warehouse_id, qty in locations.items():
+                    if qty > 0:
+                        result.append((warehouse_id, qty))
+
+                return result  # намерихме продукта → връщаме
+
+        return []  # продуктът не е намерен

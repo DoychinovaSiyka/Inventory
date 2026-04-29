@@ -307,67 +307,57 @@ class ReportController:
     def product_lifecycle(self, name):
         name = name.lower()
         product = None
-
-        # намираме продукта
         for p in self.product_controller.get_all():
             if p.name and name in p.name.lower():
                 product = p
                 break
 
-        if not product:
-            return None
+        if not product: return None
 
         pid = product.product_id
-        unit = product.unit
-
-        # текущо количество от инвентара
         current_stock = self.inventory_controller.get_total_stock(pid)
 
         total_in = 0.0
         total_out_qty = 0.0
         revenue = 0.0
+        total_purchase_expense = 0.0  # Всички пари за доставки
 
-        # събираме IN, OUT и приход
         for m in self.movement_controller.movements:
-            if m.product_id != pid:
-                continue
+            if m.product_id != pid: continue
+            qty = float(m.quantity or 0)
 
-            if m.movement_type == MovementType.IN:
-                total_in += float(m.quantity or 0)
-
-            elif m.movement_type == MovementType.OUT:
-                qty = float(m.quantity or 0)
-                price = float(m.price if m.price is not None else product.price)
+            if m.movement_type.name == "IN":
+                total_in += qty
+                total_purchase_expense += qty * float(m.price or 0)
+            elif m.movement_type.name == "OUT":
                 total_out_qty += qty
+                price = float(m.price if m.price is not None else product.price)
                 revenue += qty * price
 
-        # начално количество
-        initial_stock = current_stock + total_out_qty - total_in
-
-        # FIFO разход (себестойност)
-        cost = self.inventory_controller.calculate_fifo_cost(
+        # --- ТУК ЗАПАЗВАМЕ ТВОЕТО FIFO ---
+        fifo_cost = self.inventory_controller.calculate_fifo_cost(
             pid,
             self.movement_controller.movements,
             fallback_price=product.price
         )
 
-        # печалба и марж
-        profit = revenue - cost
-        margin = (profit / revenue * 100) if revenue > 0 else 0.0
+        # Смятаме две различни печалби
+        # 1. Счетоводна (по FIFO)
+        fifo_profit = revenue - fifo_cost
+        # 2. Касова (реални пари в брой: Приходи - Всички Покупки)
+        cash_flow_balance = revenue - total_purchase_expense
 
         data = {
             "product": product.name,
-            "unit": unit,
-            "initial_stock": initial_stock,
+            "unit": product.unit,
             "total_in": total_in,
             "total_out": total_out_qty,
             "current_stock": current_stock,
             "revenue": revenue,
-            "cost": cost,
-            "profit": profit,
-            "margin": margin
+            "expense": total_purchase_expense,  # Парите за доставки
+            "fifo_cost": fifo_cost,  # Себестойност по FIFO
+            "profit": fifo_profit,  # Печалба по FIFO
+            "cash_balance": cash_flow_balance  # Реални пари в касата
         }
 
-        summary = {"found": True}
-        self._save_report("product_lifecycle", {"name": name}, summary, data)
         return data

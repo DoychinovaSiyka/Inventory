@@ -13,7 +13,7 @@ class ReportsView:
             choice = menu.show()
             if choice == "0":
                 break
-            menu.execute(choice, user)   # ❗ Премахнато е result == "break"
+            menu.execute(choice, user)
 
     def _build_menu(self):
         return Menu("Справки и Отчети", [
@@ -271,8 +271,6 @@ class ReportsView:
     # 11) ИНВЕНТАР ПО СКЛАДОВЕ
     # ---------------------------------------------------------
     def inventory_by_warehouse(self, user):
-        """ Справка 11: Инвентар – наличност по складове """
-        # Важно: Използваме контролерите през self.controller
         inventory_data = self.controller.inventory_controller.data.get("products", {})
         all_products = self.controller.product_controller.get_all()
         locations_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
@@ -304,16 +302,17 @@ class ReportsView:
         rows.sort(key=lambda r: (r[0], r[1]))
         columns = ["Склад", "Продукт", "Наличност"]
         print("\n   Инвентар – наличност по складове\n")
-        from views.password_utils import format_table
         print(format_table(columns, rows))
 
     # ---------------------------------------------------------
-    # 12) ЖИЗНЕН ЦИКЪЛ
+    # 12) ЖИЗНЕН ЦИКЪЛ (С ДОБАВЕН РАЗХОД И ПЕЧАЛБА)
+    # ---------------------------------------------------------
+    # ---------------------------------------------------------
+    # 12) ЖИЗНЕН ЦИКЪЛ (ПО-РАЗБИРАЕМИ ТЕРМИНИ)
     # ---------------------------------------------------------
     def report_lifecycle(self, _):
         name = input("Продукт: ").strip()
         if not name:
-            print("[!] Отказано.\n")
             return
 
         data = self.controller.product_lifecycle(name)
@@ -321,12 +320,35 @@ class ReportsView:
             print("\n[!] Продуктът не е намерен.\n")
             return
 
-        print("\nАНАЛИЗ НА ПРОДУКТ:")
-        print("Име:", data["product"])
-        print("Начално:", data["initial_stock"])
-        print("Заредено:", data["total_in"])
-        print("Продадено:", data["total_out"])
-        print("Текущо:", data["current_stock"])
-        print("Приход:", f"{data['revenue']:.2f} лв.\n")
+        revenue = data.get("revenue", 0.0)
+        cost_of_goods = data.get("fifo_cost", 0.0)  # Себестойност на продаденото
+        profit = data.get("profit", 0.0)
 
-        input("Enter за продължение...")
+        total_invested = data.get("expense", 0.0)  # Всички покупки
+        total_in = data.get("total_in", 0.0)
+        current_stock = data.get("current_stock", 0.0)
+
+        # Средна покупна цена (ако има покупки)
+        if total_in > 0:
+            avg_purchase_price = total_invested / total_in
+        else:
+            avg_purchase_price = 0.0
+
+        # Реална стойност на стоката в склада
+        in_stock_value = current_stock * avg_purchase_price
+
+        print("\n" + "═" * 45)
+        print(f"   ФИНАНСОВ ОТЧЕТ: {data['product'].upper()}")
+        print("═" * 45)
+        print(f"  Наличност в склада: {current_stock} {data.get('unit', '')}")
+        print(f"  Продадени бройки:   {data['total_out']} {data.get('unit', '')}")
+        print("-" * 45)
+        print(f"  ОБОРОТ (Продажби):        {revenue:>10.2f} лв.")
+        print(f"  СЕБЕСТОЙНОСТ (Разход):    {cost_of_goods:>10.2f} лв.")
+        print("-" * 45)
+        print(f"  ЧИСТА ПЕЧАЛБА:            {profit:>10.2f} лв.")
+        print("═" * 45)
+        print(f"  * Стойност на стоката в склада: {in_stock_value:.2f} лв.")
+        print("═" * 45)
+
+        input("\nНатиснете Enter за продължение...")
