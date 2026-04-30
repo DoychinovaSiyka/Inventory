@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "3ddb658e-2d55-43a0-bac3-5beb5b874ec6",
+        "report_id": "a3730fc8-1018-4d55-95cd-2479e43abb59",
         "report_type": "inventory_summary",
-        "generated_on": "2026-04-30 10:20:44",
+        "generated_on": "2026-04-30 10:25:51",
         "parameters": {},
         "data": {
             "summary": {
@@ -19,9 +19,9 @@
         }
     },
     {
-        "report_id": "e67d6cb7-3f8c-42a5-961c-e57ee6dbe24c",
+        "report_id": "9f0af1f9-065a-425b-9798-3fb72986628a",
         "report_type": "movements_history",
-        "generated_on": "2026-04-30 10:20:45",
+        "generated_on": "2026-04-30 10:25:56",
         "parameters": {},
         "data": {
             "summary": {
@@ -72,9 +72,9 @@
         }
     },
     {
-        "report_id": "6c9e09af-adc7-420a-97ac-b00bd59c685c",
+        "report_id": "eac96e4f-db6b-459a-946f-18cfd3d160c0",
         "report_type": "sales_all",
-        "generated_on": "2026-04-30 10:20:46",
+        "generated_on": "2026-04-30 10:25:57",
         "parameters": {},
         "data": {
             "summary": {
@@ -93,9 +93,9 @@
         }
     },
     {
-        "report_id": "f8323262-46c2-4704-8766-02cd8495dbbe",
+        "report_id": "37cfcd51-686f-416f-8cab-e2b3d53abbf8",
         "report_type": "sales_by_customer",
-        "generated_on": "2026-04-30 10:20:54",
+        "generated_on": "2026-04-30 10:26:04",
         "parameters": {
             "customer": "Мария"
         },
@@ -117,9 +117,9 @@
         }
     },
     {
-        "report_id": "a9dfe2c5-ee91-4343-b3fd-f2ad2c70e308",
+        "report_id": "b54bfa42-6aa8-4beb-8adc-81cf6d5a74fd",
         "report_type": "sales_by_product",
-        "generated_on": "2026-04-30 10:20:56",
+        "generated_on": "2026-04-30 10:26:08",
         "parameters": {
             "product": "диня"
         },
@@ -141,9 +141,9 @@
         }
     },
     {
-        "report_id": "ff296f4a-a681-4fc2-8115-7050378b6133",
+        "report_id": "14115e8a-6a13-4861-a178-33c8ab795598",
         "report_type": "sales_by_date",
-        "generated_on": "2026-04-30 10:21:06",
+        "generated_on": "2026-04-30 10:26:17",
         "parameters": {
             "date": "2026-04-29"
         },
@@ -165,9 +165,9 @@
         }
     },
     {
-        "report_id": "1c2e522b-3894-442c-946c-9a5a54f31633",
+        "report_id": "5e0d1925-de5c-44b9-919b-1e4031be1bd6",
         "report_type": "deliveries_all",
-        "generated_on": "2026-04-30 10:21:14",
+        "generated_on": "2026-04-30 10:26:24",
         "parameters": {
             "keyword": "София"
         },
@@ -189,9 +189,9 @@
         }
     },
     {
-        "report_id": "368bf6d9-04b4-45d9-b4b2-a4e1800ac50f",
+        "report_id": "333f057d-428c-4f1a-8794-e8e04a3442e5",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-30 10:21:15",
+        "generated_on": "2026-04-30 10:26:26",
         "parameters": {},
         "data": {
             "summary": {
@@ -207,9 +207,9 @@
         }
     },
     {
-        "report_id": "31844337-6900-4af8-8c26-fb28e068f05c",
+        "report_id": "93a5d30e-d5bb-4903-a9c5-04ed12217813",
         "report_type": "top_products",
-        "generated_on": "2026-04-30 10:21:17",
+        "generated_on": "2026-04-30 10:26:28",
         "parameters": {},
         "data": {
             "summary": {
@@ -226,9 +226,9 @@
         }
     },
     {
-        "report_id": "a3c99368-be95-4288-ae50-bfe2afe05f8c",
+        "report_id": "5dd833a4-d77c-4d37-bf72-06b1c650e693",
         "report_type": "product_lifecycle",
-        "generated_on": "2026-04-30 10:21:22",
+        "generated_on": "2026-04-30 10:26:33",
         "parameters": {
             "search_name": "диня"
         },
