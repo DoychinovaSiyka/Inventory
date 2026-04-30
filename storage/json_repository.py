@@ -51,11 +51,12 @@ class JSONRepository(Repository):
     def save(self, data):
         """Записва данните обратно в JSON файла."""
 
+        # Стабилно сортиране по време за report_history.json
         if self.filepath.name == "report_history.json" and isinstance(data, list):
             try:
                 data = sorted(data, key=lambda r: r.get("generated_on", ""))
             except Exception:
-                pass  # ако нещо стане, просто записваме без сортиране
+                pass
 
         try:
             with open(self.filepath, "w", encoding="utf-8") as f:
