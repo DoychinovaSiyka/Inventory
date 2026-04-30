@@ -22,47 +22,65 @@ class ReportController:
         self.supplier_controller = supplier_controller
 
     def _save_report(self, report_type, parameters, summary, data):
-        """ Записва отчет, като проверява дали вече съществува такъв тип за днешния ден.
-        Ако съществува - го обновява. Ако не - добавя нов."""
-        today = datetime.now().strftime("%Y-%m-%d")
-        all_reports = self.repo.get_all() or []
+        try:
+            today = datetime.now().strftime("%Y-%m-%d")
 
-        # Търсим дали вече имаме такъв тип отчет, генериран днес
-        existing_report_index = -1
-        for i, rep in enumerate(all_reports):
-            if rep["report_type"] == report_type and rep["generated_on"].startswith(today):
-                existing_report_index = i
-                break
+            raw_data = self.repo.load()
+            if isinstance(raw_data, list):
+                all_reports = raw_data
+            elif isinstance(raw_data, dict):
+                all_reports = [raw_data]
+            else:
+                all_reports = []
 
-        new_report = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            existing_index = -1
+            for i, rep in enumerate(all_reports):
+                rep_type = rep.get("report_type")
+                rep_date = rep.get("generated_on", "")[:10]
+                if rep_type == report_type and rep_date == today:
+                    existing_index = i
+                    break
+
+            new_report = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                             parameters=parameters, data={"summary": summary, "data": data})
 
-        if existing_report_index != -1:
-            # Обновяваме съществуващия
-            all_reports[existing_report_index] = new_report.to_dict()
-        else:
-            all_reports.append(new_report.to_dict())
+            if existing_index != -1:
+                old = all_reports[existing_index]
+                if self._is_duplicate(old, new_report_dict):
+                    return
+                all_reports[existing_index] = new_report_dict
+            else:
+                all_reports.append(new_report_dict)
 
-        self.repo.save(all_reports)
+            self.repo.save(all_reports)
 
-    # Движения
+        except Exception as e:
+            print(f"Грешка при запис на отчет: {e}")
+
+    # Справка: всички движения (IN/OUT/MOVE)
     def report_movements(self):
         data = []
         for m in self.movement_controller.movements:
             product = self.product_controller.get_by_id(m.product_id)
             product_name = product.name if product else "-"
             mtype = m.movement_type.name
+
             if mtype == "IN":
-                from_loc, to_loc = "Доставчик", (self.location_controller.get_by_id(m.location_id).name
-                                                 if self.location_controller.get_by_id(m.location_id) else m.location_id)
+                from_loc = "Доставчик"
+                loc = self.location_controller.get_by_id(m.location_id)
+                to_loc = loc.name if loc else m.location_id
+
             elif mtype == "OUT":
-                from_loc, to_loc = (self.location_controller.get_by_id(m.location_id).name
-                                    if self.location_controller.get_by_id(m.location_id) else m.location_id), (m.customer or "Клиент")
+                loc = self.location_controller.get_by_id(m.location_id)
+                from_loc = loc.name if loc else m.location_id
+                to_loc = m.customer or "Клиент"
+
             elif mtype == "MOVE":
-                from_loc = (self.location_controller.get_by_id(m.from_location_id).name
-                            if self.location_controller.get_by_id(m.from_location_id) else m.from_location_id)
-                to_loc = (self.location_controller.get_by_id(m.to_location_id).name
-                          if self.location_controller.get_by_id(m.to_location_id) else m.to_location_id)
+                loc1 = self.location_controller.get_by_id(m.from_location_id)
+                loc2 = self.location_controller.get_by_id(m.to_location_id)
+                from_loc = loc1.name if loc1 else m.from_location_id
+                to_loc = loc2.name if loc2 else m.to_location_id
+
             else:
                 from_loc, to_loc = "-", "-"
 
@@ -72,7 +90,7 @@ class ReportController:
         self._save_report("movements_history", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Всички продажби
+    # Справка: всички продажби (фактури)
     def report_sales(self):
         invoices = self.invoice_controller.get_all() or []
         data = [
@@ -82,7 +100,7 @@ class ReportController:
         self._save_report("sales_all", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Продажби по клиент
+    # Справка: продажби по клиент
     def report_sales_by_customer(self, customer):
         invoices = self.invoice_controller.get_all() or []
         data = []
@@ -94,7 +112,7 @@ class ReportController:
         self._save_report("sales_by_customer", {"customer": customer}, summary, data)
         return ReportResult(summary, data)
 
-    # Продажби по продукт
+    # Справка: продажби по продукт
     def report_sales_by_product(self, product):
         invoices = self.invoice_controller.get_all() or []
         data = []
@@ -106,7 +124,7 @@ class ReportController:
         self._save_report("sales_by_product", {"product": product}, summary, data)
         return ReportResult(summary, data)
 
-    # Продажби по дата
+    # Справка: продажби по дата
     def report_sales_by_date(self, date_obj):
         date_str = date_obj.strftime("%Y-%m-%d")
         invoices = self.invoice_controller.get_all() or []
@@ -119,8 +137,7 @@ class ReportController:
         self._save_report("sales_by_date", {"date": date_str}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Доставки (IN)
+    # Справка: всички доставки (IN)
     def report_deliveries_all(self, keyword=None):
         data = []
         for m in self.movement_controller.movements:
@@ -150,11 +167,11 @@ class ReportController:
         self._save_report("deliveries_all", {"keyword": keyword}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Оборот по дни
+    # Справка: оборот по дни
     def report_turnover_by_day(self):
         invoices = self.invoice_controller.get_all() or []
         daily = {}
+
         for inv in invoices:
             day = inv.date[:10]
             if day not in daily:
@@ -162,13 +179,12 @@ class ReportController:
             daily[day]["count"] += 1
             daily[day]["total"] += inv.total_price
 
-        data = [{"date": day, "count": info["count"], "total": info["total"]} for day, info in daily.items()]
+        data = [{"date": d, "count": info["count"], "total": info["total"]} for d, info in daily.items()]
         summary = {"days": len(data)}
         self._save_report("turnover_by_day", {}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Най-продавани продукти
+    # Справка: най-продавани продукти
     def report_top_products(self):
         stats = {}
         invoices = self.invoice_controller.get_all() or []
@@ -186,8 +202,7 @@ class ReportController:
         self._save_report("top_products", {}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Обобщена наличност
+    # Справка: обобщена наличност по продукти
     def report_inventory_summary(self):
         products = self.product_controller.get_all()
         data = []
@@ -209,28 +224,32 @@ class ReportController:
         self._save_report("inventory_summary", {}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Жизнен цикъл
+    # Справка: жизнен цикъл на продукт
     def product_lifecycle(self, name):
         name_search = name.lower()
-        product = next((p for p in self.product_controller.get_all() if p.name and name_search in p.name.lower()),
-                       None)
+        product = next((p for p in self.product_controller.get_all()
+                        if p.name and name_search in p.name.lower()), None)
+
         if not product:
             return None
-
         pid = product.product_id
         current_stock = self.inventory_controller.get_total_stock(pid)
-        total_in, total_out_qty, revenue, total_purchase_expense = 0.0, 0.0, 0.0, 0.0
 
+        total_in = 0.0
+        total_out = 0.0
+        revenue = 0.0
+        expense = 0.0
         for m in self.movement_controller.movements:
             if m.product_id != pid:
                 continue
+
             qty = float(m.quantity or 0)
             if m.movement_type.name == "IN":
                 total_in += qty
-                total_purchase_expense += qty * float(m.price or 0)
+                expense += qty * float(m.price or 0)
+
             elif m.movement_type.name == "OUT":
-                total_out_qty += qty
+                total_out += qty
                 price = float(m.price if m.price is not None else product.price)
                 revenue += qty * price
 
@@ -245,47 +264,3 @@ class ReportController:
         # Записваме и тази справка в архива
         self._save_report("product_lifecycle", {"search_name": name}, {"product": product.name}, data)
         return data
-
-    def _save_report(self, report_type, parameters, summary, data):
-        """ Записва отчет. Списъкът се пази и се добавя по един отчет от вид за деня."""
-        try:
-            today = datetime.now().strftime("%Y-%m-%d")
-
-            # Опит за взимане на текущите данни - използваме load() за директен достъп
-            raw_data = self.repo.load()
-            if isinstance(raw_data, list):
-                all_reports = raw_data
-            elif raw_data and isinstance(raw_data, dict) and raw_data:
-                # Ако случайно има само един обект (не в списък), го превръщаме в списък
-                all_reports = [raw_data]
-            else:
-                all_reports = []
-
-            # Търсим дали такъв тип отчет вече съществува за днес
-            existing_index = -1
-            for i, rep in enumerate(all_reports):
-                if isinstance(rep, dict):
-                    rep_type = rep.get("report_type")
-                    # Взимаме датата от стринга "2026-04-29 22:55:04" -> "2026-04-29"
-                    rep_date = rep.get("generated_on", "")[:10]
-                    if rep_type == report_type and rep_date == today:
-                        existing_index = i
-                        break
-
-            # Подготовка на новия отчет
-            new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                    parameters=parameters, data={"summary": summary, "data": data})
-            new_report_dict = new_report_obj.to_dict()
-
-            if existing_index != -1:
-                # Намерили сме стария отчет за днес - заменяме го с новия
-                all_reports[existing_index] = new_report_dict
-            else:
-                # Няма такъв отчет за днес - добавяме го като нов елемент в списъка
-                all_reports.append(new_report_dict)
-
-            # Запис на целия списък обратно във файла
-            self.repo.save(all_reports)
-
-        except Exception as e:
-            print(f"Грешка при запис на отчет в контролера: {e}")
