@@ -1,3 +1,253 @@
 [
-
+    {
+        "report_id": "4d23187b-a3c9-42ba-a90b-1e5a71bd2d61",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-04-30 10:58:25",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 1
+            },
+            "data": [
+                {
+                    "product": "Диня \"Гърция\"",
+                    "available": "189.0 бр.",
+                    "sold": "18.0 бр.",
+                    "top_locations": "W1:129.0, W2:34.0, W5:26.0"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "5bbc1b94-fe11-400c-bf49-95bda2824a84",
+        "report_type": "movements_history",
+        "generated_on": "2026-04-30 10:58:26",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total": 4
+            },
+            "data": [
+                {
+                    "movement_id": "1b01d8ec-8efd-492c-b2b8-ff32e55b1857",
+                    "date": "2026-04-29",
+                    "type": "IN",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 129.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "София – Основен склад"
+                },
+                {
+                    "movement_id": "f6ec08d7-b260-4502-9da3-bb8445bd7e86",
+                    "date": "2026-04-29",
+                    "type": "IN",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 78.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Магазин Смолян"
+                },
+                {
+                    "movement_id": "97287976-ff9e-4690-a7f0-502165d45e6f",
+                    "date": "2026-04-29",
+                    "type": "OUT",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 18.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Мария Димитрова"
+                },
+                {
+                    "movement_id": "e00c9fc4-3c10-4d24-a607-60ab163def29",
+                    "date": "2026-04-29",
+                    "type": "MOVE",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 34.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Пловдив – Регионален склад"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "b3015192-cbfb-40c4-97a4-307b9b7fb397",
+        "report_type": "sales_all",
+        "generated_on": "2026-04-30 10:58:28",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_sales": 1
+            },
+            "data": [
+                {
+                    "invoice_number": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+                    "date": "2026-04-29",
+                    "client": "Мария Димитрова",
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "total_price": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "47c86e6f-7e49-4298-b1d3-8caeb5894881",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-04-30 10:58:36",
+        "parameters": {
+            "customer": "Мария"
+        },
+        "data": {
+            "summary": {
+                "customer": "Мария",
+                "total": 1
+            },
+            "data": [
+                {
+                    "invoice_number": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+                    "date": "2026-04-29",
+                    "client": "Мария Димитрова",
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "total_price": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "d80b3e82-62a0-4f79-94a7-0e9ae14df9f2",
+        "report_type": "sales_by_product",
+        "generated_on": "2026-04-30 10:58:40",
+        "parameters": {
+            "product": "диня"
+        },
+        "data": {
+            "summary": {
+                "product": "диня",
+                "total": 1
+            },
+            "data": [
+                {
+                    "invoice_number": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+                    "date": "2026-04-29",
+                    "client": "Мария Димитрова",
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "total_price": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "9bfdec86-bc45-4fd0-8fc1-5086016c33a4",
+        "report_type": "sales_by_date",
+        "generated_on": "2026-04-30 10:58:48",
+        "parameters": {
+            "date": "2026-04-29"
+        },
+        "data": {
+            "summary": {
+                "date": "2026-04-29",
+                "total": 1
+            },
+            "data": [
+                {
+                    "invoice_number": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+                    "date": "2026-04-29",
+                    "client": "Мария Димитрова",
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "total_price": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "2753ed5e-7eea-4781-b5ff-4dc8a8aced4e",
+        "report_type": "deliveries_all",
+        "generated_on": "2026-04-30 10:58:54",
+        "parameters": {
+            "keyword": "София"
+        },
+        "data": {
+            "summary": {
+                "total": 1
+            },
+            "data": [
+                {
+                    "movement_id": "1b01d8ec-8efd-492c-b2b8-ff32e55b1857",
+                    "date": "2026-04-29",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 129.0,
+                    "unit": "бр.",
+                    "supplier": "\"Burgas Logistic Partners\"",
+                    "location": "София – Основен склад"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "3fe4e67e-ab94-431a-a81f-5359f9089e6d",
+        "report_type": "turnover_by_day",
+        "generated_on": "2026-04-30 10:58:56",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "days": 1
+            },
+            "data": [
+                {
+                    "date": "2026-04-29",
+                    "count": 1,
+                    "total": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "1a6c7043-83bb-44aa-a953-0d6f48d2911d",
+        "report_type": "top_products",
+        "generated_on": "2026-04-30 10:58:58",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 1
+            },
+            "data": [
+                {
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "unit": "бр.",
+                    "total": 142.02
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "f4220852-87bf-4650-8f20-d958438e99a0",
+        "report_type": "product_lifecycle",
+        "generated_on": "2026-04-30 10:59:01",
+        "parameters": {
+            "search_name": "диня"
+        },
+        "data": {
+            "summary": {
+                "product": "Диня \"Гърция\""
+            },
+            "data": {
+                "product": "Диня \"Гърция\"",
+                "unit": "бр.",
+                "total_in": 207.0,
+                "total_out": 18.0,
+                "current_stock": 189.0,
+                "revenue": 142.01999999999998,
+                "expense": 1526.49,
+                "fifo_cost": 125.82000000000001,
+                "profit": 16.199999999999974,
+                "cash_balance": -1384.47
+            }
+        }
+    }
 ]
