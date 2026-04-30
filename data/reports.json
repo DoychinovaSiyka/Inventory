@@ -1,8 +1,8 @@
 [
     {
-        "report_id": "85747987-f7bd-47b8-bba7-a3fe1015f028",
+        "report_id": "f6558113-0230-4dbc-b432-58af183df2f3",
         "report_type": "inventory_summary",
-        "generated_on": "2026-04-29 23:19:18",
+        "generated_on": "2026-04-30 10:18:16",
         "parameters": {},
         "data": {
             "summary": {
@@ -19,9 +19,9 @@
         }
     },
     {
-        "report_id": "77db6c5b-f628-4a64-92cf-0e63904853e7",
+        "report_id": "35832046-2357-4031-91ed-613ee8bb27b9",
         "report_type": "movements_history",
-        "generated_on": "2026-04-29 23:19:18",
+        "generated_on": "2026-04-30 10:18:17",
         "parameters": {},
         "data": {
             "summary": {
@@ -72,9 +72,9 @@
         }
     },
     {
-        "report_id": "cea86634-659e-43d5-ab8c-1157c34def37",
+        "report_id": "019eb6c1-9999-4ef5-9577-f8509dbd5263",
         "report_type": "sales_all",
-        "generated_on": "2026-04-29 23:19:19",
+        "generated_on": "2026-04-30 10:18:18",
         "parameters": {},
         "data": {
             "summary": {
@@ -93,9 +93,9 @@
         }
     },
     {
-        "report_id": "4c3f2aa4-ee6c-4741-8c76-c58dca2e7ed6",
+        "report_id": "f3ecf48b-8bb3-4577-9186-a5b1c69f14c5",
         "report_type": "sales_by_customer",
-        "generated_on": "2026-04-29 23:19:24",
+        "generated_on": "2026-04-30 10:18:24",
         "parameters": {
             "customer": "Мария"
         },
@@ -117,9 +117,9 @@
         }
     },
     {
-        "report_id": "60da9976-5cc9-4a54-b101-22d9ce61e3d3",
+        "report_id": "3b944259-38e2-40fa-8f35-6fba91531a07",
         "report_type": "sales_by_product",
-        "generated_on": "2026-04-29 23:19:28",
+        "generated_on": "2026-04-30 10:18:27",
         "parameters": {
             "product": "диня"
         },
@@ -141,9 +141,9 @@
         }
     },
     {
-        "report_id": "d309c981-d536-4a19-bcf5-5d576eeacab1",
+        "report_id": "6aad02cc-fc31-41fc-ba8b-161b4c91dec6",
         "report_type": "sales_by_date",
-        "generated_on": "2026-04-29 23:19:41",
+        "generated_on": "2026-04-30 10:18:34",
         "parameters": {
             "date": "2026-04-29"
         },
@@ -165,15 +165,15 @@
         }
     },
     {
-        "report_id": "818197c1-4d41-467f-b4a3-7648f0d84d7e",
+        "report_id": "22c41395-191a-421b-91ea-fa386892412c",
         "report_type": "deliveries_all",
-        "generated_on": "2026-04-29 23:20:10",
+        "generated_on": "2026-04-30 10:18:44",
         "parameters": {
-            "keyword": "\"Burgas Logistic Partners\""
+            "keyword": "София"
         },
         "data": {
             "summary": {
-                "total": 2
+                "total": 1
             },
             "data": [
                 {
@@ -184,23 +184,14 @@
                     "unit": "бр.",
                     "supplier": "\"Burgas Logistic Partners\"",
                     "location": "София – Основен склад"
-                },
-                {
-                    "movement_id": "f6ec08d7-b260-4502-9da3-bb8445bd7e86",
-                    "date": "2026-04-29",
-                    "product": "Диня \"Гърция\"",
-                    "quantity": 78.0,
-                    "unit": "бр.",
-                    "supplier": "\"Burgas Logistic Partners\"",
-                    "location": "Магазин Смолян"
                 }
             ]
         }
     },
     {
-        "report_id": "412bc2fe-d227-4a61-a98a-79fc7175158c",
+        "report_id": "1f93b3b5-c385-4983-a10a-8e8fab179513",
         "report_type": "turnover_by_day",
-        "generated_on": "2026-04-29 23:20:12",
+        "generated_on": "2026-04-30 10:18:45",
         "parameters": {},
         "data": {
             "summary": {
@@ -216,9 +207,9 @@
         }
     },
     {
-        "report_id": "2a2ba8ff-289c-4c83-97af-e6144a319901",
+        "report_id": "e22f2a95-6877-4b23-a775-0ce482ab2117",
         "report_type": "top_products",
-        "generated_on": "2026-04-29 23:20:13",
+        "generated_on": "2026-04-30 10:18:47",
         "parameters": {},
         "data": {
             "summary": {
@@ -235,9 +226,9 @@
         }
     },
     {
-        "report_id": "302018b6-6d67-4d18-bb0a-85df44147444",
+        "report_id": "0af052ca-6d01-4817-bef1-2f7bbae7ca50",
         "report_type": "product_lifecycle",
-        "generated_on": "2026-04-29 23:20:19",
+        "generated_on": "2026-04-30 10:19:11",
         "parameters": {
             "search_name": "диня"
         },
