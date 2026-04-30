@@ -36,13 +36,19 @@ class ReportController:
             else:
                 all_reports = []
 
-            # ВИНАГИ добавяме нов отчет – НЕ презаписваме стар
-            new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                    parameters=parameters, data={"summary": summary, "data": data})
+            # Подготвяме новия отчет
+            new_report_obj = Report( report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                     parameters=parameters, data={"summary": summary, "data": data})
+            new_report_dict = new_report_obj.to_dict()
 
-            all_reports.append(new_report_obj.to_dict())
+            # 1) Ако вече има ИДЕНТИЧЕН отчет - НЕ записваме нищо
+            for old in all_reports:
+                if self._is_duplicate(old, new_report_dict):
+                    return  # НИЩО не се променя
+            # 2) Ако няма такъв - добавяме като НОВ
+            all_reports.append(new_report_dict)
 
-            # Сортирането се прави в save()
+            # 3) Запис – сортирането е в save()
             self.repo.save(all_reports)
 
         except Exception as e:
