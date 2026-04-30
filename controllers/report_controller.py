@@ -27,39 +27,22 @@ class ReportController:
                 old_report.get("parameters") == new_report.get("parameters") and
                 old_report.get("data") == new_report.get("data"))
 
-    # Записваме отчет само ако е нов или различен
+    # Записваме отчет само ако е нов
     def _save_report(self, report_type, parameters, summary, data):
         try:
-            today = datetime.now().strftime("%Y-%m-%d")
-
             raw_data = self.repo.load()
             if isinstance(raw_data, list):
                 all_reports = raw_data
-            elif isinstance(raw_data, dict):
-                all_reports = [raw_data]
             else:
                 all_reports = []
 
-            existing_index = -1
-            for i, rep in enumerate(all_reports):
-                rep_type = rep.get("report_type")
-                rep_date = rep.get("generated_on", "")[:10]
-                if rep_type == report_type and rep_date == today:
-                    existing_index = i
-                    break
-
+            # ВИНАГИ добавяме нов отчет – НЕ презаписваме стар
             new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                     parameters=parameters, data={"summary": summary, "data": data})
-            new_report_dict = new_report_obj.to_dict()
 
-            if existing_index != -1:
-                old = all_reports[existing_index]
-                if self._is_duplicate(old, new_report_dict):
-                    return
-                all_reports[existing_index] = new_report_dict
-            else:
-                all_reports.append(new_report_dict)
+            all_reports.append(new_report_obj.to_dict())
 
+            # Сортирането се прави в save()
             self.repo.save(all_reports)
 
         except Exception as e:
