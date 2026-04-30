@@ -147,14 +147,13 @@ class ReportController:
             product = self.product_controller.get_by_id(m.product_id)
             if not product:
                 continue
-
             loc = self.location_controller.get_by_id(m.location_id)
             loc_name = loc.name if loc else m.location_id
+
             supplier = "-"
             if self.supplier_controller and product.supplier_id:
                 s = self.supplier_controller.get_by_id(product.supplier_id)
                 supplier = s.name if s else product.supplier_id
-
             if keyword:
                 k = keyword.lower()
                 if k not in product.name.lower() and k not in supplier.lower() and k not in loc_name.lower():
@@ -164,7 +163,8 @@ class ReportController:
                          "quantity": m.quantity, "unit": m.unit, "supplier": supplier, "location": loc_name})
 
         summary = {"total": len(data)}
-        self._save_report("deliveries_all", {"keyword": keyword}, summary, data)
+        report_type = "deliveries_all" if keyword is None else "deliveries_search"
+        self._save_report(report_type, {"keyword": keyword}, summary, data)
         return ReportResult(summary, data)
 
     # Справка: оборот по дни
