@@ -63,7 +63,6 @@ class AdminMenuView:
             if result == "break":
                 break
 
-
     def sync_inventory_action(self, user):
         print("   СИНХРОНИЗАЦИЯ НА СКЛАДА (REBUILD)")
         print(" Внимание: Текущите наличности в инвентара ще бъдат")
@@ -71,14 +70,17 @@ class AdminMenuView:
 
         confirm = input("\nЖелаете ли да продължите? (y/n): ").lower()
         if confirm == 'y':
+            # Преизчислява инвентара от всички движения
             self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
+
+            # Записвам новите наличности в JSON
+            self.inventory_controller.save()
+
             print(" Всички наличности са актуализирани спрямо документите.")
         else:
             print("\n Операцията е отказана.")
 
         input("\nНатиснете Enter за продължение...")
-
-
 
     def open_graph(self, user):
         if self.graph_view:
