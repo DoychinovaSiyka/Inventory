@@ -10,7 +10,7 @@ class Category:
         self.description = description
         self.parent_id = str(parent_id) if parent_id else None
 
-        now = Category.now()      # Дати – ако не са подадени, се задават текущи
+        now = Category.now()
         self.created = created or now
         self.modified = modified or now
 
