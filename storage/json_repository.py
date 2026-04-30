@@ -8,8 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 
 class JSONRepository(Repository):
-    """ Repository слой за работа с JSON файлове. Да зареждат и записват данни безопасно,
-    без да прави предположения за структурата."""
+    """ Repository слой за работа с JSON файлове. Да зарежда и записва данни безопасно."""
 
     def __init__(self, filepath):
         self.filepath = Path(filepath)
@@ -19,32 +18,35 @@ class JSONRepository(Repository):
         self._last_saved_data = None
 
     def load(self):
-        """Чете JSON файла и връща съдържанието му. Ако е празен или повреден, връща подходяща
-        празна структура и създава файла автоматично."""
+        """Чете JSON файла и връща съдържанието му.
+           Ако файлът липсва - създава правилната празна структура.
+           Ако е празен - връща правилната структура."""
 
-        # Ако файлът изобщо не съществува, го създаваме празен веднага
+        # Определяме правилната празна структура според името на файла
+        if self.filepath.name == "inventory.json":
+            empty = {}      # инвентарът е речник
+        else:
+            empty = []      # всички други JSON-и са списъци
+
+        # Ако файлът липсва -> създаваме го
         if not self.filepath.exists():
-            initial_data = {} if self.filepath.name == "inventory.json" else []
-            self.save(initial_data)
-            return initial_data
+            self.save(empty)
+            return empty
 
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
-                # Четем съдържанието и проверявам дали не е напълно празен файл
                 content = f.read().strip()
+                # Празен файл -> връщаме правилната структура
                 if not content:
-                    return {} if self.filepath.name == "inventory.json" else []
+                    return empty
 
                 data = json.loads(content)
-                if data is None:
-                    return {} if self.filepath.name == "inventory.json" else []
-
                 self._last_saved_data = data
                 return data
 
-        except (json.JSONDecodeError, OSError):
-            # При грешка в четенето или повреден JSON, връщаме празна структура
-            return {} if self.filepath.name == "inventory.json" else []
+        except Exception:
+            # При грешка -> връщаме правилната структура
+            return empty
 
     def save(self, data):
         """Записва данните обратно в JSON файла."""
@@ -53,6 +55,7 @@ class JSONRepository(Repository):
                 json.dump(data, f, indent=4, ensure_ascii=False)
 
             self._last_saved_data = data
+
         except Exception as e:
             print(f"Грешка при запис във файл {self.filepath.name}: {e}")
 
