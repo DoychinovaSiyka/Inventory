@@ -165,11 +165,11 @@
         }
     },
     {
-        "report_id": "83e3cbae-3124-433d-9f4c-2de617f463f3",
+        "report_id": "f20fad44-a3d1-490a-a246-9460324a8093",
         "report_type": "deliveries_all",
-        "generated_on": "2026-04-30 11:44:57",
+        "generated_on": "2026-04-30 12:05:35",
         "parameters": {
-            "keyword": "Магазин Смолян"
+            "keyword": "София – Основен склад"
         },
         "data": {
             "summary": {
@@ -177,13 +177,13 @@
             },
             "data": [
                 {
-                    "movement_id": "f6ec08d7-b260-4502-9da3-bb8445bd7e86",
+                    "movement_id": "1b01d8ec-8efd-492c-b2b8-ff32e55b1857",
                     "date": "2026-04-29",
                     "product": "Диня \"Гърция\"",
-                    "quantity": 78.0,
+                    "quantity": 129.0,
                     "unit": "бр.",
                     "supplier": "\"Burgas Logistic Partners\"",
-                    "location": "Магазин Смолян"
+                    "location": "София – Основен склад"
                 }
             ]
         }
@@ -226,11 +226,11 @@
         }
     },
     {
-        "report_id": "f3f83da2-6b71-41c5-b538-80832e4a6aa4",
+        "report_id": "445480ed-7d25-4a5a-847d-9dd7a4f57fc4",
         "report_type": "product_lifecycle",
-        "generated_on": "2026-04-30 11:45:48",
+        "generated_on": "2026-04-30 12:07:21",
         "parameters": {
-            "search_name": "Диня"
+            "search_name": "Диня \"Гърция\""
         },
         "data": {
             "summary": {
