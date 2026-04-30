@@ -2413,5 +2413,19 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-30 11:33:51"
+    },
+    {
+        "log_id": "8a1aff50-da86-454d-b890-a239879966f3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-30 11:42:20"
+    },
+    {
+        "log_id": "ea70e5db-ca6f-490b-93d3-7d88e95ec6b3",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-30 11:47:10"
     }
 ]
