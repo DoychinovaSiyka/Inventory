@@ -2791,5 +2791,12 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-04-30 09:53:48"
+    },
+    {
+        "log_id": "2ede5cd6-7809-48d7-b795-7f5ae9e39b4c",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-04-30 10:01:25"
     }
 ]

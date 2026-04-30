@@ -47,7 +47,6 @@ class AdminMenuView:
                                               MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
                                               MenuItem("9", "Управление на локации (складове)", lambda u: self.location_view.show_menu(u)),
                                               MenuItem("10", "Най-кратък път между складове (Dijkstra)", lambda u: self.open_graph(u)),
-                                              MenuItem("11", "СИНХРОНИЗИРАНЕ НА ИНВЕНТАРА (Rebuild)", lambda u: self.sync_inventory_action(u)),
                                               MenuItem("0", "Назад", lambda u: "break")])
 
 
@@ -63,24 +62,7 @@ class AdminMenuView:
             if result == "break":
                 break
 
-    def sync_inventory_action(self, user):
-        print("   СИНХРОНИЗАЦИЯ НА СКЛАДА (REBUILD)")
-        print(" Внимание: Текущите наличности в инвентара ще бъдат")
-        print("    изтрити и преизчислени на база ВСИЧКИ движения (IN/OUT).")
 
-        confirm = input("\nЖелаете ли да продължите? (y/n): ").lower()
-        if confirm == 'y':
-            # Преизчислява инвентара от всички движения
-            self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
-
-            # Записвам новите наличности в JSON
-            self.inventory_controller.save()
-
-            print(" Всички наличности са актуализирани спрямо документите.")
-        else:
-            print("\n Операцията е отказана.")
-
-        input("\nНатиснете Enter за продължение...")
 
     def open_graph(self, user):
         if self.graph_view:
