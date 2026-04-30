@@ -229,11 +229,16 @@ class ReportController:
     # Справка: жизнен цикъл на продукт
     def product_lifecycle(self, name):
         name_search = name.lower()
-        product = next((p for p in self.product_controller.get_all()
-                        if p.name and name_search in p.name.lower()), None)
+        product = None
+        for p in self.product_controller.get_all():
+            if p.name:
+                if name_search in p.name.lower():
+                    product = p
+                    break
 
         if not product:
             return None
+
         pid = product.product_id
         current_stock = self.inventory_controller.get_total_stock(pid)
 
