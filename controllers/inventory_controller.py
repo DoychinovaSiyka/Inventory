@@ -62,7 +62,6 @@ class InventoryController:
                 self.data["products"][pid] = {"locations": {}}
 
             m_type = m.movement_type.name
-
             if m_type == "IN":
                 loc = m.location_id
                 self.data["products"][pid]["locations"][loc] = \
@@ -125,7 +124,6 @@ class InventoryController:
             product = self.product_controller.get_by_id(product_id)
             if not product:
                 continue
-
             if product.name.lower() == product_name.lower():
                 locations = pdata.get("locations", {})
                 for warehouse_id, qty in locations.items():

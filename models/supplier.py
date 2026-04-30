@@ -17,7 +17,6 @@ class Supplier:
         self.modified = modified or now
 
     def update_modified(self):
-        """Обновявам датата при промяна на обекта."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):

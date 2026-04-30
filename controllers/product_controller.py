@@ -89,10 +89,15 @@ class ProductController:
                 continue
             if max_price is not None and p.price > max_price:
                 continue
-
             if category_id:
-                if not any(c.category_id == category_id for c in p.categories):
+                found = False
+                for c in p.categories:
+                    if c.category_id == category_id:
+                        found = True
+                        break
+                if not found:
                     continue
+
             if location_id and inventory_controller:
                 stock = inventory_controller.data["products"].get(p.product_id, {})
                 loc_stock = stock.get("locations", {}).get(location_id, 0)
@@ -103,13 +108,11 @@ class ProductController:
         return results
 
 
-    def update_product(self, product_id, new_name=None, new_description=None,
-                       new_price=None, new_supplier_id=None, user_id=None):
+    def update_product(self, product_id, new_name=None, new_description=None, new_price=None, new_supplier_id=None, user_id=None):
 
         product = self.get_by_id(product_id)
         if not product:
             return False
-
         if new_name is not None:
             ProductValidator.validate_name(new_name)
             product.name = new_name

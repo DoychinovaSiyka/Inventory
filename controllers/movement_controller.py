@@ -98,12 +98,11 @@ class MovementController:
 
 
         # СЪЗДАВАНЕ НА ДВИЖЕНИЕ
-        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id,
-            product_name=product.name, user_id=user_id,
-            location_id=location_id if m_type_str != "MOVE" else None, movement_type=MovementType[m_type_str],
-            quantity=qty, unit=product.unit,
-            description=description, price=prc, supplier_id=product.supplier_id, customer=customer,
-            from_location_id=from_location_id, to_location_id=to_location_id)
+        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name, user_id=user_id,
+                            location_id=location_id if m_type_str != "MOVE" else None, movement_type=MovementType[m_type_str],
+                            quantity=qty, unit=product.unit,description=description, price=prc,
+                            supplier_id=product.supplier_id, customer=customer,
+                            from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()

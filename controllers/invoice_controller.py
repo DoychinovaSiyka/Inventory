@@ -44,10 +44,9 @@ class InvoiceController:
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)
 
-        invoice = Invoice(product=product.name, quantity=qty, unit=movement.unit,
-                           unit_price=unit_price, total_price=total_price, customer=customer,
-                           movement_id=movement.movement_id,
-                           date=movement.date, created=movement.date, modified=movement.date, invoice_id=str(uuid.uuid4()))
+        invoice = Invoice(product=product.name, quantity=qty, unit=movement.unit, unit_price=unit_price,
+                          total_price=total_price, customer=customer, movement_id=movement.movement_id,
+                          date=movement.date, created=movement.date, modified=movement.date, invoice_id=str(uuid.uuid4()))
 
         self.invoices.append(invoice)
         self._save_changes()

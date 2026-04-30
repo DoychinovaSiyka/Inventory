@@ -42,7 +42,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"), item.get("top_locations", "-")])
+            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"),
+                         item.get("top_locations", "-")])
 
         print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
@@ -71,13 +72,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -96,13 +92,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"], item["product"],
+                         f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -121,13 +112,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -152,13 +138,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
 
@@ -172,14 +153,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["date"],
-                item["movement_id"],
-                item["product"],
-                f"{item['quantity']} {item['unit']}",
-                item["supplier"],
-                item["location"]
-            ])
+            rows.append([item["date"], item["movement_id"], item["product"],
+                         f"{item['quantity']} {item['unit']}", item["supplier"], item["location"]])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
@@ -198,14 +173,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["date"],
-                item["movement_id"],
-                item["product"],
-                f"{item['quantity']} {item['unit']}",
-                item["supplier"],
-                item["location"]
-            ])
+            rows.append([item["date"], item["movement_id"], item["product"],
+                         f"{item['quantity']} {item['unit']}", item["supplier"], item["location"]])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
 
@@ -219,11 +188,7 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["date"],
-                item["count"],
-                f"{item['total']:.2f} лв."
-            ])
+            rows.append([item["date"],item["count"],f"{item['total']:.2f} лв."])
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
 
@@ -237,11 +202,7 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["product"],
-                f"{item['quantity']} {item['unit']}",
-                f"{item['total']:.2f} лв."
-            ])
+            rows.append([item["product"], f"{item['quantity']} {item['unit']}", f"{item['total']:.2f} лв."])
 
         print(format_table(["Продукт", "Количество", "Оборот"], rows))
 

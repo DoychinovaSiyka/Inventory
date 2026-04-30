@@ -179,7 +179,8 @@ class ProductMenuView:
             return
 
         new_name = input(f"Ново име ({product.name}) [Enter за запазване]: ").strip() or None
-        new_description = input(f"Ново описание ({product.description or 'няма'}) [Enter за запазване]: ").strip() or None
+        new_description = input(f"Ново описание ({product.description or 'няма'}) "
+                                f"[Enter за запазване]: ").strip() or None
 
         new_price = None
         while True:
@@ -200,14 +201,17 @@ class ProductMenuView:
             for i, s in enumerate(suppliers):
                 print(f"{i}. {s.name}")
 
-            supp_raw = input(f"Изберете номер на доставчик (Текущ: {product.supplier_id or 'няма'}) [Enter за запазване]: ").strip()
+            supp_raw = input(f"Изберете номер на доставчик (Текущ: {product.supplier_id or 'няма'}) "
+                             f"[Enter за запазване]: ").strip()
             if supp_raw.isdigit() and int(supp_raw) < len(suppliers):
                 new_supplier_id = suppliers[int(supp_raw)].supplier_id
 
         # Запис
         try:
-            success = self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_description,
-                                                              new_price=new_price, new_supplier_id=new_supplier_id, user_id=user.user_id)
+            success = self.product_controller.update_product(product_id=pid, new_name=new_name,
+                                                             new_description=new_description,
+                                                              new_price=new_price, new_supplier_id=new_supplier_id,
+                                                             user_id=user.user_id)
 
             if success:
                 print(f"\n[+] Продуктът '{product.name}' беше обновен успешно!")

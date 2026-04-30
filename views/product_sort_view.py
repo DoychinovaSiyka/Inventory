@@ -44,13 +44,15 @@ class ProductSortView:
 
     def sort_qty_desc(self, _):
         products = bubble_sort_logic(self.product_controller.get_all(),
-                                     key=lambda p: self.inventory_controller.get_total_stock(p.product_id), reverse=True)
+                                     key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
+                                     reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
 
     def sort_qty_asc(self, _):
         products = selection_sort_logic(self.product_controller.get_all(),
-                                        key=lambda p: self.inventory_controller.get_total_stock(p.product_id), reverse=False)
+                                        key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
+                                        reverse=False)
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
 

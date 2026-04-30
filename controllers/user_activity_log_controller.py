@@ -34,7 +34,6 @@ class UserActivityLogController:
         return [log for log in self.logs if keyword in log.action.lower()]
 
     def save_changes(self):
-        """Записва всички лог записи обратно в JSON файла."""
         self.repo.save([log.to_dict() for log in self.logs])
 
 

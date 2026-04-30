@@ -53,20 +53,16 @@ class ReportController:
             product_name = product.name if product else "-"
             mtype = m.movement_type.name
             if mtype == "IN":
-                from_loc, to_loc = "Доставчик", (
-                    self.location_controller.get_by_id(m.location_id).name if self.location_controller.get_by_id(
-                        m.location_id) else m.location_id)
+                from_loc, to_loc = "Доставчик", (self.location_controller.get_by_id(m.location_id).name
+                                                 if self.location_controller.get_by_id(m.location_id) else m.location_id)
             elif mtype == "OUT":
-                from_loc, to_loc = (
-                    self.location_controller.get_by_id(m.location_id).name if self.location_controller.get_by_id(
-                        m.location_id) else m.location_id), (m.customer or "Клиент")
+                from_loc, to_loc = (self.location_controller.get_by_id(m.location_id).name
+                                    if self.location_controller.get_by_id(m.location_id) else m.location_id), (m.customer or "Клиент")
             elif mtype == "MOVE":
-                from_loc = (
-                    self.location_controller.get_by_id(m.from_location_id).name if self.location_controller.get_by_id(
-                        m.from_location_id) else m.from_location_id)
-                to_loc = (
-                    self.location_controller.get_by_id(m.to_location_id).name if self.location_controller.get_by_id(
-                        m.to_location_id) else m.to_location_id)
+                from_loc = (self.location_controller.get_by_id(m.from_location_id).name
+                            if self.location_controller.get_by_id(m.from_location_id) else m.from_location_id)
+                to_loc = (self.location_controller.get_by_id(m.to_location_id).name
+                          if self.location_controller.get_by_id(m.to_location_id) else m.to_location_id)
             else:
                 from_loc, to_loc = "-", "-"
 
@@ -92,14 +88,8 @@ class ReportController:
         data = []
         for inv in invoices:
             if inv.customer and customer.lower() in inv.customer.lower():
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
+                             "product": inv.product, "quantity": inv.quantity, "total_price": inv.total_price})
         summary = {"customer": customer, "total": len(data)}
         self._save_report("sales_by_customer", {"customer": customer}, summary, data)
         return ReportResult(summary, data)
@@ -110,14 +100,8 @@ class ReportController:
         data = []
         for inv in invoices:
             if inv.product and product.lower() in inv.product.lower():
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
+                             "product": inv.product, "quantity": inv.quantity, "total_price": inv.total_price})
         summary = {"product": product, "total": len(data)}
         self._save_report("sales_by_product", {"product": product}, summary, data)
         return ReportResult(summary, data)
@@ -129,14 +113,8 @@ class ReportController:
         data = []
         for inv in invoices:
             if inv.date and inv.date.startswith(date_str):
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
+                             "product": inv.product, "quantity": inv.quantity, "total_price": inv.total_price})
         summary = {"date": date_str, "total": len(data)}
         self._save_report("sales_by_date", {"date": date_str}, summary, data)
         return ReportResult(summary, data)
@@ -155,7 +133,6 @@ class ReportController:
 
             loc = self.location_controller.get_by_id(m.location_id)
             loc_name = loc.name if loc else m.location_id
-
             supplier = "-"
             if self.supplier_controller and product.supplier_id:
                 s = self.supplier_controller.get_by_id(product.supplier_id)
@@ -166,15 +143,8 @@ class ReportController:
                 if k not in product.name.lower() and k not in supplier.lower() and k not in loc_name.lower():
                     continue
 
-            data.append({
-                "movement_id": m.movement_id,
-                "date": m.date[:10],
-                "product": product.name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "supplier": supplier,
-                "location": loc_name
-            })
+            data.append({"movement_id": m.movement_id, "date": m.date[:10], "product": product.name,
+                         "quantity": m.quantity, "unit": m.unit, "supplier": supplier,"location": loc_name})
 
         summary = {"total": len(data)}
         self._save_report("deliveries_all", {"keyword": keyword}, summary, data)
@@ -209,12 +179,8 @@ class ReportController:
             stats[name]["qty"] += inv.quantity
             stats[name]["total"] += inv.total_price
 
-        data = [{
-            "product": name,
-            "quantity": info["qty"],
-            "unit": info["unit"],
-            "total": info["total"]
-        } for name, info in stats.items()]
+        data = [{"product": name, "quantity": info["qty"], "unit": info["unit"], "total": info["total"]}
+                for name, info in stats.items()]
 
         summary = {"total_products": len(data)}
         self._save_report("top_products", {}, summary, data)
@@ -236,12 +202,8 @@ class ReportController:
             top = sorted(locs.items(), key=lambda x: x[1], reverse=True)[:3]
             top_str = ", ".join([f"{lid}:{qty}" for lid, qty in top]) if top else "-"
 
-            data.append({
-                "product": p.name,
-                "available": f"{stock} {p.unit}",
-                "sold": f"{sold} {p.unit}" if sold > 0 else "-",
-                "top_locations": top_str
-            })
+            data.append({"product": p.name, "available": f"{stock} {p.unit}",
+                         "sold": f"{sold} {p.unit}" if sold > 0 else "-", "top_locations": top_str})
 
         summary = {"total_products": len(data)}
         self._save_report("inventory_summary", {}, summary, data)
@@ -275,15 +237,12 @@ class ReportController:
         fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements,
                                                                   product.price)
 
-        data = {
-            "product": product.name, "unit": product.unit, "total_in": total_in,
-            "total_out": total_out_qty, "current_stock": current_stock,
-            "revenue": revenue, "expense": total_purchase_expense,
-            "fifo_cost": fifo_cost, "profit": revenue - fifo_cost,
-            "cash_balance": revenue - total_purchase_expense
-        }
+        data = {"product": product.name, "unit": product.unit, "total_in": total_in,
+                "total_out": total_out_qty, "current_stock": current_stock,
+                "revenue": revenue, "expense": total_purchase_expense, "fifo_cost": fifo_cost, "profit": revenue - fifo_cost,
+                "cash_balance": revenue - total_purchase_expense}
 
-        # Записваме и тази справка в архива!
+        # Записваме и тази справка в архива
         self._save_report("product_lifecycle", {"search_name": name}, {"product": product.name}, data)
         return data
 
@@ -292,9 +251,8 @@ class ReportController:
         try:
             today = datetime.now().strftime("%Y-%m-%d")
 
-            # 1. Опит за взимане на текущите данни - използваме load() за директен достъп
+            # Опит за взимане на текущите данни - използваме load() за директен достъп
             raw_data = self.repo.load()
-
             if isinstance(raw_data, list):
                 all_reports = raw_data
             elif raw_data and isinstance(raw_data, dict) and raw_data:
@@ -303,7 +261,7 @@ class ReportController:
             else:
                 all_reports = []
 
-            # 2. Търсим дали такъв тип отчет вече съществува за днес
+            # Търсим дали такъв тип отчет вече съществува за днес
             existing_index = -1
             for i, rep in enumerate(all_reports):
                 if isinstance(rep, dict):
@@ -314,16 +272,11 @@ class ReportController:
                         existing_index = i
                         break
 
-            # 3. Подготовка на новия отчет
-            new_report_obj = Report(
-                report_type=report_type,
-                generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                parameters=parameters,
-                data={"summary": summary, "data": data}
-            )
+            # Подготовка на новия отчет
+            new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                    parameters=parameters, data={"summary": summary, "data": data})
             new_report_dict = new_report_obj.to_dict()
 
-            # 4. Обновяване или Добавяне
             if existing_index != -1:
                 # Намерили сме стария отчет за днес - заменяме го с новия
                 all_reports[existing_index] = new_report_dict
@@ -331,7 +284,7 @@ class ReportController:
                 # Няма такъв отчет за днес - добавяме го като нов елемент в списъка
                 all_reports.append(new_report_dict)
 
-            # 5. Запис на целия списък обратно във файла
+            # Запис на целия списък обратно във файла
             self.repo.save(all_reports)
 
         except Exception as e:

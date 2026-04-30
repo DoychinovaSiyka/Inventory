@@ -59,8 +59,7 @@ class LocationController:
                 return loc
         return None
 
-    def update(self, location_id: str, name: Optional[str] = None,
-               zone: Optional[str] = None, capacity=None) -> bool:
+    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None) -> bool:
 
         location = self.get_by_id(location_id)
         if location is None:
