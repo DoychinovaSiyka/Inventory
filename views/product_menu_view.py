@@ -322,7 +322,6 @@ class ProductMenuView:
         if not m_controller:
             print("[!] Грешка: Системата не може да зареди движенията за изчисление.")
             return
-
         total = self.inventory_controller.get_total_inventory_value_fifo(m_controller)
 
         print(f"\nОбща стойност на склада (по средна закупна цена):")
