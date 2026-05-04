@@ -11,9 +11,8 @@ class ReportResult:
 
 
 class ReportController:
-    def __init__(self, product_controller, movement_controller, invoice_controller,
-                 location_controller, inventory_controller, supplier_controller):
-
+    def __init__(self, product_controller, movement_controller, invoice_controller, location_controller,
+                 inventory_controller, supplier_controller):
 
         self.repo = JSONRepository("data/reports.json")
         self.product_controller = product_controller

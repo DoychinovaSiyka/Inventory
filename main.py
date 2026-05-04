@@ -39,7 +39,7 @@ class InventoryApplication:
     def _init_controllers(self):
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
         self.user_controller = UserController(self.user_repo, self.activity_log_controller)
-        self.category_controller = CategoryController(self.category_repo)
+        self.category_controller = CategoryController(self.category_repo, self.activity_log_controller)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
 
