@@ -19,17 +19,12 @@ from storage.json_repository import JSONRepository
 
 class InventoryApplication:
     def __init__(self):
-        # Създавам всички хранилища (Model слой)
         self._init_repositories()
-
-        # Създавам всички контролери (Controller слой)
         self._init_controllers()
-
-        # Създавам менюта (View слой)
         self._init_menus()
 
 
-    # ХРАНИЛИЩА
+    # Хранилища
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -38,52 +33,43 @@ class InventoryApplication:
         self.location_repo = JSONRepository("data/locations.json")
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
-        self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
+        self.activity_log_repo = JSONRepository("data/user_activity_log.json")
 
 
-    # КОНТРОЛЕРИ (Controller)
+    # Контролери
     def _init_controllers(self):
-        # Логове на действията
-        self.activity_log_controller = UserActivityLogController(JSONRepository("data/user_activity_log.json"))
-
+        self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
-        self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # Контролер за продукти – получава нужните зависимости
-        self.product_controller = ProductController(self.product_repo, self.category_controller, self.activity_log_controller,
-                                                    self.supplier_controller, self.inventory_repo)
 
-        # Контролер за инвентар
-        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
+        self.product_controller = ProductController(self.product_repo, self.category_controller,
+                                                    self.activity_log_controller)
 
-        # Контролер за движения – най-сложният
-        self.movement_controller = MovementController(self.movement_repo, self.product_controller, self.user_controller, self.location_controller,
-                                                      self.invoice_controller, self.activity_log_controller, self.inventory_controller, self.supplier_controller)
+        self.invoice_controller = InvoiceController(self.invoice_repo, self.activity_log_controller)
 
-        # Контролер за справки
-        self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
-                                                  self.invoice_controller, self.location_controller,
-                                                  self.inventory_controller, self.supplier_controller)
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
+                                                       self.user_controller, self.location_controller,
+                                                       self.supplier_controller, self.invoice_controller,
+                                                       self.activity_log_controller)
+
+
+        # InventoryController - зависи от движенията
+        self.inventory_controller = InventoryController(self.inventory_repo, self.movement_controller)
+
+        # ReportController
+        self.report_controller = ReportController(self.product_controller, self.movement_controller,
+                                                   self.invoice_controller, self.location_controller,
+                                                   self.inventory_controller, self.supplier_controller)
+
 
         # Графи (логистика)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
 
-        # Зареждане на инвентара според наличните движения
-        if not self.movement_controller.movements:
-            print("Няма движения – зареждам началните количества.")
-            all_locations = self.location_controller.get_all()
-            default_location = all_locations[0].location_id
-            self.inventory_controller.auto_seed_initial_stock(default_location)
-        else:
-            print("Има движения – възстановявам инвентара.")
-            self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
 
-
-    # МЕНЮТА (View)
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,
                             "category": self.category_controller, "supplier": self.supplier_controller,
@@ -98,7 +84,7 @@ class InventoryApplication:
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
 
-    # ПРОЦЕС НА ВХОД
+
     def _login_flow(self):
         while True:
             try:
@@ -107,7 +93,6 @@ class InventoryApplication:
                 user = self.user_controller.login(username, password)
                 print(f"\nУспешен вход! Добре дошли, {user.first_name}.\n")
 
-                # Показвам меню според ролята
                 if user.role == "Admin":
                     self.admin_menu.show_menu(user)
                 elif user.role == "Operator":
@@ -119,11 +104,9 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"[Грешка] {e}\nОпитайте отново.\n")
 
-    # Анонимен достъп (само разглеждане)
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
         self.anonymous_menu.show_menu(guest)
-
 
 
     def run(self):

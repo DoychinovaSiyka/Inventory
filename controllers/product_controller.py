@@ -9,8 +9,6 @@ class ProductController:
         self.category_controller = category_controller
         self.activity_log_controller = activity_log_controller
         self.products = self.load()
-        self.movement_controller = None
-
 
     # ЗАРЕЖДАНЕ / ЗАПИС
     def load(self):
@@ -24,31 +22,23 @@ class ProductController:
     def _generate_id(self):
         return str(uuid.uuid4())
 
-
     # СЪЗДАВАНЕ НА ПРОДУКТ
     def add(self, product_data: dict, user_id: str) -> Product:
         ProductValidator.validate_name(product_data['name'])
 
         # Категории - списък от Category обекти
         categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
-        product = Product(product_id=self._generate_id(), name=product_data['name'], categories=categories,
-                          unit=product_data['unit'], description=product_data['description'],
-                          price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
+
+        product = Product( product_id=self._generate_id(), name=product_data['name'], categories=categories,
+                           unit=product_data['unit'], description=product_data['description'],
+                           price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
+
 
         self.products.append(product)
         self.save_changes()
 
-        # Начално IN движение
-        initial_qty = float(product_data.get("quantity", 0))
-        location_id = product_data.get("location_id")
-
-        if initial_qty > 0 and location_id and self.movement_controller:
-            self.movement_controller.add(product_id=product.product_id, user_id=user_id, location_id=location_id,
-                                         movement_type="IN", quantity=str(initial_qty),
-                                         description="Начално зареждане при създаване на продукт", price=str(product.price))
-
+        # НЯМА начално IN движение
         return product
-
 
     # ТЪРСЕНЕ
     def search(self, keyword):
@@ -73,8 +63,6 @@ class ProductController:
 
         return results
 
-
-
     def search_combined(self, keyword=None, min_price=None, max_price=None,
                         category_id=None, location_id=None, inventory_controller=None):
 
@@ -89,13 +77,9 @@ class ProductController:
                 continue
             if max_price is not None and p.price > max_price:
                 continue
+
             if category_id:
-                found = False
-                for c in p.categories:
-                    if c.category_id == category_id:
-                        found = True
-                        break
-                if not found:
+                if not any(c.category_id == category_id for c in p.categories):
                     continue
 
             if location_id and inventory_controller:
@@ -105,43 +89,48 @@ class ProductController:
                     continue
 
             results.append(p)
+
         return results
 
-
-    def update_product(self, product_id, new_name=None, new_description=None, new_price=None, new_supplier_id=None, user_id=None):
+    def update_product(self, product_id, new_name=None, new_description=None,
+                       new_price=None, new_supplier_id=None, user_id=None):
 
         product = self.get_by_id(product_id)
         if not product:
             return False
+
         if new_name is not None:
             ProductValidator.validate_name(new_name)
             product.name = new_name
         if new_description is not None:
             product.description = new_description
+
         if new_price is not None:
             try:
                 product.price = float(new_price)
             except:
                 return False
+
         if new_supplier_id is not None:
             product.supplier_id = new_supplier_id
 
         self.save_changes()
-
         return True
 
-
     def filter_by_category(self, category_id):
-        """Връща всички продукти, които имат дадената категория."""
         results = []
-
         for p in self.products:
+            found = False
+
             for c in p.categories:
                 if c.category_id == category_id:
-                    results.append(p)
+                    found = True
                     break
-        return results
 
+            if found:
+                results.append(p)
+
+        return results
 
     def get_all(self):
         return self.products

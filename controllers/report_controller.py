@@ -1,6 +1,7 @@
 from models.movement import MovementType
 from models.report import Report
 from datetime import datetime
+from storage.json_repository import JSONRepository
 
 
 class ReportResult:
@@ -10,10 +11,11 @@ class ReportResult:
 
 
 class ReportController:
-    def __init__(self, repo, product_controller, movement_controller, invoice_controller,
+    def __init__(self, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
 
-        self.repo = repo
+
+        self.repo = JSONRepository("data/reports.json")
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
@@ -31,24 +33,19 @@ class ReportController:
     def _save_report(self, report_type, parameters, summary, data):
         try:
             raw_data = self.repo.load()
-            if isinstance(raw_data, list):
-                all_reports = raw_data
-            else:
-                all_reports = []
+            all_reports = raw_data if isinstance(raw_data, list) else []
 
-            # Подготвяме новия отчет
-            new_report_obj = Report( report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            new_report_obj = Report( report_type=report_type,
+                                     generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                      parameters=parameters, data={"summary": summary, "data": data})
             new_report_dict = new_report_obj.to_dict()
 
-            # 1) Ако вече има ИДЕНТИЧЕН отчет - НЕ записваме нищо
+            # Проверка за дубликат
             for old in all_reports:
                 if self._is_duplicate(old, new_report_dict):
-                    return  # НИЩО не се променя
-            # 2) Ако няма такъв - добавяме като НОВ
-            all_reports.append(new_report_dict)
+                    return
 
-            # 3) Запис – сортирането е в save()
+            all_reports.append(new_report_dict)
             self.repo.save(all_reports)
 
         except Exception as e:
@@ -104,6 +101,7 @@ class ReportController:
     def report_sales_by_customer(self, customer):
         invoices = self.invoice_controller.get_all() or []
         data = []
+
         for inv in invoices:
             if inv.customer and customer.lower() in inv.customer.lower():
                 data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
@@ -116,6 +114,7 @@ class ReportController:
     def report_sales_by_product(self, product):
         invoices = self.invoice_controller.get_all() or []
         data = []
+
         for inv in invoices:
             if inv.product and product.lower() in inv.product.lower():
                 data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
@@ -129,6 +128,7 @@ class ReportController:
         date_str = date_obj.strftime("%Y-%m-%d")
         invoices = self.invoice_controller.get_all() or []
         data = []
+
         for inv in invoices:
             if inv.date and inv.date.startswith(date_str):
                 data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
@@ -137,9 +137,11 @@ class ReportController:
         self._save_report("sales_by_date", {"date": date_str}, summary, data)
         return ReportResult(summary, data)
 
+
     # Справка: всички доставки
     def report_deliveries_all(self, keyword=None):
         data = []
+
         for m in self.movement_controller.movements:
             if m.movement_type != MovementType.IN:
                 continue
@@ -147,6 +149,7 @@ class ReportController:
             product = self.product_controller.get_by_id(m.product_id)
             if not product:
                 continue
+
             loc = self.location_controller.get_by_id(m.location_id)
             loc_name = loc.name if loc else m.location_id
 
@@ -154,6 +157,7 @@ class ReportController:
             if self.supplier_controller and product.supplier_id:
                 s = self.supplier_controller.get_by_id(product.supplier_id)
                 supplier = s.name if s else product.supplier_id
+
             if keyword:
                 k = keyword.lower()
                 if k not in product.name.lower() and k not in supplier.lower() and k not in loc_name.lower():
@@ -226,15 +230,16 @@ class ReportController:
         self._save_report("inventory_summary", {}, summary, data)
         return ReportResult(summary, data)
 
+
     # Справка: жизнен цикъл на продукт
     def product_lifecycle(self, name):
         name_search = name.lower()
         product = None
+
         for p in self.product_controller.get_all():
-            if p.name:
-                if name_search in p.name.lower():
-                    product = p
-                    break
+            if p.name and name_search in p.name.lower():
+                product = p
+                break
 
         if not product:
             return None
@@ -246,11 +251,13 @@ class ReportController:
         total_out = 0.0
         revenue = 0.0
         expense = 0.0
+
         for m in self.movement_controller.movements:
             if m.product_id != pid:
                 continue
 
             qty = float(m.quantity or 0)
+
             if m.movement_type.name == "IN":
                 total_in += qty
                 expense += qty * float(m.price or 0)

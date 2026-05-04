@@ -6,19 +6,19 @@ from validators.movement_validator import MovementValidator
 
 class MovementController:
     def __init__(self, repo, product_controller, user_controller, location_controller,
-                 invoice_controller, activity_log_controller=None, inventory_controller=None, supplier_controller=None):
+                 supplier_controller, invoice_controller, activity_log_controller=None):
 
         self.repo = repo
         self.product_controller = product_controller
         self.user_controller = user_controller
         self.location_controller = location_controller
+        self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
         self.activity_log_controller = activity_log_controller
-        self.inventory_controller = inventory_controller
-        self.supplier_controller = supplier_controller
+
+        self.inventory_controller = None
 
         self.movements = self._load_movements()
-
 
     # Зареждане на движенията от JSON
     def _load_movements(self) -> List[Movement]:
@@ -29,30 +29,23 @@ class MovementController:
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
-
     # Търсене по описание
     def search_by_description(self, keyword: str) -> List[Movement]:
         keyword = keyword.lower()
         results = []
 
         for m in self.movements:
-            # Дата
             m_date = str(m.date).lower()
             m_product = (m.product_name or "").lower()
-
-            # Тип (IN, OUT, MOVE)
             m_type = m.movement_type.name.lower()
 
-            # Към/От (Партньор - Доставчик или Клиент)
             partner = ""
             if m.movement_type.name == "IN" and m.supplier_id:
-                supp = self.supplier_controller.get_by_id(m.supplier_id) if self.supplier_controller else None
+                supp = self.supplier_controller.get_by_id(m.supplier_id)
                 partner = (supp.name.lower() if supp else m.supplier_id.lower())
             elif m.movement_type.name == "OUT":
                 partner = (m.customer or "").lower()
 
-            # Склад (Локация)
-            location_info = ""
             if m.movement_type.name == "MOVE":
                 loc_from = self.location_controller.get_by_id(m.from_location_id)
                 loc_to = self.location_controller.get_by_id(m.to_location_id)
@@ -61,12 +54,12 @@ class MovementController:
                 loc_obj = self.location_controller.get_by_id(m.location_id)
                 location_info = (loc_obj.name or "").lower() if loc_obj else (m.location_id or "").lower()
 
-            if (keyword in m_date or keyword in m_product or keyword in m_type or keyword in partner or
-                    keyword in location_info or keyword in (m.description or "").lower()):
+            if (keyword in m_date or keyword in m_product or keyword in m_type or
+                keyword in partner or keyword in location_info or
+                keyword in (m.description or "").lower()):
                 results.append(m)
 
         return results
-
 
     # Добавяне на движение (IN / OUT / MOVE)
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
@@ -74,17 +67,14 @@ class MovementController:
             supplier_id: Optional[str] = None, from_location_id: Optional[str] = None,
             to_location_id: Optional[str] = None) -> Movement:
 
-        # Нормализиране на типа движение
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
 
-        # Проверка за продукт
         product = self.product_controller.get_by_id(product_id)
         if not product:
             raise ValueError("Продуктът не е намерен.")
 
         qty = MovementValidator.parse_quantity(quantity)
         prc = MovementValidator.parse_price(price) if m_type_str != "MOVE" else 0.0
-
 
         # ОБНОВЯВАНЕ НА ИНВЕНТАРА
         if self.inventory_controller:
@@ -107,17 +97,17 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-
-        # СЪЗДАВАНЕ НА ФАКТУРА ПРИ OUT
+        # Фактура при OUT
         if m_type_str == "OUT" and self.invoice_controller:
             self.invoice_controller.create_from_movement(movement=movement, product=product,
                                                          customer=customer or "Неизвестен клиент", user_id=user_id)
 
         return movement
 
-    def advanced_filter(self, movement_type=None, start_date=None, end_date=None, product_id=None,
-                        location_id=None, user_id=None):
+    def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
+                        product_id=None, location_id=None, user_id=None):
         results = []
+
         for m in self.movements:
             if movement_type and m.movement_type.name != movement_type:
                 continue
@@ -127,6 +117,7 @@ class MovementController:
                 continue
             if product_id and str(m.product_id) != str(product_id):
                 continue
+
             if location_id:
                 if m.movement_type == MovementType.MOVE:
                     if m.from_location_id != location_id and m.to_location_id != location_id:
@@ -141,4 +132,3 @@ class MovementController:
             results.append(m)
 
         return results
-
