@@ -9,7 +9,6 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 class JSONRepository(Repository):
     """ Repository слой за работа с JSON файлове. Да зарежда и записва данни безопасно."""
-
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         # Автоматично създаваме папките, ако липсват
