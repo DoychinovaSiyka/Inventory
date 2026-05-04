@@ -403,5 +403,230 @@
                 "cash_balance": -1384.47
             }
         }
+    },
+    {
+        "report_id": "9d62320d-59b6-4d42-b797-37d8656680a7",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-05-05 00:09:38",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 3
+            },
+            "data": [
+                {
+                    "product": "Диня \"Гърция\"",
+                    "available": "189.0 бр.",
+                    "sold": "18.0 бр.",
+                    "top_locations": "W1:129.0, W2:34.0, W5:26.0"
+                },
+                {
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "available": "211.0 бр.",
+                    "sold": "13.0 бр.",
+                    "top_locations": "W5:99.0, W3:78.0, W4:34.0"
+                },
+                {
+                    "product": "Бира \"Ariana\"",
+                    "available": "106.0 бр.",
+                    "sold": "28.0 бр.",
+                    "top_locations": "W5:56.0, W4:25.0, W2:25.0"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "059c6471-0de4-4eac-84c9-1c1088c92386",
+        "report_type": "movements_history",
+        "generated_on": "2026-05-05 00:09:39",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total": 12
+            },
+            "data": [
+                {
+                    "movement_id": "1b01d8ec-8efd-492c-b2b8-ff32e55b1857",
+                    "date": "2026-04-29",
+                    "type": "IN",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 129.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "София – Основен склад"
+                },
+                {
+                    "movement_id": "f6ec08d7-b260-4502-9da3-bb8445bd7e86",
+                    "date": "2026-04-29",
+                    "type": "IN",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 78.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Магазин Смолян"
+                },
+                {
+                    "movement_id": "97287976-ff9e-4690-a7f0-502165d45e6f",
+                    "date": "2026-04-29",
+                    "type": "OUT",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 18.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Мария Димитрова"
+                },
+                {
+                    "movement_id": "e00c9fc4-3c10-4d24-a607-60ab163def29",
+                    "date": "2026-04-29",
+                    "type": "MOVE",
+                    "product": "Диня \"Гърция\"",
+                    "quantity": 34.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Пловдив – Регионален склад"
+                },
+                {
+                    "movement_id": "345e3765-2fe4-4ffb-9ec5-1dbffde2a0a6",
+                    "date": "2026-05-02",
+                    "type": "IN",
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "quantity": 190.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Магазин Смолян"
+                },
+                {
+                    "movement_id": "6e0b0d5e-ba20-43de-85b9-2228f8a047d9",
+                    "date": "2026-05-02",
+                    "type": "OUT",
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "quantity": 13.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Стефан Стефанов"
+                },
+                {
+                    "movement_id": "ae866e80-d518-4ccc-8f1a-335a417846f7",
+                    "date": "2026-05-02",
+                    "type": "IN",
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "quantity": 34.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Бургас – Пристанищен склад"
+                },
+                {
+                    "movement_id": "3888487f-d6f4-4a42-aced-d623bbd70b68",
+                    "date": "2026-05-02",
+                    "type": "MOVE",
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "quantity": 78.0,
+                    "unit": "бр.",
+                    "from": "Магазин Смолян",
+                    "to": "Варна – Морски склад"
+                },
+                {
+                    "movement_id": "639a5642-175c-4dd6-9ad0-4a20a179892e",
+                    "date": "2026-05-04",
+                    "type": "IN",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 78.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Бургас – Пристанищен склад"
+                },
+                {
+                    "movement_id": "24b3a8c7-0894-4cf8-8ee3-0b8197da40f7",
+                    "date": "2026-05-04",
+                    "type": "OUT",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 28.0,
+                    "unit": "бр.",
+                    "from": "Бургас – Пристанищен склад",
+                    "to": "Димитър Стоянов"
+                },
+                {
+                    "movement_id": "948cff06-ef06-4bac-886b-5ec25fcb6204",
+                    "date": "2026-05-04",
+                    "type": "IN",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 56.0,
+                    "unit": "бр.",
+                    "from": "Доставчик",
+                    "to": "Магазин Смолян"
+                },
+                {
+                    "movement_id": "867fc525-51fd-440f-82f1-ea8fd7b4eb47",
+                    "date": "2026-05-04",
+                    "type": "MOVE",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 25.0,
+                    "unit": "бр.",
+                    "from": "Бургас – Пристанищен склад",
+                    "to": "Пловдив – Регионален склад"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "1b56b4d6-cb38-4d50-95ab-a703207f79b2",
+        "report_type": "sales_all",
+        "generated_on": "2026-05-05 00:09:41",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_sales": 3
+            },
+            "data": [
+                {
+                    "invoice_number": "d97887ac-f1ed-4e48-bb71-3ba220c5f98a",
+                    "date": "2026-04-29",
+                    "client": "Мария Димитрова",
+                    "product": "Диня",
+                    "quantity": 18.0,
+                    "total_price": 142.02
+                },
+                {
+                    "invoice_number": "7655adf8-7f70-4734-bb6e-8effad26d68f",
+                    "date": "2026-05-02",
+                    "client": "Стефан Стефанов",
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "quantity": 13.0,
+                    "total_price": 50.57
+                },
+                {
+                    "invoice_number": "0740b104-3f4c-4b4e-bdc8-893c11bcdd0d",
+                    "date": "2026-05-04",
+                    "client": "Димитър Стоянов",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 28.0,
+                    "total_price": 139.72
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "32d8648b-dc76-4a7d-8bdf-c19c708d602f",
+        "report_type": "sales_by_customer",
+        "generated_on": "2026-05-05 00:09:53",
+        "parameters": {
+            "customer": "Димитър"
+        },
+        "data": {
+            "summary": {
+                "customer": "Димитър",
+                "total": 1
+            },
+            "data": [
+                {
+                    "invoice_number": "0740b104-3f4c-4b4e-bdc8-893c11bcdd0d",
+                    "date": "2026-05-04",
+                    "client": "Димитър Стоянов",
+                    "product": "Бира \"Ariana\"",
+                    "quantity": 28.0,
+                    "total_price": 139.72
+                }
+            ]
+        }
     }
 ]

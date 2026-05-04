@@ -5,8 +5,10 @@ from validators.user_validator import UserValidator
 
 class UserController:
     """Контролерът управлява потребителите. При първо стартиране създава админ и оператор."""
-    def __init__(self, repo):
+    def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
+        self.activity_log = activity_log_controller
+
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
@@ -63,11 +65,16 @@ class UserController:
     def login(self, username: str, password: str) -> Optional[User]:
         if not self.users:
             return None
+
         user = UserValidator.validate_login(username, password, self)
         hashed = self._hash_password(password)
+
         if user.password == hashed:
             self.logged_user = user
+            if self.activity_log:
+                self.activity_log.add_log(user.user_id, "LOGIN", f"Потребител {user.username} влезе в системата.")
             return user
+
         return None
 
     # Администраторски действия
@@ -114,7 +121,6 @@ class UserController:
         self.save_changes()
         return True
 
-
     def _create_default_admin(self):
         admin = User(first_name="Admin", last_name="System", email="admin@system.local", username="admin",
                      password=self._hash_password("admin123"), role="Admin", status="Active")
@@ -127,11 +133,10 @@ class UserController:
         self.users.append(operator)
         self.save_changes()
 
-
     # Анонимен потребител
     def create_anonymous_user(self) -> User:
         now = User.now()
         return User(user_id="guest-0000", first_name="Anonymous", last_name="", email="",
                     username="guest", password="", role="Anonymous", status="Active", created=now, modified=now)
 
-# dimitar01
+
