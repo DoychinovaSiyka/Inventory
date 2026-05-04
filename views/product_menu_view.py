@@ -102,7 +102,8 @@ class ProductMenuView:
                 print(f"[!] {e}")
 
         while True:
-            unit = input("Мерна единица (кг., бр.): ").strip()
+            unit = input("Мерна единица (кг, кг., kg, килограм / бр, бр., брой / л, l, литър / пакет, paket, packet): ").strip()
+
             try:
                 ProductValidator.validate_unit(unit)
                 break

@@ -2609,5 +2609,12 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе.",
         "timestamp": "2026-05-02 20:12:19"
+    },
+    {
+        "log_id": "4b1a18a9-e86c-4659-ae49-20179f28b632",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе.",
+        "timestamp": "2026-05-04 12:42:26"
     }
 ]

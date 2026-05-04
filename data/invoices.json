@@ -24,5 +24,18 @@
         "date": "2026-05-02 20:14:47",
         "created": "2026-05-02 20:14:47",
         "modified": "2026-05-02 20:14:47"
+    },
+    {
+        "invoice_id": "0740b104-3f4c-4b4e-bdc8-893c11bcdd0d",
+        "movement_id": "24b3a8c7-0894-4cf8-8ee3-0b8197da40f7",
+        "product": "Бира \"Ariana\"",
+        "quantity": 28.0,
+        "unit": "бр.",
+        "unit_price": 4.99,
+        "total_price": 139.72,
+        "customer": "Димитър Стоянов",
+        "date": "2026-05-04 12:45:44",
+        "created": "2026-05-04 12:45:44",
+        "modified": "2026-05-04 12:45:44"
     }
 ]
