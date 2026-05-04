@@ -32,12 +32,15 @@ class InventoryApplication:
         self.location_repo = JSONRepository("data/locations.json")
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
+        self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
         self.activity_log_repo = JSONRepository("data/user_activity_log.json")
 
-    # Контролери
+
     def _init_controllers(self):
+        # Логове
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
+
         self.user_controller = UserController(self.user_repo, self.activity_log_controller)
         self.category_controller = CategoryController(self.category_repo, self.activity_log_controller)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -58,13 +61,14 @@ class InventoryApplication:
                                                         self.movement_controller, self.location_controller)
 
 
-        self.report_controller = ReportController(self.product_controller, self.movement_controller,
-                                                  self.invoice_controller, self.location_controller,
-                                                  self.inventory_controller, self.supplier_controller)
+        # Отчети
+        self.report_controller = ReportController(self.report_repo, self.product_controller,
+                                                   self.movement_controller, self.invoice_controller,
+                                                   self.location_controller, self.inventory_controller, self.supplier_controller)
+
 
         # Графи (логистика)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
-
 
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,

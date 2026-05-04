@@ -1,7 +1,6 @@
 from models.movement import MovementType
 from models.report import Report
 from datetime import datetime
-from storage.json_repository import JSONRepository
 
 
 class ReportResult:
@@ -11,10 +10,10 @@ class ReportResult:
 
 
 class ReportController:
-    def __init__(self, product_controller, movement_controller, invoice_controller, location_controller,
-                 inventory_controller, supplier_controller):
+    def __init__(self, repo, product_controller, movement_controller, invoice_controller,
+                 location_controller, inventory_controller, supplier_controller):
 
-        self.repo = JSONRepository("data/reports.json")
+        self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
@@ -22,13 +21,11 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
-    # Проверка дали новият отчет е идентичен със стария
     def _is_duplicate(self, old_report, new_report):
         return (old_report.get("report_type") == new_report.get("report_type") and
                 old_report.get("parameters") == new_report.get("parameters") and
                 old_report.get("data") == new_report.get("data"))
 
-    # Записваме отчет само ако е нов
     def _save_report(self, report_type, parameters, summary, data):
         try:
             raw_data = self.repo.load()
@@ -39,7 +36,6 @@ class ReportController:
                                      parameters=parameters, data={"summary": summary, "data": data})
             new_report_dict = new_report_obj.to_dict()
 
-            # Проверка за дубликат
             for old in all_reports:
                 if self._is_duplicate(old, new_report_dict):
                     return
@@ -50,7 +46,6 @@ class ReportController:
         except Exception as e:
             print(f"Грешка при запис на отчет: {e}")
 
-    # Справка: всички движения
     def report_movements(self):
         data = []
         for m in self.movement_controller.movements:
@@ -85,7 +80,6 @@ class ReportController:
         self._save_report("movements_history", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: всички продажби
     def report_sales(self):
         invoices = self.invoice_controller.get_all() or []
         data = [{"invoice_number": inv.invoice_id,
@@ -96,7 +90,6 @@ class ReportController:
         self._save_report("sales_all", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: продажби по клиент
     def report_sales_by_customer(self, customer):
         invoices = self.invoice_controller.get_all() or []
         data = []
@@ -109,7 +102,6 @@ class ReportController:
         self._save_report("sales_by_customer", {"customer": customer}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: продажби по продукт
     def report_sales_by_product(self, product):
         invoices = self.invoice_controller.get_all() or []
         data = []
@@ -122,7 +114,6 @@ class ReportController:
         self._save_report("sales_by_product", {"product": product}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: продажби по дата
     def report_sales_by_date(self, date_obj):
         date_str = date_obj.strftime("%Y-%m-%d")
         invoices = self.invoice_controller.get_all() or []
@@ -136,8 +127,6 @@ class ReportController:
         self._save_report("sales_by_date", {"date": date_str}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Справка: всички доставки
     def report_deliveries_all(self, keyword=None):
         data = []
 
@@ -170,7 +159,6 @@ class ReportController:
         self._save_report(report_type, {"keyword": keyword}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: оборот по дни
     def report_turnover_by_day(self):
         invoices = self.invoice_controller.get_all() or []
         daily = {}
@@ -187,7 +175,6 @@ class ReportController:
         self._save_report("turnover_by_day", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: най-продавани продукти
     def report_top_products(self):
         stats = {}
         invoices = self.invoice_controller.get_all() or []
@@ -206,7 +193,6 @@ class ReportController:
         self._save_report("top_products", {}, summary, data)
         return ReportResult(summary, data)
 
-    # Справка: обобщена наличност
     def report_inventory_summary(self):
         products = self.product_controller.get_all()
         data = []
@@ -229,8 +215,6 @@ class ReportController:
         self._save_report("inventory_summary", {}, summary, data)
         return ReportResult(summary, data)
 
-
-    # Справка: жизнен цикъл на продукт
     def product_lifecycle(self, name):
         name_search = name.lower()
         product = None
