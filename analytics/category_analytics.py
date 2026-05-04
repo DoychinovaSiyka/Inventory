@@ -29,8 +29,7 @@ def _add_children_to_tree(parent_id: str, all_categories: List[Category],
 
 
 def get_category_stats(categories: List[Category], products: List) -> dict:
-    """Проста статистика – броя продукти във всяка категория.
-    Полезно за справки и визуализации."""
+    """Статистика – броя продукти във всяка категория."""
     stats = {}
     for cat in categories:
         # Броя колко продукта имат тази категория

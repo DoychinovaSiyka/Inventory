@@ -65,7 +65,7 @@ class InventoryApplication:
 
         # ЗАРЕЖДАНЕ НА ИНВЕНТАРА
         if not self.movement_controller.movements:
-            print(" Няма движения → зареждаме началните количества от products.json")
+            print(" Няма движения - зареждаме началните количества от products.json")
 
             all_locations = self.location_controller.get_all()
             if not all_locations:

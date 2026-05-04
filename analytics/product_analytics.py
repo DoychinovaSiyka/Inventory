@@ -13,8 +13,7 @@ def calculate_average_price(products: List[Product]) -> float:
 
 def calculate_total_inventory_value(products: List[Product],
                                     inventory_controller=None) -> float:
-    """ Изчислявам общата стойност на склада. Количествата не са в Product,
-    а в inventory.json, затова ги взимам от контролера."""
+    """ Изчислявам общата стойност на склада."""
     if inventory_controller is None:
         return 0.0
 
