@@ -46,7 +46,7 @@ def format_table(columns, rows):
     if not rows:
         return "\n[!] Няма налични данни.\n"
 
-    # 1. Изчисляваме максималната ширина за всяка колона
+    # Изчисляваме максималната ширина за всяка колона
     # Стартираме с дължината на заглавията
     col_widths = [len(str(c)) for c in columns]
 
@@ -57,15 +57,15 @@ def format_table(columns, rows):
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
-    # 2. Добавяме фиксиран "въздух" (padding) от общо 2 интервала (един отляво, един отдясно)
+    # Добавяме фиксиран "въздух" (padding) от общо 2 интервала (един отляво, един отдясно)
     # Така колоната ще е с 2 символа по-широка от най-дългия си елемент
     col_widths = [w + 2 for w in col_widths]
 
-    # 3. Дефинираме разделителната линия
+    # Дефинираме разделителната линия
     # Пример: +------------+-------+
     separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 
-    # 4. Форматираме заглавния ред
+    # Форматираме заглавния ред
     # Центрираме или подравняваме вляво заглавията
     header_parts = []
     for i, col_name in enumerate(columns):
@@ -75,7 +75,7 @@ def format_table(columns, rows):
         header_parts.append(cell)
     header_row = "|" + "|".join(header_parts) + "|"
 
-    # 5. Сглобяваме таблицата
+    # Сглобяваме таблицата
     table_lines = [separator, header_row, separator]
 
     for row in rows:
