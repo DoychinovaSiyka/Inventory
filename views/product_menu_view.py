@@ -267,7 +267,7 @@ class ProductMenuView:
         if not raw:
             return
 
-        # Ако е число – използваме индекс
+        # Ако е число – използвам индекс
         if raw.isdigit():
             idx = int(raw)
             if 0 <= idx < len(categories):
@@ -276,7 +276,7 @@ class ProductMenuView:
                 print("[!] Невалиден номер на категория.")
                 return
         else:
-            # Ако е текст – приемаме го като ID
+            # Ако е текст – приемам го като ID
             category_id = raw
 
 
@@ -329,7 +329,6 @@ class ProductMenuView:
         print(f"--------------------------------------------------")
         print(f"Общо: {self.format_lv(total)}")
         print(f"--------------------------------------------------")
-
         input("\nНатиснете Enter за продължение...")
 
 
@@ -378,7 +377,6 @@ class ProductMenuView:
         locations = self.location_controller.get_all()
         for i, loc in enumerate(locations):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
         loc_raw = input("Локация (Номер или ID, Enter за пропуск): ").strip()
         location_id = None
 

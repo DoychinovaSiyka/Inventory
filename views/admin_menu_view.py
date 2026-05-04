@@ -14,7 +14,7 @@ class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
 
-        # За по-лесен достъп до контролерите при синхронизация
+
         self.inventory_controller = controllers["inventory"]
         self.movement_controller = controllers["movement"]
         self.product_view = ProductMenuView(controllers["product"], controllers["category"],
