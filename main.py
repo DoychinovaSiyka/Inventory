@@ -112,7 +112,6 @@ class InventoryApplication:
             print("0. Изход")
 
             choice = input("Избор: ").strip()
-
             if choice == "1":
                 self._login_flow()
             elif choice == "2":
