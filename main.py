@@ -23,7 +23,6 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-
     # Хранилища
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
@@ -36,7 +35,6 @@ class InventoryApplication:
         self.inventory_repo = JSONRepository("data/inventory.json")
         self.activity_log_repo = JSONRepository("data/user_activity_log.json")
 
-
     # Контролери
     def _init_controllers(self):
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
@@ -44,7 +42,6 @@ class InventoryApplication:
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
-
 
         self.product_controller = ProductController(self.product_repo, self.category_controller,
                                                     self.activity_log_controller)
@@ -56,15 +53,14 @@ class InventoryApplication:
                                                        self.supplier_controller, self.invoice_controller,
                                                        self.activity_log_controller)
 
+        # InventoryController - зависи от движенията и локациите
+        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller,
+                                                        self.movement_controller, self.location_controller)
 
-        # InventoryController - зависи от движенията
-        self.inventory_controller = InventoryController(self.inventory_repo, self.movement_controller)
 
-        # ReportController
         self.report_controller = ReportController(self.product_controller, self.movement_controller,
-                                                   self.invoice_controller, self.location_controller,
-                                                   self.inventory_controller, self.supplier_controller)
-
+                                                  self.invoice_controller, self.location_controller,
+                                                  self.inventory_controller, self.supplier_controller)
 
         # Графи (логистика)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
@@ -82,7 +78,6 @@ class InventoryApplication:
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
-
 
 
     def _login_flow(self):
