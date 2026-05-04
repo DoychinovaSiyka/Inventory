@@ -12,7 +12,7 @@ def _match_string(target: str, keyword: str) -> bool:
 
 
 def _match_date(date_val: str, date_str: str) -> bool:
-    """Базова проверка за дата – просто сравнявам началото на стринга."""
+    """Базова проверка за дата – сравнявам началото на стринга."""
     if not date_str:
         return True
     return date_val.startswith(date_str.strip())

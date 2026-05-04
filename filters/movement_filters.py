@@ -89,15 +89,12 @@ def filter_by_date_range(movements: List[Movement],
 
 
 # Комбиниран филтър – прилага всички критерии едновременно
-def filter_advanced(movements: List[Movement],
-                    movement_type=None, start_date=None,
-                    end_date=None, product_id=None,
-                    location_id=None, user_id=None):
+def filter_advanced(movements: List[Movement], movement_type=None, start_date=None,
+                    end_date=None, product_id=None, location_id=None, user_id=None):
 
     results = movements
 
     if movement_type:
-        # Приемам и Enum, и string – по-гъвкаво е
         type_name = movement_type.name if isinstance(movement_type, MovementType) else str(movement_type)
         results = [m for m in results if m.movement_type.name == type_name]
 
@@ -123,7 +120,7 @@ def filter_advanced(movements: List[Movement],
 
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None) -> List[Movement]:
-        """Разширено филтриране по няколко критерия. Ако параметър е None – просто го пропускам."""
+        """Разширено филтриране по няколко критерия."""
         results = self.movements
 
         if movement_type:
