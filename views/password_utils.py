@@ -24,6 +24,7 @@ def input_password(prompt="Въведете парола: "):
                 password = password[:-1]
                 print("\b \b", end="", flush=True)
             continue
+
         # Игнориране на специални клавиши
         if code in (0, 224):     # 0 и 224 — първи байт на специални клавиши (стрелки, F-клавиши)
             msvcrt.getch()       # втори байт
