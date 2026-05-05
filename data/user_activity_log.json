@@ -2630,5 +2630,19 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе в системата.",
         "timestamp": "2026-05-05 00:23:56"
+    },
+    {
+        "log_id": "34f15dfe-5b38-4aa7-a593-6a7d41d9e9fb",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-05 01:06:56"
+    },
+    {
+        "log_id": "28ef2a07-9439-4867-a04b-198e4b110168",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-05 08:52:27"
     }
 ]

@@ -12,13 +12,13 @@ class InventoryController:
 
         # Зареждане на инвентара
         if not self.movement_controller.movements:
-            print("Няма движения – зареждам началните количества.")
+            print("Няма движения – зареждане на началните количества.")
             all_locations = self.location_controller.get_all()
             if all_locations:
                 default_location = all_locations[0].location_id
                 self.auto_seed_initial_stock(default_location)
         else:
-            print("Има движения – възстановявам инвентара.")
+            print("Има движения – възстановяване на инвентара.")
             self.rebuild_inventory_from_movements(self.movement_controller.movements)
 
     def _save(self):
@@ -52,7 +52,6 @@ class InventoryController:
 
                 current = locations.get(default_location, 0)
                 locations[default_location] = current + float(product.quantity)
-
         self._save()
 
     # Увеличаване на наличност
@@ -66,7 +65,6 @@ class InventoryController:
         locations = self.data["products"][product_id]["locations"]
         current = locations.get(location_id, 0)
         locations[location_id] = current + quantity
-
         self._save()
 
     # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
@@ -132,7 +130,6 @@ class InventoryController:
         product_id = str(product_id)
         batches = []
         total_cost = 0.0
-
         relevant = []
         for m in movements:
             if str(m.product_id) == product_id:
@@ -187,7 +184,7 @@ class InventoryController:
 
     # Обща стойност на склада
     def get_total_inventory_value_fifo(self, movement_controller):
-        """ Изчислява общата стойност на целия склад на база реалните доставки (FIFO/Средна цена)."""
+        """ Изчислява общата стойност на целия склад на база реалните доставки (Средна цена)."""
         total_value = 0.0
 
         for pid, pdata in self.data.get("products", {}).items():
