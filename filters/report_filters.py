@@ -5,14 +5,12 @@ from models.invoice import Invoice
 
 # Малки помощни функции за вътрешно ползване
 def _match_string(target: str, keyword: str) -> bool:
-    """Правя търсенето по-унифицирано – малки букви, без излишни интервали."""
     if not keyword:
         return True
     return keyword.lower().strip() in (target or "").lower()
 
 
 def _match_date(date_val: str, date_str: str) -> bool:
-    """Базова проверка за дата – сравнявам началото на стринга."""
     if not date_str:
         return True
     return date_val.startswith(date_str.strip())
@@ -43,7 +41,7 @@ def filter_movements_by_type(movements: List[Movement], movement_type: str):
 
 
 def filter_movements_by_date(movements: List[Movement], date_str: str):
-    """Филтър по дата – просто проверявам дали започва с подадения текст."""
+    """Филтър по дата – проверявам дали започва с подадения текст."""
     return [m for m in movements if _match_date(m.date, date_str)]
 
 

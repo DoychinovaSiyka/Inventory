@@ -61,7 +61,7 @@ def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
     return [inv for inv in invoices if keyword in inv.product.lower()]
 
 
-# Търсене по дата – просто проверявам дали датата започва с подадения текст
+# Търсене по дата – проверявам дали датата започва с подадения текст
 def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
     if not date_str:
         return invoices
