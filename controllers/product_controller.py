@@ -53,8 +53,6 @@ class ProductController:
     # ИЗТРИВАНЕ НА ПРОДУКТ
     def delete_by_id(self, product_id, user_id=None):
         product_id = str(product_id)
-
-        # намирам продукта
         product_to_delete = None
         for p in self.products:
             if p.product_id == product_id:
