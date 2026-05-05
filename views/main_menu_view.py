@@ -24,8 +24,8 @@ class MainMenuView:
             MenuItem("6", "Справки", self.open_reports),
             MenuItem("7", "Потребители", self.open_users),
             MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
-            MenuItem("0", "Изход", lambda u: "break")])
-
+            MenuItem("0", "Изход", lambda u: "break")
+        ])
 
     def show_menu(self, user):
         while True:
@@ -37,8 +37,8 @@ class MainMenuView:
 
     # Действия - методи, които отварят съответните под-изгледи (Views)
     def open_products(self, user):
-        ProductView(self.product_controller, self.category_controller, self.location_controller,
-                    self.activity_log_controller).show_menu(user)
+        ProductView(self.controllers["product"], self.controllers["category"],
+                    self.controllers["location"], self.controllers["activity_log"]).show_menu(user)
 
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
@@ -47,8 +47,8 @@ class MainMenuView:
         SupplierView(self.controllers["supplier"]).show_menu(user)
 
     def open_movements(self, _):
-        MovementView(self.product_controller, self.movement_controller, self.user_controller,
-                     self.location_controller, self.supplier_controller).show_menu()
+        MovementView(self.controllers["product"], self.controllers["movement"], self.controllers["user"],
+                     self.controllers["location"], self.controllers["supplier"]).show_menu()
 
     def open_invoices(self, user):
         InvoiceView(self.controllers["invoice"]).show_menu(user)
