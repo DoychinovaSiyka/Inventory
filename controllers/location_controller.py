@@ -52,7 +52,6 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        """Връща None, ако локацията не съществува (без гръмване)."""
         for loc in self.locations:
             if loc.location_id == location_id:
                 return loc
