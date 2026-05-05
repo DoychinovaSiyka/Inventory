@@ -106,8 +106,8 @@ class MovementView:
 
             raw_l = raw.lower()
             for item in items:
-                iid = item.product_id if isinstance(item, Product) else (
-                    item.location_id if isinstance(item, Location) else item.supplier_id)
+                iid = item.product_id if isinstance(item, Product) else (item.location_id
+                                                                         if isinstance(item, Location) else item.supplier_id)
                 if iid.lower() == raw_l:
                     return item
             print("Невалиден ID. Опитайте отново.\n")
