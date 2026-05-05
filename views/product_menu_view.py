@@ -101,7 +101,6 @@ class ProductMenuView:
 
         while True:
             unit = input("Мерна единица (кг, кг., kg, килограм / бр, бр., брой / л, l, литър / пакет, paket, packet): ").strip()
-
             try:
                 ProductValidator.validate_unit(unit)
                 break
@@ -114,7 +113,8 @@ class ProductMenuView:
             print(f"{i}. {c.name}")
 
         cat_raw = input("Изберете категория (номер): ").strip()
-        category_id = categories[int(cat_raw)].category_id if cat_raw.isdigit() and int(cat_raw) < len(categories) else None
+        category_id = categories[int(cat_raw)].category_id if cat_raw.isdigit() and int(cat_raw) < len(categories) \
+            else None
 
         locations = self.location_controller.get_all()
         print("\nЛокации:")
@@ -153,7 +153,6 @@ class ProductMenuView:
         pid = input("ID на продукт: ").strip()
         if not pid:
             return
-
         product = self.product_controller.get_by_id(pid)
         if not product:
             print(f"[!] Продукт с ID {pid} не съществува.")
