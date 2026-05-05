@@ -15,7 +15,6 @@ class MovementController:
         self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
         self.activity_log_controller = activity_log_controller
-
         self.inventory_controller = None
 
         # Зареждане на движенията от JSON
@@ -114,7 +113,6 @@ class MovementController:
                 continue
             if product_id and str(m.product_id) != str(product_id):
                 continue
-
             if location_id:
                 if m.movement_type == MovementType.MOVE:
                     if m.from_location_id != location_id and m.to_location_id != location_id:

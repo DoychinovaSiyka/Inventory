@@ -262,7 +262,6 @@ class ProductMenuView:
         if not raw:
             return
 
-        # Ако е число – използвам индекс
         if raw.isdigit():
             idx = int(raw)
             if 0 <= idx < len(categories):
