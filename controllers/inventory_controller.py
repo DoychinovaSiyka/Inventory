@@ -1,14 +1,11 @@
 from typing import List
 
-
 class InventoryController:
-    def __init__(self, repository, product_controller, movement_controller, location_controller):
+    def __init__(self, repository, product_controller, location_controller):
         self.repo = repository
         self.product_controller = product_controller
-        self.movement_controller = movement_controller
         self.location_controller = location_controller
         self.data = self.repo.load() or {"products": {}}
-
 
     def _save(self):
         self.repo.save(self.data)
@@ -20,10 +17,7 @@ class InventoryController:
             return 0.0
 
         locations = self.data["products"][product_id].get("locations", {})
-        total = 0.0
-        for qty in locations.values():
-            total += float(qty)
-        return total
+        return sum(float(qty) for qty in locations.values())
 
     # НАЧАЛНО ЗАРЕЖДАНЕ
     def auto_seed_initial_stock(self, default_location):
@@ -34,9 +28,9 @@ class InventoryController:
                     self.data["products"][pid] = {"locations": {}}
 
                 locations = self.data["products"][pid]["locations"]
-
                 current = locations.get(default_location, 0)
                 locations[default_location] = current + float(product.quantity)
+
         self._save()
 
     # Увеличаване на наличност
@@ -48,8 +42,7 @@ class InventoryController:
             self.data["products"][product_id] = {"locations": {}}
 
         locations = self.data["products"][product_id]["locations"]
-        current = locations.get(location_id, 0)
-        locations[location_id] = current + quantity
+        locations[location_id] = locations.get(location_id, 0) + quantity
         self._save()
 
     # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
@@ -64,8 +57,7 @@ class InventoryController:
             self.data["products"][product_id] = {"locations": {}}
 
         locations = self.data["products"][product_id]["locations"]
-        current = locations.get(location_id, 0)
-        locations[location_id] = current - quantity
+        locations[location_id] = locations.get(location_id, 0) - quantity
 
         self._save()
         return True
@@ -86,38 +78,27 @@ class InventoryController:
 
             if m_type == "IN":
                 loc = m.location_id
-                current = locations.get(loc, 0)
-                locations[loc] = current + qty
+                locations[loc] = locations.get(loc, 0) + qty
+
             elif m_type == "OUT":
                 loc = m.location_id
-                current = locations.get(loc, 0)
-                locations[loc] = current - qty
+                locations[loc] = locations.get(loc, 0) - qty
+
             elif m_type == "MOVE":
                 from_loc = m.from_location_id
                 to_loc = m.to_location_id
-
-                current_from = locations.get(from_loc, 0)
-                locations[from_loc] = current_from - qty
-                current_to = locations.get(to_loc, 0)
-                locations[to_loc] = current_to + qty
+                locations[from_loc] = locations.get(from_loc, 0) - qty
+                locations[to_loc] = locations.get(to_loc, 0) + qty
 
         self._save()
 
-
     # FIFO себестойност
     def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):
-        """ Смятам себестойността на продаденото по FIFO. Подреждам всички движения по дата и
-        водя списък с партиди от доставки.
-        При продажба изписвам количества от най-старите налични партиди и така получавам
-        реалната себестойност на продадените бройки."""
         product_id = str(product_id)
         batches = []
         total_cost = 0.0
-        relevant = []
-        for m in movements:
-            if str(m.product_id) == product_id:
-                relevant.append(m)
 
+        relevant = [m for m in movements if str(m.product_id) == product_id]
         relevant.sort(key=lambda x: x.date)
 
         for m in relevant:
@@ -125,10 +106,7 @@ class InventoryController:
             qty = float(m.quantity)
 
             if mtype == "IN":
-                if m.price is not None:
-                    price = float(m.price)
-                else:
-                    price = float(fallback_price)
+                price = float(m.price) if m.price is not None else float(fallback_price)
                 batches.append({"qty": qty, "price": price})
 
             elif mtype == "OUT":
@@ -148,13 +126,13 @@ class InventoryController:
 
     # Къде има продукт
     def get_warehouses_with_product(self, product_name):
-        """ Връща списък от (warehouse_id, quantity) за всички складове, в които продуктът съществува с количество > 0."""
         result = []
 
         for pid, pdata in self.data.get("products", {}).items():
             product = self.product_controller.get_by_id(pid)
             if not product:
                 continue
+
             if product.name.lower() == product_name.lower():
                 locations = pdata.get("locations", {})
                 for warehouse_id, qty in locations.items():
@@ -166,7 +144,6 @@ class InventoryController:
 
     # Обща стойност на склада
     def get_total_inventory_value_fifo(self, movement_controller):
-        """ Изчислява общата стойност на целия склад на база реалните доставки (Средна цена)."""
         total_value = 0.0
 
         for pid, pdata in self.data.get("products", {}).items():
@@ -184,11 +161,7 @@ class InventoryController:
             for m in movement_controller.movements:
                 if str(m.product_id) == str(pid) and m.movement_type.name == "IN":
                     qty = float(m.quantity)
-                    if m.price is not None:
-                        price = float(m.price)
-                    else:
-                        price = float(product.price)
-
+                    price = float(m.price) if m.price is not None else float(product.price)
                     total_purchase_expense += qty * price
                     total_in_qty += qty
 

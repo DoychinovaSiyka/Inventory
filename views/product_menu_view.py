@@ -17,15 +17,18 @@ def _wrap(text, width=45):
 
 class ProductMenuView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController,
-                 location_controller: LocationController, inventory_controller, supplier_controller=None, activity_log_controller=None):
+                 location_controller: LocationController, inventory_controller, movement_controller,
+                 supplier_controller=None, activity_log_controller=None):
 
         self.product_controller = product_controller
         self.category_controller = category_controller
         self.location_controller = location_controller
         self.inventory_controller = inventory_controller
+        self.movement_controller = movement_controller
         self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller, inventory_controller)
+
 
     @staticmethod
     def format_lv(value):
@@ -199,14 +202,10 @@ class ProductMenuView:
                 new_supplier_id = suppliers[int(supp_raw)].supplier_id
 
         try:
-            success = self.product_controller.update_product(
-                product_id=pid,
-                new_name=new_name,
-                new_description=new_description,
-                new_price=new_price,
-                new_supplier_id=new_supplier_id,
-                user_id=user.user_id
-            )
+            success = self.product_controller.update_product(product_id=pid, new_name=new_name,
+                                                             new_description=new_description,
+                                                             new_price=new_price, new_supplier_id=new_supplier_id,
+                                                             user_id=user.user_id)
 
             if success:
                 print(f"\n[+] Продуктът '{product.name}' беше обновен успешно!")
@@ -308,7 +307,7 @@ class ProductMenuView:
             print(f"Най-евтин: {p.name} - {self.format_lv(p.price)}")
 
     def total_value(self, _):
-        m_controller = self.inventory_controller.movement_controller
+        m_controller = self.movement_controller
         if not m_controller:
             print("[!] Грешка: Системата не може да зареди движенията за изчисление.")
             return

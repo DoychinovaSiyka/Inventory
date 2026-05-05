@@ -665,5 +665,73 @@
                 }
             ]
         }
+    },
+    {
+        "report_id": "aa3afd8f-00ad-4b52-b81a-9daeec3d2a01",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-05-06 01:12:53",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 5
+            },
+            "data": [
+                {
+                    "product": "Диня \"Гърция\"",
+                    "available": "189.0 бр.",
+                    "sold": "18.0 бр.",
+                    "top_locations": "W1:129.0, W2:34.0, W5:26.0"
+                },
+                {
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "available": "211.0 бр.",
+                    "sold": "13.0 бр.",
+                    "top_locations": "W5:99.0, W3:78.0, W4:34.0"
+                },
+                {
+                    "product": "Бира \"Ariana\"",
+                    "available": "106.0 бр.",
+                    "sold": "28.0 бр.",
+                    "top_locations": "W5:56.0, W4:25.0, W2:25.0"
+                },
+                {
+                    "product": "краставици \"Гергана\"",
+                    "available": "80.0 кг.",
+                    "sold": "20.0 кг.",
+                    "top_locations": "W1:100.0, W2:45.0, W4:-65.0"
+                },
+                {
+                    "product": "Хляб",
+                    "available": "0.0 бр.",
+                    "sold": "-",
+                    "top_locations": "-"
+                }
+            ]
+        }
+    },
+    {
+        "report_id": "e51d108d-1af8-4e82-8510-a80d51ab2ed6",
+        "report_type": "product_lifecycle",
+        "generated_on": "2026-05-06 01:13:10",
+        "parameters": {
+            "search_name": "краставици \"Гергана\""
+        },
+        "data": {
+            "summary": {
+                "product": "краставици \"Гергана\""
+            },
+            "data": {
+                "product": "краставици \"Гергана\"",
+                "unit": "кг.",
+                "total_in": 100.0,
+                "total_out": 20.0,
+                "current_stock": 80.0,
+                "revenue": 115.60000000000001,
+                "expense": 566.0,
+                "fifo_cost": 113.2,
+                "profit": 2.4000000000000057,
+                "cash_balance": -450.4
+            }
+        }
     }
 ]

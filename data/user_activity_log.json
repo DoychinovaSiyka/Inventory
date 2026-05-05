@@ -2693,5 +2693,40 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе в системата.",
         "timestamp": "2026-05-06 00:33:39"
+    },
+    {
+        "log_id": "e19999fc-8609-4812-853b-d5916d7df485",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-06 00:52:35"
+    },
+    {
+        "log_id": "0b6371c0-d10e-4544-a846-d035c66c6ec6",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-06 01:05:14"
+    },
+    {
+        "log_id": "a7ef62d2-3d02-4323-acbe-03d124dd5555",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-06 01:10:25"
+    },
+    {
+        "log_id": "eb33c696-0fd2-42f4-9107-39bf90c3ee64",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-06 01:12:18"
+    },
+    {
+        "log_id": "f25c1e13-f109-458f-bd3b-90687e871c8f",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "GENERATE_INVOICE",
+        "details": "Автоматична фактура за движение d42fa24a-2a22-4f6f-849b-657cc1a8c201",
+        "timestamp": "2026-05-06 01:18:15"
     }
 ]
