@@ -2644,5 +2644,12 @@
         "action": "LOGIN",
         "details": "Потребител admin влезе в системата.",
         "timestamp": "2026-05-05 08:52:27"
+    },
+    {
+        "log_id": "8ba0761d-1f8b-41aa-9d37-20d3f41b5bfe",
+        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
+        "action": "LOGIN",
+        "details": "Потребител admin влезе в системата.",
+        "timestamp": "2026-05-05 16:55:38"
     }
 ]

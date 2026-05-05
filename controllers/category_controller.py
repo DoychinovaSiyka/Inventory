@@ -94,7 +94,6 @@ class CategoryController:
         before = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
         deleted = len(self.categories) < before
-
         if deleted:
             self._save_changes()
             self._log(user_id, "DELETE_CATEGORY", f"Категория {category_id} изтрита")
