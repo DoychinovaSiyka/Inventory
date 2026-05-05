@@ -1,6 +1,5 @@
 import uuid
 from typing import List, Optional
-from storage.json_repository import JSONRepository
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
 from filters.invoice_filters import (filter_by_customer, filter_by_product, filter_by_date,
@@ -9,15 +8,14 @@ from filters.invoice_filters import (filter_by_customer, filter_by_product, filt
 
 class InvoiceController:
     """Контролерът се грижи за CRUD операциите и координацията между слоевете."""
-    def __init__(self, repo: JSONRepository, activity_log_controller=None):
+    def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
-        self.invoices: List[Invoice] = []
-        self._load_invoices()
 
-    def _load_invoices(self):
+        # Зареждане на фактурите
         raw = self.repo.load() or []
-        self.invoices = [Invoice.from_dict(inv) for inv in raw]
+        self.invoices: List[Invoice] = [Invoice.from_dict(inv) for inv in raw]
+
 
     def _save_changes(self):
         self.repo.save([inv.to_dict() for inv in self.invoices])

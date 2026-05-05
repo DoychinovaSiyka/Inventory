@@ -2,6 +2,7 @@ from typing import List, Optional
 from models.user_activity_log import UserActivityLog
 
 
+
 class UserActivityLogController:
     """Контролерът управлява логовете и ги записва в JSON."""
     def __init__(self, repo):

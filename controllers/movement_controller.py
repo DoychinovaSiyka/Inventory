@@ -18,12 +18,10 @@ class MovementController:
 
         self.inventory_controller = None
 
-        self.movements = self._load_movements()
-
-    # Зареждане на движенията от JSON
-    def _load_movements(self) -> List[Movement]:
+        # Зареждане на движенията от JSON
         raw = self.repo.load() or []
-        return [Movement.from_dict(m) for m in raw]
+        self.movements: List[Movement] = [Movement.from_dict(m) for m in raw]
+
 
     # Записване на движенията
     def save_changes(self) -> None:
@@ -85,7 +83,6 @@ class MovementController:
             elif m_type_str == "MOVE":
                 self.inventory_controller.decrease_stock(product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(product_id, qty, to_location_id)
-
 
         # СЪЗДАВАНЕ НА ДВИЖЕНИЕ
         movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name, user_id=user_id,

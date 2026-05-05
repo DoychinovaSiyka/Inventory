@@ -26,6 +26,7 @@ class ReportController:
                 old_report.get("parameters") == new_report.get("parameters") and
                 old_report.get("data") == new_report.get("data"))
 
+
     def _save_report(self, report_type, parameters, summary, data):
         try:
             raw_data = self.repo.load()

@@ -1,5 +1,4 @@
 from typing import List
-from storage.json_repository import JSONRepository
 
 
 class InventoryController:
@@ -172,7 +171,6 @@ class InventoryController:
             product = self.product_controller.get_by_id(pid)
             if not product:
                 continue
-
             if product.name.lower() == product_name.lower():
                 locations = pdata.get("locations", {})
                 for warehouse_id, qty in locations.items():

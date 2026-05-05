@@ -8,13 +8,13 @@ class ProductController:
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log_controller = activity_log_controller
-        self.products = self.load()
+
+        # ЗАРЕЖДАНЕ / ЗАПИС
+        data = self.repo.load() or []
+        self.products = [Product.from_dict(p, self.category_controller) for p in data]
+
 
     # ЗАРЕЖДАНЕ / ЗАПИС
-    def load(self):
-        data = self.repo.load() or []
-        return [Product.from_dict(p, self.category_controller) for p in data]
-
     def save_changes(self):
         data = [p.to_dict() for p in self.products]
         self.repo.save(data)

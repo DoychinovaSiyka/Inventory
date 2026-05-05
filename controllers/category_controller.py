@@ -1,6 +1,5 @@
 import uuid
 from typing import Optional, List
-from storage.json_repository import Repository
 from models.category import Category
 from validators.category_validator import CategoryValidator
 from filters.category_filters import filter_categories
@@ -9,16 +8,14 @@ from analytics.category_analytics import build_category_tree
 
 class CategoryController:
     """Контролерът управлява категориите и координира CRUD операциите."""
-    def __init__(self, repo: Repository, activity_log_controller=None):
+    def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
-        self.categories: List[Category] = []
-        self._load_categories()
 
-    # Зареждам категориите от JSON файла
-    def _load_categories(self):
+        # Зареждане на категориите от JSON файла
         raw_data = self.repo.load() or []
-        self.categories = [Category.from_dict(c) for c in raw_data]
+        self.categories: List[Category] = [Category.from_dict(c) for c in raw_data]
+
 
     # Добавям запис в логовете, ако има лог контролер
     def _log(self, user_id: str, action: str, message: str):
@@ -62,15 +59,18 @@ class CategoryController:
 
         if category.description == new_description:
             return True
+
         category.description = new_description
         category.update_modified()
         self._save_changes()
         self._log(user_id, "EDIT_CATEGORY", "Описание обновено")
         return True
 
+
     # UPDATE – промяна на родител
     def update_parent(self, category_id: str, parent_id: Optional[str], user_id: str) -> bool:
         category = CategoryValidator.validate_exists(category_id, self)
+
         if category.parent_id == parent_id:
             return True
 
@@ -94,10 +94,13 @@ class CategoryController:
         before = len(self.categories)
         self.categories = [c for c in self.categories if c.category_id != category_id]
         deleted = len(self.categories) < before
+
         if deleted:
             self._save_changes()
             self._log(user_id, "DELETE_CATEGORY", f"Категория {category_id} изтрита")
+
         return deleted
+
 
     # Публични методи за достъп
     def get_all(self) -> List[Category]:

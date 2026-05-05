@@ -1,12 +1,11 @@
 from typing import Optional, List
 from models.location import Location
-from storage.json_repository import JSONRepository
 from validators.location_validator import LocationValidator
 
 
 class LocationController:
     """Контролерът управлява локациите в системата. Работи коректно дори когато locations.json е празен."""
-    def __init__(self, repo: JSONRepository, activity_log_controller=None, inventory_controller=None):
+    def __init__(self, repo, activity_log_controller=None, inventory_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
         self.inventory_controller = inventory_controller
