@@ -271,9 +271,7 @@ class ReportsView:
 
         # Реална стойност на стоката в склада
         in_stock_value = current_stock * avg_purchase_price
-        print("\n" + "═" * 45)
         print(f"   ФИНАНСОВ ОТЧЕТ: {data['product'].upper()}")
-        print("═" * 45)
         print(f"  Наличност в склада: {current_stock} {data.get('unit', '')}")
         print(f"  Продадени бройки:   {data['total_out']} {data.get('unit', '')}")
         print("-" * 45)
@@ -281,7 +279,5 @@ class ReportsView:
         print(f"  СЕБЕСТОЙНОСТ (Разход):    {cost_of_goods:>10.2f} лв.")
         print("-" * 45)
         print(f"  ЧИСТА ПЕЧАЛБА:            {profit:>10.2f} лв.")
-        print("═" * 45)
         print(f"  * Стойност на стоката в склада: {in_stock_value:.2f} лв.")
-        print("═" * 45)
         input("\nНатиснете Enter за продължение...")

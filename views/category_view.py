@@ -53,7 +53,6 @@ class CategoryView:
 
         for i, root in enumerate(roots, 1):
             print_tree(root, 0, str(i))
-
         print()
 
     def add_category(self, user: User):

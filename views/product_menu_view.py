@@ -7,7 +7,6 @@ from views.product_sort_view import ProductSortView
 from views.password_utils import require_password, format_table
 from validators.product_validator import ProductValidator
 from textwrap import wrap
-
 from analytics.product_analytics import (calculate_average_price, calculate_total_inventory_value,
                                          get_most_expensive_product, get_cheapest_product, group_products_by_category)
 
@@ -26,7 +25,6 @@ class ProductMenuView:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
-
         self.sort_view = ProductSortView(product_controller, inventory_controller)
 
     @staticmethod
@@ -209,10 +207,8 @@ class ProductMenuView:
 
         # Запис
         try:
-            success = self.product_controller.update_product(product_id=pid, new_name=new_name,
-                                                             new_description=new_description,
-                                                              new_price=new_price, new_supplier_id=new_supplier_id,
-                                                             user_id=user.user_id)
+            success = self.product_controller.update_product(product_id=pid, new_name=new_name, new_description=new_description,
+                                                             new_price=new_price, new_supplier_id=new_supplier_id, user_id=user.user_id)
 
             if success:
                 print(f"\n[+] Продуктът '{product.name}' беше обновен успешно!")

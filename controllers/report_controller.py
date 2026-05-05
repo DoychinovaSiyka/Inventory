@@ -21,10 +21,12 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
+
     def _is_duplicate(self, old_report, new_report):
         return (old_report.get("report_type") == new_report.get("report_type") and
                 old_report.get("parameters") == new_report.get("parameters") and
                 old_report.get("data") == new_report.get("data"))
+
 
 
     def _save_report(self, report_type, parameters, summary, data):
@@ -230,7 +232,6 @@ class ReportController:
 
         pid = product.product_id
         current_stock = self.inventory_controller.get_total_stock(pid)
-
         total_in = 0.0
         total_out = 0.0
         revenue = 0.0

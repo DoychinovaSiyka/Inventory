@@ -180,7 +180,6 @@ class InvoiceView:
         print("   Търсене по сума / диапазон")
         min_total = input("Минимална сума (или Enter): ").strip()
         max_total = input("Максимална сума (или Enter): ").strip()
-
         try:
             min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
             max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None

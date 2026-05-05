@@ -4,7 +4,7 @@ from datetime import datetime
 
 class UserActivityLog:
     def __init__(self, user_id, action, details="", timestamp=None, log_id=None):
-        """ Модел за лог запис. Генерирането на UUID и време се случва тук, ако не са подадени. """
+        """ Модел за лог запис."""
         self.log_id = str(log_id) if log_id else str(uuid.uuid4())
         self.user_id = str(user_id)
         self.action = str(action) # Какво действие е извършено

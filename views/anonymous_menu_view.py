@@ -6,7 +6,6 @@ from views.category_view import CategoryView
 
 class AnonymousMenuView:
     def __init__(self, controllers):
-        # Запазвам контролерите, за да ги подадем на под-менютата
         self.controllers = controllers
 
         self.product_view = ProductMenuView(controllers["product"], controllers["category"], controllers["location"],

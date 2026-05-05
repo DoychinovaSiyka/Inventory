@@ -66,7 +66,7 @@ class GraphView:
             print(f"[!] '{product_name}' не е наличен в нито един склад.")
             return
 
-        # превръщаме в чист списък от warehouse_id
+        # превръщаме в списък от warehouse_id
         all_sources = []
         for wid, qty in sources:
             wid_up = str(wid).upper()

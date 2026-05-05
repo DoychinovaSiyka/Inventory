@@ -3,7 +3,6 @@ from typing import Optional, Union
 
 
 class Location:
-    """Модел за складова локация. Държа name и zone винаги като текст, за да няма None."""
     def __init__(self, location_id: Optional[Union[str, int]] = None,
                  name: Optional[str] = "", zone: Optional[str] = "",
                  capacity: int = 0, created: Optional[str] = None, modified: Optional[str] = None):
@@ -33,7 +32,7 @@ class Location:
 
     @staticmethod
     def from_dict(data):
-        """Създавам Location от JSON речник и оправям празните стойности."""
+        """Създавам Location от JSON речник."""
         if not data:
             return None
 

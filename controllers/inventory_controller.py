@@ -43,7 +43,6 @@ class InventoryController:
             if product.quantity and product.quantity > 0:
 
                 pid = str(product.product_id)
-
                 if pid not in self.data["products"]:
                     self.data["products"][pid] = {"locations": {}}
 
@@ -114,7 +113,6 @@ class InventoryController:
 
                 current_from = locations.get(from_loc, 0)
                 locations[from_loc] = current_from - qty
-
                 current_to = locations.get(to_loc, 0)
                 locations[to_loc] = current_to + qty
 

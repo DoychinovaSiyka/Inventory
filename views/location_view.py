@@ -10,7 +10,7 @@ class LocationView:
         self.location_controller = location_controller
 
     def show_menu(self, user: User):
-        """ Основен цикъл на менюто. Динамично генерира опции според ролята. """
+        """ Основен цикъл на менюто. Генерира опции според ролята. """
         while True:
             menu = self._build_menu(user)
             choice = menu.show()

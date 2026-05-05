@@ -6,7 +6,7 @@ class Report:
     def __init__(self, report_type, parameters=None, data=None, generated_on=None, report_id=None):
         """ Модел за отчет. Съхранява метаданни и резултати от справки. """
 
-        # Уникално ID за всеки отчет, ако не е подадено
+
         self.report_id = str(report_id) if report_id else str(uuid.uuid4())
         self.generated_on = generated_on or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.report_type = report_type

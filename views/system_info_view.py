@@ -3,7 +3,6 @@ class SystemInfoView:
     @staticmethod
     def show_menu():
         print("\n Информация за системата (WIMS)\n")
-
         print("Име на проекта:")
         print("  Warehouse Inventory Management System (WIMS)\n")
 

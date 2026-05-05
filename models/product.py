@@ -40,7 +40,8 @@ class Product:
 
         qty = data.get("quantity", 0)
 
-        return Product( product_id=data.get("product_id"), name=data.get("name"),
-                        categories=categories, unit=data.get("unit"), description=data.get("description"),
-                        price=data.get("price"), supplier_id=data.get("supplier_id"),
-                        tags=data.get("tags", []), created=data.get("created"), modified=data.get("modified"), quantity=qty)
+        return Product(product_id=data.get("product_id"), name=data.get("name"),
+                       categories=categories, unit=data.get("unit"), description=data.get("description"),
+                       price=data.get("price"), supplier_id=data.get("supplier_id"),
+                       tags=data.get("tags", []), created=data.get("created"), modified=data.get("modified"),
+                       quantity=qty)

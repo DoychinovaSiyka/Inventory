@@ -1,6 +1,5 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
-
 from sorting.product_sorters import (sort_by_name_logic, sort_by_price_desc_logic,
                                      bubble_sort_logic, selection_sort_logic)
 

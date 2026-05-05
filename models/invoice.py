@@ -16,9 +16,8 @@ class Invoice:
     def __init__(self, product, quantity, unit, unit_price, total_price, customer, movement_id=None,
                  date=None, created=None, modified=None, invoice_id=None):
 
-        # Уникален идентификатор на фактурата
-        self.invoice_id = invoice_id or Invoice.generate_id()
 
+        self.invoice_id = invoice_id or Invoice.generate_id()
         self.movement_id = str(movement_id) if movement_id else None  # Свързано движение (OUT)
         self.product = product
         self.customer = customer

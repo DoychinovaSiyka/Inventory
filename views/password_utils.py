@@ -47,7 +47,6 @@ def format_table(columns, rows):
         return "\n[!] Няма налични данни.\n"
 
     # Изчисляваме максималната ширина за всяка колона
-    # Стартираме с дължината на заглавията
     col_widths = [len(str(c)) for c in columns]
 
     # Обхождаме редовете, за да намерим най-дългия елемент във всяка колона
@@ -57,25 +56,18 @@ def format_table(columns, rows):
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
-    # Добавяме фиксиран "въздух" (padding) от общо 2 интервала (един отляво, един отдясно)
-    # Така колоната ще е с 2 символа по-широка от най-дългия си елемент
+    # Добавяме фиксиран padding от общо 2 интервала (един отляво, един отдясно)
     col_widths = [w + 2 for w in col_widths]
-
-    # Дефинираме разделителната линия
-    # Пример: +------------+-------+
     separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 
     # Форматираме заглавния ред
     # Центрираме или подравняваме вляво заглавията
     header_parts = []
     for i, col_name in enumerate(columns):
-        # {:<{w}} подравнява вляво в рамките на 'w' пространства
-        # Слагаме по един интервал в началото за естетика
         cell = f" {col_name}".ljust(col_widths[i])
         header_parts.append(cell)
     header_row = "|" + "|".join(header_parts) + "|"
 
-    # Сглобяваме таблицата
     table_lines = [separator, header_row, separator]
 
     for row in rows:
@@ -88,8 +80,9 @@ def format_table(columns, rows):
 
     # Добавяме финалната линия
     table_lines.append(separator)
-
     return "\n" + "\n".join(table_lines) + "\n"
+
+
 
 #  Декоратор за защита с парола
 def require_password(correct_password):
@@ -97,7 +90,6 @@ def require_password(correct_password):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                # вместо getpass - звездички
                 password = input_password("Въведете парола: ")
             except Exception:
                 # Ако средата не поддържа - видима парола

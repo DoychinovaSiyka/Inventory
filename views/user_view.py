@@ -1,7 +1,7 @@
 from models.user import User
 from controllers.user_controller import UserController
 from views.menu import Menu, MenuItem
-from views.password_utils import input_password  # скрито въвеждане на парола
+from views.password_utils import input_password
 
 
 class UserView:

@@ -63,7 +63,6 @@ class SupplierView:
     # редактиране на доставчик - admin only
     def edit_supplier(self, _):
         print("\n--- Редактиране на доставчик ---")
-        # цикъл докато не въведем валидно ID
         while True:
             supplier_id = input("Въведете ID на доставчик (Enter за отказ): ").strip()
             if not supplier_id:

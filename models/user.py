@@ -28,7 +28,7 @@ class User:
 
     @staticmethod
     def from_dict(data):
-        """Прави User от JSON речник. Ако няма данни – връща None."""
+        """Прави User от JSON речник."""
         if not data:
             return None
         return User(first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),

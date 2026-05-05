@@ -14,7 +14,6 @@ class ProductController:
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
 
-    # ЗАРЕЖДАНЕ / ЗАПИС
     def save_changes(self):
         data = [p.to_dict() for p in self.products]
         self.repo.save(data)

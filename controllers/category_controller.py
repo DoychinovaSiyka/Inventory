@@ -59,7 +59,6 @@ class CategoryController:
 
         if category.description == new_description:
             return True
-
         category.description = new_description
         category.update_modified()
         self._save_changes()
