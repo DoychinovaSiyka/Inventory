@@ -66,28 +66,46 @@ class ProductController:
                         category_id=None, location_id=None, inventory_controller=None):
 
         results = []
-
-        for p in self.products:
+        for product in self.products:
+            # Търсене по ключова дума
             if keyword:
-                if keyword.lower() not in p.name.lower() and keyword.lower() not in p.description.lower():
+                text = keyword.lower()
+                name_ok = text in product.name.lower()
+                desc_ok = text in product.description.lower()
+
+                if not name_ok and not desc_ok:
                     continue
 
-            if min_price is not None and p.price < min_price:
-                continue
-            if max_price is not None and p.price > max_price:
-                continue
+            # Филтър по минимална цена
+            if min_price is not None:
+                if product.price < min_price:
+                    continue
 
+            if max_price is not None:
+                if product.price > max_price:
+                    continue
+
+            # Филтър по категория
             if category_id:
-                if not any(c.category_id == category_id for c in p.categories):
+                found = False
+                for cat in product.categories:
+                    if cat.category_id == category_id:
+                        found = True
+                        break
+                if not found:
                     continue
 
+            # Филтър по локация (склад)
             if location_id and inventory_controller:
-                stock = inventory_controller.data["products"].get(p.product_id, {})
-                loc_stock = stock.get("locations", {}).get(location_id, 0)
-                if loc_stock <= 0:
+                all_stock = inventory_controller.data.get("products", {})
+                product_stock = all_stock.get(product.product_id, {})
+                locations = product_stock.get("locations", {})
+                quantity = locations.get(location_id, 0)
+                if quantity <= 0:
                     continue
 
-            results.append(p)
+            # Ако е минал всички проверки -> добавяме го
+            results.append(product)
 
         return results
 

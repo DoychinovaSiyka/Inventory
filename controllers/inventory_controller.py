@@ -38,10 +38,7 @@ class InventoryController:
     # НАЧАЛНО ЗАРЕЖДАНЕ
     def auto_seed_initial_stock(self, default_location):
         for product in self.product_controller.get_all():
-
-            # Проверяваме дали продуктът има начално количество
             if product.quantity and product.quantity > 0:
-
                 pid = str(product.product_id)
                 if pid not in self.data["products"]:
                     self.data["products"][pid] = {"locations": {}}
@@ -101,12 +98,10 @@ class InventoryController:
                 loc = m.location_id
                 current = locations.get(loc, 0)
                 locations[loc] = current + qty
-
             elif m_type == "OUT":
                 loc = m.location_id
                 current = locations.get(loc, 0)
                 locations[loc] = current - qty
-
             elif m_type == "MOVE":
                 from_loc = m.from_location_id
                 to_loc = m.to_location_id
@@ -117,6 +112,7 @@ class InventoryController:
                 locations[to_loc] = current_to + qty
 
         self._save()
+
 
     # FIFO себестойност
     def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):

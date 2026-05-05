@@ -13,7 +13,6 @@ class SupplierController:
 
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
-        """ Добавя нов доставчик – използва SupplierValidator. """
         SupplierValidator.validate_all(name, contact, address)
 
         supplier = Supplier(name=name.strip(), contact=contact.strip(), address=address.strip())
@@ -36,7 +35,6 @@ class SupplierController:
 
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
-        """ Актуализира доставчик след валидация на подадените полета. """
         supplier = SupplierValidator.validate_exists(supplier_id, self)
 
         if name is not None:
