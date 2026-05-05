@@ -13,10 +13,10 @@ class ProductController:
         data = self.repo.load() or []
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
-
     def save_changes(self):
         data = [p.to_dict() for p in self.products]
         self.repo.save(data)
+
 
     def _generate_id(self):
         return str(uuid.uuid4())
@@ -104,7 +104,6 @@ class ProductController:
                 if quantity <= 0:
                     continue
 
-            # Ако е минал всички проверки -> добавяме го
             results.append(product)
 
         return results
@@ -143,7 +142,6 @@ class ProductController:
                 if c.category_id == category_id:
                     found = True
                     break
-
             if found:
                 results.append(p)
 
