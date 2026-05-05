@@ -628,5 +628,42 @@
                 }
             ]
         }
+    },
+    {
+        "report_id": "4c7591b3-541d-4bd7-8b23-22ce4a9b50d5",
+        "report_type": "inventory_summary",
+        "generated_on": "2026-05-05 23:42:47",
+        "parameters": {},
+        "data": {
+            "summary": {
+                "total_products": 4
+            },
+            "data": [
+                {
+                    "product": "Диня \"Гърция\"",
+                    "available": "189.0 бр.",
+                    "sold": "18.0 бр.",
+                    "top_locations": "W1:129.0, W2:34.0, W5:26.0"
+                },
+                {
+                    "product": "Кисело мляко \"Родопчанка\"",
+                    "available": "211.0 бр.",
+                    "sold": "13.0 бр.",
+                    "top_locations": "W5:99.0, W3:78.0, W4:34.0"
+                },
+                {
+                    "product": "Бира \"Ariana\"",
+                    "available": "106.0 бр.",
+                    "sold": "28.0 бр.",
+                    "top_locations": "W5:56.0, W4:25.0, W2:25.0"
+                },
+                {
+                    "product": "краставици \"Гергана\"",
+                    "available": "120.0 кг.",
+                    "sold": "-",
+                    "top_locations": "W2:120.0"
+                }
+            ]
+        }
     }
 ]

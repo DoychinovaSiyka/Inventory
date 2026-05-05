@@ -9,16 +9,6 @@ class InventoryController:
         self.location_controller = location_controller
         self.data = self.repo.load() or {"products": {}}
 
-        # Зареждане на инвентара
-        if not self.movement_controller.movements:
-            print("Няма движения – зареждане на началните количества.")
-            all_locations = self.location_controller.get_all()
-            if all_locations:
-                default_location = all_locations[0].location_id
-                self.auto_seed_initial_stock(default_location)
-        else:
-            print("Има движения – възстановяване на инвентара.")
-            self.rebuild_inventory_from_movements(self.movement_controller.movements)
 
     def _save(self):
         self.repo.save(self.data)

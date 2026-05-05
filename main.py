@@ -36,7 +36,6 @@ class InventoryApplication:
         self.inventory_repo = JSONRepository("data/inventory.json")
         self.activity_log_repo = JSONRepository("data/user_activity_log.json")
 
-
     def _init_controllers(self):
         # Логове
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
@@ -51,21 +50,31 @@ class InventoryApplication:
 
         self.invoice_controller = InvoiceController(self.invoice_repo, self.activity_log_controller)
 
+
+        self.inventory_controller = InventoryController(self.inventory_repo,
+                                                        self.product_controller, self.location_controller)
+
+
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
-                                                       self.user_controller, self.location_controller,
-                                                       self.supplier_controller, self.invoice_controller,
-                                                       self.activity_log_controller)
+                                                      self.user_controller, self.location_controller,
+                                                      self.supplier_controller, self.invoice_controller,
+                                                      self.inventory_controller, self.activity_log_controller)
 
-        # InventoryController - зависи от движенията и локациите
-        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller,
-                                                        self.movement_controller, self.location_controller)
-
+        # 3) Инициализация на инвентара
+        if not self.movement_controller.movements:
+            print("Няма движения – зареждане на началните количества.")
+            all_locations = self.location_controller.get_all()
+            if all_locations:
+                default_location = all_locations[0].location_id
+                self.inventory_controller.auto_seed_initial_stock(default_location)
+        else:
+            print("Има движения – възстановяване на инвентара.")
+            self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
 
         # Отчети
-        self.report_controller = ReportController(self.report_repo, self.product_controller,
-                                                   self.movement_controller, self.invoice_controller,
-                                                   self.location_controller, self.inventory_controller, self.supplier_controller)
-
+        self.report_controller = ReportController( self.report_repo, self.product_controller, self.movement_controller, self.invoice_controller,
+                                                   self.location_controller, self.inventory_controller,
+                                                   self.supplier_controller)
 
         # Графи (логистика)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
@@ -82,7 +91,6 @@ class InventoryApplication:
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
-
 
     def _login_flow(self):
         while True:
@@ -106,7 +114,6 @@ class InventoryApplication:
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
         self.anonymous_menu.show_menu(guest)
-
 
     def run(self):
         while True:

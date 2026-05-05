@@ -6,7 +6,8 @@ from validators.movement_validator import MovementValidator
 
 class MovementController:
     def __init__(self, repo, product_controller, user_controller, location_controller,
-                 supplier_controller, invoice_controller, activity_log_controller=None):
+                 supplier_controller, invoice_controller, inventory_controller,
+                 activity_log_controller=None):
 
         self.repo = repo
         self.product_controller = product_controller
@@ -15,7 +16,7 @@ class MovementController:
         self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
         self.activity_log_controller = activity_log_controller
-        self.inventory_controller = None
+        self.inventory_controller = inventory_controller
 
         # Зареждане на движенията от JSON
         raw = self.repo.load() or []
@@ -84,11 +85,11 @@ class MovementController:
                 self.inventory_controller.increase_stock(product_id, qty, to_location_id)
 
         # СЪЗДАВАНЕ НА ДВИЖЕНИЕ
-        movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name, user_id=user_id,
-                            location_id=location_id if m_type_str != "MOVE" else None, movement_type=MovementType[m_type_str],
-                            quantity=qty, unit=product.unit,description=description, price=prc,
-                            supplier_id=product.supplier_id, customer=customer,
-                            from_location_id=from_location_id, to_location_id=to_location_id)
+        movement = Movement( movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name,
+                             user_id=user_id, location_id=location_id if m_type_str != "MOVE" else None,
+                             movement_type=MovementType[m_type_str], quantity=qty, unit=product.unit,
+                             description=description, price=prc, supplier_id=product.supplier_id,
+                             customer=customer, from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()

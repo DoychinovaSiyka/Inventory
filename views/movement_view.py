@@ -33,15 +33,15 @@ class MovementView:
             MenuItem("5", "Разширено филтриране", self.advanced_filter),
             MenuItem("0", "Назад", lambda u: "break")])
 
-
     def _truncate(self, text, length=20):
         if text is None:
             return "-"
         text = str(text)
         return (text[:length - 3] + '...') if len(text) > length else text
 
+
     def _get_inventory(self):
-        return self.product_controller.inventory_controller.data["products"]
+        return self.movement_controller.inventory_controller.data["products"]
 
     def _get_product_total_qty(self, product):
         pdata = self._get_inventory().get(product.product_id, {})
@@ -243,7 +243,6 @@ class MovementView:
                     break
                 print("Грешка: Изборът на доставчик е задължителен за IN.")
 
-
         if movement_type == "OUT":
             while True:
                 customer_input = input("Име на клиент (Задължително): ").strip()
@@ -440,4 +439,4 @@ class MovementView:
             rows.append([m.date[:16], m.movement_type.name, pname,
                          self._format_qty_unit(m.quantity, m.unit), partner,loc_disp])
 
-        print(format_table(columns, rows))
+            print(format_table(columns, rows))

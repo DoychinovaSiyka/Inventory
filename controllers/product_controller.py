@@ -17,7 +17,6 @@ class ProductController:
         data = [p.to_dict() for p in self.products]
         self.repo.save(data)
 
-
     def _generate_id(self):
         return str(uuid.uuid4())
 
@@ -26,9 +25,11 @@ class ProductController:
         ProductValidator.validate_name(product_data['name'])
 
         # Категории - списък от Category обекти
-        categories = [self.category_controller.get_by_id(cid) for cid in product_data['category_ids']]
+        categories = []
+        for cid in product_data['category_ids']:
+            categories.append(self.category_controller.get_by_id(cid))
 
-        product = Product( product_id=self._generate_id(), name=product_data['name'], categories=categories,
+        product = Product(product_id=self._generate_id(), name=product_data['name'], categories=categories,
                            unit=product_data['unit'], description=product_data['description'],
                            price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
 
@@ -36,8 +37,40 @@ class ProductController:
         self.products.append(product)
         self.save_changes()
 
-        # НЯМА начално IN движение
+        # НАЧАЛНО ЗАРЕЖДАНЕ В ИНВЕНТАРА
+        if "quantity" in product_data and "location_id" in product_data and "inventory_controller" in product_data:
+            try:
+                qty = float(product_data["quantity"])
+                loc = product_data["location_id"]
+                if qty > 0:
+                    inv = product_data["inventory_controller"]
+                    inv.increase_stock(product.product_id, qty, loc)
+            except:
+                pass
+
         return product
+
+    # ИЗТРИВАНЕ НА ПРОДУКТ
+    def delete_by_id(self, product_id, user_id=None):
+        product_id = str(product_id)
+
+        # намирам продукта
+        product_to_delete = None
+        for p in self.products:
+            if p.product_id == product_id:
+                product_to_delete = p
+                break
+
+        if not product_to_delete:
+            raise ValueError("Продуктът не е намерен.")
+
+        # премахвам го от списъка
+        self.products.remove(product_to_delete)
+
+        # записвам промените
+        self.save_changes()
+
+        return True
 
     # ТЪРСЕНЕ
     def search(self, keyword):
@@ -46,18 +79,21 @@ class ProductController:
 
         for p in self.products:
             name = p.name.lower()
-            category_text = " ".join([c.name.lower() for c in p.categories]) if p.categories else ""
+            category_text = ""
+            for c in p.categories:
+                category_text += c.name.lower() + " "
+
             description = p.description.lower() if p.description else ""
             supplier = str(p.supplier_id).lower() if p.supplier_id else ""
             tags = ""
             try:
                 if p.tags:
-                    tags = " ".join([t.lower() for t in p.tags])
+                    for t in p.tags:
+                        tags += t.lower() + " "
             except:
                 tags = ""
 
-            if (keyword in name or keyword in category_text or keyword in description or
-                    keyword in supplier or keyword in tags):
+            if keyword in name or keyword in category_text or keyword in description or keyword in supplier or keyword in tags:
                 results.append(p)
 
         return results
@@ -66,26 +102,22 @@ class ProductController:
                         category_id=None, location_id=None, inventory_controller=None):
 
         results = []
+
         for product in self.products:
-            # Търсене по ключова дума
+
             if keyword:
                 text = keyword.lower()
                 name_ok = text in product.name.lower()
                 desc_ok = text in product.description.lower()
-
                 if not name_ok and not desc_ok:
                     continue
 
-            # Филтър по минимална цена
             if min_price is not None:
                 if product.price < min_price:
                     continue
-
             if max_price is not None:
                 if product.price > max_price:
                     continue
-
-            # Филтър по категория
             if category_id:
                 found = False
                 for cat in product.categories:
@@ -95,7 +127,6 @@ class ProductController:
                 if not found:
                     continue
 
-            # Филтър по локация (склад)
             if location_id and inventory_controller:
                 all_stock = inventory_controller.data.get("products", {})
                 product_stock = all_stock.get(product.product_id, {})
@@ -137,14 +168,12 @@ class ProductController:
         results = []
         for p in self.products:
             found = False
-
             for c in p.categories:
                 if c.category_id == category_id:
                     found = True
                     break
             if found:
                 results.append(p)
-
         return results
 
     def get_all(self):

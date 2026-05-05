@@ -43,5 +43,20 @@
         "quantity": 0.0,
         "created": "2026-05-04 12:44:41",
         "modified": "2026-05-04 12:44:41"
+    },
+    {
+        "product_id": "dca14536-ba85-43e4-80a9-6995b1116ee5",
+        "name": "краставици \"Гергана\"",
+        "categories": [
+            "f3c4a8d1-0c6e-4b0e-9f0c-1a2b3c4d5e6f"
+        ],
+        "unit": "кг.",
+        "description": "български краставици",
+        "price": 3.99,
+        "supplier_id": "8905c6a6-c92c-4947-9e33-e88144d84e60",
+        "tags": [],
+        "quantity": 0.0,
+        "created": "2026-05-06 00:24:52",
+        "modified": "2026-05-06 00:24:52"
     }
 ]
