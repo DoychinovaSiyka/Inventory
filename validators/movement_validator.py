@@ -28,18 +28,6 @@ class MovementValidator:
             raise ValueError("Невалиден тип движение.")
 
     @staticmethod
-    def validate_description(description):
-        if description is None:
-            raise ValueError("Описанието е задължително.")
-        if not isinstance(description, str):
-            raise ValueError("Описанието трябва да е текст.")
-        desc = description.strip()
-        if len(desc) < 3:
-            raise ValueError("Описанието трябва да е поне 3 символа.")
-        if len(desc) > 500:
-            raise ValueError("Описанието е твърде дълго.")
-
-    @staticmethod
     def parse_quantity(quantity):
         if quantity is None or str(quantity).strip() == "":
             raise ValueError("Количество е задължително.")
@@ -48,6 +36,7 @@ class MovementValidator:
 
         for token in ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]:
             raw = raw.replace(token, "")
+
         try:
             q = float(raw)
         except Exception:
@@ -62,6 +51,7 @@ class MovementValidator:
     def parse_price(price):
         if price is None or str(price).strip() == "":
             raise ValueError("Цената е задължителна.")
+
         p = str(price).lower().strip()
         for token in ["лв.", "лв", "lv.", "lv", " "]:
             p = p.replace(token, "")
@@ -73,6 +63,7 @@ class MovementValidator:
             raise ValueError("Невалидна цена. Въведете число.")
         if value < 0:
             raise ValueError("Цената не може да е отрицателна.")
+
         return round(value, 2)
 
     @staticmethod
@@ -97,6 +88,7 @@ class MovementValidator:
             raise ValueError("Location ID е задължително.")
 
         loc = str(loc_id).strip()
+
         if loc.isdigit():
             num = int(loc)
             locations = location_controller.get_all()
@@ -115,10 +107,9 @@ class MovementValidator:
         raise ValueError("Невалиден Location ID. Допустими: 1–9 или W1–W9.")
 
     @staticmethod
-    def validate_in_out_rules(movement_type, product, quantity,
-                              customer, inventory_controller, location_id):
-
+    def validate_in_out_rules(movement_type, product, quantity, customer, inventory_controller, location_id):
         mt = str(movement_type).upper()
+
         if mt == "IN":
             if customer:
                 raise ValueError("При IN движение не може да има клиент.")
@@ -136,8 +127,7 @@ class MovementValidator:
 
             available = inventory_controller.get_stock_for_location(product.product_id, location_id)
             if available < quantity:
-                raise ValueError(f"Недостатъчна наличност! В този склад има само {available} "
-                                 f"{product.unit}.")
+                raise ValueError(f"Недостатъчна наличност! В този склад има само {available} {product.unit}.")
 
         if mt == "MOVE":
             if customer:

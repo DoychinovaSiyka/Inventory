@@ -68,8 +68,8 @@ class ProductController:
         return results
 
     # РАЗШИРЕНО ТЪРСЕНЕ
-    def search_combined(self, keyword=None, min_price=None, max_price=None,
-                        category_id=None, location_id=None, inventory_controller=None):
+    def search_combined(self, keyword=None, min_price=None, max_price=None, category_id=None,
+                        inventory_controller=None):
 
         results = []
         for product in self.products:
@@ -98,9 +98,7 @@ class ProductController:
         return results
 
     # ОБНОВЯВАНЕ
-    def update_product(self, product_id, new_name=None, new_description=None,
-                       new_price=None, new_supplier_id=None, user_id=None):
-
+    def update_product(self, product_id, new_name=None, new_description=None, new_price=None, user_id=None):
         product = self.get_by_id(product_id)
         if not product:
             return False
@@ -108,10 +106,8 @@ class ProductController:
         if new_name is not None:
             ProductValidator.validate_name(new_name)
             product.name = new_name
-
         if new_description is not None:
             product.description = new_description
-
         if new_price is not None:
             try:
                 product.price = float(new_price)

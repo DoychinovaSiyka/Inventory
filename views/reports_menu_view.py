@@ -7,197 +7,186 @@ class ReportsView:
     def __init__(self, controller):
         self.controller = controller
 
-    def show_menu(self, user):
-        menu = self._build_menu()
-        while True:
-            choice = menu.show()
-            if choice == "0":
-                break
-            menu.execute(choice, user)
 
-    def _build_menu(self):
-        return Menu("Справки и Отчети", [
-            MenuItem("1", "Обобщена справка за наличности", self.summary_report),
-            MenuItem("2", "Справка за движения", self.report_movements),
-            MenuItem("3", "Всички фактури/продажби", self.report_sales),
-            MenuItem("4", "Търсене по клиент", self.report_sales_by_customer),
-            MenuItem("5", "Търсене по продукт", self.report_sales_by_product),
-            MenuItem("6", "Търсене по дата", self.report_sales_by_date),
-            MenuItem("7", "Справка за всички доставки", self.report_all_deliveries),
-            MenuItem("8", "Търсене на доставка", self.search_delivery),
-            MenuItem("9", "Оборот по дни", self.report_turnover_by_day),
-            MenuItem("10", "Най-продавани продукти", self.report_top_products),
-            MenuItem("11", "Инвентар – наличност по складове", self.inventory_by_warehouse),
-            MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
-            MenuItem("0", "Назад", lambda u: "break")])
+    def _check(self, data, msg="Няма данни."):
+        if not data:
+            print(f"\n{msg}\n")
+            return False
+        return True
 
-    # ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ
-    def summary_report(self, _):
-        res = self.controller.report_inventory_summary()
-        if not res.data:
-            print("\nНяма данни.\n")
+    def _print_table(self, headers, rows):
+        print(format_table(headers, rows))
+
+    def _print_sales_table(self, data):
+        if not self._check(data, "Няма продажби."):
             return
-
         rows = []
-        for item in res.data:
-            rows.append([item.get("product", "-"), item.get("available", "-"), item.get("sold", "-"),
-                         item.get("top_locations", "-")])
-
-        print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
-
-    # СПРАВКА ЗА ДВИЖЕНИЯ
-    def report_movements(self, _):
-        res = self.controller.report_movements()
-        if not res.data:
-            print("\nНяма движения.\n")
-            return
-
-        rows = []
-        for m in res.data:
-            rows.append([m.get("movement_id", "-"), m.get("date", "-"), m.get("type", "-"), m.get("product", "-"),
-                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
-
-        print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows))
-
-    # ВСИЧКИ ПРОДАЖБИ (с продажна цена)
-    def report_sales(self, _):
-        res = self.controller.report_sales()
-        if not res.data:
-            print("\n[!] Няма продажби.\n")
-            return
-
-        rows = []
-        for item in res.data:
+        for item in data:
             rows.append([item["invoice_number"], item["date"], item["client"], item["product"],
                          f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
+        self._print_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows)
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
-
-    # ПРОДАЖБИ ПО КЛИЕНТ
-    def report_sales_by_customer(self, _):
-        name = input("Клиент: ").strip()
-        if not name:
-            print("Отказано.\n")
+    def _print_delivery_table(self, data):
+        if not self._check(data, "Няма доставки."):
             return
+        rows = []
+        for item in data:
+            rows.append([item["date"], item["movement_id"], item["product"], f"{item['quantity']} {item['unit']}",
+                         f"{item.get('price', 0):.2f} лв.", item["supplier"], item["location"]])
+        self._print_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows)
 
-        res = self.controller.report_sales_by_customer(name)
-        if not res.data:
-            print("\nНяма данни.\n")
+
+    def _run_menu(self, menu_obj, user):
+        while True:
+            choice = menu_obj.show()
+            if choice == "0" or choice is None:
+                break
+            menu_obj.execute(choice, user)
+
+
+    def show_menu(self, user):
+        menu = Menu("СПРАВКИ И ОТЧЕТИ", [
+            MenuItem("1", "Наличности и складове", self.menu_inventory),
+            MenuItem("2", "Движения (IN/OUT/MOVE)", self.menu_movements),
+            MenuItem("3", "Продажби и фактури", self.menu_sales),
+            MenuItem("4", "Доставки", self.menu_deliveries),
+            MenuItem("5", "Финансови отчети", self.menu_finance),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(menu, user)
+
+
+    def menu_inventory(self, user):
+        submenu = Menu("НАЛИЧНОСТИ", [
+            MenuItem("1", "Обобщена справка", self.summary_report),
+            MenuItem("2", "Наличност по складове", self.inventory_by_warehouse),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(submenu, user)
+
+
+    def menu_movements(self, user):
+        submenu = Menu("ДВИЖЕНИЯ", [
+            MenuItem("1", "Всички движения", self.report_movements),
+            MenuItem("2", "Разширено филтриране", self.search_delivery),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(submenu, user)
+
+
+    def menu_sales(self, user):
+        submenu = Menu("ПРОДАЖБИ И ФАКТУРИ", [
+            MenuItem("1", "Всички продажби", self.report_sales),
+            MenuItem("2", "Търсене", self.search_sales),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(submenu, user)
+
+
+    def menu_deliveries(self, user):
+        submenu = Menu("ДОСТАВКИ", [
+            MenuItem("1", "Всички доставки", self.report_all_deliveries),
+            MenuItem("2", "Търсене", self.search_delivery),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(submenu, user)
+
+
+    def menu_finance(self, user):
+        submenu = Menu("ФИНАНСОВИ ОТЧЕТИ", [
+            MenuItem("1", "Оборот по дни", self.report_turnover_by_day),
+            MenuItem("2", "Най-продавани продукти", self.report_top_products),
+            MenuItem("3", "Жизнен цикъл на продукт", self.report_lifecycle),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(submenu, user)
+
+
+    def summary_report(self, _):
+        res = self.controller.report_inventory_summary()
+        if not self._check(res.data):
             return
-
         rows = []
         for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
+            rows.append([item.get("product", "-"), item.get("available", "-"),
+                         item.get("sold", "-"), item.get("top_locations", "-")])
+        self._print_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows)
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
-
-    # ПРОДАЖБИ ПО ПРОДУКТ
-    def report_sales_by_product(self, _):
-        name = input("Продукт: ").strip()
-        if not name:
-            print("Отказано.\n")
+    def report_movements(self, _):
+        res = self.controller.report_movements()
+        if not self._check(res.data, "Няма движения."):
             return
-
-        res = self.controller.report_sales_by_product(name)
-        if not res.data:
-            print("\nНяма продажби.\n")
-            return
-
         rows = []
-        for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
+        for m in res.data:
+            rows.append([m.get("movement_id", "-"), m.get("date", "-"), m.get("type", "-"),
+                         m.get("product", "-"), f"{m.get('quantity', 0)} {m.get('unit', '')}",
+                         m.get("from", "-"), m.get("to", "-")])
+        self._print_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows)
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
+    def report_sales(self, _):
+        res = self.controller.report_sales()
+        self._print_sales_table(res.data)
 
-    # ПРОДАЖБИ ПО ДАТА
-    def report_sales_by_date(self, _):
-        val = input("Дата (ГГГГ-ММ-ДД): ").strip()
-        if not val:
-            print("Отказано.\n")
-            return
-        try:
-            d = datetime.strptime(val, "%Y-%m-%d")
-        except:
-            print("Невалидна дата.\n")
-            return
-
-        res = self.controller.report_sales_by_date(d)
-        if not res.data:
-            print("\nНяма продажби.\n")
-            return
-
-        rows = []
-        for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
-
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
-
-    # ВСИЧКИ ДОСТАВКИ (с доставна цена)
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
-        if not res.data:
-            print("\nНяма доставки.\n")
-            return
+        self._print_delivery_table(res.data)
 
-        rows = []
-        for item in res.data:
-            rows.append([item["date"], item["movement_id"], item["product"],
-                          f"{item['quantity']} {item['unit']}", f"{item.get('price', 0):.2f} лв.", item["supplier"],
-                         item["location"]])
-
-        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
-
-    # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         key = input("Търсене: ").strip()
         if not key:
             print("Отказано.\n")
             return
-
         res = self.controller.report_deliveries_all(key)
-        if not res.data:
-            print("\nНяма резултати.\n")
+        self._print_delivery_table(res.data)
+
+    def search_sales(self, _):
+        print("\nТърсене на продажба:")
+        print("1. По клиент")
+        print("2. По продукт")
+        print("3. По дата")
+
+        choice = input("Избор: ").strip()
+        res = None
+        if choice == "1":
+            val = input("Клиент: ").strip()
+            if val:
+                res = self.controller.report_sales_by_customer(val)
+
+        elif choice == "2":
+            val = input("Продукт: ").strip()
+            if val:
+                res = self.controller.report_sales_by_product(val)
+
+        elif choice == "3":
+            val = input("Дата (ГГГГ-ММ-ДД): ").strip()
+            try:
+                d = datetime.strptime(val, "%Y-%m-%d")
+                res = self.controller.report_sales_by_date(d)
+            except:
+                print("Невалидна дата.\n")
+                return
+        else:
+            print("Невалиден избор.\n")
             return
 
-        rows = []
-        for item in res.data:
-            rows.append([item["date"], item["movement_id"], item["product"],
-                         f"{item['quantity']} {item['unit']}", f"{item.get('price', 0):.2f} лв.",
-                         item["supplier"], item["location"]])
+        if res:
+            self._print_sales_table(res.data)
+        else:
+            print("\nНяма данни или отказано.\n")
 
-        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
-
-    # ОБОРОТ ПО ДНИ
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
-        if not res.data:
-            print("\n Няма данни.\n")
+        if not self._check(res.data):
             return
-
         rows = []
         for item in res.data:
             rows.append([item["date"], item["count"], f"{item['total']:.2f} лв."])
+        self._print_table(["Дата", "Брой", "Оборот"], rows)
 
-        print(format_table(["Дата", "Брой", "Оборот"], rows))
-
-    # НАЙ-ПРОДАВАНИ ПРОДУКТИ
     def report_top_products(self, _):
         res = self.controller.report_top_products()
-        if not res.data:
-            print("\n[!] Няма продажби.\n")
+        if not self._check(res.data, "Няма продажби."):
             return
-
         rows = []
         for item in res.data:
             rows.append([item["product"], f"{item['quantity']} {item['unit']}", f"{item['total']:.2f} лв."])
+        self._print_table(["Продукт", "Количество", "Оборот"], rows)
 
-        print(format_table(["Продукт", "Количество", "Оборот"], rows))
-
-    # ИНВЕНТАР ПО СКЛАДОВЕ
-    def inventory_by_warehouse(self, user):
+    def inventory_by_warehouse(self, _):
         inventory_data = self.controller.inventory_controller.data.get("products", {})
         all_products = self.controller.product_controller.get_all()
         locations_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
@@ -210,9 +199,8 @@ class ReportsView:
             if not locs:
                 total_stock = self.controller.inventory_controller.get_total_stock(pid)
                 if total_stock > 0:
-                    initial_loc_id = getattr(product, 'location_id', 'W1')
-                    loc_obj = locations_map.get(initial_loc_id)
-                    loc_name = loc_obj.name if loc_obj else initial_loc_id
+                    loc_obj = locations_map.get("W1")
+                    loc_name = loc_obj.name if loc_obj else "W1"
                     rows.append([loc_name, product.name, f"{total_stock} {product.unit}"])
             else:
                 for loc_id, qty in locs.items():
@@ -222,13 +210,12 @@ class ReportsView:
                         rows.append([loc_name, product.name, f"{qty} {product.unit}"])
 
         if not rows:
-            print("\n[!] Няма налични продукти.\n")
+            print("\nНяма налични продукти.\n")
             return
 
         rows.sort(key=lambda r: (r[0], r[1]))
-        columns = ["Склад", "Продукт", "Наличност"]
         print("\n   Инвентар – наличност по складове\n")
-        print(format_table(columns, rows))
+        self._print_table(["Склад", "Продукт", "Наличност"], rows)
 
     # ЖИЗНЕН ЦИКЪЛ
     def report_lifecycle(self, _):

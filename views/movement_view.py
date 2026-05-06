@@ -28,10 +28,10 @@ class MovementView:
         return Menu("Меню за Доставки/Продажби/Премествания", [
             MenuItem("1", "Създаване на доставка/продажба (IN/OUT)", self.create_movement),
             MenuItem("2", "Преместване между локации (MOVE)", self.move_between_locations),
-            MenuItem("3", "Търсене на движения", self.search_movements),
-            MenuItem("4", "Покажи всички движения", self.show_all),
-            MenuItem("5", "Разширено филтриране", self.advanced_filter),
+            MenuItem("3", "Покажи всички движения", self.show_all),
+            MenuItem("4", "Разширено филтриране", self.advanced_filter),
             MenuItem("0", "Назад", lambda u: "break")])
+
 
     def _truncate(self, text, length=20):
         if text is None:
@@ -208,12 +208,6 @@ class MovementView:
             except:
                 print("Грешка: цената трябва да е валидно число.\n")
 
-        while True:
-            description = input("Описание: ").strip()
-            if len(description) >= 3:
-                break
-            print("Грешка: описанието трябва да е поне 3 символа.\n")
-
         supplier_id = None
         customer = None
 
@@ -252,8 +246,8 @@ class MovementView:
         try:
             mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
                                               location_id=location.location_id, movement_type=movement_type,
-                                              quantity=str(qty), description=description, price=str(prc),
-                                              customer=customer, supplier_id=supplier_id)
+                                              quantity=str(qty), price=str(prc), customer=customer,
+                                              supplier_id=supplier_id)
 
             print(f"\nДвижението е добавено! ID: {mv.movement_id}")
         except ValueError as e:
@@ -311,55 +305,15 @@ class MovementView:
 
         qty_raw = input("Количество: ").strip()
         qty = MovementValidator.parse_quantity(qty_raw)
-        desc = input("Описание: ")
 
         try:
-            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id, location_id=None,
-                                              movement_type="MOVE", quantity=str(qty), description=desc,
+            mv = self.movement_controller.add(product_id=product.product_id, user_id=user.user_id,
+                                              location_id=None, movement_type="MOVE", quantity=str(qty),
                                               price="0", from_location_id=from_loc, to_location_id=to_loc)
 
             print(f"\nПреместено! ID: {mv.movement_id}")
         except ValueError as e:
             print("Грешка:", e)
-
-    def search_movements(self, _):
-        kw = input("Търсене: ").strip()
-        if not kw or len(kw) < 2:
-            print("Въведете поне 2 символа за търсене.")
-            return
-
-        results = self.movement_controller.search_by_description(kw)
-        if not results:
-            print(f"\nНяма намерени данни за '{kw}'.\n")
-            return
-
-        columns = ["Дата", "Продукт", "Тип", "Кол.", "Към/От", "Склад"]
-        rows = []
-
-        for m in results:
-            partner_display = "-"
-            if m.movement_type.name == "IN":
-                supp = self.supplier_controller.get_by_id(m.supplier_id) if self.supplier_controller else None
-                partner_display = supp.name if supp else (m.supplier_id or "Доставчик")
-            elif m.movement_type.name == "OUT":
-                partner_display = f"Клиент: {m.customer}" if m.customer else "Краен клиент"
-            else:
-                partner_display = "Вътрешно"
-
-            if m.movement_type.name == "MOVE":
-                loc_f = self.location_controller.get_by_id(m.from_location_id)
-                loc_t = self.location_controller.get_by_id(m.to_location_id)
-                loc_display = f"{loc_f.name if loc_f else '?'} -> {loc_t.name if loc_t else '?'}"
-            else:
-                loc = self.location_controller.get_by_id(m.location_id)
-                loc_display = loc.name if loc else (m.location_id or "-")
-
-            rows.append([str(m.date)[:16], str(m.product_name)[:15],
-                         m.movement_type.name, self._format_qty_unit(m.quantity, m.unit),
-                         str(partner_display)[:25], str(loc_display)[:40]])
-
-        print(f"\nРезултати за търсене '{kw}':")
-        print(format_table(columns, rows))
 
     def show_all(self, _):
         mv = self.movement_controller.movements
@@ -376,23 +330,20 @@ class MovementView:
 
                 from_name = loc_f.name if loc_f else m.from_location_id
                 to_name = loc_t.name if loc_t else m.to_location_id
-
                 loc_display = f"{from_name} -> {to_name}"
             else:
                 loc = self.location_controller.get_by_id(m.location_id)
                 loc_display = loc.name if loc else "-"
 
             rows.append([m.movement_id[:8], m.date[:16], m.movement_type.name,
-                         self._format_qty_unit(m.quantity, m.unit), f"{m.price} лв.", loc_display])
+                          self._format_qty_unit(m.quantity, m.unit), f"{m.price} лв.", loc_display])
 
         print(format_table(columns, rows))
 
     def advanced_filter(self, _):
         print("\n   Разширено филтриране на движения   ")
         print("0=IN, 1=OUT, 2=MOVE")
-
         m_type_input = input("Тип movement: ").strip()
-
         if m_type_input not in ["", "0", "1", "2"]:
             print("Невалиден тип движение. Допустими: 0=IN, 1=OUT, 2=MOVE.")
             return

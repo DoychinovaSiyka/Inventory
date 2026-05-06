@@ -4,10 +4,10 @@ from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
 
 
+
 class MovementController:
     def __init__(self, repo, product_controller, user_controller, location_controller,
-                 supplier_controller, invoice_controller, inventory_controller,
-                 activity_log_controller=None):
+                 supplier_controller, invoice_controller, inventory_controller, activity_log_controller=None):
 
         self.repo = repo
         self.product_controller = product_controller
@@ -21,45 +21,12 @@ class MovementController:
         raw = self.repo.load() or []
         self.movements: List[Movement] = [Movement.from_dict(m) for m in raw]
 
-
     def save_changes(self) -> None:
         self.repo.save([m.to_dict() for m in self.movements])
 
 
-    def search_by_description(self, keyword: str) -> List[Movement]:
-        keyword = keyword.lower()
-        results = []
-
-        for m in self.movements:
-            m_date = str(m.date).lower()
-            m_product = (m.product_name or "").lower()
-            m_type = m.movement_type.name.lower()
-
-            partner = ""
-            if m.movement_type.name == "IN" and m.supplier_id:
-                supp = self.supplier_controller.get_by_id(m.supplier_id)
-                partner = (supp.name.lower() if supp else m.supplier_id.lower())
-            elif m.movement_type.name == "OUT":
-                partner = (m.customer or "").lower()
-
-            if m.movement_type.name == "MOVE":
-                loc_from = self.location_controller.get_by_id(m.from_location_id)
-                loc_to = self.location_controller.get_by_id(m.to_location_id)
-                location_info = f"{(loc_from.name if loc_from else '').lower()} {(loc_to.name if loc_to else '').lower()}"
-            else:
-                loc_obj = self.location_controller.get_by_id(m.location_id)
-                location_info = (loc_obj.name or "").lower() if loc_obj else (m.location_id or "").lower()
-
-            if (keyword in m_date or keyword in m_product or keyword in m_type or
-                keyword in partner or keyword in location_info or
-                keyword in (m.description or "").lower()):
-                results.append(m)
-
-        return results
-
-
-    def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str, quantity: str,
-            description: str, price: str, customer: Optional[str] = None, supplier_id: Optional[str] = None,
+    def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
+            quantity: str, price: str, customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
 
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
@@ -72,6 +39,7 @@ class MovementController:
         qty = MovementValidator.parse_quantity(quantity)
         prc = MovementValidator.parse_price(price) if m_type_str != "MOVE" else 0.0
 
+        # MOVE логика
         if m_type_str == "MOVE":
             from_location_id = MovementValidator.validate_location_id(from_location_id, self.location_controller)
             to_location_id = MovementValidator.validate_location_id(to_location_id, self.location_controller)
@@ -85,6 +53,7 @@ class MovementController:
                                                 customer=customer, inventory_controller=self.inventory_controller,
                                                 location_id=location_id if m_type_str != "MOVE" else from_location_id)
 
+        # Актуализиране на инвентара
         if self.inventory_controller:
             if m_type_str == "IN":
                 self.inventory_controller.increase_stock(product_id, qty, location_id)
@@ -94,21 +63,22 @@ class MovementController:
                 self.inventory_controller.decrease_stock(product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(product_id, qty, to_location_id)
 
+
         movement = Movement(movement_id=str(uuid.uuid4()), product_id=product_id, product_name=product.name,
                             user_id=user_id, location_id=location_id if m_type_str != "MOVE" else None,
                             movement_type=MovementType[m_type_str], quantity=qty, unit=product.unit,
-                            description=description, price=prc, supplier_id=supplier_id, customer=customer,
+                            price=prc, supplier_id=supplier_id, customer=customer,
                             from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()
 
+        # Фактура при OUT
         if m_type_str == "OUT" and self.invoice_controller:
             self.invoice_controller.create_from_movement(movement=movement, product=product,
                                                          customer=customer or "Неизвестен клиент", user_id=user_id)
 
         return movement
-
 
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None):
