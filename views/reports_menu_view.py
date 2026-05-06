@@ -35,7 +35,7 @@ class ReportsView:
     def summary_report(self, _):
         res = self.controller.report_inventory_summary()
         if not res.data:
-            print("\n[!] Няма данни.\n")
+            print("\nНяма данни.\n")
             return
 
         rows = []
@@ -49,20 +49,13 @@ class ReportsView:
     def report_movements(self, _):
         res = self.controller.report_movements()
         if not res.data:
-            print("\n[!] Няма движения.\n")
+            print("\nНяма движения.\n")
             return
 
         rows = []
         for m in res.data:
-            rows.append([
-                m.get("movement_id", "-"),
-                m.get("date", "-"),
-                m.get("type", "-"),
-                m.get("product", "-"),
-                f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                m.get("from", "-"),
-                m.get("to", "-")
-            ])
+            rows.append([m.get("movement_id", "-"), m.get("date", "-"), m.get("type", "-"), m.get("product", "-"),
+                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
 
         print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows))
 
@@ -75,14 +68,8 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item.get('unit_price', 0):.2f} лв.",
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"], item["product"],
+                         f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
@@ -90,24 +77,18 @@ class ReportsView:
     def report_sales_by_customer(self, _):
         name = input("Клиент: ").strip()
         if not name:
-            print("[!] Отказано.\n")
+            print("Отказано.\n")
             return
 
         res = self.controller.report_sales_by_customer(name)
         if not res.data:
-            print("\n[!] Няма данни.\n")
+            print("\nНяма данни.\n")
             return
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item.get('unit_price', 0):.2f} лв.",
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
@@ -115,24 +96,18 @@ class ReportsView:
     def report_sales_by_product(self, _):
         name = input("Продукт: ").strip()
         if not name:
-            print("[!] Отказано.\n")
+            print("Отказано.\n")
             return
 
         res = self.controller.report_sales_by_product(name)
         if not res.data:
-            print("\n[!] Няма продажби.\n")
+            print("\nНяма продажби.\n")
             return
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item.get('unit_price', 0):.2f} лв.",
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
@@ -140,30 +115,23 @@ class ReportsView:
     def report_sales_by_date(self, _):
         val = input("Дата (ГГГГ-ММ-ДД): ").strip()
         if not val:
-            print("[!] Отказано.\n")
+            print("Отказано.\n")
             return
-
         try:
             d = datetime.strptime(val, "%Y-%m-%d")
         except:
-            print("[!] Невалидна дата.\n")
+            print("Невалидна дата.\n")
             return
 
         res = self.controller.report_sales_by_date(d)
         if not res.data:
-            print("\n[!] Няма продажби.\n")
+            print("\nНяма продажби.\n")
             return
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{item.get('unit_price', 0):.2f} лв.",
-                f"{item['total_price']:.2f} лв."
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], f"{item.get('unit_price', 0):.2f} лв.", f"{item['total_price']:.2f} лв."])
 
         print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
@@ -171,20 +139,14 @@ class ReportsView:
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if not res.data:
-            print("\n[!] Няма доставки.\n")
+            print("\nНяма доставки.\n")
             return
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["date"],
-                item["movement_id"],
-                item["product"],
-                f"{item['quantity']} {item['unit']}",
-                f"{item.get('price', 0):.2f} лв.",
-                item["supplier"],
-                item["location"]
-            ])
+            rows.append([item["date"], item["movement_id"], item["product"],
+                          f"{item['quantity']} {item['unit']}", f"{item.get('price', 0):.2f} лв.", item["supplier"],
+                         item["location"]])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
 
@@ -192,25 +154,19 @@ class ReportsView:
     def search_delivery(self, _):
         key = input("Търсене: ").strip()
         if not key:
-            print("[!] Отказано.\n")
+            print("Отказано.\n")
             return
 
         res = self.controller.report_deliveries_all(key)
         if not res.data:
-            print("\n[!] Няма резултати.\n")
+            print("\nНяма резултати.\n")
             return
 
         rows = []
         for item in res.data:
-            rows.append([
-                item["date"],
-                item["movement_id"],
-                item["product"],
-                f"{item['quantity']} {item['unit']}",
-                f"{item.get('price', 0):.2f} лв.",
-                item["supplier"],
-                item["location"]
-            ])
+            rows.append([item["date"], item["movement_id"], item["product"],
+                         f"{item['quantity']} {item['unit']}", f"{item.get('price', 0):.2f} лв.",
+                         item["supplier"], item["location"]])
 
         print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
 
@@ -218,7 +174,7 @@ class ReportsView:
     def report_turnover_by_day(self, _):
         res = self.controller.report_turnover_by_day()
         if not res.data:
-            print("\n[!] Няма данни.\n")
+            print("\n Няма данни.\n")
             return
 
         rows = []
@@ -251,7 +207,6 @@ class ReportsView:
             pid = product.product_id
             p_inv = inventory_data.get(pid, {})
             locs = p_inv.get("locations", {})
-
             if not locs:
                 total_stock = self.controller.inventory_controller.get_total_stock(pid)
                 if total_stock > 0:
@@ -283,13 +238,12 @@ class ReportsView:
 
         data = self.controller.product_lifecycle(name)
         if not data:
-            print("\n[!] Продуктът не е намерен.\n")
+            print("\nПродуктът не е намерен.\n")
             return
 
         revenue = data.get("revenue", 0.0)
         cost_of_goods = data.get("fifo_cost", 0.0)
         profit = data.get("profit", 0.0)
-
         total_invested = data.get("expense", 0.0)
         total_in = data.get("total_in", 0.0)
         current_stock = data.get("current_stock", 0.0)

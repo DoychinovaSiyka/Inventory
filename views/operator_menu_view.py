@@ -11,7 +11,6 @@ from views.location_view import LocationView
 
 class OperatorMenuView:
     def __init__(self, controllers):
-        # пазим контролерите, за да може менюто да отваря нужните екрани
         self.product_controller = controllers["product"]
         self.category_controller = controllers["category"]
         self.location_controller = controllers["location"]
@@ -24,17 +23,19 @@ class OperatorMenuView:
         self.inventory_controller = controllers["inventory"]
 
     def _build_menu(self):
-        return Menu("Операторско меню", [MenuItem("1", "Управление на продукти", self.open_products),
-                                         MenuItem("2", "Управление на категории", self.open_categories),
-                                         MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
-                                         MenuItem("4", "Справки", self.open_reports),
-                                         MenuItem("5", "Фактури", self.open_invoices),
-                                         MenuItem("6", "Информация за системата", self.open_system_info),
-                                         MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
-                                         MenuItem("0", "Назад", lambda u: "break")])
+        return Menu("Операторско меню", [
+            MenuItem("1", "Управление на продукти", self.open_products),
+            MenuItem("2", "Управление на категории", self.open_categories),
+            MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
+            MenuItem("4", "Справки", self.open_reports),
+            MenuItem("5", "Фактури", self.open_invoices),
+            MenuItem("6", "Информация за системата", self.open_system_info),
+            MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     def show_menu(self, user):
-        if user.role.lower() == "guest":  # гост - няма достъп
+        if user.role.lower() == "guest":
             print("Нямате достъп до операторското меню.")
             return
 
@@ -50,9 +51,8 @@ class OperatorMenuView:
         return view_class(*args)
 
     def open_products(self, user):
-        view = self._open_view(ProductMenuView,self.product_controller, self.category_controller,
-                               self.location_controller, self.inventory_controller, self.supplier_controller, self.activity_log)
-
+        view = self._open_view(ProductMenuView, self.product_controller, self.category_controller,
+                               self.inventory_controller, self.movement_controller, self.activity_log)
         view.show_menu(user)
 
     @require_password("parola123")
@@ -61,7 +61,7 @@ class OperatorMenuView:
         view.show_menu(user)
 
     def open_movements(self, user):
-        view = self._open_view(MovementView,self.product_controller, self.movement_controller,
+        view = self._open_view(MovementView, self.product_controller, self.movement_controller,
                                self.user_controller, self.location_controller, self.supplier_controller)
         view.show_menu()
 

@@ -5,12 +5,14 @@ class InventoryController:
         self.repo = repository
         self.product_controller = product_controller
         self.location_controller = location_controller
+
+        # products: { product_id: { "locations": { loc_id: qty } } }
         self.data = self.repo.load() or {"products": {}}
 
     def _save(self):
         self.repo.save(self.data)
 
-    # СМЯТА ОБЩОТО ОТ locations
+    # ОБЩО КОЛИЧЕСТВО ОТ ВСИЧКИ СКЛАДОВЕ
     def get_total_stock(self, product_id):
         product_id = str(product_id)
         if product_id not in self.data["products"]:
@@ -19,21 +21,7 @@ class InventoryController:
         locations = self.data["products"][product_id].get("locations", {})
         return sum(float(qty) for qty in locations.values())
 
-    # НАЧАЛНО ЗАРЕЖДАНЕ
-    def auto_seed_initial_stock(self, default_location):
-        for product in self.product_controller.get_all():
-            if product.quantity and product.quantity > 0:
-                pid = str(product.product_id)
-                if pid not in self.data["products"]:
-                    self.data["products"][pid] = {"locations": {}}
-
-                locations = self.data["products"][pid]["locations"]
-                current = locations.get(default_location, 0)
-                locations[default_location] = current + float(product.quantity)
-
-        self._save()
-
-    # Увеличаване на наличност
+    # УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ
     def increase_stock(self, product_id, quantity, location_id):
         product_id = str(product_id)
         quantity = float(quantity)
@@ -42,7 +30,8 @@ class InventoryController:
             self.data["products"][product_id] = {"locations": {}}
 
         locations = self.data["products"][product_id]["locations"]
-        locations[location_id] = locations.get(location_id, 0) + quantity
+        locations[location_id] = locations.get(location_id, 0.0) + quantity
+
         self._save()
 
     # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
@@ -50,15 +39,16 @@ class InventoryController:
         product_id = str(product_id)
         quantity = float(quantity)
 
-        if self.get_total_stock(product_id) < quantity:
+        if product_id not in self.data["products"]:
             return False
 
-        if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {"locations": {}}
-
         locations = self.data["products"][product_id]["locations"]
-        locations[location_id] = locations.get(location_id, 0) - quantity
+        current = locations.get(location_id, 0.0)
 
+        if current < quantity:
+            return False
+
+        locations[location_id] = current - quantity
         self._save()
         return True
 
@@ -78,17 +68,17 @@ class InventoryController:
 
             if m_type == "IN":
                 loc = m.location_id
-                locations[loc] = locations.get(loc, 0) + qty
+                locations[loc] = locations.get(loc, 0.0) + qty
 
             elif m_type == "OUT":
                 loc = m.location_id
-                locations[loc] = locations.get(loc, 0) - qty
+                locations[loc] = locations.get(loc, 0.0) - qty
 
             elif m_type == "MOVE":
                 from_loc = m.from_location_id
                 to_loc = m.to_location_id
-                locations[from_loc] = locations.get(from_loc, 0) - qty
-                locations[to_loc] = locations.get(to_loc, 0) + qty
+                locations[from_loc] = locations.get(from_loc, 0.0) - qty
+                locations[to_loc] = locations.get(to_loc, 0.0) + qty
 
         self._save()
 

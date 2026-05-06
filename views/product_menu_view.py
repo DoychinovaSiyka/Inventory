@@ -1,7 +1,6 @@
 from views.menu import Menu, MenuItem
 from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
-from controllers.location_controller import LocationController
 from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password, format_table
@@ -17,18 +16,14 @@ def _wrap(text, width=45):
 
 class ProductMenuView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController,
-                 location_controller: LocationController, inventory_controller, movement_controller,
-                 supplier_controller=None, activity_log_controller=None):
+                 inventory_controller, movement_controller, activity_log_controller=None):
 
         self.product_controller = product_controller
         self.category_controller = category_controller
-        self.location_controller = location_controller
         self.inventory_controller = inventory_controller
         self.movement_controller = movement_controller
-        self.supplier_controller = supplier_controller
         self.activity_log = activity_log_controller
         self.sort_view = ProductSortView(product_controller, inventory_controller)
-
 
     @staticmethod
     def format_lv(value):
@@ -51,7 +46,8 @@ class ProductMenuView:
             MenuItem("13", "Групиране по категории", self.group_by_category),
             MenuItem("14", "Разширено търсене", self.advanced_search),
             MenuItem("15", "Наличности по складове", self.show_stock_by_warehouses),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     @staticmethod
     def _is_operator():
@@ -73,7 +69,7 @@ class ProductMenuView:
                 ProductValidator.validate_name(name)
                 break
             except ValueError as e:
-                print(f"[!] {e}")
+                print(f"Грешка: {e}")
 
         while True:
             description = input("Описание: ").strip()
@@ -81,7 +77,7 @@ class ProductMenuView:
                 ProductValidator.validate_description(description)
                 break
             except ValueError as e:
-                print(f"[!] {e}")
+                print(f"Грешка: {e}")
 
         while True:
             price_raw = input("Цена: ").strip()
@@ -89,9 +85,7 @@ class ProductMenuView:
                 price = ProductValidator.parse_float(price_raw, "Цена")
                 break
             except ValueError as e:
-                print(f"[!] {e}")
-
-
+                print(f"Грешка: {e}")
 
         while True:
             unit = input("Мерна единица (кг, кг., kg, килограм / бр, бр., брой / л, l, литър / пакет, paket, packet): ").strip()
@@ -99,42 +93,20 @@ class ProductMenuView:
                 ProductValidator.validate_unit(unit)
                 break
             except ValueError as e:
-                print(f"[!] {e}")
-
+                print(f"Грешка: {e}")
         categories = self.category_controller.get_all()
         print("\nКатегории:")
         for i, c in enumerate(categories):
             print(f"{i}. {c.name}")
 
         cat_raw = input("Изберете категория (номер): ").strip()
-        category_id = categories[int(cat_raw)].category_id if cat_raw.isdigit() and int(cat_raw) < len(categories) else None
-
-        locations = self.location_controller.get_all()
-        print("\nЛокации:")
-        for i, loc in enumerate(locations, start=1):
-            print(f"{i}. {loc.name}")
-
-        loc_raw = input("Изберете локация (номер): ").strip()
-        location_id = locations[int(loc_raw) - 1].location_id if loc_raw.isdigit() and 0 < int(loc_raw) <= len(locations) else None
-
-        supplier_id = None
-        if self.supplier_controller:
-            suppliers = self.supplier_controller.get_all()
-            print("\nДоставчици:")
-            for i, s in enumerate(suppliers):
-                print(f"{i}. {s.name} (ID: {s.supplier_id})")
-
-            supp_raw = input("Изберете доставчик (номер или Enter за пропуск): ").strip()
-            if supp_raw.isdigit() and int(supp_raw) < len(suppliers):
-                supplier_id = suppliers[int(supp_raw)].supplier_id
+        category_id = categories[int(cat_raw)].category_id if (cat_raw.isdigit() and
+                                                               int(cat_raw) < len(categories)) else None
 
         try:
-            product_data = {"name": name, "category_ids": [category_id] if category_id else [],
-                             "unit": unit,
-                             "description": description, "price": price, "supplier_id": supplier_id,
-                             "location_id": location_id}
-
-            product_data["inventory_controller"] = self.inventory_controller
+            product_data = {"name": name, "description": description,
+                            "price": price, "unit": unit,
+                            "category_ids": [category_id] if category_id else []}
 
             self.product_controller.add(product_data, user.user_id)
             print("Продуктът е създаден успешно.")
@@ -149,65 +121,52 @@ class ProductMenuView:
             return
         product = self.product_controller.get_by_id(pid)
         if not product:
-            print(f"[!] Продукт с ID {pid} не съществува.")
+            print(f"Продукт с ID {pid} не съществува.")
             return
-        confirm = input(f"Сигурни ли сте, че искате да изтриете '{product.name}'? (y/n): ").strip().lower()
+
+        confirm = input(f"Изтриване на '{product.name}'? (y/n): ").strip().lower()
         if confirm != "y":
-            print("Операцията е отказана.")
+            print("Отказано.")
             return
         try:
             self.product_controller.delete_by_id(pid, user.user_id)
-            print(f"[+] Продуктът '{product.name}' беше премахнат успешно.")
+            print(f"Продуктът '{product.name}' беше премахнат.")
         except Exception as e:
-            print(f"[!] Грешка при премахване: {e}")
+            print(f"Грешка: {e}")
 
     def edit_product(self, user):
         print("\n  Редактиране на продукт  ")
-        pid = input("Въведете ID на продукт: ").strip()
+        pid = input("ID: ").strip()
         product = self.product_controller.get_by_id(pid)
         if not product:
-            print(f"[!] Продукт с ID {pid} не съществува.")
+            print("Няма такъв продукт.")
             return
 
-        new_name = input(f"Ново име ({product.name}) [Enter за запазване]: ").strip() or None
-        new_description = input(f"Ново описание ({product.description or 'няма'}) [Enter за запазване]: ").strip() or None
+        new_name = input(f"Ново име ({product.name}): ").strip() or None
+        new_description = input(f"Ново описание ({product.description}): ").strip() or None
 
         new_price = None
         while True:
-            new_price_raw = input(f"Нова цена ({product.price}) [Enter за запазване]: ").strip()
-            if new_price_raw == "":
-                new_price = None
+            raw = input(f"Нова цена ({product.price}): ").strip()
+            if raw == "":
                 break
             try:
-                new_price = ProductValidator.parse_float(new_price_raw, "Цена")
+                new_price = ProductValidator.parse_float(raw, "Цена")
                 break
             except ValueError as e:
-                print(f"[!] {e}")
-
-        new_supplier_id = product.supplier_id
-        if self.supplier_controller:
-            print("\nСмяна на доставчик:")
-            suppliers = self.supplier_controller.get_all()
-            for i, s in enumerate(suppliers):
-                print(f"{i}. {s.name}")
-
-            supp_raw = input(f"Изберете номер на доставчик (Текущ: {product.supplier_id or 'няма'}) [Enter за запазване]: ").strip()
-            if supp_raw.isdigit() and int(supp_raw) < len(suppliers):
-                new_supplier_id = suppliers[int(supp_raw)].supplier_id
+                print(f"Грешка: {e}")
 
         try:
-            success = self.product_controller.update_product(product_id=pid, new_name=new_name,
-                                                             new_description=new_description,
-                                                             new_price=new_price, new_supplier_id=new_supplier_id,
-                                                             user_id=user.user_id)
+            ok = self.product_controller.update_product(product_id=pid, new_name=new_name,
+                                                        new_description=new_description, new_price=new_price, user_id=user.user_id)
 
-            if success:
-                print(f"\n[+] Продуктът '{product.name}' беше обновен успешно!")
+            if ok:
+                print("Продуктът е обновен.")
             else:
-                print("\n[!] Нещо се обърка при обновяването.")
+                print("Неуспешно обновяване.")
 
         except Exception as e:
-            print(f"\n[!] Критична грешка при редактиране: {e}")
+            print(f"Грешка: {e}")
 
     def show_all(self, _):
         products = self.product_controller.get_all()
@@ -249,29 +208,22 @@ class ProductMenuView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name} (ID: {c.category_id})")
 
-        raw = input("Категория (номер или ID): ").strip()
+        raw = input("Категория: ").strip()
         if not raw:
             return
-
-        if raw.isdigit():
-            idx = int(raw)
-            if 0 <= idx < len(categories):
-                category_id = categories[idx].category_id
-            else:
-                print("[!] Невалиден номер на категория.")
-                return
+        if raw.isdigit() and int(raw) < len(categories):
+            category_id = categories[int(raw)].category_id
         else:
             category_id = raw
 
         results = self.product_controller.filter_by_category(category_id)
-
         if not results:
-            print("Няма продукти в тази категория.")
+            print("Няма продукти.")
             return
-
         for p in results:
             qty = self.inventory_controller.get_total_stock(p.product_id)
             print(f"{p.name} | {qty} {p.unit}")
+
 
     def low_stock(self, _):
         threshold = float(input("Граница (Enter за 5): ") or 5.0)
@@ -303,16 +255,13 @@ class ProductMenuView:
     def total_value(self, _):
         m_controller = self.movement_controller
         if not m_controller:
-            print("[!] Грешка: Системата не може да зареди движенията за изчисление.")
+            print("Няма движения.")
             return
 
         total = self.inventory_controller.get_total_inventory_value_fifo(m_controller)
-
-        print(f"\nОбща стойност на склада (по средна закупна цена):")
-        print(f"--------------------------------------------------")
-        print(f"Общо: {self.format_lv(total)}")
-        print(f"--------------------------------------------------")
-        input("\nНатиснете Enter за продължение...")
+        print("\nОбща стойност на склада:")
+        print(f"{self.format_lv(total)}")
+        input("\nEnter за продължение...")
 
     def group_by_category(self, _):
         grouped = group_products_by_category(self.product_controller.get_all())
@@ -325,20 +274,18 @@ class ProductMenuView:
 
     def advanced_search(self, _):
         print("\n  Разширено търсене  ")
-        keyword = input("Ключово слово (Enter за пропуск): ").strip() or None
+        keyword = input("Ключово слово: ").strip() or None
 
         raw_min = input("Мин. цена: ").strip()
         try:
             min_price = ProductValidator.parse_optional_float(raw_min)
-        except ValueError as e:
-            print(f"[!] {e} → игнорирам мин. цена.")
+        except ValueError:
             min_price = None
 
         raw_max = input("Макс. цена: ").strip()
         try:
             max_price = ProductValidator.parse_optional_float(raw_max)
-        except ValueError as e:
-            print(f"[!] {e} → игнорирам макс. цена.")
+        except ValueError:
             max_price = None
 
         print("\nКатегории:")
@@ -346,7 +293,7 @@ class ProductMenuView:
         for i, c in enumerate(categories):
             print(f"{i}. {c.name}")
 
-        cat_raw = input("Категория (Номер или ID, Enter за пропуск): ").strip()
+        cat_raw = input("Категория: ").strip()
         category_id = None
 
         if cat_raw:
@@ -355,62 +302,22 @@ class ProductMenuView:
             else:
                 category_id = cat_raw
 
-        print("\nЛокации:")
-        locations = self.location_controller.get_all()
-        for i, loc in enumerate(locations):
-            print(f"{i}. {loc.name} (ID: {loc.location_id})")
-
-        loc_raw = input("Локация (Номер или ID, Enter за пропуск): ").strip()
-        location_id = None
-
-        if loc_raw:
-            if loc_raw.isdigit() and int(loc_raw) < len(locations):
-                location_id = locations[int(loc_raw)].location_id
-            else:
-                location_id = loc_raw
-
-        results = self.product_controller.search_combined(keyword=keyword, min_price=min_price,
-                                                          max_price=max_price, category_id=category_id,
-                                                          location_id=location_id, inventory_controller=self.inventory_controller)
+        results = self.product_controller.search_combined(keyword=keyword, min_price=min_price, max_price=max_price,
+                                                          category_id=category_id, inventory_controller=self.inventory_controller)
 
         if not results:
-            print("\n[!] Няма резултати.\n")
+            print("\nНяма резултати.\n")
             return
 
         rows = []
         for p in results:
             stock = self.inventory_controller.get_total_stock(p.product_id)
-
-            if p.supplier_id and self.supplier_controller:
-                supplier_obj = self.supplier_controller.get_by_id(p.supplier_id)
-                supplier_name = supplier_obj.name if supplier_obj else p.supplier_id
-            else:
-                supplier_name = "—"
-
-            supplier_name = supplier_name.replace('"', '')
-
-            inv = self.inventory_controller.data["products"].get(p.product_id, {})
-            loc_data = inv.get("locations", {})
-            warehouse_lines = []
-
-            for lid, q in loc_data.items():
-                if float(q) > 0:
-                    loc_obj = self.location_controller.get_by_id(lid)
-                    loc_name = loc_obj.name if loc_obj else lid
-                    warehouse_lines.append(f"{loc_name} ({q} {p.unit})")
-
-            if not warehouse_lines:
-                warehouse_lines = ["—"]
-
-            rows.append([p.name, f"{p.price:.2f} лв.",
-                          f"{stock} {p.unit}", ", ".join([c.name for c in p.categories])
-                          if p.categories else "-", warehouse_lines[0], supplier_name])
-
-            for line in warehouse_lines[1:]:
-                rows.append(["", "", "", "", line, ""])
+            rows.append([p.name,
+                         f"{p.price:.2f} лв.", f"{stock} {p.unit}", ", ".join([c.name for c in p.categories])
+                         if p.categories else "-"])
 
         print(f"\nНамерени резултати ({len(results)}):")
-        headers = ["Продукт", "Цена", "Наличност", "Категории", "Локации", "Доставчик"]
+        headers = ["Продукт", "Цена", "Наличност", "Категории"]
         print(format_table(headers, rows))
 
     def show_stock_by_warehouses(self, _):
@@ -419,8 +326,7 @@ class ProductMenuView:
             print("Няма продукти.")
             return
 
-        all_locations = self.location_controller.get_all()
-
+        all_locations = self.movement_controller.location_controller.get_all()
         for p in products:
             print(f"\n   {p.name}\n")
             inv_entry = self.inventory_controller.data.get("products", {}).get(p.product_id, {})
@@ -432,13 +338,9 @@ class ProductMenuView:
             for loc in all_locations:
                 wh_id = loc.location_id
                 qty = float(product_locations.get(wh_id, 0))
-                if qty > 0:
-                    display_qty = f"{qty} {p.unit}"
-                else:
-                    display_qty = f"0 {p.unit} (няма движение)"
-
+                display_qty = f"{qty} {p.unit}" if qty > 0 else f"0 {p.unit} (няма движение)"
                 rows.append([loc.name, display_qty])
                 total += qty
 
             print(format_table(["Склад", "Наличност"], rows))
-            print(f"\n  Общо: {total:.1f} {p.unit}\n")
+            print(f"\nОбщо: {total:.1f} {p.unit}\n")

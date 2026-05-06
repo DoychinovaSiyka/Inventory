@@ -49,31 +49,17 @@ class InventoryApplication:
 
         self.invoice_controller = InvoiceController(self.invoice_repo, self.activity_log_controller)
 
-
-        self.inventory_controller = InventoryController(self.inventory_repo,
-                                                        self.product_controller, self.location_controller)
-
+        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
 
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
                                                       self.user_controller, self.location_controller,
                                                       self.supplier_controller, self.invoice_controller,
                                                       self.inventory_controller, self.activity_log_controller)
 
-        # Инициализация на инвентара
-        if not self.movement_controller.movements:
-            print("Няма движения – зареждане на началните количества.")
-            all_locations = self.location_controller.get_all()
-            if all_locations:
-                default_location = all_locations[0].location_id
-                self.inventory_controller.auto_seed_initial_stock(default_location)
-        else:
-            print("Има движения – възстановяване на инвентара.")
-            self.inventory_controller.rebuild_inventory_from_movements(self.movement_controller.movements)
-
         # Отчети
-        self.report_controller = ReportController( self.report_repo, self.product_controller, self.movement_controller, self.invoice_controller,
-                                                   self.location_controller, self.inventory_controller,
-                                                   self.supplier_controller)
+        self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
+                                                  self.invoice_controller, self.location_controller,
+                                                  self.inventory_controller, self.supplier_controller)
 
         # Графи (логистика)
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
@@ -85,7 +71,6 @@ class InventoryApplication:
                             "invoice": self.invoice_controller, "report": self.report_controller,
                             "activity_log": self.activity_log_controller, "logistic": self.logistic_service,
                             "inventory": self.inventory_controller}
-
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)

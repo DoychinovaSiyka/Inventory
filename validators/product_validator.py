@@ -4,7 +4,6 @@ from models.category import Category
 
 class ProductValidator:
 
-    # Проверка за валиден UUID
     @staticmethod
     def validate_uuid(value, field_name="ID"):
         if value is None:
@@ -175,21 +174,6 @@ class ProductValidator:
                 raise ValueError(f"Категория с ID {cid} не съществува.")
 
 
-    @staticmethod
-    def validate_supplier_exists(supplier_id, supplier_controller):  # доставчик – ако има, трябва да е валиден
-        if supplier_id is None:
-            return
-        supplier = supplier_controller.get_by_id(supplier_id)
-        if not supplier:
-            raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
-
-
-    # Проверка за дублиране в склад
-    @staticmethod
-    def validate_unique_name_in_location(name, location_id, products):  # име + склад → уникално
-        for p in products:
-            if p.name.lower() == name.lower() and getattr(p, "location_id", None) == location_id:
-                raise ValueError("Продуктът вече съществува в този склад.")
 
 
     # Проверка за уникално име в целия каталог

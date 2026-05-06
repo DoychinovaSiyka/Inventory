@@ -65,7 +65,7 @@ class UserView:
             return
         try:
             self.controller.register(fn, ln, email, username, password, role)
-            print("[Успех] Потребителят е добавен успешно!")
+            print("Потребителят е добавен успешно!")
         except ValueError as e:
             print(f"[Грешка] {e}")
 
@@ -96,7 +96,7 @@ class UserView:
             return
         try:
             self.controller.change_status(user, username, "Inactive")
-            print(f"[Успех] Потребителят '{username}' е деактивиран.")
+            print(f"Потребителят '{username}' е деактивиран.")
         except ValueError as e:
             print(f"[Грешка] {e}")
 
@@ -108,7 +108,7 @@ class UserView:
             return
         try:
             self.controller.change_status(user, username, "Active")
-            print(f"[Успех] Потребителят '{username}' е активиран.")
+            print(f"Потребителят '{username}' е активиран.")
         except ValueError as e:
             print(f"[Грешка] {e}")
 
@@ -125,6 +125,6 @@ class UserView:
             return
         try:
             self.controller.delete_user(user, username)
-            print(f"[Успех] Потребителят '{username}' е изтрит от системата.")
+            print(f"Потребителят '{username}' е изтрит от системата.")
         except ValueError as e:
             print(f"[Грешка] {e}")

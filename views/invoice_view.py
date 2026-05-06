@@ -64,12 +64,12 @@ class InvoiceView:
         while True:
             invoice_id = input("Въведете ID на фактура (пълен UUID): ").strip()
             if not invoice_id:
-                print("[!] Прекъснато – празен вход.\n")
+                print("Прекъснато – празен вход.\n")
                 return
             try:
                 InvoiceValidator.validate_uuid(invoice_id, "Invoice ID")
             except ValueError as e:
-                print(f"[!] {e}")
+                print(f"{e}")
                 print("Моля, опитайте отново.\n")
                 continue
 
@@ -92,12 +92,12 @@ class InvoiceView:
     def search_by_customer(self, user):
         keyword = input("Въведете име на клиент: ").strip()
         if not keyword:
-            print("[!] Прекъснато – празен вход.\n")
+            print("Прекъснато – празен вход.\n")
             return
 
         results = self.invoice_controller.search_by_customer(keyword)
         if not results:
-            print("[!] Няма такъв клиент.")
+            print("Няма такъв клиент.")
             return
 
         columns = ["ID", "Продукт", "Количество", "Общо", "Дата"]
@@ -110,12 +110,12 @@ class InvoiceView:
     def search_by_product(self, user):
         keyword = input("Въведете име на продукт: ").strip()
         if not keyword:
-            print("[!] Прекъснато – празен вход.\n")
+            print("Прекъснато – празен вход.\n")
             return
 
         results = self.invoice_controller.search_by_product(keyword)
         if not results:
-            print("[!] Няма такъв продукт.")
+            print("Няма такъв продукт.")
             return
 
         columns = ["ID", "Клиент", "Количество", "Общо", "Дата"]
@@ -128,18 +128,18 @@ class InvoiceView:
         while True:
             date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
             if not date_str:
-                print("[!] Прекъснато – празен вход.\n")
+                print("Прекъснато – празен вход.\n")
                 return
             try:
                 InvoiceValidator.validate_date(date_str)
                 break
             except ValueError as e:
-                print(f"[!] {e}")
+                print(f"{e}")
                 print("Моля, опитайте отново.\n")
 
         results = self.invoice_controller.search_by_date(date_str)
         if not results:
-            print("[!] Няма фактури за тази дата.")
+            print("Няма фактури за тази дата.")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо"]
@@ -160,14 +160,14 @@ class InvoiceView:
         try:
             InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
         except ValueError as e:
-            print(f"[!] {e}")
+            print(f"{e}")
             return
 
         results = self.invoice_controller.advanced_search(customer=customer, product=product, start_date=start_date,
                                                           end_date=end_date,min_total=min_total,max_total=max_total)
 
         if not results:
-            print("\n[!] Няма фактури по тези критерии.")
+            print("\nНяма фактури по тези критерии.")
             return
 
         columns = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Дата"]

@@ -46,7 +46,6 @@ class MovementValidator:
 
         raw = str(quantity).lower().strip().replace(",", ".")
 
-        # премахваме мерни единици
         for token in ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]:
             raw = raw.replace(token, "")
         try:
@@ -117,20 +116,16 @@ class MovementValidator:
 
     @staticmethod
     def validate_in_out_rules(movement_type, product, quantity,
-                              supplier_id, customer, inventory_controller, location_id):
-        mt = str(movement_type).upper()
+                              customer, inventory_controller, location_id):
 
+        mt = str(movement_type).upper()
         if mt == "IN":
-            if not supplier_id or str(supplier_id).strip() == "":
-                raise ValueError("При IN движение трябва да има доставчик.")
             if customer:
                 raise ValueError("При IN движение не може да има клиент.")
 
         if mt == "OUT":
             if not customer or str(customer).strip() == "":
                 raise ValueError("При OUT движение трябва да има клиент.")
-            if supplier_id:
-                raise ValueError("При OUT движение не може да има доставчик.")
 
             if inventory_controller is None:
                 raise ValueError("InventoryController липсва.")
@@ -139,15 +134,12 @@ class MovementValidator:
             if location_id is None:
                 raise ValueError("Липсва локация за проверка на наличност.")
 
-            available = inventory_controller.get_stock_for_location(product.product_id,
-                                                                    location_id)
+            available = inventory_controller.get_stock_for_location(product.product_id, location_id)
             if available < quantity:
                 raise ValueError(f"Недостатъчна наличност! В този склад има само {available} "
                                  f"{product.unit}.")
 
         if mt == "MOVE":
-            if supplier_id:
-                raise ValueError("MOVE не може да има доставчик.")
             if customer:
                 raise ValueError("MOVE не може да има клиент.")
 

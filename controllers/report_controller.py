@@ -34,9 +34,8 @@ class ReportController:
             raw_data = self.repo.load()
             all_reports = raw_data if isinstance(raw_data, list) else []
 
-            new_report_obj = Report( report_type=report_type,
-                                     generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                     parameters=parameters, data={"summary": summary, "data": data})
+            new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                    parameters=parameters, data={"summary": summary, "data": data})
             new_report_dict = new_report_obj.to_dict()
 
             for old in all_reports:
@@ -89,17 +88,16 @@ class ReportController:
 
         for inv in invoices:
             # продажна цена на единица
-            unit_price = float(inv.unit_price if hasattr(inv, "unit_price") else inv.total_price / max(inv.quantity, 1))
+            if inv.unit_price is not None:
+                unit_price = float(inv.unit_price)
+            else:
+                if inv.quantity <= 0:
+                    unit_price = float(inv.total_price)
+                else:
+                    unit_price = float(inv.total_price / inv.quantity)
 
-            data.append({
-                "invoice_number": inv.invoice_id,
-                "date": inv.date[:10],
-                "client": inv.customer,
-                "product": inv.product,
-                "quantity": inv.quantity,
-                "unit_price": unit_price,
-                "total_price": inv.total_price
-            })
+            data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer, "product": inv.product,
+                         "quantity": inv.quantity, "unit_price": unit_price, "total_price": inv.total_price})
 
         summary = {"total_sales": len(data)}
         self._save_report("sales_all", {}, summary, data)
@@ -114,15 +112,9 @@ class ReportController:
 
                 unit_price = float(inv.unit_price if hasattr(inv, "unit_price") else inv.total_price / max(inv.quantity, 1))
 
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "unit_price": unit_price,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
+                              "product": inv.product, "quantity": inv.quantity, "unit_price": unit_price,
+                              "total_price": inv.total_price})
 
         summary = {"customer": customer, "total": len(data)}
         self._save_report("sales_by_customer", {"customer": customer}, summary, data)
@@ -137,15 +129,9 @@ class ReportController:
 
                 unit_price = float(inv.unit_price if hasattr(inv, "unit_price") else inv.total_price / max(inv.quantity, 1))
 
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "unit_price": unit_price,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10],
+                             "client": inv.customer, "product": inv.product,
+                             "quantity": inv.quantity, "unit_price": unit_price, "total_price": inv.total_price})
 
         summary = {"product": product, "total": len(data)}
         self._save_report("sales_by_product", {"product": product}, summary, data)
@@ -161,15 +147,10 @@ class ReportController:
 
                 unit_price = float(inv.unit_price if hasattr(inv, "unit_price") else inv.total_price / max(inv.quantity, 1))
 
-                data.append({
-                    "invoice_number": inv.invoice_id,
-                    "date": inv.date[:10],
-                    "client": inv.customer,
-                    "product": inv.product,
-                    "quantity": inv.quantity,
-                    "unit_price": unit_price,
-                    "total_price": inv.total_price
-                })
+                data.append({"invoice_number": inv.invoice_id, "date": inv.date[:10], "client": inv.customer,
+                             "product": inv.product, "quantity": inv.quantity, "unit_price": unit_price,
+                             "total_price": inv.total_price})
+
 
         summary = {"date": date_str, "total": len(data)}
         self._save_report("sales_by_date", {"date": date_str}, summary, data)
