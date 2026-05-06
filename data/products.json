@@ -1,3 +1,14 @@
 [
-
+    {
+        "product_id": "1adff951-92a8-4b64-ad35-098b14ce3d0a",
+        "name": "яйца",
+        "categories": [
+            "5eb098ab-f9d7-462d-a2ee-d63ab44fadc7"
+        ],
+        "unit": "бр.",
+        "description": "еузди",
+        "price": 3.0,
+        "created": "2026-05-07 00:29:00",
+        "modified": "2026-05-07 00:29:00"
+    }
 ]

@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import Optional, List
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
@@ -80,27 +81,43 @@ class MovementController:
 
         return movement
 
+    from datetime import datetime
+
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None):
+
         results = []
 
         for m in self.movements:
+            try:
+                m_date = datetime.strptime(m.date[:10], "%Y-%m-%d")
+            except:
+                m_date = None
+
+            # филтър по тип
             if movement_type and m.movement_type.name != movement_type:
                 continue
-            if start_date and m.date < start_date:
+
+            # филтър по дата
+            if start_date and m_date and m_date < start_date:
                 continue
-            if end_date and m.date > end_date:
+            if end_date and m_date and m_date > end_date:
                 continue
+
+            # филтър по продукт
             if product_id and str(m.product_id) != str(product_id):
                 continue
+
+            # филтър по локация
             if location_id:
-                if m.movement_type == MovementType.MOVE:
+                if m.movement_type.name == "MOVE":
                     if m.from_location_id != location_id and m.to_location_id != location_id:
                         continue
                 else:
                     if m.location_id != location_id:
                         continue
 
+            # филтър по потребител
             if user_id and str(m.user_id) != str(user_id):
                 continue
 

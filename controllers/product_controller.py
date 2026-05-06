@@ -17,116 +17,110 @@ class ProductController:
         self.repo.save(data)
 
     def _generate_id(self):
-        return str(uuid.uuid4())
+        return str(uuid.uuid4())[:8]  # По-кратки ID-та за по-лесна работа на оператора
+
+    def _log(self, user_id, action, message):
+        """Помощна функция за синхронизация с отчетите за активност"""
+        if self.activity_log_controller:
+            self.activity_log_controller.log_event(user_id, action, message)
 
     # СЪЗДАВАНЕ НА ПРОДУКТ
     def add(self, product_data: dict, user_id: str) -> Product:
         ProductValidator.validate_name(product_data['name'])
 
         categories = []
-        for cid in product_data['category_ids']:
-            categories.append(self.category_controller.get_by_id(cid))
+        for cid in product_data.get('category_ids', []):
+            cat = self.category_controller.get_by_id(cid)
+            if cat:
+                categories.append(cat)
 
-        product = Product(product_id=self._generate_id(), name=product_data['name'],
-                          categories=categories, unit=product_data['unit'],
-                          description=product_data['description'], price=float(product_data['price']))
+        product = Product(
+            product_id=self._generate_id(),
+            name=product_data['name'],
+            categories=categories,
+            unit=product_data.get('unit', 'бр.'),
+            description=product_data.get('description', ''),
+            price=float(product_data['price'])
+        )
 
         self.products.append(product)
         self.save_changes()
+
+        # ЛОГИРАНЕ: Важно за ReportsView
+        self._log(user_id, "CREATE_PRODUCT", f"Създаден продукт: {product.name} (ID: {product.product_id})")
+
         return product
 
     # ИЗТРИВАНЕ
-    def delete_by_id(self, product_id, user_id=None):
-        product_id = str(product_id)
-        product_to_delete = None
-
-        for p in self.products:
-            if p.product_id == product_id:
-                product_to_delete = p
-                break
-
-        if not product_to_delete:
+    def delete_by_id(self, product_id, user_id):
+        product = self.get_by_id(product_id)
+        if not product:
             raise ValueError("Продуктът не е намерен.")
 
-        self.products.remove(product_to_delete)
+        product_name = product.name
+        self.products.remove(product)
         self.save_changes()
+
+        # ЛОГИРАНЕ
+        self._log(user_id, "DELETE_PRODUCT", f"Изтрит продукт: {product_name} (ID: {product_id})")
         return True
 
-    # ТЪРСЕНЕ
-    def search(self, keyword):
-        keyword = keyword.lower()
-        results = []
+    # ОБНОВЯВАНЕ (SYNC FIX)
+    def update_product(self, product_id, new_name=None, new_description=None,
+                       new_price=None, user_id=None):
 
-        for p in self.products:
-            name = p.name.lower()
-            category_text = " ".join([c.name.lower() for c in p.categories])
-            description = p.description.lower() if p.description else ""
-
-            if keyword in name or keyword in category_text or keyword in description:
-                results.append(p)
-
-        return results
-
-    # РАЗШИРЕНО ТЪРСЕНЕ
-    def search_combined(self, keyword=None, min_price=None, max_price=None, category_id=None,
-                        inventory_controller=None):
-
-        results = []
-        for product in self.products:
-            if keyword:
-                text = keyword.lower()
-                if text not in product.name.lower() and text not in product.description.lower():
-                    continue
-
-            if min_price is not None and product.price < min_price:
-                continue
-            if max_price is not None and product.price > max_price:
-                continue
-
-            # Категория
-            if category_id:
-                found = False
-                for cat in product.categories:
-                    if cat.category_id == category_id:
-                        found = True
-                        break
-                if not found:
-                    continue
-
-            results.append(product)
-
-        return results
-
-    # ОБНОВЯВАНЕ
-    def update_product(self, product_id, new_name=None, new_description=None, new_price=None, user_id=None):
         product = self.get_by_id(product_id)
         if not product:
             return False
 
-        if new_name is not None:
+        changes = []
+        if new_name:
             ProductValidator.validate_name(new_name)
+            changes.append(f"име: {product.name} -> {new_name}")
             product.name = new_name
+
         if new_description is not None:
             product.description = new_description
-        if new_price is not None:
-            try:
-                product.price = float(new_price)
-            except:
-                return False
 
-        self.save_changes()
+        if new_price is not None:
+            old_price = product.price
+            product.price = float(new_price)
+            changes.append(f"цена: {old_price} -> {new_price}")
+
+        if changes:
+            self.save_changes()
+            # ЛОГИРАНЕ: Кой какво точно е променил
+            self._log(user_id, "UPDATE_PRODUCT", f"Редакция на {product_id}: " + ", ".join(changes))
+
         return True
 
+    # ТЪРСЕНЕ И ФИЛТРИ
+    def search(self, keyword):
+        if not keyword: return self.products
+        keyword = keyword.lower()
+        return [p for p in self.products if keyword in p.name.lower() or
+                keyword in (p.description or "").lower()]
 
-    # ФИЛТЪР ПО КАТЕГОРИЯ
-    def filter_by_category(self, category_id):
-        results = []
-        for p in self.products:
-            for c in p.categories:
-                if c.category_id == category_id:
-                    results.append(p)
-                    break
+    def search_combined(self, keyword=None, min_price=None, max_price=None,
+                        category_id=None, inventory_controller=None):
+        results = self.products
+
+        if keyword:
+            results = [p for p in results if keyword.lower() in p.name.lower()]
+
+        if min_price is not None:
+            results = [p for p in results if p.price >= min_price]
+
+        if max_price is not None:
+            results = [p for p in results if p.price <= max_price]
+
+        if category_id:
+            results = [p for p in results if any(c.category_id == category_id for c in p.categories)]
+
         return results
+
+    def filter_by_category(self, category_id):
+        return [p for p in self.products if any(c.category_id == category_id for c in p.categories)]
 
     def get_all(self):
         return self.products
