@@ -31,8 +31,6 @@ class ReportsView:
             MenuItem("12", "Жизнен цикъл на продукт", self.report_lifecycle),
             MenuItem("0", "Назад", lambda u: "break")])
 
-
-
     # ОБОБЩЕНА СПРАВКА ЗА НАЛИЧНОСТИ
     def summary_report(self, _):
         res = self.controller.report_inventory_summary()
@@ -47,7 +45,6 @@ class ReportsView:
 
         print(format_table(["Продукт", "Наличност", "Продадено", "Топ локации"], rows))
 
-
     # СПРАВКА ЗА ДВИЖЕНИЯ
     def report_movements(self, _):
         res = self.controller.report_movements()
@@ -57,13 +54,19 @@ class ReportsView:
 
         rows = []
         for m in res.data:
-            rows.append([m.get("movement_id", "-"), m.get("date", "-"), m.get("type", "-"), m.get("product", "-"),
-                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
+            rows.append([
+                m.get("movement_id", "-"),
+                m.get("date", "-"),
+                m.get("type", "-"),
+                m.get("product", "-"),
+                f"{m.get('quantity', 0)} {m.get('unit', '')}",
+                m.get("from", "-"),
+                m.get("to", "-")
+            ])
 
         print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "От", "Към"], rows))
 
-
-    # ВСИЧКИ ПРОДАЖБИ
+    # ВСИЧКИ ПРОДАЖБИ (с продажна цена)
     def report_sales(self, _):
         res = self.controller.report_sales()
         if not res.data:
@@ -72,13 +75,18 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item['total_price']:.2f} лв."])
+            rows.append([
+                item["invoice_number"],
+                item["date"],
+                item["client"],
+                item["product"],
+                f"{item.get('unit_price', 0):.2f} лв.",
+                f"{item['total_price']:.2f} лв."
+            ])
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
+        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
-
-
+    # ПРОДАЖБИ ПО КЛИЕНТ
     def report_sales_by_customer(self, _):
         name = input("Клиент: ").strip()
         if not name:
@@ -92,13 +100,18 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"], item["product"],
-                         f"{item['total_price']:.2f} лв."])
+            rows.append([
+                item["invoice_number"],
+                item["date"],
+                item["client"],
+                item["product"],
+                f"{item.get('unit_price', 0):.2f} лв.",
+                f"{item['total_price']:.2f} лв."
+            ])
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
+        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
-
-
+    # ПРОДАЖБИ ПО ПРОДУКТ
     def report_sales_by_product(self, _):
         name = input("Продукт: ").strip()
         if not name:
@@ -112,11 +125,16 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item['total_price']:.2f} лв."])
+            rows.append([
+                item["invoice_number"],
+                item["date"],
+                item["client"],
+                item["product"],
+                f"{item.get('unit_price', 0):.2f} лв.",
+                f"{item['total_price']:.2f} лв."
+            ])
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
-
+        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
     # ПРОДАЖБИ ПО ДАТА
     def report_sales_by_date(self, _):
@@ -138,13 +156,18 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{item['total_price']:.2f} лв."])
+            rows.append([
+                item["invoice_number"],
+                item["date"],
+                item["client"],
+                item["product"],
+                f"{item.get('unit_price', 0):.2f} лв.",
+                f"{item['total_price']:.2f} лв."
+            ])
 
-        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Общо"], rows))
+        print(format_table(["Фактура", "Дата", "Клиент", "Продукт", "Продажна цена", "Общо"], rows))
 
-
-    # ВСИЧКИ ДОСТАВКИ
+    # ВСИЧКИ ДОСТАВКИ (с доставна цена)
     def report_all_deliveries(self, _):
         res = self.controller.report_deliveries_all()
         if not res.data:
@@ -153,13 +176,19 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["date"], item["movement_id"], item["product"],
-                         f"{item['quantity']} {item['unit']}", item["supplier"], item["location"]])
+            rows.append([
+                item["date"],
+                item["movement_id"],
+                item["product"],
+                f"{item['quantity']} {item['unit']}",
+                f"{item.get('price', 0):.2f} лв.",
+                item["supplier"],
+                item["location"]
+            ])
 
-        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
+        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
 
-
-    #  ТЪРСЕНЕ НА ДОСТАВКА
+    # ТЪРСЕНЕ НА ДОСТАВКА
     def search_delivery(self, _):
         key = input("Търсене: ").strip()
         if not key:
@@ -173,11 +202,17 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["date"], item["movement_id"], item["product"],
-                         f"{item['quantity']} {item['unit']}", item["supplier"], item["location"]])
+            rows.append([
+                item["date"],
+                item["movement_id"],
+                item["product"],
+                f"{item['quantity']} {item['unit']}",
+                f"{item.get('price', 0):.2f} лв.",
+                item["supplier"],
+                item["location"]
+            ])
 
-        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставчик", "Склад"], rows))
-
+        print(format_table(["Дата", "ID", "Продукт", "Кол.", "Доставна цена", "Доставчик", "Склад"], rows))
 
     # ОБОРОТ ПО ДНИ
     def report_turnover_by_day(self, _):
@@ -188,10 +223,9 @@ class ReportsView:
 
         rows = []
         for item in res.data:
-            rows.append([item["date"],item["count"],f"{item['total']:.2f} лв."])
+            rows.append([item["date"], item["count"], f"{item['total']:.2f} лв."])
 
         print(format_table(["Дата", "Брой", "Оборот"], rows))
-
 
     # НАЙ-ПРОДАВАНИ ПРОДУКТИ
     def report_top_products(self, _):
@@ -205,7 +239,6 @@ class ReportsView:
             rows.append([item["product"], f"{item['quantity']} {item['unit']}", f"{item['total']:.2f} лв."])
 
         print(format_table(["Продукт", "Количество", "Оборот"], rows))
-
 
     # ИНВЕНТАР ПО СКЛАДОВЕ
     def inventory_by_warehouse(self, user):
@@ -242,8 +275,6 @@ class ReportsView:
         print("\n   Инвентар – наличност по складове\n")
         print(format_table(columns, rows))
 
-
-
     # ЖИЗНЕН ЦИКЪЛ
     def report_lifecycle(self, _):
         name = input("Продукт: ").strip()
@@ -256,21 +287,20 @@ class ReportsView:
             return
 
         revenue = data.get("revenue", 0.0)
-        cost_of_goods = data.get("fifo_cost", 0.0)  # Себестойност на продаденото
+        cost_of_goods = data.get("fifo_cost", 0.0)
         profit = data.get("profit", 0.0)
 
-        total_invested = data.get("expense", 0.0)  # Всички покупки
+        total_invested = data.get("expense", 0.0)
         total_in = data.get("total_in", 0.0)
         current_stock = data.get("current_stock", 0.0)
 
-        # Средна покупна цена (ако има покупки)
         if total_in > 0:
             avg_purchase_price = total_invested / total_in
         else:
             avg_purchase_price = 0.0
 
-        # Реална стойност на стоката в склада
         in_stock_value = current_stock * avg_purchase_price
+
         print(f"   ФИНАНСОВ ОТЧЕТ: {data['product'].upper()}")
         print(f"  Наличност в склада: {current_stock} {data.get('unit', '')}")
         print(f"  Продадени бройки:   {data['total_out']} {data.get('unit', '')}")
