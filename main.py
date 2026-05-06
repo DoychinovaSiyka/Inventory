@@ -37,7 +37,6 @@ class InventoryApplication:
         self.activity_log_repo = JSONRepository("data/user_activity_log.json")
 
     def _init_controllers(self):
-        # Логове
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
 
         self.user_controller = UserController(self.user_repo, self.activity_log_controller)
@@ -60,7 +59,7 @@ class InventoryApplication:
                                                       self.supplier_controller, self.invoice_controller,
                                                       self.inventory_controller, self.activity_log_controller)
 
-        # 3) Инициализация на инвентара
+        # Инициализация на инвентара
         if not self.movement_controller.movements:
             print("Няма движения – зареждане на началните количества.")
             all_locations = self.location_controller.get_all()

@@ -375,14 +375,9 @@ class ProductMenuView:
             else:
                 location_id = loc_raw
 
-        results = self.product_controller.search_combined(
-            keyword=keyword,
-            min_price=min_price,
-            max_price=max_price,
-            category_id=category_id,
-            location_id=location_id,
-            inventory_controller=self.inventory_controller
-        )
+        results = self.product_controller.search_combined(keyword=keyword, min_price=min_price,
+                                                          max_price=max_price, category_id=category_id,
+                                                          location_id=location_id, inventory_controller=self.inventory_controller)
 
         if not results:
             print("\n[!] Няма резултати.\n")
@@ -413,14 +408,9 @@ class ProductMenuView:
             if not warehouse_lines:
                 warehouse_lines = ["—"]
 
-            rows.append([
-                p.name,
-                f"{p.price:.2f} лв.",
-                f"{stock} {p.unit}",
-                ", ".join([c.name for c in p.categories]) if p.categories else "-",
-                warehouse_lines[0],
-                supplier_name
-            ])
+            rows.append([p.name, f"{p.price:.2f} лв.",
+                          f"{stock} {p.unit}", ", ".join([c.name for c in p.categories])
+                          if p.categories else "-", warehouse_lines[0], supplier_name])
 
             for line in warehouse_lines[1:]:
                 rows.append(["", "", "", "", line, ""])
