@@ -29,24 +29,15 @@ class ProductController:
         for cid in product_data['category_ids']:
             categories.append(self.category_controller.get_by_id(cid))
 
-        product = Product(product_id=self._generate_id(), name=product_data['name'], categories=categories,
-                           unit=product_data['unit'], description=product_data['description'],
-                           price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
 
+        # Наличност се появява САМО чрез IN движение (MovementController).
+        product = Product(product_id=self._generate_id(), name=product_data['name'], categories=categories,
+                          unit=product_data['unit'], description=product_data['description'],
+                          price=float(product_data['price']), supplier_id=product_data.get('supplier_id', None))
 
         self.products.append(product)
         self.save_changes()
 
-        # НАЧАЛНО ЗАРЕЖДАНЕ В ИНВЕНТАРА
-        if "quantity" in product_data and "location_id" in product_data and "inventory_controller" in product_data:
-            try:
-                qty = float(product_data["quantity"])
-                loc = product_data["location_id"]
-                if qty > 0:
-                    inv = product_data["inventory_controller"]
-                    inv.increase_stock(product.product_id, qty, loc)
-            except:
-                pass
 
         return product
 

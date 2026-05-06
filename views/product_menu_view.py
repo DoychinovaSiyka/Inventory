@@ -91,13 +91,7 @@ class ProductMenuView:
             except ValueError as e:
                 print(f"[!] {e}")
 
-        while True:
-            quantity_raw = input("Начално количество: ").strip()
-            try:
-                quantity = ProductValidator.parse_float(quantity_raw, "Количество")
-                break
-            except ValueError as e:
-                print(f"[!] {e}")
+
 
         while True:
             unit = input("Мерна единица (кг, кг., kg, килограм / бр, бр., брой / л, l, литър / пакет, paket, packet): ").strip()
@@ -136,7 +130,7 @@ class ProductMenuView:
 
         try:
             product_data = {"name": name, "category_ids": [category_id] if category_id else [],
-                             "quantity": quantity, "unit": unit,
+                             "unit": unit,
                              "description": description, "price": price, "supplier_id": supplier_id,
                              "location_id": location_id}
 

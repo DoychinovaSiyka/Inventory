@@ -368,7 +368,7 @@ class MovementView:
         if not mv:
             return
 
-        columns = ["ID", "Дата", "Тип", "Количество", "Склад"]
+        columns = ["ID", "Дата", "Тип", "Количество", "Цена", "Склад"]
         rows = []
 
         for m in mv:
@@ -384,8 +384,9 @@ class MovementView:
                 loc = self.location_controller.get_by_id(m.location_id)
                 loc_display = loc.name if loc else "-"
 
+
             rows.append([m.movement_id[:8], m.date[:16], m.movement_type.name,
-                         self._format_qty_unit(m.quantity, m.unit), loc_display])
+                         self._format_qty_unit(m.quantity, m.unit), f"{m.price} лв.", loc_display])
 
         print(format_table(columns, rows))
 
