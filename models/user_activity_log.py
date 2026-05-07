@@ -29,7 +29,8 @@ class UserActivityLog:
         """Възстановява лог запис от речник."""
         if not data:
             return None
-        return UserActivityLog(log_id=data.get("log_id"), user_id=data.get("user_id"), action=data.get("action"),
+        return UserActivityLog(log_id=data.get("log_id"), user_id=data.get("user_id"),
+                               action=data.get("action"),
                                details=data.get("details", ""), timestamp=data.get("timestamp"))
 
     def __str__(self):

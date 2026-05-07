@@ -106,8 +106,7 @@ class CategoryView:
 
             self.controller.add(
                 {"name": name, "description": description, "parent_id": parent_id},
-                user_id=current_uid
-            )
+                user_id=current_uid)
             print(f"Категорията '{name}' е добавена.")
         except Exception as e:
             print(f"Грешка: {e}")

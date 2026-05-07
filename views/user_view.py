@@ -87,7 +87,6 @@ class UserView:
 
         fn = input("Име (опционално): ").strip() or "-"
         ln = input("Фамилия (опционално): ").strip() or "-"
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен.")

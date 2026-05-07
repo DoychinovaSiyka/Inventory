@@ -9,31 +9,27 @@ class Location:
                  capacity: int = 0, created: Optional[str] = None,
                  modified: Optional[str] = None):
 
-        # ID
+
         if location_id is None:
             self.location_id = str(uuid.uuid4())
         else:
             self.location_id = str(location_id)
 
-        # Име
         if name is not None:
             self.name = name
         else:
             self.name = ""
 
-        # Зона
         if zone is not None:
             self.zone = zone
         else:
             self.zone = ""
 
-        # Капацитет
         if capacity is not None:
             self.capacity = int(capacity)
         else:
             self.capacity = 0
 
-        # Дати
         now_val = Location.now()
 
         if created:
@@ -56,14 +52,8 @@ class Location:
 
     def to_dict(self):
         """Записваме в JSON пълното 36-символно ID."""
-        return {
-            "location_id": self.location_id,
-            "name": self.name,
-            "zone": self.zone,
-            "capacity": self.capacity,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"location_id": self.location_id, "name": self.name, "zone": self.zone,
+                "capacity": self.capacity, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
@@ -71,14 +61,9 @@ class Location:
         if not data:
             return None
 
-        return Location(
-            location_id=data.get("location_id"),
-            name=data.get("name"),
-            zone=data.get("zone"),
-            capacity=data.get("capacity", 0),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Location(location_id=data.get("location_id"), name=data.get("name"),
+                        zone=data.get("zone"), capacity=data.get("capacity", 0),
+                        created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         short_id = self.location_id[:8]

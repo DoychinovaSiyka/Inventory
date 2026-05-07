@@ -148,13 +148,8 @@ class ProductMenuView:
 
             category_id = self._select_category()
 
-            product_data = {
-                "name": name,
-                "description": "",
-                "price": price,
-                "unit": unit,
-                "category_ids": [category_id] if category_id else []
-            }
+            product_data = {"name": name, "description": "", "price": price, "unit": unit,
+                            "category_ids": [category_id] if category_id else []}
 
             new_p = self.product_controller.add(product_data, user.user_id)
             print(f"\nПродуктът '{new_p.name}' е създаден.")
@@ -202,12 +197,8 @@ class ProductMenuView:
                 except Exception as e:
                     print(f"Грешка: {e}")
 
-            self.product_controller.update_product(
-                product.product_id,
-                new_name=new_name,
-                new_price=new_price,
-                user_id=user.user_id
-            )
+            self.product_controller.update_product(product.product_id, new_name=new_name,
+                                                   new_price=new_price, user_id=user.user_id)
 
             print("Продуктът е обновен.")
         except Exception as e:
@@ -242,12 +233,14 @@ class ProductMenuView:
     def search(self, _):
         keyword = input("\nВъведете име: ").strip()
         if keyword:
-            self._print_products(self.product_controller.search(keyword), f"Резултати за '{keyword}'")
+            self._print_products(self.product_controller.search(keyword),
+                                 f"Резултати за '{keyword}'")
 
     def filter_by_category(self, _):
         cat_id = self._select_category()
         if cat_id:
-            self._print_products(self.product_controller.filter_by_category(cat_id), "Филтър по категория")
+            self._print_products(self.product_controller.filter_by_category(cat_id),
+                                 "Филтър по категория")
 
     def low_stock(self, _):
         while True:

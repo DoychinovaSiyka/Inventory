@@ -35,55 +35,33 @@ class MovementController:
 
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
-        return self.add(
-            product_id=product_id,
-            user_id=user_id,
-            location_id=location_id,
-            movement_type="IN",
-            quantity=quantity,
-            price=price,
-            supplier_id=supplier_id
-        )
+        return self.add(product_id=product_id, user_id=user_id, location_id=location_id,
+                        movement_type="IN", quantity=quantity, price=price, supplier_id=supplier_id)
 
     def add_out(self, product_id, quantity, customer, location_id, user_id):
         current_stock = self.inventory_controller.get_stock_by_location(product_id, location_id)
         if current_stock < float(quantity):
-            raise ValueError(
-                f"Недостатъчна наличност в този склад! Налично: {current_stock}, Искано: {quantity}"
-            )
+            raise ValueError(f"Недостатъчна наличност в този склад! "
+                             f"Налично: {current_stock}, Искано: {quantity}")
 
-        return self.add(
-            product_id=product_id,
-            user_id=user_id,
-            location_id=location_id,
-            movement_type="OUT",
-            quantity=quantity,
-            price=None,
-            customer=customer
-        )
+        return self.add(product_id=product_id, user_id=user_id, location_id=location_id,
+                        movement_type="OUT", quantity=quantity, price=None, customer=customer)
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
         current_stock = self.inventory_controller.get_stock_by_location(product_id, from_loc)
         if current_stock < float(quantity):
             raise ValueError(f"Няма достатъчно стока за преместване! Налично: {current_stock}")
 
-        return self.add(
-            product_id=product_id,
-            user_id=user_id,
-            location_id=None,
-            movement_type="MOVE",
-            quantity=quantity,
-            price="0",
-            from_location_id=from_loc,
-            to_location_id=to_loc
-        )
+        return self.add(product_id=product_id, user_id=user_id, location_id=None,
+                        movement_type="MOVE", quantity=quantity, price="0",
+                        from_location_id=from_loc, to_location_id=to_loc)
 
 
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
             quantity: str, price: Optional[str], customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
 
-        # Продукт
+
         full_product = self.product_controller.get_by_id(product_id)
         if not full_product:
             raise ValueError(f"Продукт с ID {product_id} не е намерен.")
@@ -92,19 +70,16 @@ class MovementController:
         historical_name = full_product.name
         historical_unit = full_product.unit
 
-        # Потребител
+
         full_user = self.user_controller.get_by_id(user_id)
         if not full_user:
             raise ValueError(f"Потребител с ID {user_id} не е намерен.")
         user_id = full_user.user_id
 
-        # Тип движение
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
 
-        # Количество
         qty = MovementValidator.parse_quantity(quantity)
 
-        # Доставчик
         final_supplier_id = None
         if m_type_str == "IN":
             if supplier_id:
@@ -114,7 +89,7 @@ class MovementController:
                 else:
                     final_supplier_id = str(supplier_id)
 
-        # Цена
+
         if m_type_str == "MOVE":
             prc = 0.0
         else:
@@ -123,7 +98,7 @@ class MovementController:
             else:
                 prc = MovementValidator.parse_price(price)
 
-        # Локации
+
         if m_type_str == "MOVE":
             loc_from_obj = self.location_controller.get_by_id(from_location_id)
             if loc_from_obj:
@@ -133,7 +108,7 @@ class MovementController:
             if loc_to_obj:
                 to_location_id = loc_to_obj.location_id
 
-            # MOVE не използва location_id
+
             movement_location_id = None
 
         else:
@@ -168,22 +143,16 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-        # Логване
+
         if self.activity_log_controller:
-            self.activity_log_controller.log_action(
-                user_id=user_id,
-                action=f"MOVEMENT_{m_type_str}",
-                details=f"Продукт: {historical_name}, Кол: {qty}"
-            )
+            self.activity_log_controller.log_action(user_id=user_id, action=f"MOVEMENT_{m_type_str}",
+                                                    details=f"Продукт: {historical_name}, Кол: {qty}")
 
         # Фактура при OUT
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement,
-                product=full_product,
-                customer=customer or "Неизвестен клиент",
-                user_id=user_id
-            )
+            self.invoice_controller.create_from_movement(movement=movement, product=full_product,
+                                                         customer=customer or "Неизвестен клиент",
+                                                         user_id=user_id)
 
         return movement
 

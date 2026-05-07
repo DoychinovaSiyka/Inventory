@@ -36,6 +36,7 @@ class Supplier:
                         contact=d.get("contact", ""), address=d.get("address", ""), created=d.get("created"),
                         modified=d.get("modified"))
 
+
     def __str__(self):
         short_id = self.supplier_id[:8]
         return f"Доставчик: {self.name} [ID: {short_id}] | Контакт: {self.contact}"

@@ -128,7 +128,8 @@ class CategoryController:
         """Изтриване само ако категорията е празна (няма продукти и подкатегории)."""
         category = self.get_by_id(category_id)
         if category is None:
-            self._log(user_id, "DELETE_CATEGORY_FAIL", f"Несъществуваща категория: {category_id}")
+            self._log(user_id, "DELETE_CATEGORY_FAIL",
+                      f"Несъществуваща категория: {category_id}")
             return False
 
         products = []

@@ -115,10 +115,8 @@ class MovementView:
                 print("Въведете валидна цена.")
 
         try:
-            self.movement_controller.add_in(
-                product.product_id, qty, price, location.location_id,
-                supplier.supplier_id, user.user_id
-            )
+            self.movement_controller.add_in(product.product_id, qty, price, location.location_id,
+                                            supplier.supplier_id, user.user_id)
             print(f"\nДобавени са {qty} {product.unit}.")
         except Exception as e:
             print(f"Грешка при запис: {e}")
@@ -132,12 +130,8 @@ class MovementView:
         if not product:
             return
 
-        warehouses = [
-            loc for loc in self.location_controller.get_all()
-            if self.movement_controller.inventory_controller.get_stock_by_location(
-                product.product_id, loc.location_id
-            ) > 0
-        ]
+        warehouses = [loc for loc in self.location_controller.get_all()
+                      if self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, loc.location_id) > 0]
 
         if not warehouses:
             print(f"Продуктът '{product.name}' не е наличен в складовете.")
@@ -147,9 +141,7 @@ class MovementView:
         if not location:
             return
 
-        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(
-            product.product_id, location.location_id
-        )
+        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, location.location_id)
 
         customer = input("Клиент: ").strip() or "Анонимен"
 
@@ -170,9 +162,8 @@ class MovementView:
                 print("Въведете число.")
 
         try:
-            self.movement_controller.add_out(
-                product.product_id, qty, customer, location.location_id, user.user_id
-            )
+            self.movement_controller.add_out(product.product_id, qty, customer,
+                                             location.location_id, user.user_id)
             print(f"\nИзписани са {qty} {product.unit}.")
         except Exception as e:
             print(f"Грешка при изписване: {e}")
@@ -190,9 +181,7 @@ class MovementView:
         if not from_loc:
             return
 
-        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(
-            product.product_id, from_loc.location_id
-        )
+        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, from_loc.location_id)
 
         if max_qty <= 0:
             print(f"Няма наличност от '{product.name}' в този склад.")
@@ -216,10 +205,8 @@ class MovementView:
                 print("Въведете число.")
 
         try:
-            self.movement_controller.move_stock(
-                product.product_id, qty, from_loc.location_id,
-                to_loc.location_id, user.user_id
-            )
+            self.movement_controller.move_stock(product.product_id, qty, from_loc.location_id,
+                                                to_loc.location_id, user.user_id)
             print("\nПреместването е извършено.")
         except Exception as e:
             print(f"Грешка при преместване: {e}")
@@ -296,10 +283,8 @@ class MovementView:
             quantity_text = str(m.quantity) + " " + product_unit
             short_partner = partner[:12]
 
-            row = [
-                short_id, short_date, short_type, short_product,
-                quantity_text, short_partner, location_text
-            ]
+            row = [short_id, short_date, short_type, short_product, quantity_text, short_partner,
+                   location_text]
 
             rows.append(row)
 

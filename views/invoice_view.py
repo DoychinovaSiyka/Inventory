@@ -29,19 +29,11 @@ class InvoiceView:
             except (ValueError, TypeError):
                 total = 0.0
 
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{total:.2f} лв.",
-                inv.date[:16]
-            ])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer,
+                         f"{inv.quantity} {inv.unit}", f"{total:.2f} лв.", inv.date[:16]])
 
         print("\n" + format_table(
-            ["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"],
-            rows
-        ))
+            ["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -59,8 +51,7 @@ class InvoiceView:
             MenuItem("5", "Търсене по дата", self.search_by_date),
             MenuItem("6", "Разширено търсене", self.advanced_search),
             MenuItem("7", "Търсене по сума", self.search_by_total),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
     def show_all(self, user):
@@ -81,16 +72,14 @@ class InvoiceView:
 
             print("Не е намерена фактура с това ID.")
 
-        rows = [
-            ["Пълно ID", invoice.invoice_id],
-            ["Движение ID", invoice.movement_id[:8] if hasattr(invoice, 'movement_id') else "-"],
-            ["Продукт", invoice.product],
-            ["Количество", f"{invoice.quantity} {invoice.unit}"],
-            ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
-            ["Обща сума", f"{float(invoice.total_price):.2f} лв."],
-            ["Клиент", invoice.customer],
-            ["Дата/Час", invoice.date]
-        ]
+        rows = [["Пълно ID", invoice.invoice_id],
+                ["Движение ID", invoice.movement_id[:8] if hasattr(invoice, 'movement_id') else "-"],
+                ["Продукт", invoice.product],
+                ["Количество", f"{invoice.quantity} {invoice.unit}"],
+                ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
+                ["Обща сума", f"{float(invoice.total_price):.2f} лв."],
+                ["Клиент", invoice.customer],
+                ["Дата/Час", invoice.date]]
 
         print("\n" + format_table(["Поле", "Стойност"], rows))
         input("\nНатиснете Enter за продължение...")

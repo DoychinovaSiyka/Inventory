@@ -100,7 +100,7 @@ class MovementValidator:
         loc_input = str(loc_id).strip()
         locations = location_controller.get_all()
 
-        # Избор по номер
+
         if loc_input.isdigit() and len(loc_input) < 3:
             num = int(loc_input)
             if 1 <= num <= len(locations):

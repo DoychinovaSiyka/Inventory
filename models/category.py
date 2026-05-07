@@ -42,28 +42,17 @@ class Category:
         self.modified = Category.now()
 
     def to_dict(self):
-        return {
-            "category_id": self.category_id,
-            "name": self.name,
-            "description": self.description,
-            "parent_id": self.parent_id,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"category_id": self.category_id, "name": self.name, "description": self.description,
+                "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
         if not data:
             return None
 
-        return Category(
-            category_id=data.get("category_id"),
-            name=data.get("name"),
-            description=data.get("description", ""),
-            parent_id=data.get("parent_id"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Category(category_id=data.get("category_id"), name=data.get("name"),
+                        description=data.get("description", ""), parent_id=data.get("parent_id"),
+                        created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         short_id = self.category_id[:8]

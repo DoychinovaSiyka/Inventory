@@ -16,7 +16,7 @@ class Report:
         self.data = data if data is not None else {}
 
     def to_dict(self):
-        """Превръща обекта в речник за запис в JSON (с пълно ID)."""
+        """Превръща обекта в речник за запис в JSON."""
         return {"report_id": self.report_id, "report_type": self.report_type,
                 "generated_on": self.generated_on, "parameters": self.parameters, "data": self.data}
 
@@ -26,7 +26,8 @@ class Report:
         if not d:
             return None
         return Report(report_id=d.get("report_id"), report_type=d.get("report_type", ""),
-                      generated_on=d.get("generated_on", ""), parameters=d.get("parameters"), data=d.get("data"))
+                      generated_on=d.get("generated_on", ""), parameters=d.get("parameters"),
+                      data=d.get("data"))
 
     def __str__(self):
         short_id = self.report_id[:8]

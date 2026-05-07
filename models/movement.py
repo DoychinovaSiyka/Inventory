@@ -18,55 +18,40 @@ class Movement:
                  quantity, unit, price=None, supplier_id=None, customer=None, date=None,
                  created=None, modified=None, from_location_id=None, to_location_id=None):
 
-        # movement_id
         if movement_id:
             self.movement_id = str(movement_id)
         else:
             self.movement_id = str(uuid.uuid4())
 
-        # product_id
+
         self.product_id = str(product_id)
-
-        # product_name
         self.product_name = product_name
-
-        # user_id
         self.user_id = str(user_id)
-
-        # location_id
         if location_id:
             self.location_id = str(location_id)
         else:
             self.location_id = None
 
-        # movement_type
         self.movement_type = movement_type
 
-        # quantity
         if quantity is not None:
             self.quantity = float(quantity)
         else:
             self.quantity = 0.0
 
-        # unit
         self.unit = unit
 
-        # price
         if price is not None:
             self.price = float(price)
         else:
             self.price = 0.0
 
-        # supplier_id
         if supplier_id:
             self.supplier_id = str(supplier_id)
         else:
             self.supplier_id = None
 
-        # customer
         self.customer = customer
-
-        # timestamps
         now_val = Movement.now()
 
         if date:
@@ -84,17 +69,16 @@ class Movement:
         else:
             self.modified = now_val
 
-        # from_location_id
         if from_location_id:
             self.from_location_id = str(from_location_id)
         else:
             self.from_location_id = None
 
-        # to_location_id
         if to_location_id:
             self.to_location_id = str(to_location_id)
         else:
             self.to_location_id = None
+
 
     def update_modified(self):
         self.modified = Movement.now()

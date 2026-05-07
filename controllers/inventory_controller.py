@@ -49,6 +49,7 @@ class InventoryController:
         locations = self.data["products"][pid].get("locations", {})
         return float(locations.get(lid, 0.0))
 
+
     def get_total_stock(self, product_id: str) -> float:
         pid = self._get_full_product_id(product_id)
 
@@ -111,7 +112,6 @@ class InventoryController:
         self.data = {"products": {}}
 
         sorted_movements = sorted(movements, key=lambda x: x.date)
-
         for m in sorted_movements:
             pid = str(m.product_id)
             qty = float(m.quantity)
@@ -122,14 +122,12 @@ class InventoryController:
             locations = self.data["products"][pid]["locations"]
             m_type = m.movement_type.name
 
-            # IN
             if m_type == "IN":
                 if m.location_id:
                     lid = str(m.location_id)
                     current = float(locations.get(lid, 0.0))
                     locations[lid] = current + qty
 
-            # OUT
             elif m_type == "OUT":
                 if m.location_id:
                     lid = str(m.location_id)
@@ -139,7 +137,6 @@ class InventoryController:
                         new_val = 0.0
                     locations[lid] = new_val
 
-            # MOVE
             elif m_type == "MOVE":
                 from_loc = m.from_location_id
                 to_loc = m.to_location_id
@@ -206,7 +203,6 @@ class InventoryController:
         total_inventory_value = 0.0
 
         movements_source = movement_controller.movements
-
         if isinstance(movements_source, dict):
             all_movements = []
             for key in movements_source:
@@ -233,7 +229,6 @@ class InventoryController:
             for m in prod_movements:
                 m_type = m.movement_type.name
                 qty = float(m.quantity)
-
                 if m_type == "IN":
                     if m.price is not None:
                         price = float(m.price)

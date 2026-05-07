@@ -86,14 +86,12 @@ class LocationController:
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Проверка за наличности (поправена логика)
+        # Проверка за наличности
         if self.inventory_controller:
             products_data = self.inventory_controller.data.get("products", {})
-
             for pid, pdata in products_data.items():
                 locations_map = pdata.get("locations", {})
                 qty = locations_map.get(location.location_id, 0)
-
                 try:
                     qty_value = float(qty)
                 except Exception:

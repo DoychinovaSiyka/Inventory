@@ -23,43 +23,33 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
             MenuItem("4", "По количество (високо -> ниско)", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско -> високо)", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
 
     def sort_by_name(self, _):
         products = sort_by_name_logic(self.product_controller.get_all())
         self._print_sorted(products, "Име (A–Z)", "Вградено сортиране")
 
     def sort_price_desc(self, _):
-        products = selection_sort_logic(
-            self.product_controller.get_all(),
-            key=lambda p: float(p.price),
-            reverse=True
-        )
+        products = selection_sort_logic(self.product_controller.get_all(), key=lambda p: float(p.price),
+                                        reverse=True)
         self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
     def sort_price_asc(self, _):
-        products = bubble_sort_logic(
-            self.product_controller.get_all(),
-            key=lambda p: float(p.price),
-            reverse=False
-        )
+        products = bubble_sort_logic(self.product_controller.get_all(), key=lambda p: float(p.price),
+                                     reverse=False)
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
     def sort_qty_desc(self, _):
-        products = bubble_sort_logic(
-            self.product_controller.get_all(),
-            key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
-            reverse=True
-        )
+        products = bubble_sort_logic(self.product_controller.get_all(),
+                                     key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
+                                     reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
     def sort_qty_asc(self, _):
-        products = selection_sort_logic(
-            self.product_controller.get_all(),
-            key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
-            reverse=False
-        )
+        products = selection_sort_logic(self.product_controller.get_all(),
+                                        key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
+                                        reverse=False)
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
     def _print_sorted(self, products, title, algorithm):
@@ -80,12 +70,7 @@ class ProductSortView:
             except (ValueError, TypeError):
                 price_val = 0.0
 
-            rows.append([
-                short_id,
-                p.name[:25],
-                f"{stock:.2f} {p.unit}",
-                f"{price_val:.2f} лв."
-            ])
+            rows.append([short_id, p.name[:25], f"{stock:.2f} {p.unit}", f"{price_val:.2f} лв."])
 
         print(format_table(["ID (кратко)", "Име", "Наличност", "Цена"], rows))
         input("\nНатиснете Enter за връщане...")

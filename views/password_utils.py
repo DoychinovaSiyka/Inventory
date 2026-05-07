@@ -60,7 +60,7 @@ def format_table(columns, rows):
     col_widths = [w + 2 for w in col_widths]
     separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 
-    # Форматираме заглавния ред
+
     # Центрираме или подравняваме вляво заглавията
     header_parts = []
     for i, col_name in enumerate(columns):
@@ -78,7 +78,7 @@ def format_table(columns, rows):
             row_parts.append(cell_str)
         table_lines.append("|" + "|".join(row_parts) + "|")
 
-    # Добавяме финалната линия
+
     table_lines.append(separator)
     return "\n" + "\n".join(table_lines) + "\n"
 

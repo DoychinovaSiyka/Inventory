@@ -37,16 +37,9 @@ class Product:
             for c in self.categories:
                 cat_ids.append(c.category_id)
 
-        return {
-            "product_id": self.product_id,
-            "name": self.name,
-            "categories": cat_ids,
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"product_id": self.product_id, "name": self.name, "categories": cat_ids,
+                "unit": self.unit, "description": self.description, "price": self.price,
+                "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data, category_controller=None):

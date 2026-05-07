@@ -40,24 +40,21 @@ class ReportsView:
             MenuItem("2", "Логистика и движения", self.menu_logistics),
             MenuItem("3", "Продажби", self.menu_sales),
             MenuItem("4", "Анализ по FIFO", self.report_fifo_analysis),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
     def menu_inventory(self, user):
         sub = Menu("НАЛИЧНОСТИ", [
             MenuItem("1", "Обобщена справка", self.summary_report),
             MenuItem("2", "Наличност по складове", self.inventory_by_warehouse),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(sub, user)
 
     def menu_logistics(self, user):
         sub = Menu("ЛОГИСТИКА", [
             MenuItem("1", "Хронологичен регистър", self.report_movements),
             MenuItem("2", "Търсене на доставки", self.search_delivery),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(sub, user)
 
     def menu_sales(self, user):
@@ -65,8 +62,7 @@ class ReportsView:
             MenuItem("1", "Всички продажби", self.report_sales),
             MenuItem("2", "Търсене по клиент", self.search_sales_by_customer),
             MenuItem("3", "Търсене по продукт", self.search_sales_by_product),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(sub, user)
 
     def _fmt_delivery(self, data):
@@ -75,14 +71,8 @@ class ReportsView:
             price_value = float(i["price"])
             quantity_text = str(i["quantity"]) + " " + str(i["unit"])
 
-            row = [
-                i["date"],
-                i["movement_id"],
-                i["product"],
-                quantity_text,
-                f"{price_value:.2f}",
-                i["supplier"]
-            ]
+            row = [i["date"], i["movement_id"], i["product"], quantity_text,
+                   f"{price_value:.2f}", i["supplier"]]
             rows.append(row)
 
         return rows
@@ -91,14 +81,7 @@ class ReportsView:
         rows = []
         for i in data:
             total_value = float(i["total_price"])
-
-            row = [
-                i["invoice_number"],
-                i["date"],
-                i["client"],
-                i["product"],
-                f"{total_value:.2f}"
-            ]
+            row = [i["invoice_number"], i["date"], i["client"], i["product"], f"{total_value:.2f}"]
             rows.append(row)
 
         return rows
@@ -161,15 +144,8 @@ class ReportsView:
         for m in res.data:
             quantity_text = str(m["quantity"]) + " " + str(m["unit"])
 
-            row = [
-                m["date"],
-                m["movement_id"],
-                m["type"],
-                m["product"],
-                quantity_text,
-                m["from"],
-                m["to"]
-            ]
+            row = [m["date"], m["movement_id"], m["type"], m["product"], quantity_text,
+                   m["from"], m["to"]]
             rows.append(row)
 
         self._display_report("Хронология на движенията",
@@ -188,24 +164,19 @@ class ReportsView:
         res = self.controller.report_sales()
         formatted = self._fmt_sales(res.data)
 
-        self._display_report("Продажби",
-                             ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+        self._display_report("Продажби",["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
                              formatted)
 
     def search_sales_by_customer(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
         self._search_flow("име на клиент",
                           self.controller.report_sales_by_customer,
-                          self._fmt_sales,
-                          "Продажби",
-                          headers)
+                          self._fmt_sales,"Продажби", headers)
 
     def search_sales_by_product(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
         self._search_flow("име на продукт",
-                          self.controller.report_sales_by_product,
-                          self._fmt_sales,
-                          "Продажби",
+                          self.controller.report_sales_by_product, self._fmt_sales,"Продажби",
                           headers)
 
     def report_fifo_analysis(self, _):
@@ -216,7 +187,6 @@ class ReportsView:
                 break
 
             data = self.controller.product_lifecycle(name)
-
             if not data:
                 print(f"Продукт '{name}' не е намерен.")
                 continue

@@ -36,33 +36,18 @@ class User:
         """Превръща речник от JSON в обект User."""
         if not data:
             return None
-        return User(
-            first_name=data.get("first_name", ""),
-            last_name=data.get("last_name", ""),
-            email=data.get("email", ""),
-            username=data.get("username", ""),
-            password=data.get("password", ""),
-            role=data.get("role", "Operator"),
-            status=data.get("status", "Active"),
-            user_id=data.get("user_id"),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return User( first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),
+                     email=data.get("email", ""), username=data.get("username", ""),
+                     password=data.get("password", ""), role=data.get("role", "Operator"),
+                     status=data.get("status", "Active"), user_id=data.get("user_id"),
+                     created=data.get("created"), modified=data.get("modified"))
 
     def to_dict(self):
-        """Връща User като речник за JSON запис (с пълното ID)."""
-        return {
-            "user_id": self.user_id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "email": self.email,
-            "username": self.username,
-            "password": self.password,
-            "role": self.role,
-            "status": self.status,
-            "created": self.created,
-            "modified": self.modified
-        }
+        """Връща User като речник за JSON запис."""
+        return {"user_id": self.user_id, "first_name": self.first_name, "last_name": self.last_name,
+                "email": self.email, "username": self.username, "password": self.password,
+                "role": self.role, "status": self.status, "created": self.created,
+                "modified": self.modified}
 
     def __str__(self):
         short_id = self.user_id[:8]

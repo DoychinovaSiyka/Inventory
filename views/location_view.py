@@ -23,8 +23,7 @@ class LocationView:
             items.extend([
                 MenuItem("2", "Добавяне на нова локация", self.add_location),
                 MenuItem("3", "Редактиране на локация", self.edit_location),
-                MenuItem("4", "Изтриване на локация", self.delete_location)
-            ])
+                MenuItem("4", "Изтриване на локация", self.delete_location)])
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на локации", items)
 
@@ -107,12 +106,8 @@ class LocationView:
                 print(f"Грешка: {e}")
 
         try:
-            self.location_controller.update(
-                location.location_id,
-                name=new_name,
-                zone=new_zone,
-                capacity=new_cap
-            )
+            self.location_controller.update(location.location_id, name=new_name, zone=new_zone,
+                                            capacity=new_cap)
             print("Данните са обновени.")
         except Exception as e:
             print(f"Грешка: {e}")

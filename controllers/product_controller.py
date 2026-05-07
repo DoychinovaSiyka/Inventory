@@ -96,13 +96,11 @@ class ProductController:
             changes.append(f"име: {product.name} -> {new_name}")
             product.name = new_name
             product.update_modified()
-
         if new_description is not None:
             desc = ProductValidator.validate_description(new_description)
             product.description = desc
             product.update_modified()
             changes.append("описание: променено")
-
         if new_price is not None:
             price = ProductValidator.parse_float(new_price, "Цена")
             old_p = product.price

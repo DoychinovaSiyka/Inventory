@@ -1,10 +1,8 @@
 from typing import List, Optional
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
-from filters.invoice_filters import (
-    filter_by_customer, filter_by_product, filter_by_date,
-    filter_by_total_range, filter_by_date_range, filter_advanced
-)
+from filters.invoice_filters import (filter_by_customer, filter_by_product, filter_by_date,
+                                     filter_by_total_range, filter_by_date_range, filter_advanced)
 
 
 class InvoiceController:
@@ -57,7 +55,7 @@ class InvoiceController:
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)
 
-        # customer fallback
+
         if not customer or str(customer).strip() == "":
             customer = "Неизвестен клиент"
 
@@ -83,12 +81,9 @@ class InvoiceController:
         if not target_id:
             return None
 
-        # Първо търсим пълно ID
         for inv in self.invoices:
             if inv.invoice_id == target_id:
                 return inv
-
-        # После търсим по кратък код
         for inv in self.invoices:
             if inv.invoice_id.startswith(target_id):
                 return inv

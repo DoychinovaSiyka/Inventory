@@ -97,12 +97,8 @@ class SupplierView:
         new_address = new_address or supplier.address
 
         try:
-            self.controller.update(
-                supplier_id=supplier.supplier_id,
-                name=new_name,
-                contact=new_contact,
-                address=new_address
-            )
+            self.controller.update(supplier_id=supplier.supplier_id, name=new_name,
+                                   contact=new_contact, address=new_address)
             print("Данните са обновени.")
         except Exception as e:
             print(f"Грешка: {e}")
