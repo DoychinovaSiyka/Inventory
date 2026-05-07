@@ -67,5 +67,4 @@ class SupplierController:
         return True
 
     def save_changes(self) -> None:
-        """Записва пълните ID-та в JSON."""
         self.repo.save([s.to_dict() for s in self.suppliers])

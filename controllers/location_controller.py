@@ -5,7 +5,6 @@ from validators.location_validator import LocationValidator
 
 class LocationController:
     """Контролерът управлява локациите в системата."""
-
     def __init__(self, repo, activity_log_controller=None, inventory_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -94,5 +93,4 @@ class LocationController:
         return True
 
     def save_changes(self) -> None:
-        # Записваме пълните 36-символни UUID в JSON файла
         self.repo.save([l.to_dict() for l in self.locations])

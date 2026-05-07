@@ -20,17 +20,17 @@ class UserController:
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
-    # --- НОВ ПОМОЩЕН МЕТОД ЗА СИНХРОНИЗАЦИЯ С VIEW ---
+
     def find_user_flexible(self, identifier: str) -> Optional[User]:
         """Търси потребител по пълно ID, кратко ID или Username."""
         if not identifier: return None
         target = str(identifier).strip()
 
-        # 1. Опит за търсене по ID (пълно или кратко)
-        user = self.get_by_id(target)
-        if user: return user
 
-        # 2. Опит за търсене по Username
+        user = self.get_by_id(target)
+        if user:
+            return user
+
         return self.get_by_username(target)
 
     def _hash_password(self, password: str) -> str:
@@ -104,7 +104,6 @@ class UserController:
 
         UserValidator.confirm_admin(acting_user)
         UserValidator.validate_status(new_status)
-        # Сравняваме реалните потребителски имена за сигурност
         UserValidator.validate_not_self(acting_user.username, user.username)
 
         user.status = new_status

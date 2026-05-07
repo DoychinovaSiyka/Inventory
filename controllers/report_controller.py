@@ -45,16 +45,10 @@ class ReportController:
 
         result = []
 
-        # Подготвяме името за сравнение
+
         search_name = customer_name.lower()
-
-        # Минаваме през всички движения
         for m in all_movements:
-
-            # Търсим само OUT движения
             if m.movement_type.name == "OUT":
-
-                # Проверяваме дали има клиент
                 if m.customer is not None:
                     current_customer = m.customer.lower()
                 else:
@@ -83,15 +77,9 @@ class ReportController:
 
         search_name = product_name.lower()
 
-        # Минаваме през всички движения
         for m in all_movements:
-
-            # Търсим само OUT движения
             if m.movement_type.name == "OUT":
-
-                # Взимаме продукта по ID
                 product_obj = self.product_controller.get_by_id(m.product_id)
-
                 if product_obj is not None:
                     current_product_name = product_obj.name.lower()
                 else:
@@ -104,34 +92,65 @@ class ReportController:
         return result
 
     def report_movements(self):
-        """Показва движението между реални локации. """
+        """Показва движението между реални локации."""
         data = []
+
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
 
             # Логика за локациите
             if mtype == "IN":
                 f_loc = "Доставчик"
+
                 t_loc_obj = self.location_controller.get_by_id(m.location_id)
-                t_loc = t_loc_obj.name if t_loc_obj else "Склад"
+                if t_loc_obj:
+                    t_loc = t_loc_obj.name
+                else:
+                    t_loc = "Склад"
+
             elif mtype == "OUT":
                 f_loc_obj = self.location_controller.get_by_id(m.location_id)
-                f_loc = f_loc_obj.name if f_loc_obj else "Склад"
-                t_loc = (m.customer or "Клиент")
+                if f_loc_obj:
+                    f_loc = f_loc_obj.name
+                else:
+                    f_loc = "Склад"
+
+                if m.customer:
+                    t_loc = m.customer
+                else:
+                    t_loc = "Клиент"
+
             elif mtype == "MOVE":
                 fl_obj = self.location_controller.get_by_id(m.from_location_id)
-                tl_obj = self.location_controller.get_by_id(m.to_location_id)
-                f_loc = fl_obj.name if fl_obj else "Източник"
-                t_loc = tl_obj.name if tl_obj else "Цел"
-            else:
-                f_loc, t_loc = "Н/А", "Н/А"
+                if fl_obj:
+                    f_loc = fl_obj.name
+                else:
+                    f_loc = "Източник"
 
-            data.append({ "movement_id": m.movement_id[:8], "date": str(m.date)[:10], "type": mtype,
-                          "product": m.product_name,
-                          "quantity": m.quantity, "unit": m.unit, "from": f_loc, "to": t_loc})
+                tl_obj = self.location_controller.get_by_id(m.to_location_id)
+                if tl_obj:
+                    t_loc = tl_obj.name
+                else:
+                    t_loc = "Цел"
+
+            else:
+                f_loc = "Н/А"
+                t_loc = "Н/А"
+
+            # Подготовка на реда
+            movement_id_short = m.movement_id[:8]
+            date_short = str(m.date)[:10]
+            product_name = m.product_name
+            quantity = m.quantity
+            unit = m.unit
+
+            row = {"movement_id": movement_id_short, "date": date_short, "type": mtype,
+                   "product": product_name, "quantity": quantity, "unit": unit, "from": f_loc,
+                   "to": t_loc}
+
+            data.append(row)
 
         return ReportResult({"total": len(data)}, data)
-
 
     def report_deliveries_all(self, keyword=None):
         data = []
@@ -180,7 +199,7 @@ class ReportController:
         pid = str(product.product_id)
         movements = self.movement_controller.movements
 
-        # Филтрираме движенията за този продукт веднъж
+        # Филтрираме движенията за този продукт
         prod_moves = [m for m in movements if str(m.product_id) == pid]
 
         total_in = sum(float(m.quantity) for m in prod_moves if m.movement_type.name == "IN")

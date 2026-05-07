@@ -85,7 +85,7 @@ class InventoryApplication:
     def _login_flow(self):
         """Процес по автентикация на потребител."""
         while True:
-            print("\n--- Вход в системата ---")
+            print("\nВход в системата")
             username = input("Потребителско име (Enter за връщане): ").strip()
             if not username:
                 break
@@ -93,19 +93,19 @@ class InventoryApplication:
             password = input_password("Парола: ")
             try:
                 user = self.user_controller.login(username, password)
-                print(f"\nДобре дошли, {user.first_name}! Роля: {user.role}")
+                print(f"\nДобре дошли, {user.first_name}. Роля: {user.role}")
 
                 if user.role == "Admin":
                     self.admin_menu.show_menu(user)
                 elif user.role == "Operator":
                     self.operator_menu.show_menu(user)
                 else:
-                    print("Грешка: Непозната роля в системата.")
+                    print("Непозната роля.")
                 break
 
             except ValueError as e:
                 print(f"\nГрешка при вход: {e}")
-                print("Моля, опитайте отново.\n")
+                print("Опитайте отново.\n")
 
     def _anonymous_flow(self):
         """Достъп за разглеждане без регистрация."""
@@ -115,30 +115,26 @@ class InventoryApplication:
     def run(self):
         """Главен цикъл на приложението."""
         while True:
-            print("\n" + "=" * 45)
-            print("   СКЛАДОВА СИСТЕМА - ГЛАВНО МЕНЮ")
-            print("=" * 45)
-            print(" 1. Вход")
-            print(" 2. Анонимен достъп (Само преглед)")
-            print(" 0. Изход")
-            print("-" * 45)
+            print("\nСкладова система")
+            print("1. Вход")
+            print("2. Анонимен достъп (само преглед)")
+            print("0. Изход")
 
             choice = input("Вашият избор: ").strip()
             if choice == "1":
                 self._login_flow()
             elif choice == "2":
                 self._anonymous_flow()
-            elif choice == choice == "0":
-                print("\nПриключване на работа. Довиждане!")
+            elif choice == "0":
+                print("\nПриключване на работа.")
                 sys.exit()
             else:
-                print("\nНевалиден избор. Моля, изберете опция от менюто.")
-
+                print("\nНевалиден избор.")
 
 if __name__ == "__main__":
     try:
         app = InventoryApplication()
         app.run()
     except KeyboardInterrupt:
-        print("\n\nПрограмата е прекъсната принудително.")
+        print("\nПрограмата е прекъсната.")
         sys.exit()
