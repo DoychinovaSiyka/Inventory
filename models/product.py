@@ -6,9 +6,9 @@ class Product:
     def __init__(self, product_id, name, categories, unit, description, price,
                  created=None, modified=None):
 
-
+        # 1. ГЕНЕРИРАНЕ: Вече пазим пълното 36-символно UUID за базата
         if not product_id:
-            self.product_id = str(uuid.uuid4())[:8]
+            self.product_id = str(uuid.uuid4())
         else:
             self.product_id = str(product_id)
 
@@ -23,16 +23,17 @@ class Product:
         self.modified = modified if modified else now
 
     def update_modified(self):
+        """Обновява датата при редакция."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
         """
-        СИНХРОН С REPO: Превръща обекта в речник за запис в JSON.
-        Записваме само ID-тата на категориите.
+        Записваме в JSON пълното ID на продукта и пълните ID-та на категориите му.
         """
         return {
             "product_id": self.product_id,
             "name": self.name,
+            # Тук също пазим пълните ID-та на категориите за сигурна връзка
             "categories": [c.category_id for c in self.categories] if self.categories else [],
             "unit": self.unit,
             "description": self.description,
@@ -43,13 +44,12 @@ class Product:
 
     @staticmethod
     def from_dict(data, category_controller=None):
-        """
-        СИНХРОН С ВАЛИДАТОРА: Зарежда данни и възстановява връзките с категориите.
-        """
+        """Възстановява обекта и неговите връзки."""
         categories = []
         if category_controller:
             cat_ids = data.get("categories", [])
             for cid in cat_ids:
+                # Контролерът вече знае как да намери категория по пълно или кратко ID
                 c = category_controller.get_by_id(cid)
                 if c:
                     categories.append(c)
@@ -64,3 +64,12 @@ class Product:
             created=data.get("created"),
             modified=data.get("modified")
         )
+
+    def __str__(self):
+        # 2. ВИЗУАЛИЗАЦИЯ: Само тук режем до 8 символа за конзолата
+        short_id = self.product_id[:8]
+        cats_str = ", ".join([c.name for c in self.categories]) if self.categories else "Няма"
+
+        return (f"Продукт: {self.name} [ID: {short_id}]\n"
+                f"  - Категории: {cats_str}\n"
+                f"  - Цена: {self.price:.2f} {self.unit}")

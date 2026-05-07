@@ -1,51 +1,42 @@
 from typing import List, Optional
 from models.user_activity_log import UserActivityLog
 
-
-
 class UserActivityLogController:
     """Контролерът управлява логовете и ги записва в JSON."""
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме съществуващите логове от репозиториума
+        # Зареждаме съществуващите логове (с пълни UUID за user_id)
         raw_data = self.repo.load() or []
         self.logs: List[UserActivityLog] = [UserActivityLog.from_dict(l) for l in raw_data]
 
-    def add_log(self, user_id, action, details=""):
-        new_log = UserActivityLog(user_id=user_id, action=action, details=details)
+    # СИНХРОНИЗАЦИЯ: Прекръстваме го на log_action, за да съответства на повикванията в другите контролери
+    def log_action(self, user_id, action, details=""):
+        # user_id тук трябва да е пълното UUID (вече го оправихме в MovementController и ProductController)
+        new_log = UserActivityLog(user_id=str(user_id), action=action, details=details)
         self.logs.append(new_log)
         self.save_changes()
         return new_log
 
     # READ - Получаване на всички логове
     def get_all(self) -> List[UserActivityLog]:
-        """Връща пълната история на действията."""
         return self.logs
 
-    # READ - Филтриране по потребител
+    # READ - Филтриране по потребител (ИНТЕЛИГЕНТНО)
     def get_by_user(self, user_id: str) -> List[UserActivityLog]:
-        """Връща всички действия на конкретен потребител."""
-        uid = str(user_id)
-        return [log for log in self.logs if log.user_id == uid]
+        """Връща действия на потребител, поддържа и кратко ID."""
+        uid = str(user_id).strip()
+        # Позволяваме търсене по началото на UUID-то
+        return [log for log in self.logs if str(log.user_id).startswith(uid)]
 
     # READ - Търсене по действие
     def search_by_action(self, action_keyword: str) -> List[UserActivityLog]:
-        """Търси логове по ключова дума в действието."""
         keyword = action_keyword.lower()
         return [log for log in self.logs if keyword in log.action.lower()]
 
     def save_changes(self):
         self.repo.save([log.to_dict() for log in self.logs])
 
-
-    # Изчистване на логове /записи от историята/ - полезно при администрация
     def clear_logs(self):
+        """Изчистване на историята."""
         self.logs = []
         self.save_changes()
-
-
-
-# UserActivityLogController е единственият контролер, който не използва dependency injection.
-# Това е умишлено, защото той винаги работи само с един конкретен лог файл и е
-# напълно самостоятелен. Всички останали контролери получават JSONRepository отвън,
-# което е по‑професионално и следва SOLID принципите.

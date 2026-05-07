@@ -6,7 +6,7 @@ from validators.category_validator import CategoryValidator
 class Category:
     def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
 
-        # 1. ГЕНЕРИРАНЕ: Ако няма ID, създаваме ПЪЛНО UUID (36 символа)
+
         if not category_id:
             self.category_id = str(uuid.uuid4())
         else:
@@ -56,7 +56,6 @@ class Category:
         )
 
     def __str__(self):
-        # 2. ВИЗУАЛИЗАЦИЯ: Само тук режем за пред потребителя
         short_id = self.category_id[:8]
         # Ако има родител, също му показваме само първите 8 символа
         parent_info = f" (Подкатегория на: {self.parent_id[:8]})" if self.parent_id else ""

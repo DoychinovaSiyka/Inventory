@@ -5,38 +5,53 @@ from validators.supplier_validator import SupplierValidator
 
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
+
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме съществуващите данни от репозиториума
+        # Зареждаме съществуващите данни (с пълни UUID от JSON)
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
-
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
 
-        supplier = Supplier(name=name.strip(), contact=contact.strip(), address=address.strip())
+        # СИНХРОНИЗАЦИЯ: Моделът автоматично ще генерира пълно UUID
+        supplier = Supplier(
+            supplier_id=None,
+            name=name.strip(),
+            contact=contact.strip(),
+            address=address.strip()
+        )
+
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier
 
-
     # READ
     def get_all(self) -> List[Supplier]:
-        """Връща всички доставчици."""
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        sid = str(supplier_id)
+        """
+        КЛЮЧОВА ПРОМЯНА: Поддържа търсене по кратко ID (префикс).
+        """
+        sid = str(supplier_id).strip()
+        if not sid:
+            return None
+
         for supplier in self.suppliers:
-            if supplier.supplier_id == sid:
+            # Проверка дали пълното ID започва с въведеното
+            if supplier.supplier_id.startswith(sid):
                 return supplier
         return None
 
-
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
-        supplier = SupplierValidator.validate_exists(supplier_id, self)
+
+        # Намираме реалния обект (поддържа кратко ID)
+        supplier = self.get_by_id(supplier_id)
+        if not supplier:
+            raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
         if name is not None:
             SupplierValidator.validate_name(name)
@@ -47,20 +62,21 @@ class SupplierController:
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
+
         supplier.update_modified()
         self.save_changes()
         return supplier
 
     def remove(self, supplier_id: str) -> bool:
-        """ Изтрива доставчик след проверка за съществуване. """
-        SupplierValidator.validate_exists(supplier_id, self)
+        """ Изтрива доставчик след интелигентна проверка. """
         supplier = self.get_by_id(supplier_id)
-        if supplier:
-            self.suppliers.remove(supplier)
-            self.save_changes()
-            return True
-        return False
+        if not supplier:
+            raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
+
+        self.suppliers.remove(supplier)
+        self.save_changes()
+        return True
 
     def save_changes(self) -> None:
-        """Записва всички доставчици в JSON хранилището."""
+        """Записва пълните 36-символни ID-та в JSON."""
         self.repo.save([s.to_dict() for s in self.suppliers])

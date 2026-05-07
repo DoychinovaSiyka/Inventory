@@ -1,22 +1,22 @@
 import uuid
 from datetime import datetime
 
-
 class UserActivityLog:
     def __init__(self, user_id, action, details="", timestamp=None, log_id=None):
         """ Модел за лог запис. Проследява действията на потребителите. """
 
-        # СИНХРОНИЗАЦИЯ: 8 символа за ID на самия лог
+        # 1. ГЕНЕРИРАНЕ: Пълно UUID за самия лог запис в JSON файла
         if not log_id:
-            self.log_id = str(uuid.uuid4())[:8]
+            self.log_id = str(uuid.uuid4())
         else:
             self.log_id = str(log_id)
 
-        # СИНХРОНИЗАЦИЯ: user_id трябва да е 8 символа, за да съвпада с модела User
-        self.user_id = str(user_id)[:8]
+        # 2. ВРЪЗКА: Пазим ПЪЛНОТО ID на потребителя (36 символа),
+        # за да можем винаги да го намерим в системата без грешки.
+        self.user_id = str(user_id)
 
         self.action = str(action)  # Напр: "LOGIN", "CREATE_PRODUCT", "SALE"
-        self.details = str(details)  # Допълнителна инфо (напр. "Продукт: Ябълки")
+        self.details = str(details)  # Допълнителна инфо
 
         if timestamp:
             self.timestamp = timestamp
@@ -24,7 +24,7 @@ class UserActivityLog:
             self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
-        """Превръща лог записа в речник за JSON съхранение."""
+        """Превръща лог записа в речник за JSON съхранение с пълни данни."""
         return {
             "log_id": self.log_id,
             "user_id": self.user_id,
@@ -47,5 +47,7 @@ class UserActivityLog:
         )
 
     def __str__(self):
-        # Оптимизиран изглед за конзолата
-        return f"[{self.timestamp}] Потр. ID: {self.user_id} | Действие: {self.action} | Детайли: {self.details}"
+        # 3. ВИЗУАЛИЗАЦИЯ: Режем ID-тата само за конзолата, за да не се разтяга екрана
+        short_log_id = self.log_id[:8]
+        short_user_id = self.user_id[:8]
+        return f"[{self.timestamp}] (Лог: {short_log_id}) Потр. ID: {short_user_id} | Действие: {self.action} | Детайли: {self.details}"

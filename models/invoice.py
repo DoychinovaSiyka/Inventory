@@ -6,8 +6,7 @@ from validators.invoice_validator import InvoiceValidator
 class Invoice:
     @staticmethod
     def generate_id():
-        # СИНХРОН: Фактурите трябва да имат кратки, четими номера
-        return str(uuid.uuid4())[:8]
+        return str(uuid.uuid4())
 
     @staticmethod
     def now():
@@ -15,9 +14,10 @@ class Invoice:
 
     def __init__(self, product, quantity, unit, unit_price, total_price, customer, movement_id=None,
                  date=None, created=None, modified=None, invoice_id=None):
-        # Използваме подаденото ID или генерираме ново 8-символно
-        self.invoice_id = invoice_id or Invoice.generate_id()
-        # СИНХРОН: movement_id също трябва да е краткото ID от модела Movement
+        # 1. ИДЕНТИФИКАЦИЯ: Пазим пълното ID
+        self.invoice_id = str(invoice_id) if invoice_id else Invoice.generate_id()
+
+        # movement_id също се пази като пълно ID (за връзка с модела Movement)
         self.movement_id = str(movement_id) if movement_id else None
 
         self.product = product
@@ -32,6 +32,7 @@ class Invoice:
         self.created = created or now_val
         self.modified = modified or now_val
 
+
         InvoiceValidator.validate_all(
             product=self.product, customer=self.customer, quantity=self.quantity,
             unit=self.unit, unit_price=self.unit_price, movement_id=self.movement_id,
@@ -43,7 +44,7 @@ class Invoice:
         self.modified = Invoice.now()
 
     def to_dict(self):
-        """Конвертиране към речник за JSON съхранение."""
+        """Конвертиране към речник за JSON съхранение (с пълно ID)."""
         return {
             "invoice_id": self.invoice_id,
             "movement_id": self.movement_id,
@@ -79,5 +80,5 @@ class Invoice:
         )
 
     def __str__(self):
-        # Красив изглед за конзолата
-        return f"Фактура #{self.invoice_id} | Клиент: {self.customer} | Общо: {self.total_price:.2f} лв."
+        short_id = self.invoice_id[:8]
+        return f"Фактура #{short_id} | Клиент: {self.customer} | Общо: {self.total_price:.2f} лв."

@@ -12,7 +12,6 @@ class InventoryValidator:
             raise ValueError(f"{field_name} трябва да е поне {min_len} символа.")
         if clean_text.isdigit():
             raise ValueError(f"{field_name} не може да съдържа само цифри.")
-
         return clean_text
 
     @staticmethod
@@ -27,11 +26,22 @@ class InventoryValidator:
 
     @staticmethod
     def _validate_ids(product_id, warehouse_id=None):
-        # Проверка за задължителни ID-та
         if not product_id:
             raise ValueError("ID на продукт е задължително.")
         if warehouse_id is not None and not warehouse_id:
             raise ValueError("ID на склад е задължително.")
+
+    @staticmethod
+    def _resolve_id(short_id, keys_list):
+        """
+        Намира пълното ID по въведено кратко ID.
+        Ако потребителят въведе 'a1b2', търсим UUID, който започва с това.
+        """
+        short_id = str(short_id).lower()
+        for full_id in keys_list:
+            if full_id.lower().startswith(short_id):
+                return full_id
+        return None
 
     @staticmethod
     def validate_increase(product_id, product_name, warehouse_id, qty):
@@ -43,54 +53,59 @@ class InventoryValidator:
 
     @staticmethod
     def validate_decrease(product_id, warehouse_id, qty, master_inventory):
-        # Проверка при OUT спрямо структурата на инвентара
         InventoryValidator._validate_ids(product_id, warehouse_id)
         val = InventoryValidator._validate_number(qty, "Количеството за OUT")
         if val <= 0:
             raise ValueError("Количеството за OUT трябва да бъде по-голямо от 0.")
 
-        p_id_str = str(product_id)
         products = master_inventory.get("products", {})
-        if p_id_str not in products:
-            raise ValueError("Продуктът не съществува в системата за наличности.")
 
-        product_data = products[p_id_str]
+        p_id_full = InventoryValidator._resolve_id(product_id, products.keys())
+        if not p_id_full:
+            raise ValueError(f"Продукт с ID {product_id} не съществува.")
+
+        product_data = products[p_id_full]
         locations = product_data.get("locations", {})
-        current_qty = float(locations.get(str(warehouse_id), 0.0))
+
+        w_id_full = InventoryValidator._resolve_id(warehouse_id, locations.keys())
+        if not w_id_full:
+            raise ValueError(f"Локация {warehouse_id} не е намерена за този продукт.")
+
+        current_qty = float(locations.get(w_id_full, 0.0))
         if current_qty < val:
-            raise ValueError(f"Недостатъчна наличност в склад {warehouse_id}! " 
-                             f"Налично: {current_qty}, Заявка: {val}")
+            raise ValueError(f"Недостатъчна наличност! В склад {warehouse_id} има само {current_qty}.")
 
     @staticmethod
-    def validate_move(product_id, product_name, from_wh, to_wh, qty, master_inventory):
-        # Проверка при MOVE между два склада
+    def validate_move(product_id, from_wh, to_wh, qty, master_inventory):
         InventoryValidator._validate_ids(product_id)
         if str(from_wh) == str(to_wh):
             raise ValueError("Изходният и целевият склад не могат да бъдат еднакви.")
 
         val = InventoryValidator._validate_number(qty, "Количеството за MOVE")
-        p_id_str = str(product_id)
         products = master_inventory.get("products", {})
 
-        if p_id_str in products:
-            from_wh_qty = float(products[p_id_str].get("locations", {}).get(str(from_wh), 0.0))
-            if from_wh_qty < val:
-                raise ValueError(f"Няма достатъчно стока в склад {from_wh} за преместване. "
-                                 f"(Налично: {from_wh_qty})")
-        else:
+        p_id_full = InventoryValidator._resolve_id(product_id, products.keys())
+        if not p_id_full:
             raise ValueError("Продуктът не е намерен в инвентара.")
+
+        locations = products[p_id_full].get("locations", {})
+        from_wh_full = InventoryValidator._resolve_id(from_wh, locations.keys())
+
+        if not from_wh_full:
+            raise ValueError(f"Изходният склад {from_wh} не е намерен или е празен.")
+
+        from_wh_qty = float(locations.get(from_wh_full, 0.0))
+        if from_wh_qty < val:
+            raise ValueError(f"Няма достатъчно стока за преместване. (Налично в {from_wh}: {from_wh_qty})")
 
     @staticmethod
     def validate_inventory_integrity(master_inventory):
-        # Проверка дали total_stock съвпада със сумата по локации
         products = master_inventory.get("products", {})
         for p_id, data in products.items():
             wh_sum = sum(float(v) for v in data.get("locations", {}).values())
             total_recorded = float(data.get("total_stock", 0.0))
             if abs(wh_sum - total_recorded) > 0.0001:
-                raise ValueError(f"Разсинхронизация при {data['name']}! " 
-                                 f"Сума по локации: {wh_sum}, "
-                                 f"Общо записано: {total_recorded}.")
+                raise ValueError(f"Разсинхронизация при {data['name']}!")
 
     @staticmethod
     def validate_movements(movements):
@@ -107,6 +122,7 @@ class InventoryValidator:
             val = InventoryValidator._validate_number(qty, f"Количество в запис #{idx}")
             if val <= 0:
                 raise ValueError(f"Запис #{idx}: Количеството трябва да е над 0.")
+
             if mtype == "MOVE":
                 if not m.get("from_warehouse") or not m.get("to_warehouse"):
                     raise ValueError(f"Запис #{idx}: Липсва склад при MOVE.")

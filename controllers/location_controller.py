@@ -5,31 +5,21 @@ from validators.location_validator import LocationValidator
 
 class LocationController:
     """Контролерът управлява локациите в системата."""
+
     def __init__(self, repo, activity_log_controller=None, inventory_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
         self.inventory_controller = inventory_controller
 
+        # Зареждане на локациите (с пълни UUID от JSON)
         raw = self.repo.load()
         if not raw or not isinstance(raw, list):
             raw = []
         self.locations: List[Location] = [Location.from_dict(l) for l in raw]
 
-
     def _log(self, action: str, message: str):
         if self.activity_log:
-            self.activity_log.add_log("system", action, message)
-
-    def _generate_id(self) -> str:
-        if not self.locations:
-            return "W1"
-        numeric_ids = []
-        for loc in self.locations:
-            num = str(loc.location_id).replace("W", "")
-            if num.isdigit():
-                numeric_ids.append(int(num))
-        next_id = max(numeric_ids) + 1 if numeric_ids else 1
-        return f"W{next_id}"
+            self.activity_log.log_action("system", action, message)
 
 
     # CREATE
@@ -40,10 +30,15 @@ class LocationController:
 
         LocationValidator.validate_unique_name(name, self.locations)
 
-        location = Location(location_id = self._generate_id(), name=name, zone=zone, capacity=capacity)
+        # СИНХРОНИЗАЦИЯ: Подаваме location_id=None, моделът генерира пълно UUID
+        location = Location(location_id=None, name=name, zone=zone, capacity=capacity)
+
         self.locations.append(location)
         self.save_changes()
-        self._log("ADD_LOCATION", f"Добавена локация: {name}")
+
+        # В лога записваме съкратено ID за прегледност
+        short_id = location.location_id[:8]
+        self._log("ADD_LOCATION", f"Добавена локация: {name} (ID: {short_id})")
 
         return location
 
@@ -52,30 +47,43 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
+        """
+        КЛЮЧОВА ПРОМЯНА: Търсим по префикс.
+        Позволява на потребителя да въведе само първите 8 символа.
+        """
+        target_id = str(location_id).strip()
+        if not target_id:
+            return None
+
         for loc in self.locations:
-            if loc.location_id == location_id:
+            # Проверяваме дали пълното ID в базата започва с въведеното
+            if loc.location_id.startswith(target_id):
                 return loc
         return None
 
     def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None) -> bool:
-
+        # get_by_id вече ще намери локацията и по съкратено ID
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
+
         if name is not None:
             name = LocationValidator.validate_name(name)
-            LocationValidator.validate_unique_name(name, self.locations, exclude_id=location_id)
+            # Проверка за уникалност, изключвайки ТЕКУЩОТО пълно ID
+            LocationValidator.validate_unique_name(name, self.locations, exclude_id=location.location_id)
             location.name = name
+
         if zone is not None:
             zone = LocationValidator.validate_zone(zone)
             location.zone = zone
+
         if capacity is not None:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
 
         location.update_modified()
         self.save_changes()
-        self._log("EDIT_LOCATION", f"Обновена локация {location_id}")
+        self._log("EDIT_LOCATION", f"Обновена локация {location.location_id[:8]}")
 
         return True
 
@@ -84,16 +92,18 @@ class LocationController:
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Дали в склада има наличности
+        # Проверка за наличности
         if self.inventory_controller:
-            stock = self.inventory_controller.get_stock_by_location(location_id)
+            stock = self.inventory_controller.get_stock_by_location(location.location_id)
             if stock and sum(item.quantity for item in stock) > 0:
                 raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
 
-        self.locations = [l for l in self.locations if l.location_id != location_id]
+        full_id = location.location_id
+        self.locations = [l for l in self.locations if l.location_id != full_id]
         self.save_changes()
-        self._log("DELETE_LOCATION", f"Изтрита локация {location_id}")
+        self._log("DELETE_LOCATION", f"Изтрита локация {full_id[:8]}")
         return True
 
     def save_changes(self) -> None:
+        # Записваме пълните 36-символни UUID в JSON файла
         self.repo.save([l.to_dict() for l in self.locations])

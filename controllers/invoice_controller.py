@@ -12,7 +12,7 @@ class InvoiceController:
         self.repo = repo
         self.activity_log = activity_log_controller
 
-        # Зареждане на фактурите
+        # Зареждане на фактурите (с пълни UUID от JSON-а)
         raw = self.repo.load() or []
         self.invoices: List[Invoice] = [Invoice.from_dict(inv) for inv in raw]
 
@@ -21,19 +21,19 @@ class InvoiceController:
 
     def _log(self, user_id: str, action: str, message: str):
         if self.activity_log:
-            # Използваме синхронизираното име на метода
             self.activity_log.log_action(user_id, action, message)
 
-    # СЪЗДАВАНЕ НА ФАКТУРА (РЪЧНО)
+    # СЪЗДАВАНЕ НА ФАКТУРА
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         InvoiceValidator.validate_all(**invoice_data)
 
-        # СИНХРОНИЗАЦИЯ: Invoice_id не се подава, моделът го генерира (8 символа)
         invoice = Invoice(**invoice_data)
-
         self.invoices.append(invoice)
         self._save_changes()
-        self._log(user_id, "GENERATE_INVOICE", f"Ръчно генерирана фактура #{invoice.invoice_id} за {invoice.customer}")
+
+        # В лога записваме само 8 символа за красота
+        self._log(user_id, "GENERATE_INVOICE",
+                  f"Ръчно генерирана фактура #{invoice.invoice_id[:8]} за {invoice.customer}")
         return invoice
 
     # АВТОМАТИЧНА ФАКТУРА ОТ OUT ДВИЖЕНИЕ
@@ -42,25 +42,16 @@ class InvoiceController:
         unit_price = float(movement.price)
         total_price = round(qty * unit_price, 2)
 
-        # СИНХРОНИЗАЦИЯ: Махаме str(uuid.uuid4()) и оставяме invoice_id=None
-        invoice = Invoice(
-            product=product.name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            movement_id=movement.movement_id,
-            date=movement.date,
-            created=movement.date,
-            modified=movement.date,
-            invoice_id=None  # Моделът ще генерира 8-символно ID
-        )
+        invoice = Invoice(product=product.name, quantity=qty, unit=movement.unit, unit_price=unit_price,
+                          total_price=total_price, customer=customer, movement_id=movement.movement_id,
+                          date=movement.date, created=movement.date, modified=movement.date, invoice_id=None)
 
         self.invoices.append(invoice)
         self._save_changes()
+
+        # В лога записваме краткото ID на фактурата и краткото ID на движението
         self._log(user_id, "GENERATE_INVOICE",
-                  f"Автоматична фактура #{invoice.invoice_id} за движение {movement.movement_id}")
+                  f"Автоматична фактура #{invoice.invoice_id[:8]} за движение {movement.movement_id[:8]}")
 
         return invoice
 
@@ -68,9 +59,14 @@ class InvoiceController:
         return self.invoices
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
+        """ Търсим по префикс. Позволява на потребителя да въведе само първите 8 символа."""
         target_id = str(invoice_id).strip()
+        if not target_id:
+            return None
+
         for inv in self.invoices:
-            if inv.invoice_id == target_id:
+            # Сравняваме дали пълното ID започва с въведеното от потребителя
+            if inv.invoice_id.startswith(target_id):
                 return inv
         return None
 
@@ -83,15 +79,24 @@ class InvoiceController:
         inv.customer = new_customer
         inv.update_modified()
         self._save_changes()
-        self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {invoice_id}")
+
+        # Логваме със съкратено ID
+        self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {inv.invoice_id[:8]}")
         return True
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
+        # Намираме реалната фактура, за да вземем пълното ѝ ID
+        inv = self.get_by_id(invoice_id)
+        if not inv:
+            return False
+
+        full_id = inv.invoice_id
         before = len(self.invoices)
-        self.invoices = [inv for inv in self.invoices if inv.invoice_id != invoice_id]
+        self.invoices = [i for i in self.invoices if i.invoice_id != full_id]
+
         if len(self.invoices) < before:
             self._save_changes()
-            self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {invoice_id}")
+            self._log(user_id, "DELETE_INVOICE", f"Изтрита фактура {full_id[:8]}")
             return True
         return False
 
@@ -110,8 +115,7 @@ class InvoiceController:
         return filter_by_total_range(self.invoices, min_total, max_total)
 
     def advanced_search(self, **kwargs):
-        InvoiceValidator.validate_search_filters(
-            kwargs.get("start_date"), kwargs.get("end_date"),
-            kwargs.get("min_total"), kwargs.get("max_total")
-        )
+        InvoiceValidator.validate_search_filters(kwargs.get("start_date"),
+                                                 kwargs.get("end_date"), kwargs.get("min_total"),
+                                                 kwargs.get("max_total"))
         return filter_advanced(self.invoices, **kwargs)

@@ -6,49 +6,60 @@ class InventoryController:
         self.product_controller = product_controller
         self.location_controller = location_controller
 
-        # products: { product_id: { "locations": { loc_id: qty } } }
+        # Данните в JSON са с пълни UUID: { "products": { "36-char-uuid": { "locations": { "36-char-uuid": qty } } } }
         self.data = self.repo.load() or {"products": {}}
 
     def _save(self):
         self.repo.save(self.data)
 
-    # ОБЩО КОЛИЧЕСТВО ОТ ВСИЧКИ СКЛАДОВЕ
+    def _get_full_product_id(self, input_id):
+        """Помощен метод: превръща кратко ID в пълно UUID."""
+        product = self.product_controller.get_by_id(input_id)
+        return product.product_id if product else str(input_id)
+
+    def _get_full_location_id(self, input_id):
+        location = self.location_controller.get_by_id(input_id)
+        return location.location_id if location else str(input_id)
+
+    # ОБЩО КОЛИЧЕСТВО
     def get_total_stock(self, product_id):
-        product_id = str(product_id)
-        if product_id not in self.data["products"]:
+        pid = self._get_full_product_id(product_id)
+        if pid not in self.data["products"]:
             return 0.0
 
-        locations = self.data["products"][product_id].get("locations", {})
+        locations = self.data["products"][pid].get("locations", {})
         return sum(float(qty) for qty in locations.values())
 
     # УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ
     def increase_stock(self, product_id, quantity, location_id):
-        product_id = str(product_id)
+        pid = self._get_full_product_id(product_id)
+        lid = self._get_full_location_id(location_id)
         quantity = float(quantity)
 
-        if product_id not in self.data["products"]:
-            self.data["products"][product_id] = {"locations": {}}
+        if pid not in self.data["products"]:
+            self.data["products"][pid] = {"locations": {}}
 
-        locations = self.data["products"][product_id]["locations"]
-        locations[location_id] = locations.get(location_id, 0.0) + quantity
+        locations = self.data["products"][pid]["locations"]
+        locations[lid] = locations.get(lid, 0.0) + quantity
 
         self._save()
 
     # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
     def decrease_stock(self, product_id, quantity, location_id):
-        product_id = str(product_id)
+        pid = self._get_full_product_id(product_id)
+        lid = self._get_full_location_id(location_id)
         quantity = float(quantity)
 
-        if product_id not in self.data["products"]:
+        if pid not in self.data["products"]:
             return False
 
-        locations = self.data["products"][product_id]["locations"]
-        current = locations.get(location_id, 0.0)
+        locations = self.data["products"][pid]["locations"]
+        current = locations.get(lid, 0.0)
 
         if current < quantity:
             return False
 
-        locations[location_id] = current - quantity
+        locations[lid] = current - quantity
         self._save()
         return True
 
@@ -57,6 +68,7 @@ class InventoryController:
         self.data = {"products": {}}
 
         for m in movements:
+            # Тук movement вече съдържа пълните ID-та в обекта си
             pid = str(m.product_id)
             qty = float(m.quantity)
 
@@ -69,11 +81,9 @@ class InventoryController:
             if m_type == "IN":
                 loc = m.location_id
                 locations[loc] = locations.get(loc, 0.0) + qty
-
             elif m_type == "OUT":
                 loc = m.location_id
                 locations[loc] = locations.get(loc, 0.0) - qty
-
             elif m_type == "MOVE":
                 from_loc = m.from_location_id
                 to_loc = m.to_location_id
@@ -84,11 +94,12 @@ class InventoryController:
 
     # FIFO себестойност
     def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):
-        product_id = str(product_id)
+        pid = self._get_full_product_id(product_id)
         batches = []
         total_cost = 0.0
 
-        relevant = [m for m in movements if str(m.product_id) == product_id]
+        # Филтрираме движенията
+        relevant = [m for m in movements if str(m.product_id) == pid]
         relevant.sort(key=lambda x: x.date)
 
         for m in relevant:
@@ -98,7 +109,6 @@ class InventoryController:
             if mtype == "IN":
                 price = float(m.price) if m.price is not None else float(fallback_price)
                 batches.append({"qty": qty, "price": price})
-
             elif mtype == "OUT":
                 need = qty
                 while need > 0 and batches:
@@ -111,31 +121,12 @@ class InventoryController:
                         total_cost += need * b["price"]
                         b["qty"] -= need
                         need = 0
-
         return total_cost
-
-    # Къде има продукт
-    def get_warehouses_with_product(self, product_name):
-        result = []
-
-        for pid, pdata in self.data.get("products", {}).items():
-            product = self.product_controller.get_by_id(pid)
-            if not product:
-                continue
-
-            if product.name.lower() == product_name.lower():
-                locations = pdata.get("locations", {})
-                for warehouse_id, qty in locations.items():
-                    if qty > 0:
-                        result.append((warehouse_id, qty))
-                return result
-
-        return []
 
     # Обща стойност на склада
     def get_total_inventory_value_fifo(self, movement_controller):
         total_value = 0.0
-
+        # Обхождаме продуктите
         for pid, pdata in self.data.get("products", {}).items():
             product = self.product_controller.get_by_id(pid)
             if not product:
@@ -149,6 +140,7 @@ class InventoryController:
             total_in_qty = 0.0
 
             for m in movement_controller.movements:
+                # Сравняваме пълни UUID
                 if str(m.product_id) == str(pid) and m.movement_type.name == "IN":
                     qty = float(m.quantity)
                     price = float(m.price) if m.price is not None else float(product.price)

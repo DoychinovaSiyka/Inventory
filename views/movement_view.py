@@ -15,14 +15,13 @@ class MovementView:
         self.supplier_controller = supplier_controller
 
     def _get_product_total_qty(self, product):
-        """СИНХРОН: Използваме inventory_controller за наличностите."""
+        """Връща общото количество от всички локации."""
         return self.movement_controller.inventory_controller.get_total_stock(product.product_id)
 
     def _get_product_warehouses_with_qty(self, product):
-        """СИНХРОН: Връща локациите, където продуктът реално е наличен."""
-        all_locs = self.location_controller.get_all()
+        """Връща списък с локации, в които продуктът има наличност."""
         result = []
-        for loc in all_locs:
+        for loc in self.location_controller.get_all():
             qty = self.movement_controller.inventory_controller.get_stock_by_location(
                 product.product_id, loc.location_id
             )
@@ -31,78 +30,83 @@ class MovementView:
         return result
 
     def _select_item(self, items, label):
-        """СИНХРОН: Позволява избор чрез кратките 8-символни ID-та."""
+        """Позволява избор по номер или по начало на ID (кратко или пълно)."""
         if not items:
-            print(f"\n[!] Няма налични {label} в системата.\n")
+            print(f"\nНяма налични {label}.\n")
             return None
 
         print(f"\n--- Избор на {label} ---")
         for i, item in enumerate(items, 1):
-            # Универсално взимане на ID, независимо от типа обект
-            iid = getattr(item, 'product_id', getattr(item, 'location_id', getattr(item, 'supplier_id', '???')))
+            full_id = getattr(item, 'product_id',
+                       getattr(item, 'location_id',
+                       getattr(item, 'supplier_id', '')))
+
             qty_info = ""
             if isinstance(item, Product):
                 qty_info = f" | Налично: {self._get_product_total_qty(item)} {item.unit}"
 
-            print(f"{i}. {item.name}{qty_info} (ID: {iid})")
+            print(f"{i}. {item.name}{qty_info} [ID: {full_id[:8]}]")
 
-        choice = input(f"\nИзберете {label} (Номер или ID, Enter за отказ): ").strip()
-        if not choice: return None
+        choice = input(f"\nИзберете {label} (номер или ID, Enter за отказ): ").strip()
+        if not choice:
+            return None
 
-        # Проверка по номер в списъка
-        if choice.isdigit() and 0 < int(choice) <= len(items):
-            return items[int(choice) - 1]
+        if choice.isdigit():
+            index = int(choice) - 1
+            if 0 <= index < len(items):
+                return items[index]
 
-        # Проверка по кратко или пълно ID
+        choice_lower = choice.lower()
         for item in items:
-            iid = getattr(item, 'product_id', getattr(item, 'location_id', getattr(item, 'supplier_id', '')))
-            if iid.lower() == choice.lower():
+            full_id = getattr(item, 'product_id',
+                       getattr(item, 'location_id',
+                       getattr(item, 'supplier_id', '')))
+            if full_id.lower().startswith(choice_lower):
                 return item
 
-        print("[!] Невалиден избор.")
+        print("Невалиден избор. Обектът не е намерен.")
         return None
 
     def _display_results(self, results):
-        """СИНХРОН: Таблица със същия стил като в ProductMenuView."""
+        """Форматира и показва списък с движения."""
         if not results:
-            print("\n[!] Няма записани движения по този критерий.\n")
+            print("\n--- Няма движения по този критерий ---\n")
             return
 
-        # Добавяме ID на самото движение за по-добра проследяемост
-        columns = ["ID", "Дата", "Тип", "Продукт", "К-во", "Партньор", "Склад/Път"]
+        columns = ["ID", "Дата", "Тип", "Продукт", "Количество", "Партньор", "Склад/Път"]
         rows = []
 
         for m in results:
             product = self.product_controller.get_by_id(m.product_id)
-            p_name = product.name if product else "???"
-            p_unit = product.unit if product else ""
+            p_name = product.name if product else "-"
+            p_unit = product.unit if product else "-"
 
-            # Логика за Партньор (Доставчик или Клиент)
-            partner = "Вътрешно"
             if m.movement_type.name == "IN":
                 sup = self.supplier_controller.get_by_id(m.supplier_id) if m.supplier_id else None
                 partner = sup.name if sup else "Доставчик"
             elif m.movement_type.name == "OUT":
-                partner = f"Кл: {m.customer}" if m.customer else "Клиент"
+                partner = m.customer if m.customer else "Клиент"
+            else:
+                partner = "Вътрешно"
 
-            # Логика за Локация
             if m.movement_type.name == "MOVE":
-                l_from = self.location_controller.get_by_id(m.from_location_id)
-                l_to = self.location_controller.get_by_id(m.to_location_id)
-                loc_text = f"{l_from.name if l_from else '?'} -> {l_to.name if l_to else '?'}"
+                loc_from = self.location_controller.get_by_id(m.from_location_id)
+                loc_to = self.location_controller.get_by_id(m.to_location_id)
+                loc_text = f"{(loc_from.name if loc_from else '-')[:10]} -> {(loc_to.name if loc_to else '-')[:10]}"
             else:
                 loc = self.location_controller.get_by_id(m.location_id)
                 loc_text = loc.name if loc else "-"
 
             rows.append([
-                m.movement_id[:8],  # Показваме първите 8 знака от ID-то
-                m.date[5:16],  # Съкратена дата (Месец-Ден Час:Мин)
+                m.movement_id[:8],
+                m.date[5:16],
                 m.movement_type.name,
-                p_name,
+                p_name[:15],
                 f"{m.quantity} {p_unit}",
-                partner,
+                partner[:15],
                 loc_text
             ])
 
-        print(format_table(columns, rows))
-        input("\nНатиснете Enter за връщане към менюто...")
+        print("\n" + format_table(columns, rows))
+        input("\nНатиснете Enter за продължение...")
+

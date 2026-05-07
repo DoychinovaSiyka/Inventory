@@ -6,91 +6,120 @@ class ProductValidator:
 
     @staticmethod
     def validate_uuid(value, field_name="ID"):
-        """Синхронизирано с кратките ID-та (8 символа)"""
-        if not value:
+        """
+        Позволява кратки ID-та (8 символа) или пълни UUID.
+        """
+        if value is None:
             return None
+
         val_str = str(value).strip()
-        # Позволяваме или пълен UUID, или нашите кратки 8-символни кодове
-        if len(val_str) != 8 and len(val_str) < 32:
-            raise ValueError(f"Невалиден формат за {field_name}. Очаква се кратък код (8 симв.)")
-        return val_str
+
+        # Кратък код (8 символа)
+        if len(val_str) == 8:
+            if not val_str.isalnum():
+                raise ValueError(f"{field_name} (кратък код) съдържа невалидни символи.")
+            return val_str
+
+        # Пълен UUID
+        if len(val_str) >= 32:
+            try:
+                if "-" in val_str:
+                    uuid.UUID(val_str)
+                return val_str
+            except:
+                raise ValueError(f"Невалиден UUID формат за {field_name}.")
+
+        raise ValueError(f"Невалиден формат за {field_name}. Въведете кратък код (8 символа) или пълен UUID.")
 
     @staticmethod
     def validate_name(name):
         if not name or not isinstance(name, str):
             raise ValueError("Името на продукта е задължително.")
+
         name = name.strip()
         if len(name) < 3:
             raise ValueError("Името трябва да е поне 3 символа.")
+        if len(name) > 100:
+            raise ValueError("Името е твърде дълго (максимум 100 символа).")
         return name
 
     @staticmethod
     def validate_description(description):
-        """Направено незадължително, за да съвпада с ProductMenuView"""
-        if description is None or description.strip() == "":
-            return ""  # Връщаме празен низ вместо грешка
+        """Опционално поле — ако е празно, връща празен стринг."""
+        if description is None or str(description).strip() == "":
+            return ""
 
-        desc = description.strip()
+        desc = str(description).strip()
         if 0 < len(desc) < 3:
-            raise ValueError("Описанието трябва да е поне 3 символа или празно.")
+            raise ValueError("Описанието трябва да е поне 3 символа или да остане празно.")
         if len(desc) > 1000:
-            raise ValueError("Описанието е твърде дълго (макс 1000 симв.).")
+            raise ValueError("Описанието е твърде дълго.")
         return desc
 
     @staticmethod
     def validate_unit(unit):
-        """Синхронизирано форматиране на мерни единици"""
+        """
+        Унифицира мерните единици, за да няма дублиране.
+        """
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 
         u = unit.strip().lower()
-        # Разширен речник за автоматично коригиране
+
         mapping = {
-            "кг": "кг.", "kg": "кг.", "килограм": "кг.",
-            "бр": "бр.", "брой": "бр.", "pcs": "бр.",
+            "кг": "кг.", "kg": "кг.", "килограм": "кг.", "кило": "кг.",
+            "бр": "бр.", "брой": "бр.", "pcs": "бр.", "бройка": "бр.",
             "л": "л.", "l": "л.", "литър": "л.",
-            "пакет": "пакет", "пк": "пакет"
+            "пакет": "пакет", "пк": "пакет", "pack": "пакет",
+            "м": "м.", "m": "м.", "метър": "м."
         }
 
-        # Ако потребителят въведе "5 кг", взимаме само "кг"
-        u = u.split()[-1]
+        u_parts = u.split()
+        target_unit = u_parts[-1]
 
-        if u in mapping:
-            return mapping[u]
+        if target_unit in mapping:
+            return mapping[target_unit]
 
-        allowed = ["кг.", "бр.", "л.", "пакет"]
-        if u not in allowed:
-            # Ако не е в списъка, но е нормална дума, я оставяме (напр. "кутия")
-            # или хвърляме грешка за пълна строгост:
-            raise ValueError(f"Невалидна мерна единица. Използвайте: {', '.join(allowed)}")
-        return u
+        allowed = ["кг.", "бр.", "л.", "пакет", "м.", "кв.м."]
+        if target_unit not in allowed:
+            if target_unit.isalpha() and len(target_unit) >= 1:
+                return target_unit
+            raise ValueError(f"Невалидна мерна единица. Използвайте стандартните: {', '.join(allowed)}")
+
+        return target_unit
 
     @staticmethod
     def parse_float(value, field_name="стойност"):
-        """Почиства 'лв.', ',' и други символи - ползва се от MenuView"""
+        """Почистване и валидиране на числови стойности."""
         if value is None or str(value).strip() == "":
-            raise ValueError(f"{field_name} е задължителна.")
+            raise ValueError(f"Полето '{field_name}' е задължително.")
 
         if isinstance(value, str):
             value = (value.replace("лв.", "").replace("лв", "")
-                     .replace(",", ".").replace("BGN", "").strip())
+                     .replace(",", ".").replace("bgn", "")
+                     .replace(" ", "").strip())
         try:
             f = float(value)
             if f <= 0:
                 raise ValueError(f"{field_name} трябва да е положително число.")
             return round(f, 2)
         except (ValueError, TypeError):
-            raise ValueError(f"{field_name} трябва да е валидно число.")
+            raise ValueError(f"{field_name} трябва да бъде валидно число.")
 
     @staticmethod
     def validate_unique_name(name, products, exclude_product_id=None):
-        """Проверява за дублиращи се имена в каталога"""
-        if not name: return
+        """Проверява дали името на продукта вече съществува."""
+        if not name:
+            return
 
-        name_lower = name.strip().lower()
+        new_name = name.strip().lower()
         for p in products:
-            if exclude_product_id and str(p.product_id) == str(exclude_product_id):
-                continue
-            if p.name.lower() == name_lower:
-                raise ValueError(f"Продукт с име '{name}' вече съществува.")
+
+            if exclude_product_id:
+                p_id_str = str(p.product_id)
+                if p_id_str == str(exclude_product_id) or p_id_str.startswith(str(exclude_product_id)):
+                    continue
+
+            if p.name.lower() == new_name:
+                raise ValueError(f"Продукт с име '{name}' вече съществува в каталога.")
         return True

@@ -5,9 +5,9 @@ class User:
     def __init__(self, first_name, last_name, email, username, password,
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
-        # СИНХРОНИЗАЦИЯ: Използваме 8 символа за последователност
+        # 1. ГЕНЕРИРАНЕ: Вече пазим пълното 36-символно UUID за сигурност в базата
         if not user_id:
-            self.user_id = str(uuid.uuid4())[:8]
+            self.user_id = str(uuid.uuid4())
         else:
             self.user_id = str(user_id)
 
@@ -50,7 +50,7 @@ class User:
         )
 
     def to_dict(self):
-        """Връща User като речник за JSON запис."""
+        """Връща User като речник за JSON запис (с пълното ID)."""
         return {
             "user_id": self.user_id,
             "first_name": self.first_name,
@@ -65,4 +65,6 @@ class User:
         }
 
     def __str__(self):
-        return f"Потребител: {self.username} [ID: {self.user_id}] | Роля: {self.role} | Статус: {self.status}"
+        # 2. ВИЗУАЛИЗАЦИЯ: Само тук показваме първите 8 символа
+        short_id = self.user_id[:8]
+        return f"Потребител: {self.username} [ID: {short_id}] | Роля: {self.role} | Статус: {self.status}"

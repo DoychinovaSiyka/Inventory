@@ -11,7 +11,7 @@ class CategoryController:
         self.repo = repo
         self.activity_log = activity_log_controller
 
-        # Зареждане на категориите от JSON файла (с пълни UUID)
+        # Зареждане на категориите от JSON файла
         raw_data = self.repo.load() or []
         self.categories: List[Category] = [Category.from_dict(c) for c in raw_data]
 
@@ -20,44 +20,32 @@ class CategoryController:
             self.activity_log.log_action(user_id, action, message)
 
     def _save_changes(self) -> None:
-        # Записва пълните 36-символни UUID в JSON
         self.repo.save([c.to_dict() for c in self.categories])
 
     def add(self, category_data: dict, user_id: str) -> Category:
         name = category_data.get("name")
         description = category_data.get("description", "")
-        parent_id = category_data.get("parent_id")  # Тук може да е 8-цифрено от входа
-
-        # Ако parent_id е съкратено, намираме пълното му ID преди запис
+        parent_id = category_data.get("parent_id")
         if parent_id:
             parent_cat = self.get_by_id(parent_id)
             parent_id = parent_cat.category_id if parent_cat else parent_id
 
-        # Валидации
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_description(description)
         CategoryValidator.validate_parent_exists(parent_id, self.categories)
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
-        # Моделът автоматично ще си генерира ПЪЛНО UUID
-        category = Category(
-            category_id=None,
-            name=name,
-            description=description,
-            parent_id=parent_id
-        )
+        category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
 
         self.categories.append(category)
         self._save_changes()
 
-        # В лога записваме краткото ID за прегледност
         short_id = category.category_id[:8]
         self._log(user_id, "ADD_CATEGORY", f"Добавена категория: {name} (ID: {short_id})")
         return category
 
     def update_name(self, category_id: str, new_name: str, user_id: str) -> bool:
-        # Използваме get_by_id, който вече разпознава съкратени кодове
         category = CategoryValidator.validate_exists(category_id, self)
         CategoryValidator.validate_update_name(new_name)
 
@@ -90,10 +78,7 @@ class CategoryController:
         return False
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
-        """
-        КЛЮЧОВ МЕТОД: Позволява намиране на обект както по пълно ID,
-        така и по първите 8 символа, въведени от потребителя.
-        """
+        """Намиране на обект както по пълно ID, така и по първите 8 символа, въведени от потребителя."""
         target_id = str(category_id).strip()
         if not target_id:
             return None
@@ -104,7 +89,7 @@ class CategoryController:
                 return c
         return None
 
-    # Останалото се запазва, тъй като ползва вътрешните обекти
+
     def get_all(self) -> List[Category]:
         return self.categories
 

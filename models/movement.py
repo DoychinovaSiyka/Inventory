@@ -18,39 +18,41 @@ class Movement:
                  quantity, unit, price=None, supplier_id=None, customer=None, date=None,
                  created=None, modified=None, from_location_id=None, to_location_id=None):
 
-        # СИНХРОНИЗАЦИЯ НА ID: Генерира 8 символа, ако не е подадено друго
+
         if not movement_id:
-            self.movement_id = str(uuid.uuid4())[:8]
+            self.movement_id = str(uuid.uuid4())
         else:
             self.movement_id = str(movement_id)
 
-        self.product_id = product_id
+        # 2. ВРЪЗКИ: Тук пазим ПЪЛНИТЕ ID-та на продукти, потребители и локации
+        self.product_id = str(product_id)
         self.product_name = product_name
-        self.user_id = user_id
-        self.location_id = location_id
+        self.user_id = str(user_id)
+        self.location_id = str(location_id) if location_id else None
+
         self.movement_type = movement_type
 
-        # СИНХРОНИЗАЦИЯ НА ТИПОВЕ: Важно за изчисленията в Контролера (FIFO/Стойност)
+        # Типове данни
         self.quantity = float(quantity) if quantity is not None else 0.0
         self.unit = unit
         self.price = float(price) if price is not None else 0.0
 
-        self.supplier_id = supplier_id
+        self.supplier_id = str(supplier_id) if supplier_id else None
         self.customer = customer
 
         now_val = Movement.now()
         self.date = date or now_val
         self.created = created or now_val
         self.modified = modified or now_val
-        self.from_location_id = from_location_id
-        self.to_location_id = to_location_id
+        self.from_location_id = str(from_location_id) if from_location_id else None
+        self.to_location_id = str(to_location_id) if to_location_id else None
 
     def update_modified(self):
         """Обновява времето на последна промяна."""
         self.modified = Movement.now()
 
     def to_dict(self):
-        """Превръща обекта в речник (за JSON съхранение)."""
+        """Превръща обекта в речник (за JSON съхранение с пълни ID)."""
         return {
             "movement_id": self.movement_id,
             "product_id": self.product_id,
@@ -72,7 +74,6 @@ class Movement:
 
     @staticmethod
     def from_dict(data):
-        """Възстановява обекта от речник (при зареждане от файл)."""
         if not data:
             return None
 
@@ -98,3 +99,18 @@ class Movement:
             from_location_id=data.get("from_location_id"),
             to_location_id=data.get("to_location_id")
         )
+
+    def __str__(self):
+        mid = self.movement_id[:8]
+        pid = self.product_id[:8]
+        mtype = self.movement_type.name
+
+        info = f"[Движение: {mid}] {mtype} | Продукт: {self.product_name} ({pid}) | Кол: {self.quantity} {self.unit}"
+
+        # Добавяме инфо за локациите (също съкратени)
+        if mtype == "MOVE":
+            info += f" от {self.from_location_id[:8]} към {self.to_location_id[:8]}"
+        elif self.location_id:
+            info += f" в склад {self.location_id[:8]}"
+
+        return info

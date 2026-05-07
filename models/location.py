@@ -7,9 +7,9 @@ class Location:
                  name: Optional[str] = "", zone: Optional[str] = "",
                  capacity: int = 0, created: Optional[str] = None, modified: Optional[str] = None):
 
-
+        # 1. ГЕНЕРИРАНЕ: Вече пазим пълното UUID за базата данни
         if location_id is None:
-            self.location_id = str(uuid.uuid4())[:8]
+            self.location_id = str(uuid.uuid4())
         else:
             self.location_id = str(location_id)
 
@@ -30,7 +30,7 @@ class Location:
         self.modified = Location.now()
 
     def to_dict(self):
-        """Правя обекта на речник за JSON."""
+        """Записваме в JSON пълното 36-символно ID."""
         return {
             "location_id": self.location_id,
             "name": self.name,
@@ -56,4 +56,6 @@ class Location:
         )
 
     def __str__(self):
-        return f"Локация: {self.name} [ID: {self.location_id}] | Зона: {self.zone} | Капацитет: {self.capacity}"
+        # 2. ВИЗУАЛИЗАЦИЯ: Режем до 8 символа само за пред потребителя в терминала
+        short_id = self.location_id[:8]
+        return f"Локация: {self.name} [ID: {short_id}] | Зона: {self.zone} | Капацитет: {self.capacity}"

@@ -5,7 +5,7 @@ from sorting.product_sorters import (sort_by_name_logic, bubble_sort_logic, sele
 
 class ProductSortView:
     def __init__(self, product_controller, inventory_controller):
-        """Инициализация с правилното име на метода __init__"""
+        """Инициализация с контролери за данни и наличности."""
         self.product_controller = product_controller
         self.inventory_controller = inventory_controller
 
@@ -41,8 +41,7 @@ class ProductSortView:
 
     def sort_qty_desc(self, _):
         products = bubble_sort_logic(self.product_controller.get_all(),
-                                     key=lambda p: self.inventory_controller.get_total_stock(p.product_id),
-                                     reverse=True)
+                                     key=lambda p: self.inventory_controller.get_total_stock(p.product_id), reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
     def sort_qty_asc(self, _):
@@ -51,14 +50,10 @@ class ProductSortView:
                                         reverse=False)
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
+
     def _print_sorted(self, products, title, algorithm):
-        """
-        Подобрен метод за принтиране:
-        1. Вече включва ID на продукта за лесна навигация.
-        2. Форматира цената и наличността унифицирано.
-        """
         if not products:
-            print("\n[!] Няма продукти за показване.")
+            print("\nНяма продукти за показване.")
             return
 
         print(f"\n--- СОРТИРАНЕ: {title} ---")
@@ -66,17 +61,13 @@ class ProductSortView:
 
         rows = []
         for p in products:
-            # Взимаме наличността чрез контролера
+            # Взимаме наличността чрез инвентарния контролер
             stock = self.inventory_controller.get_total_stock(p.product_id)
 
-            # Редът вече съвпада логически с ProductMenuView (ID, Име, Наличност, Цена)
-            rows.append([
-                p.product_id,
-                p.name,
-                f"{stock:.2f} {p.unit}",
-                f"{p.price:.2f} лв."
-            ])
+            short_id = p.product_id[:8]
 
-        # Печат на таблицата с ID за пълна функционалност
-        print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
+            rows.append([short_id, p.name[:25],  f"{stock:.2f} {p.unit}", f"{p.price:.2f} лв."])
+
+
+        print(format_table(["ID (кратко)", "Име", "Наличност", "Цена"], rows))
         input("\nНатиснете Enter за връщане към менюто за сортиране...")

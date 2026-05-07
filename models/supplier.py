@@ -1,11 +1,13 @@
 import uuid
 from datetime import datetime
 
+
 class Supplier:
     def __init__(self, supplier_id=None, name="", contact="", address="", created=None, modified=None):
-        # СИНХРОНИЗАЦИЯ: 8 символа за единен стандарт в целия склад
+
+
         if not supplier_id:
-            self.supplier_id = str(uuid.uuid4())[:8]
+            self.supplier_id = str(uuid.uuid4())
         else:
             self.supplier_id = str(supplier_id)
 
@@ -22,7 +24,7 @@ class Supplier:
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
-        """Превръща обекта в речник за JSON."""
+        """Превръща обекта в речник за JSON (записва пълното ID)."""
         return {
             "supplier_id": self.supplier_id,
             "name": self.name,
@@ -47,4 +49,6 @@ class Supplier:
         )
 
     def __str__(self):
-        return f"Доставчик: {self.name} [ID: {self.supplier_id}] | Контакт: {self.contact}"
+        # 2. ВИЗУАЛИЗАЦИЯ: Режем до 8 символа само при принтиране в терминала
+        short_id = self.supplier_id[:8]
+        return f"Доставчик: {self.name} [ID: {short_id}] | Контакт: {self.contact}"

@@ -5,9 +5,9 @@ class Report:
     def __init__(self, report_type, parameters=None, data=None, generated_on=None, report_id=None):
         """ Модел за отчет. Съхранява метаданни и резултати от справки. """
 
-        # СИНХРОНИЗАЦИЯ: 8 символа за консистентност с целия проект
+        # 1. ГЕНЕРИРАНЕ: Пълно UUID за базата данни (инженерен стандарт)
         if not report_id:
-            self.report_id = str(uuid.uuid4())[:8]
+            self.report_id = str(uuid.uuid4())
         else:
             self.report_id = str(report_id)
 
@@ -17,7 +17,7 @@ class Report:
         self.data = data if data is not None else {}
 
     def to_dict(self):
-        """Превръща обекта в речник за запис в JSON."""
+        """Превръща обекта в речник за запис в JSON (с пълно ID)."""
         return {
             "report_id": self.report_id,
             "report_type": self.report_type,
@@ -40,5 +40,6 @@ class Report:
         )
 
     def __str__(self):
-        # По-красив изглед при принтиране в CMD
-        return f"Отчет #{self.report_id} | Тип: {self.report_type} | Генериран на: {self.generated_on}"
+        # 2. ВИЗУАЛИЗАЦИЯ: Режем до 8 символа за CMD, за да е прегледно
+        short_id = self.report_id[:8]
+        return f"Отчет #{short_id} | Тип: {self.report_type} | Генериран на: {self.generated_on}"

@@ -16,103 +16,89 @@ class SupplierView:
             if result == "break":
                 break
 
-    # Създаване на менюто отделно
     def _build_menu(self, user: User):
         is_admin = user.role == "Admin"
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
+
         if is_admin:
-            menu_items.extend([MenuItem("2", "Добавяне на доставчик", self.add_supplier),
-                               MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                               MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
+            menu_items.extend([
+                MenuItem("2", "Добавяне на доставчик", self.add_supplier),
+                MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
+                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)
+            ])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", menu_items)
 
-    # списък с доставчици
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
-            print("\nНяма налични доставчици.")
+            print("\n[!] Няма налични доставчици.")
             return
-        columns = ["ID", "Име", "Контакт", "Адрес"]
-        rows = [[s.supplier_id, s.name, s.contact, s.address] for s in suppliers]
-        print("\n" + format_table(columns, rows))
 
-    # добавяне на доставчик - admin only
+        columns = ["ID (кратко)", "Име", "Контакт", "Адрес"]
+        rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
+        print("\n--- СПИСЪК НА ПАРТНЬОРИ / ДОСТАВЧИЦИ ---")
+        print(format_table(columns, rows))
+
     def add_supplier(self, _):
-        print("\n--- Добавяне на доставчик ---")
+        print("\n--- ДОБАВЯНЕ НА НОВА ФИРМА ДОСТАВЧИК ---")
         name = input("Име на доставчик (Enter за отказ): ").strip()
         if not name:
-            print("Операцията е отказана.\n")
             return
 
-        contact = input("Контакт (телефон/имейл, Enter за отказ): ").strip()
-        if not contact:
-            print("Операцията е отказана.\n")
-            return
-        address = input("Адрес (Enter за отказ): ").strip()
-        if not address:
-            print("Операцията е отказана.\n")
-            return
+        contact = input("Контакт (тел/имейл): ").strip() or "-"
+        address = input("Адрес: ").strip() or "-"
         try:
-            self.controller.add(name=name, contact=contact, address=address)
-            print("[Успех] Доставчикът е добавен успешно!")
+            new_sup = self.controller.add(name=name, contact=contact, address=address)
+            print(f"Доставчикът е добавен с ID: {new_sup.supplier_id[:8]}")
         except ValueError as e:
             print(f"[Грешка] {e}")
 
-    # редактиране на доставчик - admin only
     def edit_supplier(self, _):
-        print("\n--- Редактиране на доставчик ---")
+        print("\n--- РЕДАКТИРАНЕ НА ДОСТАВЧИК ---")
         while True:
-            supplier_id = input("Въведете ID на доставчик (Enter за отказ): ").strip()
-            if not supplier_id:
-                print("Операцията е отказана.\n")
+            supplier_id_input = input("Въведете ID (кратко или пълно, Enter за отказ): ").strip()
+            if not supplier_id_input:
                 return
-            try:
-                supplier = self.controller.get_by_id(supplier_id)
-                if not supplier:
-                    print(f"Доставчик с ID '{supplier_id}' не е намерен. Моля, опитайте отново.\n")
-                    continue
-                # имаме валиден доставчик
-                break
-            except ValueError as e:
-                print(f"[Грешка] {e}. Моля, опитайте отново.\n")
+            supplier = self.controller.get_by_id(supplier_id_input)
+            if not supplier:
+                print(f"[Грешка] Доставчик с ID '{supplier_id_input}' не е намерен. Опитайте пак.")
+                continue
+            break
 
-        print("\n* Оставете празно, ако не желаете промяна на текущата стойност.")
-        new_name = input(f"Ново име ({supplier.name}): ").strip()
-        new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
-        new_address = input(f"Нов адрес ({supplier.address}): ").strip()
+        print(f"\nРедактиране на: {supplier.name} [{supplier.supplier_id[:8]}]")
+        print("* Празно поле = запазване на старата стойност.")
+        new_name = input(f"Ново име ({supplier.name}): ").strip() or supplier.name
+        new_contact = input(f"Нов контакт ({supplier.contact}): ").strip() or supplier.contact
+        new_address = input(f"Нов адрес ({supplier.address}): ").strip() or supplier.address
 
         try:
-            self.controller.update(supplier_id=supplier_id, name=new_name or supplier.name,
-                                   contact=new_contact or supplier.contact, address=new_address or supplier.address)
-            print("Доставчикът е обновен успешно!")
+            self.controller.update(supplier_id=supplier.supplier_id, name=new_name,
+                                   contact=new_contact, address=new_address)
+            print("Данните са обновени успешно.")
         except ValueError as e:
             print(f"[Грешка] {e}")
-
 
     def delete_supplier(self, _):
-        print("\n--- Изтриване на доставчик ---")
+        print("\n--- ИЗТРИВАНЕ НА ДОСТАВЧИК ---")
         while True:
-            supplier_id = input("Въведете ID на доставчик (Enter за отказ): ").strip()
-            if not supplier_id:
-                print("Операцията е отказана.\n")
+            supplier_id_input = input("Въведете ID за изтриване (Enter за отказ): ").strip()
+            if not supplier_id_input:
                 return
-            try:
-                supplier = self.controller.get_by_id(supplier_id)
-                if not supplier:
-                    print(f"Доставчик с ID '{supplier_id}' не е намерен. Моля, опитайте отново.\n")
-                    continue
-                break
-            except ValueError as e:
-                print(f"[Грешка] {e}. Моля, опитайте отново.\n")
+
+            supplier = self.controller.get_by_id(supplier_id_input)
+            if not supplier:
+                print(f"[Грешка] Доставчик с ID '{supplier_id_input}' не е намерен.")
+                continue
+            break
 
         confirm = input(f"Сигурни ли сте, че искате да изтриете '{supplier.name}'? (y/n): ").strip().lower()
-        if confirm != "y":
+        if confirm == "y":
+            try:
+                self.controller.remove(supplier.supplier_id)
+                print(f"Доставчик '{supplier.name}' беше премахнат.")
+            except ValueError as e:
+                print(f"[Грешка] {e}")
+        else:
             print("Операцията е отказана.")
-            return
-        try:
-            self.controller.remove(supplier_id)
-            print(f"[Успех] Доставчик '{supplier.name}' беше изтрит.")
-        except ValueError as e:
-            print(f"[Грешка] {e}")
