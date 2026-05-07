@@ -4,8 +4,6 @@ from validators.user_validator import UserValidator
 
 
 class UserController:
-    """Контролерът управлява потребителите и гарантира системната стабилност."""
-
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         self.activity_log = activity_log_controller
@@ -17,17 +15,30 @@ class UserController:
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
-        # Проверяваме по USERNAME, за да няма дублиране на системни акаунти
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
+    # --- НОВ ПОМОЩЕН МЕТОД ЗА СИНХРОНИЗАЦИЯ С VIEW ---
+    def find_user_flexible(self, identifier: str) -> Optional[User]:
+        """Търси потребител по пълно ID, кратко ID или Username."""
+        if not identifier: return None
+        target = str(identifier).strip()
+
+        # 1. Опит за търсене по ID (пълно или кратко)
+        user = self.get_by_id(target)
+        if user: return user
+
+        # 2. Опит за търсене по Username
+        return self.get_by_username(target)
+
     def _hash_password(self, password: str) -> str:
-        """Прост хеш метод (ASCII код на символите)."""
-        if not password:
-            return ""
+        if not password: return ""
         return "".join(str(ord(c)) for c in password)
+
+    def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
+        return stored_password_hash == self._hash_password(provided_password)
 
     def save_changes(self):
         self.repo.save([u.to_dict() for u in self.users])
@@ -44,42 +55,23 @@ class UserController:
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        """Търсене по ID с приоритет на точното съвпадение."""
         target_id = str(user_id).strip()
-        if not target_id:
-            return None
-
-        # Първо търсим точно ID
+        if not target_id: return None
         for u in self.users:
-            if u.user_id == target_id:
-                return u
-
-        # Ако не намерим, търсим по начало на ID
-        for u in self.users:
-            if u.user_id.startswith(target_id):
+            if u.user_id == target_id or u.user_id.startswith(target_id):
                 return u
         return None
 
     def login(self, username: str, password: str) -> Optional[User]:
-        """Логин логика със запис в лога."""
         user = UserValidator.validate_login(username, password, self)
-        if not user:
-            return None
-
-        hashed = self._hash_password(password)
-        if user.password == hashed:
-            if user.status != "Active":
-                raise ValueError("Вашият акаунт е деактивиран. Свържете се с администратор.")
-
+        if user:
             self.logged_user = user
             if self.activity_log:
                 self.activity_log.log_action(user.user_id, "LOGIN", f"Успешен вход: {user.username}")
             return user
-
         return None
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
-        """Регистрация на нов потребител с валидация."""
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
@@ -90,10 +82,13 @@ class UserController:
         self.save_changes()
         return new_user
 
-    def change_role(self, username, new_role):
-        user = UserValidator.validate_exists(username, self)
-        UserValidator.validate_role(new_role)
 
+    def change_role(self, identifier, new_role):
+        user = self.find_user_flexible(identifier)
+        if not user:
+            raise ValueError(f"Потребител '{identifier}' не е намерен.")
+
+        UserValidator.validate_role(new_role)
         if user.role == new_role:
             raise ValueError(f"Потребителят вече е с роля '{new_role}'.")
 
@@ -101,29 +96,37 @@ class UserController:
         user.update_modified()
         self.save_changes()
 
-    def change_status(self, acting_user: User, target_username: str, new_status: str):
+
+    def change_status(self, acting_user: User, identifier: str, new_status: str):
+        user = self.find_user_flexible(identifier)
+        if not user:
+            raise ValueError(f"Потребител '{identifier}' не е намерен.")
+
         UserValidator.confirm_admin(acting_user)
         UserValidator.validate_status(new_status)
-        UserValidator.validate_not_self(acting_user.username, target_username)  # Не можеш да се деактивираш сам
+        # Сравняваме реалните потребителски имена за сигурност
+        UserValidator.validate_not_self(acting_user.username, user.username)
 
-        user = UserValidator.validate_exists(target_username, self)
         user.status = new_status
         user.update_modified()
         self.save_changes()
         return True
 
-    def delete_user(self, acting_user: User, target_username: str):
-        UserValidator.confirm_admin(acting_user)
-        UserValidator.validate_not_self(acting_user.username, target_username)
 
-        user = UserValidator.validate_exists(target_username, self)
+    def delete_user(self, acting_user: User, identifier: str):
+        user = self.find_user_flexible(identifier)
+        if not user:
+            raise ValueError(f"Потребител '{identifier}' не е намерен.")
+
+        UserValidator.confirm_admin(acting_user)
+        UserValidator.validate_not_self(acting_user.username, user.username)
         UserValidator.validate_not_last_admin(user, self.users)
 
         self.users.remove(user)
         self.save_changes()
 
         if self.activity_log:
-            self.activity_log.log_action(acting_user.user_id, "DELETE_USER", f"Изтрит потребител: {target_username}")
+            self.activity_log.log_action(acting_user.user_id, "DELETE_USER", f"Изтрит потребител: {user.username}")
         return True
 
     def _create_default_admin(self):
@@ -138,7 +141,3 @@ class UserController:
                         status="Active")
         self.users.append(operator)
         self.save_changes()
-
-    def create_anonymous_user(self) -> User:
-        return User(user_id="00000000-0000-0000-0000-000000000000", first_name="Anonymous",
-                    last_name="", email="", username="guest", password="", role="Anonymous", status="Active")

@@ -30,6 +30,79 @@ class ReportController:
         return ReportResult({"total_count": len(invoices), "total_revenue": round(total_sum, 2)},
                             self._map_invoices_to_data(invoices))
 
+    def report_sales_by_customer(self, customer_name: str):
+        """Връща всички продажби (OUT движения) за конкретен клиент."""
+
+        # Взимаме всички движения
+        all_movements = self.movement_controller.get_all()
+
+        # Ако е речник, го превръщаме в списък
+        if isinstance(all_movements, dict):
+            temp_list = []
+            for key in all_movements:
+                temp_list.append(all_movements[key])
+            all_movements = temp_list
+
+        result = []
+
+        # Подготвяме името за сравнение
+        search_name = customer_name.lower()
+
+        # Минаваме през всички движения
+        for m in all_movements:
+
+            # Търсим само OUT движения
+            if m.movement_type.name == "OUT":
+
+                # Проверяваме дали има клиент
+                if m.customer is not None:
+                    current_customer = m.customer.lower()
+                else:
+                    current_customer = ""
+
+                # Проверяваме дали търсеното име се съдържа в името на клиента
+                if search_name in current_customer:
+                    result.append(m)
+
+        return result
+
+    def report_sales_by_product(self, product_name: str):
+        """Връща всички продажби (OUT движения) за конкретен продукт."""
+
+        # Взимаме всички движения
+        all_movements = self.movement_controller.get_all()
+
+        # Ако е речник - превръщаме в списък
+        if isinstance(all_movements, dict):
+            temp_list = []
+            for key in all_movements:
+                temp_list.append(all_movements[key])
+            all_movements = temp_list
+
+        result = []
+
+        search_name = product_name.lower()
+
+        # Минаваме през всички движения
+        for m in all_movements:
+
+            # Търсим само OUT движения
+            if m.movement_type.name == "OUT":
+
+                # Взимаме продукта по ID
+                product_obj = self.product_controller.get_by_id(m.product_id)
+
+                if product_obj is not None:
+                    current_product_name = product_obj.name.lower()
+                else:
+                    current_product_name = ""
+
+                # Проверяваме дали търсеното име е част от името на продукта
+                if search_name in current_product_name:
+                    result.append(m)
+
+        return result
+
     def report_movements(self):
         """Показва движението между реални локации. """
         data = []

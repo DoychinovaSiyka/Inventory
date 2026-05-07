@@ -10,26 +10,25 @@ class UserView:
 
     def show_menu(self, user: User):
         if user.role != "Admin":
-            print("\n[Достъп отказан] Само администратор може да управлява потребители.")
+            print("\nСамо администратор може да управлява потребители.")
             return
 
-        menu = self._build_menu()
         while True:
+            menu = self._build_menu()
             choice = menu.show()
             result = menu.execute(choice, user)
             if result == "break":
                 break
 
     def _build_menu(self):
-        return Menu("АДМИНИСТРАЦИЯ НА ПОТРЕБИТЕЛИ", [
-            MenuItem("1", "Списък на всички потребители", self.show_users),
-            MenuItem("2", "Добавяне на нов потребител", self.add_user),
-            MenuItem("3", "Промяна на роля (Admin/Operator)", self.change_role),
-            MenuItem("4", "Деактивиране (Inactive)", self.deactivate_user),
-            MenuItem("5", "Активиране (Active)", self.activate_user),
-            MenuItem("6", "Изтриване от системата", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+        return Menu("Администрация на потребители", [
+            MenuItem("1", "Списък на всички потребители", lambda u: self.show_users(u)),
+            MenuItem("2", "Добавяне на нов потребител", lambda u: self.add_user(u)),
+            MenuItem("3", "Промяна на роля", lambda u: self.change_role(u)),
+            MenuItem("4", "Деактивиране", lambda u: self.deactivate_user(u)),
+            MenuItem("5", "Активиране", lambda u: self.activate_user(u)),
+            MenuItem("6", "Изтриване от системата", lambda u: self.delete_user(u)),
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_users(self, _):
         users = self.controller.get_all()
@@ -37,88 +36,113 @@ class UserView:
             print("\nНяма регистрирани потребители.")
             return
 
-        print("\n--- СПИСЪК НА ПОТРЕБИТЕЛИТЕ ---")
+        print("\nСписък на потребителите")
         columns = ["ID (кратко)", "Username", "Имейл", "Роля", "Статус"]
-        rows = [[u.user_id[:8], u.username, u.email, u.role, u.status] for u in users]
+        rows = []
+        for u in users:
+            rows.append([u.user_id[:8], u.username, u.email, u.role, u.status])
+
         print(format_table(columns, rows))
+        input("\nНатиснете Enter за връщане...")
 
     def add_user(self, _):
-        print("\n--- РЕГИСТРАЦИЯ НА НОВ ПОТРЕБИТЕЛ ---")
-        username = input("Потребителско име (мин. 3 симв.): ").strip()
-        if not username:
-            return
+        print("\nДобавяне на нов потребител")
+        print("(Напишете 'отказ' за изход)")
 
-        email = input("Имейл адрес: ").strip()
-        if not email:
-            return
+        while True:
+            username = input("Потребителско име (мин. 3 символа): ").strip()
+            if username.lower() == 'отказ':
+                return
 
-        password = input_password("Парола (мин. 6 симв., букви и цифри): ").strip()
-        if not password:
-            return
+            if self.controller.get_by_username(username):
+                print("Това потребителско име вече съществува.")
+                continue
+            if len(username) < 3:
+                print("Потребителското име е твърде кратко.")
+                continue
+            break
 
-        role = input("Роля (Admin/Operator) [Default: Operator]: ").strip() or "Operator"
+        while True:
+            email = input("Имейл адрес: ").strip()
+            if email.lower() == 'отказ':
+                return
+            if "@" not in email or "." not in email:
+                print("Невалиден имейл.")
+                continue
+            break
+
+        while True:
+            password = input_password("Парола (мин. 6 символа): ").strip()
+            if password.lower() == 'отказ':
+                return
+            if len(password) < 6:
+                print("Паролата е твърде кратка.")
+                continue
+            break
+
+        role = input("Роля (Admin/Operator) [по подразбиране: Operator]: ").strip().capitalize() or "Operator"
+        if role not in ["Admin", "Operator"]:
+            print("Невалидна роля. Зададена е по подразбиране: Operator.")
+            role = "Operator"
+
         fn = input("Име (опционално): ").strip() or "-"
         ln = input("Фамилия (опционално): ").strip() or "-"
 
         try:
-            new_user = self.controller.register(fn, ln, email, username, password, role)
-            print(f"Потребител '{username}' е добавен с ID: {new_user.user_id[:8]}")
+            self.controller.register(fn, ln, email, username, password, role)
+            print(f"\nПотребител '{username}' е добавен.")
         except ValueError as e:
-            print(f"[Грешка] {e}")
+            print(f"Грешка: {e}")
 
     def change_role(self, _):
-        print("\n--- ПРОМЯНА НА РОЛЯ ---")
-        target = input("Username или кратко ID на потребителя: ").strip()
-        if not target:
+        print("\nПромяна на роля")
+        target = input("Username или ID (или 'отказ'): ").strip()
+        if not target or target.lower() == 'отказ':
             return
 
-        new_role = input("Нова роля (Admin/Operator): ").strip()
-        if not new_role:
-            return
-
+        new_role = input("Нова роля (Admin/Operator): ").strip().capitalize()
         try:
             self.controller.change_role(target, new_role)
-            print(f"Ролята на '{target}' е променена.")
+            print("Ролята е променена.")
         except ValueError as e:
-            print(f"[Грешка] {e}")
+            print(f"Грешка: {e}")
 
     def deactivate_user(self, current_user):
-        print("\n--- ДЕАКТИВИРАНЕ ---")
-        target = input("Username или кратко ID за деактивиране: ").strip()
-        if not target:
+        print("\nДеактивиране на потребител")
+        target = input("Username или ID (или 'отказ'): ").strip()
+        if not target or target.lower() == 'отказ':
             return
 
         try:
             self.controller.change_status(current_user, target, "Inactive")
-            print(f"Потребителят '{target}' вече е неактивен.")
+            print("Потребителят е деактивиран.")
         except ValueError as e:
-            print(f"[Грешка] {e}")
+            print(f"Грешка: {e}")
 
     def activate_user(self, current_user):
-        print("\n--- АКТИВИРАНЕ ---")
-        target = input("Username или кратко ID за активиране: ").strip()
-        if not target:
+        print("\nАктивиране на потребител")
+        target = input("Username или ID (или 'отказ'): ").strip()
+        if not target or target.lower() == 'отказ':
             return
 
         try:
             self.controller.change_status(current_user, target, "Active")
-            print(f"Потребителят '{target}' е активиран успешно.")
+            print("Потребителят е активиран.")
         except ValueError as e:
-            print(f"[Грешка] {e}")
-
+            print(f"Грешка: {e}")
 
     def delete_user(self, current_user):
-        print("\n--- ПРЕМАХВАНЕ НА ПОТРЕБИТЕЛ ---")
-        target = input("Username или кратко ID за изтриване: ").strip()
-        if not target:
+        print("\nИзтриване на потребител")
+        target = input("Username или ID (или 'отказ'): ").strip()
+        if not target or target.lower() == 'отказ':
             return
 
-        confirm = input(f"ВНИМАНИЕ: Изтриването на '{target}' е окончателно! Потвърди (y/n): ").strip().lower()
+        confirm = input(f"Изтриване на '{target}'? (y/n): ").strip().lower()
         if confirm == 'y':
             try:
                 self.controller.delete_user(current_user, target)
-                print(f"Потребителят '{target}' е премахнат от системата.")
+                print("Потребителят е изтрит.")
             except (ValueError, PermissionError) as e:
-                print(f"[Грешка] {e}")
+                print(f"Грешка: {e}")
         else:
-            print("Операцията е отказана.")
+            print("Операцията е прекратена.")

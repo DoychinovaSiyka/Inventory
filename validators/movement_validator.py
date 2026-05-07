@@ -6,10 +6,6 @@ class MovementValidator:
 
     @staticmethod
     def validate_uuid(value, field_name):
-        """
-        Позволява кратки ID-та (8 символа) или пълен UUID.
-        Ако е 36 символа, проверява дали е валиден UUID.
-        """
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително поле.")
 
@@ -91,12 +87,10 @@ class MovementValidator:
 
     @staticmethod
     def validate_location_id(loc_id, location_controller):
-        """
-        Позволява избор на склад чрез:
+        """Позволява избор на склад чрез:
         - номер от списъка (1, 2, 3…)
         - кратко ID (8 символа)
-        - пълно ID
-        """
+        - пълно ID"""
         if loc_id is None or str(loc_id).strip() == "":
             raise ValueError("Код на склад е задължителен.")
 

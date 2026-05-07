@@ -90,7 +90,6 @@ class InvoiceValidator:
         if not date_str:
             raise ValueError("Датата е задължителна.")
 
-        # Поддържаме двата основни формата в системата
         formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S"]
         for fmt in formats:
             try:
@@ -98,7 +97,6 @@ class InvoiceValidator:
                 return
             except ValueError:
                 pass
-
         raise ValueError("Невалидна дата. Моля, използвайте формат ГГГГ-ММ-ДД.")
 
     @staticmethod

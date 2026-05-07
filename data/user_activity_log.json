@@ -1,3 +1,100 @@
 [
-
+    {
+        "log_id": "7796719c-47db-48b3-8aea-ccb70452746a",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "GENERATE_INVOICE",
+        "details": "Автоматична фактура от продажба на диня",
+        "timestamp": "2026-05-07 20:47:59"
+    },
+    {
+        "log_id": "8ff32f44-3205-4407-812a-f59604c7f46a",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "MOVEMENT_OUT",
+        "details": "Продукт: диня, Кол: 99.0",
+        "timestamp": "2026-05-07 20:47:59"
+    },
+    {
+        "log_id": "4c90171a-b5e3-4a0f-a10b-870a10f31b16",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 20:47:48"
+    },
+    {
+        "log_id": "e22941f4-314d-42e4-8734-8804b86805fa",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 20:45:37"
+    },
+    {
+        "log_id": "c83b03be-6443-470a-949d-a857ce401ca9",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 20:43:27"
+    },
+    {
+        "log_id": "00a1029e-9376-40e1-a59f-4782bcbc9b61",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 20:40:28"
+    },
+    {
+        "log_id": "a0be7690-c69f-4476-962f-2d88bb7d4b9b",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "MOVEMENT_IN",
+        "details": "Продукт: диня, Кол: 111.0",
+        "timestamp": "2026-05-07 20:35:16"
+    },
+    {
+        "log_id": "b436e7f5-03b8-413d-bf85-230d66800c78",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 20:34:23"
+    },
+    {
+        "log_id": "dd0ebf8f-73c5-45e7-a546-5e383b42ad5d",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "CREATE_PRODUCT",
+        "details": "Продукт: диня (ID: 31b6ea89)",
+        "timestamp": "2026-05-07 19:57:57"
+    },
+    {
+        "log_id": "267c4bae-c799-48bd-9bd0-5a82a1eb38e1",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "ADD_CATEGORY",
+        "details": "Добавена категория: плодове",
+        "timestamp": "2026-05-07 19:57:25"
+    },
+    {
+        "log_id": "75b21e9d-e5da-4ba3-9c6a-1cabb9c7f7b5",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "CREATE_PRODUCT",
+        "details": "Продукт: диня (ID: f2ff9082)",
+        "timestamp": "2026-05-07 19:55:36"
+    },
+    {
+        "log_id": "d797e7c4-af94-4b1f-8712-40439723c4d5",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 19:55:08"
+    },
+    {
+        "log_id": "d555a75e-e86a-422a-97a1-7c5bbbba547c",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 19:52:39"
+    },
+    {
+        "log_id": "2f5337ef-3fb8-4783-80a4-b5d08f723fe9",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "action": "LOGIN",
+        "details": "Успешен вход: admin",
+        "timestamp": "2026-05-07 19:38:14"
+    }
 ]

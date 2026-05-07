@@ -1,3 +1,38 @@
 [
-
+    {
+        "movement_id": "198c8ffc-65c5-4eba-a376-fd16516f3f47",
+        "product_id": "f2ff9082-d325-4ed8-a6bc-e88db1b0b38d",
+        "product_name": "диня",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "location_id": "4955ff4a-c5b8-455e-b928-16db3a549f2d",
+        "movement_type": "IN",
+        "quantity": 111.0,
+        "unit": "бр.",
+        "price": 6.0,
+        "supplier_id": "5a0a69b8-2e6c-4616-9f9c-f43f6c434df7",
+        "customer": null,
+        "date": "2026-05-07 20:35:16",
+        "created": "2026-05-07 20:35:16",
+        "modified": "2026-05-07 20:35:16",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "b2323f0c-106f-4389-8119-aaac07c2e3e9",
+        "product_id": "f2ff9082-d325-4ed8-a6bc-e88db1b0b38d",
+        "product_name": "диня",
+        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
+        "location_id": "4955ff4a-c5b8-455e-b928-16db3a549f2d",
+        "movement_type": "OUT",
+        "quantity": 99.0,
+        "unit": "бр.",
+        "price": 4.0,
+        "supplier_id": null,
+        "customer": "weWP",
+        "date": "2026-05-07 20:47:59",
+        "created": "2026-05-07 20:47:59",
+        "modified": "2026-05-07 20:47:59",
+        "from_location_id": null,
+        "to_location_id": null
+    }
 ]

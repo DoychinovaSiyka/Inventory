@@ -76,6 +76,7 @@ class CategoryValidator:
             raise ValueError("Невалиден формат за ID на родителска категория.")
         return cleaned
 
+
     @staticmethod
     def validate_no_cycle(category_id, parent_id, all_categories):
         if not parent_id:

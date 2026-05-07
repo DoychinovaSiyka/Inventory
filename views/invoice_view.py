@@ -19,8 +19,9 @@ class InvoiceView:
 
     def _show_invoices(self, invoices):
         if not invoices:
-            print("\n--- Няма намерени фактури ---\n")
+            print("\nНяма намерени фактури.\n")
             return
+
         rows = []
         for inv in invoices:
             try:
@@ -28,112 +29,152 @@ class InvoiceView:
             except (ValueError, TypeError):
                 total = 0.0
 
-            rows.append([inv.invoice_id[:8], inv.product, inv.customer,
-                         f"{inv.quantity} {inv.unit}", f"{total:.2f} лв.", inv.date[:16]])
+            rows.append([
+                inv.invoice_id[:8],
+                inv.product,
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{total:.2f} лв.",
+                inv.date[:16]
+            ])
 
-        print("\n" + format_table(["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
+        print("\n" + format_table(
+            ["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"],
+            rows
+        ))
+
+    def _run_menu(self, menu_obj, user):
+        while True:
+            choice = menu_obj.show()
+            if choice == "0" or choice is None:
+                break
+            menu_obj.execute(choice, user)
 
     def show_menu(self, user: User):
-        while True:
-            menu = self._build_menu()
-            choice = menu.show()
-            if menu.execute(choice, user) == "break":
-                break
-
-    def _build_menu(self):
-        return Menu("Меню Фактури", [
+        menu = Menu("Меню фактури", [
             MenuItem("1", "Списък с всички фактури", self.show_all),
-            MenuItem("2", "Преглед на фактура по ID", self.view_by_id),
+            MenuItem("2", "Преглед по ID", self.view_by_id),
             MenuItem("3", "Търсене по клиент", self.search_by_customer),
             MenuItem("4", "Търсене по продукт", self.search_by_product),
             MenuItem("5", "Търсене по дата", self.search_by_date),
             MenuItem("6", "Разширено търсене", self.advanced_search),
             MenuItem("7", "Търсене по сума", self.search_by_total),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
+        self._run_menu(menu, user)
 
     def show_all(self, user):
         self._show_invoices(self.invoice_controller.get_all())
 
     def view_by_id(self, user):
-        print("\n=== Преглед на фактура по ID ===")
+        print("\nПреглед на фактура")
+        print("(Въведете 'отказ' за връщане)")
+
         while True:
             invoice_id = self._input("Въведете ID: ")
-            if not invoice_id:
-                print("Прекъснато.\n")
+            if not invoice_id or invoice_id.lower() == 'отказ':
                 return
 
             invoice = self.invoice_controller.get_by_id(invoice_id)
             if invoice:
                 break
-            print("Фактура с такова ID не е намерена. Опитайте отново.\n")
 
+            print("Не е намерена фактура с това ID.")
 
-        try:
-            u_price = float(invoice.unit_price)
-            t_price = float(invoice.total_price)
-        except (ValueError, TypeError):
-            u_price = 0.0
-            t_price = 0.0
+        rows = [
+            ["Пълно ID", invoice.invoice_id],
+            ["Движение ID", invoice.movement_id[:8] if hasattr(invoice, 'movement_id') else "-"],
+            ["Продукт", invoice.product],
+            ["Количество", f"{invoice.quantity} {invoice.unit}"],
+            ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
+            ["Обща сума", f"{float(invoice.total_price):.2f} лв."],
+            ["Клиент", invoice.customer],
+            ["Дата/Час", invoice.date]
+        ]
 
-
-        m_id = invoice.movement_id[:8] if (hasattr(invoice, 'movement_id') and invoice.movement_id) else "-"
-
-        columns = ["Поле", "Стойност"]
-        rows = [["Пълно ID", invoice.invoice_id], ["Движение ID", invoice.movement_id[:8]],
-                ["Продукт", invoice.product], ["Количество", f"{invoice.quantity} {invoice.unit}"],
-                ["Единична цена", f"{invoice.unit_price:.2f} лв."], ["Общо", f"{invoice.total_price:.2f} лв."],
-                ["Клиент", invoice.customer], ["Дата", invoice.date]]
-
-        print("\n" + format_table(columns, rows))
+        print("\n" + format_table(["Поле", "Стойност"], rows))
+        input("\nНатиснете Enter за продължение...")
 
     def search_by_customer(self, user):
-        keyword = self._input("Въведете име на клиент: ")
-        if not keyword: return
-        self._show_invoices(self.invoice_controller.search_by_customer(keyword))
+        keyword = self._input("\nВъведете име на клиент: ")
+        if keyword:
+            self._show_invoices(self.invoice_controller.search_by_customer(keyword))
 
     def search_by_product(self, user):
-        keyword = self._input("Въведете име на продукт: ")
-        if not keyword: return
-        self._show_invoices(self.invoice_controller.search_by_product(keyword))
+        keyword = self._input("\nВъведете име на продукт: ")
+        if keyword:
+            self._show_invoices(self.invoice_controller.search_by_product(keyword))
 
     def search_by_date(self, user):
         while True:
-            date_str = self._input("Дата (ГГГГ-ММ-ДД): ")
-            if not date_str: return
+            date_str = self._input("\nВъведете дата (ГГГГ-ММ-ДД) или 'отказ': ")
+            if not date_str or date_str.lower() == 'отказ':
+                return
             try:
                 InvoiceValidator.validate_date(date_str)
                 break
             except ValueError as e:
-                print(f"{e}")
+                print(e)
+
         self._show_invoices(self.invoice_controller.search_by_date(date_str))
 
     def advanced_search(self, user):
-        print("\n--- Разширено търсене ---")
+        print("\nРазширено търсене")
+        print("(Enter пропуска полето)")
+
         customer = self._input("Клиент: ")
         product = self._input("Продукт: ")
-        start_date = self._input("Начална дата (ГГГГ-ММ-ДД): ")
-        end_date = self._input("Крайна дата (ГГГГ-ММ-ДД): ")
-        min_total = self._input("Минимална сума: ")
-        max_total = self._input("Максимална сума: ")
 
-        try:
-            InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
-            results = self.invoice_controller.advanced_search(customer=customer, product=product,
-                                                               start_date=start_date, end_date=end_date,
-                                                               min_total=min_total, max_total=max_total)
-            self._show_invoices(results)
-        except ValueError as e:
-            print(f"{e}")
+        while True:
+            start_date = self._input("Начална дата (ГГГГ-ММ-ДД): ")
+            end_date = self._input("Крайна дата (ГГГГ-ММ-ДД): ")
+            min_total = self._input("Минимална сума: ")
+            max_total = self._input("Максимална сума: ")
+
+            try:
+                InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
+
+                results = self.invoice_controller.advanced_search(
+                    customer=customer,
+                    product=product,
+                    start_date=start_date,
+                    end_date=end_date,
+                    min_total=min_total,
+                    max_total=max_total
+                )
+                self._show_invoices(results)
+                break
+
+            except ValueError as e:
+                print(f"Грешка във филтрите: {e}")
+                retry = input("Опит отново? (y/n): ").lower()
+                if retry != 'y':
+                    break
 
     def search_by_total(self, user):
-        print("\n--- Търсене по сума ---")
-        min_total = self._input("Минимална сума: ")
-        max_total = self._input("Максимална сума: ")
+        print("\nТърсене по сума")
 
-        try:
-            min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
-            max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None
-            results = self.invoice_controller.advanced_search(min_total=min_val, max_total=max_val)
-            self._show_invoices(results)
-        except ValueError as e:
-            print(f"{e}")
+        while True:
+            min_total = self._input("Минимална сума: ")
+            max_total = self._input("Максимална сума: ")
+
+            try:
+                if min_total is not None:
+                    min_val = InvoiceValidator.parse_float(min_total, "Минимална сума")
+                else:
+                    min_val = None
+
+                if max_total is not None:
+                    max_val = InvoiceValidator.parse_float(max_total, "Максимална сума")
+                else:
+                    max_val = None
+
+                results = self.invoice_controller.advanced_search(
+                    min_total=min_val,
+                    max_total=max_val
+                )
+                self._show_invoices(results)
+                break
+
+            except ValueError as e:
+                print(f"Грешка: {e}. Опитайте отново.")

@@ -65,6 +65,5 @@ class LocationValidator:
     def validate_can_delete(location_id, inventory_controller):
         stock_in_loc = inventory_controller.get_stock_by_location_total(location_id)
         if stock_in_loc > 0:
-            raise ValueError(
-                f"Локацията не може да бъде изтрита, защото в нея има {stock_in_loc} налични единици стока."
-            )
+            raise ValueError(f"Локацията не може да бъде изтрита, защото в нея "
+                             f"има {stock_in_loc} налични единици стока.")

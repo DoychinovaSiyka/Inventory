@@ -11,6 +11,7 @@ from views.location_view import LocationView
 
 class OperatorMenuView:
     def __init__(self, controllers):
+        self.controllers = controllers
         self.product_controller = controllers["product"]
         self.category_controller = controllers["category"]
         self.location_controller = controllers["location"]
@@ -24,63 +25,60 @@ class OperatorMenuView:
 
     def _build_menu(self):
         return Menu("Операторско меню", [
-            MenuItem("1", "Управление на продукти", self.open_products),
-            MenuItem("2", "Управление на категории", self.open_categories),
-            MenuItem("3", "Доставки и продажби (IN/OUT движения)", self.open_movements),
-            MenuItem("4", "Справки", self.open_reports),
-            MenuItem("5", "Фактури", self.open_invoices),
-            MenuItem("6", "Информация за системата", self.open_system_info),
-            MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("1", "Управление на продукти", lambda u: self.open_products(u)),
+            MenuItem("2", "Управление на категории", lambda u: self.open_categories(u)),
+            MenuItem("3", "Доставки и продажби (IN/OUT)", lambda u: self.open_movements(u)),
+            MenuItem("4", "Справки", lambda u: self.open_reports(u)),
+            MenuItem("5", "Фактури", lambda u: self.open_invoices(u)),
+            MenuItem("6", "Информация за системата", lambda u: self.open_system_info(u)),
+            MenuItem("7", "Преглед на локации", lambda u: self.open_locations_readonly(u)),
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     def show_menu(self, user):
         if user.role.lower() == "guest":
-            print("Нямате достъп до операторското меню.")
+            print("\nНямате достъп до операторското меню.")
             return
 
-        menu = self._build_menu()
         while True:
+            menu = self._build_menu()
             choice = menu.show()
             result = menu.execute(choice, user)
             if result == "break":
                 break
 
-    @staticmethod
-    def _open_view(view_class, *args):
-        return view_class(*args)
-
     def open_products(self, user):
-        view = self._open_view(ProductMenuView, self.product_controller, self.category_controller,
-                               self.inventory_controller, self.movement_controller, self.activity_log)
+        view = ProductMenuView(self.product_controller, self.category_controller,
+                               self.inventory_controller, self.movement_controller,
+                               self.activity_log)
         view.show_menu(user)
 
     @require_password("parola123")
     def open_categories(self, user):
-        view = self._open_view(CategoryView, self.category_controller)
+        view = CategoryView(self.category_controller)
         view.show_menu(user)
 
     def open_movements(self, user):
-        view = self._open_view(MovementView, self.product_controller, self.movement_controller,
-                               self.user_controller, self.location_controller, self.supplier_controller)
-        view.show_menu()
+        view = MovementView(self.product_controller, self.movement_controller,
+                            self.user_controller, self.location_controller, self.supplier_controller)
+        view.show_menu(user)
 
     @require_password("parola123")
     def open_reports(self, user):
-        view = self._open_view(ReportsView, self.report_controller)
+        view = ReportsView(self.report_controller)
         view.show_menu(user)
 
     @require_password("parola123")
     def open_invoices(self, user):
-        view = self._open_view(InvoiceView, self.invoice_controller, self.activity_log)
+        view = InvoiceView(self.invoice_controller, self.activity_log)
         view.show_menu(user)
 
     @require_password("parola123")
     def open_locations_readonly(self, user):
-        print("\n--- СПИСЪК НА ЛОКАЦИИТЕ (READ-ONLY) ---")
+        print("\nСписък на локациите:")
         view = LocationView(self.location_controller)
         view.show_all(user)
-        input("\nНатиснете Enter за връщане към менюто...")
+        input("\nНатиснете Enter за връщане...")
 
-    @staticmethod
-    def open_system_info(_):
+    def open_system_info(self, _):
         SystemInfoView().show_menu()

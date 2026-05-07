@@ -63,10 +63,7 @@ class SupplierValidator:
 
     @staticmethod
     def validate_exists(supplier_id, controller):
-        """
-        Поддържа търсене по кратко ID (8 символа).
-        Позволява избор чрез началото на ID-то.
-        """
+        """Позволява избор чрез началото на ID-то."""
         if not supplier_id:
             raise ValueError("Трябва да въведете ID на доставчик.")
 
@@ -79,7 +76,7 @@ class SupplierValidator:
 
     @staticmethod
     def validate_all(name, contact, address):
-        """Пълна проверка на всички полета наведнъж."""
+        """Пълна проверка на всички полета."""
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
         SupplierValidator.validate_address(address)

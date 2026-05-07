@@ -6,21 +6,15 @@ class ProductValidator:
 
     @staticmethod
     def validate_uuid(value, field_name="ID"):
-        """
-        Позволява кратки ID-та (8 символа) или пълни UUID.
-        """
         if value is None:
             return None
 
         val_str = str(value).strip()
-
-        # Кратък код (8 символа)
         if len(val_str) == 8:
             if not val_str.isalnum():
                 raise ValueError(f"{field_name} (кратък код) съдържа невалидни символи.")
             return val_str
 
-        # Пълен UUID
         if len(val_str) >= 32:
             try:
                 if "-" in val_str:
@@ -58,9 +52,6 @@ class ProductValidator:
 
     @staticmethod
     def validate_unit(unit):
-        """
-        Унифицира мерните единици, за да няма дублиране.
-        """
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
 

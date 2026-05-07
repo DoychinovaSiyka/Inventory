@@ -33,10 +33,8 @@ class InventoryValidator:
 
     @staticmethod
     def _resolve_id(short_id, keys_list):
-        """
-        Намира пълното ID по въведено кратко ID.
-        Ако потребителят въведе 'a1b2', търсим UUID, който започва с това.
-        """
+        """Намира пълното ID по въведено кратко ID.
+        Ако потребителят въведе 'a1b2', търсим UUID, който започва с това."""
         short_id = str(short_id).lower()
         for full_id in keys_list:
             if full_id.lower().startswith(short_id):
