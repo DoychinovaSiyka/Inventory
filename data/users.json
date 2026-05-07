@@ -1,26 +1,3 @@
 [
-    {
-        "user_id": "6099d950-5c8b-45e0-a9d5-d0c5a72793ef",
-        "first_name": "Admin",
-        "last_name": "System",
-        "email": "admin@system.local",
-        "username": "admin",
-        "password": "97100109105110495051",
-        "role": "Admin",
-        "status": "Active",
-        "created": "2026-05-07 19:35:30",
-        "modified": "2026-05-07 19:35:30"
-    },
-    {
-        "user_id": "3072613e-7511-4cbf-820c-95838154a684",
-        "first_name": "Operator",
-        "last_name": "User",
-        "email": "operator@example.com",
-        "username": "operator",
-        "password": "11111210111497116111114495051",
-        "role": "Operator",
-        "status": "Active",
-        "created": "2026-05-07 19:35:30",
-        "modified": "2026-05-07 19:35:30"
-    }
+
 ]

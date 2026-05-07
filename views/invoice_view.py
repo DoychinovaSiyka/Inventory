@@ -134,14 +134,9 @@ class InvoiceView:
             try:
                 InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
 
-                results = self.invoice_controller.advanced_search(
-                    customer=customer,
-                    product=product,
-                    start_date=start_date,
-                    end_date=end_date,
-                    min_total=min_total,
-                    max_total=max_total
-                )
+                results = self.invoice_controller.advanced_search(customer=customer, product=product,
+                                                                   start_date=start_date, end_date=end_date,
+                                                                   min_total=min_total, max_total=max_total)
                 self._show_invoices(results)
                 break
 
@@ -169,10 +164,7 @@ class InvoiceView:
                 else:
                     max_val = None
 
-                results = self.invoice_controller.advanced_search(
-                    min_total=min_val,
-                    max_total=max_val
-                )
+                results = self.invoice_controller.advanced_search(min_total=min_val, max_total=max_val)
                 self._show_invoices(results)
                 break
 
