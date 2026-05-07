@@ -30,12 +30,8 @@ class ReportController:
             raw_data = self.repo.load()
             all_reports = raw_data if isinstance(raw_data, list) else []
 
-            new_report_obj = Report(
-                report_type=report_type,
-                generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                parameters=parameters,
-                data={"summary": summary, "data": data}
-            )
+            new_report_obj = Report(report_type=report_type, generated_on=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                     parameters=parameters, data={"summary": summary, "data": data})
             new_report_dict = new_report_obj.to_dict()
 
             for old in all_reports:
@@ -50,7 +46,6 @@ class ReportController:
     def report_movements(self):
         data = []
         for m in self.movement_controller.movements:
-            # Търсим продукта (get_by_id вече поддържа и двете дължини)
             product = self.product_controller.get_by_id(m.product_id)
             product_name = product.name if product else "-"
             mtype = m.movement_type.name
@@ -58,7 +53,7 @@ class ReportController:
             if mtype == "IN":
                 from_loc = "Доставчик"
                 loc = self.location_controller.get_by_id(m.location_id)
-                to_loc = loc.name if loc else m.location_id[:8]  # Показваме кратко, ако няма име
+                to_loc = loc.name if loc else m.location_id[:8]
 
             elif mtype == "OUT":
                 loc = self.location_controller.get_by_id(m.location_id)
@@ -73,17 +68,9 @@ class ReportController:
             else:
                 from_loc, to_loc = "-", "-"
 
-            # За визуализация в отчета: подрязваме ID-тата
-            data.append({
-                "movement_id": m.movement_id[:8],
-                "date": m.date[:10],
-                "type": mtype,
-                "product": product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_loc,
-                "to": to_loc
-            })
+
+            data.append({"movement_id": m.movement_id[:8], "date": m.date[:10], "type": mtype, "product": product_name,
+                          "quantity": m.quantity, "unit": m.unit, "from": from_loc, "to": to_loc})
 
         summary = {"total": len(data)}
         self._save_report("movements_history", {}, summary, data)
@@ -95,15 +82,9 @@ class ReportController:
         for inv in invoices:
             unit_price = float(inv.unit_price) if inv.unit_price else (inv.total_price / max(inv.quantity, 1))
 
-            data.append({
-                "invoice_number": inv.invoice_id[:8],
-                "date": inv.date[:10],
-                "client": inv.customer,
-                "product": inv.product,
-                "quantity": inv.quantity,
-                "unit_price": round(unit_price, 2),
-                "total_price": inv.total_price
-            })
+            data.append({"invoice_number": inv.invoice_id[:8], "date": inv.date[:10], "client": inv.customer,
+                         "product": inv.product, "quantity": inv.quantity, "unit_price": round(unit_price, 2),
+                         "total_price": inv.total_price})
 
         summary = {"total_sales": len(data)}
         self._save_report("sales_all", {}, summary, data)
@@ -131,16 +112,9 @@ class ReportController:
                 if k not in product.name.lower() and k not in supplier_name.lower() and k not in loc_name.lower():
                     continue
 
-            data.append({
-                "movement_id": m.movement_id[:8],
-                "date": m.date[:10],
-                "product": product.name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "price": float(m.price or 0),
-                "supplier": supplier_name,
-                "location": loc_name
-            })
+            data.append({"movement_id": m.movement_id[:8], "date": m.date[:10],
+                         "product": product.name, "quantity": m.quantity,
+                         "unit": m.unit, "price": float(m.price or 0), "supplier": supplier_name, "location": loc_name})
 
         summary = {"total": len(data)}
         self._save_report("deliveries_all", {"keyword": keyword}, summary, data)
@@ -153,41 +127,35 @@ class ReportController:
             pid = p.product_id  # Пълно ID за логиката
             stock = self.inventory_controller.get_total_stock(pid)
 
-            # Изчисляваме продажбите по пълно ID
+            # Изчисляваме продажбите по ID
             sold = sum(m.quantity for m in self.movement_controller.movements
                        if str(m.product_id) == str(pid) and m.movement_type == MovementType.OUT)
 
             inv_entry = self.inventory_controller.data.get("products", {}).get(pid, {})
             locs = inv_entry.get("locations", {})
-            # Показваме съкратени ID-та на локациите за прегледност
             top = sorted(locs.items(), key=lambda x: x[1], reverse=True)[:3]
             top_str = ", ".join([f"{lid[:8]}:{qty}" for lid, qty in top]) if top else "-"
 
-            data.append({
-                "product": p.name,
-                "available": f"{stock} {p.unit}",
-                "sold": f"{sold} {p.unit}" if sold > 0 else "-",
-                "top_locations": top_str
-            })
+            data.append({ "product": p.name, "available": f"{stock} {p.unit}",
+                          "sold": f"{sold} {p.unit}" if sold > 0 else "-", "top_locations": top_str})
 
         summary = {"total_products": len(data)}
         self._save_report("inventory_summary", {}, summary, data)
         return ReportResult(summary, data)
 
     def product_lifecycle(self, name_or_id):
-        # Вече поддържа търсене и по име, и по кратко ID
         product = self.product_controller.get_by_id(name_or_id)
         if not product:
-            # Търсене по име, ако get_by_id не върне нищо (за по-стария стил)
             name_search = name_or_id.lower()
             for p in self.product_controller.get_all():
                 if p.name and name_search in p.name.lower():
                     product = p
                     break
 
-        if not product: return None
+        if not product:
+            return None
 
-        pid = product.product_id  # Пълно UUID
+        pid = product.product_id
         current_stock = self.inventory_controller.get_total_stock(pid)
         total_in, total_out, revenue, expense = 0.0, 0.0, 0.0, 0.0
 
@@ -207,19 +175,10 @@ class ReportController:
         fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements,
                                                                   product.price)
 
-        data = {
-            "product": product.name,
-            "product_id": pid[:8],
-            "unit": product.unit,
-            "total_in": total_in,
-            "total_out": total_out,
-            "current_stock": current_stock,
-            "revenue": round(revenue, 2),
-            "expense": round(expense, 2),
-            "fifo_cost": round(fifo_cost, 2),
-            "profit": round(revenue - fifo_cost, 2),
-            "cash_balance": round(revenue - expense, 2)
-        }
+        data = {"product": product.name, "product_id": pid[:8], "unit": product.unit, "total_in": total_in,
+                "total_out": total_out, "current_stock": current_stock, "revenue": round(revenue, 2),
+                "expense": round(expense, 2), "fifo_cost": round(fifo_cost, 2),
+                "profit": round(revenue - fifo_cost, 2), "cash_balance": round(revenue - expense, 2)}
 
         summary = {"product": product.name}
         self._save_report("product_lifecycle", {"search": name_or_id}, summary, data)

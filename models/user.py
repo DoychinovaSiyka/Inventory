@@ -5,7 +5,7 @@ class User:
     def __init__(self, first_name, last_name, email, username, password,
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
-        # 1. ГЕНЕРИРАНЕ: Вече пазим пълното 36-символно UUID за сигурност в базата
+
         if not user_id:
             self.user_id = str(uuid.uuid4())
         else:
@@ -65,6 +65,5 @@ class User:
         }
 
     def __str__(self):
-        # 2. ВИЗУАЛИЗАЦИЯ: Само тук показваме първите 8 символа
         short_id = self.user_id[:8]
         return f"Потребител: {self.username} [ID: {short_id}] | Роля: {self.role} | Статус: {self.status}"

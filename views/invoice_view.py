@@ -23,14 +23,8 @@ class InvoiceView:
             return
         rows = []
         for inv in invoices:
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{float(inv.total_price):.2f} лв.",
-                inv.date[:16]
-            ])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
+                         f"{float(inv.total_price):.2f} лв.", inv.date[:16]])
 
         print("\n" + format_table(["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
 
@@ -57,8 +51,6 @@ class InvoiceView:
 
     def view_by_id(self, user):
         print("\n=== Преглед на фактура по ID ===")
-        print("(Можете да въведете само първите 8 символа от ID-то)")
-
         while True:
             invoice_id = self._input("Въведете ID: ")
             if not invoice_id:
@@ -68,21 +60,14 @@ class InvoiceView:
             invoice = self.invoice_controller.get_by_id(invoice_id)
             if invoice:
                 break
-
             print("Фактура с такова ID не е намерена. Опитайте отново.\n")
 
-        # Детайлен изглед
+
         columns = ["Поле", "Стойност"]
-        rows = [
-            ["Пълно ID", invoice.invoice_id],
-            ["Движение ID", invoice.movement_id[:8]],  # Кратко за прегледност
-            ["Продукт", invoice.product],
-            ["Количество", f"{invoice.quantity} {invoice.unit}"],
-            ["Единична цена", f"{invoice.unit_price:.2f} лв."],
-            ["Общо", f"{invoice.total_price:.2f} лв."],
-            ["Клиент", invoice.customer],
-            ["Дата", invoice.date]
-        ]
+        rows = [["Пълно ID", invoice.invoice_id], ["Движение ID", invoice.movement_id[:8]],
+                ["Продукт", invoice.product], ["Количество", f"{invoice.quantity} {invoice.unit}"],
+                ["Единична цена", f"{invoice.unit_price:.2f} лв."], ["Общо", f"{invoice.total_price:.2f} лв."],
+                ["Клиент", invoice.customer], ["Дата", invoice.date]]
 
         print("\n" + format_table(columns, rows))
 
@@ -119,11 +104,9 @@ class InvoiceView:
 
         try:
             InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
-            results = self.invoice_controller.advanced_search(
-                customer=customer, product=product,
-                start_date=start_date, end_date=end_date,
-                min_total=min_total, max_total=max_total
-            )
+            results = self.invoice_controller.advanced_search(customer=customer, product=product,
+                                                              start_date=start_date, end_date=end_date,
+                                                              min_total=min_total, max_total=max_total)
             self._show_invoices(results)
         except ValueError as e:
             print(f"{e}")

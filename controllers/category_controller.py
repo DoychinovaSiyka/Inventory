@@ -37,7 +37,6 @@ class CategoryController:
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
-
         self.categories.append(category)
         self._save_changes()
 
@@ -84,7 +83,6 @@ class CategoryController:
             return None
 
         for c in self.categories:
-            # Проверяваме дали пълното ID започва с предоставения низ
             if c.category_id.startswith(target_id):
                 return c
         return None
@@ -94,7 +92,6 @@ class CategoryController:
         return self.categories
 
     def get_subcategories(self, parent_id: str) -> List[Category]:
-        # Намираме пълното ID на родителя, ако е подадено кратко
         parent = self.get_by_id(parent_id)
         pid = parent.category_id if parent else parent_id
         return [c for c in self.categories if c.parent_id == pid]

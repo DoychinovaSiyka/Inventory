@@ -30,7 +30,7 @@ class InventoryController:
         locations = self.data["products"][pid].get("locations", {})
         return sum(float(qty) for qty in locations.values())
 
-    # УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ
+
     def increase_stock(self, product_id, quantity, location_id):
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
@@ -41,7 +41,6 @@ class InventoryController:
 
         locations = self.data["products"][pid]["locations"]
         locations[lid] = locations.get(lid, 0.0) + quantity
-
         self._save()
 
     # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
@@ -55,7 +54,6 @@ class InventoryController:
 
         locations = self.data["products"][pid]["locations"]
         current = locations.get(lid, 0.0)
-
         if current < quantity:
             return False
 
@@ -94,6 +92,11 @@ class InventoryController:
 
     # FIFO себестойност
     def calculate_fifo_cost(self, product_id, movements, fallback_price=0.0):
+        """ Смятам себестойността на продаденото по FIFO. Подреждам всички движения по дата и
+              водя списък с партиди от доставки.
+              При продажба изписвам количества от най-старите налични партиди и така получавам
+              реалната себестойност на продадените бройки."""
+
         pid = self._get_full_product_id(product_id)
         batches = []
         total_cost = 0.0
@@ -140,7 +143,6 @@ class InventoryController:
             total_in_qty = 0.0
 
             for m in movement_controller.movements:
-                # Сравняваме пълни UUID
                 if str(m.product_id) == str(pid) and m.movement_type.name == "IN":
                     qty = float(m.quantity)
                     price = float(m.price) if m.price is not None else float(product.price)

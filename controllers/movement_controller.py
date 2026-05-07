@@ -17,7 +17,7 @@ class MovementController:
         self.activity_log_controller = activity_log_controller
         self.inventory_controller = inventory_controller
 
-        # Зареждане на движенията с пълни UUID
+        # Зареждане на движенията
         raw = self.repo.load() or []
         self.movements: List[Movement] = [Movement.from_dict(m) for m in raw]
 
@@ -28,8 +28,6 @@ class MovementController:
             quantity: str, price: str, customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
 
-
-        # Търсим реалните обекти чрез техните контролери (които вече поддържат .startswith())
 
         full_product = self.product_controller.get_by_id(product_id)
         if not full_product:
@@ -43,7 +41,6 @@ class MovementController:
 
 
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
-
         qty = MovementValidator.parse_quantity(quantity)
         prc = MovementValidator.parse_price(price) if m_type_str != "MOVE" else 0.0
 
@@ -51,7 +48,6 @@ class MovementController:
         if m_type_str == "MOVE":
             loc_from = self.location_controller.get_by_id(from_location_id)
             loc_to = self.location_controller.get_by_id(to_location_id)
-
             from_location_id = loc_from.location_id if loc_from else from_location_id
             to_location_id = loc_to.location_id if loc_to else to_location_id
 
@@ -61,14 +57,13 @@ class MovementController:
             loc = self.location_controller.get_by_id(location_id)
             location_id = loc.location_id if loc else location_id
 
-        # 3. Специфични правила за наличност (ползваме вече пълните ID-та)
-        MovementValidator.validate_in_out_rules(
-            movement_type=m_type_str, product=full_product, quantity=qty,
-            customer=customer, inventory_controller=self.inventory_controller,
-            location_id=location_id if m_type_str != "MOVE" else from_location_id
-        )
+        # Специфични правила за наличност
+        MovementValidator.validate_in_out_rules(movement_type=m_type_str, product=full_product, quantity=qty,
+                                                customer=customer, inventory_controller=self.inventory_controller,
+                                                location_id=location_id if m_type_str != "MOVE"
+                                                else from_location_id)
 
-        # 4. Актуализиране на инвентара
+        # Актуализиране на инвентара
         if self.inventory_controller:
             if m_type_str == "IN":
                 self.inventory_controller.increase_stock(product_id, qty, location_id)
@@ -78,7 +73,7 @@ class MovementController:
                 self.inventory_controller.decrease_stock(product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(product_id, qty, to_location_id)
 
-        # 5. СЪЗДАВАНЕ НА ОБЕКТА
+        # СЪЗДАВАНЕ НА ОБЕКТА
         movement = Movement(movement_id=None,   product_id=product_id, product_name=full_product.name,
                             user_id=user_id, location_id=location_id
             if m_type_str != "MOVE" else None, movement_type=MovementType[m_type_str], quantity=qty,
@@ -88,28 +83,21 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-        # 6. Логване (със съкратени ID за прегледност в конзолата)
+        # Логване
         if self.activity_log_controller:
-            self.activity_log_controller.log_action(
-                user_id=user_id,
-                action=f"MOVEMENT_{m_type_str}",
-                details=f"Продукт: {full_product.name}, Кол: {qty} (Движение ID: {movement.movement_id[:8]})"
-            )
+            self.activity_log_controller.log_action(user_id=user_id, action=f"MOVEMENT_{m_type_str}",
+                                                    details=f"Продукт: {full_product.name}, Кол: {qty} "
+                                                            f"(Движение ID: {movement.movement_id[:8]})")
 
-        # 7. Фактура
+        # Фактура
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement,
-                product=full_product,
-                customer=customer or "Неизвестен клиент",
-                user_id=user_id
-            )
+            self.invoice_controller.create_from_movement(movement=movement, product=full_product,
+                                                         customer=customer or "Неизвестен клиент", user_id=user_id)
 
         return movement
 
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None):
-        """Сложен филтър за справки (сравнява пълни или съкратени ID-та)."""
         results = []
         for m in self.movements:
             try:
@@ -125,8 +113,6 @@ class MovementController:
             if end_date and m_date > end_date:
                 continue
 
-            # Сравняваме с .startswith(), за да може филтърът да работи
-            # и с кратки, и с дълги ID-та
             if product_id and not str(m.product_id).startswith(str(product_id)):
                 continue
             if user_id and not str(m.user_id).startswith(str(user_id)):

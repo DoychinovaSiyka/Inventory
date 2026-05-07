@@ -8,20 +8,15 @@ class SupplierController:
 
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме съществуващите данни (с пълни UUID от JSON)
+        # Зареждаме съществуващите данни
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
 
-        # СИНХРОНИЗАЦИЯ: Моделът автоматично ще генерира пълно UUID
-        supplier = Supplier(
-            supplier_id=None,
-            name=name.strip(),
-            contact=contact.strip(),
-            address=address.strip()
-        )
+        supplier = Supplier(supplier_id=None, name=name.strip(),
+                            contact=contact.strip(), address=address.strip())
 
         self.suppliers.append(supplier)
         self.save_changes()
@@ -32,15 +27,12 @@ class SupplierController:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        """
-        КЛЮЧОВА ПРОМЯНА: Поддържа търсене по кратко ID (префикс).
-        """
+        """ Поддържа търсене по кратко ID (префикс)."""
         sid = str(supplier_id).strip()
         if not sid:
             return None
 
         for supplier in self.suppliers:
-            # Проверка дали пълното ID започва с въведеното
             if supplier.supplier_id.startswith(sid):
                 return supplier
         return None
@@ -48,7 +40,6 @@ class SupplierController:
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
 
-        # Намираме реалния обект (поддържа кратко ID)
         supplier = self.get_by_id(supplier_id)
         if not supplier:
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
@@ -78,5 +69,5 @@ class SupplierController:
         return True
 
     def save_changes(self) -> None:
-        """Записва пълните 36-символни ID-та в JSON."""
+        """Записва пълните ID-та в JSON."""
         self.repo.save([s.to_dict() for s in self.suppliers])

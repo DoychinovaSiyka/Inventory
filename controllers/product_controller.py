@@ -13,7 +13,6 @@ class ProductController:
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
     def save_changes(self):
-        # Записва пълните 36-символни UUID
         data = [p.to_dict() for p in self.products]
         self.repo.save(data)
 
@@ -24,32 +23,24 @@ class ProductController:
     def add(self, product_data: dict, user_id: str) -> Product:
         ProductValidator.validate_name(product_data['name'])
 
-        # Намираме пълните ID-та на категориите
         categories = []
         for cid in product_data.get('category_ids', []):
             cat = self.category_controller.get_by_id(cid)
             if cat:
                 categories.append(cat)
 
-        product = Product(
-            product_id=None,
-            name=product_data['name'],
-            categories=categories,
-            unit=product_data.get('unit', 'бр.'),
-            description=product_data.get('description', ''),
-            price=float(product_data['price'])
-        )
+        product = Product(product_id=None, name=product_data['name'], categories=categories,
+                          unit=product_data.get('unit', 'бр.'),
+                          description=product_data.get('description', ''), price=float(product_data['price']))
 
         self.products.append(product)
         self.save_changes()
 
-        # В лога записваме само 8 символа за прегледност
         short_id = product.product_id[:8]
         self._log(user_id, "CREATE_PRODUCT", f"Продукт: {product.name} (ID: {short_id})")
         return product
 
     def get_by_id(self, product_id):
-        """ Позволява на потребителя да въведе само 8 символа и намира пълното UUID в списъка."""
         pid_str = str(product_id).strip()
         if not pid_str:
             return None
@@ -110,7 +101,6 @@ class ProductController:
                 keyword in p.product_id.lower()]  # Позволяваме търсене и по ID
 
     def filter_by_category(self, category_id):
-        # Намираме пълното ID на категорията първо
         cat = self.category_controller.get_by_id(category_id)
         if not cat:
             return []

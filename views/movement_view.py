@@ -22,9 +22,7 @@ class MovementView:
         """Връща списък с локации, в които продуктът има наличност."""
         result = []
         for loc in self.location_controller.get_all():
-            qty = self.movement_controller.inventory_controller.get_stock_by_location(
-                product.product_id, loc.location_id
-            )
+            qty = self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, loc.location_id)
             if qty > 0:
                 result.append(loc)
         return result
@@ -37,9 +35,14 @@ class MovementView:
 
         print(f"\n--- Избор на {label} ---")
         for i, item in enumerate(items, 1):
-            full_id = getattr(item, 'product_id',
-                       getattr(item, 'location_id',
-                       getattr(item, 'supplier_id', '')))
+            if isinstance(item, Product):
+                full_id = item.product_id
+            elif isinstance(item, Location):
+                full_id = item.location_id
+            else:
+                full_id = item.supplier_id
+
+            print(f"{i}. {item.name} [ID: {full_id[:8]}]")
 
             qty_info = ""
             if isinstance(item, Product):
@@ -58,9 +61,15 @@ class MovementView:
 
         choice_lower = choice.lower()
         for item in items:
-            full_id = getattr(item, 'product_id',
-                       getattr(item, 'location_id',
-                       getattr(item, 'supplier_id', '')))
+            if isinstance(item, Product):
+                full_id = item.product_id
+            elif isinstance(item, Location):
+                full_id = item.location_id
+            elif isinstance(item, Supplier):
+                full_id = item.supplier_id
+            else:
+                continue
+
             if full_id.lower().startswith(choice_lower):
                 return item
 
@@ -68,7 +77,6 @@ class MovementView:
         return None
 
     def _display_results(self, results):
-        """Форматира и показва списък с движения."""
         if not results:
             print("\n--- Няма движения по този критерий ---\n")
             return
@@ -97,15 +105,8 @@ class MovementView:
                 loc = self.location_controller.get_by_id(m.location_id)
                 loc_text = loc.name if loc else "-"
 
-            rows.append([
-                m.movement_id[:8],
-                m.date[5:16],
-                m.movement_type.name,
-                p_name[:15],
-                f"{m.quantity} {p_unit}",
-                partner[:15],
-                loc_text
-            ])
+            rows.append([m.movement_id[:8], m.date[5:16], m.movement_type.name, p_name[:15],
+                         f"{m.quantity} {p_unit}", partner[:15], loc_text])
 
         print("\n" + format_table(columns, rows))
         input("\nНатиснете Enter за продължение...")

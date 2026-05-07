@@ -39,7 +39,6 @@ class CategoryView:
 
         def print_tree(cat, level, prefix):
             indent = "   " * level
-            # СИНХРОНИЗАЦИЯ: Показваме само първите 8 символа от ID-то
             short_id = cat.category_id[:8]
 
             if level == 0:
@@ -47,7 +46,7 @@ class CategoryView:
             else:
                 print(f"{indent}- {cat.name} [ID: {short_id}]")
 
-            # Рекурсивно децата (сравняваме пълните ID-та в бекенда)
+            # Рекурсивно децата
             children = [c for c in categories if c.parent_id == cat.category_id]
             children.sort(key=lambda x: x.name.lower())
             for child in children:
@@ -74,10 +73,8 @@ class CategoryView:
 
         try:
             current_uid = user.user_id if user else "unknown"
-            self.controller.add(
-                {"name": name, "description": description, "parent_id": parent_id},
-                user_id=current_uid
-            )
+            self.controller.add({"name": name, "description": description, "parent_id": parent_id},
+                                user_id=current_uid)
             print("Категорията е добавена успешно!")
         except ValueError as e:
             print("Грешка:", e)

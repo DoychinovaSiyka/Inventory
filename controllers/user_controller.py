@@ -14,7 +14,7 @@ class UserController:
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
 
-        # Зареждаме потребителите с пълни UUID от JSON
+        # Зареждаме потребителите от JSON
         self.users: List[User] = []
         for u in raw_data:
             if isinstance(u, dict):
@@ -32,11 +32,9 @@ class UserController:
             self._create_default_operator()
 
     def _hash_password(self, password: str) -> str:
-        # Прост хеш за целите на проекта
         return "".join(str(ord(c)) for c in password)
 
     def save_changes(self):
-        """Записва пълните UUID в JSON файла."""
         self.repo.save([u.to_dict() for u in self.users])
 
     # READ операции
@@ -50,7 +48,6 @@ class UserController:
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        """Интелигентно търсене по пълно или съкратено ID."""
         target_id = str(user_id).strip()
         if not target_id:
             return None
@@ -69,12 +66,9 @@ class UserController:
         if user.password == hashed:
             self.logged_user = user
             if self.activity_log:
-                self.activity_log.log_action(
-                    user.user_id,
-                    "LOGIN",
-                    f"Потребител {user.username} влезе в системата."
-                )
+                self.activity_log.log_action(user.user_id, "LOGIN", f"Потребител {user.username} влезе в системата.")
             return user
+
         return None
 
     # Администраторски действия
@@ -83,16 +77,8 @@ class UserController:
         UserValidator.validate_unique_username(username, self)
 
 
-        new_user = User(
-            user_id=None,
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            email=email.strip(),
-            username=username.strip(),
-            password=self._hash_password(password),
-            role=role,
-            status="Active"
-        )
+        new_user = User(user_id=None, first_name=first_name.strip(), last_name=last_name.strip(), email=email.strip(),
+                        username=username.strip(), password=self._hash_password(password), role=role, status="Active")
         self.users.append(new_user)
         self.save_changes()
         return new_user
@@ -133,31 +119,19 @@ class UserController:
         return True
 
     def _create_default_admin(self):
-        admin = User(
-            user_id=None,
-            first_name="Admin", last_name="System",
-            email="admin@system.local", username="admin",
-            password=self._hash_password("admin123"),
-            role="Admin", status="Active"
-        )
+        admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
+                     username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_changes()
 
     def _create_default_operator(self):
-        operator = User(
-            user_id=None,
-            first_name="Operator", last_name="User",
-            email="operator@example.com", username="operator",
-            password=self._hash_password("operator123"),
-            role="Operator", status="Active"
-        )
+        operator = User(user_id=None, first_name="Operator", last_name="User", email="operator@example.com",
+                        username="operator", password=self._hash_password("operator123"), role="Operator",
+                        status="Active")
         self.users.append(operator)
         self.save_changes()
 
     def create_anonymous_user(self) -> User:
         """Помощен метод за гост достъп (не се записва в базата)."""
-        return User(
-            user_id="00000000-0000-0000-0000-000000000000",
-            first_name="Anonymous", last_name="", email="",
-            username="guest", password="", role="Anonymous", status="Active"
-        )
+        return User(user_id="00000000-0000-0000-0000-000000000000", first_name="Anonymous",
+                    last_name="", email="", username="guest", password="", role="Anonymous", status="Active")

@@ -11,7 +11,7 @@ class LocationController:
         self.activity_log = activity_log_controller
         self.inventory_controller = inventory_controller
 
-        # Зареждане на локациите (с пълни UUID от JSON)
+        # Зареждане на локациите
         raw = self.repo.load()
         if not raw or not isinstance(raw, list):
             raw = []
@@ -29,14 +29,11 @@ class LocationController:
         capacity = LocationValidator.validate_capacity(capacity)
 
         LocationValidator.validate_unique_name(name, self.locations)
-
-        # СИНХРОНИЗАЦИЯ: Подаваме location_id=None, моделът генерира пълно UUID
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity)
 
         self.locations.append(location)
         self.save_changes()
 
-        # В лога записваме съкратено ID за прегледност
         short_id = location.location_id[:8]
         self._log("ADD_LOCATION", f"Добавена локация: {name} (ID: {short_id})")
 
@@ -47,10 +44,7 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        """
-        КЛЮЧОВА ПРОМЯНА: Търсим по префикс.
-        Позволява на потребителя да въведе само първите 8 символа.
-        """
+        """ Търсим по префикс. Позволява на потребителя да въведе само първите 8 символа."""
         target_id = str(location_id).strip()
         if not target_id:
             return None
@@ -62,14 +56,12 @@ class LocationController:
         return None
 
     def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None) -> bool:
-        # get_by_id вече ще намери локацията и по съкратено ID
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
         if name is not None:
             name = LocationValidator.validate_name(name)
-            # Проверка за уникалност, изключвайки ТЕКУЩОТО пълно ID
             LocationValidator.validate_unique_name(name, self.locations, exclude_id=location.location_id)
             location.name = name
 

@@ -12,7 +12,7 @@ class InvoiceController:
         self.repo = repo
         self.activity_log = activity_log_controller
 
-        # Зареждане на фактурите (с пълни UUID от JSON-а)
+        # Зареждане на фактурите
         raw = self.repo.load() or []
         self.invoices: List[Invoice] = [Invoice.from_dict(inv) for inv in raw]
 
@@ -31,7 +31,6 @@ class InvoiceController:
         self.invoices.append(invoice)
         self._save_changes()
 
-        # В лога записваме само 8 символа за красота
         self._log(user_id, "GENERATE_INVOICE",
                   f"Ръчно генерирана фактура #{invoice.invoice_id[:8]} за {invoice.customer}")
         return invoice
@@ -49,7 +48,6 @@ class InvoiceController:
         self.invoices.append(invoice)
         self._save_changes()
 
-        # В лога записваме краткото ID на фактурата и краткото ID на движението
         self._log(user_id, "GENERATE_INVOICE",
                   f"Автоматична фактура #{invoice.invoice_id[:8]} за движение {movement.movement_id[:8]}")
 
@@ -65,7 +63,6 @@ class InvoiceController:
             return None
 
         for inv in self.invoices:
-            # Сравняваме дали пълното ID започва с въведеното от потребителя
             if inv.invoice_id.startswith(target_id):
                 return inv
         return None
@@ -80,12 +77,10 @@ class InvoiceController:
         inv.update_modified()
         self._save_changes()
 
-        # Логваме със съкратено ID
         self._log(user_id, "EDIT_INVOICE", f"Променен клиент на фактура {inv.invoice_id[:8]}")
         return True
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        # Намираме реалната фактура, за да вземем пълното ѝ ID
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False

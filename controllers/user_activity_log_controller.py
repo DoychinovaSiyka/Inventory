@@ -5,11 +5,11 @@ class UserActivityLogController:
     """Контролерът управлява логовете и ги записва в JSON."""
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме съществуващите логове (с пълни UUID за user_id)
+        # Зареждаме съществуващите логове
         raw_data = self.repo.load() or []
         self.logs: List[UserActivityLog] = [UserActivityLog.from_dict(l) for l in raw_data]
 
-    # СИНХРОНИЗАЦИЯ: Прекръстваме го на log_action, за да съответства на повикванията в другите контролери
+
     def log_action(self, user_id, action, details=""):
         # user_id тук трябва да е пълното UUID (вече го оправихме в MovementController и ProductController)
         new_log = UserActivityLog(user_id=str(user_id), action=action, details=details)
@@ -21,11 +21,10 @@ class UserActivityLogController:
     def get_all(self) -> List[UserActivityLog]:
         return self.logs
 
-    # READ - Филтриране по потребител (ИНТЕЛИГЕНТНО)
+    # READ - Филтриране по потребител
     def get_by_user(self, user_id: str) -> List[UserActivityLog]:
         """Връща действия на потребител, поддържа и кратко ID."""
         uid = str(user_id).strip()
-        # Позволяваме търсене по началото на UUID-то
         return [log for log in self.logs if str(log.user_id).startswith(uid)]
 
     # READ - Търсене по действие

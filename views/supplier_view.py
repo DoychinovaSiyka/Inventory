@@ -72,7 +72,6 @@ class SupplierView:
         new_name = input(f"Ново име ({supplier.name}): ").strip() or supplier.name
         new_contact = input(f"Нов контакт ({supplier.contact}): ").strip() or supplier.contact
         new_address = input(f"Нов адрес ({supplier.address}): ").strip() or supplier.address
-
         try:
             self.controller.update(supplier_id=supplier.supplier_id, name=new_name,
                                    contact=new_contact, address=new_address)
