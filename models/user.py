@@ -5,18 +5,23 @@ class User:
     def __init__(self, first_name, last_name, email, username, password,
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
-        self.user_id = str(user_id) if user_id else str(uuid.uuid4())
+        # СИНХРОНИЗАЦИЯ: Използваме 8 символа за последователност
+        if not user_id:
+            self.user_id = str(uuid.uuid4())[:8]
+        else:
+            self.user_id = str(user_id)
+
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.username = username
         self.password = password
-        self.role = role # Роля в системата
-        self.status = status # Статус на акаунта
+        self.role = role # Роля: Admin, Operator и т.н.
+        self.status = status # Статус: Active, Inactive
 
-        now = User.now()
-        self.created = created or now
-        self.modified = modified or now
+        now_val = User.now()
+        self.created = created or now_val
+        self.modified = modified or now_val
 
     @staticmethod
     def now():
@@ -28,22 +33,36 @@ class User:
 
     @staticmethod
     def from_dict(data):
-        """Прави User от JSON речник."""
+        """Превръща речник от JSON в обект User."""
         if not data:
             return None
-        return User(first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),
-                    email=data.get("email", ""), username=data.get("username", ""),
-                    password=data.get("password", ""), role=data.get("role", "Operator"),
-                    status=data.get("status", "Active"), user_id=data.get("user_id"),
-                    created=data.get("created"), modified=data.get("modified"))
+        return User(
+            first_name=data.get("first_name", ""),
+            last_name=data.get("last_name", ""),
+            email=data.get("email", ""),
+            username=data.get("username", ""),
+            password=data.get("password", ""),
+            role=data.get("role", "Operator"),
+            status=data.get("status", "Active"),
+            user_id=data.get("user_id"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def to_dict(self):
         """Връща User като речник за JSON запис."""
-        return {"user_id": self.user_id, "first_name": self.first_name,
-                "last_name": self.last_name, "email": self.email, "username": self.username,
-                "password": self.password, "role": self.role, "status": self.status,
-                "created": self.created, "modified": self.modified}
-
+        return {
+            "user_id": self.user_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "username": self.username,
+            "password": self.password,
+            "role": self.role,
+            "status": self.status,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return f"Потребител: {self.username} [ID: {self.user_id}] | Роля: {self.role} | Статус: {self.status}"

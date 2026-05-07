@@ -1,11 +1,17 @@
+import uuid
 from datetime import datetime
 from validators.category_validator import CategoryValidator
 
 
 class Category:
     def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
-        # ID-то може да бъде подадено отвън (от JSON/контролера), а датите се генерират в модела, ако липсват.
-        self.category_id = str(category_id) if category_id else None
+
+        # 1. ГЕНЕРИРАНЕ: Ако няма ID, създаваме ПЪЛНО UUID (36 символа)
+        if not category_id:
+            self.category_id = str(uuid.uuid4())
+        else:
+            self.category_id = str(category_id)
+
         self.name = name
         self.description = description
         self.parent_id = str(parent_id) if parent_id else None
@@ -22,25 +28,37 @@ class Category:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def update_modified(self):
-        """Обновявам датата при промяна."""
+        """Обновяваме датата при промяна."""
         self.modified = Category.now()
 
     def to_dict(self):
-        """Превръщам обекта в dict, за да може да се запише в JSON."""
-        return {"category_id": self.category_id, "name": self.name,
-                "description": self.description,
-                "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
+        """Записваме в JSON ПЪЛНОТО ID (36 символа)."""
+        return {
+            "category_id": self.category_id,
+            "name": self.name,
+            "description": self.description,
+            "parent_id": self.parent_id,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):
-        """Създавам Category от речник, зареден от JSON файла."""
         if not data:
             return None
-
-        return Category(category_id=data.get("category_id"), name=data.get("name"),
-                        description=data.get("description", ""), parent_id=data.get("parent_id"),
-                        created=data.get("created"), modified=data.get("modified"))
+        return Category(
+            category_id=data.get("category_id"),
+            name=data.get("name"),
+            description=data.get("description", ""),
+            parent_id=data.get("parent_id"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def __str__(self):
-        parent_info = f" (подкатегория на {self.parent_id})" if self.parent_id else ""
-        return f"Категория: {self.name}{parent_info}"
+        # 2. ВИЗУАЛИЗАЦИЯ: Само тук режем за пред потребителя
+        short_id = self.category_id[:8]
+        # Ако има родител, също му показваме само първите 8 символа
+        parent_info = f" (Подкатегория на: {self.parent_id[:8]})" if self.parent_id else ""
+
+        return f"Категория: {self.name} [ID: {short_id}]{parent_info}"

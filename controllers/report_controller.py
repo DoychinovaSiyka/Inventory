@@ -82,6 +82,7 @@ class ReportController:
         self._save_report("movements_history", {}, summary, data)
         return ReportResult(summary, data)
 
+
     def report_sales(self):
         invoices = self.invoice_controller.get_all() or []
         data = []

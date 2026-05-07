@@ -20,6 +20,7 @@ class SupplierController:
         self.save_changes()
         return supplier
 
+
     # READ
     def get_all(self) -> List[Supplier]:
         """Връща всички доставчици."""
