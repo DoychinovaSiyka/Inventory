@@ -22,8 +22,7 @@ class CategoryView:
             menu_items.extend([
                 MenuItem("2", "Добавяне на категория", self.add_category),
                 MenuItem("3", "Редактиране на категория", self.edit_category),
-                MenuItem("4", "Изтриване на категория", self.delete_category)
-            ])
+                MenuItem("4", "Изтриване на категория", self.delete_category)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Категории", menu_items)
@@ -91,11 +90,10 @@ class CategoryView:
 
         print(f"\nТекущо име: {category.name}")
         new_name = input("Ново име (Enter за запазване): ").strip() or None
-
         print(f"Текущо описание: {category.description}")
         new_desc = input("Ново описание (Enter за запазване): ").strip() or None
 
-        # Добавена валидация за описанието при редакция
+
         if new_desc and len(new_desc) < 3:
             print("Грешка: Новото описание е твърде кратко. Промяната не е записана.")
             new_desc = None
@@ -110,8 +108,6 @@ class CategoryView:
                 self.controller.update_description(category_id, new_desc, current_uid)
 
             if parent:
-                # Тук контролерът трябва да проверява за "Циклична връзка"
-                # (не може категорията да е родител на себе си)
                 if parent.category_id == category_id:
                     print("Грешка: Категорията не може да бъде родител на самата себе си.")
                 else:
@@ -141,20 +137,20 @@ class CategoryView:
         if not categories:
             return None
 
-        # Сортираме за по-лесен избор
-        categories.sort(key=lambda x: x.name.lower())
 
+        categories.sort(key=lambda x: x.name.lower())
         for i, cat in enumerate(categories, 1):
             print(f"{i}. {cat.name} [{cat.category_id[:8]}]")
 
         choice = input("\nИзбор (номер или ID, Enter за отказ): ").strip()
         if not choice: return None
 
-        # Проверка по кратко ID
-        found = self.controller.get_by_id(choice)
-        if found: return found
 
-        # Проверка по номер
+        found = self.controller.get_by_id(choice)
+        if found:
+            return found
+
+
         if choice.isdigit():
             idx = int(choice) - 1
             if 0 <= idx < len(categories):

@@ -29,7 +29,7 @@ class CategoryController:
         description = category_data.get("description", "").strip()
         parent_input = category_data.get("parent_id")
 
-        # ОПРАВКА: Намиране на точния родител
+        # Намиране на точния родител
         parent_id = None
         if parent_input:
             parent_cat = self.get_by_id(parent_input)
@@ -76,7 +76,7 @@ class CategoryController:
         if not category:
             return False
 
-        # Валидацията проверява дали има продукти или деца
+        # проверява дали има продукти или деца
         products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 

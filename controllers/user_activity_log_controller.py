@@ -30,7 +30,7 @@ class UserActivityLogController:
         return [log for log in self.logs if keyword in log.action.lower()]
 
     def save_changes(self):
-        # Записваме само последните 1000 лога например, за да не гърми диска (опционално)
+        # Записваме само последните 1000 лога например, за да не гърми диска - опционално
         self.repo.save([log.to_dict() for log in self.logs])
 
     def clear_logs(self):

@@ -5,7 +5,6 @@ from validators.supplier_validator import SupplierValidator
 
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
-
     def __init__(self, repo):
         self.repo = repo
 
@@ -27,7 +26,7 @@ class SupplierController:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        """ Поддържа търсене по кратко ID (префикс)."""
+        """Търсене по кратко ID (префикс)."""
         sid = str(supplier_id).strip()
         if not sid:
             return None

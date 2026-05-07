@@ -17,7 +17,7 @@ class UserController:
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
-        # ОПРАВКА: Проверяваме по USERNAME, за да няма дублиране на системни акаунти
+        # Проверяваме по USERNAME, за да няма дублиране на системни акаунти
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
@@ -49,12 +49,12 @@ class UserController:
         if not target_id:
             return None
 
-        # 1. Първо търсим точно ID
+        # Първо търсим точно ID
         for u in self.users:
             if u.user_id == target_id:
                 return u
 
-        # 2. Ако не намерим, търсим по начало на ID (за удобство)
+        # Ако не намерим, търсим по начало на ID
         for u in self.users:
             if u.user_id.startswith(target_id):
                 return u
@@ -83,16 +83,9 @@ class UserController:
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        new_user = User(
-            user_id=None,
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            email=email.strip(),
-            username=username.strip().lower(),  # Винаги малки букви за username
-            password=self._hash_password(password),
-            role=role,
-            status="Active"
-        )
+        new_user = User(user_id=None, first_name=first_name.strip(), last_name=last_name.strip(),
+                        email=email.strip(), username=username.strip().lower(),
+                        password=self._hash_password(password), role=role, status="Active")
         self.users.append(new_user)
         self.save_changes()
         return new_user

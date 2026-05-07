@@ -59,12 +59,10 @@ class ReportsView:
         self._run_menu(sub, user)
 
     def _fmt_delivery(self, data):
-        # Тук използваме i["product"], което ReportController вече е взел от движението (историческо)
         return [[i["date"], i["movement_id"], i["product"],
                  f"{i['quantity']} {i['unit']}", f"{float(i['price']):.2f}", i["supplier"]] for i in data]
 
     def _fmt_sales(self, data):
-        # Фактурите са snapshot, така че тук няма парадокс
         return [[i["invoice_number"], i["date"], i["client"],
                  i["product"], f"{float(i['total_price']):.2f}"] for i in data]
 
@@ -79,10 +77,9 @@ class ReportsView:
         loc_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
         rows = []
 
-        # Вместо да въртим по продуктите в каталога, въртим по това, което РЕАЛНО има в склада
+        # въртим по това, което има в склада не продуктите в каталога
         for pid, pdata in inv_data.items():
             product = self.controller.product_controller.get_by_id(pid)
-            # Ако продуктът е изтрит от каталога, показваме ID-то му или търсим последното му име
             p_name = product.name if product else f"Изтрит продукт ({pid[:8]})"
             p_unit = product.unit if product else "бр."
 
@@ -95,7 +92,6 @@ class ReportsView:
 
     def report_movements(self, _):
         res = self.controller.report_movements()
-        # Използваме m["product"], който вече е историческото име от Movement
         rows = [[m["date"], m["movement_id"], m["type"], m["product"],
                  f"{m['quantity']} {m['unit']}", m["from"], m["to"]] for m in res.data]
         self._display_report("ХРОНОЛОГИЯ", ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"], rows)

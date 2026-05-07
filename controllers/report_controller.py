@@ -21,7 +21,6 @@ class ReportController:
         self.supplier_controller = supplier_controller
 
     def _map_invoices_to_data(self, invoices):
-        # Фактурите съхраняват името като текст - няма парадокс.
         return [{"invoice_number": i.invoice_id[:8], "date": i.date[:10], "client": i.customer,
                  "product": i.product, "total_price": i.total_price} for i in invoices]
 
@@ -32,7 +31,7 @@ class ReportController:
                             self._map_invoices_to_data(invoices))
 
     def report_movements(self):
-        """ УБИТ ПАРАДОКС: Показва движението между реални локации. """
+        """Показва движението между реални локации. """
         data = []
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
@@ -54,22 +53,16 @@ class ReportController:
             else:
                 f_loc, t_loc = "Н/А", "Н/А"
 
-            data.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "type": mtype,
-                "product": m.product_name,  # ИСТОРИЧЕСКО ИМЕ
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": f_loc,
-                "to": t_loc
-            })
+            data.append({ "movement_id": m.movement_id[:8], "date": str(m.date)[:10], "type": mtype,
+                          "product": m.product_name,
+                          "quantity": m.quantity, "unit": m.unit, "from": f_loc, "to": t_loc})
+
         return ReportResult({"total": len(data)}, data)
+
 
     def report_deliveries_all(self, keyword=None):
         data = []
         for m in self.movement_controller.movements:
-            # ОПРАВКА: Сравняваме по име на тип
             if m.movement_type.name != "IN": continue
 
             p_name = m.product_name
@@ -79,15 +72,8 @@ class ReportController:
             if keyword and keyword.lower() not in p_name.lower() and keyword.lower() not in sup.lower():
                 continue
 
-            data.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "product": p_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "price": float(m.price or 0),
-                "supplier": sup
-            })
+            data.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "product": p_name,
+                         "quantity": m.quantity, "unit": m.unit, "price": float(m.price or 0), "supplier": sup})
         return ReportResult({"total": len(data)}, data)
 
     def report_inventory_summary(self):
@@ -96,30 +82,32 @@ class ReportController:
             pid = str(p.product_id)
             stock = self.inventory_controller.get_total_stock(pid)
 
-            # ОПРАВКА: Филтрираме коректно OUT движенията за конкретния продукт
+            # Филтрираме коректно OUT движенията за конкретния продукт
             sold = sum(float(m.quantity) for m in self.movement_controller.movements
                        if str(m.product_id) == pid and m.movement_type.name == "OUT")
 
-            data.append({
-                "product": p.name,
-                "available": f"{stock} {p.unit}",
-                "sold": f"{sold} {p.unit}" if sold > 0 else "0",
-                "top_locations": "Виж Инвентар"
-            })
+            data.append({"product": p.name, "available": f"{stock} {p.unit}", "sold": f"{sold} {p.unit}"
+            if sold > 0 else "0", "top_locations": "Виж Инвентар"})
         return ReportResult({"total": len(data)}, data)
 
     def product_lifecycle(self, name_or_id):
         """ Пълна финансова история на продукт. """
         product = self.product_controller.get_by_id(name_or_id)
         if not product:
-            product = next((p for p in self.product_controller.get_all() if name_or_id.lower() in p.name.lower()), None)
+            # Търсим продукт по част от името
+            for p in self.product_controller.get_all():
+                if name_or_id.lower() in p.name.lower():
+                    product = p
+                    break
 
-        if not product: return None
+
+        if not product:
+            return None
 
         pid = str(product.product_id)
         movements = self.movement_controller.movements
 
-        # Филтрираме движенията за този продукт веднъж, за по-бърза работа
+        # Филтрираме движенията за този продукт веднъж
         prod_moves = [m for m in movements if str(m.product_id) == pid]
 
         total_in = sum(float(m.quantity) for m in prod_moves if m.movement_type.name == "IN")
@@ -129,16 +117,9 @@ class ReportController:
         revenue = sum(float(m.quantity) * float(m.price or 0) for m in prod_moves
                       if m.movement_type.name == "OUT")
 
-        # FIFO Себестойност (използва оправената логика в InventoryController)
+        # FIFO Себестойност
         fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, movements, product.price)
 
-        return {
-            "product": product.name,
-            "unit": product.unit,
-            "total_in": total_in,
-            "total_out": total_out,
-            "current_stock": self.inventory_controller.get_total_stock(pid),
-            "revenue": round(revenue, 2),
-            "fifo_cost": round(fifo_cost, 2),
-            "profit": round(revenue - fifo_cost, 2)
-        }
+        return {"product": product.name, "unit": product.unit, "total_in": total_in, "total_out": total_out,
+                "current_stock": self.inventory_controller.get_total_stock(pid), "revenue": round(revenue, 2),
+                "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}

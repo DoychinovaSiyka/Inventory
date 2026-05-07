@@ -20,11 +20,8 @@ from storage.json_repository import JSONRepository
 
 class InventoryApplication:
     def __init__(self):
-        # 1. Подготвяме пътищата към данните
         self._init_repositories()
-        # 2. Свързваме логиката (Контролерите)
         self._init_controllers()
-        # 3. Подготвяме интерфейса (Менютата)
         self._init_menus()
 
     def _init_repositories(self):
@@ -43,74 +40,43 @@ class InventoryApplication:
     def _init_controllers(self):
         """Свързване на контролерите в правилната йерархична последователност."""
 
-        # Логът е пръв, за да може другите да пишат в него веднага
         self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
-
-        # Базови справочници
         self.user_controller = UserController(self.user_repo, self.activity_log_controller)
         self.category_controller = CategoryController(self.category_repo, self.activity_log_controller)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
 
-        # Продукти (зависят от категории)
-        self.product_controller = ProductController(
-            self.product_repo,
-            self.category_controller,
-            self.activity_log_controller
-        )
+        # Продукти
+        self.product_controller = ProductController(self.product_repo, self.category_controller,
+                                                    self.activity_log_controller)
 
         # Фактури
         self.invoice_controller = InvoiceController(self.invoice_repo, self.activity_log_controller)
 
-        # Инвентар (Складът в реално време)
-        self.inventory_controller = InventoryController(
-            self.inventory_repo,
-            self.product_controller,
-            self.location_controller
-        )
+        # Инвентар
+        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
 
-        # Движения (MovementController) - ТУК РЕДЪТ Е КРИТИЧЕН ЗА __init__
-        # Аргументи: repo, product, user, location, supplier, invoice, inventory, activity_log
-        self.movement_controller = MovementController(
-            self.movement_repo,
-            self.product_controller,
-            self.user_controller,
-            self.location_controller,
-            self.supplier_controller,
-            self.invoice_controller,
-            self.inventory_controller,
-            self.activity_log_controller
-        )
+
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
+                                                      self.user_controller, self.location_controller,
+                                                      self.supplier_controller, self.invoice_controller,
+                                                      self.inventory_controller, self.activity_log_controller)
 
         # Отчети и справки
-        self.report_controller = ReportController(
-            self.report_repo,
-            self.product_controller,
-            self.movement_controller,
-            self.invoice_controller,
-            self.location_controller,
-            self.inventory_controller,
-            self.supplier_controller
-        )
+        self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller, self.invoice_controller,
+                                                   self.location_controller, self.inventory_controller,
+                                                   self.supplier_controller)
 
         # Визуализация и логистика
         self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
 
     def _init_menus(self):
-        """Подготовка на вютата и менютата."""
-        self.controllers = {
-            "user": self.user_controller,
-            "product": self.product_controller,
-            "category": self.category_controller,
-            "supplier": self.supplier_controller,
-            "location": self.location_controller,
-            "movement": self.movement_controller,
-            "invoice": self.invoice_controller,
-            "report": self.report_controller,
-            "activity_log": self.activity_log_controller,
-            "logistic": self.logistic_service,
-            "inventory": self.inventory_controller
-        }
+        self.controllers = {"user": self.user_controller, "product": self.product_controller,
+                            "category": self.category_controller, "supplier": self.supplier_controller,
+                            "location": self.location_controller, "movement": self.movement_controller,
+                            "invoice": self.invoice_controller, "report": self.report_controller,
+                            "activity_log": self.activity_log_controller, "logistic": self.logistic_service,
+                            "inventory": self.inventory_controller}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -125,21 +91,20 @@ class InventoryApplication:
                 break
 
             password = input_password("Парола: ")
-
             try:
                 user = self.user_controller.login(username, password)
-                print(f"\n[+] Добре дошли, {user.first_name}! Роля: {user.role}")
+                print(f"\nДобре дошли, {user.first_name}! Роля: {user.role}")
 
                 if user.role == "Admin":
                     self.admin_menu.show_menu(user)
                 elif user.role == "Operator":
                     self.operator_menu.show_menu(user)
                 else:
-                    print("[!] Грешка: Непозната роля в системата.")
-                break  # Излиза от цикъла след успешно логване и приключване на работа
+                    print("Грешка: Непозната роля в системата.")
+                break
 
             except ValueError as e:
-                print(f"\n[!] Грешка при вход: {e}")
+                print(f"\nГрешка при вход: {e}")
                 print("Моля, опитайте отново.\n")
 
     def _anonymous_flow(self):
@@ -159,7 +124,6 @@ class InventoryApplication:
             print("-" * 45)
 
             choice = input("Вашият избор: ").strip()
-
             if choice == "1":
                 self._login_flow()
             elif choice == "2":
@@ -168,7 +132,7 @@ class InventoryApplication:
                 print("\nПриключване на работа. Довиждане!")
                 sys.exit()
             else:
-                print("\n[!] Невалиден избор. Моля, изберете опция от менюто.")
+                print("\nНевалиден избор. Моля, изберете опция от менюто.")
 
 
 if __name__ == "__main__":

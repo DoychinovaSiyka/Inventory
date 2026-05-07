@@ -43,7 +43,6 @@ class ProductController:
         return product
 
     def get_by_id(self, product_id) -> Optional[Product]:
-        """ Търсене по префикс - КРИТИЧНО ЗА СИНХРОНИЗАЦИЯТА. """
         pid_str = str(product_id or "").strip()
         if not pid_str:
             return None
@@ -96,7 +95,6 @@ class ProductController:
         return True
 
     def search(self, keyword) -> List[Product]:
-        """ Търсене, използвано от справките. """
         clean_keyword = str(keyword or "").strip().lower()
         if not clean_keyword:
             return self.get_all()

@@ -42,7 +42,7 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        # ОПРАВКА 2: Справяне със supplier_id (проверка дали съществува, преди запис)
+
         final_supplier_id = None
         if m_type_str == "IN" and supplier_id:
             supplier = self.supplier_controller.get_by_id(supplier_id)
@@ -67,14 +67,10 @@ class MovementController:
             loc = self.location_controller.get_by_id(location_id)
             location_id = loc.location_id if loc else location_id
 
-        MovementValidator.validate_in_out_rules(
-            movement_type=m_type_str,
-            product=full_product,
-            quantity=qty,
-            customer=customer,
-            inventory_controller=self.inventory_controller,
-            location_id=location_id if m_type_str != "MOVE" else from_location_id
-        )
+        MovementValidator.validate_in_out_rules(movement_type=m_type_str, product=full_product, quantity=qty,
+                                                customer=customer, inventory_controller=self.inventory_controller,
+                                                location_id=location_id if m_type_str != "MOVE"
+                                                else from_location_id)
 
         if self.inventory_controller:
             if m_type_str == "IN":
@@ -85,39 +81,23 @@ class MovementController:
                 self.inventory_controller.decrease_stock(real_product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(real_product_id, qty, to_location_id)
 
-        movement = Movement(
-            movement_id=None,
-            product_id=real_product_id,
-            product_name=historical_name,
-            user_id=user_id,
-            location_id=location_id if m_type_str != "MOVE" else None,
-            movement_type=MovementType[m_type_str],
-            quantity=qty,
-            unit=historical_unit,
-            price=prc,
-            supplier_id=final_supplier_id,
-            customer=customer,
-            from_location_id=from_location_id,
-            to_location_id=to_location_id
-        )
+        movement = Movement(movement_id=None, product_id=real_product_id, product_name=historical_name,
+                            user_id=user_id, location_id=location_id if m_type_str != "MOVE" else None,
+                            movement_type=MovementType[m_type_str], quantity=qty, unit=historical_unit,
+                            price=prc, supplier_id=final_supplier_id, customer=customer,
+                            from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()
 
         if self.activity_log_controller:
-            self.activity_log_controller.log_action(
-                user_id=user_id,
-                action=f"MOVEMENT_{m_type_str}",
-                details=f"Продукт: {historical_name}, Кол: {qty}"
-            )
+            self.activity_log_controller.log_action(user_id=user_id, action=f"MOVEMENT_{m_type_str}",
+                                                    details=f"Продукт: {historical_name}, Кол: {qty}")
 
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement,
-                product=full_product,
-                customer=customer or "Неизвестен клиент",
-                user_id=user_id
-            )
+            self.invoice_controller.create_from_movement(movement=movement, product=full_product,
+                                                         customer=customer or "Неизвестен клиент",
+                                                         user_id=user_id)
 
         return movement
 
@@ -125,12 +105,11 @@ class MovementController:
                         product_id=None, location_id=None, user_id=None):
         results = []
         for m in self.movements:
-            # ОПРАВКА 1: Фина настройка на филтрация по дати (поддържа обекти и стрингове)
+            # настройка на филтрация по дати (поддържа обекти и стрингове)
             try:
                 if isinstance(m.date, datetime):
                     m_date = m.date
                 else:
-                    # Вземаме само YYYY-MM-DD частта, за да сме сигурни в сравнението
                     m_date = datetime.strptime(str(m.date)[:10], "%Y-%m-%d")
             except (ValueError, TypeError):
                 continue
@@ -142,7 +121,7 @@ class MovementController:
             if end_date and m_date.date() > end_date.date():
                 continue
 
-            # Използваме точно съвпадение за ID-тата, за да избегнем грешки
+
             if product_id and str(m.product_id) != str(product_id):
                 continue
             if user_id and str(m.user_id) != str(user_id):

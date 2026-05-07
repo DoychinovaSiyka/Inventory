@@ -13,7 +13,9 @@ class InvoiceView:
 
     def _input(self, prompt):
         value = input(prompt).strip()
-        return value if value != "" else None
+        if value == "":
+            return None
+        return value
 
     def _show_invoices(self, invoices):
         if not invoices:
@@ -21,20 +23,13 @@ class InvoiceView:
             return
         rows = []
         for inv in invoices:
-            # Подсигуряваме, че сумата винаги е число за форматиране
             try:
                 total = float(inv.total_price)
             except (ValueError, TypeError):
                 total = 0.0
 
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,  # Историческо име
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{total:.2f} лв.",
-                inv.date[:16]
-            ])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer,
+                         f"{inv.quantity} {inv.unit}", f"{total:.2f} лв.", inv.date[:16]])
 
         print("\n" + format_table(["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
 
@@ -72,7 +67,7 @@ class InvoiceView:
                 break
             print("Фактура с такова ID не е намерена. Опитайте отново.\n")
 
-        # Форматиране на цените с безопасно преобразуване
+
         try:
             u_price = float(invoice.unit_price)
             t_price = float(invoice.total_price)
@@ -123,11 +118,9 @@ class InvoiceView:
 
         try:
             InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
-            results = self.invoice_controller.advanced_search(
-                customer=customer, product=product,
-                start_date=start_date, end_date=end_date,
-                min_total=min_total, max_total=max_total
-            )
+            results = self.invoice_controller.advanced_search(customer=customer, product=product,
+                                                               start_date=start_date, end_date=end_date,
+                                                               min_total=min_total, max_total=max_total)
             self._show_invoices(results)
         except ValueError as e:
             print(f"{e}")

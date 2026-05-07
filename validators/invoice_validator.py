@@ -21,10 +21,6 @@ class InvoiceValidator:
 
     @staticmethod
     def validate_uuid(value, field_name="ID"):
-        """
-        СИНХРОНИЗАЦИЯ: Вече позволява и кратки ID-та (минимум 4 символа),
-        тъй като потребителят често ще търси по тях.
-        """
         if value is None:
             return
 
@@ -119,7 +115,6 @@ class InvoiceValidator:
 
     @staticmethod
     def validate_movement_for_invoice(movement):
-        """Гарантира, че фактура се издава само за продажби."""
         m_type = str(movement.movement_type.name).upper()
         if m_type != "OUT":
             raise ValueError(f"Не може да се издаде фактура за движение тип '{m_type}'. Трябва да е продажба (OUT).")

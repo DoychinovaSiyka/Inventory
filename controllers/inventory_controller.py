@@ -65,10 +65,7 @@ class InventoryController:
         return True
 
     def rebuild_inventory_from_movements(self, movements: List):
-        """
-        Пълно реконструиране на склада въз основа на историята.
-        ОПРАВКА: Добавена защита срещу отрицателни наличности.
-        """
+        """Пълно реконструиране на склада въз основа на историята.Защита срещу отрицателни наличности."""
         self.data = {"products": {}}
         # Сортираме по дата, за да гарантираме хронологична реконструкция
         sorted_movements = sorted(movements, key=lambda x: x.date)
@@ -134,7 +131,6 @@ class InventoryController:
         for pid in self.data.get("products", {}).keys():
             prod_movements = [m for m in all_movements if str(m.product_id) == str(pid)]
             prod_movements.sort(key=lambda x: x.date)
-
             product_obj = self.product_controller.get_by_id(pid)
             fallback = float(product_obj.price) if product_obj else 0.0
 

@@ -49,7 +49,6 @@ class JSONRepository(Repository):
 
     def save(self, data):
         """Записва данните обратно в JSON файла."""
-
         if self.filepath.name == "report_history.json" and isinstance(data, list):
             try:
                 data.sort(key=lambda r: r.get("generated_on", ""))

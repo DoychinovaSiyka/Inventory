@@ -146,16 +146,15 @@ class ProductMenuView:
         if not product:
             print("Продуктът не е намерен.")
             return
-
         print(f"Редактиране на: {product.name} [{product.product_id[:8]}]")
         try:
             new_name = input(f"Ново име (Enter за запазване '{product.name}'): ").strip() or None
             new_price_raw = input(f"Нова цена (Enter за запазване {product.price}): ").strip()
             new_price = ProductValidator.parse_float(new_price_raw) if new_price_raw else None
 
-            # Тук продуктът се обновява в каталога това НЯМА да промени старите фактури.
-            self.product_controller.update_product(product.product_id, new_name=new_name, new_price=new_price,
-                                                   user_id=user.user_id)
+            # продуктът се обновява в каталога това НЯМА да промени старите фактури.
+            self.product_controller.update_product(product.product_id, new_name=new_name,
+                                                   new_price=new_price, user_id=user.user_id)
             print("Продуктът е обновен успешно.")
         except Exception as e:
             print(f"Грешка при редакция: {e}")
@@ -201,9 +200,7 @@ class ProductMenuView:
             threshold_raw = input("\nМинимална граница (Enter за 5.0): ").strip()
             threshold = float(threshold_raw) if threshold_raw else 5.0
 
-            # Филтрираме само продукти, които съществуват в каталога
             low_products = [p for p in self.product_controller.get_all() if self._stock(p) < threshold]
-
             if not low_products:
                 print(f"Няма продукти с наличност под {threshold}.")
             else:
