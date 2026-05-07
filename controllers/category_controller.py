@@ -86,17 +86,15 @@ class CategoryController:
         return True
 
     def get_by_id(self, category_id: str) -> Optional[Category]:
-        """Интелигентно търсене: първо точно съвпадение, после по префикс."""
+        """Търсене: първо точно съвпадение, после по префикс."""
         target_id = str(category_id).strip()
         if not target_id:
             return None
 
-        # 1. Точно съвпадение (защита от парадокси)
         for c in self.categories:
             if c.category_id == target_id:
                 return c
 
-        # 2. Кратко ID (за удобство)
         for c in self.categories:
             if c.category_id.startswith(target_id):
                 return c
