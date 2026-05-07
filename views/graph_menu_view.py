@@ -28,7 +28,7 @@ class GraphView:
             self.graph.add_edge(end, start, dist)
 
     def _build_menu(self):
-        # Менюто съдържа основната функция – търсене на най-близък склад
+        # Търсене на най-близък склад
         return Menu("Логистичен Модул (Dijkstra)",
                     [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
                      MenuItem("0", "Назад", lambda u: "break")])

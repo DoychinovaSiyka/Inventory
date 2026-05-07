@@ -106,6 +106,7 @@ class UserView:
         except ValueError as e:
             print(f"[Грешка] {e}")
 
+
     def delete_user(self, current_user):
         print("\n--- ПРЕМАХВАНЕ НА ПОТРЕБИТЕЛ ---")
         target = input("Username или кратко ID за изтриване: ").strip()

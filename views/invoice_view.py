@@ -13,9 +13,7 @@ class InvoiceView:
 
     def _input(self, prompt):
         value = input(prompt).strip()
-        if value == "":
-            return None
-        return value
+        return value if value != "" else None
 
     def _show_invoices(self, invoices):
         if not invoices:
@@ -23,8 +21,20 @@ class InvoiceView:
             return
         rows = []
         for inv in invoices:
-            rows.append([inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
-                         f"{float(inv.total_price):.2f} лв.", inv.date[:16]])
+            # Подсигуряваме, че сумата винаги е число за форматиране
+            try:
+                total = float(inv.total_price)
+            except (ValueError, TypeError):
+                total = 0.0
+
+            rows.append([
+                inv.invoice_id[:8],
+                inv.product,  # Историческо име
+                inv.customer,
+                f"{inv.quantity} {inv.unit}",
+                f"{total:.2f} лв.",
+                inv.date[:16]
+            ])
 
         print("\n" + format_table(["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
 
@@ -62,6 +72,16 @@ class InvoiceView:
                 break
             print("Фактура с такова ID не е намерена. Опитайте отново.\n")
 
+        # Форматиране на цените с безопасно преобразуване
+        try:
+            u_price = float(invoice.unit_price)
+            t_price = float(invoice.total_price)
+        except (ValueError, TypeError):
+            u_price = 0.0
+            t_price = 0.0
+
+
+        m_id = invoice.movement_id[:8] if (hasattr(invoice, 'movement_id') and invoice.movement_id) else "-"
 
         columns = ["Поле", "Стойност"]
         rows = [["Пълно ID", invoice.invoice_id], ["Движение ID", invoice.movement_id[:8]],
@@ -90,7 +110,6 @@ class InvoiceView:
                 break
             except ValueError as e:
                 print(f"{e}")
-
         self._show_invoices(self.invoice_controller.search_by_date(date_str))
 
     def advanced_search(self, user):
@@ -104,9 +123,11 @@ class InvoiceView:
 
         try:
             InvoiceValidator.validate_search_filters(start_date, end_date, min_total, max_total)
-            results = self.invoice_controller.advanced_search(customer=customer, product=product,
-                                                              start_date=start_date, end_date=end_date,
-                                                              min_total=min_total, max_total=max_total)
+            results = self.invoice_controller.advanced_search(
+                customer=customer, product=product,
+                start_date=start_date, end_date=end_date,
+                min_total=min_total, max_total=max_total
+            )
             self._show_invoices(results)
         except ValueError as e:
             print(f"{e}")
@@ -119,6 +140,7 @@ class InvoiceView:
         try:
             min_val = InvoiceValidator.parse_float(min_total, "Минимална сума") if min_total else None
             max_val = InvoiceValidator.parse_float(max_total, "Максимална сума") if max_total else None
-            self._show_invoices(self.invoice_controller.search_by_total(min_val, max_val))
+            results = self.invoice_controller.advanced_search(min_total=min_val, max_total=max_val)
+            self._show_invoices(results)
         except ValueError as e:
             print(f"{e}")

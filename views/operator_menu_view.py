@@ -31,8 +31,7 @@ class OperatorMenuView:
             MenuItem("5", "Фактури", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("7", "Преглед на локации (само за четене)", self.open_locations_readonly),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user):
         if user.role.lower() == "guest":

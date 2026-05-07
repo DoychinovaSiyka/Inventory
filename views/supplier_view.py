@@ -33,7 +33,7 @@ class SupplierView:
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
-            print("\n[!] Няма налични доставчици.")
+            print("\nНяма налични доставчици.")
             return
 
         columns = ["ID (кратко)", "Име", "Контакт", "Адрес"]

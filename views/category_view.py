@@ -19,9 +19,11 @@ class CategoryView:
     def _build_menu(self, is_admin: bool):
         menu_items = [MenuItem("1", "Списък с категории (Йерархия)", self.show_all)]
         if is_admin:
-            menu_items.extend([MenuItem("2", "Добавяне на категория", self.add_category),
-                               MenuItem("3", "Редактиране на категория", self.edit_category),
-                               MenuItem("4", "Изтриване на категория", self.delete_category)])
+            menu_items.extend([
+                MenuItem("2", "Добавяне на категория", self.add_category),
+                MenuItem("3", "Редактиране на категория", self.edit_category),
+                MenuItem("4", "Изтриване на категория", self.delete_category)
+            ])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Категории", menu_items)
@@ -33,8 +35,7 @@ class CategoryView:
             return
 
         print("\n=== Категории (йерархия) ===")
-        # Взимаме главните категории
-        roots = [c for c in categories if c.parent_id is None]
+        roots = [c for c in categories if not c.parent_id]
         roots.sort(key=lambda x: x.name.lower())
 
         def print_tree(cat, level, prefix):
@@ -46,7 +47,6 @@ class CategoryView:
             else:
                 print(f"{indent}- {cat.name} [ID: {short_id}]")
 
-            # Рекурсивно децата
             children = [c for c in categories if c.parent_id == cat.category_id]
             children.sort(key=lambda x: x.name.lower())
             for child in children:
@@ -57,24 +57,26 @@ class CategoryView:
         print("-" * 30)
 
     def add_category(self, user: User):
+        print("\n--- Добавяне на категория ---")
         name = input("Име на категория (Enter = отказ): ").strip()
         if not name: return
 
         description = input("Описание: ").strip()
-        if not description: return
-
         if len(description) < 3:
-            print("Грешка: Описанието е твърде кратко.")
+            print("Грешка: Описанието трябва да е поне 3 символа.")
             return
 
-        print("\nИзберете родителска категория:")
+        print("\nИзберете родителска категория (Enter за Главна):")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
 
         try:
             current_uid = user.user_id if user else "unknown"
-            self.controller.add({"name": name, "description": description, "parent_id": parent_id},
-                                user_id=current_uid)
+            self.controller.add({
+                "name": name,
+                "description": description,
+                "parent_id": parent_id
+            }, user_id=current_uid)
             print("Категорията е добавена успешно!")
         except ValueError as e:
             print("Грешка:", e)
@@ -88,12 +90,17 @@ class CategoryView:
         current_uid = user.user_id if user else "unknown"
 
         print(f"\nТекущо име: {category.name}")
-        new_name = input("Ново име (Enter за запазване): ").strip()
+        new_name = input("Ново име (Enter за запазване): ").strip() or None
 
         print(f"Текущо описание: {category.description}")
-        new_desc = input("Ново описание (Enter за запазване): ").strip()
+        new_desc = input("Ново описание (Enter за запазване): ").strip() or None
 
-        print("\nИзберете нов родител (Enter за без промяна/главна):")
+        # Добавена валидация за описанието при редакция
+        if new_desc and len(new_desc) < 3:
+            print("Грешка: Новото описание е твърде кратко. Промяната не е записана.")
+            new_desc = None
+
+        print(f"\nИзберете нов родител за '{category.name}' (Enter за запазване):")
         parent = self.select_category()
 
         try:
@@ -102,19 +109,25 @@ class CategoryView:
             if new_desc:
                 self.controller.update_description(category_id, new_desc, current_uid)
 
-            # Ако потребителят е избрал нещо в select_category, обновяваме родителя
             if parent:
-                self.controller.update_parent(category_id, parent.category_id, current_uid)
+                # Тук контролерът трябва да проверява за "Циклична връзка"
+                # (не може категорията да е родител на себе си)
+                if parent.category_id == category_id:
+                    print("Грешка: Категорията не може да бъде родител на самата себе си.")
+                else:
+                    self.controller.update_parent(category_id, parent.category_id, current_uid)
 
-            print("Категорията е обновена!")
+            print("Обновяването приключи.")
         except Exception as e:
             print("Грешка:", e)
 
     def delete_category(self, user: User):
+        print("\n--- Изтриване на категория ---")
         category = self.select_category()
         if not category: return
 
-        confirm = input(f" Сигурни ли сте, че триете '{category.name}'? (y/n): ").strip().lower()
+        print("ПРЕДУПРЕЖДЕНИЕ: Продуктите в тази категория ще останат без категория.")
+        confirm = input(f"Сигурни ли сте, че триете '{category.name}'? (y/n): ").strip().lower()
         if confirm == "y":
             try:
                 self.controller.remove(category.category_id, user.user_id)
@@ -123,27 +136,29 @@ class CategoryView:
                 print("Грешка:", e)
 
     def select_category(self):
-        """ Помощен метод за избор. Поддържа номер от списъка или кратко ID. """
+        """ Помощен метод за избор. """
         categories = self.controller.get_all()
         if not categories:
             return None
 
-        print("\n--- Избор на категория ---")
+        # Сортираме за по-лесен избор
+        categories.sort(key=lambda x: x.name.lower())
+
         for i, cat in enumerate(categories, 1):
-            # Показваме съкратеното ID
             print(f"{i}. {cat.name} [{cat.category_id[:8]}]")
 
-        while True:
-            choice = input("\nВъведете номер или ID (Enter = отказ): ").strip()
-            if not choice: return None
+        choice = input("\nИзбор (номер или ID, Enter за отказ): ").strip()
+        if not choice: return None
 
-            found = self.controller.get_by_id(choice)
-            if found:
-                return found
+        # Проверка по кратко ID
+        found = self.controller.get_by_id(choice)
+        if found: return found
 
-            if choice.isdigit():
-                idx = int(choice) - 1
-                if 0 <= idx < len(categories):
-                    return categories[idx]
+        # Проверка по номер
+        if choice.isdigit():
+            idx = int(choice) - 1
+            if 0 <= idx < len(categories):
+                return categories[idx]
 
-            print("Невалиден избор. Опитайте отново.")
+        print("Невалиден избор.")
+        return None

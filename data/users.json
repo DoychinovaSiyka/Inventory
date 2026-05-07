@@ -1,38 +1,3 @@
 [
-    {
-        "user_id": "3712f2f9-f9da-49f7-9e35-a274278cf0c9",
-        "first_name": "Admin",
-        "last_name": "System",
-        "email": "admin@system.local",
-        "username": "admin",
-        "password": "97100109105110495051",
-        "role": "Admin",
-        "status": "Active",
-        "created": "2026-04-18 17:53:20",
-        "modified": "2026-04-18 17:53:20"
-    },
-    {
-        "user_id": "a132b1cc-d8c4-4a8f-9a3b-ac0943cac666",
-        "first_name": "Operator",
-        "last_name": "User",
-        "email": "operator@example.com",
-        "username": "operator",
-        "password": "11111210111497116111114495051",
-        "role": "Operator",
-        "status": "Active",
-        "created": "2026-04-18 20:21:07",
-        "modified": "2026-04-18 20:21:07"
-    },
-    {
-        "user_id": "8c27a8bd-903d-41a1-a142-eb4be22acb3b",
-        "first_name": "Димитър",
-        "last_name": "Димитров",
-        "email": "dimitar.dimitrov.work@abv.bg",
-        "username": "dimitar_01",
-        "password": "100105109105116971144849",
-        "role": "Admin",
-        "status": "Active",
-        "created": "2026-04-18 20:24:03",
-        "modified": "2026-04-18 20:24:03"
-    }
+
 ]

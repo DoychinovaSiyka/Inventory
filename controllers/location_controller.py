@@ -44,13 +44,11 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        """ Търсим по префикс. Позволява на потребителя да въведе само първите 8 символа."""
         target_id = str(location_id).strip()
         if not target_id:
             return None
 
         for loc in self.locations:
-            # Проверяваме дали пълното ID в базата започва с въведеното
             if loc.location_id.startswith(target_id):
                 return loc
         return None

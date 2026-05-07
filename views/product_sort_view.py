@@ -32,14 +32,15 @@ class ProductSortView:
         self._print_sorted(products, "Име (A–Z)", "Built-in Sort")
 
     def sort_price_desc(self, _):
-        products = selection_sort_logic(self.product_controller.get_all(), key=lambda p: p.price, reverse=True)
+        products = selection_sort_logic(self.product_controller.get_all(), key=lambda p: float(p.price), reverse=True)
         self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
     def sort_price_asc(self, _):
-        products = bubble_sort_logic(self.product_controller.get_all(), key=lambda p: p.price, reverse=False)
+        products = bubble_sort_logic(self.product_controller.get_all(), key=lambda p: float(p.price), reverse=False)
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
     def sort_qty_desc(self, _):
+        # Тук използваме get_total_stock, което е математически вярно спрямо текущия склад
         products = bubble_sort_logic(self.product_controller.get_all(),
                                      key=lambda p: self.inventory_controller.get_total_stock(p.product_id), reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
@@ -52,6 +53,7 @@ class ProductSortView:
 
 
     def _print_sorted(self, products, title, algorithm):
+        """ Показва резултатите, като се уверява, че данните са коректни за визуализация. """
         if not products:
             print("\nНяма продукти за показване.")
             return
@@ -61,13 +63,22 @@ class ProductSortView:
 
         rows = []
         for p in products:
-            # Взимаме наличността чрез инвентарния контролер
+            # 1. Взимаме наличността в реално време
             stock = self.inventory_controller.get_total_stock(p.product_id)
+            short_id = str(p.product_id)[:8]
 
-            short_id = p.product_id[:8]
+            # 2. Подсигуряваме се, че цената е число (защита срещу грешни типове в JSON)
+            try:
+                price_val = float(p.price)
+            except (ValueError, TypeError):
+                price_val = 0.0
 
-            rows.append([short_id, p.name[:25],  f"{stock:.2f} {p.unit}", f"{p.price:.2f} лв."])
-
+            rows.append([
+                short_id,
+                p.name[:25],
+                f"{stock:.2f} {p.unit}",
+                f"{price_val:.2f} лв."
+            ])
 
         print(format_table(["ID (кратко)", "Име", "Наличност", "Цена"], rows))
         input("\nНатиснете Enter за връщане към менюто за сортиране...")

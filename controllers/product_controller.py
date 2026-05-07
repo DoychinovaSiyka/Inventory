@@ -1,14 +1,17 @@
+from typing import List, Optional
 from models.product import Product
 from validators.product_validator import ProductValidator
-
 
 class ProductController:
     def __init__(self, repo, category_controller, activity_log_controller=None):
         self.repo = repo
         self.category_controller = category_controller
         self.activity_log_controller = activity_log_controller
+        self.products: List[Product] = []
+        self._reload()
 
-        # Зареждаме продуктите с пълни UUID от JSON
+    def _reload(self):
+        """ Зарежда данните и ги превръща в обекти. """
         data = self.repo.load() or []
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
@@ -36,12 +39,12 @@ class ProductController:
         self.products.append(product)
         self.save_changes()
 
-        short_id = product.product_id[:8]
-        self._log(user_id, "CREATE_PRODUCT", f"Продукт: {product.name} (ID: {short_id})")
+        self._log(user_id, "CREATE_PRODUCT", f"Продукт: {product.name} (ID: {product.product_id[:8]})")
         return product
 
-    def get_by_id(self, product_id):
-        pid_str = str(product_id).strip()
+    def get_by_id(self, product_id) -> Optional[Product]:
+        """ Търсене по префикс - КРИТИЧНО ЗА СИНХРОНИЗАЦИЯТА. """
+        pid_str = str(product_id or "").strip()
         if not pid_str:
             return None
 
@@ -53,12 +56,12 @@ class ProductController:
     def delete_by_id(self, product_id, user_id):
         product = self.get_by_id(product_id)
         if not product:
-            raise ValueError("Продуктът не е намерен.")
+            return False
 
-        name_tmp = product.name
         full_id = product.product_id
+        name_tmp = product.name
 
-        self.products.remove(product)
+        self.products = [p for p in self.products if p.product_id != full_id]
         self.save_changes()
 
         self._log(user_id, "DELETE_PRODUCT", f"Продукт: {name_tmp} (ID: {full_id[:8]})")
@@ -92,20 +95,22 @@ class ProductController:
             self._log(user_id, "UPDATE_PRODUCT", f"Редакция {product.product_id[:8]}: " + ", ".join(changes))
         return True
 
-    def search(self, keyword):
-        if not keyword:
-            return self.products
-        keyword = keyword.lower()
-        return [p for p in self.products if keyword in p.name.lower() or
-                keyword in (p.description or "").lower() or
-                keyword in p.product_id.lower()]  # Позволяваме търсене и по ID
+    def search(self, keyword) -> List[Product]:
+        """ Търсене, използвано от справките. """
+        clean_keyword = str(keyword or "").strip().lower()
+        if not clean_keyword:
+            return self.get_all()
 
-    def filter_by_category(self, category_id):
+        return [p for p in self.products if
+                clean_keyword in p.name.lower() or
+                clean_keyword in (p.description or "").lower() or
+                clean_keyword in p.product_id.lower()]
+
+    def filter_by_category(self, category_id) -> List[Product]:
         cat = self.category_controller.get_by_id(category_id)
         if not cat:
             return []
-        target_cid = cat.category_id
-        return [p for p in self.products if any(c.category_id == target_cid for c in p.categories)]
+        return [p for p in self.products if any(c.category_id == cat.category_id for c in p.categories)]
 
-    def get_all(self):
-        return self.products
+    def get_all(self) -> List[Product]:
+        return self.products or []

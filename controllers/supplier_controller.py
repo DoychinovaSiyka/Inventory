@@ -8,7 +8,7 @@ class SupplierController:
 
     def __init__(self, repo):
         self.repo = repo
-        # Зареждаме съществуващите данни
+
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
@@ -59,7 +59,6 @@ class SupplierController:
         return supplier
 
     def remove(self, supplier_id: str) -> bool:
-        """ Изтрива доставчик след интелигентна проверка. """
         supplier = self.get_by_id(supplier_id)
         if not supplier:
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")

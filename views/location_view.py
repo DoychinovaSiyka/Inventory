@@ -33,7 +33,6 @@ class LocationView:
             return
 
         columns = ["Код (ID)", "Име на обект", "Зона", "Капацитет"]
-        # СИНХРОНИЗАЦИЯ: Режем ID-то до 8 символа само за таблицата
         rows = [[loc.location_id[:8], loc.name, loc.zone, loc.capacity] for loc in locations]
 
         print("\n--- СПИСЪК НА СКЛАДОВЕТЕ И МАГАЗИНИТЕ ---")
@@ -51,7 +50,6 @@ class LocationView:
         try:
             capacity = LocationValidator.validate_capacity(capacity_raw)
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity)
-            # Показваме краткото ID на потребителя за записване
             print(f"Успех! Локацията е добавена с код: {new_loc.location_id[:8]}")
         except ValueError as e:
             print(f"[Грешка] {e}")
@@ -61,10 +59,10 @@ class LocationView:
         loc_id = input("Въведете Код/ID (пълен или първите 8 знака): ").strip()
         if not loc_id: return
 
-        # Контролерът вече знае как да намери локация по кратко ID
+
         location = self.location_controller.get_by_id(loc_id)
         if location is None:
-            print("[Грешка] Локация с такъв код не съществува.")
+            print("Локация с такъв код не съществува.")
             return
 
         print(f"\nРедактиране на [{location.location_id[:8]}]. Празно = без промяна.")
@@ -85,7 +83,7 @@ class LocationView:
 
         location = self.location_controller.get_by_id(loc_id)
         if not location:
-            print("[Грешка] Локацията не е намерена.")
+            print("Локацията не е намерена.")
             return
 
         confirm = input(f"Сигурни ли сте, че триете {location.name} [{location.location_id[:8]}]? (y/n): ").lower()

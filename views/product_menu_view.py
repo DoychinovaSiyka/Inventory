@@ -21,7 +21,10 @@ class ProductMenuView:
 
     @staticmethod
     def format_lv(value):
-        return f"{value:.2f} лв."
+        try:
+            return f"{float(value):.2f} лв."
+        except:
+            return "0.00 лв."
 
     def _stock(self, product):
         return self.inventory_controller.get_total_stock(product.product_id)
@@ -59,7 +62,6 @@ class ProductMenuView:
         if not raw:
             return None
 
-
         if raw.isdigit():
             idx = int(raw) - 1
             if 0 <= idx < len(categories):
@@ -94,7 +96,7 @@ class ProductMenuView:
 
     @require_password("parola123")
     def menu_sort_protected(self, user):
-        return self.menu_sort(user)
+        return self.sort_view.show_menu()  # Директно към сортирането
 
     def menu_manage(self, user):
         submenu = Menu("УПРАВЛЕНИЕ", [
@@ -117,10 +119,11 @@ class ProductMenuView:
         try:
             name = input("Име: ").strip()
             ProductValidator.validate_name(name)
+
             price_raw = input("Цена: ").strip()
             price = ProductValidator.parse_float(price_raw, "Цена")
 
-            unit = input("Мерна единица (кг, кг., kg, килограм / бр, бр., брой / л, l, литър / пакет, paket, packet): ").strip()
+            unit_raw = input("Мерна единица (кг, бр, л, пакет): ").strip()
             unit = ProductValidator.validate_unit(unit_raw)
 
             category_id = self._select_category()
@@ -150,6 +153,7 @@ class ProductMenuView:
             new_price_raw = input(f"Нова цена (Enter за запазване {product.price}): ").strip()
             new_price = ProductValidator.parse_float(new_price_raw) if new_price_raw else None
 
+            # Тук продуктът се обновява в каталога това НЯМА да промени старите фактури.
             self.product_controller.update_product(product.product_id, new_name=new_name, new_price=new_price,
                                                    user_id=user.user_id)
             print("Продуктът е обновен успешно.")
@@ -167,6 +171,8 @@ class ProductMenuView:
             print("Продуктът не е намерен.")
             return
 
+        print(f"ВНИМАНИЕ: Изтриването на продукта го премахва само от КАТАЛОГА.")
+        print(f"Всички стари движения и фактури ще запазят историята за него.")
         confirm = input(f"Наистина ли искате да изтриете '{product.name}'? (y/n): ").strip().lower()
         if confirm == 'y':
             try:
@@ -194,6 +200,8 @@ class ProductMenuView:
         try:
             threshold_raw = input("\nМинимална граница (Enter за 5.0): ").strip()
             threshold = float(threshold_raw) if threshold_raw else 5.0
+
+            # Филтрираме само продукти, които съществуват в каталога
             low_products = [p for p in self.product_controller.get_all() if self._stock(p) < threshold]
 
             if not low_products:
