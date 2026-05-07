@@ -56,7 +56,12 @@ class LocationValidator:
     @staticmethod
     def validate_exists(location_id, locations):
         search_id = str(location_id).strip().lower()
-        exists = any(str(l.location_id).lower().startswith(search_id) for l in locations)
+        exists = False
+
+        for l in locations:
+            if str(l.location_id).lower().startswith(search_id):
+                exists = True
+                break
 
         if not exists:
             raise ValueError(f"Склад/Локация с код '{location_id}' не е намерен в базата.")

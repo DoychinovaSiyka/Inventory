@@ -12,6 +12,7 @@ class ReportResult:
 class ReportController:
     def __init__(self, repo, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
+
         self.repo = repo
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -20,33 +21,58 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
-    def _map_invoices_to_data(self, invoices):
-        return [{"invoice_number": i.invoice_id[:8], "date": i.date[:10], "client": i.customer,
-                 "product": i.product, "total_price": i.total_price} for i in invoices]
 
+
+    def _map_invoices_to_data(self, invoices):
+        mapped = []
+
+        for i in invoices:
+            row = {
+                "invoice_number": i.invoice_id[:8],
+                "date": i.date[:10],
+                "client": i.customer,
+                "product": i.product,
+                "total_price": i.total_price
+            }
+            mapped.append(row)
+
+        return mapped
+
+
+    # Продажби
     def report_sales(self):
-        invoices = self.invoice_controller.get_all() or []
-        total_sum = sum(float(i.total_price) for i in invoices)
-        return ReportResult({"total_count": len(invoices), "total_revenue": round(total_sum, 2)},
-                            self._map_invoices_to_data(invoices))
+        invoices = self.invoice_controller.get_all()
+
+        if not invoices:
+            invoices = []
+
+        total_sum = 0.0
+        for i in invoices:
+            try:
+                total_sum += float(i.total_price)
+            except Exception:
+                total_sum += 0.0
+
+        summary = {
+            "total_count": len(invoices),
+            "total_revenue": round(total_sum, 2)
+        }
+
+        data = self._map_invoices_to_data(invoices)
+        return ReportResult(summary, data)
 
     def report_sales_by_customer(self, customer_name: str):
-        """Връща всички продажби (OUT движения) за конкретен клиент."""
-
-        # Взимаме всички движения
         all_movements = self.movement_controller.get_all()
 
-        # Ако е речник, го превръщаме в списък
         if isinstance(all_movements, dict):
-            temp_list = []
+            temp = []
             for key in all_movements:
-                temp_list.append(all_movements[key])
-            all_movements = temp_list
+                temp.append(all_movements[key])
+            all_movements = temp
 
         result = []
-
-
         search_name = customer_name.lower()
+
         for m in all_movements:
             if m.movement_type.name == "OUT":
                 if m.customer is not None:
@@ -54,51 +80,46 @@ class ReportController:
                 else:
                     current_customer = ""
 
-                # Проверяваме дали търсеното име се съдържа в името на клиента
                 if search_name in current_customer:
                     result.append(m)
 
         return result
 
     def report_sales_by_product(self, product_name: str):
-        """Връща всички продажби (OUT движения) за конкретен продукт."""
-
-        # Взимаме всички движения
         all_movements = self.movement_controller.get_all()
 
-        # Ако е речник - превръщаме в списък
         if isinstance(all_movements, dict):
-            temp_list = []
+            temp = []
             for key in all_movements:
-                temp_list.append(all_movements[key])
-            all_movements = temp_list
+                temp.append(all_movements[key])
+            all_movements = temp
 
         result = []
-
         search_name = product_name.lower()
 
         for m in all_movements:
             if m.movement_type.name == "OUT":
                 product_obj = self.product_controller.get_by_id(m.product_id)
+
                 if product_obj is not None:
                     current_product_name = product_obj.name.lower()
                 else:
                     current_product_name = ""
 
-                # Проверяваме дали търсеното име е част от името на продукта
                 if search_name in current_product_name:
                     result.append(m)
 
         return result
 
+
+    # Движения
     def report_movements(self):
-        """Показва движението между реални локации."""
         data = []
 
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
 
-            # Логика за локациите
+            # FROM / TO локации
             if mtype == "IN":
                 f_loc = "Доставчик"
 
@@ -134,64 +155,122 @@ class ReportController:
                     t_loc = "Цел"
 
             else:
-                f_loc = "Н/А"
-                t_loc = "Н/А"
+                f_loc = "Няма"
+                t_loc = "Няма"
 
-            # Подготовка на реда
             movement_id_short = m.movement_id[:8]
             date_short = str(m.date)[:10]
             product_name = m.product_name
             quantity = m.quantity
             unit = m.unit
 
-            row = {"movement_id": movement_id_short, "date": date_short, "type": mtype,
-                   "product": product_name, "quantity": quantity, "unit": unit, "from": f_loc,
-                   "to": t_loc}
+            row = {
+                "movement_id": movement_id_short,
+                "date": date_short,
+                "type": mtype,
+                "product": product_name,
+                "quantity": quantity,
+                "unit": unit,
+                "from": f_loc,
+                "to": t_loc
+            }
 
             data.append(row)
 
-        return ReportResult({"total": len(data)}, data)
+        summary = {"total": len(data)}
+        return ReportResult(summary, data)
 
+
+    # Доставки
     def report_deliveries_all(self, keyword=None):
         data = []
+
         for m in self.movement_controller.movements:
-            if m.movement_type.name != "IN": continue
-
-            p_name = m.product_name
-            sup_obj = self.supplier_controller.get_by_id(m.supplier_id)
-            sup = sup_obj.name if (m.supplier_id and sup_obj) else "Неизвестен"
-
-            if keyword and keyword.lower() not in p_name.lower() and keyword.lower() not in sup.lower():
+            if m.movement_type.name != "IN":
                 continue
 
-            data.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "product": p_name,
-                         "quantity": m.quantity, "unit": m.unit, "price": float(m.price or 0), "supplier": sup})
-        return ReportResult({"total": len(data)}, data)
+            p_name = m.product_name
 
+            sup_obj = None
+            if m.supplier_id:
+                sup_obj = self.supplier_controller.get_by_id(m.supplier_id)
+
+            if sup_obj:
+                supplier_name = sup_obj.name
+            else:
+                supplier_name = "Неизвестен"
+
+            if keyword:
+                kw = keyword.lower()
+                if kw not in p_name.lower() and kw not in supplier_name.lower():
+                    continue
+
+            price_value = 0.0
+            if m.price is not None:
+                try:
+                    price_value = float(m.price)
+                except Exception:
+                    price_value = 0.0
+
+            row = {
+                "movement_id": m.movement_id[:8],
+                "date": str(m.date)[:10],
+                "product": p_name,
+                "quantity": m.quantity,
+                "unit": m.unit,
+                "price": price_value,
+                "supplier": supplier_name
+            }
+
+            data.append(row)
+
+        summary = {"total": len(data)}
+        return ReportResult(summary, data)
+
+
+    # Обобщена наличност
     def report_inventory_summary(self):
         data = []
+
         for p in self.product_controller.get_all():
             pid = str(p.product_id)
             stock = self.inventory_controller.get_total_stock(pid)
 
-            # Филтрираме коректно OUT движенията за конкретния продукт
-            sold = sum(float(m.quantity) for m in self.movement_controller.movements
-                       if str(m.product_id) == pid and m.movement_type.name == "OUT")
+            sold = 0.0
+            for m in self.movement_controller.movements:
+                if str(m.product_id) == pid and m.movement_type.name == "OUT":
+                    try:
+                        sold += float(m.quantity)
+                    except Exception:
+                        sold += 0.0
 
-            data.append({"product": p.name, "available": f"{stock} {p.unit}", "sold": f"{sold} {p.unit}"
-            if sold > 0 else "0", "top_locations": "Виж Инвентар"})
-        return ReportResult({"total": len(data)}, data)
+            if sold > 0:
+                sold_text = str(sold) + " " + p.unit
+            else:
+                sold_text = "0"
 
+            row = {
+                "product": p.name,
+                "available": str(stock) + " " + p.unit,
+                "sold": sold_text,
+                "top_locations": "Виж Инвентар"
+            }
+
+            data.append(row)
+
+        summary = {"total": len(data)}
+        return ReportResult(summary, data)
+
+
+    # Финансов живот на продукт
     def product_lifecycle(self, name_or_id):
-        """ Пълна финансова история на продукт. """
         product = self.product_controller.get_by_id(name_or_id)
+
         if not product:
-            # Търсим продукт по част от името
             for p in self.product_controller.get_all():
                 if name_or_id.lower() in p.name.lower():
                     product = p
                     break
-
 
         if not product:
             return None
@@ -199,19 +278,39 @@ class ReportController:
         pid = str(product.product_id)
         movements = self.movement_controller.movements
 
-        # Филтрираме движенията за този продукт
-        prod_moves = [m for m in movements if str(m.product_id) == pid]
+        prod_moves = []
+        for m in movements:
+            if str(m.product_id) == pid:
+                prod_moves.append(m)
 
-        total_in = sum(float(m.quantity) for m in prod_moves if m.movement_type.name == "IN")
-        total_out = sum(float(m.quantity) for m in prod_moves if m.movement_type.name == "OUT")
+        total_in = 0.0
+        total_out = 0.0
 
-        # ПРИХОДИ: Само от OUT движения
-        revenue = sum(float(m.quantity) * float(m.price or 0) for m in prod_moves
-                      if m.movement_type.name == "OUT")
+        for m in prod_moves:
+            if m.movement_type.name == "IN":
+                total_in += float(m.quantity)
+            elif m.movement_type.name == "OUT":
+                total_out += float(m.quantity)
 
-        # FIFO Себестойност
+        revenue = 0.0
+        for m in prod_moves:
+            if m.movement_type.name == "OUT":
+                try:
+                    revenue += float(m.quantity) * float(m.price)
+                except Exception:
+                    revenue += 0.0
+
         fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, movements, product.price)
 
-        return {"product": product.name, "unit": product.unit, "total_in": total_in, "total_out": total_out,
-                "current_stock": self.inventory_controller.get_total_stock(pid), "revenue": round(revenue, 2),
-                "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}
+        result = {
+            "product": product.name,
+            "unit": product.unit,
+            "total_in": total_in,
+            "total_out": total_out,
+            "current_stock": self.inventory_controller.get_total_stock(pid),
+            "revenue": round(revenue, 2),
+            "fifo_cost": round(fifo_cost, 2),
+            "profit": round(revenue - fifo_cost, 2)
+        }
+
+        return result

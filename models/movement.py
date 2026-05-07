@@ -18,33 +18,85 @@ class Movement:
                  quantity, unit, price=None, supplier_id=None, customer=None, date=None,
                  created=None, modified=None, from_location_id=None, to_location_id=None):
 
-
-        if not movement_id:
-            self.movement_id = str(uuid.uuid4())
-        else:
+        # movement_id
+        if movement_id:
             self.movement_id = str(movement_id)
+        else:
+            self.movement_id = str(uuid.uuid4())
 
+        # product_id
         self.product_id = str(product_id)
-        self.product_name = product_name
-        self.user_id = str(user_id)
-        self.location_id = str(location_id) if location_id else None
 
+        # product_name
+        self.product_name = product_name
+
+        # user_id
+        self.user_id = str(user_id)
+
+        # location_id
+        if location_id:
+            self.location_id = str(location_id)
+        else:
+            self.location_id = None
+
+        # movement_type
         self.movement_type = movement_type
-        self.quantity = float(quantity) if quantity is not None else 0.0
+
+        # quantity
+        if quantity is not None:
+            self.quantity = float(quantity)
+        else:
+            self.quantity = 0.0
+
+        # unit
         self.unit = unit
-        self.price = float(price) if price is not None else 0.0
-        self.supplier_id = str(supplier_id) if supplier_id else None
+
+        # price
+        if price is not None:
+            self.price = float(price)
+        else:
+            self.price = 0.0
+
+        # supplier_id
+        if supplier_id:
+            self.supplier_id = str(supplier_id)
+        else:
+            self.supplier_id = None
+
+        # customer
         self.customer = customer
 
+        # timestamps
         now_val = Movement.now()
-        self.date = date or now_val
-        self.created = created or now_val
-        self.modified = modified or now_val
-        self.from_location_id = str(from_location_id) if from_location_id else None
-        self.to_location_id = str(to_location_id) if to_location_id else None
+
+        if date:
+            self.date = date
+        else:
+            self.date = now_val
+
+        if created:
+            self.created = created
+        else:
+            self.created = now_val
+
+        if modified:
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+        # from_location_id
+        if from_location_id:
+            self.from_location_id = str(from_location_id)
+        else:
+            self.from_location_id = None
+
+        # to_location_id
+        if to_location_id:
+            self.to_location_id = str(to_location_id)
+        else:
+            self.to_location_id = None
 
     def update_modified(self):
-        """Обновява времето на последна промяна."""
         self.modified = Movement.now()
 
     def to_dict(self):
@@ -79,9 +131,12 @@ class Movement:
         mtype = self.movement_type.name
 
         info = f"[Движение: {mid}] {mtype} | Продукт: {self.product_name} ({pid}) | Кол: {self.quantity} {self.unit}"
+
         if mtype == "MOVE":
-            info += f" от {self.from_location_id[:8]} към {self.to_location_id[:8]}"
-        elif self.location_id:
-            info += f" в склад {self.location_id[:8]}"
+            if self.from_location_id and self.to_location_id:
+                info += f" от {self.from_location_id[:8]} към {self.to_location_id[:8]}"
+        else:
+            if self.location_id:
+                info += f" в склад {self.location_id[:8]}"
 
         return info

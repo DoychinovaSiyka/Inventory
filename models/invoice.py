@@ -12,11 +12,22 @@ class Invoice:
     def now():
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def __init__(self, product, quantity, unit, unit_price, total_price, customer, movement_id=None,
-                 date=None, created=None, modified=None, invoice_id=None):
+    def __init__(self, product, quantity, unit, unit_price, total_price, customer,
+                 movement_id=None, date=None, created=None, modified=None, invoice_id=None):
 
-        self.invoice_id = str(invoice_id) if invoice_id else Invoice.generate_id()
-        self.movement_id = str(movement_id) if movement_id else None
+        # ID
+        if invoice_id:
+            self.invoice_id = str(invoice_id)
+        else:
+            self.invoice_id = Invoice.generate_id()
+
+        # Movement ID
+        if movement_id:
+            self.movement_id = str(movement_id)
+        else:
+            self.movement_id = None
+
+        # Основни полета
         self.product = product
         self.customer = customer
         self.quantity = float(quantity)
@@ -24,38 +35,72 @@ class Invoice:
         self.unit_price = float(unit_price)
         self.total_price = float(total_price)
 
+        # Дати
         now_val = Invoice.now()
-        self.date = date or now_val
-        self.created = created or now_val
-        self.modified = modified or now_val
 
+        if date:
+            self.date = date
+        else:
+            self.date = now_val
 
-        InvoiceValidator.validate_all(product=self.product, customer=self.customer, quantity=self.quantity,
-                                      unit=self.unit, unit_price=self.unit_price, movement_id=self.movement_id,
-                                      date=self.date, total_price=self.total_price)
+        if created:
+            self.created = created
+        else:
+            self.created = now_val
+
+        if modified:
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+        # Валидация
+        InvoiceValidator.validate_all(
+            product=self.product,
+            customer=self.customer,
+            quantity=self.quantity,
+            unit=self.unit,
+            unit_price=self.unit_price,
+            movement_id=self.movement_id,
+            date=self.date,
+            total_price=self.total_price
+        )
 
     def update_modified(self):
-        """Обновява датата на последна промяна."""
         self.modified = Invoice.now()
 
     def to_dict(self):
-        """Конвертиране към речник за JSON съхранение (с пълно ID)."""
-        return {"invoice_id": self.invoice_id, "movement_id": self.movement_id,
-                "product": self.product, "quantity": self.quantity, "unit": self.unit, "unit_price": self.unit_price,
-                "total_price": self.total_price,
-                "customer": self.customer, "date": self.date, "created": self.created, "modified": self.modified}
+        return {
+            "invoice_id": self.invoice_id,
+            "movement_id": self.movement_id,
+            "product": self.product,
+            "quantity": self.quantity,
+            "unit": self.unit,
+            "unit_price": self.unit_price,
+            "total_price": self.total_price,
+            "customer": self.customer,
+            "date": self.date,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):
-        """Създаване на Invoice от JSON речник."""
         if not data:
             return None
 
-        return Invoice(invoice_id=data.get("invoice_id"), movement_id=data.get("movement_id"),
-                       product=data.get("product", "Неизвестен"), quantity=data.get("quantity", 0),
-                       unit=data.get("unit", "бр."), unit_price=data.get("unit_price", 0.0),
-                       total_price=data.get("total_price", 0.0), customer=data.get("customer", "Неизвестен"),
-                       date=data.get("date"), created=data.get("created"), modified=data.get("modified"))
+        return Invoice(
+            invoice_id=data.get("invoice_id"),
+            movement_id=data.get("movement_id"),
+            product=data.get("product", "Неизвестен"),
+            quantity=data.get("quantity", 0),
+            unit=data.get("unit", "бр."),
+            unit_price=data.get("unit_price", 0.0),
+            total_price=data.get("total_price", 0.0),
+            customer=data.get("customer", "Неизвестен"),
+            date=data.get("date"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def __str__(self):
         short_id = self.invoice_id[:8]

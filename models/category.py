@@ -13,11 +13,23 @@ class Category:
 
         self.name = name
         self.description = description
-        self.parent_id = str(parent_id) if parent_id else None
+
+        if parent_id:
+            self.parent_id = str(parent_id)
+        else:
+            self.parent_id = None
 
         now = Category.now()
-        self.created = created or now
-        self.modified = modified or now
+
+        if created:
+            self.created = created
+        else:
+            self.created = now
+
+        if modified:
+            self.modified = modified
+        else:
+            self.modified = now
 
         CategoryValidator.validate_name(self.name)
         CategoryValidator.validate_description(self.description)
@@ -27,23 +39,38 @@ class Category:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     def update_modified(self):
-        """Обновяваме датата при промяна."""
         self.modified = Category.now()
 
     def to_dict(self):
-        """Записваме в JSON"""
-        return {"category_id": self.category_id, "name": self.name, "description": self.description,
-                "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
+        return {
+            "category_id": self.category_id,
+            "name": self.name,
+            "description": self.description,
+            "parent_id": self.parent_id,
+            "created": self.created,
+            "modified": self.modified
+        }
 
     @staticmethod
     def from_dict(data):
         if not data:
             return None
-        return Category(category_id=data.get("category_id"), name=data.get("name"),
-                        description=data.get("description", ""), parent_id=data.get("parent_id"),
-                        created=data.get("created"), modified=data.get("modified"))
+
+        return Category(
+            category_id=data.get("category_id"),
+            name=data.get("name"),
+            description=data.get("description", ""),
+            parent_id=data.get("parent_id"),
+            created=data.get("created"),
+            modified=data.get("modified")
+        )
 
     def __str__(self):
         short_id = self.category_id[:8]
-        parent_info = f" (Подкатегория на: {self.parent_id[:8]})" if self.parent_id else ""
+
+        if self.parent_id:
+            parent_info = f" (Подкатегория на: {self.parent_id[:8]})"
+        else:
+            parent_info = ""
+
         return f"Категория: {self.name} [ID: {short_id}]{parent_info}"

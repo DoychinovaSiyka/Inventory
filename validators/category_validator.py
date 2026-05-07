@@ -53,71 +53,67 @@ class CategoryValidator:
 
     @staticmethod
     def validate_parent_id(parent_id, category_id):
-        if parent_id and category_id:
-            if str(category_id).startswith(str(parent_id)) or str(parent_id).startswith(str(category_id)):
-                raise ValueError("Категория не може да бъде родител на самата себе си.")
+        if parent_id and category_id and str(parent_id) == str(category_id):
+            raise ValueError("Категория не може да бъде родител на самата себе си.")
 
     @staticmethod
     def validate_parent_exists(parent_id, categories):
         if not parent_id:
             return
-
-        found = any(str(c.category_id).startswith(str(parent_id)) for c in categories)
-
-        if not found:
-            raise ValueError("Родителската категория не е намерена (проверете ID-то).")
+        for c in categories:
+            if str(c.category_id) == str(parent_id):
+                return
+        raise ValueError("Родителската категория не е намерена (проверете ID-то).")
 
     @staticmethod
     def validate_parent_choice(choice):
         if not choice:
             return None
         cleaned = choice.strip()
-        if not all(ch.isalnum() or ch == "-" for ch in cleaned):
-            raise ValueError("Невалиден формат за ID на родителска категория.")
+        for ch in cleaned:
+            if not (ch.isalnum() or ch == "-"):
+                raise ValueError("Невалиден формат за ID на родителска категория.")
         return cleaned
 
-
     @staticmethod
-    def validate_no_cycle(category_id, parent_id, all_categories):
+    def validate_no_cycle(category_id, parent_id, categories):
         if not parent_id:
             return
 
-        current_parent_id = None
-        for c in all_categories:
-            if str(c.category_id).startswith(str(parent_id)):
-                current_parent_id = str(c.category_id)
-                break
-
-        target_id = str(category_id)
-        current = current_parent_id
+        target = str(category_id)
+        current = parent_id
 
         while current:
-            if current == target_id:
+            if str(current) == target:
                 raise ValueError("Открита циклична зависимост между категориите.")
 
             next_parent = None
-            for c in all_categories:
-                if str(c.category_id) == current:
+            for c in categories:
+                if str(c.category_id) == str(current):
                     next_parent = c.parent_id
                     break
+
             current = next_parent
 
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
         target_id = str(category_id)
 
+        # Проверка за подкатегории
         for c in all_categories:
             if str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории. Първо преместете или изтрийте тях.")
 
+        # Проверка за продукти
         for p in products:
-            cat_ids = [str(getattr(cat, "category_id", cat)) for cat in p.category_ids]
-            if target_id in cat_ids:
-                raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+            if p.categories:
+                for cat in p.categories:
+                    if str(cat.category_id) == target_id:
+                        raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
 
     @staticmethod
-    def validate_exists(category_id, controller):
-        category = controller.get_by_id(category_id)
-        if category is None:
-            raise ValueError("Категорията не е намерена.")
-        return category
+    def validate_exists(category_id, categories):
+        for c in categories:
+            if str(c.category_id) == str(category_id):
+                return c
+        raise ValueError("Категорията не е намерена.")

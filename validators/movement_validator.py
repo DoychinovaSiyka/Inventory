@@ -13,8 +13,9 @@ class MovementValidator:
 
         # Кратък код (8 символа)
         if len(val_str) == 8:
-            if not all(c.isalnum() for c in val_str):
-                raise ValueError(f"{field_name} съдържа невалидни символи.")
+            for c in val_str:
+                if not c.isalnum():
+                    raise ValueError(f"{field_name} съдържа невалидни символи.")
             return
 
         # Пълен UUID
@@ -26,12 +27,13 @@ class MovementValidator:
     @staticmethod
     def normalize_movement_type(movement_type):
         mt = str(movement_type).strip().upper()
-        mapping = {
-            "1": "IN", "2": "OUT", "3": "MOVE",
-            "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"
-        }
+
+        mapping = {"1": "IN", "2": "OUT", "3": "MOVE",
+                   "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
+
         if mt not in mapping:
             raise ValueError("Невалиден тип движение. Допустими: IN, OUT, MOVE.")
+
         return mapping[mt]
 
     @staticmethod
@@ -39,18 +41,20 @@ class MovementValidator:
         if quantity is None or str(quantity).strip() == "":
             raise ValueError("Количеството е задължително.")
 
-        raw = str(quantity).lower().strip().replace(",", ".")
+        raw = str(quantity).lower().strip()
+        raw = raw.replace(",", ".")
 
-        # Премахване на мерни единици, ако са въведени
-        for token in ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]:
-            raw = raw.replace(token, "")
+        # Премахване на мерни единици
+        tokens = ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]
+        for t in tokens:
+            raw = raw.replace(t, "")
 
         try:
             q = float(raw)
             if q <= 0:
                 raise ValueError("Количеството трябва да е по-голямо от 0.")
             return round(q, 2)
-        except:
+        except Exception:
             raise ValueError("Невалидно количество. Въведете число (напр. 5 или 12.50).")
 
     @staticmethod
@@ -59,8 +63,11 @@ class MovementValidator:
             raise ValueError("Цената е задължителна.")
 
         p = str(price).lower().strip()
-        for token in ["лв.", "лв", "lv.", "lv", " "]:
-            p = p.replace(token, "")
+
+        tokens = ["лв.", "лв", "lv.", "lv", " "]
+        for t in tokens:
+            p = p.replace(t, "")
+
         p = p.replace(",", ".")
 
         try:
@@ -68,7 +75,7 @@ class MovementValidator:
             if value < 0:
                 raise ValueError("Цената не може да е отрицателна.")
             return round(value, 2)
-        except:
+        except Exception:
             raise ValueError("Невалидна цена. Въведете число.")
 
     @staticmethod
@@ -87,10 +94,6 @@ class MovementValidator:
 
     @staticmethod
     def validate_location_id(loc_id, location_controller):
-        """Позволява избор на склад чрез:
-        - номер от списъка (1, 2, 3…)
-        - кратко ID (8 символа)
-        - пълно ID"""
         if loc_id is None or str(loc_id).strip() == "":
             raise ValueError("Код на склад е задължителен.")
 
@@ -104,7 +107,7 @@ class MovementValidator:
                 return locations[num - 1].location_id
             raise ValueError(f"Невалиден номер. Изберете от 1 до {len(locations)}.")
 
-        # Търсене по ID
+
         found_loc = location_controller.get_by_id(loc_input)
         if found_loc:
             return found_loc.location_id
@@ -115,8 +118,9 @@ class MovementValidator:
     def validate_in_out_rules(movement_type, product, quantity, customer, inventory_controller, location_id):
         mt = str(movement_type).upper()
 
-        if mt == "IN" and customer:
-            raise ValueError("При заприхождаване (IN) не може да има клиент.")
+        if mt == "IN":
+            if customer:
+                raise ValueError("При заприхождаване (IN) не може да има клиент.")
 
         if mt == "OUT":
             if not customer or str(customer).strip() == "":
@@ -126,13 +130,15 @@ class MovementValidator:
             if available < quantity:
                 raise ValueError(f"Недостатъчна наличност. В този склад има само {available} {product.unit}.")
 
-        if mt == "MOVE" and customer:
-            raise ValueError("Вътрешните премествания (MOVE) не използват клиент.")
+        if mt == "MOVE":
+            if customer:
+                raise ValueError("Вътрешните премествания (MOVE) не използват клиент.")
 
     @staticmethod
     def validate_move_locations(from_loc, to_loc):
         if not from_loc or not to_loc:
             raise ValueError("MOVE операцията изисква изходен и целеви склад.")
+
         if str(from_loc) == str(to_loc):
             raise ValueError("Не можете да местите стока в същия склад.")
 
@@ -140,8 +146,9 @@ class MovementValidator:
     def validate_date(date_str):
         if not date_str:
             return datetime.now().strftime("%Y-%m-%d")
+
         try:
             datetime.strptime(date_str.strip(), "%Y-%m-%d")
             return date_str.strip()
-        except:
+        except Exception:
             raise ValueError("Невалидна дата. Използвайте формат ГГГГ-ММ-ДД.")

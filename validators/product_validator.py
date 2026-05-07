@@ -39,7 +39,6 @@ class ProductValidator:
 
     @staticmethod
     def validate_description(description):
-        """Опционално поле — ако е празно, връща празен стринг."""
         if description is None or str(description).strip() == "":
             return ""
 
@@ -81,7 +80,6 @@ class ProductValidator:
 
     @staticmethod
     def parse_float(value, field_name="стойност"):
-        """Почистване и валидиране на числови стойности."""
         if value is None or str(value).strip() == "":
             raise ValueError(f"Полето '{field_name}' е задължително.")
 
@@ -99,7 +97,6 @@ class ProductValidator:
 
     @staticmethod
     def validate_unique_name(name, products, exclude_product_id=None):
-        """Проверява дали името на продукта вече съществува."""
         if not name:
             return
 

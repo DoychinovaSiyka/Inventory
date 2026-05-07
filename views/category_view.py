@@ -15,17 +15,19 @@ class CategoryView:
             menu_obj.execute(choice, user)
 
     def show_menu(self, user: User):
-        is_admin = (user is not None and user.role == "Admin")
+        is_admin = False
+        if user is not None and user.role == "Admin":
+            is_admin = True
+
         menu_items = [MenuItem("1", "Списък с категории", self.show_all)]
 
         if is_admin:
-            menu_items.extend([
-                MenuItem("2", "Добавяне на категория", self.add_category),
-                MenuItem("3", "Редактиране на категория", self.edit_category),
-                MenuItem("4", "Изтриване на категория", self.delete_category)
-            ])
+            menu_items.append(MenuItem("2", "Добавяне на категория", self.add_category))
+            menu_items.append(MenuItem("3", "Редактиране на категория", self.edit_category))
+            menu_items.append(MenuItem("4", "Изтриване на категория", self.delete_category))
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
+
         menu = Menu("Меню категории", menu_items)
         self._run_menu(menu, user)
 
@@ -36,24 +38,37 @@ class CategoryView:
             return
 
         print("\nКатегории (йерархия):")
-        roots = [c for c in categories if not c.parent_id]
+
+        roots = []
+        for c in categories:
+            if not c.parent_id:
+                roots.append(c)
+
         roots.sort(key=lambda x: x.name.lower())
 
         def print_tree(cat, level, prefix):
             indent = "   " * level
             short_id = cat.category_id[:8]
+
             if level == 0:
                 print(f"{prefix}. {cat.name} (ID: {short_id})")
             else:
                 print(f"{indent}- {cat.name} (ID: {short_id})")
 
-            children = [c for c in categories if c.parent_id == cat.category_id]
+            children = []
+            for c in categories:
+                if c.parent_id == cat.category_id:
+                    children.append(c)
+
             children.sort(key=lambda x: x.name.lower())
+
             for child in children:
                 print_tree(child, level + 1, prefix)
 
-        for i, root in enumerate(roots, 1):
-            print_tree(root, 0, str(i))
+        index = 1
+        for root in roots:
+            print_tree(root, 0, str(index))
+            index += 1
 
     def add_category(self, user: User):
         print("\nНова категория")
@@ -63,7 +78,7 @@ class CategoryView:
             name = input("Име на категория: ").strip()
             if name.lower() == 'отказ':
                 return
-            if not name:
+            if name == "":
                 print("Името не може да бъде празно.")
                 continue
             break
@@ -79,10 +94,16 @@ class CategoryView:
 
         print("\nИзберете родителска категория (Enter за главна):")
         parent = self.select_category()
-        parent_id = parent.category_id if parent else None
+
+        parent_id = None
+        if parent is not None:
+            parent_id = parent.category_id
 
         try:
-            current_uid = user.user_id if user else "unknown"
+            current_uid = "unknown"
+            if user is not None:
+                current_uid = user.user_id
+
             self.controller.add(
                 {"name": name, "description": description, "parent_id": parent_id},
                 user_id=current_uid
@@ -94,44 +115,52 @@ class CategoryView:
     def edit_category(self, user: User):
         print("\nРедактиране на категория")
         category = self.select_category()
-        if not category:
+        if category is None:
             return
 
-        current_uid = user.user_id if user else "unknown"
+        current_uid = "unknown"
+        if user is not None:
+            current_uid = user.user_id
+
         print(f"\nРедактирате: {category.name}")
         print("(Enter запазва старата стойност, 'отказ' за изход)")
 
+        new_name = None
         while True:
-            new_name = input(f"Ново име [{category.name}]: ").strip()
-            if new_name.lower() == 'отказ':
+            name_input = input(f"Ново име [{category.name}]: ").strip()
+            if name_input.lower() == 'отказ':
                 return
-            if not new_name:
-                new_name = None
+            if name_input == "":
                 break
+            new_name = name_input
             break
 
+        new_desc = None
         while True:
-            new_desc = input(f"Ново описание [{category.description}]: ").strip()
-            if new_desc.lower() == 'отказ':
+            desc_input = input(f"Ново описание [{category.description}]: ").strip()
+            if desc_input.lower() == 'отказ':
                 return
-            if not new_desc:
-                new_desc = None
+            if desc_input == "":
                 break
-            if len(new_desc) < 3:
+            if len(desc_input) < 3:
                 print("Описанието трябва да е поне 3 символа.")
                 continue
+            new_desc = desc_input
             break
 
         print("Изберете нов родител (Enter за без промяна):")
         parent = self.select_category()
 
         try:
-            if new_name:
+            if new_name is not None:
                 self.controller.update_name(category.category_id, new_name, current_uid)
-            if new_desc:
+
+            if new_desc is not None:
                 self.controller.update_description(category.category_id, new_desc, current_uid)
-            if parent and parent.category_id != category.category_id:
-                self.controller.update_parent(category.category_id, parent.category_id, current_uid)
+
+            if parent is not None:
+                if parent.category_id != category.category_id:
+                    self.controller.update_parent(category.category_id, parent.category_id, current_uid)
 
             print("Категорията е обновена.")
         except Exception as e:
@@ -143,16 +172,19 @@ class CategoryView:
             return None
 
         categories.sort(key=lambda x: x.name.lower())
-        for i, cat in enumerate(categories, 1):
-            print(f"{i}. {cat.name} ({cat.category_id[:8]})")
+
+        index = 1
+        for cat in categories:
+            print(f"{index}. {cat.name} ({cat.category_id[:8]})")
+            index += 1
 
         while True:
             choice = input("\nИзбор (номер или ID, Enter за отказ): ").strip()
-            if not choice:
+            if choice == "":
                 return None
 
             found = self.controller.get_by_id(choice)
-            if found:
+            if found is not None:
                 return found
 
             if choice.isdigit():
@@ -165,7 +197,7 @@ class CategoryView:
     def delete_category(self, user: User):
         print("\nИзтриване на категория")
         category = self.select_category()
-        if not category:
+        if category is None:
             return
 
         print(f"Продуктите в '{category.name}' ще останат без категория.")
