@@ -8,8 +8,6 @@ from views.product_sort_view import ProductSortView
 from views.password_utils import require_password, format_table
 from validators.product_validator import ProductValidator
 
-
-
 class ProductMenuView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController,
                  inventory_controller, movement_controller, activity_log_controller=None):
@@ -101,19 +99,14 @@ class ProductMenuView:
 
     def show_menu(self, user: User):
         menu = Menu("Меню продукти", [
-            MenuItem("1", "Операции с продукти", self.menu_manage_protected),
+            MenuItem("1", "Операции с продукти", self.menu_manage),
             MenuItem("2", "Списък и търсене", self.menu_search),
             MenuItem("3", "Критични наличности", self.low_stock),
-            MenuItem("4", "Сортиране", self.menu_sort_protected),
+            MenuItem("4", "Сортиране", self.menu_sort),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-    @require_password("parola123")
-    def menu_manage_protected(self, user):
-        return self.menu_manage(user)
-
-    @require_password("parola123")
-    def menu_sort_protected(self, user):
+    def menu_sort(self, user):
         return self.sort_view.show_menu()
 
     def menu_manage(self, user):

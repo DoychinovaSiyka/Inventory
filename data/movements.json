@@ -1,3 +1,20 @@
 [
-
+    {
+        "movement_id": "94e382e5-d0de-46d6-abcd-4933e39341e7",
+        "product_id": "547efbe2-9289-4531-a17e-1a9a15976616",
+        "product_name": "Банани (Еквадор)",
+        "user_id": "8863013c-d101-44f7-9a28-48cf472d5d9c",
+        "location_id": "a2d7b9ca-6deb-4c7b-893a-8f9ff4f9c0b8",
+        "movement_type": "IN",
+        "quantity": 123.0,
+        "unit": "кг.",
+        "price": 3.89,
+        "supplier_id": "9beb0d4a-05b2-4daa-bbda-cea83e894a72",
+        "customer": null,
+        "date": "2026-05-09 00:44:22",
+        "created": "2026-05-09 00:44:22",
+        "modified": "2026-05-09 00:44:22",
+        "from_location_id": null,
+        "to_location_id": null
+    }
 ]

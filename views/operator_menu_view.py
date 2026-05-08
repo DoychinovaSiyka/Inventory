@@ -46,37 +46,41 @@ class OperatorMenuView:
             if result == "break":
                 break
 
-    def open_products(self, user):
-        view = ProductMenuView(self.product_controller, self.category_controller,
-                               self.inventory_controller, self.movement_controller)
-        view.show_menu(user)
+        # ТУК ДОБАВЯМЕ ЗАЩИТАТА ЗА ОПЕРАТОРА
+        @require_password("parola123")
+        def open_products(self, user):
+            view = ProductMenuView(self.product_controller, self.category_controller,
+                                   self.inventory_controller, self.movement_controller)
+            view.show_menu(user)
 
-    @require_password("parola123")
-    def open_categories(self, user):
-        view = CategoryView(self.category_controller)
-        view.show_menu(user)
+        @require_password("parola123")
+        def open_categories(self, user):
+            view = CategoryView(self.category_controller)
+            view.show_menu(user)
 
-    def open_movements(self, user):
-        view = MovementView(self.product_controller, self.movement_controller,
-                            self.user_controller, self.location_controller, self.supplier_controller)
-        view.show_menu(user)
+        def open_movements(self, user):
+            # Обикновено движенията (продажби/доставки) не искат парола за оператор,
+            # за да може да работи бързо на касата.
+            view = MovementView(self.product_controller, self.movement_controller,
+                                self.user_controller, self.location_controller, self.supplier_controller)
+            view.show_menu(user)
 
-    @require_password("parola123")
-    def open_reports(self, user):
-        view = ReportsView(self.report_controller)
-        view.show_menu(user)
+        @require_password("parola123")
+        def open_reports(self, user):
+            view = ReportsView(self.report_controller)
+            view.show_menu(user)
 
-    @require_password("parola123")
-    def open_invoices(self, user):
-        view = InvoiceView(self.invoice_controller)
-        view.show_menu(user)
+        @require_password("parola123")
+        def open_invoices(self, user):
+            view = InvoiceView(self.invoice_controller)
+            view.show_menu(user)
 
-    @require_password("parola123")
-    def open_locations_readonly(self, user):
-        print("\nСписък на локациите:")
-        view = LocationView(self.location_controller)
-        view.show_all(user)
-        input("\nНатиснете Enter за връщане...")
+        @require_password("parola123")
+        def open_locations_readonly(self, user):
+            print("\nСписък на локациите:")
+            view = LocationView(self.location_controller)
+            view.show_all(user)
+            input("\nНатиснете Enter за връщане...")
 
-    def open_system_info(self, _):
-        SystemInfoView().show_menu()
+        def open_system_info(self, _):
+            SystemInfoView().show_menu()

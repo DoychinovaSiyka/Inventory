@@ -1,3 +1,9 @@
 {
-
+    "products": {
+        "547efbe2-9289-4531-a17e-1a9a15976616": {
+            "locations": {
+                "a2d7b9ca-6deb-4c7b-893a-8f9ff4f9c0b8": 123.0
+            }
+        }
+    }
 }
