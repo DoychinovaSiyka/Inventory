@@ -112,14 +112,7 @@ class ProductMenuView:
         self._run_menu(submenu, user)
 
     def _select_unit(self):
-        """Вариант 2: Меню за избор на мерна единица"""
-        # Списък от кортежи: (номер_за_меню, име_за_екран, код_за_валидатор)
-        units = [
-            ("1", "Килограм (кг.)", "кг"),
-            ("2", "Брой (бр.)", "бр"),
-            ("3", "Литър (л.)", "л"),
-            ("4", "Пакет", "пакет")
-        ]
+        units = [("1", "Килограм (кг.)", "кг"), ("2", "Брой (бр.)", "бр"), ("3", "Литър (л.)", "л"), ("4", "Пакет", "пакет")]
 
         print("\nИзберете мерна единица:")
         for num, display, _ in units:
@@ -144,7 +137,8 @@ class ProductMenuView:
         try:
             while True:
                 name = input("Име: ").strip()
-                if name.lower() == 'отказ': return
+                if name.lower() == 'отказ':
+                    return
                 try:
                     ProductValidator.validate_name(name)
                     break
@@ -154,7 +148,8 @@ class ProductMenuView:
 
             while True:
                 price_raw = input("Цена: ").strip()
-                if price_raw.lower() == 'отказ': return
+                if price_raw.lower() == 'отказ':
+                    return
                 try:
                     price = ProductValidator.parse_float(price_raw, "Цена")
                     break
@@ -162,15 +157,25 @@ class ProductMenuView:
                     print(f"Грешка: {e}")
 
 
+            while True:
+                description = input("Описание: ").strip()
+                if description.lower() == 'отказ':
+                    return
+                if len(description) >= 3:
+                    break
+                print("Описанието трябва да е поне 3 символа.")
+
+
             unit_code = self._select_unit()
             if unit_code == 'отказ':
                 return
 
             unit = ProductValidator.validate_unit(unit_code)
+
             category_id = self._select_category()
 
             # Запис в базата
-            product_data = {"name": name, "description": "", "price": price, "unit": unit,
+            product_data = {"name": name, "description": description, "price": price, "unit": unit,
                             "category_ids": [category_id] if category_id else []}
 
             new_p = self.product_controller.add(product_data, user.user_id)
@@ -207,6 +212,7 @@ class ProductMenuView:
                 except Exception as e:
                     print(f"Грешка: {e}")
 
+
             while True:
                 new_price_raw = input(f"Нова цена [{product.price}]: ").strip()
                 if new_price_raw.lower() == 'отказ':
@@ -220,10 +226,24 @@ class ProductMenuView:
                 except Exception as e:
                     print(f"Грешка: {e}")
 
-            self.product_controller.update_product(product.product_id, new_name=new_name,
+
+            while True:
+                new_desc = input(f"Ново описание [{product.description}]: ").strip()
+                if new_desc.lower() == 'отказ':
+                    return
+                if not new_desc:
+                    new_desc = None
+                    break
+                if len(new_desc) >= 3:
+                    break
+                print("Описанието трябва да е поне 3 символа.")
+
+
+            self.product_controller.update_product(product.product_id, new_name=new_name, new_description=new_desc,
                                                    new_price=new_price, user_id=user.user_id)
 
             print("Продуктът е обновен.")
+
         except Exception as e:
             print(f"Грешка при редакция: {e}")
 
