@@ -1,3 +1,5 @@
+import uuid
+from datetime import datetime
 from views.menu import Menu, MenuItem
 from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
@@ -5,6 +7,7 @@ from models.user import User
 from views.product_sort_view import ProductSortView
 from views.password_utils import require_password, format_table
 from validators.product_validator import ProductValidator
+
 
 
 class ProductMenuView:
@@ -16,7 +19,6 @@ class ProductMenuView:
         self.inventory_controller = inventory_controller
         self.movement_controller = movement_controller
         self.activity_log = activity_log_controller
-
         self.sort_view = ProductSortView(product_controller, inventory_controller)
 
     @staticmethod
@@ -46,30 +48,49 @@ class ProductMenuView:
         print(format_table(["ID (кратко)", "Име", "Наличност", "Цена"], rows))
 
     def _select_category(self):
-        categories = self.category_controller.get_all()
-        if not categories:
+        all_categories = self.category_controller.get_all()
+        if not all_categories:
             print("\nНяма налични категории.")
             return None
 
-        print("\nИзбор на категория:")
-        for i, c in enumerate(categories):
-            print(f"{i + 1}. {c.name} (ID: {c.category_id[:8]})")
+        # Филтрираме само категориите без родител
+        main_categories = [c for c in all_categories if not c.parent_id or str(c.parent_id).lower() == "none"]
+        print("\nИЗБОР НА ГЛАВНА КАТЕГОРИЯ")
+        for i, c in enumerate(main_categories):
+            print(f"{i + 1}. {c.name}")
 
         while True:
-            raw = input("\nИзберете номер или въведете ID (Enter за пропускане): ").strip()
+            raw = input("\nИзберете номер или име (Enter за назад): ").strip()
             if not raw:
                 return None
 
+            selected_cat = None
+
+            # Проверка по номер
             if raw.isdigit():
                 idx = int(raw) - 1
-                if 0 <= idx < len(categories):
-                    return categories[idx].category_id
+                if 0 <= idx < len(main_categories):
+                    selected_cat = main_categories[idx]
 
-            cat = self.category_controller.get_by_id(raw)
-            if cat:
-                return cat.category_id
+            # Проверка по име
+            if not selected_cat:
+                for c in main_categories:
+                    if raw.lower() in c.name.lower():
+                        selected_cat = c
+                        break
 
-            print("Невалиден избор. Опитайте отново.")
+            if selected_cat:
+                # Вземаме всички подкатегории рекурсивно чрез контролера
+                sub_cats = self.category_controller.filter_by_parent(selected_cat.category_id)
+
+                all_related_ids = [c.category_id for c in sub_cats]
+                all_related_ids.append(selected_cat.category_id)  # Добавяме и избрания родител
+
+                # ВРЪЩАМЕ СПИСЪК ОТ ID-та
+                return all_related_ids
+
+            print("Невалиден избор. Моля, изберете номер от списъка.")
+
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -113,7 +134,6 @@ class ProductMenuView:
 
     def _select_unit(self):
         units = [("1", "Килограм (кг.)", "кг"), ("2", "Брой (бр.)", "бр"), ("3", "Литър (л.)", "л"), ("4", "Пакет", "пакет")]
-
         print("\nИзберете мерна единица:")
         for num, display, _ in units:
             print(f"{num}. {display}")
@@ -122,19 +142,15 @@ class ProductMenuView:
             choice = input("Изберете номер (1-4) или 'отказ': ").strip()
             if choice.lower() == 'отказ':
                 return 'отказ'
-
-            # Търсим дали въведеният номер съвпада с някой от списъка
             for num, _, code in units:
                 if choice == num:
                     return code
-
             print("Невалиден избор. Моля, натиснете 1, 2, 3 или 4.")
 
     def create_product(self, user):
-        print("\nНов продукт")
-        print("(Напишете 'отказ' за прекратяване)")
-
+        print("\nНов продукт (Напишете 'отказ' за прекратяване)")
         try:
+
             while True:
                 name = input("Име: ").strip()
                 if name.lower() == 'отказ':
@@ -142,8 +158,7 @@ class ProductMenuView:
                 try:
                     ProductValidator.validate_name(name)
                     break
-                except Exception as e:
-                    print(f"Грешка: {e}")
+                except Exception as e: print(f"Грешка: {e}")
 
 
             while True:
@@ -153,8 +168,7 @@ class ProductMenuView:
                 try:
                     price = ProductValidator.parse_float(price_raw, "Цена")
                     break
-                except Exception as e:
-                    print(f"Грешка: {e}")
+                except Exception as e: print(f"Грешка: {e}")
 
 
             while True:
@@ -169,14 +183,14 @@ class ProductMenuView:
             unit_code = self._select_unit()
             if unit_code == 'отказ':
                 return
-
             unit = ProductValidator.validate_unit(unit_code)
+
 
             category_id = self._select_category()
 
-            # Запис в базата
-            product_data = {"name": name, "description": description, "price": price, "unit": unit,
-                            "category_ids": [category_id] if category_id else []}
+
+            product_data = {"name": name, "description": description, "price": price,
+                            "unit": unit, "categories": [category_id] if category_id else []}
 
             new_p = self.product_controller.add(product_data, user.user_id)
             print(f"\nПродуктът '{new_p.name}' е създаден успешно!")
@@ -187,50 +201,43 @@ class ProductMenuView:
     def edit_product(self, user):
         print("\nРедактиране на продукт")
         pid = input("Въведете ID: ").strip()
-        if not pid:
-            return
+        if not pid: return
 
         product = self.product_controller.get_by_id(pid)
         if not product:
             print("Продуктът не е намерен.")
             return
 
-        print(f"Редактиране на: {product.name} ({product.product_id[:8]})")
-        print("(Enter запазва старата стойност, 'отказ' за изход)")
-
+        print(f"Редактиране на: {product.name}")
         try:
+
             while True:
                 new_name = input(f"Ново име [{product.name}]: ").strip()
-                if new_name.lower() == 'отказ':
-                    return
+                if new_name.lower() == 'отказ': return
                 if not new_name:
                     new_name = None
                     break
                 try:
                     ProductValidator.validate_name(new_name)
                     break
-                except Exception as e:
-                    print(f"Грешка: {e}")
+                except Exception as e: print(f"Грешка: {e}")
 
 
             while True:
                 new_price_raw = input(f"Нова цена [{product.price}]: ").strip()
-                if new_price_raw.lower() == 'отказ':
-                    return
+                if new_price_raw.lower() == 'отказ': return
                 if not new_price_raw:
                     new_price = None
                     break
                 try:
                     new_price = ProductValidator.parse_float(new_price_raw)
                     break
-                except Exception as e:
-                    print(f"Грешка: {e}")
+                except Exception as e: print(f"Грешка: {e}")
 
 
             while True:
                 new_desc = input(f"Ново описание [{product.description}]: ").strip()
-                if new_desc.lower() == 'отказ':
-                    return
+                if new_desc.lower() == 'отказ': return
                 if not new_desc:
                     new_desc = None
                     break
@@ -238,58 +245,43 @@ class ProductMenuView:
                     break
                 print("Описанието трябва да е поне 3 символа.")
 
-
             self.product_controller.update_product(product.product_id, new_name=new_name, new_description=new_desc,
                                                    new_price=new_price, user_id=user.user_id)
-
             print("Продуктът е обновен.")
-
         except Exception as e:
             print(f"Грешка при редакция: {e}")
 
     def remove_product(self, user):
-        print("\nПремахване на продукт")
-        pid = input("Въведете ID: ").strip()
-        if not pid:
-            return
-
+        pid = input("\nID за премахване: ").strip()
+        if not pid: return
         product = self.product_controller.get_by_id(pid)
         if not product:
             print("Продуктът не е намерен.")
             return
 
-        print(f"Продукт '{product.name}' ще бъде премахнат от каталога.")
-        confirm = input("Потвърдете (y/n): ").strip().lower()
-
+        confirm = input(f"Сигурни ли сте, че триете '{product.name}'? (y/n): ").strip().lower()
         if confirm == 'y':
-            try:
-                self.product_controller.delete_by_id(product.product_id, user.user_id)
-                print("Продуктът е премахнат.")
-            except Exception as e:
-                print(f"Грешка: {e}")
-        else:
-            print("Операцията е прекратена.")
+            self.product_controller.delete_by_id(product.product_id, user.user_id)
+            print("Продуктът е премахнат.")
 
     def show_all(self, _):
-        self._print_products(self.product_controller.get_all(), "Списък на продуктите")
+        self._print_products(self.product_controller.get_all(), "Списък на всички продукти")
 
     def search(self, _):
-        keyword = input("\nВъведете име: ").strip()
+        keyword = input("\nВъведете име за търсене: ").strip()
         if keyword:
-            self._print_products(self.product_controller.search(keyword),
-                                 f"Резултати за '{keyword}'")
+            self._print_products(self.product_controller.search(keyword), f"Резултати за '{keyword}'")
 
     def filter_by_category(self, _):
         cat_id = self._select_category()
         if cat_id:
-            self._print_products(self.product_controller.filter_by_category(cat_id),
-                                 "Филтър по категория")
+            # Вече ще работи рекурсивно, ако си сложила оправения филтър в контролера
+            self._print_products(self.product_controller.filter_by_category(cat_id), "Продукти в категорията")
 
     def low_stock(self, _):
         while True:
             threshold_raw = input("\nМинимална граница (Enter за 5.0): ").strip()
-            if threshold_raw.lower() == 'отказ':
-                return
+            if threshold_raw.lower() == 'отказ': return
             if not threshold_raw:
                 threshold = 5.0
                 break
@@ -304,7 +296,4 @@ class ProductMenuView:
             if self._stock(p) < threshold:
                 low_products.append(p)
 
-        if not low_products:
-            print(f"Няма продукти под {threshold}.")
-        else:
-            self._print_products(low_products, f"Продукти под {threshold}")
+        self._print_products(low_products, f"Критични наличности (под {threshold})")

@@ -20,7 +20,7 @@ def filter_by_description(movements: List[Movement], keyword: str) -> List[Movem
     return [m for m in movements if keyword in (m.description or "").lower()]
 
 
-# Филтър за доставки – ползва се в search_delivery
+# Филтър за доставки
 def filter_deliveries(movements: List[Movement], keyword: str,
                       product_controller, supplier_controller) -> List[Movement]:
 
