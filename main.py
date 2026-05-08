@@ -35,7 +35,6 @@ class InventoryApplication:
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
@@ -62,15 +61,15 @@ class InventoryApplication:
                                                    self.location_controller, self.inventory_controller,
                                                    self.supplier_controller)
 
-        # Визуализация и логистика
-        self.logistic_service = GraphView(self.inventory_controller, self.location_controller)
+        # Логистичен модул (алгоритмичен модул + view)
+        self.graph_view = GraphView(self.inventory_controller, self.location_controller)
 
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,
                             "category": self.category_controller, "supplier": self.supplier_controller,
                             "location": self.location_controller, "movement": self.movement_controller,
                             "invoice": self.invoice_controller, "report": self.report_controller,
-                            "inventory": self.inventory_controller}
+                            "inventory": self.inventory_controller, "graph": self.graph_view}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -121,6 +120,7 @@ class InventoryApplication:
                 sys.exit()
             else:
                 print("\nНевалиден избор.")
+
 
 if __name__ == "__main__":
     try:
