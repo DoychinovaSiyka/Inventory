@@ -9,7 +9,7 @@ class InvoiceValidator:
         if value is None or str(value).strip() == "":
             raise ValueError(f"{field_name} е задължително поле.")
 
-        # Премахваме валути и оправяме запетаите
+
         cleaned = (str(value).replace("лв.", "").replace("лв", "")
                    .replace(" ", "").replace(",", "."))
 
@@ -31,7 +31,7 @@ class InvoiceValidator:
             except:
                 raise ValueError(f"Невалиден пълен UUID формат за {field_name}.")
 
-        # Ако е кратко ID, проверяваме само дали е от позволени символи
+
         elif len(val_str) >= 4:
             if not all(c.isalnum() or c == "-" for c in val_str):
                 raise ValueError(f"ID-то съдържа невалидни символи.")

@@ -39,7 +39,6 @@ class CategoryValidator:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
-
         return cleaned
 
     @staticmethod
@@ -69,7 +68,6 @@ class CategoryValidator:
 
         target = str(category_id)
         current = parent_id
-
         while current:
             if str(current) == target:
                 raise ValueError("Открита циклична зависимост между категориите.")

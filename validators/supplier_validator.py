@@ -76,7 +76,6 @@ class SupplierValidator:
 
     @staticmethod
     def validate_exists(supplier_id, controller):
-        """Позволява избор чрез ID."""
         if not supplier_id:
             raise ValueError("Трябва да въведете ID на доставчик.")
 

@@ -4,7 +4,7 @@ import re
 class UserValidator:
     @staticmethod
     def validate_user_data(username: str, password: str, email: str, role: str, status: str):
-        """Основна валидация при регистрация или редакция. Запазваме всички изисквания."""
+        """Основна валидация при регистрация или редакция."""
 
 
         if not username or len(username.strip()) < 3:
@@ -29,25 +29,21 @@ class UserValidator:
 
     @staticmethod
     def validate_role(role: str):
-        """Проверка дали ролята е сред разрешените."""
         if role not in ["Admin", "Operator", "Anonymous"]:
             raise ValueError("Невалидна роля. Изберете: Admin, Operator или Anonymous.")
 
     @staticmethod
     def validate_status(status: str):
-        """Проверка дали статусът е валиден."""
         if status not in ["Active", "Inactive"]:
             raise ValueError("Невалиден статус. Разрешени: Active / Inactive.")
 
     @staticmethod
     def validate_unique_username(username: str, controller):
-        """Проверява дали името е заето."""
         if controller.get_by_username(username):
             raise ValueError(f"Потребителското име '{username}' вече е заето.")
 
     @staticmethod
     def validate_login(username: str, password: str, controller):
-        """Проверка при влизане."""
         user = controller.get_by_username(username)
         if not user:
             raise ValueError("Грешно потребителско име или парола.")
@@ -63,7 +59,6 @@ class UserValidator:
 
     @staticmethod
     def confirm_admin(user):
-        """Гарантира администраторски права за критични операции."""
         if not user or user.role != "Admin":
             raise PermissionError("Достъпът е отказан. Необходими са администраторски права.")
 

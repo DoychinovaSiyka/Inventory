@@ -25,7 +25,6 @@ class LocationValidator:
         cleaned = zone.strip()
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
-
         return cleaned
 
     @staticmethod

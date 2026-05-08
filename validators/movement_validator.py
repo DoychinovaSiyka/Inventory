@@ -41,7 +41,7 @@ class MovementValidator:
         raw = str(quantity).lower().strip()
         raw = raw.replace(",", ".")
 
-        # Премахване на мерни единици
+
         tokens = ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]
         for t in tokens:
             raw = raw.replace(t, "")
