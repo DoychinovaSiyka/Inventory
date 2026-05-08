@@ -1,6 +1,3 @@
-import re
-
-
 class CategoryValidator:
 
     @staticmethod
@@ -11,11 +8,11 @@ class CategoryValidator:
         cleaned = name.strip()
         if not cleaned:
             raise ValueError("Името е задължително.")
+
         if not (2 <= len(cleaned) <= 50):
             raise ValueError("Името трябва да е между 2 и 50 символа.")
 
-        if not re.match(r'^[\w\s\-().,"„“/\\°]+$', cleaned, re.UNICODE):
-            raise ValueError("Името съдържа невалидни символи.")
+        return cleaned
 
     @staticmethod
     def validate_unique(name, existing_categories):
@@ -27,7 +24,6 @@ class CategoryValidator:
     @staticmethod
     def validate_update_name(new_name):
         CategoryValidator.validate_name(new_name)
-
 
     @staticmethod
     def validate_description(description):
@@ -43,12 +39,6 @@ class CategoryValidator:
             raise ValueError("Описанието е твърде кратко (минимум 3 символа).")
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
-
-        # Приема букви, цифри, интервали, пунктуация и нормални символи
-        pattern = r'^[\w\s\-\.,!?:;"„“()\/\\°]+$'
-
-        if not re.match(pattern, cleaned, flags=re.UNICODE):
-            raise ValueError("Описанието съдържа невалидни символи.")
 
         return cleaned
 
@@ -70,11 +60,7 @@ class CategoryValidator:
     def validate_parent_choice(choice):
         if not choice:
             return None
-        cleaned = choice.strip()
-        for ch in cleaned:
-            if not (ch.isalnum() or ch == "-"):
-                raise ValueError("Невалиден формат за ID на родителска категория.")
-        return cleaned
+        return choice.strip()
 
     @staticmethod
     def validate_no_cycle(category_id, parent_id, categories):
@@ -100,19 +86,13 @@ class CategoryValidator:
     def validate_can_delete(category_id, all_categories, products):
         target_id = str(category_id)
 
-
         for c in all_categories:
             if str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории. Първо преместете или изтрийте тях.")
 
-
         for p in products:
-            if p.categories:
-                for cat in p.categories:
-                    # Проверяваме дали cat е обект (има category_id) или просто низ/ID
-                    cat_id = getattr(cat, 'category_id', str(cat))
-                    if str(cat_id) == target_id:
-                        raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+            if target_id in p.get_category_ids():
+                raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
 
     @staticmethod
     def validate_exists(category_id, categories):

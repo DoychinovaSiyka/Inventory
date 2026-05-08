@@ -1,7 +1,3 @@
-import re
-
-
-
 class LocationValidator:
 
     @staticmethod
@@ -17,12 +13,6 @@ class LocationValidator:
         if len(cleaned) > 100:
             raise ValueError("Името е твърде дълго.")
 
-        # Приема букви, цифри, интервали и нормални символи за имена
-        pattern = r'^[\w\s\-\.,()"/\\]+$'
-
-        if not re.match(pattern, cleaned, flags=re.UNICODE):
-            raise ValueError("Името съдържа невалидни символи.")
-
         return cleaned
 
     @staticmethod
@@ -31,9 +21,11 @@ class LocationValidator:
             return ""
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
+
         cleaned = zone.strip()
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
+
         return cleaned
 
     @staticmethod
@@ -47,7 +39,8 @@ class LocationValidator:
         if not isinstance(capacity, int):
             raise ValueError("Капацитетът трябва да е цяло число.")
         if capacity <= 0:
-            raise ValueError("Капацитетът трябва да е положително число (напр. брой палетни места).")
+            raise ValueError("Капацитетът трябва да е положително число.")
+
         return capacity
 
     @staticmethod
@@ -62,19 +55,13 @@ class LocationValidator:
     @staticmethod
     def validate_exists(location_id, locations):
         search_id = str(location_id).strip().lower()
-        exists = False
-
         for l in locations:
             if str(l.location_id).lower().startswith(search_id):
-                exists = True
-                break
-
-        if not exists:
-            raise ValueError(f"Склад/Локация с код '{location_id}' не е намерен в базата.")
+                return
+        raise ValueError(f"Склад/Локация с код '{location_id}' не е намерен в базата.")
 
     @staticmethod
     def validate_can_delete(location_id, inventory_controller):
         stock_in_loc = inventory_controller.get_stock_by_location_total(location_id)
         if stock_in_loc > 0:
-            raise ValueError(f"Локацията не може да бъде изтрита, защото в нея "
-                             f"има {stock_in_loc} налични единици стока.")
+            raise ValueError(f"Локацията не може да бъде изтрита, защото в нея има {stock_in_loc} налични единици стока.")
