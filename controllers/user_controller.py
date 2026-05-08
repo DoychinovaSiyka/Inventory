@@ -73,16 +73,9 @@ class UserController:
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        new_user = User(
-            user_id=None,
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            email=email.strip(),
-            username=username.strip().lower(),
-            password=self._hash_password(password),
-            role=role,
-            status="Active"
-        )
+        new_user = User(user_id=None, first_name=first_name.strip(), last_name=last_name.strip(),
+                        email=email.strip(), username=username.strip().lower(), password=self._hash_password(password),
+                        role=role, status="Active")
         self.users.append(new_user)
         self.save_changes()
         return new_user
@@ -128,29 +121,13 @@ class UserController:
         return True
 
     def _create_default_admin(self):
-        admin = User(
-            user_id=None,
-            first_name="Admin",
-            last_name="System",
-            email="admin@system.local",
-            username="admin",
-            password=self._hash_password("admin123"),
-            role="Admin",
-            status="Active"
-        )
+        admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
+                     username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_changes()
 
     def _create_default_operator(self):
-        operator = User(
-            user_id=None,
-            first_name="Operator",
-            last_name="User",
-            email="operator@example.com",
-            username="operator",
-            password=self._hash_password("operator123"),
-            role="Operator",
-            status="Active"
-        )
+        operator = User(user_id=None, first_name="Operator", last_name="User", email="operator@example.com",
+                        username="operator",password=self._hash_password("operator123"),role="Operator",status="Active")
         self.users.append(operator)
         self.save_changes()

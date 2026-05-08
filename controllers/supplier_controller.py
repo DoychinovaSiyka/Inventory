@@ -14,9 +14,7 @@ class SupplierController:
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
 
-        supplier = Supplier(supplier_id=None, name=name.strip(),
-                            contact=contact.strip(), address=address.strip())
-
+        supplier = Supplier(supplier_id=None, name=name.strip(), contact=contact.strip(), address=address.strip())
         self.suppliers.append(supplier)
         self.save_changes()
         return supplier

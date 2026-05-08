@@ -43,7 +43,6 @@ class LocationController:
         for loc in self.locations:
             if loc.location_id.startswith(target_id):
                 return loc
-
         return None
 
     def update(self, location_id: str, name: Optional[str] = None,
@@ -98,7 +97,6 @@ class LocationController:
 
         self.locations = new_list
         self.save_changes()
-
         return True
 
     def save_changes(self) -> None:

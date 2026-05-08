@@ -57,9 +57,7 @@ location_controller.py
 movement_controller.py
 product_controller.py
 report_controller.py
-stocklog_controller.py
 supplier_controller.py
-user_activity_log_controller.py
 user_controller.py
 
 data/
@@ -71,9 +69,7 @@ inventory.json
 movements.json
 products.json
 reports.json
-stocklogs.json
 suppliers.json
-user_activity_log.json
 users.json
 
 documentation/
@@ -101,7 +97,7 @@ report.py
 stock_log.py
 supplier.py
 user.py
-user_activity_log.py
+
 
 storage/
 ---------
@@ -115,7 +111,6 @@ invoice_validator.py
 location_validator.py
 movement_validator.py
 product_validator.py
-stock_log_validator.py
 supplier_validator.py
 user_validator.py
 
@@ -127,7 +122,6 @@ invoice_filters.py
 movement_filters.py
 product_filters.py
 report_filters.py
-stocklog_filters.py
 
 
 view_models/

@@ -6,7 +6,7 @@ class UserValidator:
     def validate_user_data(username: str, password: str, email: str, role: str, status: str):
         """Основна валидация при регистрация или редакция. Запазваме всички изисквания."""
 
-        # Валидация на потребителско име
+
         if not username or len(username.strip()) < 3:
             raise ValueError("Потребителското име трябва да е поне 3 символа.")
         if not username.isalnum():
@@ -18,7 +18,7 @@ class UserValidator:
         if password.isdigit() or password.isalpha():
             raise ValueError("Паролата трябва да съдържа комбинация от букви и цифри.")
 
-        # Валидация на имейл
+
         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         if not re.match(email_regex, email):
             raise ValueError(f"Невалиден формат на имейл: {email}")

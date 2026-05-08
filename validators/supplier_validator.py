@@ -20,7 +20,7 @@ class SupplierValidator:
         if clean_name.isdigit():
             raise ValueError("Името на фирмата не може да се състои само от цифри.")
 
-        # Добавени „“ за имената на фирмите
+
         allowed_name = re.compile(r"^[a-zA-Z0-9а-яА-Я\s\.,\-\"\'№°„“\\/]+$")
         if not allowed_name.match(clean_name):
             raise ValueError("Името съдържа невалидни символи.")
@@ -35,7 +35,6 @@ class SupplierValidator:
 
         clean_contact = str(contact).strip()
 
-        # Проверяваме дали съдържа поне нещо, което прилича на телефон или имейл
         has_email = SupplierValidator.email_regex.search(clean_contact)
         has_phone = SupplierValidator.phone_regex.search(clean_contact)
 
@@ -45,8 +44,7 @@ class SupplierValidator:
         if not (has_email or has_phone) or not allowed_chars_pattern.match(clean_contact):
             raise ValueError(
                 "Невалиден контакт. Въведете имейл, телефон или комбинация от двете "
-                "(напр. '0888123456 | office@mail.com')."
-            )
+                "(напр. '0888123456 | office@mail.com').")
 
         return clean_contact
 
@@ -60,9 +58,7 @@ class SupplierValidator:
         if len(clean_address) < 3:
             raise ValueError("Адресът е твърде кратък.")
 
-        # КОРЕКЦИЯ: Добавени са „ и “ в списъка с позволени символи
         allowed_address = re.compile(r"^[a-zA-Z0-9а-яА-Я\s\.,\-\"\'№°„“\\/]+$")
-
         if not allowed_address.match(clean_address):
             raise ValueError("Адресът съдържа невалидни символи (проверете кавичките или специалните знаци).")
 
@@ -85,7 +81,6 @@ class SupplierValidator:
             raise ValueError("Трябва да въведете ID на доставчик.")
 
         supplier = controller.get_by_id(str(supplier_id).strip())
-
         if not supplier:
             raise ValueError(f"Доставчик с код '{supplier_id}' не беше намерен.")
 
@@ -93,7 +88,6 @@ class SupplierValidator:
 
     @staticmethod
     def validate_all(name, contact, address):
-        """Пълна проверка на всички полета."""
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
         SupplierValidator.validate_address(address)

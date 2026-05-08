@@ -181,13 +181,12 @@ class CategoryView:
             if choice == "":
                 return None
 
-            # Проверяваме дали е номер от списъка
             if choice.isdigit():
                 idx = int(choice) - 1
                 if 0 <= idx < len(categories_sorted):
                     return categories_sorted[idx]
 
-            # Ако не е номер, тогава търсим по ID чрез контролера
+            # Търсим по ID чрез контролера
             found = self.controller.get_by_id(choice)
             if found is not None:
                 return found
@@ -202,7 +201,6 @@ class CategoryView:
 
         print(f"Продуктите в '{category.name}' ще останат без категория.")
         confirm = input("Потвърждавате ли изтриването? (y/n): ").strip().lower()
-
         if confirm == "y":
             try:
                 self.controller.remove(category.category_id, user.user_id)

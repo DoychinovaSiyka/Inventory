@@ -88,7 +88,7 @@ def filter_by_date_range(movements: List[Movement],
     return filtered
 
 
-# Комбиниран филтър – прилага всички критерии едновременно
+
 def filter_advanced(movements: List[Movement], movement_type=None, start_date=None,
                     end_date=None, product_id=None, location_id=None, user_id=None):
 
@@ -124,8 +124,7 @@ def filter_advanced(movements: List[Movement], movement_type=None, start_date=No
         results = self.movements
 
         if movement_type:
-            results = [m for m in results if
-                       m.movement_type.name == movement_type]
+            results = [m for m in results if m.movement_type.name == movement_type]
         if product_id:
             results = [m for m in results if m.product_id == product_id]
         if location_id:

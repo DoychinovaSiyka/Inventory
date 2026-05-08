@@ -110,7 +110,6 @@ class MovementController:
 
             movement_location_id = location_id
 
-        # 🔥 Уеднаквяване на името на клиента
         if m_type_str == "OUT":
             if not customer or str(customer).strip() == "":
                 customer = "Общ клиент"
@@ -129,25 +128,18 @@ class MovementController:
                 self.inventory_controller.decrease_stock(real_product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(real_product_id, qty, to_location_id)
 
-        movement = Movement(
-            movement_id=None, product_id=real_product_id, product_name=historical_name,
-            user_id=user_id, location_id=movement_location_id,
-            movement_type=MovementType[m_type_str], quantity=qty,
-            unit=historical_unit, price=prc,
-            supplier_id=final_supplier_id, customer=customer,
-            from_location_id=from_location_id, to_location_id=to_location_id
-        )
+        movement = Movement(movement_id=None, product_id=real_product_id, product_name=historical_name,
+                            user_id=user_id, location_id=movement_location_id, movement_type=MovementType[m_type_str],
+                            quantity=qty, unit=historical_unit, price=prc, supplier_id=final_supplier_id,
+                            customer=customer, from_location_id=from_location_id, to_location_id=to_location_id)
 
         self.movements.append(movement)
         self.save_changes()
 
         # Фактура при OUT
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement, product=full_product,
-                customer=customer,
-                user_id=user_id
-            )
+            self.invoice_controller.create_from_movement(movement=movement, product=full_product,
+                                                         customer=customer, user_id=user_id)
 
         return movement
 

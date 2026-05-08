@@ -10,15 +10,12 @@ class MovementValidator:
             raise ValueError(f"{field_name} е задължително поле.")
 
         val_str = str(value).strip()
-
-        # Кратък код (8 символа)
         if len(val_str) == 8:
             for c in val_str:
                 if not c.isalnum():
                     raise ValueError(f"{field_name} съдържа невалидни символи.")
             return
 
-        # Пълен UUID
         try:
             uuid.UUID(val_str)
         except Exception:

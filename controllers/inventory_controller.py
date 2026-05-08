@@ -228,7 +228,6 @@ class InventoryController:
 
                 elif m_type == "OUT":
                     need = qty
-
                     while need > 0 and batches:
                         if batches[0]["qty"] <= need:
                             need -= batches[0]["qty"]

@@ -1,3 +1,7 @@
+import re
+
+
+
 class LocationValidator:
 
     @staticmethod
@@ -11,12 +15,14 @@ class LocationValidator:
         if len(cleaned) < 2:
             raise ValueError("Името е твърде кратко (минимум 2 символа).")
         if len(cleaned) > 100:
-            raise ValueError("Името на локацията е твърде дълго.")
+            raise ValueError("Името е твърде дълго.")
 
-        allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯабвгдежзийклмнопрстуфхцчшщъьюя0123456789 -–—.,()\"„“/\\"
-        for ch in cleaned:
-            if ch not in allowed:
-                raise ValueError(f"Името съдържа невалиден символ: '{ch}'")
+        # Приема букви, цифри, интервали и нормални символи за имена
+        pattern = r'^[\w\s\-\.,()"/\\]+$'
+
+        if not re.match(pattern, cleaned, flags=re.UNICODE):
+            raise ValueError("Името съдържа невалидни символи.")
+
         return cleaned
 
     @staticmethod

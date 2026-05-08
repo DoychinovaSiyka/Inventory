@@ -47,7 +47,6 @@ def filter_movements_by_date(movements: List[Movement], date_str: str):
 
 # Филтри за продажби
 def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
-    """Търсене на продажби по клиент. Изисквам поне 3 символа, за да има смисъл."""
     if len(keyword.strip()) < 3:
         return []
     return [inv for inv in invoices if _match_string(inv.customer, keyword)]

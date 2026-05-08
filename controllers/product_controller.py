@@ -27,9 +27,7 @@ class ProductController:
         ProductValidator.validate_unique_name(name, self.products)
 
         description = ProductValidator.validate_description(product_data.get('description', ""))
-
         unit = ProductValidator.validate_unit(product_data.get('unit', 'бр.'))
-
         price = ProductValidator.parse_float(product_data['price'], "Цена")
 
         categories = []
@@ -38,8 +36,7 @@ class ProductController:
             if cat:
                 categories.append(cat)
 
-        product = Product(product_id=None, name=name, categories=categories,
-                          unit=unit, description=description, price=price)
+        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
 
         self.products.append(product)
         self.save_changes()
@@ -71,11 +68,9 @@ class ProductController:
 
         self.products = new_list
         self.save_changes()
-
         return True
 
-    def update_product(self, product_id, new_name=None, new_description=None,
-                       new_price=None, user_id=None):
+    def update_product(self, product_id, new_name=None, new_description=None, new_price=None, user_id=None):
 
         product = self.get_by_id(product_id)
         if not product:
@@ -137,7 +132,6 @@ class ProductController:
                 if c.category_id == cat.category_id:
                     result.append(p)
                     break
-
         return result
 
     def get_all(self) -> List[Product]:

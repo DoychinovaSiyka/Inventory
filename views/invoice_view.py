@@ -137,7 +137,6 @@ class InvoiceView:
 
     def search_by_total(self, user):
         print("\nТърсене по сума")
-
         while True:
             min_total = self._input("Минимална сума: ")
             max_total = self._input("Максимална сума: ")

@@ -64,7 +64,6 @@ class CategoryController:
                 other_categories.append(c)
 
         CategoryValidator.validate_unique(new_name, other_categories)
-
         category.name = new_name
         category.update_modified()
 

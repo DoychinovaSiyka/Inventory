@@ -70,7 +70,6 @@ class ReportController:
 
                 if search_name in current_customer:
                     result.append(m)
-
         return result
 
     def report_sales_by_product(self, product_name: str):
@@ -233,7 +232,6 @@ class ReportController:
                 if name_or_id.lower() in p.name.lower():
                     product = p
                     break
-
         if not product:
             return None
 

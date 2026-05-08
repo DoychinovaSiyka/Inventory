@@ -50,19 +50,10 @@ class InvoiceController:
         if not customer or str(customer).strip() == "":
             customer = "Общ клиент"
 
-        invoice = Invoice(
-            product=movement.product_name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=unit_price,
-            total_price=total_price,
-            customer=customer,
-            movement_id=movement.movement_id,
-            date=movement.date,
-            created=movement.date,
-            modified=movement.date,
-            invoice_id=None
-        )
+        invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
+                          unit_price=unit_price, total_price=total_price, customer=customer,
+                          movement_id=movement.movement_id, date=movement.date, created=movement.date,
+                          modified=movement.date, invoice_id=None)
 
         self.invoices.append(invoice)
         self._save_changes()

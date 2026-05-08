@@ -1,26 +1,21 @@
+import re
+
+
 class CategoryValidator:
 
     @staticmethod
     def validate_name(name):
         if not isinstance(name, str):
-            raise ValueError("Името на категорията трябва да е текст.")
+            raise ValueError("Името трябва да е текст.")
 
         cleaned = name.strip()
-        if cleaned == "":
-            raise ValueError("Името на категорията е задължително.")
-        if len(cleaned) < 2:
-            raise ValueError("Името е твърде кратко (минимум 2 символа).")
-        if len(cleaned) > 50:
-            raise ValueError("Името не може да надвишава 50 символа.")
+        if not cleaned:
+            raise ValueError("Името е задължително.")
+        if not (2 <= len(cleaned) <= 50):
+            raise ValueError("Името трябва да е между 2 и 50 символа.")
 
-        # Добавен символ за градус ° и наклонени черти
-        allowed = ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                   "абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ"
-                   "0123456789 -().,\"„“–—\u2011/\\°")
-
-        for ch in cleaned:
-            if ch not in allowed:
-                raise ValueError(f"Името съдържа невалиден символ: '{ch}'")
+        if not re.match(r'^[\w\s\-().,"„“/\\°]+$', cleaned, re.UNICODE):
+            raise ValueError("Името съдържа невалидни символи.")
 
     @staticmethod
     def validate_unique(name, existing_categories):
@@ -32,6 +27,7 @@ class CategoryValidator:
     @staticmethod
     def validate_update_name(new_name):
         CategoryValidator.validate_name(new_name)
+
 
     @staticmethod
     def validate_description(description):
@@ -48,14 +44,11 @@ class CategoryValidator:
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-        # Добавен символ за градус ° и пунктуация
-        allowed = ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                   "абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ"
-                   "0123456789 -().,!?:\"„“–—\u2011/\\°")
+        # Приема букви, цифри, интервали, пунктуация и нормални символи
+        pattern = r'^[\w\s\-\.,!?:;"„“()\/\\°]+$'
 
-        for ch in cleaned:
-            if ch not in allowed:
-                raise ValueError(f"Описанието съдържа невалиден символ: '{ch}'")
+        if not re.match(pattern, cleaned, flags=re.UNICODE):
+            raise ValueError("Описанието съдържа невалидни символи.")
 
         return cleaned
 
@@ -107,12 +100,12 @@ class CategoryValidator:
     def validate_can_delete(category_id, all_categories, products):
         target_id = str(category_id)
 
-        # Проверка за подкатегории
+
         for c in all_categories:
             if str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории. Първо преместете или изтрийте тях.")
 
-        # Проверка за продукти
+
         for p in products:
             if p.categories:
                 for cat in p.categories:

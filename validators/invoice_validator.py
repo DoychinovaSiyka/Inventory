@@ -25,13 +25,12 @@ class InvoiceValidator:
             return
 
         val_str = str(value).strip()
-
-        # Ако е пълно UUID, го проверяваме по стандарт
         if len(val_str) == 36:
             try:
                 uuid.UUID(val_str)
             except:
                 raise ValueError(f"Невалиден пълен UUID формат за {field_name}.")
+
         # Ако е кратко ID, проверяваме само дали е от позволени символи
         elif len(val_str) >= 4:
             if not all(c.isalnum() or c == "-" for c in val_str):
@@ -74,7 +73,7 @@ class InvoiceValidator:
             total = float(total_price)
             expected = round(float(quantity) * float(unit_price), 2)
 
-            # Позволяваме разлика до 1 стотинка заради евентуални закръгляния
+            # Позволяваме разлика до 1 стотинка заради закръгляния
             if abs(expected - total) > 0.01:
                 raise ValueError(f"Грешка в сметката! {quantity} x {unit_price} = {expected}, а е записано {total}")
         except (ValueError, TypeError):
