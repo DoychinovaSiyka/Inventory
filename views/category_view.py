@@ -15,9 +15,7 @@ class CategoryView:
             menu_obj.execute(choice, user)
 
     def show_menu(self, user: User):
-        is_admin = False
-        if user is not None and user.role == "Admin":
-            is_admin = True
+        is_admin = user is not None and user.role == "Admin"
 
         menu_items = [MenuItem("1", "Списък с категории", self.show_all)]
 
@@ -39,11 +37,7 @@ class CategoryView:
 
         print("\nКатегории (йерархия):")
 
-        roots = []
-        for c in categories:
-            if not c.parent_id:
-                roots.append(c)
-
+        roots = [c for c in categories if not c.parent_id]
         roots.sort(key=lambda x: x.name.lower())
 
         def print_tree(cat, level, prefix):
@@ -55,11 +49,7 @@ class CategoryView:
             else:
                 print(f"{indent}- {cat.name} (ID: {short_id})")
 
-            children = []
-            for c in categories:
-                if c.parent_id == cat.category_id:
-                    children.append(c)
-
+            children = [c for c in categories if c.parent_id == cat.category_id]
             children.sort(key=lambda x: x.name.lower())
 
             for child in children:
@@ -81,6 +71,9 @@ class CategoryView:
             if name == "":
                 print("Името не може да бъде празно.")
                 continue
+            if len(name) < 2:
+                print("Името трябва да е поне 2 символа.")
+                continue
             break
 
         while True:
@@ -94,16 +87,10 @@ class CategoryView:
 
         print("\nИзберете родителска категория (Enter за главна):")
         parent = self.select_category()
-
-        parent_id = None
-        if parent is not None:
-            parent_id = parent.category_id
+        parent_id = parent.category_id if parent else None
 
         try:
-            current_uid = "unknown"
-            if user is not None:
-                current_uid = user.user_id
-
+            current_uid = user.user_id if user else "unknown"
             self.controller.add(
                 {"name": name, "description": description, "parent_id": parent_id},
                 user_id=current_uid)
@@ -117,28 +104,30 @@ class CategoryView:
         if category is None:
             return
 
-        current_uid = "unknown"
-        if user is not None:
-            current_uid = user.user_id
+        current_uid = user.user_id if user else "unknown"
 
         print(f"\nРедактирате: {category.name}")
         print("(Enter запазва старата стойност, 'отказ' за изход)")
-        new_name = None
+
         while True:
             name_input = input(f"Ново име [{category.name}]: ").strip()
             if name_input.lower() == 'отказ':
                 return
             if name_input == "":
+                new_name = category.name
                 break
+            if len(name_input) < 2:
+                print("Името трябва да е поне 2 символа.")
+                continue
             new_name = name_input
             break
 
-        new_desc = None
         while True:
             desc_input = input(f"Ново описание [{category.description}]: ").strip()
             if desc_input.lower() == 'отказ':
                 return
             if desc_input == "":
+                new_desc = category.description
                 break
             if len(desc_input) < 3:
                 print("Описанието трябва да е поне 3 символа.")
@@ -150,15 +139,11 @@ class CategoryView:
         parent = self.select_category()
 
         try:
-            if new_name is not None:
-                self.controller.update_name(category.category_id, new_name, current_uid)
+            self.controller.update_name(category.category_id, new_name, current_uid)
+            self.controller.update_description(category.category_id, new_desc, current_uid)
 
-            if new_desc is not None:
-                self.controller.update_description(category.category_id, new_desc, current_uid)
-
-            if parent is not None:
-                if parent.category_id != category.category_id:
-                    self.controller.update_parent(category.category_id, parent.category_id, current_uid)
+            if parent and parent.category_id != category.category_id:
+                self.controller.update_parent(category.category_id, parent.category_id, current_uid)
 
             print("Категорията е обновена.")
         except Exception as e:
@@ -186,7 +171,6 @@ class CategoryView:
                 if 0 <= idx < len(categories_sorted):
                     return categories_sorted[idx]
 
-            # Търсим по ID чрез контролера
             found = self.controller.get_by_id(choice)
             if found is not None:
                 return found

@@ -48,15 +48,34 @@ class SupplierView:
 
         while True:
             name = input("Име на доставчик: ").strip()
-            if not name:
-                print("Името е задължително поле.")
-                continue
-            if name.lower() == 'отказ':
+            if name.lower() == "отказ":
                 return
-            break
+            try:
+                self.controller.validator.validate_name(name)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
 
-        contact = input("Контакт (тел/имейл): ").strip() or "-"
-        address = input("Адрес: ").strip() or "-"
+        while True:
+            contact = input("Контакт (тел/имейл): ").strip()
+            if contact.lower() == "отказ":
+                return
+            try:
+                self.controller.validator.validate_contact(contact)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
+
+        while True:
+            address = input("Адрес: ").strip()
+            if address.lower() == "отказ":
+                return
+            try:
+                self.controller.validator.validate_address(address)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
+
         try:
             new_sup = self.controller.add(name=name, contact=contact, address=address)
             print(f"\nДоставчикът е добавен. ID: {new_sup.supplier_id[:8]}")
@@ -68,32 +87,54 @@ class SupplierView:
 
         while True:
             supplier_id_input = input("Въведете ID (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+            if supplier_id_input.lower() == 'отказ' or supplier_id_input == "":
                 return
-
             supplier = self.controller.get_by_id(supplier_id_input)
             if supplier:
                 break
-
             print("Доставчикът не е намерен. Опитайте отново.")
 
         print(f"\nРедактиране на: {supplier.name} [{supplier.supplier_id[:8]}]")
         print("Празно поле запазва старата стойност. 'отказ' за изход.")
 
-        new_name = input(f"Ново име ({supplier.name}): ").strip()
-        if new_name.lower() == 'отказ':
-            return
-        new_name = new_name or supplier.name
+        while True:
+            new_name = input(f"Ново име ({supplier.name}): ").strip()
+            if new_name.lower() == 'отказ':
+                return
+            if new_name == "":
+                new_name = supplier.name
+                break
+            try:
+                self.controller.validator.validate_name(new_name)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
 
-        new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
-        if new_contact.lower() == 'отказ':
-            return
-        new_contact = new_contact or supplier.contact
+        while True:
+            new_contact = input(f"Нов контакт ({supplier.contact}): ").strip()
+            if new_contact.lower() == 'отказ':
+                return
+            if new_contact == "":
+                new_contact = supplier.contact
+                break
+            try:
+                self.controller.validator.validate_contact(new_contact)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
 
-        new_address = input(f"Нов адрес ({supplier.address}): ").strip()
-        if new_address.lower() == 'отказ':
-            return
-        new_address = new_address or supplier.address
+        while True:
+            new_address = input(f"Нов адрес ({supplier.address}): ").strip()
+            if new_address.lower() == 'отказ':
+                return
+            if new_address == "":
+                new_address = supplier.address
+                break
+            try:
+                self.controller.validator.validate_address(new_address)
+                break
+            except Exception as e:
+                print(f"Грешка: {e}")
 
         try:
             self.controller.update(supplier_id=supplier.supplier_id, name=new_name,
@@ -107,13 +148,11 @@ class SupplierView:
 
         while True:
             supplier_id_input = input("Въведете ID (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+            if supplier_id_input.lower() == 'отказ' or supplier_id_input == "":
                 return
-
             supplier = self.controller.get_by_id(supplier_id_input)
             if supplier:
                 break
-
             print("Доставчикът не е намерен.")
 
         confirm = input(f"Изтриване на '{supplier.name}'? (y/n): ").strip().lower()

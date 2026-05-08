@@ -36,7 +36,7 @@ class User:
         """Превръща речник от JSON в обект User."""
         if not data:
             return None
-        return User( first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),
+        return User(first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),
                      email=data.get("email", ""), username=data.get("username", ""),
                      password=data.get("password", ""), role=data.get("role", "Operator"),
                      status=data.get("status", "Active"), user_id=data.get("user_id"),
