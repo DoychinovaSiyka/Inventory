@@ -13,8 +13,11 @@ class CategoryValidator:
         if len(cleaned) > 50:
             raise ValueError("Името не може да надвишава 50 символа.")
 
-        # Добавени са специални тирета (–, —, ‑) за по-голяма гъвкавост
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,\"„“–—\u2011/\\"
+        # Добавен символ за градус ° и наклонени черти
+        allowed = ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                   "абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ"
+                   "0123456789 -().,\"„“–—\u2011/\\°")
+
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError(f"Името съдържа невалиден символ: '{ch}'")
@@ -45,8 +48,11 @@ class CategoryValidator:
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-        # Тук са добавени пунктуационни знаци и специалното тире \u2011
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,!?:\"„“–—\u2011/\\"
+        # Добавен символ за градус ° и пунктуация
+        allowed = ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                   "абвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ"
+                   "0123456789 -().,!?:\"„“–—\u2011/\\°")
+
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError(f"Описанието съдържа невалиден символ: '{ch}'")
@@ -110,7 +116,9 @@ class CategoryValidator:
         for p in products:
             if p.categories:
                 for cat in p.categories:
-                    if str(cat.category_id) == target_id:
+                    # Проверяваме дали cat е обект (има category_id) или просто низ/ID
+                    cat_id = getattr(cat, 'category_id', str(cat))
+                    if str(cat_id) == target_id:
                         raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
 
     @staticmethod
