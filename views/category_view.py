@@ -169,10 +169,10 @@ class CategoryView:
         if not categories:
             return None
 
-        categories.sort(key=lambda x: x.name.lower())
+        categories_sorted = sorted(categories, key=lambda x: x.name.lower())
 
         index = 1
-        for cat in categories:
+        for cat in categories_sorted:
             print(f"{index}. {cat.name} ({cat.category_id[:8]})")
             index += 1
 
@@ -181,14 +181,16 @@ class CategoryView:
             if choice == "":
                 return None
 
+            # Проверяваме дали е номер от списъка
+            if choice.isdigit():
+                idx = int(choice) - 1
+                if 0 <= idx < len(categories_sorted):
+                    return categories_sorted[idx]
+
+            # Ако не е номер, тогава търсим по ID чрез контролера
             found = self.controller.get_by_id(choice)
             if found is not None:
                 return found
-
-            if choice.isdigit():
-                idx = int(choice) - 1
-                if 0 <= idx < len(categories):
-                    return categories[idx]
 
             print("Невалиден избор. Опитайте отново.")
 

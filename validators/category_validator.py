@@ -13,7 +13,8 @@ class CategoryValidator:
         if len(cleaned) > 50:
             raise ValueError("Името не може да надвишава 50 символа.")
 
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,\"„“–—/\\"
+        # Добавени са специални тирета (–, —, ‑) за по-голяма гъвкавост
+        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,\"„“–—\u2011/\\"
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError(f"Името съдържа невалиден символ: '{ch}'")
@@ -44,7 +45,8 @@ class CategoryValidator:
         if len(cleaned) > 200:
             raise ValueError("Описанието е твърде дълго (максимум 200 символа).")
 
-        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,!?:\"„“–—"
+        # Тук са добавени пунктуационни знаци и специалното тире \u2011
+        allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъьюяАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ0123456789 -().,!?:\"„“–—\u2011/\\"
         for ch in cleaned:
             if ch not in allowed:
                 raise ValueError(f"Описанието съдържа невалиден символ: '{ch}'")
