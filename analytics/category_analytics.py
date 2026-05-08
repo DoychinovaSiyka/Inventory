@@ -32,7 +32,6 @@ def get_category_stats(categories: List[Category], products: List) -> dict:
     """Статистика – броя продукти във всяка категория."""
     stats = {}
     for cat in categories:
-        # Броя колко продукта имат тази категория
         count = sum(1 for p in products if cat.category_id in
                     [str(c) for c in p.categories])
         stats[cat.name] = count

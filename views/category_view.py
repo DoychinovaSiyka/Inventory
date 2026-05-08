@@ -123,7 +123,6 @@ class CategoryView:
 
         print(f"\nРедактирате: {category.name}")
         print("(Enter запазва старата стойност, 'отказ' за изход)")
-
         new_name = None
         while True:
             name_input = input(f"Ново име [{category.name}]: ").strip()
