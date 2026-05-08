@@ -27,7 +27,6 @@ class CategoryController:
     def add(self, category_data: dict, user_id: str) -> Category:
         name = category_data.get("name", "")
         name = name.strip()
-
         description = category_data.get("description", "")
         description = description.strip()
         parent_input = category_data.get("parent_id")
