@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from validators.category_validator import CategoryValidator
 
 
 class Category:
@@ -31,8 +30,6 @@ class Category:
         else:
             self.modified = now
 
-        CategoryValidator.validate_name(self.name)
-        CategoryValidator.validate_description(self.description)
 
     @staticmethod
     def now():

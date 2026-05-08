@@ -111,6 +111,32 @@ class ProductMenuView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(submenu, user)
 
+    def _select_unit(self):
+        """Вариант 2: Меню за избор на мерна единица"""
+        # Списък от кортежи: (номер_за_меню, име_за_екран, код_за_валидатор)
+        units = [
+            ("1", "Килограм (кг.)", "кг"),
+            ("2", "Брой (бр.)", "бр"),
+            ("3", "Литър (л.)", "л"),
+            ("4", "Пакет", "пакет")
+        ]
+
+        print("\nИзберете мерна единица:")
+        for num, display, _ in units:
+            print(f"{num}. {display}")
+
+        while True:
+            choice = input("Изберете номер (1-4) или 'отказ': ").strip()
+            if choice.lower() == 'отказ':
+                return 'отказ'
+
+            # Търсим дали въведеният номер съвпада с някой от списъка
+            for num, _, code in units:
+                if choice == num:
+                    return code
+
+            print("Невалиден избор. Моля, натиснете 1, 2, 3 или 4.")
+
     def create_product(self, user):
         print("\nНов продукт")
         print("(Напишете 'отказ' за прекратяване)")
@@ -118,41 +144,38 @@ class ProductMenuView:
         try:
             while True:
                 name = input("Име: ").strip()
-                if name.lower() == 'отказ':
-                    return
+                if name.lower() == 'отказ': return
                 try:
                     ProductValidator.validate_name(name)
                     break
                 except Exception as e:
                     print(f"Грешка: {e}")
 
+
             while True:
                 price_raw = input("Цена: ").strip()
-                if price_raw.lower() == 'отказ':
-                    return
+                if price_raw.lower() == 'отказ': return
                 try:
                     price = ProductValidator.parse_float(price_raw, "Цена")
                     break
                 except Exception as e:
                     print(f"Грешка: {e}")
 
-            while True:
-                unit_raw = input("Мерна единица (кг, бр, л, пакет): ").strip()
-                if unit_raw.lower() == 'отказ':
-                    return
-                try:
-                    unit = ProductValidator.validate_unit(unit_raw)
-                    break
-                except Exception as e:
-                    print(f"Грешка: {e}")
 
+            unit_code = self._select_unit()
+            if unit_code == 'отказ':
+                return
+
+            unit = ProductValidator.validate_unit(unit_code)
             category_id = self._select_category()
 
+            # Запис в базата
             product_data = {"name": name, "description": "", "price": price, "unit": unit,
                             "category_ids": [category_id] if category_id else []}
 
             new_p = self.product_controller.add(product_data, user.user_id)
-            print(f"\nПродуктът '{new_p.name}' е създаден.")
+            print(f"\nПродуктът '{new_p.name}' е създаден успешно!")
+
         except Exception as e:
             print(f"\nГрешка при създаване: {e}")
 

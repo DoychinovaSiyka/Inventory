@@ -1,3 +1,7 @@
+import uuid
+from datetime import datetime
+
+
 class Product:
     def __init__(self, product_id, name, categories, unit, description, price,
                  created=None, modified=None):

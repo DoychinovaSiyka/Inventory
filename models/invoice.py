@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from validators.invoice_validator import InvoiceValidator
 
 
 class Invoice:
@@ -51,11 +50,6 @@ class Invoice:
         else:
             self.modified = now_val
 
-
-        InvoiceValidator.validate_all(product=self.product, customer=self.customer,
-                                      quantity=self.quantity, unit=self.unit,
-                                      unit_price=self.unit_price, movement_id=self.movement_id,
-                                      date=self.date, total_price=self.total_price)
 
     def update_modified(self):
         self.modified = Invoice.now()
