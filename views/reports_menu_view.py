@@ -182,7 +182,6 @@ class ReportsView:
     def report_fifo_analysis(self, _):
         while True:
             name = input("\nВъведете име или ID на продукт (или 'отказ' за изход): ").strip()
-
             if not name or name.lower() == "отказ":
                 break
 

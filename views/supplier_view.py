@@ -57,7 +57,6 @@ class SupplierView:
 
         contact = input("Контакт (тел/имейл): ").strip() or "-"
         address = input("Адрес: ").strip() or "-"
-
         try:
             new_sup = self.controller.add(name=name, contact=contact, address=address)
             print(f"\nДоставчикът е добавен. ID: {new_sup.supplier_id[:8]}")

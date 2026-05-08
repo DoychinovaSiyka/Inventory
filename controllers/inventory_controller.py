@@ -16,7 +16,6 @@ class InventoryController:
     def _save(self):
         self.repo.save(self.data)
 
-
     def _get_full_product_id(self, input_id: str) -> str:
         product = self.product_controller.get_by_id(str(input_id))
         if product:
@@ -31,11 +30,8 @@ class InventoryController:
         if loc:
             return loc.location_id
 
-        # ако складът не съществува - НЕ връщаме произволен ID
         return None
 
-
-    # Основни справки
     def get_stock_by_location(self, product_id: str, location_id: str) -> float:
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
@@ -48,7 +44,6 @@ class InventoryController:
 
         locations = self.data["products"][pid].get("locations", {})
         return float(locations.get(lid, 0.0))
-
 
     def get_total_stock(self, product_id: str) -> float:
         pid = self._get_full_product_id(product_id)
@@ -63,7 +58,6 @@ class InventoryController:
             total += float(qty)
 
         return total
-
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._get_full_product_id(product_id)
@@ -105,8 +99,6 @@ class InventoryController:
         locations[lid] = current - qty_to_remove
         self._save()
         return True
-
-
 
     def rebuild_inventory_from_movements(self, movements: List):
         self.data = {"products": {}}
@@ -156,8 +148,6 @@ class InventoryController:
 
         self._save()
 
-
-
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         pid = self._get_full_product_id(product_id)
 
@@ -197,7 +187,6 @@ class InventoryController:
                         need = 0
 
         return round(total_cost, 2)
-
 
     def get_total_inventory_value_fifo(self, movement_controller) -> float:
         total_inventory_value = 0.0

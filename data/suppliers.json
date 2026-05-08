@@ -1,3 +1,42 @@
 [
-
+    {
+        "supplier_id": "cbff2971-7031-4f87-83bd-abf90ec8dea5",
+        "name": "„Балкан Логистик“ ООД",
+        "contact": "02/988-1234 | office@balkanlog.bg",
+        "address": "гр. София, Индустриална зона - Север",
+        "created": "2026-05-08 15:04:12",
+        "modified": "2026-05-08 15:04:12"
+    },
+    {
+        "supplier_id": "45c025d3-b989-4772-91ba-24bbc1fa63cd",
+        "name": "„Тракия Спедиция“",
+        "contact": "032/600-700 | info@trakiasped.com",
+        "address": "гр. Пловдив, бул. „България“ 122",
+        "created": "2026-05-08 15:04:48",
+        "modified": "2026-05-08 15:04:48"
+    },
+    {
+        "supplier_id": "967c7af5-b016-46b4-ae8c-0cd0aa4cf57b",
+        "name": "„Варна Порт Сървиз“",
+        "contact": "052/333-444 | varna_port@supply.bg",
+        "address": "гр. Варна, Пристанище Варна-Изток",
+        "created": "2026-05-08 15:05:30",
+        "modified": "2026-05-08 15:05:30"
+    },
+    {
+        "supplier_id": "1e5c150a-e235-41f7-b4bf-1856a5f9e1d6",
+        "name": "„Черноморски Пакетаж“",
+        "contact": "056/800-900 | burgas_pack@abv.bg",
+        "address": "гр. Бургас, Промишлена зона - Юг",
+        "created": "2026-05-08 15:05:59",
+        "modified": "2026-05-08 15:05:59"
+    },
+    {
+        "supplier_id": "7297852e-ce56-4aa9-9f8b-ef55cd2666ee",
+        "name": "„Родопска Еко Ферма“",
+        "contact": "0301/55-443 | rodopi_eco@gmail.com",
+        "address": "гр. Смолян, ул. „Родопска“ 5",
+        "created": "2026-05-08 15:07:25",
+        "modified": "2026-05-08 15:07:25"
+    }
 ]

@@ -3,10 +3,9 @@ from models.product import Product
 
 
 def calculate_average_price(products: List[Product]) -> float:
-    """Връща средната цена на продуктите. Ако списъкът е празен – 0."""
+    """Връща средната цена на продуктите."""
     if not products:
         return 0.0
-
     total = sum(p.price for p in products)
     return round(total / len(products), 2)
 

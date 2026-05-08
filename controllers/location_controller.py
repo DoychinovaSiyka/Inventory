@@ -7,10 +7,8 @@ class LocationController:
     """Контролерът управлява локациите в системата."""
     def __init__(self, repo, activity_log_controller=None, inventory_controller=None):
         self.repo = repo
-        self.activity_log = activity_log_controller
         self.inventory_controller = inventory_controller
 
-        # Зареждане на локациите
         raw = self.repo.load()
         if not raw or not isinstance(raw, list):
             raw = []
@@ -20,10 +18,6 @@ class LocationController:
             obj = Location.from_dict(l)
             if obj:
                 self.locations.append(obj)
-
-    def _log(self, action: str, message: str):
-        if self.activity_log:
-            self.activity_log.log_action("system", action, message)
 
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
@@ -35,9 +29,6 @@ class LocationController:
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity)
         self.locations.append(location)
         self.save_changes()
-
-        short_id = location.location_id[:8]
-        self._log("ADD_LOCATION", f"Добавена локация: {name} (ID: {short_id})")
 
         return location
 
@@ -77,7 +68,6 @@ class LocationController:
 
         location.update_modified()
         self.save_changes()
-        self._log("EDIT_LOCATION", f"Обновена локация {location.location_id[:8]}")
 
         return True
 
@@ -86,7 +76,6 @@ class LocationController:
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Проверка за наличности
         if self.inventory_controller:
             products_data = self.inventory_controller.data.get("products", {})
             for pid, pdata in products_data.items():
@@ -110,7 +99,6 @@ class LocationController:
         self.locations = new_list
         self.save_changes()
 
-        self._log("DELETE_LOCATION", f"Изтрита локация {full_id[:8]}")
         return True
 
     def save_changes(self) -> None:

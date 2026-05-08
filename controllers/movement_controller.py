@@ -15,7 +15,6 @@ class MovementController:
         self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
         self.inventory_controller = inventory_controller
-        self.activity_log_controller = activity_log_controller
 
         raw = self.repo.load() or []
         self.movements: List[Movement] = []
@@ -32,7 +31,6 @@ class MovementController:
         for m in self.movements:
             data.append(m.to_dict())
         self.repo.save(data)
-
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
         return self.add(product_id=product_id, user_id=user_id, location_id=location_id,
@@ -56,11 +54,9 @@ class MovementController:
                         movement_type="MOVE", quantity=quantity, price="0",
                         from_location_id=from_loc, to_location_id=to_loc)
 
-
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
             quantity: str, price: Optional[str], customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
-
 
         full_product = self.product_controller.get_by_id(product_id)
         if not full_product:
@@ -69,7 +65,6 @@ class MovementController:
         real_product_id = full_product.product_id
         historical_name = full_product.name
         historical_unit = full_product.unit
-
 
         full_user = self.user_controller.get_by_id(user_id)
         if not full_user:
@@ -89,7 +84,6 @@ class MovementController:
                 else:
                     final_supplier_id = str(supplier_id)
 
-
         if m_type_str == "MOVE":
             prc = 0.0
         else:
@@ -97,7 +91,6 @@ class MovementController:
                 prc = float(full_product.price)
             else:
                 prc = MovementValidator.parse_price(price)
-
 
         if m_type_str == "MOVE":
             loc_from_obj = self.location_controller.get_by_id(from_location_id)
@@ -108,7 +101,6 @@ class MovementController:
             if loc_to_obj:
                 to_location_id = loc_to_obj.location_id
 
-
             movement_location_id = None
 
         else:
@@ -117,6 +109,11 @@ class MovementController:
                 location_id = loc_obj.location_id
 
             movement_location_id = location_id
+
+        # 🔥 Уеднаквяване на името на клиента
+        if m_type_str == "OUT":
+            if not customer or str(customer).strip() == "":
+                customer = "Общ клиент"
 
         # Обновяване на инвентара
         if self.inventory_controller:
@@ -132,30 +129,27 @@ class MovementController:
                 self.inventory_controller.decrease_stock(real_product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(real_product_id, qty, to_location_id)
 
-        # Създаване на Movement обект
-        movement = Movement( movement_id=None, product_id=real_product_id, product_name=historical_name,
-                             user_id=user_id, location_id=movement_location_id,
-                             movement_type=MovementType[m_type_str], quantity=qty,
-                             unit=historical_unit, price=prc,
-                             supplier_id=final_supplier_id, customer=customer,
-                             from_location_id=from_location_id, to_location_id=to_location_id)
+        movement = Movement(
+            movement_id=None, product_id=real_product_id, product_name=historical_name,
+            user_id=user_id, location_id=movement_location_id,
+            movement_type=MovementType[m_type_str], quantity=qty,
+            unit=historical_unit, price=prc,
+            supplier_id=final_supplier_id, customer=customer,
+            from_location_id=from_location_id, to_location_id=to_location_id
+        )
 
         self.movements.append(movement)
         self.save_changes()
 
-
-        if self.activity_log_controller:
-            self.activity_log_controller.log_action(user_id=user_id, action=f"MOVEMENT_{m_type_str}",
-                                                    details=f"Продукт: {historical_name}, Кол: {qty}")
-
         # Фактура при OUT
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(movement=movement, product=full_product,
-                                                         customer=customer or "Неизвестен клиент",
-                                                         user_id=user_id)
+            self.invoice_controller.create_from_movement(
+                movement=movement, product=full_product,
+                customer=customer,
+                user_id=user_id
+            )
 
         return movement
-
 
     def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
                         product_id=None, location_id=None, user_id=None):

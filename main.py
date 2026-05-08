@@ -7,7 +7,6 @@ from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.report_controller import ReportController
-from controllers.user_activity_log_controller import UserActivityLogController
 from controllers.inventory_controller import InventoryController
 
 from views.admin_menu_view import AdminMenuView
@@ -35,23 +34,21 @@ class InventoryApplication:
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
-        self.activity_log_repo = JSONRepository("data/user_activity_log.json")
+
 
     def _init_controllers(self):
         """Свързване на контролерите в правилната йерархична последователност."""
 
-        self.activity_log_controller = UserActivityLogController(self.activity_log_repo)
-        self.user_controller = UserController(self.user_repo, self.activity_log_controller)
-        self.category_controller = CategoryController(self.category_repo, self.activity_log_controller)
+        self.user_controller = UserController(self.user_repo)
+        self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
 
         # Продукти
-        self.product_controller = ProductController(self.product_repo, self.category_controller,
-                                                    self.activity_log_controller)
+        self.product_controller = ProductController(self.product_repo, self.category_controller)
 
         # Фактури
-        self.invoice_controller = InvoiceController(self.invoice_repo, self.activity_log_controller)
+        self.invoice_controller = InvoiceController(self.invoice_repo)
 
         # Инвентар
         self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
@@ -60,7 +57,7 @@ class InventoryApplication:
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
                                                       self.user_controller, self.location_controller,
                                                       self.supplier_controller, self.invoice_controller,
-                                                      self.inventory_controller, self.activity_log_controller)
+                                                      self.inventory_controller)
 
         # Отчети и справки
         self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller, self.invoice_controller,
@@ -75,7 +72,6 @@ class InventoryApplication:
                             "category": self.category_controller, "supplier": self.supplier_controller,
                             "location": self.location_controller, "movement": self.movement_controller,
                             "invoice": self.invoice_controller, "report": self.report_controller,
-                            "activity_log": self.activity_log_controller, "logistic": self.logistic_service,
                             "inventory": self.inventory_controller}
 
         self.admin_menu = AdminMenuView(self.controllers)

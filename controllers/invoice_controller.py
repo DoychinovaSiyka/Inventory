@@ -9,7 +9,6 @@ class InvoiceController:
     """ Контролерът управлява жизнения цикъл на фактурите. """
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
-        self.activity_log = activity_log_controller
         self.invoices: List[Invoice] = []
         self._reload()
 
@@ -30,11 +29,6 @@ class InvoiceController:
             data.append(inv.to_dict())
         self.repo.save(data)
 
-    def _log(self, user_id: str, action: str, message: str):
-        """ Помощен метод за записване на активност. """
-        if self.activity_log:
-            self.activity_log.log_action(user_id, action, message)
-
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
         """ Ръчно генерирана фактура. """
         InvoiceValidator.validate_all(**invoice_data)
@@ -42,9 +36,6 @@ class InvoiceController:
         invoice = Invoice(**invoice_data)
         self.invoices.append(invoice)
         self._save_changes()
-
-        self._log(user_id, "GENERATE_INVOICE",
-                  f"Ръчно генерирана фактура #{invoice.invoice_id[:8]}")
 
         return invoice
 
@@ -57,19 +48,24 @@ class InvoiceController:
 
 
         if not customer or str(customer).strip() == "":
-            customer = "Неизвестен клиент"
+            customer = "Общ клиент"
 
-        invoice = Invoice( product=movement.product_name, quantity=qty, unit=movement.unit,
-                           unit_price=unit_price, total_price=total_price, customer=customer,
-                           movement_id=movement.movement_id,
-                           date=movement.date, created=movement.date, modified=movement.date,
-                           invoice_id=None)
+        invoice = Invoice(
+            product=movement.product_name,
+            quantity=qty,
+            unit=movement.unit,
+            unit_price=unit_price,
+            total_price=total_price,
+            customer=customer,
+            movement_id=movement.movement_id,
+            date=movement.date,
+            created=movement.date,
+            modified=movement.date,
+            invoice_id=None
+        )
 
         self.invoices.append(invoice)
         self._save_changes()
-
-        self._log(user_id, "GENERATE_INVOICE",
-                  f"Автоматична фактура от продажба на {movement.product_name}")
 
         return invoice
 
@@ -102,10 +98,6 @@ class InvoiceController:
 
         self.invoices = new_list
         self._save_changes()
-
-        self._log(user_id, "DELETE_INVOICE",
-                  f"Изтрита фактура #{inv.invoice_id[:8]}")
-
         return True
 
     def search_by_customer(self, keyword: str) -> List[Invoice]:

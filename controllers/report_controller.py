@@ -21,8 +21,6 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
-
-
     def _map_invoices_to_data(self, invoices):
         mapped = []
 
@@ -33,8 +31,6 @@ class ReportController:
 
         return mapped
 
-
-    # Продажби
     def report_sales(self):
         invoices = self.invoice_controller.get_all()
 
@@ -103,15 +99,12 @@ class ReportController:
 
         return result
 
-
-    # Движения
     def report_movements(self):
         data = []
 
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
 
-            # FROM / TO локации
             if mtype == "IN":
                 f_loc = "Доставчик"
 
@@ -165,8 +158,6 @@ class ReportController:
         summary = {"total": len(data)}
         return ReportResult(summary, data)
 
-
-    # Доставки
     def report_deliveries_all(self, keyword=None):
         data = []
 
@@ -206,8 +197,6 @@ class ReportController:
         summary = {"total": len(data)}
         return ReportResult(summary, data)
 
-
-    # Обобщена наличност
     def report_inventory_summary(self):
         data = []
 
@@ -236,8 +225,6 @@ class ReportController:
         summary = {"total": len(data)}
         return ReportResult(summary, data)
 
-
-    # Финансов живот на продукт
     def product_lifecycle(self, name_or_id):
         product = self.product_controller.get_by_id(name_or_id)
 

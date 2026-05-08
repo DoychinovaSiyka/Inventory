@@ -17,15 +17,14 @@ class AdminMenuView:
         self.movement_controller = controllers["movement"]
 
         self.product_view = ProductMenuView(controllers["product"], controllers["category"],
-                                            controllers["inventory"], controllers["movement"],
-                                            controllers["activity_log"])
+                                            controllers["inventory"], controllers["movement"])
         self.category_view = CategoryView(controllers["category"])
         self.movement_view = MovementView(controllers["product"], controllers["movement"],
                                           controllers["user"], controllers["location"], controllers["supplier"])
 
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
-        self.invoice_view = InvoiceView(controllers["invoice"], controllers["activity_log"])
+        self.invoice_view = InvoiceView(controllers["invoice"])
         self.supplier_view = SupplierView(controllers["supplier"])
         self.system_info_view = SystemInfoView()
         self.location_view = LocationView(controllers["location"])

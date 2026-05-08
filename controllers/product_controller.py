@@ -7,7 +7,6 @@ class ProductController:
     def __init__(self, repo, category_controller, activity_log_controller=None):
         self.repo = repo
         self.category_controller = category_controller
-        self.activity_log_controller = activity_log_controller
         self.products: List[Product] = []
         self._reload()
 
@@ -22,10 +21,6 @@ class ProductController:
         for p in self.products:
             data.append(p.to_dict())
         self.repo.save(data)
-
-    def _log(self, user_id, action, message):
-        if self.activity_log_controller and user_id:
-            self.activity_log_controller.log_action(user_id, action, message)
 
     def add(self, product_data: dict, user_id: str) -> Product:
         name = ProductValidator.validate_name(product_data['name'])
@@ -49,7 +44,6 @@ class ProductController:
         self.products.append(product)
         self.save_changes()
 
-        self._log(user_id, "CREATE_PRODUCT", f"Продукт: {product.name} (ID: {product.product_id[:8]})")
         return product
 
     def get_by_id(self, product_id) -> Optional[Product]:
@@ -78,7 +72,6 @@ class ProductController:
         self.products = new_list
         self.save_changes()
 
-        self._log(user_id, "DELETE_PRODUCT", f"Продукт: {name_tmp} (ID: {full_id[:8]})")
         return True
 
     def update_product(self, product_id, new_name=None, new_description=None,
@@ -96,11 +89,13 @@ class ProductController:
             changes.append(f"име: {product.name} -> {new_name}")
             product.name = new_name
             product.update_modified()
+
         if new_description is not None:
             desc = ProductValidator.validate_description(new_description)
             product.description = desc
             product.update_modified()
             changes.append("описание: променено")
+
         if new_price is not None:
             price = ProductValidator.parse_float(new_price, "Цена")
             old_p = product.price
@@ -110,7 +105,6 @@ class ProductController:
 
         if changes:
             self.save_changes()
-            self._log(user_id, "UPDATE_PRODUCT", f"Редакция {product.product_id[:8]}: " + ", ".join(changes))
 
         return True
 

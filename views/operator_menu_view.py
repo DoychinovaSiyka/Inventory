@@ -19,7 +19,6 @@ class OperatorMenuView:
         self.invoice_controller = controllers["invoice"]
         self.report_controller = controllers["report"]
         self.user_controller = controllers["user"]
-        self.activity_log = controllers["activity_log"]
         self.supplier_controller = controllers["supplier"]
         self.inventory_controller = controllers["inventory"]
 
@@ -49,8 +48,7 @@ class OperatorMenuView:
 
     def open_products(self, user):
         view = ProductMenuView(self.product_controller, self.category_controller,
-                               self.inventory_controller, self.movement_controller,
-                               self.activity_log)
+                               self.inventory_controller, self.movement_controller)
         view.show_menu(user)
 
     @require_password("parola123")
@@ -70,7 +68,7 @@ class OperatorMenuView:
 
     @require_password("parola123")
     def open_invoices(self, user):
-        view = InvoiceView(self.invoice_controller, self.activity_log)
+        view = InvoiceView(self.invoice_controller)
         view.show_menu(user)
 
     @require_password("parola123")
