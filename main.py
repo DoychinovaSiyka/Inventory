@@ -37,8 +37,6 @@ class InventoryApplication:
 
 
     def _init_controllers(self):
-        """Свързване на контролерите в правилната йерархична последователност."""
-
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -79,7 +77,6 @@ class InventoryApplication:
         self.anonymous_menu = AnonymousMenuView(self.controllers)
 
     def _login_flow(self):
-        """Процес по автентикация на потребител."""
         while True:
             print("\nВход в системата")
             username = input("Потребителско име (Enter за връщане): ").strip()
@@ -104,12 +101,10 @@ class InventoryApplication:
                 print("Опитайте отново.\n")
 
     def _anonymous_flow(self):
-        """Достъп за разглеждане без регистрация."""
         guest = self.user_controller.create_anonymous_user()
         self.anonymous_menu.show_menu(guest)
 
     def run(self):
-        """Главен цикъл на приложението."""
         while True:
             print("\nСкладова система")
             print("1. Вход")
