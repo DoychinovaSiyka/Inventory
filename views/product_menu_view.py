@@ -111,8 +111,18 @@ class ProductMenuView:
         if not cat_id:
             return
 
-        results = self.product_controller.filter_by_category(cat_id)
-        self._print_products(results, "Продукти в категорията")
+        # всички под-категории
+        all_ids = [cat_id] + self.category_controller.get_all_hierarchical_ids(cat_id)
+
+        results = []
+        for cid in all_ids:
+            results.extend(self.product_controller.filter_by_category(cid))
+
+        # Премахваме дубликати, ако продукт е в повече от една под-категория
+        unique_results = list({p.product_id: p for p in results}.values())
+        self._print_products(unique_results, "Продукти в категорията и нейните под-нива")
+
+
 
     def low_stock(self, _):
         raw = input("\nМинимална граница (Enter за 5.0): ").strip()

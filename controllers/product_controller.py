@@ -10,7 +10,7 @@ class ProductController:
     def __init__(self, repo, category_controller, inventory_controller):
         self.repo = repo
         self.category_controller = category_controller
-        self.inventory_controller = inventory_controller  # Нужен за ViewModel метода
+        self.inventory_controller = inventory_controller
         self.products: List[Product] = []
         self._reload()
 
@@ -42,6 +42,9 @@ class ProductController:
         pid = str(product_id or "").strip()
         return next((p for p in self.products if p.product_id.startswith(pid)), None)
 
+    def get_all(self) -> List[Product]:
+        return self.products
+
     def search(self, keyword: str) -> List[Product]:
         return product_filters.filter_combined(self.products, keyword=keyword)
 
@@ -56,6 +59,7 @@ class ProductController:
         return True
 
     def get_formatted_grouped_by_category(self) -> dict:
+        """Логика за групиране и форматиране (бившият ViewModel)."""
         grouped_data = product_analytics.group_products_by_category(self.products)
         result = {}
         for cat_name, products_list in grouped_data.items():
@@ -67,9 +71,37 @@ class ProductController:
             } for p in products_list]
         return result
 
-    # Сортировките ползват външните сортери
+
     def get_sorted_by_name(self):
         return product_sorters.sort_by_name_logic(self.products[:])
 
     def get_sorted_by_price(self, reverse=True):
         return product_sorters.sort_by_price_desc_logic(self.products[:])
+
+    def get_sorted_by_quantity(self, inventory_controller, algorithm="bubble", reverse=True):
+        """Сортиране по наличност чрез подаден алгоритъм (Bubble или Selection)."""
+        key_fn = lambda p: inventory_controller.get_total_stock(p.product_id)
+
+        products_copy = self.products[:]
+        if algorithm == "bubble":
+            return product_sorters.bubble_sort_logic(products_copy, key=key_fn, reverse=reverse)
+        return product_sorters.selection_sort_logic(products_copy, key=key_fn, reverse=reverse)
+
+    def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True):
+        """Сортиране по избран критерий (име, цена, количество)."""
+        if sort_type == "name":
+            key_fn = lambda p: p.name.lower()
+        elif sort_type == "price":
+            key_fn = lambda p: p.price
+        elif sort_type == "quantity":
+            key_fn = lambda p: self.inventory_controller.get_total_stock(p.product_id)
+        else:
+            key_fn = lambda p: p.name.lower()
+
+        products_copy = self.products[:]
+
+
+        if algorithm == "bubble":
+            return product_sorters.bubble_sort_logic(products_copy, key=key_fn, reverse=reverse)
+        else:
+            return product_sorters.selection_sort_logic(products_copy, key=key_fn, reverse=reverse)
