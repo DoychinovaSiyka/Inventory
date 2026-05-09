@@ -36,7 +36,6 @@ class InventoryApplication:
         self.inventory_repo = JSONRepository("data/inventory.json")
 
     def _init_controllers(self):
-        # Базови контролери
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
