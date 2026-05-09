@@ -7,7 +7,7 @@ class UserView:
         self.controller = controller
 
     def show_menu(self, user):
-        if not user or not hasattr(user, 'role') or user.role != "Admin":
+        if not user or user.role != "Admin":
             print("\nСамо администратор може да управлява потребители.")
             return
 
@@ -25,8 +25,8 @@ class UserView:
             MenuItem("4", "Деактивиране", self.deactivate_user),
             MenuItem("5", "Активиране", self.activate_user),
             MenuItem("6", "Изтриване от системата", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break")])
-
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     def show_users(self, _):
         users = self.controller.get_all()
@@ -45,11 +45,10 @@ class UserView:
 
     def add_user(self, _):
         print("\nНов потребител")
-        print("(Напишете 'отказ' за изход)")
 
         while True:
             username = input("Потребителско име (мин. 3 символа): ").strip()
-            if username.lower() == 'отказ':
+            if not username:
                 return
             if len(username) < 3:
                 print("Името е твърде кратко.")
@@ -61,7 +60,7 @@ class UserView:
 
         while True:
             email = input("Имейл: ").strip()
-            if email.lower() == 'отказ':
+            if not email:
                 return
             if "@" not in email or "." not in email:
                 print("Невалиден имейл.")
@@ -70,7 +69,7 @@ class UserView:
 
         while True:
             password = input_password("Парола (мин. 6 символа): ").strip()
-            if password.lower() == 'отказ':
+            if not password:
                 return
             if len(password) < 6:
                 print("Паролата е твърде кратка.")
@@ -79,8 +78,6 @@ class UserView:
 
         while True:
             role_raw = input("Роля (Admin/Operator) [Operator]: ").strip().capitalize()
-            if role_raw == 'Отказ':
-                return
             if not role_raw:
                 role = "Operator"
                 break
@@ -101,8 +98,8 @@ class UserView:
     def change_role(self, _):
         print("\nПромяна на роля")
         while True:
-            target = input("Username или ID (или 'отказ'): ").strip()
-            if not target or target.lower() == 'отказ':
+            target = input("Username или ID: ").strip()
+            if not target:
                 return
 
             user_obj = self.controller.get_by_id(target) or self.controller.get_by_username(target)
@@ -112,7 +109,7 @@ class UserView:
 
         while True:
             new_role = input(f"Нова роля за {user_obj.username} (Admin/Operator): ").strip().capitalize()
-            if new_role.lower() == 'отказ':
+            if not new_role:
                 return
             if new_role in ["Admin", "Operator"]:
                 break
@@ -126,8 +123,8 @@ class UserView:
 
     def deactivate_user(self, current_user):
         print("\nДеактивиране на потребител")
-        target = input("Username или ID (или 'отказ'): ").strip()
-        if not target or target.lower() == 'отказ':
+        target = input("Username или ID: ").strip()
+        if not target:
             return
 
         try:
@@ -138,8 +135,8 @@ class UserView:
 
     def activate_user(self, current_user):
         print("\nАктивиране на потребител")
-        target = input("Username или ID (или 'отказ'): ").strip()
-        if not target or target.lower() == 'отказ':
+        target = input("Username или ID: ").strip()
+        if not target:
             return
 
         try:
@@ -151,8 +148,8 @@ class UserView:
     def delete_user(self, current_user):
         print("\nИзтриване на потребител")
 
-        target = input("Username или ID (или 'отказ'): ").strip()
-        if not target or target.lower() == 'отказ':
+        target = input("Username или ID: ").strip()
+        if not target:
             return
 
         confirm = input(f"Искате ли да изтрием '{target}'? (y/n): ").strip().lower()

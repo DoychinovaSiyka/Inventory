@@ -1,5 +1,6 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
+from models.movement_type import MovementType
 
 
 class MovementView:
@@ -13,16 +14,13 @@ class MovementView:
         self.supplier_controller = supplier_controller
         self.inventory_controller = inventory_controller
 
-
-
     def _ask_float(self, prompt, allow_empty=False, default=None):
         while True:
             val = input(prompt).strip()
-            if val.lower() == "отказ":
-                return "cancel"
-
             if not val and allow_empty:
                 return default
+            if not val:
+                return None
 
             try:
                 num = float(val)
@@ -45,15 +43,13 @@ class MovementView:
                     item_id = item.product_id
                 elif label == "доставчик":
                     item_id = item.supplier_id
-                elif label in ["склад", "склад за съхранение", "склад ИЗТОЧНИК", "склад ПОЛУЧАТЕЛ"]:
-                    item_id = item.location_id
                 else:
-                    item_id = "ID"
+                    item_id = item.location_id
 
                 print(f"{i}. {item.name} (ID: {str(item_id)[:8]})")
 
-            choice = input("\nНомер или ID (Enter за отказ): ").strip()
-            if not choice or choice.lower() == "отказ":
+            choice = input("\nНомер или ID (Enter за връщане): ").strip()
+            if not choice:
                 return None
 
             if choice.isdigit():
@@ -68,16 +64,13 @@ class MovementView:
                     item_id = str(item.product_id)
                 elif label == "доставчик":
                     item_id = str(item.supplier_id)
-                elif label in ["склад", "склад за съхранение", "склад ИЗТОЧНИК", "склад ПОЛУЧАТЕЛ"]:
-                    item_id = str(item.location_id)
                 else:
-                    item_id = ""
+                    item_id = str(item.location_id)
 
                 if item_id.startswith(choice):
                     return item
 
             print("Невалиден избор. Опитайте пак.")
-
 
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
@@ -89,11 +82,10 @@ class MovementView:
 
         while True:
             choice = menu.show()
-            if choice == "0" or choice is None:
+            if choice in ("0", None):
                 break
             if menu.execute(choice, user) == "break":
                 break
-
 
     def process_delivery(self, user):
         print("\nНова доставка")
@@ -110,7 +102,7 @@ class MovementView:
             return
 
         qty = self._ask_float(f"Количество ({product.unit}): ")
-        if qty == "cancel":
+        if qty is None:
             return
 
         price = self._ask_float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True, default=product.price)
@@ -123,7 +115,6 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при запис: {e}")
 
-    # ПРОДАЖБА (OUT)
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
@@ -144,7 +135,7 @@ class MovementView:
         for i, (_, text) in enumerate(valid, 1):
             print(f"{i}. {text}")
 
-        choice = input("\nНомер (Enter за отказ): ").strip()
+        choice = input("\nНомер (Enter за връщане): ").strip()
         if not choice.isdigit():
             return None
 
@@ -166,9 +157,10 @@ class MovementView:
             return
 
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
+
         max_stock = self.inventory_controller.get_stock(product.product_id, location.location_id)
         qty = self._ask_float(f"Количество (макс {max_stock}): ")
-        if qty == "cancel":
+        if qty is None:
             return
         if qty > max_stock:
             print(f"Няма толкова наличност ({max_stock}).")
@@ -184,8 +176,6 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
 
-
-
     def process_transfer(self, user):
         print("\nВътрешно преместване")
         product = self._select_item(self.product_controller.get_all(), "продукт")
@@ -195,15 +185,17 @@ class MovementView:
         from_loc = self._select_item(self.location_controller.get_all(), "склад ИЗТОЧНИК")
         if not from_loc:
             return
+
         to_loc = self._select_item(self.location_controller.get_all(), "склад ПОЛУЧАТЕЛ")
         if not to_loc:
             return
+
         if from_loc.location_id == to_loc.location_id:
             print("Двата склада съвпадат.")
             return
 
         qty = self._ask_float(f"Количество ({product.unit}): ")
-        if qty == "cancel":
+        if qty is None:
             return
 
         try:
@@ -213,7 +205,6 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при преместването: {e}")
 
-    # ХРОНОЛОГИЯ
     def _format_movement_row(self, m):
         prod = self.product_controller.get_by_id(m.product_id)
         p_name = prod.name[:15] if prod else "---"

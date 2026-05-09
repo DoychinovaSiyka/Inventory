@@ -8,10 +8,7 @@ class LocationView:
 
     def show_menu(self, user):
         while True:
-            is_admin = False
-            if user and hasattr(user, 'role'):
-                if user.role == "Admin":
-                    is_admin = True
+            is_admin = (user and user.role == "Admin")
 
             menu = self._build_menu(is_admin)
             choice = menu.show()
@@ -47,13 +44,11 @@ class LocationView:
 
     def add_location(self, _):
         print("\nНова локация")
-        print("(Напишете 'отказ' за изход)")
+
         while True:
             name = input("Име: ").strip()
-            if name.lower() == 'отказ':
-                return
             if not name:
-                print("Името е празно.")
+                print("Името е задължително.")
                 continue
             break
 
@@ -61,8 +56,6 @@ class LocationView:
 
         while True:
             capacity_raw = input("Капацитет: ").strip()
-            if capacity_raw.lower() == 'отказ':
-                return
             if not capacity_raw:
                 print("Въведете капацитет.")
                 continue
@@ -85,11 +78,10 @@ class LocationView:
 
     def edit_location(self, _):
         print("\nРедактиране на локация")
-
         location = None
         while True:
-            loc_id = input("ID или част от него ('отказ' за изход): ").strip()
-            if loc_id.lower() == 'отказ' or not loc_id:
+            loc_id = input("ID или част от него: ").strip()
+            if not loc_id:
                 return
 
             location = self.location_controller.get_by_id(loc_id)
@@ -106,8 +98,6 @@ class LocationView:
             if not new_cap_raw:
                 new_cap = location.capacity
                 break
-            if new_cap_raw.lower() == 'отказ':
-                return
 
             try:
                 if float(new_cap_raw) < 0:
@@ -130,8 +120,8 @@ class LocationView:
 
         location = None
         while True:
-            loc_id = input("ID на локация ('отказ' за изход): ").strip()
-            if loc_id.lower() == 'отказ' or not loc_id:
+            loc_id = input("ID на локация: ").strip()
+            if not loc_id:
                 return
 
             location = self.location_controller.get_by_id(loc_id)

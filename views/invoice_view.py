@@ -9,10 +9,10 @@ class InvoiceView:
 
     def _input(self, prompt):
         value = input(prompt).strip()
-        return value if value != "" else None
+        return value or None
 
     def _show_invoices(self, invoices):
-        """показване на фактури в таблица."""
+        """Показване на фактури в таблица."""
         if not invoices:
             print("\nНяма намерени фактури.\n")
             return
@@ -38,7 +38,8 @@ class InvoiceView:
 
         while True:
             choice = menu.show()
-            if choice == "0" or choice is None: break
+            if choice in ("0", None):
+                break
             menu.execute(choice, user)
 
     def show_all(self, _):
@@ -47,7 +48,8 @@ class InvoiceView:
     def view_by_id(self, _):
         print("\nПРЕГЛЕД НА ФАКТУРА")
         invoice_id = self._input("Въведете ID (или част от него): ")
-        if not invoice_id: return
+        if not invoice_id:
+            return
 
         invoice = self.invoice_controller.get_by_id(invoice_id)
         if not invoice:
@@ -60,6 +62,7 @@ class InvoiceView:
                 ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
                 ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
                 ["Клиент", invoice.customer], ["Дата/Час", invoice.date]]
+
         print("\n" + format_table(["Детайл", "Стойност"], rows))
         input("\nНатиснете Enter за продължение...")
 
@@ -80,7 +83,6 @@ class InvoiceView:
                 self._show_invoices(self.invoice_controller.search_by_date(date_str))
             except Exception as e:
                 print(f"Грешка: {e}")
-
 
     def advanced_search(self, _):
         print("\nРАЗШИРЕНО ТЪРСЕНЕ (Enter за пропускане)")

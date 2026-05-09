@@ -12,9 +12,7 @@ class ProductMenuView:
         self.activity_log = activity_log_controller
 
     def _stock(self, product):
-        # Връща общата наличност на продукта
         return self.inventory_controller.get_total_stock(product.product_id)
-
 
     def _print_products(self, products, title=""):
         if not products:
@@ -24,7 +22,12 @@ class ProductMenuView:
         rows = []
         for p in products:
             qty = self._stock(p)
-            rows.append([str(p.product_id)[:8], p.name[:30], f"{qty:.2f} {p.unit}", f"{p.price:.2f} лв."])
+            rows.append([
+                str(p.product_id)[:8],
+                p.name[:30],
+                f"{qty:.2f} {p.unit}",
+                f"{p.price:.2f} лв."
+            ])
 
         if title:
             print(f"\n{title}")
@@ -32,46 +35,65 @@ class ProductMenuView:
         print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
         input("\nEnter за продължение...")
 
+
     def _select_category(self):
-        categories = self.category_controller.get_all()
-        if not categories:
+        main_categories = [c for c in self.category_controller.get_all() if not c.parent_id]
+        if not main_categories:
+            print("Няма дефинирани категории.")
             return None
 
-        print("\nКатегории:")
-        for i, c in enumerate(categories, start=1):
+        print("\nИзбор на главна категория")
+        for i, c in enumerate(main_categories, start=1):
             print(f"{i}. {c.name}")
 
-        choice = input("\nНомер или Enter за отказ: ").strip()
-        if not choice:
+        choice = input("\nИзберете номер (Enter за връщане): ").strip()
+        if not choice.isdigit():
             return None
 
-        if choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(categories):
-                return categories[idx].category_id
+        idx = int(choice) - 1
+        if not (0 <= idx < len(main_categories)):
+            print("Невалиден номер.")
+            return None
 
-        for c in categories:
-            if choice.lower() in c.name.lower():
-                return c.category_id
+        selected_main = main_categories[idx]
 
-        print("Невалиден избор.")
-        return None
+        sub_categories = [c for c in self.category_controller.get_all() if c.parent_id == selected_main.category_id]
+        if not sub_categories:
+            return selected_main.category_id
+
+        print(f"\nПод-категории за '{selected_main.name}':")
+        print("0. Избор на главната категория")
+        for i, sc in enumerate(sub_categories, start=1):
+            print(f"{i}. {sc.name}")
+
+        sub_choice = input("\nИзберете под-категория (Enter за главната): ").strip()
+
+        if not sub_choice or sub_choice == "0":
+            return selected_main.category_id
+
+        if sub_choice.isdigit():
+            s_idx = int(sub_choice) - 1
+            if 0 <= s_idx < len(sub_categories):
+                return sub_categories[s_idx].category_id
+
+        print("Невалиден избор. Избрана е главната категория.")
+        return selected_main.category_id
+
 
 
     def create_product(self, user):
-        print("\nНов продукт (напишете 'отказ' за изход)")
+        print("\nНов продукт")
         name = input("Име: ").strip()
-        if name.lower() == "отказ":
+        if not name:
             return
 
         price_raw = input("Цена: ").strip()
-        if price_raw.lower() == "отказ":
+        if not price_raw:
             return
 
         desc = input("Описание: ").strip()
         unit = input("Мерна единица [бр.]: ").strip() or "бр."
         cat_id = self._select_category()
-
         data = {"name": name, "price": price_raw, "description": desc,
                 "unit": unit, "category_ids": [cat_id] if cat_id else []}
 
@@ -82,8 +104,8 @@ class ProductMenuView:
             print(f"\nГрешка: {e}")
 
     def remove_product(self, user):
-        pid = input("\nID на продукт за изтриване (или 'отказ'): ").strip()
-        if pid.lower() == "отказ":
+        pid = input("\nID на продукт за изтриване: ").strip()
+        if not pid:
             return
 
         product = self.product_controller.get_by_id(pid)
@@ -110,18 +132,14 @@ class ProductMenuView:
         if not cat_id:
             return
 
-        # всички под-категории
         all_ids = [cat_id] + self.category_controller.get_all_hierarchical_ids(cat_id)
 
         results = []
         for cid in all_ids:
             results.extend(self.product_controller.filter_by_category(cid))
 
-        # Премахваме дубликати, ако продукт е в повече от една под-категория
         unique_results = list({p.product_id: p for p in results}.values())
-        self._print_products(unique_results, "Продукти в категорията и нейните под-нива")
-
-
+        self._print_products(unique_results, "Продукти в категорията и под-нивата")
 
     def low_stock(self, _):
         raw = input("\nМинимална граница (Enter за 5.0): ").strip()
@@ -137,6 +155,7 @@ class ProductMenuView:
         print("3. По наличност")
 
         choice = input("\nИзбор: ").strip()
+
         if choice == "1":
             sorted_list = self.product_controller.get_sorted_by_name()
             self._print_products(sorted_list, "Сортиране по име")
@@ -159,7 +178,6 @@ class ProductMenuView:
             MenuItem("6", "Критични наличности", self.low_stock),
             MenuItem("7", "Сортиране", self.sort_products),
             MenuItem("0", "Назад", lambda u: "break")])
-
 
         while True:
             choice = menu.show()

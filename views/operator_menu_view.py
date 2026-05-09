@@ -37,7 +37,7 @@ class OperatorMenuView:
 
     def show_menu(self, user):
         if user is None or not user.role:
-            print("\nГрешка: неуспешно разпознаване на потребител.")
+            print("\nНеуспешно разпознаване на потребител.")
             return
 
         if user.role.lower() == "guest":

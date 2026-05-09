@@ -9,15 +9,13 @@ class SupplierView:
     def show_menu(self, user):
         while True:
             is_admin = False
-            if user and hasattr(user, 'role'):
-                if user.role == "Admin":
-                    is_admin = True
+            if user and user.role == "Admin":
+                is_admin = True
 
             menu = self._build_menu(is_admin)
             choice = menu.show()
             if menu.execute(choice, user) == "break":
                 break
-
 
     def _build_menu(self, is_admin):
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
@@ -48,21 +46,16 @@ class SupplierView:
 
     def add_supplier(self, _):
         print("\nНов доставчик")
-        print("(Напишете 'отказ' за изход)")
 
         while True:
             name = input("Име: ").strip()
-            if name.lower() == "отказ":
-                return
             if not name:
-                print("Името е празно.")
+                print("Името е задължително.")
                 continue
             break
 
         while True:
             contact = input("Контакт: ").strip()
-            if contact.lower() == "отказ":
-                return
             if not contact:
                 print("Контактът е задължителен.")
                 continue
@@ -70,10 +63,8 @@ class SupplierView:
 
         while True:
             address = input("Адрес: ").strip()
-            if address.lower() == "отказ":
-                return
             if not address:
-                print("Адресът е празен.")
+                print("Адресът е задължителен.")
                 continue
             break
 
@@ -87,8 +78,8 @@ class SupplierView:
         print("\nРедактиране на доставчик")
 
         while True:
-            supplier_id_input = input("ID (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+            supplier_id_input = input("ID: ").strip()
+            if not supplier_id_input:
                 return
 
             supplier = self.controller.get_by_id(supplier_id_input)
@@ -111,10 +102,9 @@ class SupplierView:
 
     def delete_supplier(self, _):
         print("\nИзтриване на доставчик")
-
         while True:
-            supplier_id_input = input("ID (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+            supplier_id_input = input("ID: ").strip()
+            if not supplier_id_input:
                 return
 
             supplier = self.controller.get_by_id(supplier_id_input)

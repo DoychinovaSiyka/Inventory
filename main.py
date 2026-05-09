@@ -36,34 +36,36 @@ class InventoryApplication:
         self.inventory_repo = JSONRepository("data/inventory.json")
 
     def _init_controllers(self):
+        # създаваме тези, които не зависят от нищо друго
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
-
-        # Контролер за продукти - зависи от категории
-        self.product_controller = ProductController(self.product_repo, self.category_controller)
-
-        # Контролер за фактури
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # Контролер за инвентар - наличности
-        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
 
-        # Контролер за движения
+        #  създаваме първо Инвентара, защото той е нужен на Продукта
+        self.inventory_controller = InventoryController(self.inventory_repo, None, self.location_controller)
+
+
+        self.product_controller = ProductController(self.product_repo, self.category_controller, self.inventory_controller)
+
+        # инжектираме product_controller обратно в инвентара
+        self.inventory_controller.product_controller = self.product_controller
+
+
         self.movement_controller = MovementController(self.movement_repo, self.product_controller,
                                                       self.user_controller, self.location_controller,
                                                       self.supplier_controller, self.invoice_controller,
                                                       self.inventory_controller)
 
-        # Контролер за отчети и справки
         self.report_controller = ReportController(self.report_repo, self.product_controller,
                                                   self.movement_controller, self.invoice_controller,
                                                   self.location_controller, self.inventory_controller,
                                                   self.supplier_controller)
 
-        # Логистичен модул (Dijkstra/Графи)
         self.graph_view = GraphView(self.inventory_controller, self.location_controller)
+
 
     def _init_menus(self):
         """Инициализация на всички изгледи и менюта."""

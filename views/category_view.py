@@ -5,21 +5,18 @@ class CategoryView:
     def __init__(self, controller):
         self.controller = controller
 
+
     def _ask_required_string(self, prompt, min_len=2):
         while True:
             value = input(prompt).strip()
-            if value.lower() == "отказ":
-                return "cancel"
-
             if not value:
                 print("Полето е празно.")
                 continue
-
             if len(value) < min_len:
                 print(f"Трябват поне {min_len} символа.")
                 continue
-
             return value
+
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -28,9 +25,9 @@ class CategoryView:
                 break
             menu_obj.execute(choice, user)
 
-    def show_menu(self, user):
-        is_admin = user and getattr(user, "role", "") == "Admin"
 
+    def show_menu(self, user):
+        is_admin = (user is not None and user.role == "Admin")
         items = [MenuItem("1", "Списък с категории", self.show_all)]
 
         if is_admin:
@@ -50,7 +47,6 @@ class CategoryView:
             return
 
         print("\nКатегории:")
-
         def print_tree(parent_id=None, level=0):
             children = [c for c in categories if c.parent_id == parent_id]
             children.sort(key=lambda x: x.name.lower())
@@ -66,15 +62,9 @@ class CategoryView:
 
     def add_category(self, user):
         print("\nНова категория")
-        print("(Напишете 'отказ' за изход)")
 
         name = self._ask_required_string("Име: ", 2)
-        if name == "cancel":
-            return
-
         description = self._ask_required_string("Описание: ", 3)
-        if description == "cancel":
-            return
 
         print("\nИзберете родителска категория (Enter за главна):")
         parent = self.select_category()
@@ -93,12 +83,9 @@ class CategoryView:
             return
 
         print(f"\nРедакция на: {category.name}")
-        print("(Enter запазва старата стойност, 'отказ' за изход)")
-
+        print("(Enter запазва старата стойност)")
         while True:
             new_name = input(f"Ново име [{category.name}]: ").strip()
-            if new_name.lower() == "отказ":
-                return
             if not new_name:
                 new_name = category.name
                 break
@@ -109,8 +96,6 @@ class CategoryView:
 
         while True:
             new_desc = input(f"Ново описание [{category.description}]: ").strip()
-            if new_desc.lower() == "отказ":
-                return
             if not new_desc:
                 new_desc = category.description
                 break
@@ -143,8 +128,8 @@ class CategoryView:
             for i, cat in enumerate(categories, 1):
                 print(f"{i}. {cat.name} ({cat.category_id[:8]})")
 
-            choice = input("\nИзбор (номер или ID, Enter за отказ): ").strip()
-            if not choice or choice.lower() == "отказ":
+            choice = input("\nИзбор (номер или ID, Enter за връщане): ").strip()
+            if not choice:
                 return None
 
             if choice.isdigit():
