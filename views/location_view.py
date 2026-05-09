@@ -99,7 +99,6 @@ class LocationView:
             print("Не е намерена такава локация.")
 
         print(f"\nРедакция на {location.name} (Enter запазва старата стойност)")
-
         new_name = input(f"Ново име [{location.name}]: ").strip() or location.name
         new_zone = input(f"Нова зона [{location.zone}]: ").strip() or location.zone
 

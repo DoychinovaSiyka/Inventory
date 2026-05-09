@@ -21,14 +21,9 @@ class AdminMenuView:
 
         self.category_view = CategoryView(controllers["category"])
 
-        self.movement_view = MovementView(
-            controllers["product"],
-            controllers["movement"],
-            controllers["user"],
-            controllers["location"],
-            controllers["supplier"],
-            controllers["inventory"]
-        )
+        self.movement_view = MovementView(controllers["product"], controllers["movement"],
+                                          controllers["user"], controllers["location"],
+                                          controllers["supplier"], controllers["inventory"])
 
         self.user_view = UserView(controllers["user"])
         self.reports_view = ReportsView(controllers["report"])
@@ -63,7 +58,6 @@ class AdminMenuView:
         while True:
             current_menu = self._build_menu()
             choice = current_menu.show()
-
             if choice == "0" or choice is None:
                 break
 

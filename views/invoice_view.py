@@ -94,7 +94,6 @@ class InvoiceView:
                 print(f"Грешка: {e}")
 
     def advanced_search(self, _):
-        """Единен метод за разширено търсене и търсене по суми."""
         print("\nРАЗШИРЕНО ТЪРСЕНЕ (Enter за пропускане)")
 
         customer = self._input("Клиент: ")

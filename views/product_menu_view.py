@@ -15,8 +15,8 @@ class ProductMenuView:
         # Връща общата наличност на продукта
         return self.inventory_controller.get_total_stock(product.product_id)
 
+
     def _print_products(self, products, title=""):
-        # Показва списък с продукти в табличен вид
         if not products:
             print("\nНяма продукти.\n")
             return
@@ -24,12 +24,7 @@ class ProductMenuView:
         rows = []
         for p in products:
             qty = self._stock(p)
-            rows.append([
-                str(p.product_id)[:8],
-                p.name[:30],
-                f"{qty:.2f} {p.unit}",
-                f"{p.price:.2f} лв."
-            ])
+            rows.append([str(p.product_id)[:8], p.name[:30], f"{qty:.2f} {p.unit}", f"{p.price:.2f} лв."])
 
         if title:
             print(f"\n{title}")
@@ -38,7 +33,6 @@ class ProductMenuView:
         input("\nEnter за продължение...")
 
     def _select_category(self):
-        # Избор на категория от списък
         categories = self.category_controller.get_all()
         if not categories:
             return None
@@ -56,7 +50,7 @@ class ProductMenuView:
             if 0 <= idx < len(categories):
                 return categories[idx].category_id
 
-        # Търсене по име
+
         for c in categories:
             if choice.lower() in c.name.lower():
                 return c.category_id
@@ -64,9 +58,9 @@ class ProductMenuView:
         print("Невалиден избор.")
         return None
 
+
     def create_product(self, user):
         print("\nНов продукт (напишете 'отказ' за изход)")
-
         name = input("Име: ").strip()
         if name.lower() == "отказ":
             return
@@ -77,7 +71,6 @@ class ProductMenuView:
 
         desc = input("Описание: ").strip()
         unit = input("Мерна единица [бр.]: ").strip() or "бр."
-
         cat_id = self._select_category()
 
         data = {"name": name, "price": price_raw, "description": desc,

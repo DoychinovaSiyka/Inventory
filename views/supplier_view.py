@@ -25,8 +25,7 @@ class SupplierView:
             menu_items.extend([
                 MenuItem("2", "Добавяне на доставчик", self.add_supplier),
                 MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)
-            ])
+                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
 
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", menu_items)
@@ -104,12 +103,7 @@ class SupplierView:
         new_address = input(f"Нов адрес [{supplier.address}]: ").strip() or supplier.address
 
         try:
-            self.controller.update(
-                supplier_id=supplier.supplier_id,
-                name=new_name,
-                contact=new_contact,
-                address=new_address
-            )
+            self.controller.update(supplier_id=supplier.supplier_id, name=new_name, contact=new_contact, address=new_address)
             print("Данните са обновени.")
         except Exception as e:
             print(f"Проблем при обновяване: {e}")

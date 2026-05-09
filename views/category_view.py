@@ -95,7 +95,6 @@ class CategoryView:
         print(f"\nРедакция на: {category.name}")
         print("(Enter запазва старата стойност, 'отказ' за изход)")
 
-
         while True:
             new_name = input(f"Ново име [{category.name}]: ").strip()
             if new_name.lower() == "отказ":
@@ -107,7 +106,6 @@ class CategoryView:
                 print("Името е твърде кратко.")
                 continue
             break
-
 
         while True:
             new_desc = input(f"Ново описание [{category.description}]: ").strip()
@@ -146,7 +144,6 @@ class CategoryView:
                 print(f"{i}. {cat.name} ({cat.category_id[:8]})")
 
             choice = input("\nИзбор (номер или ID, Enter за отказ): ").strip()
-
             if not choice or choice.lower() == "отказ":
                 return None
 
@@ -169,7 +166,6 @@ class CategoryView:
 
         print(f"Продуктите в '{category.name}' ще останат без категория.")
         confirm = input(f"Искате ли да изтрием '{category.name}'? (y/n): ").strip().lower()
-
         if confirm == "y":
             try:
                 self.controller.remove(category.category_id, user.user_id)

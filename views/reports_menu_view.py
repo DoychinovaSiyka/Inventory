@@ -49,7 +49,6 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-    # Форматиращи функции
 
     def _fmt_delivery(self, data):
         rows = []
@@ -224,10 +223,8 @@ class ReportsView:
 
     def report_fifo_analysis(self, _):
         """Интерактивен FIFO анализ за конкретен продукт."""
-
         while True:
             name = input("\nВъведете име или ID на продукт (или 'отказ' за изход): ").strip()
-
             if not name or name.lower() == "отказ":
                 break
 

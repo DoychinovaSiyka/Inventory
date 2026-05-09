@@ -34,6 +34,7 @@ class OperatorMenuView:
             MenuItem("7", "Преглед на складови локации", self.open_locations_readonly),
             MenuItem("0", "Изход", lambda u: "break")])
 
+
     def show_menu(self, user):
         if user is None or not user.role:
             print("\nГрешка: неуспешно разпознаване на потребител.")
@@ -42,7 +43,6 @@ class OperatorMenuView:
         if user.role.lower() == "guest":
             print("\nНямате достъп до операторския модул.")
             return
-
 
         while True:
             menu = self._build_menu()

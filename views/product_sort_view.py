@@ -30,35 +30,19 @@ class ProductSortView:
         self._print_sorted(products, "Име (A–Z)", "Вградено сортиране")
 
     def sort_price_desc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="price",
-            algorithm="selection",
-            reverse=True
-        )
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="selection", reverse=True)
         self._print_sorted(products, "Цена (висока -> ниска)", "Selection Sort")
 
     def sort_price_asc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="price",
-            algorithm="bubble",
-            reverse=False
-        )
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="bubble", reverse=False)
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
     def sort_qty_desc(self, _):
-        products = self.product_controller.get_sorted_by_quantity(
-            self.inventory_controller,
-            algorithm="bubble",
-            reverse=True
-        )
+        products = self.product_controller.get_sorted_by_quantity(self.inventory_controller, algorithm="bubble", reverse=True)
         self._print_sorted(products, "Количество (високо -> ниско)", "Bubble Sort")
 
     def sort_qty_asc(self, _):
-        products = self.product_controller.get_sorted_by_quantity(
-            self.inventory_controller,
-            algorithm="selection",
-            reverse=False
-        )
+        products = self.product_controller.get_sorted_by_quantity(self.inventory_controller,algorithm="selection",reverse=False)
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
     def _print_sorted(self, products, title, algorithm_name):
@@ -79,12 +63,7 @@ class ProductSortView:
             except (ValueError, TypeError):
                 price_val = 0.0
 
-            rows.append([
-                short_id,
-                p.name[:25],
-                f"{stock:.2f} {p.unit}",
-                f"{price_val:.2f} лв."
-            ])
+            rows.append([short_id, p.name[:25], f"{stock:.2f} {p.unit}", f"{price_val:.2f} лв."])
 
         print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
         input("\nEnter за връщане...")

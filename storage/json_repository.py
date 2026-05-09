@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from storage.repository import Repository
 
-# Добавям родителската директория, за да работят импортите нормално
+# родителската директория, за да работят импортите нормално
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 
@@ -19,7 +19,6 @@ class JSONRepository(Repository):
         self._cache = self.load()
 
     def load(self):
-        """ Чете данни от файла и гарантира правилната структура. """
         if not self.filepath.exists():
             return self.default_data
 
