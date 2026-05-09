@@ -9,27 +9,29 @@ class InventoryController:
 
         raw = self.repo.load()
 
-        # Синхронизираме структурата на данните
-        if raw and "products" in raw:
-            self.data = raw
-        else:
-            self.data = {"products": {}}
+        # Ако има записан инвентар – ползваме го; иначе започваме с празна структура
+        self.data = raw if raw and "products" in raw else {"products": {}}
 
     def _save(self):
+        # Записваме текущото състояние
         self.repo.save(self.data)
 
     def _get_full_product_id(self, input_id: str) -> str:
+        # Ако е подадено съкратено ID, намираме пълното
         product = self.product_controller.get_by_id(str(input_id))
         return product.product_id if product else str(input_id)
 
     def _get_full_location_id(self, input_id: str) -> str:
+        # Същото, но за локации
         if not input_id:
             return None
         loc = self.location_controller.get_by_id(str(input_id))
         return loc.location_id if loc else str(input_id)
 
+    # Наличности
+
     def get_stock(self, product_id: str, location_id: str) -> float:
-        """Помощен метод за съвместимост с View-тата."""
+        # Съвместимост с View-тата
         return self.get_stock_by_location(product_id, location_id)
 
     def get_stock_by_location(self, product_id: str, location_id: str) -> float:
@@ -43,14 +45,18 @@ class InventoryController:
         return float(locations.get(lid, 0.0))
 
     def get_total_stock(self, product_id: str) -> float:
+        # Общо количество от всички складове
         pid = self._get_full_product_id(product_id)
         if pid not in self.data["products"]:
             return 0.0
 
         locations = self.data["products"][pid].get("locations", {})
-        return sum(float(qty) for qty in locations.values())
+        return sum(float(q) for q in locations.values())
+
+    # Промяна на количества
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
+        # Добавяме количество при доставка
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
 
@@ -60,115 +66,134 @@ class InventoryController:
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
-        locations = self.data["products"][pid]["locations"]
-        locations[lid] = float(locations.get(lid, 0.0)) + float(quantity)
+        locs = self.data["products"][pid]["locations"]
+        locs[lid] = float(locs.get(lid, 0.0)) + float(quantity)
         self._save()
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
+        # Намаляваме количество при продажба
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
 
         if not lid or pid not in self.data["products"]:
             return False
 
-        locations = self.data["products"][pid]["locations"]
-        current = float(locations.get(lid, 0.0))
-        qty_to_remove = float(quantity)
+        locs = self.data["products"][pid]["locations"]
+        current = float(locs.get(lid, 0.0))
+        qty = float(quantity)
 
-        if current < qty_to_remove:
+        if current < qty:
             return False
 
-        locations[lid] = current - qty_to_remove
+        locs[lid] = current - qty
         self._save()
         return True
 
+    # Пълно пресмятане от движения
+
     def rebuild_inventory_from_movements(self, movements: List):
-        """Пълно преизчисляване на база хронологията на движенията."""
+        # Пресмятаме инвентара от нулата по хронологията на движенията
         self.data = {"products": {}}
         sorted_moves = sorted(movements, key=lambda m: m.date)
 
         for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
-            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+            m_type = m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)
 
             if pid not in self.data["products"]:
                 self.data["products"][pid] = {"locations": {}}
 
-            locations = self.data["products"][pid]["locations"]
+            locs = self.data["products"][pid]["locations"]
 
             if m_type == "IN" and m.location_id:
                 lid = str(m.location_id)
-                locations[lid] = locations.get(lid, 0.0) + qty
+                locs[lid] = locs.get(lid, 0.0) + qty
+
             elif m_type == "OUT" and m.location_id:
                 lid = str(m.location_id)
-                locations[lid] = max(0.0, locations.get(lid, 0.0) - qty)
+                locs[lid] = max(0.0, locs.get(lid, 0.0) - qty)
+
             elif m_type == "MOVE":
                 from_lid = str(m.from_location_id) if m.from_location_id else None
                 to_lid = str(m.to_location_id) if m.to_location_id else None
+
                 if from_lid:
-                    locations[from_lid] = max(0.0, locations.get(from_lid, 0.0) - qty)
+                    locs[from_lid] = max(0.0, locs.get(from_lid, 0.0) - qty)
                 if to_lid:
-                    locations[to_lid] = locations.get(to_lid, 0.0) + qty
+                    locs[to_lid] = locs.get(to_lid, 0.0) + qty
 
         self._save()
 
+    # FIFO себестойност
+
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        """Пресмята себестойността САМО на продадените количества по FIFO."""
         pid = self._get_full_product_id(product_id)
 
-        # 1. Намираме колко общо е продадено (OUT)
+        # Колко е продадено общо
         total_sold = 0.0
         for m in movements:
-            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+            m_type = m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)
             if str(m.product_id) == pid and m_type == "OUT":
                 total_sold += float(m.quantity)
 
         if total_sold <= 0:
             return 0.0
 
-        # 2. Събираме всички доставки (IN) като партиди
+        # Всички доставки по ред на постъпване
         batches = []
         for m in sorted(movements, key=lambda x: x.date):
-            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+            m_type = m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)
             if str(m.product_id) == pid and m_type == "IN":
-                price = float(m.price) if m.price is not None else float(fallback_price)
+                price = float(m.price) if m.price and float(m.price) > 0 else float(fallback_price)
                 batches.append({"qty": float(m.quantity), "price": price})
 
-        # 3. Изчисляваме себестойността само за продаденото количество
+        # Изваждаме количествата от най-старите партиди
         total_cost = 0.0
-        remaining_to_calculate = total_sold
+        remaining = total_sold
 
         for batch in batches:
-            if remaining_to_calculate <= 0:
+            if remaining <= 0:
                 break
 
-            take_qty = min(batch["qty"], remaining_to_calculate)
-            total_cost += take_qty * batch["price"]
-            remaining_to_calculate -= take_qty
+            take = min(batch["qty"], remaining)
+            total_cost += take * batch["price"]
+            remaining -= take
+
+        # Ако продажбите са повече от доставките
+        if remaining > 0:
+            total_cost += remaining * fallback_price
 
         return round(total_cost, 2)
 
-    def get_total_inventory_value_fifo(self, movement_controller) -> float:
-        """Пресмята стойността на това, което ОСТАВА в склада в момента."""
-        total_value = 0.0
-        all_movements = movement_controller.get_all()
+    # FIFO стойност на остатъка
 
-        for pid in self.data.get("products", {}).keys():
+    def get_total_inventory_value_fifo(self, movement_controller) -> float:
+        # Стойност на наличностите по FIFO
+        total_value = 0.0
+        all_moves = movement_controller.get_all()
+
+        for pid in self.data.get("products", {}):
             product_obj = self.product_controller.get_by_id(pid)
             fb_price = float(product_obj.price) if product_obj else 0.0
 
-            prod_moves = sorted([m for m in all_movements if str(m.product_id) == pid], key=lambda x: x.date)
+            prod_moves = sorted(
+                [m for m in all_moves if str(m.product_id) == pid],
+                key=lambda x: x.date
+            )
+
             batches = []
 
             for m in prod_moves:
-                m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+                m_type = m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)
                 qty = float(m.quantity)
 
                 if m_type == "IN":
-                    price = float(m.price) if m.price is not None else fb_price
+                    price = float(m.price) if m.price and float(m.price) > 0 else fb_price
                     batches.append({"qty": qty, "price": price})
+
                 elif m_type == "OUT":
+                    # Премахваме количества от най-старите партиди
                     while qty > 0 and batches:
                         if batches[0]["qty"] <= qty:
                             qty -= batches[0]["qty"]

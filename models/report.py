@@ -4,7 +4,6 @@ from datetime import datetime
 class Report:
     def __init__(self, report_type, parameters=None, data=None, generated_on=None, report_id=None):
         """ Модел за отчет. Съхранява метаданни и резултати от справки. """
-
         if not report_id:
             self.report_id = str(uuid.uuid4())
         else:

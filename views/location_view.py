@@ -8,7 +8,6 @@ class LocationView:
 
     def show_menu(self, user):
         while True:
-            # Използваме стандартна проверка за ролята
             is_admin = False
             if user and hasattr(user, 'role'):
                 if user.role == "Admin":
@@ -24,7 +23,7 @@ class LocationView:
 
         if is_admin:
             items.extend([
-                MenuItem("2", "Добавяне на нова локация", self.add_location),
+                MenuItem("2", "Добавяне на локация", self.add_location),
                 MenuItem("3", "Редактиране на локация", self.edit_location),
                 MenuItem("4", "Изтриване на локация", self.delete_location)
             ])
@@ -35,7 +34,7 @@ class LocationView:
     def show_all(self, _):
         locations = self.location_controller.get_all()
         if not locations:
-            print("\nНяма налични локации.")
+            print("\nНяма локации.")
             return
 
         columns = ["Код (ID)", "Име", "Зона", "Капацитет"]
@@ -43,84 +42,85 @@ class LocationView:
         for loc in locations:
             rows.append([loc.location_id[:8], loc.name, loc.zone, loc.capacity])
 
-        print("\nСПИСЪК НА ЛОКАЦИИТЕ")
+        print("\nСписък с локации")
         print(format_table(columns, rows))
-        input("\nНатиснете Enter за продължение...")
+        input("\nEnter за продължение...")
 
     def add_location(self, _):
-        print("\n--- ДОБАВЯНЕ НА ЛОКАЦИЯ ---")
+        print("\nНова локация")
         print("(Напишете 'отказ' за изход)")
 
-        # Валидация за Име
         while True:
-            name = input("Име на локация: ").strip()
-            if name.lower() == 'отказ': return
+            name = input("Име: ").strip()
+            if name.lower() == 'отказ':
+                return
             if not name:
-                print("Грешка: Името не може да бъде празно!")
+                print("Името е празно.")
                 continue
             break
 
-        zone = input("Зона/Сектор (Enter за General): ").strip() or "General"
+        zone = input("Зона (Enter за General): ").strip() or "General"
 
-        # Валидация за Капацитет
         while True:
-            capacity_raw = input("Капацитет (число): ").strip()
-            if capacity_raw.lower() == 'отказ': return
+            capacity_raw = input("Капацитет: ").strip()
+            if capacity_raw.lower() == 'отказ':
+                return
             if not capacity_raw:
-                print("Грешка: Моля, въведете капацитет!")
+                print("Въведете капацитет.")
                 continue
 
             try:
-                # Проверка дали е валидно число
                 cap = float(capacity_raw)
                 if cap < 0:
-                    print("Грешка: Капацитетът не може да е отрицателен!")
+                    print("Капацитетът не може да е отрицателен.")
                     continue
                 break
             except ValueError:
-                print("Грешка: Въведете валидно число за капацитет!")
+                print("Невалидно число.")
+                continue
 
         try:
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity_raw)
-            print(f"\n[OK] Локацията е добавена успешно с код: {new_loc.location_id[:8]}")
+            print(f"\nЛокацията е добавена. Код: {new_loc.location_id[:8]}")
         except Exception as e:
-            print(f"Грешка при запис: {e}")
+            print(f"Проблем при запис: {e}")
 
     def edit_location(self, _):
-        print("\n--- РЕДАКТИРАНЕ НА ЛОКАЦИЯ ---")
+        print("\nРедактиране на локация")
 
-        # Избор на локация с повторение при грешка
         location = None
         while True:
-            loc_id = input("Въведете ID (или част от него, 'отказ' за изход): ").strip()
-            if loc_id.lower() == 'отказ' or not loc_id: return
+            loc_id = input("ID или част от него ('отказ' за изход): ").strip()
+            if loc_id.lower() == 'отказ' or not loc_id:
+                return
 
             location = self.location_controller.get_by_id(loc_id)
             if location:
                 break
-            print("Локацията не е намерена. Опитайте отново.")
+            print("Не е намерена такава локация.")
 
-        print(f"\nРедактирате {location.name} (Enter запазва старата стойност)")
+        print(f"\nРедакция на {location.name} (Enter запазва старата стойност)")
 
         new_name = input(f"Ново име [{location.name}]: ").strip() or location.name
         new_zone = input(f"Нова зона [{location.zone}]: ").strip() or location.zone
 
-        # Валидация на новия капацитет
         while True:
             new_cap_raw = input(f"Нов капацитет [{location.capacity}]: ").strip()
             if not new_cap_raw:
                 new_cap = location.capacity
                 break
-            if new_cap_raw.lower() == 'отказ': return
+            if new_cap_raw.lower() == 'отказ':
+                return
 
             try:
                 if float(new_cap_raw) < 0:
-                    print("Грешка: Не може да бъде отрицателно число!")
+                    print("Капацитетът не може да е отрицателен.")
                     continue
                 new_cap = new_cap_raw
                 break
             except ValueError:
-                print("Грешка: Моля, въведете валидно число!")
+                print("Невалидно число.")
+                continue
 
         try:
             self.location_controller.update(
@@ -129,29 +129,30 @@ class LocationView:
                 zone=new_zone,
                 capacity=new_cap
             )
-            print("[OK] Данните са обновени.")
+            print("Данните са обновени.")
         except Exception as e:
-            print(f"Грешка при обновяване: {e}")
+            print(f"Проблем при обновяване: {e}")
 
     def delete_location(self, _):
-        print("\n--- ИЗТРИВАНЕ ---")
+        print("\nИзтриване на локация")
 
         location = None
         while True:
-            loc_id = input("Въведете ID на локация ('отказ' за изход): ").strip()
-            if loc_id.lower() == 'отказ' or not loc_id: return
+            loc_id = input("ID на локация ('отказ' за изход): ").strip()
+            if loc_id.lower() == 'отказ' or not loc_id:
+                return
 
             location = self.location_controller.get_by_id(loc_id)
             if location:
                 break
-            print("Локацията не е намерена.")
+            print("Не е намерена такава локация.")
 
-        confirm = input(f"Сигурни ли сте, че триете {location.name}? (y/n): ").lower()
+        confirm = input(f"Искате ли да изтрием '{location.name}'? (y/n): ").lower()
         if confirm == 'y':
             try:
                 self.location_controller.remove(location.location_id)
-                print("[OK] Локацията е премахната.")
+                print("Локацията е изтрита.")
             except Exception as e:
-                print(f"Грешка: {e}")
+                print(f"Проблем при изтриване: {e}")
         else:
             print("Операцията е прекратена.")

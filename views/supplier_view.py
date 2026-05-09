@@ -4,12 +4,10 @@ from views.password_utils import format_table
 
 class SupplierView:
     def __init__(self, controller):
-        # Контролерът се подава отвън, няма нужда от import SupplierController
         self.controller = controller
 
     def show_menu(self, user):
         while True:
-            # Стандартна проверка за роля без магически функции
             is_admin = False
             if user and hasattr(user, 'role'):
                 if user.role == "Admin":
@@ -36,120 +34,105 @@ class SupplierView:
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
-            print("\nНяма налични доставчици.")
+            print("\nНяма доставчици.")
             return
 
-        columns = ["ID (кратко)", "Име", "Контакт", "Адрес"]
+        columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = []
         for s in suppliers:
             rows.append([s.supplier_id[:8], s.name, s.contact, s.address])
 
-        print("\nСПИСЪК НА ДОСТАВЧИЦИ")
+        print("\nСписък с доставчици")
         print(format_table(columns, rows))
-        input("\nНатиснете Enter за продължение...")
+        input("\nEnter за продължение...")
 
     def add_supplier(self, _):
-        print("\n--- ДОБАВЯНЕ НА ДОСТАВЧИК ---")
+        print("\nНов доставчик")
         print("(Напишете 'отказ' за изход)")
 
-        # Име
         while True:
-            name = input("Име на доставчик: ").strip()
-            if name.lower() == "отказ": return
+            name = input("Име: ").strip()
+            if name.lower() == "отказ":
+                return
             if not name:
-                print("Грешка: Името не може да е празно!")
+                print("Името е празно.")
                 continue
             break
 
-        # Контакт
         while True:
-            contact = input("Контакт (тел/имейл): ").strip()
-            if contact.lower() == "отказ": return
+            contact = input("Контакт: ").strip()
+            if contact.lower() == "отказ":
+                return
             if not contact:
-                print("Грешка: Контактната информация е задължителна!")
+                print("Контактът е задължителен.")
                 continue
             break
 
-        # Адрес
         while True:
             address = input("Адрес: ").strip()
-            if address.lower() == "отказ": return
+            if address.lower() == "отказ":
+                return
             if not address:
-                print("Грешка: Адресът не може да е празен!")
+                print("Адресът е празен.")
                 continue
             break
 
         try:
             new_sup = self.controller.add(name=name, contact=contact, address=address)
-            print(f"\n[OK] Доставчикът е добавен успешно. ID: {new_sup.supplier_id[:8]}")
+            print(f"\nДоставчикът е добавен. ID: {new_sup.supplier_id[:8]}")
         except Exception as e:
-            print(f"Грешка при запис: {e}")
+            print(f"Проблем при запис: {e}")
 
     def edit_supplier(self, _):
-        print("\n--- РЕДАКТИРАНЕ НА ДОСТАВЧИК ---")
+        print("\nРедактиране на доставчик")
 
-        # Избор на доставчик с проверка
         while True:
-            supplier_id_input = input("Въведете ID на доставчик (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ': return
+            supplier_id_input = input("ID (или 'отказ'): ").strip()
+            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+                return
 
             supplier = self.controller.get_by_id(supplier_id_input)
             if supplier:
                 break
-            print("Грешка: Доставчикът не е намерен.")
+            print("Няма такъв доставчик.")
 
-        print(f"\nРедактирате: {supplier.name}")
-        print("(Enter запазва старата стойност, 'отказ' за изход)")
+        print(f"\nРедакция на: {supplier.name}")
+        print("(Enter запазва старата стойност)")
 
-        # Ново име
-        while True:
-            new_name = input(f"Ново име [{supplier.name}]: ").strip()
-            if new_name.lower() == 'отказ': return
-            if not new_name:
-                new_name = supplier.name
-            break
-
-        # Нов контакт
-        while True:
-            new_contact = input(f"Нов контакт [{supplier.contact}]: ").strip()
-            if new_contact.lower() == 'отказ': return
-            if not new_contact:
-                new_contact = supplier.contact
-            break
-
-        # Нов адрес
-        while True:
-            new_address = input(f"Нов адрес [{supplier.address}]: ").strip()
-            if new_address.lower() == 'отказ': return
-            if not new_address:
-                new_address = supplier.address
-            break
+        new_name = input(f"Ново име [{supplier.name}]: ").strip() or supplier.name
+        new_contact = input(f"Нов контакт [{supplier.contact}]: ").strip() or supplier.contact
+        new_address = input(f"Нов адрес [{supplier.address}]: ").strip() or supplier.address
 
         try:
-            self.controller.update(supplier_id=supplier.supplier_id, name=new_name,
-                                   contact=new_contact, address=new_address)
-            print("[OK] Данните са обновени успешно.")
+            self.controller.update(
+                supplier_id=supplier.supplier_id,
+                name=new_name,
+                contact=new_contact,
+                address=new_address
+            )
+            print("Данните са обновени.")
         except Exception as e:
-            print(f"Грешка при обновяване: {e}")
+            print(f"Проблем при обновяване: {e}")
 
     def delete_supplier(self, _):
-        print("\n--- ИЗТРИВАНЕ НА ДОСТАВЧИК ---")
+        print("\nИзтриване на доставчик")
 
         while True:
-            supplier_id_input = input("Въведете ID за изтриване (или 'отказ'): ").strip()
-            if not supplier_id_input or supplier_id_input.lower() == 'отказ': return
+            supplier_id_input = input("ID (или 'отказ'): ").strip()
+            if not supplier_id_input or supplier_id_input.lower() == 'отказ':
+                return
 
             supplier = self.controller.get_by_id(supplier_id_input)
             if supplier:
                 break
-            print("Грешка: Доставчикът не е намерен.")
+            print("Няма такъв доставчик.")
 
-        confirm = input(f"Сигурни ли сте, че триете '{supplier.name}'? (y/n): ").strip().lower()
+        confirm = input(f"Искате ли да изтрием '{supplier.name}'? (y/n): ").strip().lower()
         if confirm == "y":
             try:
                 self.controller.remove(supplier.supplier_id)
-                print("[OK] Доставчикът е премахнат.")
+                print("Доставчикът е изтрит.")
             except Exception as e:
-                print(f"Грешка при изтриване: {e}")
+                print(f"Проблем при изтриване: {e}")
         else:
             print("Операцията е прекратена.")

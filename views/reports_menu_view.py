@@ -7,9 +7,6 @@ class ReportsView:
     def __init__(self, controller):
         self.controller = controller
 
-    # ---------------------------------------------------------
-    # Помощни методи
-    # ---------------------------------------------------------
 
     def _display_report(self, title, headers, rows):
         """Показва таблица със заглавие и данни."""
@@ -33,37 +30,28 @@ class ReportsView:
         """Общ механизъм за справки с търсене."""
         keyword = input(f"Въведете {prompt} (Enter за всички): ").strip()
 
-        # ПОПРАВКА: Винаги подаваме keyword, дори да е празен
-        # Така контролерът ще получи аргумента, който очаква
         result = controller_fn(keyword)
 
         formatted = format_fn(result.data)
         self._display_report(title, headers, formatted)
-    # ---------------------------------------------------------
-    # ОПТИМИЗИРАНО ГЛАВНО МЕНЮ НА СПРАВКИ
-    # ---------------------------------------------------------
+
+    # Оптимизирано главно меню на справки
 
     def show_menu(self, user):
         menu = Menu("СПРАВКИ", [
             MenuItem("1", "Обобщена наличност", self.summary_report),
             MenuItem("2", "Наличност по складове", self.inventory_by_warehouse),
-
             MenuItem("3", "Хронология на движенията", self.report_movements),
             MenuItem("4", "Търсене на доставки", self.search_delivery),
-
             MenuItem("5", "Всички продажби", self.report_sales),
             MenuItem("6", "Търсене продажби по клиент", self.search_sales_by_customer),
             MenuItem("7", "Търсене продажби по продукт", self.search_sales_by_product),
-
             MenuItem("8", "Анализ по FIFO", self.report_fifo_analysis),
-
             MenuItem("0", "Назад", lambda u: "break")
         ])
         self._run_menu(menu, user)
 
-    # ---------------------------------------------------------
     # Форматиращи функции
-    # ---------------------------------------------------------
 
     def _fmt_delivery(self, data):
         rows = []
@@ -99,9 +87,7 @@ class ReportsView:
 
         return rows
 
-    # ---------------------------------------------------------
     # Справки: Наличности
-    # ---------------------------------------------------------
 
     def summary_report(self, _):
         """Обобщена справка за наличности."""
@@ -167,9 +153,7 @@ class ReportsView:
             rows_sorted
         )
 
-    # ---------------------------------------------------------
     # Справки: Логистика
-    # ---------------------------------------------------------
 
     def report_movements(self, _):
         result = self.controller.report_movements()
@@ -206,10 +190,7 @@ class ReportsView:
             headers
         )
 
-    # ---------------------------------------------------------
     # Справки: Продажби
-    # ---------------------------------------------------------
-
     def report_sales(self, _):
         result = self.controller.report_sales()
         formatted = self._fmt_sales(result.data)
@@ -242,9 +223,6 @@ class ReportsView:
             headers
         )
 
-    # ---------------------------------------------------------
-    # FIFO Анализ
-    # ---------------------------------------------------------
 
     def report_fifo_analysis(self, _):
         """Интерактивен FIFO анализ за конкретен продукт."""
@@ -256,7 +234,6 @@ class ReportsView:
                 break
 
             data = self.controller.product_lifecycle(name)
-
             if not data:
                 print(f"Продукт '{name}' не е намерен.")
                 continue

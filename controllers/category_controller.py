@@ -13,12 +13,11 @@ class CategoryController:
         raw_data = self.repo.load() or []
         self.categories: List[Category] = [Category.from_dict(c) for c in raw_data]
 
-    # --- ДОБАВЕН МЕТОД ---
+
     def get_all(self) -> List[Category]:
         """Връща списък с всички категории (нужен за View-тата)."""
         return self.categories
 
-    # ----------------------
 
     def _save_changes(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])

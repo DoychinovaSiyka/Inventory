@@ -27,7 +27,7 @@ class ProductSortView:
 
     def sort_by_name(self, _):
         products = self.product_controller.get_sorted_by_name()
-        self._print_sorted(products, "Име (A–Z)", "Вградено")
+        self._print_sorted(products, "Име (A–Z)", "Вградено сортиране")
 
     def sort_price_desc(self, _):
         products = self.product_controller.get_custom_sort(
@@ -46,7 +46,6 @@ class ProductSortView:
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
     def sort_qty_desc(self, _):
-        # Подаваме inventory_controller и algorithm на контролера
         products = self.product_controller.get_sorted_by_quantity(
             self.inventory_controller,
             algorithm="bubble",
@@ -67,7 +66,7 @@ class ProductSortView:
             print("\nНяма продукти за показване.")
             return
 
-        print(f"\n--- СОРТИРАНЕ ПО: {title} ---")
+        print(f"\nСортиране по: {title}")
         print(f"Метод: {algorithm_name}\n")
 
         rows = []
@@ -87,5 +86,5 @@ class ProductSortView:
                 f"{price_val:.2f} лв."
             ])
 
-        print(format_table(["ID (кратко)", "Име", "Наличност", "Цена"], rows))
-        input("\nНатиснете Enter за връщане...")
+        print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
+        input("\nEnter за връщане...")

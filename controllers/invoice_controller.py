@@ -11,6 +11,7 @@ class InvoiceController:
         self.invoices: List[Invoice] = []
         self._reload()
 
+
     def _reload(self):
         """ Зарежда всички фактури от базата и ги превръща в обекти. """
         raw = self.repo.load() or []

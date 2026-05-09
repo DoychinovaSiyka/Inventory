@@ -7,30 +7,36 @@ class UserController:
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
 
+        # Зареждаме потребителите от файла
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
 
+        # Превръщаме речниците в User обекти
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
+        # Ако няма админ и оператор, създаваме ги
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
     def find_user_flexible(self, identifier: str) -> Optional[User]:
+        # Позволява търсене по ID или username
         if not identifier:
             return None
-        target = str(identifier).strip()
 
-        user = self.get_by_id(target)
+        identifier = str(identifier).strip()
+
+        user = self.get_by_id(identifier)
         if user:
             return user
 
-        return self.get_by_username(target)
+        return self.get_by_username(identifier)
 
     def _hash_password(self, password: str) -> str:
+        # Елементарно хеширане (учебна цел)
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
@@ -39,30 +45,37 @@ class UserController:
         return stored_password_hash == self._hash_password(provided_password)
 
     def save_changes(self):
+        # Записваме всички потребители обратно в JSON
         self.repo.save([u.to_dict() for u in self.users])
 
     def get_by_username(self, username: str) -> Optional[User]:
+        # Търсене по username
         if not username:
             return None
-        search_name = username.strip().lower()
+
+        username = username.strip().lower()
         for u in self.users:
-            if u.username.lower() == search_name:
+            if u.username.lower() == username:
                 return u
         return None
 
     def get_all(self):
+        # Връщаме всички потребители
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        target_id = str(user_id).strip()
-        if not target_id:
+        # Търсене по ID или начало на ID
+        if not user_id:
             return None
+
+        user_id = str(user_id).strip()
         for u in self.users:
-            if u.user_id == target_id or u.user_id.startswith(target_id):
+            if u.user_id == user_id or u.user_id.startswith(user_id):
                 return u
         return None
 
     def login(self, username: str, password: str) -> Optional[User]:
+        # Проверка на входните данни чрез валидатора
         user = UserValidator.validate_login(username, password, self)
         if user:
             self.logged_user = user
@@ -70,22 +83,34 @@ class UserController:
         return None
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
+        # Проверки за валидност
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        new_user = User(user_id=None, first_name=first_name.strip(), last_name=last_name.strip(),
-                        email=email.strip(), username=username.strip().lower(), password=self._hash_password(password),
-                        role=role, status="Active")
+        # Създаваме нов потребител
+        new_user = User(
+            user_id=None,
+            first_name=first_name.strip(),
+            last_name=last_name.strip(),
+            email=email.strip(),
+            username=username.strip().lower(),
+            password=self._hash_password(password),
+            role=role,
+            status="Active"
+        )
+
         self.users.append(new_user)
         self.save_changes()
         return new_user
 
     def change_role(self, identifier, new_role):
+        # Смяна на роля
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
 
         UserValidator.validate_role(new_role)
+
         if user.role == new_role:
             raise ValueError(f"Потребителят вече е с роля '{new_role}'.")
 
@@ -94,6 +119,7 @@ class UserController:
         self.save_changes()
 
     def change_status(self, acting_user: User, identifier: str, new_status: str):
+        # Активиране/деактивиране на потребител
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
@@ -108,6 +134,7 @@ class UserController:
         return True
 
     def delete_user(self, acting_user: User, identifier: str):
+        # Изтриване на потребител
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
@@ -121,13 +148,31 @@ class UserController:
         return True
 
     def _create_default_admin(self):
-        admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
-                     username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
+        # Създаваме администратор по подразбиране
+        admin = User(
+            user_id=None,
+            first_name="Admin",
+            last_name="System",
+            email="admin@system.local",
+            username="admin",
+            password=self._hash_password("admin123"),
+            role="Admin",
+            status="Active"
+        )
         self.users.append(admin)
         self.save_changes()
 
     def _create_default_operator(self):
-        operator = User(user_id=None, first_name="Operator", last_name="User", email="operator@example.com",
-                        username="operator",password=self._hash_password("operator123"),role="Operator",status="Active")
+        # Създаваме оператор по подразбиране
+        operator = User(
+            user_id=None,
+            first_name="Operator",
+            last_name="User",
+            email="operator@example.com",
+            username="operator",
+            password=self._hash_password("operator123"),
+            role="Operator",
+            status="Active"
+        )
         self.users.append(operator)
         self.save_changes()

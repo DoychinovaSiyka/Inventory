@@ -6,7 +6,10 @@ from filters import movement_filters
 
 
 class MovementController:
-    """Управлява складовите движения и гарантира, че цените са исторически верни."""
+    """
+    Управлява складовите движения и гарантира, че цените са исторически верни.
+    Този контролер е сърцето на логистиката и предотвратява 'парадокса' с цените.
+    """
 
     def __init__(self, repo, product_controller, user_controller, location_controller,
                  supplier_controller, invoice_controller, inventory_controller, activity_log_controller=None):
@@ -19,68 +22,101 @@ class MovementController:
         self.invoice_controller = invoice_controller
         self.inventory_controller = inventory_controller
 
+        # Зареждане на движенията от базата (JSON)
         raw = self.repo.load() or []
-        self.movements: List[Movement] = [Movement.from_dict(m) for m in raw if Movement.from_dict(m)]
+        self.movements: List[Movement] = []
+        for m in raw:
+            try:
+                obj = Movement.from_dict(m)
+                if obj:
+                    self.movements.append(obj)
+            except Exception:
+                continue
 
     def get_all(self) -> List[Movement]:
+        """Връща списък с всички движения."""
         return self.movements
 
     def save_changes(self) -> None:
+        """Записва текущия списък с движения обратно в хранилището."""
         self.repo.save([m.to_dict() for m in self.movements])
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
-        """Доставка: ползва въведената доставна цена."""
-        return self.add(product_id=product_id, user_id=user_id, location_id=location_id,
-                        movement_type="IN", quantity=quantity, price=price, supplier_id=supplier_id)
+        """Доставка: Записва движение 'ВХОД' с конкретната доставна цена."""
+        return self.add(
+            product_id=product_id,
+            user_id=user_id,
+            location_id=location_id,
+            movement_type="IN",
+            quantity=quantity,
+            price=price,
+            supplier_id=supplier_id
+        )
 
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         """
-        Продажба: ВЕЧЕ ПРИЕМА price (продажна цена).
-        Това премахва парадокса с каталожната цена!
+        Продажба: Записва движение 'ИЗХОД' с РЕАЛНАТА продажна цена.
+        Това е ключовият момент, който премахва зависимостта от каталожната цена.
         """
-        current_stock = self.inventory_controller.get_stock_by_location(product_id, location_id)
+        # Проверка на наличността преди извършване на операцията
+        current_stock = self.inventory_controller.get_stock(product_id, location_id)
         if current_stock < float(quantity):
-            raise ValueError(f"Недостатъчна наличност! В момента има: {current_stock}")
+            raise ValueError(f"Недостатъчна наличност в избрания склад! Налично: {current_stock}")
 
-        return self.add(product_id=product_id, user_id=user_id, location_id=location_id,
-                        movement_type="OUT", quantity=quantity, price=price, customer=customer)
+        return self.add(
+            product_id=product_id,
+            user_id=user_id,
+            location_id=location_id,
+            movement_type="OUT",
+            quantity=quantity,
+            price=price,
+            customer=customer
+        )
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
-        return self.add(product_id=product_id, user_id=user_id, location_id=None,
-                        movement_type="MOVE", quantity=quantity, price="0",
-                        from_location_id=from_loc, to_location_id=to_loc)
+        """Трансфер: Преместване на стока между два склада (без промяна на цена)."""
+        return self.add(
+            product_id=product_id,
+            user_id=user_id,
+            location_id=None,
+            movement_type="MOVE",
+            quantity=quantity,
+            price="0", # Трансферите не генерират печалба/разход
+            from_location_id=from_loc,
+            to_location_id=to_loc
+        )
 
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
             quantity: str, price: Optional[str], customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
-        """Основен метод. ВЕЧЕ НЕ ПОЛЗВА КАТАЛОГА ЗА ЦЕНИ ПРИ ПРОДАЖБА."""
+        """
+        Основен метод за създаване на движение.
+        Гарантира синхронизация с инвентара и генериране на фактури.
+        """
 
+        # 1. Валидация на основните обекти
         product = self.product_controller.get_by_id(product_id)
         if not product:
-            raise ValueError(f"Продуктът не съществува.")
+            raise ValueError("Продуктът не съществува в базата.")
 
         user = self.user_controller.get_by_id(user_id)
         if not user:
-            raise ValueError(f"Потребителят не е намерен.")
+            raise ValueError("Потребителят не е намерен.")
 
+        # 2. Подготовка на данните
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        # ----------------------------------------------------------
-        # КРАЙ НА ПАРАДОКСА:
-        # Ако има подадена цена (от Сийка), ползваме нея.
-        # Ако няма (за MOVE), е 0.
-        # САМО ако всичко друго липсва, вземаме каталога, но това вече няма да се случва при продажби.
-        # ----------------------------------------------------------
+        # 3. ЛОГИКА ЗА ЦЕНАТА (Решаване на парадокса)
         if m_type_str == "MOVE":
             prc = 0.0
-        elif price is not None:
+        elif price is not None and str(price).strip() != "":
             prc = float(price)
         else:
-            # Това е спасителен пояс, но при оправеното View няма да се стига до тук
+            # Ако по някаква причина няма цена, вземаме текущата от каталога
             prc = float(product.price)
 
-        # Синхронизиране на Инвентара
+        # 4. Синхронизиране на Инвентара (Промяна на количествата в реално време)
         if self.inventory_controller:
             if m_type_str == "IN":
                 self.inventory_controller.increase_stock(product.product_id, qty, location_id)
@@ -90,8 +126,9 @@ class MovementController:
                 self.inventory_controller.decrease_stock(product.product_id, qty, from_location_id)
                 self.inventory_controller.increase_stock(product.product_id, qty, to_location_id)
 
+        # 5. Създаване на обекта Movement
         movement = Movement(
-            movement_id=None,
+            movement_id=None, # Генерира се автоматично в модела
             product_id=product.product_id,
             product_name=product.name,
             user_id=user.user_id,
@@ -106,23 +143,33 @@ class MovementController:
             to_location_id=to_location_id
         )
 
+        # 6. Записване в историята
         self.movements.append(movement)
         self.save_changes()
 
-        # Фактурата също ще ползва РЕАЛНАТА цена от движението, а не каталога!
+        # 7. Автоматично издаване на фактура при продажба
         if m_type_str == "OUT" and self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement,
-                product=product,
-                customer=customer or "Общ клиент",
-                user_id=user.user_id
-            )
+            try:
+                self.invoice_controller.create_from_movement(
+                    movement=movement,
+                    product=product,
+                    customer=customer or "Общ клиент",
+                    user_id=user.user_id
+                )
+            except Exception as e:
+                print(f"[Предупреждение] Движението е записано, но фактурата не беше генерирана: {e}")
 
         return movement
 
     def advanced_filter(self, **kwargs) -> List[Movement]:
+        """Филтриране на историята по различни критерии."""
         return movement_filters.filter_advanced(self.movements, **kwargs)
 
     def filter_deliveries(self, keyword: str) -> List[Movement]:
-        return movement_filters.filter_deliveries(self.movements, keyword, self.product_controller,
-                                                  self.supplier_controller)
+        """Специализирано филтриране само за доставки (IN)."""
+        return movement_filters.filter_deliveries(
+            self.movements,
+            keyword,
+            self.product_controller,
+            self.supplier_controller
+        )

@@ -25,8 +25,7 @@ class MovementValidator:
     def normalize_movement_type(movement_type):
         mt = str(movement_type).strip().upper()
 
-        mapping = {"1": "IN", "2": "OUT", "3": "MOVE",
-                   "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
+        mapping = {"1": "IN", "2": "OUT", "3": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
 
         if mt not in mapping:
             raise ValueError("Невалиден тип движение. Допустими: IN, OUT, MOVE.")
