@@ -7,7 +7,6 @@ from analytics.category_analytics import build_category_tree, get_category_stats
 
 class CategoryController:
     """Управлява категориите и гарантира йерархичната цялост."""
-
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         raw_data = self.repo.load() or []
@@ -28,7 +27,6 @@ class CategoryController:
                 raise ValueError(f"Родителска категория {parent_input} не съществува.")
             parent_id = parent.category_id
 
-        # Валидации
         CategoryValidator.validate_name(name)
         CategoryValidator.validate_unique(name, self.categories)
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
@@ -43,12 +41,10 @@ class CategoryController:
         if not target:
             return None
 
-        # 1. Търсим точно съвпадение
         for c in self.categories:
             if c.category_id == target:
                 return c
 
-        # 2. Търсим по начало на ID
         for c in self.categories:
             if c.category_id.startswith(target):
                 return c
@@ -63,10 +59,7 @@ class CategoryController:
 
         target_pid = str(pid) if pid else "None"
 
-        return [
-            c for c in self.categories
-            if (str(c.parent_id) == target_pid) or (c.parent_id is None and target_pid == "None")
-        ]
+        return [c for c in self.categories if (str(c.parent_id) == target_pid) or (c.parent_id is None and target_pid == "None")]
 
     def search(self, keyword: str) -> List[Category]:
         """Търсене чрез външния филтър модул."""
@@ -84,12 +77,11 @@ class CategoryController:
         return get_all_children_ids(self.categories, parent_id)
 
     def get_stats(self, product_controller) -> dict:
-        """Използва аналитичния модул за статистика."""
+        """ Връща речник от типа: {'Име на категория': брой продукти}."""
         products = product_controller.get_all() if product_controller else []
         return get_category_stats(self.categories, products)
-
     def get_visual_tree(self) -> List[dict]:
-        """Връща дървото подготвено за принтиране."""
+        """Връща дървото"""
         return build_category_tree(self.categories)
 
     def remove(self, category_id: str, user_id: str, product_controller=None) -> bool:
@@ -98,7 +90,7 @@ class CategoryController:
             return False
 
         products = product_controller.get_all() if product_controller else []
-        # Валидаторът проверява дали има закачени продукти или подкатегории
+        # Дали има закачени продукти или подкатегории
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]

@@ -1,5 +1,3 @@
-from models.product import Product
-from models.location import Location
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
@@ -13,280 +11,154 @@ class MovementView:
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
 
-    def _get_product_total_qty(self, product):
-        return self.movement_controller.inventory_controller.get_total_stock(product.product_id)
+    # --- Помощни методи за конзолна валидация (While True) ---
 
-    def _run_menu(self, menu_obj, user):
+    def _ask_float(self, prompt, allow_empty=False, default=None):
+        """Принуждава потребителя да въведе валидно число."""
         while True:
-            choice = menu_obj.show()
-            if choice == "0" or choice is None:
-                break
-            result = menu_obj.execute(choice, user)
-            if result == "break":
-                break
-
-    def show_menu(self, user):
-        menu = Menu("Логистични операции", [
-            MenuItem("1", "Доставка (IN)", lambda u: self.handle_in(u)),
-            MenuItem("2", "Продажба / изписване (OUT)", lambda u: self.handle_out(u)),
-            MenuItem("3", "Преместване между складове (MOVE)", lambda u: self.handle_move(u)),
-            MenuItem("4", "Хронология на движенията", lambda u: self.show_history(u)),
-            MenuItem("0", "Назад", lambda u: "break")])
-        self._run_menu(menu, user)
+            val = input(prompt).strip()
+            if val.lower() == 'отказ': return 'cancel'
+            if not val and allow_empty: return default
+            try:
+                num = float(val)
+                if num < 0:
+                    print("Грешка: Числото не може да е отрицателно!")
+                    continue
+                return num
+            except ValueError:
+                print("Грешка: Моля, въведете валидно число или 'отказ'.")
 
     def _select_item(self, items, label):
+        """Интерактивен избор на обект с While True защита."""
         if not items:
             print(f"\nНяма налични {label}.\n")
             return None
 
         while True:
-            print(f"\nИзбор на {label}:")
+            print(f"\nИЗБОР НА {label.upper()}:")
             for i, item in enumerate(items, 1):
-                qty_info = ""
-                if isinstance(item, Product):
-                    full_id = item.product_id
-                    qty_info = f" | Налично: {self._get_product_total_qty(item)} {item.unit}"
-                elif isinstance(item, Location):
-                    full_id = item.location_id
-                else:
-                    full_id = getattr(item, 'supplier_id', '')
+                item_id = getattr(item, 'product_id', getattr(item, 'location_id', getattr(item, 'supplier_id', 'ID')))
+                print(f"{i}. {item.name} (ID: {item_id[:8]})")
 
-                print(f"{i}. {item.name}{qty_info} (ID: {full_id[:8]})")
-
-            choice = input(f"\nИзберете {label} (номер/ID или 'отказ'): ").strip()
-            if not choice or choice.lower() == 'отказ':
-                return None
+            choice = input(f"\nИзберете номер или ID (Enter за отказ): ").strip()
+            if not choice: return None
+            if choice.lower() == 'отказ': return None
 
             if choice.isdigit():
-                index = int(choice) - 1
-                if 0 <= index < len(items):
+                idx = int(choice) - 1
+                if 0 <= idx < len(items):
                     return items[index]
 
-            choice_lower = choice.lower()
-            for item in items:
-                f_id = getattr(item, 'product_id',
-                               getattr(item, 'location_id', getattr(item, 'supplier_id', ''))).lower()
-                if f_id.startswith(choice_lower):
-                    return item
-
+            # Търсене по ID
+            found = next((item for item in items if
+                          getattr(item, 'product_id', getattr(item, 'location_id', '')).startswith(choice.lower())),
+                         None)
+            if found: return found
             print("Невалиден избор. Опитайте отново.")
 
+    # --- Основни методи на менюто ---
+
+    def show_menu(self, user):
+        menu = Menu("Логистични операции", [
+            MenuItem("1", "Доставка (IN)", self.handle_in),
+            MenuItem("2", "Продажба / изписване (OUT)", self.handle_out),
+            MenuItem("3", "Преместване (MOVE)", self.handle_move),
+            MenuItem("4", "Хронология на движенията", self.show_history),
+            MenuItem("0", "Назад", lambda u: "break")])
+
+        while True:
+            choice = menu.show()
+            if choice == "0" or choice is None: break
+            if menu.execute(choice, user) == "break": break
+
     def handle_in(self, user):
-        if not user:
-            print("Липсва активен потребител.")
-            return
-
-        print("\nНова доставка")
+        print("\n--- НОВА ДОСТАВКА ---")
         product = self._select_item(self.product_controller.get_all(), "продукт")
-        if not product:
-            return
+        if not product: return
         supplier = self._select_item(self.supplier_controller.get_all(), "доставчик")
-        if not supplier:
-            return
+        if not supplier: return
         location = self._select_item(self.location_controller.get_all(), "склад")
-        if not location:
-            return
+        if not location: return
 
-        while True:
-            qty_raw = input(f"Количество ({product.unit}): ").strip()
-            if qty_raw.lower() == 'отказ':
-                return
-            try:
-                qty = float(qty_raw)
-                if qty <= 0:
-                    print("Количеството трябва да е положително.")
-                    continue
-                break
-            except ValueError:
-                print("Въведете валидно число.")
+        qty = self._ask_float(f"Количество ({product.unit}): ")
+        if qty == 'cancel': return
 
-        while True:
-            price_raw = input(f"Цена (Enter за {product.price}): ").strip()
-            if not price_raw:
-                price = product.price
-                break
-            try:
-                price = float(price_raw)
-                if price < 0:
-                    print("Цената не може да е отрицателна.")
-                    continue
-                break
-            except ValueError:
-                print("Въведете валидна цена.")
+        price = self._ask_float(f"Цена (Enter за {product.price}): ", allow_empty=True, default=product.price)
+        if price == 'cancel': return
 
         try:
-            self.movement_controller.add_in(product.product_id, qty, price, location.location_id,
-                                            supplier.supplier_id, user.user_id)
-            print(f"\nДобавени са {qty} {product.unit}.")
+            self.movement_controller.add_in(product.product_id, qty, price,
+                                            location.location_id, supplier.supplier_id, user.user_id)
+            print(f"\n[OK] Заприходени са {qty} {product.unit}.")
         except Exception as e:
-            print(f"Грешка при запис: {e}")
+            print(f"Грешка: {e}")
 
     def handle_out(self, user):
-        if not user:
-            return
-
-        print("\nНова продажба / изписване")
+        print("\n--- НОВА ПРОДАЖБА ---")
         product = self._select_item(self.product_controller.get_all(), "продукт")
-        if not product:
-            return
+        if not product: return
+        location = self._select_item(self.location_controller.get_all(), "склад")
+        if not location: return
 
-        warehouses = [loc for loc in self.location_controller.get_all()
-                      if self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, loc.location_id) > 0]
+        customer = input("Клиент (Enter за Анонимен): ").strip() or "Анонимен"
 
-        if not warehouses:
-            print(f"Продуктът '{product.name}' не е наличен в складовете.")
-            return
-
-        location = self._select_item(warehouses, "склад")
-        if not location:
-            return
-
-        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, location.location_id)
-
-        customer = input("Клиент: ").strip() or "Анонимен"
-
-        while True:
-            qty_raw = input(f"Количество (макс {max_qty}): ").strip()
-            if qty_raw.lower() == 'отказ':
-                return
-            try:
-                qty = float(qty_raw)
-                if qty <= 0:
-                    print("Количеството трябва да е над 0.")
-                    continue
-                if qty > max_qty:
-                    print(f"Недостатъчна наличност (налично: {max_qty}).")
-                    continue
-                break
-            except ValueError:
-                print("Въведете число.")
+        qty = self._ask_float(f"Количество за изписване ({product.unit}): ")
+        if qty == 'cancel': return
 
         try:
             self.movement_controller.add_out(product.product_id, qty, customer,
                                              location.location_id, user.user_id)
-            print(f"\nИзписани са {qty} {product.unit}.")
+            print(f"\n[OK] Изписани са {qty} {product.unit}.")
         except Exception as e:
-            print(f"Грешка при изписване: {e}")
+            print(f"Грешка: {e}")
 
     def handle_move(self, user):
-        if not user:
-            return
-
-        print("\nПреместване между складове")
+        print("\n--- ПРЕМЕСТВАНЕ ---")
         product = self._select_item(self.product_controller.get_all(), "продукт")
-        if not product:
-            return
+        if not product: return
+        from_loc = self._select_item(self.location_controller.get_all(), "от склад")
+        if not from_loc: return
+        to_loc = self._select_item(self.location_controller.get_all(), "към склад")
+        if not to_loc: return
 
-        from_loc = self._select_item(self.location_controller.get_all(), "изходен склад")
-        if not from_loc:
-            return
-
-        max_qty = self.movement_controller.inventory_controller.get_stock_by_location(product.product_id, from_loc.location_id)
-
-        if max_qty <= 0:
-            print(f"Няма наличност от '{product.name}' в този склад.")
-            return
-
-        to_loc = self._select_item(self.location_controller.get_all(), "целеви склад")
-        if not to_loc or to_loc.location_id == from_loc.location_id:
-            print("Невалиден избор на склад.")
-            return
-
-        while True:
-            qty_raw = input(f"Количество (налично {max_qty}): ").strip()
-            if qty_raw.lower() == 'отказ':
-                return
-            try:
-                qty = float(qty_raw)
-                if 0 < qty <= max_qty:
-                    break
-                print(f"Невалидно количество (налично: {max_qty}).")
-            except ValueError:
-                print("Въведете число.")
+        qty = self._ask_float(f"Количество за преместване: ")
+        if qty == 'cancel': return
 
         try:
             self.movement_controller.move_stock(product.product_id, qty, from_loc.location_id,
                                                 to_loc.location_id, user.user_id)
-            print("\nПреместването е извършено.")
+            print("\n[OK] Наличността е преместена.")
         except Exception as e:
-            print(f"Грешка при преместване: {e}")
+            print(f"Грешка: {e}")
 
     def show_history(self, _):
-        print("\nИстория на движенията")
-
-        results = None
-
-        try:
-            results = self.movement_controller.get_all()
-        except:
-            pass
-
-        if results is None:
-            try:
-                results = self.movement_controller.movements
-            except:
-                results = None
-
-        if isinstance(results, dict):
-            temp_list = []
-            for key in results:
-                temp_list.append(results[key])
-            results = temp_list
-
-        if results is None or len(results) == 0:
-            print("\nНяма записани движения.\n")
-            input("Натиснете Enter...")
+        movements = self.movement_controller.get_all()
+        if not movements:
+            print("\nНяма записани движения.")
             return
 
-        columns = ["ID", "Дата", "Тип", "Продукт", "Кол.", "Партньор", "Склад/Път"]
         rows = []
+        for m in reversed(movements):
+            prod = self.product_controller.get_by_id(m.product_id)
+            p_name = prod.name[:12] if prod else "Unknown"
 
-        reversed_list = list(results)
-        reversed_list.reverse()
-
-        for m in reversed_list:
-            product_obj = self.product_controller.get_by_id(m.product_id)
-
-            if product_obj is not None:
-                product_name = product_obj.name
-                product_unit = product_obj.unit
-            else:
-                product_name = "Unknown"
-                product_unit = ""
-
+            # Определяне на партньор и локация
             if m.movement_type.name == "IN":
-                supplier_obj = self.supplier_controller.get_by_id(m.supplier_id)
-                partner = supplier_obj.name if supplier_obj else "Доставчик"
-
+                supp = self.supplier_controller.get_by_id(m.supplier_id)
+                partner = (supp.name if supp else "Доставчик")[:12]
+                loc_text = self.location_controller.get_by_id(m.location_id).name[:10]
             elif m.movement_type.name == "OUT":
-                partner = m.customer if m.customer else "Клиент"
-
+                partner = (m.customer if m.customer else "Клиент")[:12]
+                loc_text = self.location_controller.get_by_id(m.location_id).name[:10]
             else:
                 partner = "Вътрешно"
+                f_loc = self.location_controller.get_by_id(m.from_location_id)
+                t_loc = self.location_controller.get_by_id(m.to_location_id)
+                loc_text = f"{f_loc.name[:5]}->{t_loc.name[:5]}" if f_loc and t_loc else "MOVE"
 
-            if m.movement_type.name == "MOVE":
-                from_loc = self.location_controller.get_by_id(m.from_location_id)
-                to_loc = self.location_controller.get_by_id(m.to_location_id)
+            rows.append([m.movement_id[:8], m.date[5:16], m.movement_type.name,
+                         p_name, f"{m.quantity}", partner, loc_text])
 
-                if from_loc and to_loc:
-                    location_text = from_loc.name[:8] + "->" + to_loc.name[:8]
-                else:
-                    location_text = "MOVE"
-            else:
-                loc_obj = self.location_controller.get_by_id(m.location_id)
-                location_text = loc_obj.name if loc_obj else "-"
-
-            short_id = m.movement_id[:8]
-            short_date = m.date[5:16]
-            short_type = m.movement_type.name
-            short_product = product_name[:12]
-            quantity_text = str(m.quantity) + " " + product_unit
-            short_partner = partner[:12]
-
-            row = [short_id, short_date, short_type, short_product, quantity_text, short_partner,
-                   location_text]
-
-            rows.append(row)
-
-        print("\n" + format_table(columns, rows))
+        print("\nХРОНОЛОГИЯ")
+        print(format_table(["ID", "Дата", "Тип", "Продукт", "Кол.", "Партньор", "Локация"], rows))
         input("\nНатиснете Enter за връщане...")

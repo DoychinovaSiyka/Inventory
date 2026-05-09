@@ -25,7 +25,6 @@ class ReportsView:
 
     def _search_flow(self, prompt, controller_fn, format_fn, title, headers):
         keyword = input(f"Въведете {prompt} (Enter за всички): ").strip()
-
         if keyword:
             res = controller_fn(keyword)
         else:
@@ -70,11 +69,9 @@ class ReportsView:
         for i in data:
             price_value = float(i["price"])
             quantity_text = str(i["quantity"]) + " " + str(i["unit"])
-
             row = [i["date"], i["movement_id"], i["product"], quantity_text,
                    f"{price_value:.2f}", i["supplier"]]
             rows.append(row)
-
         return rows
 
     def _fmt_sales(self, data):
@@ -84,7 +81,6 @@ class ReportsView:
             total_value = float(total_price)
             row = [i["invoice_number"], i["date"], i["client"], i["product"], f"{total_value:.2f}"]
             rows.append(row)
-
         return rows
 
     def summary_report(self, _):
@@ -92,57 +88,33 @@ class ReportsView:
         rows = []
 
         for i in res.data:
-            locations = i.get("top_locations", "")
-            if not locations or str(locations).strip() == "":
-                locations = "Няма наличност"
+            locations = i.get("top_locations", "Няма наличност")
+            if len(str(locations)) > 40:
+                locations = str(locations)[:37] + "..."
 
-            if len(str(locations)) > 30:
-                locations = str(locations)[:27] + "..."
-
-            row = [
-                i["product"],
-                i["available"],
-                i["sold"],
-                locations
-            ]
+            row = [i["product"], i["available"], i["sold"], locations]
             rows.append(row)
 
         self._display_report("Обобщена справка",
-                             ["Продукт", "Налично", "Продадено", "Локация"],
+                             ["Продукт", "Налично", "Продадено", "Локации"],
                              rows)
 
     def inventory_by_warehouse(self, _):
         inv_data = self.controller.inventory_controller.data.get("products", {})
-        loc_map = {}
-
-        for loc in self.controller.location_controller.get_all():
-            loc_map[loc.location_id] = loc
-
+        loc_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
         rows = []
 
         for pid, pdata in inv_data.items():
             product = self.controller.product_controller.get_by_id(pid)
-
-            if product:
-                p_name = product.name
-                p_unit = product.unit
-            else:
-                p_name = "Изтрит продукт (" + pid[:8] + ")"
-                p_unit = "бр."
+            p_name = product.name if product else f"Изтрит продукт ({pid[:8]})"
+            p_unit = product.unit if product else "бр."
 
             for loc_id, qty in pdata.get("locations", {}).items():
                 qty_value = float(qty)
-
                 if qty_value > 0:
                     loc_obj = loc_map.get(loc_id)
-
-                    if loc_obj:
-                        loc_name = loc_obj.name
-                    else:
-                        loc_name = "Склад " + str(loc_id)[:8]
-
-                    quantity_text = f"{qty_value:.2f} {p_unit}"
-                    rows.append([loc_name, p_name, quantity_text])
+                    loc_name = loc_obj.name if loc_obj else f"Склад {str(loc_id)[:8]}"
+                    rows.append([loc_name, p_name, f"{qty_value:.2f} {p_unit}"])
 
         rows_sorted = sorted(rows, key=lambda x: x[0])
         self._display_report("Наличност по складове",
@@ -152,10 +124,8 @@ class ReportsView:
     def report_movements(self, _):
         res = self.controller.report_movements()
         rows = []
-
         for m in res.data:
             quantity_text = str(m["quantity"]) + " " + str(m["unit"])
-
             row = [m["date"], m["movement_id"], m["type"], m["product"], quantity_text,
                    m["from"], m["to"]]
             rows.append(row)
@@ -175,7 +145,6 @@ class ReportsView:
     def report_sales(self, _):
         res = self.controller.report_sales()
         formatted = self._fmt_sales(res.data)
-
         self._display_report("Продажби", ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
                              formatted)
 
@@ -204,6 +173,7 @@ class ReportsView:
 
             print("\nАнализ по FIFO")
             print("-" * 30)
+            print(f"Продукт: {data['product']}")
             print(f"Текуща наличност: {data['current_stock']} {data['unit']}")
             print(f"Общо движение: Вход: {data['total_in']} | Изход: {data['total_out']}")
             print("-" * 30)

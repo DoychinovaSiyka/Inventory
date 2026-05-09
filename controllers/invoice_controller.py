@@ -1,8 +1,7 @@
 from typing import List, Optional
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
-from filters.invoice_filters import (filter_by_customer, filter_by_product, filter_by_date,
-                                     filter_by_total_range, filter_by_date_range, filter_advanced)
+from filters import invoice_filters
 
 
 class InvoiceController:
@@ -13,102 +12,83 @@ class InvoiceController:
         self._reload()
 
     def _reload(self):
-        """ Зарежда фактурите от хранилището. """
+        """ Зарежда всички фактури от базата и ги превръща в обекти. """
         raw = self.repo.load() or []
-        self.invoices = []
-        for inv in raw:
-            if isinstance(inv, dict):
-                obj = Invoice.from_dict(inv)
-                if obj:
-                    self.invoices.append(obj)
+        self.invoices = [Invoice.from_dict(inv) for inv in raw if isinstance(inv, dict)]
 
     def _save_changes(self):
-        """ Записва текущото състояние в хранилището. """
-        data = []
-        for inv in self.invoices:
-            data.append(inv.to_dict())
-        self.repo.save(data)
+        """ Записва списъка с фактури обратно в базата. """
+        self.repo.save([inv.to_dict() for inv in self.invoices])
 
     def add(self, invoice_data: dict, user_id: str) -> Invoice:
-        """ Ръчно генерирана фактура. """
         InvoiceValidator.validate_all(**invoice_data)
-
         invoice = Invoice(**invoice_data)
         self.invoices.append(invoice)
         self._save_changes()
-
         return invoice
 
     def create_from_movement(self, movement, product, customer: str, user_id: str) -> Invoice:
-        """ Автоматично генериране при продажба. """
-
+        """ Автоматично прави фактура, когато се случи продажба в склада. """
         qty = float(movement.quantity)
-        unit_price = float(movement.price)
-        total_price = round(qty * unit_price, 2)
+        u_price = float(movement.price)
+        total = round(qty * u_price, 2)
 
 
-        if not customer or str(customer).strip() == "":
-            customer = "Общ клиент"
+        cust_name = str(customer).strip() if customer else "Общ клиент"
 
         invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
-                          unit_price=unit_price, total_price=total_price, customer=customer,
-                          movement_id=movement.movement_id, date=movement.date, created=movement.date,
-                          modified=movement.date, invoice_id=None)
+                          unit_price=u_price, total_price=total, customer=cust_name,
+                          movement_id=movement.movement_id, date=movement.date, invoice_id=None)
 
         self.invoices.append(invoice)
         self._save_changes()
-
         return invoice
 
     def get_all(self) -> List[Invoice]:
-        return self.invoices or []
+        """ Връща целия списък с фактури. """
+        return self.invoices
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        target_id = str(invoice_id).strip()
-        if not target_id:
+        """ Търси конкретна фактура по нейното ID. """
+
+        tid = str(invoice_id or "").strip()
+        if not tid:
             return None
 
         for inv in self.invoices:
-            if inv.invoice_id == target_id:
+            if inv.invoice_id == tid:
                 return inv
+
         for inv in self.invoices:
-            if inv.invoice_id.startswith(target_id):
+            if inv.invoice_id.startswith(tid):
                 return inv
 
         return None
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
+        """ Изтрива фактура по ID. """
         inv = self.get_by_id(invoice_id)
-        if not inv:
-            return False
-
-        new_list = []
-        for i in self.invoices:
-            if i.invoice_id != inv.invoice_id:
-                new_list.append(i)
-
-        self.invoices = new_list
+        if not inv: return False
+        self.invoices = [i for i in self.invoices if i.invoice_id != inv.invoice_id]
         self._save_changes()
         return True
 
+
     def search_by_customer(self, keyword: str) -> List[Invoice]:
-        clean_keyword = str(keyword or "").strip()
-        if clean_keyword == "":
-            return self.get_all()
-        return filter_by_customer(self.invoices, clean_keyword) or []
+        """ Справка по име на клиент. """
+        return invoice_filters.filter_by_customer(self.invoices, keyword)
 
     def search_by_product(self, keyword: str) -> List[Invoice]:
-        clean_keyword = str(keyword or "").strip()
-        if clean_keyword == "":
-            return self.get_all()
-        return filter_by_product(self.invoices, clean_keyword) or []
+        """ Справка по име на продукт. """
+        return invoice_filters.filter_by_product(self.invoices, keyword)
 
     def search_by_date(self, date_str: str) -> List[Invoice]:
+        """ Справка за фактури от конкретна дата. """
         InvoiceValidator.validate_date(date_str)
-        return filter_by_date(self.invoices, date_str) or []
+        return invoice_filters.filter_by_date(self.invoices, date_str)
 
     def advanced_search(self, **kwargs) -> List[Invoice]:
-        """ Търсене по множество критерии. """
+        """ Справка по много критерии едновременно (дати + цени + имена). """
         InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"),
                                                  kwargs.get("min_total"), kwargs.get("max_total"))
-        return filter_advanced(self.invoices, **kwargs) or []
+        return invoice_filters.filter_advanced(self.invoices, **kwargs)

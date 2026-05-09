@@ -8,7 +8,9 @@ class InventoryController:
         self.location_controller = location_controller
 
         raw = self.repo.load()
-        if raw:
+
+        # Синхронизираме структурата на данните
+        if raw and "products" in raw:
             self.data = raw
         else:
             self.data = {"products": {}}
@@ -30,7 +32,7 @@ class InventoryController:
         if loc:
             return loc.location_id
 
-        return None
+        return str(input_id)
 
     def get_stock_by_location(self, product_id: str, location_id: str) -> float:
         pid = self._get_full_product_id(product_id)
@@ -43,7 +45,11 @@ class InventoryController:
             return 0.0
 
         locations = self.data["products"][pid].get("locations", {})
-        return float(locations.get(lid, 0.0))
+
+        if lid in locations:
+            return float(locations[lid])
+
+        return 0.0
 
     def get_total_stock(self, product_id: str) -> float:
         pid = self._get_full_product_id(product_id)
@@ -52,8 +58,8 @@ class InventoryController:
             return 0.0
 
         locations = self.data["products"][pid].get("locations", {})
-        total = 0.0
 
+        total = 0.0
         for qty in locations.values():
             total += float(qty)
 
@@ -66,16 +72,15 @@ class InventoryController:
         if not lid:
             return
 
-        qty_to_add = float(quantity)
-
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
         locations = self.data["products"][pid]["locations"]
 
         current = float(locations.get(lid, 0.0))
-        locations[lid] = current + qty_to_add
+        new_value = current + float(quantity)
 
+        locations[lid] = new_value
         self._save()
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
@@ -85,13 +90,12 @@ class InventoryController:
         if not lid:
             return False
 
-        qty_to_remove = float(quantity)
-
         if pid not in self.data["products"]:
             return False
 
         locations = self.data["products"][pid]["locations"]
         current = float(locations.get(lid, 0.0))
+        qty_to_remove = float(quantity)
 
         if current < qty_to_remove:
             return False
@@ -101,71 +105,74 @@ class InventoryController:
         return True
 
     def rebuild_inventory_from_movements(self, movements: List):
+        """Пълно преизчисляване на база хронологията на движенията."""
+
         self.data = {"products": {}}
 
-        sorted_movements = sorted(movements, key=lambda x: x.date)
-        for m in sorted_movements:
+        # Сортираме движенията ръчно по дата
+        sorted_moves = movements[:]
+        sorted_moves.sort(key=lambda m: m.date)
+
+        for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
+            m_type = m.movement_type.name
 
             if pid not in self.data["products"]:
                 self.data["products"][pid] = {"locations": {}}
 
             locations = self.data["products"][pid]["locations"]
-            m_type = m.movement_type.name
 
-            if m_type == "IN":
-                if m.location_id:
-                    lid = str(m.location_id)
-                    current = float(locations.get(lid, 0.0))
-                    locations[lid] = current + qty
+            if m_type == "IN" and m.location_id:
+                lid = str(m.location_id)
+                current = float(locations.get(lid, 0.0))
+                locations[lid] = current + qty
 
-            elif m_type == "OUT":
-                if m.location_id:
-                    lid = str(m.location_id)
-                    current = float(locations.get(lid, 0.0))
-                    new_val = current - qty
-                    if new_val < 0:
-                        new_val = 0.0
-                    locations[lid] = new_val
+            elif m_type == "OUT" and m.location_id:
+                lid = str(m.location_id)
+                current = float(locations.get(lid, 0.0))
+                new_value = current - qty
+                if new_value < 0:
+                    new_value = 0.0
+                locations[lid] = new_value
 
             elif m_type == "MOVE":
-                from_loc = m.from_location_id
-                to_loc = m.to_location_id
+                from_lid = str(m.from_location_id) if m.from_location_id else None
+                to_lid = str(m.to_location_id) if m.to_location_id else None
 
-                if from_loc:
-                    from_loc = str(from_loc)
-                    current = float(locations.get(from_loc, 0.0))
-                    new_val = current - qty
-                    if new_val < 0:
-                        new_val = 0.0
-                    locations[from_loc] = new_val
+                if from_lid:
+                    current = float(locations.get(from_lid, 0.0))
+                    new_value = current - qty
+                    if new_value < 0:
+                        new_value = 0.0
+                    locations[from_lid] = new_value
 
-                if to_loc:
-                    to_loc = str(to_loc)
-                    current = float(locations.get(to_loc, 0.0))
-                    locations[to_loc] = current + qty
+                if to_lid:
+                    current = float(locations.get(to_lid, 0.0))
+                    locations[to_lid] = current + qty
 
         self._save()
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        pid = self._get_full_product_id(product_id)
+        """Пресмята себестойността на продадените стоки по FIFO метода."""
 
+        pid = self._get_full_product_id(product_id)
         batches = []
         total_cost = 0.0
 
+        # Филтрираме движенията за този продукт
         relevant = []
         for m in movements:
             if str(m.product_id) == pid:
                 relevant.append(m)
 
-        relevant.sort(key=lambda x: x.date)
+
+        relevant.sort(key=lambda m: m.date)
 
         for m in relevant:
-            mtype = m.movement_type.name
             qty = float(m.quantity)
 
-            if mtype == "IN":
+            if m.movement_type.name == "IN":
                 if m.price is not None:
                     price = float(m.price)
                 else:
@@ -173,52 +180,51 @@ class InventoryController:
 
                 batches.append({"qty": qty, "price": price})
 
-            elif mtype == "OUT":
+            elif m.movement_type.name == "OUT":
                 need = qty
 
                 while need > 0 and batches:
-                    if batches[0]["qty"] <= need:
-                        total_cost += batches[0]["qty"] * batches[0]["price"]
-                        need -= batches[0]["qty"]
+                    first = batches[0]
+
+                    if first["qty"] <= need:
+                        total_cost += first["qty"] * first["price"]
+                        need -= first["qty"]
                         batches.pop(0)
                     else:
-                        total_cost += need * batches[0]["price"]
-                        batches[0]["qty"] -= need
+                        total_cost += need * first["price"]
+                        first["qty"] -= need
                         need = 0
 
         return round(total_cost, 2)
 
     def get_total_inventory_value_fifo(self, movement_controller) -> float:
-        total_inventory_value = 0.0
+        """Пресмята стойността на текущата наличност в склада по FIFO."""
 
-        movements_source = movement_controller.movements
-        if isinstance(movements_source, dict):
-            all_movements = []
-            for key in movements_source:
-                all_movements.append(movements_source[key])
-        else:
-            all_movements = movements_source
+        total_value = 0.0
+        all_movements = movement_controller.get_all()
 
         for pid in self.data.get("products", {}).keys():
-            prod_movements = []
-            for m in all_movements:
-                if str(m.product_id) == str(pid):
-                    prod_movements.append(m)
-
-            prod_movements.sort(key=lambda x: x.date)
-
             product_obj = self.product_controller.get_by_id(pid)
+
             if product_obj:
                 fallback = float(product_obj.price)
             else:
                 fallback = 0.0
 
+            # Събираме движенията за този продукт
+            prod_moves = []
+            for m in all_movements:
+                if str(m.product_id) == pid:
+                    prod_moves.append(m)
+
+
+            prod_moves.sort(key=lambda m: m.date)
             batches = []
 
-            for m in prod_movements:
-                m_type = m.movement_type.name
+            for m in prod_moves:
                 qty = float(m.quantity)
-                if m_type == "IN":
+
+                if m.movement_type.name == "IN":
                     if m.price is not None:
                         price = float(m.price)
                     else:
@@ -226,17 +232,21 @@ class InventoryController:
 
                     batches.append({"qty": qty, "price": price})
 
-                elif m_type == "OUT":
+                elif m.movement_type.name == "OUT":
                     need = qty
+
                     while need > 0 and batches:
-                        if batches[0]["qty"] <= need:
-                            need -= batches[0]["qty"]
+                        first = batches[0]
+
+                        if first["qty"] <= need:
+                            need -= first["qty"]
                             batches.pop(0)
                         else:
-                            batches[0]["qty"] -= need
+                            first["qty"] -= need
                             need = 0
 
+            # Сумираме стойността на останалите партиди
             for b in batches:
-                total_inventory_value += b["qty"] * b["price"]
+                total_value += b["qty"] * b["price"]
 
-        return round(total_inventory_value, 2)
+        return round(total_value, 2)

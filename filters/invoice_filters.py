@@ -3,137 +3,109 @@ from models.invoice import Invoice
 from datetime import datetime
 
 
-# Помощна функция за парсване на дати в няколко формата
 def _parse_invoice_date(date_str: str) -> Optional[datetime]:
+    """ Превръща текста в дата, за да можем да сравняваме периоди. """
     if not date_str:
         return None
+    date_str = str(date_str).strip()
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(date_str.strip(), fmt)
+            return datetime.strptime(date_str, fmt)
         except ValueError:
             continue
     return None
 
 
-
-def _clean_number(value):
-    """Премахвам 'лв', интервали и запетаи, за да може да се парсне като число."""
-    if value is None or value == "":
-        return None
-
-    value = (str(value).replace("лв.", "")
-             .replace("лв", "").replace(" ", "")
-             .replace(",", "."))
-    try:
-        return float(value)
-    except ValueError:
-        return None
-
-
 def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
+    """Търси фактури по името на клиента по част от име."""
+
     if not keyword:
         return invoices
 
-    keyword = keyword.lower().strip()
-    search_parts = keyword.split()
+    keyword = str(keyword).strip()
     results = []
 
     for inv in invoices:
-        client_name = inv.customer.lower() if inv.customer else ""
+        customer_name = inv.customer or ""
+        customer_name = customer_name.strip()
 
-        # Проверяваме всяка част от търсенето поотделно
-        match = True
-        for part in search_parts:
-            if part not in client_name:
-                match = False
+        if len(keyword) > len(customer_name):
+            continue
+
+        name_parts = customer_name.split()
+
+        # Дали keyword се съдържа в която и да е част
+        match_found = False
+        for part in name_parts:
+            if keyword in part:
+                match_found = True
                 break
-        if match:
+        if match_found:
             results.append(inv)
-    return results
 
+    return results
 
 
 def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
+    """ Филтрира фактурите по името на продадения продукт. """
     if not keyword:
         return invoices
+    keyword = str(keyword).lower().strip()
+    return [inv for inv in invoices if keyword in (inv.product or "").lower()]
 
-    keyword = keyword.lower().strip()
-    return [inv for inv in invoices if keyword in inv.product.lower()]
 
-
-# Търсене по дата – проверявам дали датата започва с подадения текст
 def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
+    """ Бързо търсене на фактури от конкретен ден. """
     if not date_str:
         return invoices
+    target = str(date_str).strip()
+    return [inv for inv in invoices if str(inv.date).startswith(target)]
 
-    date_str = date_str.strip()
-    return [inv for inv in invoices if inv.date.startswith(date_str)]
 
-
-# Филтър по диапазон на общата цена
-def filter_by_total_range(invoices: List[Invoice],
-                          min_value: Optional[float],
-                          max_value: Optional[float]) -> List[Invoice]:
-
-    min_value = _clean_number(min_value)
-    max_value = _clean_number(max_value)
-
+def filter_by_total_range(invoices: List[Invoice], min_v: Optional[float], max_v: Optional[float]) -> List[Invoice]:
+    """ Търси фактури в диапазон на цената (например от 100 до 500 лв). """
     results = invoices
-
-    if min_value is not None:
-        results = [inv for inv in results if float(inv.total_price) >= min_value]
-
-    if max_value is not None:
-        results = [inv for inv in results if float(inv.total_price) <= max_value]
-
+    if min_v is not None:
+        results = [i for i in results if float(i.total_price) >= float(min_v)]
+    if max_v is not None:
+        results = [i for i in results if float(i.total_price) <= float(max_v)]
     return results
 
 
-def filter_by_date_range(invoices: List[Invoice], start_date: Optional[str], end_date: Optional[str]) -> List[Invoice]:
-
-    if not start_date and not end_date:
+def filter_by_date_range(invoices: List[Invoice], start_str: Optional[str], end_str: Optional[str]) -> List[Invoice]:
+    """ Търси фактури издадени между две дати. """
+    if not start_str and not end_str:
         return invoices
 
-    start = _parse_invoice_date(start_date) if start_date else None
-    end = _parse_invoice_date(end_date) if end_date else None
+    start_dt = _parse_invoice_date(start_str)
+    end_dt = _parse_invoice_date(end_str)
 
     filtered = []
-
     for inv in invoices:
-        inv_date = _parse_invoice_date(inv.date)
-        if not inv_date:
+        inv_dt = _parse_invoice_date(inv.date)
+        if not inv_dt:
             continue
 
-        # Ако датата е преди началната – пропускам
-        if start and inv_date < start:
+        if start_dt and inv_dt < start_dt:
             continue
-
-        # Ако има крайна дата, проверявам дали попада в диапазона
-        if end:
-            # Ако е подадена само дата без час – приемам края на деня
-            if len(end_date.strip()) <= 10:
-                inv_date_only = inv_date.replace(hour=0, minute=0, second=0, microsecond=0)
-                if inv_date_only > end:
-                    continue
-            elif inv_date > end:
-                continue
-
+        if end_dt and inv_dt > end_dt:
+            continue
         filtered.append(inv)
-
     return filtered
 
 
-# Комбиниран филтър – прилага всички критерии един след друг
-def filter_advanced(invoices: List[Invoice], customer: Optional[str] = None,
-                    product: Optional[str] = None, start_date: Optional[str] = None, end_date: Optional[str] = None,
-                    min_total: Optional[float] = None, max_total: Optional[float] = None) -> List[Invoice]:
+def filter_advanced(invoices: List[Invoice], **kwargs) -> List[Invoice]:
+    """Комбинира всичко (клиент, продукт, дати и цени) в едно търсене. """
+    res = invoices
+    if kwargs.get("customer"):
+        res = filter_by_customer(res, kwargs["customer"])
+    if kwargs.get("product"):
+        res = filter_by_product(res, kwargs["product"])
 
-    results = invoices
-    if customer:
-        results = filter_by_customer(results, customer)
-    if product:
-        results = filter_by_product(results, product)
+    if kwargs.get("start_date") or kwargs.get("end_date"):
+        res = filter_by_date_range(res, kwargs.get("start_date"), kwargs.get("end_date"))
 
-    results = filter_by_date_range(results, start_date, end_date)
-    results = filter_by_total_range(results, min_total, max_total)
-    return results
+    if kwargs.get("min_total") is not None or kwargs.get("max_total") is not None:
+        res = filter_by_total_range(res, kwargs.get("min_total"), kwargs.get("max_total"))
+
+    return res
