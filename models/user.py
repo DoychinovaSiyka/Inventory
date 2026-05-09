@@ -44,6 +44,7 @@ class User:
 
     def to_dict(self):
         """Връща User като речник за JSON запис."""
+
         return {"user_id": self.user_id, "first_name": self.first_name, "last_name": self.last_name,
                 "email": self.email, "username": self.username, "password": self.password,
                 "role": self.role, "status": self.status, "created": self.created,

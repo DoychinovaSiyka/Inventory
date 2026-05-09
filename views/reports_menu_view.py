@@ -35,7 +35,6 @@ class ReportsView:
         formatted = format_fn(result.data)
         self._display_report(title, headers, formatted)
 
-    # Оптимизирано главно меню на справки
 
     def show_menu(self, user):
         menu = Menu("СПРАВКИ", [
@@ -47,8 +46,7 @@ class ReportsView:
             MenuItem("6", "Търсене продажби по клиент", self.search_sales_by_customer),
             MenuItem("7", "Търсене продажби по продукт", self.search_sales_by_product),
             MenuItem("8", "Анализ по FIFO", self.report_fifo_analysis),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
     # Форматиращи функции

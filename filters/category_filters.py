@@ -2,7 +2,7 @@ from typing import List
 from models.category import Category
 
 def filter_categories(categories: List[Category], keyword: str) -> List[Category]:
-    """Търси в списък с категории по име или описание (case-insensitive)."""
+    """Търси в списък с категории по име или описание."""
     if not keyword:
         return categories
 
@@ -19,7 +19,7 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
     return results
 
 def get_all_children_objects(categories: List[Category], parent_id: str) -> List[Category]:
-    """Рекурсивно събира ВСИЧКИ обекти (категории), които са наследници на parent_id."""
+    """Рекурсивно събира ВСИЧКИ обекти, които са наследници на parent_id."""
     results = []
     if not parent_id:
         return results
@@ -38,5 +38,4 @@ def get_all_children_ids(categories: List[Category], parent_id: str) -> List[str
     """Връща списък от ID-то на родителя и ВСИЧКИ негови наследници (за филтриране)."""
     # Взимаме обектите наследници
     children = get_all_children_objects(categories, parent_id)
-    # Връщаме началния ID + всички намерени ID-та
     return [str(parent_id)] + [str(c.category_id) for c in children]

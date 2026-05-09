@@ -26,7 +26,6 @@ class MovementValidator:
         mt = str(movement_type).strip().upper()
 
         mapping = {"1": "IN", "2": "OUT", "3": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
-
         if mt not in mapping:
             raise ValueError("Невалиден тип движение. Допустими: IN, OUT, MOVE.")
 
@@ -39,7 +38,6 @@ class MovementValidator:
 
         raw = str(quantity).lower().strip()
         raw = raw.replace(",", ".")
-
 
         tokens = ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]
         for t in tokens:
@@ -95,7 +93,6 @@ class MovementValidator:
 
         loc_input = str(loc_id).strip()
         locations = location_controller.get_all()
-
 
         if loc_input.isdigit() and len(loc_input) < 3:
             num = int(loc_input)

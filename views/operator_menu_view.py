@@ -22,6 +22,7 @@ class OperatorMenuView:
         self.supplier_controller = controllers["supplier"]
         self.inventory_controller = controllers["inventory"]
 
+
     def _build_menu(self):
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти (защитено)", self.open_products),
@@ -31,21 +32,22 @@ class OperatorMenuView:
             MenuItem("5", "Архив фактури (защитено)", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("7", "Преглед на складови локации", self.open_locations_readonly),
-            MenuItem("0", "Изход", lambda u: "break")
-        ])
+            MenuItem("0", "Изход", lambda u: "break")])
 
     def show_menu(self, user):
-        if not hasattr(user, "role"):
-            print("\nНеуспешно разпознаване на потребителски права.")
+        if user is None or not user.role:
+            print("\nГрешка: неуспешно разпознаване на потребител.")
             return
 
         if user.role.lower() == "guest":
             print("\nНямате достъп до операторския модул.")
             return
 
+
         while True:
             menu = self._build_menu()
             choice = menu.show()
+
             if choice == "0" or choice is None:
                 break
 
@@ -53,17 +55,9 @@ class OperatorMenuView:
             if result == "break":
                 break
 
-    # ЗАЩИТЕНИ МЕНЮТА — изискват парола
-    # (готово за бъдещо разширение: require_password може да приема user_controller)
-
     @require_password("parola123")
     def open_products(self, user):
-        view = ProductMenuView(
-            self.product_controller,
-            self.category_controller,
-            self.inventory_controller,
-            self.movement_controller
-        )
+        view = ProductMenuView(self.product_controller, self.category_controller, self.inventory_controller, self.movement_controller)
         view.show_menu(user)
 
     @require_password("parola123")
@@ -82,16 +76,9 @@ class OperatorMenuView:
         view.show_menu(user)
 
     # СВОБОДЕН ДОСТЪП
-
     def open_movements(self, user):
-        view = MovementView(
-            self.product_controller,
-            self.movement_controller,
-            self.user_controller,
-            self.location_controller,
-            self.supplier_controller,
-            self.inventory_controller
-        )
+        view = MovementView(self.product_controller, self.movement_controller,
+                            self.user_controller, self.location_controller, self.supplier_controller, self.inventory_controller)
         view.show_menu(user)
 
     def open_locations_readonly(self, user):

@@ -217,7 +217,7 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
 
-    # ПРЕМЕСТВАНЕ (MOVE)
+
 
     def process_transfer(self, user):
         print("\nВътрешно преместване")
@@ -229,11 +229,9 @@ class MovementView:
         from_loc = self._select_item(self.location_controller.get_all(), "склад ИЗТОЧНИК")
         if not from_loc:
             return
-
         to_loc = self._select_item(self.location_controller.get_all(), "склад ПОЛУЧАТЕЛ")
         if not to_loc:
             return
-
         if from_loc.location_id == to_loc.location_id:
             print("Двата склада съвпадат.")
             return
@@ -243,13 +241,8 @@ class MovementView:
             return
 
         try:
-            self.movement_controller.move_stock(
-                product.product_id,
-                qty,
-                from_loc.location_id,
-                to_loc.location_id,
-                user.user_id
-            )
+            self.movement_controller.move_stock(product.product_id, qty,
+                                                from_loc.location_id, to_loc.location_id, user.user_id)
             print(f"\nПреместени {qty:.2f} {product.unit}.")
         except Exception as e:
             print(f"Проблем при преместването: {e}")
@@ -279,16 +272,9 @@ class MovementView:
             t_loc = self.location_controller.get_by_id(m.to_location_id)
             loc_text = f"{f_loc.name[:5]}->{t_loc.name[:5]}" if f_loc and t_loc else "MOVE"
 
-        return [
-            str(m.movement_id)[:8],
-            str(m.date)[5:16],
-            m_type,
-            p_name,
-            f"{m.quantity:.2f}",
-            f"{float(m.price):.2f}",
-            partner,
-            loc_text
-        ]
+        return [str(m.movement_id)[:8], str(m.date)[5:16], m_type, p_name,
+                f"{m.quantity:.2f}", f"{float(m.price):.2f}", partner, loc_text]
+
 
     def show_history(self, _):
         movements = self.movement_controller.get_all()

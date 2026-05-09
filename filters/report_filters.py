@@ -3,7 +3,6 @@ from models.movement import Movement
 from models.invoice import Invoice
 
 def _match_string(target: str, keyword: str) -> bool:
-    """Помощна функция за търсене на текст."""
     if not keyword:
         return True
     return keyword.lower().strip() in (target or "").lower()
@@ -34,7 +33,6 @@ def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
     return [inv for inv in invoices if _match_string(inv.customer, keyword)]
 
 def filter_sales_by_product(invoices: List[Invoice], product_name: str):
-    """Търсене на продажби по име на продукт."""
     return [inv for inv in invoices if _match_string(inv.product, product_name)]
 
 def group_turnover_by_day(invoices: List[Invoice]):

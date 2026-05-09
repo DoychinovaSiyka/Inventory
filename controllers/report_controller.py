@@ -4,7 +4,7 @@ from filters import report_filters
 
 
 class ReportResult:
-    # Малък контейнер за резултатите от справките
+    # контейнер за резултатите от справките
     def __init__(self, summary, data):
         self.summary = summary
         self.data = data
@@ -21,21 +21,17 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
+
+
     def _map_invoices_to_data(self, invoices):
-        # Превръщаме фактурите в удобни редове за показване
         rows = []
         for i in invoices:
-            rows.append({
-                "invoice_number": i.invoice_id[:8],
-                "date": str(i.date)[:10],
-                "client": i.customer,
-                "product": i.product,
-                "total_price": i.total_price
-            })
+            rows.append({"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10],
+                         "client": i.customer, "product": i.product, "total_price": i.total_price})
         return rows
 
+    # Обща справка за всички продажби
     def report_sales(self):
-        # Обща справка за всички продажби
         invoices = self.invoice_controller.get_all() or []
         total_sum = 0.0
 
@@ -45,16 +41,14 @@ class ReportController:
             except:
                 pass
 
-        summary = {
-            "total_count": len(invoices),
-            "total_revenue": round(total_sum, 2)
-        }
+        summary = {"total_count": len(invoices), "total_revenue": round(total_sum, 2)}
 
         data = self._map_invoices_to_data(invoices)
         return ReportResult(summary, data)
 
+
+    # Продажби за конкретен клиент
     def report_sales_by_customer(self, customer_name: str):
-        # Продажби за конкретен клиент
         invoices = self.invoice_controller.get_all() or []
         filtered = report_filters.filter_sales_by_customer(invoices, customer_name)
 
@@ -62,8 +56,8 @@ class ReportController:
         data = self._map_invoices_to_data(filtered)
         return ReportResult(summary, data)
 
+    # Продажби за конкретен продукт
     def report_sales_by_product(self, product_name: str):
-        # Продажби за конкретен продукт
         invoices = self.invoice_controller.get_all() or []
         filtered = report_filters.filter_sales_by_product(invoices, product_name)
 
@@ -72,7 +66,7 @@ class ReportController:
         return ReportResult(summary, data)
 
     def report_movements(self):
-        # Пълен списък на всички движения
+        # Списък на всички движения
         rows = []
 
         for m in self.movement_controller.movements:
@@ -96,22 +90,16 @@ class ReportController:
                 from_loc = fl.name if fl else "Източник"
                 to_loc = tl.name if tl else "Цел"
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "type": mtype,
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_loc,
-                "to": to_loc
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "type": mtype,
+                         "product": m.product_name, "quantity": m.quantity,
+                         "unit": m.unit, "from": from_loc, "to": to_loc})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
+
+    # Всички доставки (IN)
     def report_deliveries_all(self, keyword=None):
-        # Всички доставки (IN)
         all_moves = self.movement_controller.movements
         deliveries = report_filters.filter_movements_by_type(all_moves, "IN")
 
@@ -126,21 +114,16 @@ class ReportController:
                 if kw not in m.product_name.lower() and kw not in supplier_name.lower():
                     continue
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "price": float(m.price or 0),
-                "supplier": supplier_name
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10],
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "price": float(m.price or 0),
+                         "supplier": supplier_name})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
+
+    # Обобщена справка за наличностите по локации
     def report_inventory_summary(self):
-        # Обобщена справка за наличностите по локации
         rows = []
 
         for p in self.product_controller.get_all():
@@ -166,20 +149,18 @@ class ReportController:
                     except:
                         pass
 
-            rows.append({
-                "product": p.name,
-                "available": f"{stock} {p.unit}",
-                "sold": f"{sold} {p.unit}" if sold > 0 else "0",
-                "top_locations": loc_str
-            })
+            rows.append({"product": p.name, "available": f"{stock} {p.unit}",
+                         "sold": f"{sold} {p.unit}" if sold > 0 else "0",
+                         "top_locations": loc_str})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
-    def product_lifecycle(self, name_or_id):
-        # Пълен жизнен цикъл на продукт
-        product = self.product_controller.get_by_id(name_or_id)
 
+
+    # Пълен жизнен цикъл на продукт
+    def product_lifecycle(self, name_or_id):
+        product = self.product_controller.get_by_id(name_or_id)
         if not product:
             search = str(name_or_id).lower()
             for p in self.product_controller.get_all():
@@ -204,13 +185,6 @@ class ReportController:
         fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements, product.price)
         current_stock = self.inventory_controller.get_total_stock(pid)
 
-        return {
-            "product": product.name,
-            "unit": product.unit,
-            "total_in": total_in,
-            "total_out": total_out,
-            "current_stock": current_stock,
-            "revenue": round(revenue, 2),
-            "fifo_cost": round(fifo_cost, 2),
-            "profit": round(revenue - fifo_cost, 2)
-        }
+        return {"product": product.name, "unit": product.unit, "total_in": total_in,
+                "total_out": total_out, "current_stock": current_stock, "revenue": round(revenue, 2),
+                "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}

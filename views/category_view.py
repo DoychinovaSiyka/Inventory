@@ -8,7 +8,6 @@ class CategoryView:
     def _ask_required_string(self, prompt, min_len=2):
         while True:
             value = input(prompt).strip()
-
             if value.lower() == "отказ":
                 return "cancel"
 
@@ -82,10 +81,7 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            self.controller.add(
-                {"name": name, "description": description, "parent_id": parent_id},
-                user_id=user.user_id
-            )
+            self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
             print(f"\nКатегорията '{name}' е добавена.")
         except Exception as e:
             print(f"Неуспешен запис: {e}")
@@ -99,7 +95,7 @@ class CategoryView:
         print(f"\nРедакция на: {category.name}")
         print("(Enter запазва старата стойност, 'отказ' за изход)")
 
-        # Име
+
         while True:
             new_name = input(f"Ново име [{category.name}]: ").strip()
             if new_name.lower() == "отказ":
@@ -112,7 +108,7 @@ class CategoryView:
                 continue
             break
 
-        # Описание
+
         while True:
             new_desc = input(f"Ново описание [{category.description}]: ").strip()
             if new_desc.lower() == "отказ":

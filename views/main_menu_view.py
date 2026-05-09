@@ -23,8 +23,8 @@ class MainMenuView:
             MenuItem("6", "Справки", self.open_reports),
             MenuItem("7", "Потребители", self.open_users),
             MenuItem("8", "Най-кратък път между складове (Dijkstra)", self.open_graph),
-            MenuItem("0", "Изход", lambda u: "break")
-        ])
+            MenuItem("0", "Изход", lambda u: "break")])
+
 
     def show_menu(self, user):
         while True:
@@ -34,7 +34,7 @@ class MainMenuView:
             if result == "break":
                 break
 
-    # Действия - методи, които отварят съответните под-изгледи (Views)
+
     def open_products(self, user):
         ProductView(self.controllers["product"], self.controllers["category"],
                     self.controllers["location"], self.controllers["activity_log"]).show_menu(user)

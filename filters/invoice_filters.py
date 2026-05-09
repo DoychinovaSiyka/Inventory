@@ -34,7 +34,6 @@ def filter_by_customer(invoices: List[Invoice], keyword: str) -> List[Invoice]:
 
         name_parts = customer_name.split()
 
-        # Дали keyword се съдържа в която и да е част
         match_found = False
         for part in name_parts:
             if keyword in part:

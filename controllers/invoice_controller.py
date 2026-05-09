@@ -34,8 +34,10 @@ class InvoiceController:
         u_price = float(movement.price)
         total = round(qty * u_price, 2)
 
-
-        cust_name = str(customer).strip() if customer else "Общ клиент"
+        if customer:
+            cust_name = str(customer).strip()
+        else:
+            cust_name = "Общ клиент"
 
         invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
                           unit_price=u_price, total_price=total, customer=cust_name,

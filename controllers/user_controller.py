@@ -36,7 +36,6 @@ class UserController:
         return self.get_by_username(identifier)
 
     def _hash_password(self, password: str) -> str:
-        # Елементарно хеширане (учебна цел)
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
@@ -49,7 +48,6 @@ class UserController:
         self.repo.save([u.to_dict() for u in self.users])
 
     def get_by_username(self, username: str) -> Optional[User]:
-        # Търсене по username
         if not username:
             return None
 
@@ -60,11 +58,9 @@ class UserController:
         return None
 
     def get_all(self):
-        # Връщаме всички потребители
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        # Търсене по ID или начало на ID
         if not user_id:
             return None
 
@@ -83,7 +79,6 @@ class UserController:
         return None
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
-        # Проверки за валидност
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
@@ -163,16 +158,8 @@ class UserController:
         self.save_changes()
 
     def _create_default_operator(self):
-        # Създаваме оператор по подразбиране
-        operator = User(
-            user_id=None,
-            first_name="Operator",
-            last_name="User",
-            email="operator@example.com",
-            username="operator",
-            password=self._hash_password("operator123"),
-            role="Operator",
-            status="Active"
-        )
+        operator = User(user_id=None, first_name="Operator", last_name="User",
+                        email="operator@example.com", username="operator", password=self._hash_password("operator123"),
+                        role="Operator", status="Active")
         self.users.append(operator)
         self.save_changes()

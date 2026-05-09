@@ -22,8 +22,8 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
             MenuItem("4", "По количество (високо -> ниско)", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско -> високо)", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
 
     def sort_by_name(self, _):
         products = self.product_controller.get_sorted_by_name()

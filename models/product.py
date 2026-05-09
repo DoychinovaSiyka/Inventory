@@ -6,9 +6,8 @@ class Product:
     def __init__(self, product_id, name, categories, unit, description, price,
                  created=None, modified=None):
 
-        # Генерираме ID, ако липсва
-        self.product_id = str(product_id) if product_id else str(uuid.uuid4())
 
+        self.product_id = str(product_id) if product_id else str(uuid.uuid4())
         self.name = name
         self.categories = categories      # списък от Category обекти или ID-та
         self.unit = unit
@@ -33,16 +32,10 @@ class Product:
         return ids_list
 
     def to_dict(self):
-        return {
-            "product_id": self.product_id,
-            "name": self.name,
-            "categories": self.get_category_ids(),
-            "unit": self.unit,
-            "description": self.description,
-            "price": self.price,
-            "created": self.created,
-            "modified": self.modified
-        }
+        return {"product_id": self.product_id, "name": self.name,
+                "categories": self.get_category_ids(), "unit": self.unit,
+                "description": self.description, "price": self.price,
+                "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data, category_controller=None):
@@ -56,16 +49,9 @@ class Product:
         else:
             categories_list = raw_ids
 
-        return Product(
-            product_id=data.get("product_id"),
-            name=data.get("name"),
-            categories=categories_list,
-            unit=data.get("unit"),
-            description=data.get("description", ""),
-            price=data.get("price", 0.0),
-            created=data.get("created"),
-            modified=data.get("modified")
-        )
+        return Product(product_id=data.get("product_id"), name=data.get("name"), categories=categories_list,
+                       unit=data.get("unit"), description=data.get("description", ""), price=data.get("price", 0.0),
+                       created=data.get("created"), modified=data.get("modified"))
 
     def __str__(self):
         short_id = self.product_id[:8]
@@ -76,8 +62,4 @@ class Product:
 
         cats_str = ", ".join(names) if names else "Няма"
 
-        return (
-            f"Продукт: {self.name} [ID: {short_id}]\n"
-            f"  Категории: {cats_str}\n"
-            f"  Цена: {self.price:.2f} {self.unit}"
-        )
+        return (f"Продукт: {self.name} [ID: {short_id}]\n" f"  Категории: {cats_str}\n" f"  Цена: {self.price:.2f} {self.unit}")

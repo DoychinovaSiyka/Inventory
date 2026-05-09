@@ -16,12 +16,8 @@ class AdminMenuView:
         self.inventory_controller = controllers["inventory"]
         self.movement_controller = controllers["movement"]
 
-        self.product_view = ProductMenuView(
-            controllers["product"],
-            controllers["category"],
-            controllers["inventory"],
-            controllers["movement"]
-        )
+        self.product_view = ProductMenuView(controllers["product"], controllers["category"],
+                                            controllers["inventory"], controllers["movement"])
 
         self.category_view = CategoryView(controllers["category"])
 
@@ -55,8 +51,9 @@ class AdminMenuView:
             MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
             MenuItem("9", "Управление на локации", lambda u: self.location_view.show_menu(u)),
             MenuItem("10", "Най-кратък път (Dijkstra)", lambda u: self.open_graph(u)),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
+
 
     def show_menu(self, user):
         if user.role.lower() != "admin":

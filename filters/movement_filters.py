@@ -4,49 +4,69 @@ from datetime import datetime
 
 
 def _parse_movement_date(date_val) -> Optional[datetime]:
-    """Парсва дата безопасно – работи и с обекти, и със стрингове."""
+    # Опитваме се да превърнем входа в дата.
+    # Ако вече е datetime – връщаме го.
+    # Ако е текст – пробваме няколко формата.
     if not date_val:
         return None
+
     if isinstance(date_val, datetime):
         return date_val
 
     date_str = str(date_val).strip()
-    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+
+    formats = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
+    for fmt in formats:
         try:
             return datetime.strptime(date_str, fmt)
         except ValueError:
-            continue
+            pass
+
     return None
 
 
 def filter_deliveries(movements: List[Movement], keyword: str,
                       product_controller, supplier_controller) -> List[Movement]:
-    """ Филтър за доставки (IN). Търси по име на продукт (от записа) или име на доставчик (през неговия контролер)."""
-    keyword = (keyword or "").lower().strip()
+    # Филтър само за доставки (IN)
+    # Търсим по име на продукт или име на доставчик
+    if keyword:
+        keyword = keyword.lower().strip()
+    else:
+        keyword = ""
 
-    # Вземаме само доставките
-    in_movements = [m for m in movements if m.movement_type == MovementType.IN]
+    # Първо взимаме само IN движенията
+    deliveries = []
+    for m in movements:
+        if m.movement_type == MovementType.IN:
+            deliveries.append(m)
 
-    if not keyword:
-        return in_movements
+    # Ако няма ключова дума – връщаме всички доставки
+    if keyword == "":
+        return deliveries
 
     results = []
-    for m in in_movements:
-        if keyword in (m.product_name or "").lower():
+
+    for m in deliveries:
+        # Проверка по име на продукт
+        product_name = m.product_name or ""
+        if keyword in product_name.lower():
             results.append(m)
             continue
 
-
+        # Проверка по име на доставчик
         if m.supplier_id and supplier_controller:
             supplier = supplier_controller.get_by_id(m.supplier_id)
-            if supplier and keyword in supplier.name.lower():
-                results.append(m)
-                continue
+            if supplier:
+                supplier_name = supplier.name.lower()
+                if keyword in supplier_name:
+                    results.append(m)
+                    continue
+
     return results
 
 
 def filter_advanced(movements: List[Movement], **kwargs):
-    """Главен комбиниран филтър. Поддържа всички критерии едновременно."""
+    # Комбиниран филтър – проверява всички критерии един по един
     results = []
 
     m_type = kwargs.get("movement_type")
@@ -56,39 +76,59 @@ def filter_advanced(movements: List[Movement], **kwargs):
     location_id = kwargs.get("location_id")
     user_id = kwargs.get("user_id")
 
-    # Подготвяме датите за сравнение веднъж
-    s_dt = _parse_movement_date(start_date)
-    e_dt = _parse_movement_date(end_date)
+
+    start_dt = _parse_movement_date(start_date)
+    end_dt = _parse_movement_date(end_date)
+
+    # Ако movement_type е обект, взимаме името му
+    expected_type = None
+    if m_type:
+        if isinstance(m_type, MovementType):
+            expected_type = m_type.name
+        else:
+            expected_type = str(m_type)
 
     for m in movements:
-        #  Филтър по тип (работи със стрингове или Enum обекти)
-        if m_type:
-            target_type = m_type.name if hasattr(m_type, 'name') else str(m_type)
-            if m.movement_type.name != target_type:
+
+        # Филтър по тип движение
+        if expected_type is not None:
+            if m.movement_type.name != expected_type:
                 continue
 
-        #  Филтър по дати (сравняваме datetime обекти)
-        m_dt = _parse_movement_date(m.date)
-        if s_dt and m_dt and m_dt < s_dt:
-            continue
-        if e_dt and m_dt and m_dt > e_dt:
-            continue
+        movement_dt = _parse_movement_date(m.date)
+        if start_dt is not None and movement_dt is not None:
+            if movement_dt < start_dt:
+                continue
 
-        #  Филтър по Продукт или Потребител
-        if product_id and str(m.product_id) != str(product_id):
-            continue
-        if user_id and str(m.user_id) != str(user_id):
-            continue
+        #  Филтър по дата (крайна)
+        if end_dt is not None and movement_dt is not None:
+            if movement_dt > end_dt:
+                continue
 
-        #  Филтър по Локация (обхваща и преместванията MOVE)
+        if product_id:
+            if str(m.product_id) != str(product_id):
+                continue
+
+        if user_id:
+            if str(m.user_id) != str(user_id):
+                continue
+
         if location_id:
-            loc_id = str(location_id)
+            wanted_loc = str(location_id)
+
             if m.movement_type == MovementType.MOVE:
-                # При MOVE проверяваме дали локацията е "ОТ" или "ДО"
-                if m.from_location_id != loc_id and m.to_location_id != loc_id:
+                # При MOVE проверяваме и двете локации
+                from_loc = str(m.from_location_id) if m.from_location_id else ""
+                to_loc = str(m.to_location_id) if m.to_location_id else ""
+
+                if wanted_loc != from_loc and wanted_loc != to_loc:
                     continue
-            elif m.location_id != loc_id:
-                continue
+            else:
+                # При IN/OUT проверяваме само основната локация
+                if str(m.location_id) != wanted_loc:
+                    continue
+
 
         results.append(m)
+
     return results

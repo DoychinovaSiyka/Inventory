@@ -105,7 +105,6 @@ class InvoiceView:
         max_total = self._input("Максимална сума: ")
 
         try:
-            # Вюто само предава стринговете, Контролерът ги "чисти" и валидира
             results = self.invoice_controller.advanced_search(
                 customer=customer,
                 product=product,

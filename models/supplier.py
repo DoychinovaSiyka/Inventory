@@ -18,6 +18,7 @@ class Supplier:
         self.created = created or now_val
         self.modified = modified or now_val
 
+
     def update_modified(self):
         """Обновява времето на последна промяна."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

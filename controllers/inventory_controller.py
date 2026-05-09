@@ -8,8 +8,6 @@ class InventoryController:
         self.location_controller = location_controller
 
         raw = self.repo.load()
-
-        # Ако има записан инвентар – ползваме го; иначе започваме с празна структура
         self.data = raw if raw and "products" in raw else {"products": {}}
 
     def _save(self):
@@ -22,17 +20,15 @@ class InventoryController:
         return product.product_id if product else str(input_id)
 
     def _get_full_location_id(self, input_id: str) -> str:
-        # Същото, но за локации
         if not input_id:
             return None
         loc = self.location_controller.get_by_id(str(input_id))
         return loc.location_id if loc else str(input_id)
 
     # Наличности
-
     def get_stock(self, product_id: str, location_id: str) -> float:
-        # Съвместимост с View-тата
         return self.get_stock_by_location(product_id, location_id)
+
 
     def get_stock_by_location(self, product_id: str, location_id: str) -> float:
         pid = self._get_full_product_id(product_id)
@@ -54,12 +50,10 @@ class InventoryController:
         return sum(float(q) for q in locations.values())
 
     # Промяна на количества
-
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         # Добавяме количество при доставка
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
-
         if not lid:
             return
 
@@ -90,7 +84,6 @@ class InventoryController:
         return True
 
     # Пълно пресмятане от движения
-
     def rebuild_inventory_from_movements(self, movements: List):
         # Пресмятаме инвентара от нулата по хронологията на движенията
         self.data = {"products": {}}
@@ -122,10 +115,9 @@ class InventoryController:
                     locs[from_lid] = max(0.0, locs.get(from_lid, 0.0) - qty)
                 if to_lid:
                     locs[to_lid] = locs.get(to_lid, 0.0) + qty
-
         self._save()
 
-    # FIFO себестойност
+
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         pid = self._get_full_product_id(product_id)
@@ -177,10 +169,7 @@ class InventoryController:
             product_obj = self.product_controller.get_by_id(pid)
             fb_price = float(product_obj.price) if product_obj else 0.0
 
-            prod_moves = sorted(
-                [m for m in all_moves if str(m.product_id) == pid],
-                key=lambda x: x.date
-            )
+            prod_moves = sorted([m for m in all_moves if str(m.product_id) == pid], key=lambda x: x.date)
 
             batches = []
 

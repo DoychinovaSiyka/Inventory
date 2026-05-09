@@ -7,7 +7,6 @@ from analytics.category_analytics import build_category_tree, get_category_stats
 
 class CategoryController:
     """Управлява категориите и гарантира йерархичната цялост."""
-
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         raw_data = self.repo.load() or []
@@ -58,7 +57,7 @@ class CategoryController:
         return None
 
     def get_subcategories(self, parent_id: Optional[str]) -> List[Category]:
-        """Връща само директните деца (ниво 1) на категорията."""
+        """Връща само децата - ниво 1 на категорията."""
         # Ако не е подаден родител, търсим тези с parent_id = None
         if not parent_id:
             return [c for c in self.categories if c.parent_id is None]
@@ -69,7 +68,6 @@ class CategoryController:
         return [c for c in self.categories if c.parent_id == pid]
 
     def search(self, keyword: str) -> List[Category]:
-        """Търсене чрез външния филтър модул."""
         cleaned = (keyword or "").strip()
         if len(cleaned) < 2:
             return []
