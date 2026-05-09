@@ -1,90 +1,109 @@
-from typing import List, Optional
+from typing import List
 from models.product import Product
 
 
-def filter_by_category(products: List[Product], allowed_category_ids) -> List[Product]:
-    """
-    Филтрира продукти по списък от позволени категории.
-    Използва се и от контролера, и от комбинирания филтър.
-    """
-    if not allowed_category_ids:
-        return []
+def filter_by_category(products: List[Product], category_input) -> List[Product]:
+    """Филтрира продукти по категория."""
 
-    # Превръщаме в сет от стрингове за бързина и избягване на проблеми с типа данни
-    if isinstance(allowed_category_ids, str):
-        allowed_set = {allowed_category_ids.strip()}
+    if not category_input:
+        return products
+
+    allowed_ids = []
+
+    if isinstance(category_input, (list, tuple, set)):
+        for cid in category_input:
+            allowed_ids.append(str(cid).strip())
     else:
-        allowed_set = {str(cid).strip() for cid in allowed_category_ids}
+        allowed_ids.append(str(category_input).strip())
 
     results = []
-    for p in products:
-        # Вземаме ID-тата на категориите на продукта
-        p_cat_ids = [str(c.category_id) if hasattr(c, "category_id") else str(c) for c in p.categories]
 
-        # Проверяваме дали някоя от категориите на продукта е в позволения списък
-        if any(cid in allowed_set for cid in p_cat_ids):
+    for p in products:
+        product_cat_ids = []
+        for c in p.categories:
+            product_cat_ids.append(str(c.category_id))
+
+        # Проверка за съвпадение
+        match_found = False
+        for pid in product_cat_ids:
+            for allowed in allowed_ids:
+                if pid == allowed:
+                    match_found = True
+                    break
+            if match_found:
+                break
+
+        if match_found:
             results.append(p)
+
     return results
 
 
 def filter_search(products: List[Product], keyword: str) -> List[Product]:
     """Търсене по име, описание или име на категория."""
-    keyword = (keyword or "").lower().strip()
+
     if not keyword:
         return products
 
-    search_words = keyword.split()
+    keyword = keyword.lower().strip()
+    words = keyword.split()
+
     results = []
 
     for p in products:
-        product_text = f"{p.name} {p.description}".lower()
+        name_text = p.name.lower()
+        desc_text = p.description.lower()
 
-        # Проверка дали ВСИЧКИ думи от търсенето присъстват в продукта
-        if all(word in product_text for word in search_words):
-            results.append(p)
-            continue
-
-        # Или дали присъстват в името на някоя от категориите му
+        cat_names = ""
         for c in p.categories:
-            c_name = (c.name if hasattr(c, "name") else str(c)).lower()
-            if all(word in c_name for word in search_words):
-                results.append(p)
+            cat_names += " " + c.name.lower()
+
+        full_text = name_text + " " + desc_text + " " + cat_names
+
+        # Проверка дали всички думи присъстват
+        all_found = True
+        for w in words:
+            if w not in full_text:
+                all_found = False
                 break
+
+        if all_found:
+            results.append(p)
+
     return results
 
 
 def filter_combined(products: List[Product], inventory_controller=None, **kwargs):
-    """
-    Главен филтър, който обединява всички критерии без да повтаря логика.
-    Вика горните специализирани функции.
-    """
+    """Главен филтър, който обединява всички критерии."""
+
     results = products
 
-    # 1. Търсене по ключова дума
-    if kwargs.get('keyword'):
-        results = filter_search(results, kwargs['keyword'])
+    # Търсене по ключова дума
+    if "keyword" in kwargs and kwargs["keyword"]:
+        results = filter_search(results, kwargs["keyword"])
 
-    # 2. Филтър по категория (поддържа йерархични списъци)
-    if kwargs.get('category_id'):
-        results = filter_by_category(results, kwargs['category_id'])
+    # Филтър по категория
+    if "category_id" in kwargs and kwargs["category_id"]:
+        results = filter_by_category(results, kwargs["category_id"])
 
-    # 3. Филтър по цена
-    min_p = kwargs.get('min_price')
-    max_p = kwargs.get('max_price')
+    # Филтър по цена
+    min_p = kwargs.get("min_price")
+    max_p = kwargs.get("max_price")
+
     if min_p is not None or max_p is not None:
-        results = [
-            p for p in results
-            if (min_p is None or p.price >= min_p) and (max_p is None or p.price <= max_p)
-        ]
+        filtered = []
+        for p in results:
+            ok = True
 
-    # 4. Филтър по наличност (изисква контролер на инвентара)
-    min_q = kwargs.get('min_quantity')
-    max_q = kwargs.get('max_quantity')
-    if (min_q is not None or max_q is not None) and inventory_controller:
-        results = [
-            p for p in results
-            if (min_q is None or inventory_controller.get_total_stock(p.product_id) >= min_q) and
-               (max_q is None or inventory_controller.get_total_stock(p.product_id) <= max_q)
-        ]
+            if min_p is not None:
+                if p.price < min_p:
+                    ok = False
+            if max_p is not None:
+                if p.price > max_p:
+                    ok = False
+
+            if ok:
+                filtered.append(p)
+        results = filtered
 
     return results

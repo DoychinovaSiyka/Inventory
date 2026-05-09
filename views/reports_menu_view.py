@@ -80,7 +80,8 @@ class ReportsView:
     def _fmt_sales(self, data):
         rows = []
         for i in data:
-            total_value = float(i["total_price"])
+            total_price = i.get("total_price", 0)
+            total_value = float(total_price)
             row = [i["invoice_number"], i["date"], i["client"], i["product"], f"{total_value:.2f}"]
             rows.append(row)
 
@@ -91,8 +92,19 @@ class ReportsView:
         rows = []
 
         for i in res.data:
-            sold_value = i["sold"]
-            row = [i["product"], i["available"], sold_value, i["top_locations"]]
+            locations = i.get("top_locations", "")
+            if not locations or str(locations).strip() == "":
+                locations = "Няма наличност"
+
+            if len(str(locations)) > 30:
+                locations = str(locations)[:27] + "..."
+
+            row = [
+                i["product"],
+                i["available"],
+                i["sold"],
+                locations
+            ]
             rows.append(row)
 
         self._display_report("Обобщена справка",
@@ -127,12 +139,12 @@ class ReportsView:
                     if loc_obj:
                         loc_name = loc_obj.name
                     else:
-                        loc_name = "Склад " + loc_id[:8]
+                        loc_name = "Склад " + str(loc_id)[:8]
 
                     quantity_text = f"{qty_value:.2f} {p_unit}"
                     rows.append([loc_name, p_name, quantity_text])
 
-        rows_sorted = sorted(rows)
+        rows_sorted = sorted(rows, key=lambda x: x[0])
         self._display_report("Наличност по складове",
                              ["Склад", "Продукт", "Количество"],
                              rows_sorted)
@@ -164,19 +176,19 @@ class ReportsView:
         res = self.controller.report_sales()
         formatted = self._fmt_sales(res.data)
 
-        self._display_report("Продажби",["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+        self._display_report("Продажби", ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
                              formatted)
 
     def search_sales_by_customer(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
         self._search_flow("име на клиент",
                           self.controller.report_sales_by_customer,
-                          self._fmt_sales,"Продажби", headers)
+                          self._fmt_sales, "Продажби", headers)
 
     def search_sales_by_product(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
         self._search_flow("име на продукт",
-                          self.controller.report_sales_by_product, self._fmt_sales,"Продажби",
+                          self.controller.report_sales_by_product, self._fmt_sales, "Продажби",
                           headers)
 
     def report_fifo_analysis(self, _):
@@ -191,14 +203,14 @@ class ReportsView:
                 continue
 
             print("\nАнализ по FIFO")
-            print("------------------------------")
-            print("Текуща наличност:", data["current_stock"], data["unit"])
-            print("Общо движение: Вход:", data["total_in"], "| Изход:", data["total_out"])
-            print("------------------------------")
-            print("Приходи:", f"{float(data['revenue']):.2f} лв.")
-            print("Себестойност:", f"{float(data['fifo_cost']):.2f} лв.")
-            print("Печалба:", f"{float(data['profit']):.2f} лв.")
-            print("------------------------------")
+            print("-" * 30)
+            print(f"Текуща наличност: {data['current_stock']} {data['unit']}")
+            print(f"Общо движение: Вход: {data['total_in']} | Изход: {data['total_out']}")
+            print("-" * 30)
+            print(f"Приходи: {float(data['revenue']):.2f} лв.")
+            print(f"Себестойност: {float(data['fifo_cost']):.2f} лв.")
+            print(f"Печалба: {float(data['profit']):.2f} лв.")
+            print("-" * 30)
 
             input("\nНатиснете Enter за връщане...")
             break

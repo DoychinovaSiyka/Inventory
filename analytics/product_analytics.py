@@ -10,10 +10,9 @@ def calculate_average_price(products: List[Product]) -> float:
     return round(total / len(products), 2)
 
 
-def calculate_total_inventory_value(products: List[Product],
-                                    inventory_controller=None) -> float:
-    """ Изчислявам общата стойност на склада."""
-    if inventory_controller is None:
+def calculate_total_inventory_value(products: List[Product], inventory_controller=None) -> float:
+    """Изчислява общата стойност на целия склад."""
+    if inventory_controller is None or not products:
         return 0.0
 
     total = 0.0
@@ -25,7 +24,7 @@ def calculate_total_inventory_value(products: List[Product],
 
 
 def get_most_expensive_product(products: List[Product]) -> Optional[Product]:
-    """Намирам най-скъпия продукт. Ако няма продукти – връщам None."""
+    """Намирам най-скъпия продукт."""
     if not products:
         return None
     return max(products, key=lambda p: p.price)
@@ -38,8 +37,7 @@ def get_cheapest_product(products: List[Product]) -> Optional[Product]:
 
 
 def group_products_by_category(products: List[Product]) -> Dict[str, List[Product]]:
-    """ Групирам продуктите по име на категорията. Работи с Category обекти,
-    не със стрингове."""
+    """ Групирам продуктите по име на категорията. Работи с Category обекти."""
     grouped = {}
     for p in products:
         for c in p.categories:

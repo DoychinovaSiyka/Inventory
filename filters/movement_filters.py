@@ -3,27 +3,25 @@ from models.movement import Movement, MovementType
 from datetime import datetime
 
 
-# Парсвам датите от движенията – приемам няколко формата
-def _parse_movement_date(date_str: str) -> Optional[datetime]:
-    if not date_str:
+def _parse_movement_date(date_val) -> Optional[datetime]:
+    """Парсва дата от обект или стринг."""
+    if not date_val:
         return None
+    if isinstance(date_val, datetime):
+        return date_val
+
+    date_str = str(date_val).strip()
     for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
         try:
-            return datetime.strptime(date_str.strip(), fmt)
+            return datetime.strptime(date_str, fmt)
         except ValueError:
             continue
     return None
 
 
-def filter_by_description(movements: List[Movement], keyword: str) -> List[Movement]:
-    keyword = (keyword or "").lower().strip()
-    return [m for m in movements if keyword in (m.description or "").lower()]
-
-
-# Филтър за доставки
 def filter_deliveries(movements: List[Movement], keyword: str,
                       product_controller, supplier_controller) -> List[Movement]:
-
+    """Филтър за доставки (IN) по име на продукт или доставчик."""
     keyword = (keyword or "").lower().strip()
     if not keyword:
         return [m for m in movements if m.movement_type == MovementType.IN]
@@ -33,107 +31,65 @@ def filter_deliveries(movements: List[Movement], keyword: str,
         if m.movement_type != MovementType.IN:
             continue
 
-        # Търсене по ID на движение
         if keyword in str(m.movement_id).lower():
             results.append(m)
             continue
 
-        # Търсене по име на продукт
         product = product_controller.get_by_id(m.product_id)
         if product and keyword in product.name.lower():
             results.append(m)
             continue
-
 
         if m.supplier_id and supplier_controller:
             supplier = supplier_controller.get_by_id(m.supplier_id)
             if supplier and keyword in supplier.name.lower():
                 results.append(m)
                 continue
-
     return results
-
-
-# Филтър по диапазон на дати
-def filter_by_date_range(movements: List[Movement],
-                         start_date: Optional[str],
-                         end_date: Optional[str]) -> List[Movement]:
-
-    if not start_date and not end_date:
-        return movements
-
-    start = _parse_movement_date(start_date) if start_date else None
-    end = _parse_movement_date(end_date) if end_date else None
-
-    filtered = []
-
-    for m in movements:
-        m_date = _parse_movement_date(m.date)
-        if not m_date:
-            continue
-        # Ако е преди началната дата – пропускам
-        if start and m_date < start:
-            continue
-        # Проверка за крайна дата
-        if end:
-            # Ако е подадена само дата (без час) – включвам целия ден
-            if len(end_date.strip()) <= 10:
-                if m_date.date() > end.date():
-                    continue
-            elif m_date > end:
-                continue
-
-        filtered.append(m)
-
-    return filtered
-
 
 
 def filter_advanced(movements: List[Movement], movement_type=None, start_date=None,
                     end_date=None, product_id=None, location_id=None, user_id=None):
+    """Главен филтър за движения с поддръжка на всички критерии."""
+    results = []
 
-    results = movements
+    for m in movements:
+        m_date = _parse_movement_date(m.date)
 
-    if movement_type:
-        type_name = movement_type.name if isinstance(movement_type, MovementType) else str(movement_type)
-        results = [m for m in results if m.movement_type.name == type_name]
-
-    if start_date or end_date:
-        results = filter_by_date_range(results, start_date, end_date)
-
-    if product_id:
-        results = [m for m in results if str(m.product_id) == str(product_id)]
-
-    if location_id:
-        results = [m for m in results if str(m.location_id) == str(location_id)]
-
-    if user_id:
-        results = [m for m in results if str(m.user_id) == str(user_id)]
-
-    return results
-
-
-    def search_by_description(self, keyword: str) -> List[Movement]:
-        """Търся движения, чието описание съдържа ключовата дума."""
-        keyword = keyword.lower()
-        return [m for m in self.movements if keyword in m.description.lower()]
-
-    def advanced_filter(self, movement_type=None, start_date=None, end_date=None,
-                        product_id=None, location_id=None, user_id=None) -> List[Movement]:
-        """Разширено филтриране по няколко критерия."""
-        results = self.movements
-
+        # Тип движение
         if movement_type:
-            results = [m for m in results if m.movement_type.name == movement_type]
-        if product_id:
-            results = [m for m in results if m.product_id == product_id]
-        if location_id:
-            results = [m for m in results if m.location_id == location_id]
-        if user_id:
-            results = [m for m in results if m.user_id == user_id]
-        if start_date:
-            results = [m for m in results if m.date >= start_date]
-        if end_date:
-            results = [m for m in results if m.date <= end_date]
+            type_name = movement_type.name if hasattr(movement_type, 'name') else str(movement_type)
+            if m.movement_type.name != type_name:
+                continue
 
-        return results
+        # 2. Дати
+        if start_date:
+            s_date = _parse_movement_date(start_date)
+            if m_date and m_date.date() < s_date.date():
+                continue
+        # Проверка за крайна дата
+        if end_date:
+            e_date = _parse_movement_date(end_date)
+            if m_date and m_date.date() > e_date.date():
+                continue
+
+
+        if product_id and str(m.product_id) != str(product_id):
+            continue
+
+
+        if user_id and str(m.user_id) != str(user_id):
+            continue
+
+        # проверка за MOVE
+        if location_id:
+            loc_id = str(location_id)
+            if m.movement_type.name == "MOVE":
+                if m.from_location_id != loc_id and m.to_location_id != loc_id:
+                    continue
+            else:
+                if m.location_id != loc_id:
+                    continue
+
+        results.append(m)
+    return results
