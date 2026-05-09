@@ -197,12 +197,30 @@ class ProductMenuView:
             break
 
     def filter_by_category(self, _):
+        # 1. Избираме основната категория (напр. "Мебели")
         category_id = self._select_category()
         if not category_id:
             return
-        results = self.product_controller.filter_by_category(category_id)
-        self._print_products(results, "Продукти в категорията")
 
+        # 2. Взимаме списък с ID-тата на всички нейни подкатегории (напр. "Столове", "Маси")
+        # Използваме метода от CategoryController, който вече обсъждахме
+        child_ids = self.category_controller.get_all_hierarchical_ids(category_id)
+
+        # 3. Обединяваме избраното ID с тези на децата му
+        # Подсигуряваме се, че child_ids не е None
+        all_ids = [category_id] + (child_ids if child_ids else [])
+
+        # 4. Търсим продукти, които съвпадат с който и да е от тези ID-та
+        all_results = []
+        for cid in all_ids:
+            found = self.product_controller.filter_by_category(cid)
+            all_results.extend(found)
+
+        # 5. Премахваме дубликати (ако продукт е в повече от една подкатегория)
+        unique_results = list({p.product_id: p for p in all_results}.values())
+
+        # 6. Принтираме
+        self._print_products(unique_results, "Продукти в категорията и нейните подкатегории")
     # ============================================================
     # КРИТИЧНИ НАЛИЧНОСТИ
     # ============================================================

@@ -22,15 +22,14 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
             MenuItem("4", "По количество (високо -> ниско)", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско -> високо)", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
 
     def sort_by_name(self, _):
-        # Контролерът връща направо готов списък
         products = self.product_controller.get_sorted_by_name()
-        self._print_sorted(products, "Име (A–Z)", "Вградено сортиране")
+        self._print_sorted(products, "Име (A–Z)", "Вградено")
 
     def sort_price_desc(self, _):
-        # Използваме универсалния метод на контролера
         products = self.product_controller.get_custom_sort(
             sort_type="price",
             algorithm="selection",
@@ -47,7 +46,7 @@ class ProductSortView:
         self._print_sorted(products, "Цена (ниска -> висока)", "Bubble Sort")
 
     def sort_qty_desc(self, _):
-        # Вече нямаме 'from sorting... import' – всичко е в контролера
+        # Подаваме inventory_controller и algorithm на контролера
         products = self.product_controller.get_sorted_by_quantity(
             self.inventory_controller,
             algorithm="bubble",
@@ -63,17 +62,16 @@ class ProductSortView:
         )
         self._print_sorted(products, "Количество (ниско -> високо)", "Selection Sort")
 
-    def _print_sorted(self, products, title, algorithm):
+    def _print_sorted(self, products, title, algorithm_name):
         if not products:
             print("\nНяма продукти за показване.")
             return
 
-        print(f"\nСортиране по: {title}")
-        print(f"Алгоритъм: {algorithm}\n")
+        print(f"\n--- СОРТИРАНЕ ПО: {title} ---")
+        print(f"Метод: {algorithm_name}\n")
 
         rows = []
         for p in products:
-            # Взимаме наличността за всеки продукт през инвентарния контролер
             stock = self.inventory_controller.get_total_stock(p.product_id)
             short_id = str(p.product_id)[:8]
 

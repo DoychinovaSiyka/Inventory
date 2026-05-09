@@ -20,50 +20,35 @@ class InventoryController:
 
     def _get_full_product_id(self, input_id: str) -> str:
         product = self.product_controller.get_by_id(str(input_id))
-        if product:
-            return product.product_id
-        return str(input_id)
+        return product.product_id if product else str(input_id)
 
     def _get_full_location_id(self, input_id: str) -> str:
         if not input_id:
             return None
-
         loc = self.location_controller.get_by_id(str(input_id))
-        if loc:
-            return loc.location_id
+        return loc.location_id if loc else str(input_id)
 
-        return str(input_id)
+    def get_stock(self, product_id: str, location_id: str) -> float:
+        """Помощен метод за съвместимост с View-тата."""
+        return self.get_stock_by_location(product_id, location_id)
 
     def get_stock_by_location(self, product_id: str, location_id: str) -> float:
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
 
-        if not lid:
-            return 0.0
-
-        if pid not in self.data["products"]:
+        if not lid or pid not in self.data["products"]:
             return 0.0
 
         locations = self.data["products"][pid].get("locations", {})
-
-        if lid in locations:
-            return float(locations[lid])
-
-        return 0.0
+        return float(locations.get(lid, 0.0))
 
     def get_total_stock(self, product_id: str) -> float:
         pid = self._get_full_product_id(product_id)
-
         if pid not in self.data["products"]:
             return 0.0
 
         locations = self.data["products"][pid].get("locations", {})
-
-        total = 0.0
-        for qty in locations.values():
-            total += float(qty)
-
-        return total
+        return sum(float(qty) for qty in locations.values())
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._get_full_product_id(product_id)
@@ -76,21 +61,14 @@ class InventoryController:
             self.data["products"][pid] = {"locations": {}}
 
         locations = self.data["products"][pid]["locations"]
-
-        current = float(locations.get(lid, 0.0))
-        new_value = current + float(quantity)
-
-        locations[lid] = new_value
+        locations[lid] = float(locations.get(lid, 0.0)) + float(quantity)
         self._save()
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._get_full_product_id(product_id)
         lid = self._get_full_location_id(location_id)
 
-        if not lid:
-            return False
-
-        if pid not in self.data["products"]:
+        if not lid or pid not in self.data["products"]:
             return False
 
         locations = self.data["products"][pid]["locations"]
@@ -106,17 +84,13 @@ class InventoryController:
 
     def rebuild_inventory_from_movements(self, movements: List):
         """Пълно преизчисляване на база хронологията на движенията."""
-
         self.data = {"products": {}}
-
-        # Сортираме движенията ръчно по дата
-        sorted_moves = movements[:]
-        sorted_moves.sort(key=lambda m: m.date)
+        sorted_moves = sorted(movements, key=lambda m: m.date)
 
         for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
-            m_type = m.movement_type.name
+            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
 
             if pid not in self.data["products"]:
                 self.data["products"][pid] = {"locations": {}}
@@ -125,128 +99,84 @@ class InventoryController:
 
             if m_type == "IN" and m.location_id:
                 lid = str(m.location_id)
-                current = float(locations.get(lid, 0.0))
-                locations[lid] = current + qty
-
+                locations[lid] = locations.get(lid, 0.0) + qty
             elif m_type == "OUT" and m.location_id:
                 lid = str(m.location_id)
-                current = float(locations.get(lid, 0.0))
-                new_value = current - qty
-                if new_value < 0:
-                    new_value = 0.0
-                locations[lid] = new_value
-
+                locations[lid] = max(0.0, locations.get(lid, 0.0) - qty)
             elif m_type == "MOVE":
                 from_lid = str(m.from_location_id) if m.from_location_id else None
                 to_lid = str(m.to_location_id) if m.to_location_id else None
-
                 if from_lid:
-                    current = float(locations.get(from_lid, 0.0))
-                    new_value = current - qty
-                    if new_value < 0:
-                        new_value = 0.0
-                    locations[from_lid] = new_value
-
+                    locations[from_lid] = max(0.0, locations.get(from_lid, 0.0) - qty)
                 if to_lid:
-                    current = float(locations.get(to_lid, 0.0))
-                    locations[to_lid] = current + qty
+                    locations[to_lid] = locations.get(to_lid, 0.0) + qty
 
         self._save()
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        """Пресмята себестойността на продадените стоки по FIFO метода."""
-
+        """Пресмята себестойността САМО на продадените количества по FIFO."""
         pid = self._get_full_product_id(product_id)
-        batches = []
-        total_cost = 0.0
 
-        # Филтрираме движенията за този продукт
-        relevant = []
+        # 1. Намираме колко общо е продадено (OUT)
+        total_sold = 0.0
         for m in movements:
-            if str(m.product_id) == pid:
-                relevant.append(m)
+            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+            if str(m.product_id) == pid and m_type == "OUT":
+                total_sold += float(m.quantity)
 
+        if total_sold <= 0:
+            return 0.0
 
-        relevant.sort(key=lambda m: m.date)
+        # 2. Събираме всички доставки (IN) като партиди
+        batches = []
+        for m in sorted(movements, key=lambda x: x.date):
+            m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
+            if str(m.product_id) == pid and m_type == "IN":
+                price = float(m.price) if m.price is not None else float(fallback_price)
+                batches.append({"qty": float(m.quantity), "price": price})
 
-        for m in relevant:
-            qty = float(m.quantity)
+        # 3. Изчисляваме себестойността само за продаденото количество
+        total_cost = 0.0
+        remaining_to_calculate = total_sold
 
-            if m.movement_type.name == "IN":
-                if m.price is not None:
-                    price = float(m.price)
-                else:
-                    price = float(fallback_price)
+        for batch in batches:
+            if remaining_to_calculate <= 0:
+                break
 
-                batches.append({"qty": qty, "price": price})
-
-            elif m.movement_type.name == "OUT":
-                need = qty
-
-                while need > 0 and batches:
-                    first = batches[0]
-
-                    if first["qty"] <= need:
-                        total_cost += first["qty"] * first["price"]
-                        need -= first["qty"]
-                        batches.pop(0)
-                    else:
-                        total_cost += need * first["price"]
-                        first["qty"] -= need
-                        need = 0
+            take_qty = min(batch["qty"], remaining_to_calculate)
+            total_cost += take_qty * batch["price"]
+            remaining_to_calculate -= take_qty
 
         return round(total_cost, 2)
 
     def get_total_inventory_value_fifo(self, movement_controller) -> float:
-        """Пресмята стойността на текущата наличност в склада по FIFO."""
-
+        """Пресмята стойността на това, което ОСТАВА в склада в момента."""
         total_value = 0.0
         all_movements = movement_controller.get_all()
 
         for pid in self.data.get("products", {}).keys():
             product_obj = self.product_controller.get_by_id(pid)
+            fb_price = float(product_obj.price) if product_obj else 0.0
 
-            if product_obj:
-                fallback = float(product_obj.price)
-            else:
-                fallback = 0.0
-
-            # Събираме движенията за този продукт
-            prod_moves = []
-            for m in all_movements:
-                if str(m.product_id) == pid:
-                    prod_moves.append(m)
-
-
-            prod_moves.sort(key=lambda m: m.date)
+            prod_moves = sorted([m for m in all_movements if str(m.product_id) == pid], key=lambda x: x.date)
             batches = []
 
             for m in prod_moves:
+                m_type = m.movement_type.name if hasattr(m.movement_type, 'name') else str(m.movement_type)
                 qty = float(m.quantity)
 
-                if m.movement_type.name == "IN":
-                    if m.price is not None:
-                        price = float(m.price)
-                    else:
-                        price = fallback
-
+                if m_type == "IN":
+                    price = float(m.price) if m.price is not None else fb_price
                     batches.append({"qty": qty, "price": price})
-
-                elif m.movement_type.name == "OUT":
-                    need = qty
-
-                    while need > 0 and batches:
-                        first = batches[0]
-
-                        if first["qty"] <= need:
-                            need -= first["qty"]
+                elif m_type == "OUT":
+                    while qty > 0 and batches:
+                        if batches[0]["qty"] <= qty:
+                            qty -= batches[0]["qty"]
                             batches.pop(0)
                         else:
-                            first["qty"] -= need
-                            need = 0
+                            batches[0]["qty"] -= qty
+                            qty = 0
 
-            # Сумираме стойността на останалите партиди
-            for b in batches:
-                total_value += b["qty"] * b["price"]
+            total_value += sum(b["qty"] * b["price"] for b in batches)
 
         return round(total_value, 2)

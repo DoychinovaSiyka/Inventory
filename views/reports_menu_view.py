@@ -7,7 +7,12 @@ class ReportsView:
     def __init__(self, controller):
         self.controller = controller
 
+    # ---------------------------------------------------------
+    # Помощни методи
+    # ---------------------------------------------------------
+
     def _display_report(self, title, headers, rows):
+        """Показва таблица със заглавие и данни."""
         if not rows:
             print("\nНяма данни за показване.\n")
             return
@@ -17,6 +22,7 @@ class ReportsView:
         input("\nНатиснете Enter за връщане...")
 
     def _run_menu(self, menu_obj, user):
+        """Общ механизъм за изпълнение на менюта."""
         while True:
             choice = menu_obj.show()
             if choice == "0" or choice is None:
@@ -24,149 +30,233 @@ class ReportsView:
             menu_obj.execute(choice, user)
 
     def _search_flow(self, prompt, controller_fn, format_fn, title, headers):
+        """Общ механизъм за справки с търсене."""
         keyword = input(f"Въведете {prompt} (Enter за всички): ").strip()
-        if keyword:
-            res = controller_fn(keyword)
-        else:
-            res = controller_fn()
 
-        formatted = format_fn(res.data)
+        # ПОПРАВКА: Винаги подаваме keyword, дори да е празен
+        # Така контролерът ще получи аргумента, който очаква
+        result = controller_fn(keyword)
+
+        formatted = format_fn(result.data)
         self._display_report(title, headers, formatted)
+    # ---------------------------------------------------------
+    # ОПТИМИЗИРАНО ГЛАВНО МЕНЮ НА СПРАВКИ
+    # ---------------------------------------------------------
 
     def show_menu(self, user):
         menu = Menu("СПРАВКИ", [
-            MenuItem("1", "Складови наличности", self.menu_inventory),
-            MenuItem("2", "Логистика и движения", self.menu_logistics),
-            MenuItem("3", "Продажби", self.menu_sales),
-            MenuItem("4", "Анализ по FIFO", self.report_fifo_analysis),
-            MenuItem("0", "Назад", lambda u: "break")])
+            MenuItem("1", "Обобщена наличност", self.summary_report),
+            MenuItem("2", "Наличност по складове", self.inventory_by_warehouse),
+
+            MenuItem("3", "Хронология на движенията", self.report_movements),
+            MenuItem("4", "Търсене на доставки", self.search_delivery),
+
+            MenuItem("5", "Всички продажби", self.report_sales),
+            MenuItem("6", "Търсене продажби по клиент", self.search_sales_by_customer),
+            MenuItem("7", "Търсене продажби по продукт", self.search_sales_by_product),
+
+            MenuItem("8", "Анализ по FIFO", self.report_fifo_analysis),
+
+            MenuItem("0", "Назад", lambda u: "break")
+        ])
         self._run_menu(menu, user)
 
-    def menu_inventory(self, user):
-        sub = Menu("НАЛИЧНОСТИ", [
-            MenuItem("1", "Обобщена справка", self.summary_report),
-            MenuItem("2", "Наличност по складове", self.inventory_by_warehouse),
-            MenuItem("0", "Назад", lambda u: "break")])
-        self._run_menu(sub, user)
-
-    def menu_logistics(self, user):
-        sub = Menu("ЛОГИСТИКА", [
-            MenuItem("1", "Хронологичен регистър", self.report_movements),
-            MenuItem("2", "Търсене на доставки", self.search_delivery),
-            MenuItem("0", "Назад", lambda u: "break")])
-        self._run_menu(sub, user)
-
-    def menu_sales(self, user):
-        sub = Menu("ПРОДАЖБИ", [
-            MenuItem("1", "Всички продажби", self.report_sales),
-            MenuItem("2", "Търсене по клиент", self.search_sales_by_customer),
-            MenuItem("3", "Търсене по продукт", self.search_sales_by_product),
-            MenuItem("0", "Назад", lambda u: "break")])
-        self._run_menu(sub, user)
+    # ---------------------------------------------------------
+    # Форматиращи функции
+    # ---------------------------------------------------------
 
     def _fmt_delivery(self, data):
         rows = []
-        for i in data:
-            price_value = float(i["price"])
-            quantity_text = str(i["quantity"]) + " " + str(i["unit"])
-            row = [i["date"], i["movement_id"], i["product"], quantity_text,
-                   f"{price_value:.2f}", i["supplier"]]
+        for item in data:
+            price_value = float(item["price"])
+            quantity_text = str(item["quantity"]) + " " + str(item["unit"])
+
+            row = [
+                item["date"],
+                item["movement_id"],
+                item["product"],
+                quantity_text,
+                f"{price_value:.2f}",
+                item["supplier"]
+            ]
             rows.append(row)
+
         return rows
 
     def _fmt_sales(self, data):
         rows = []
-        for i in data:
-            total_price = i.get("total_price", 0)
-            total_value = float(total_price)
-            row = [i["invoice_number"], i["date"], i["client"], i["product"], f"{total_value:.2f}"]
+        for item in data:
+            total_value = float(item.get("total_price", 0))
+
+            row = [
+                item["invoice_number"],
+                item["date"],
+                item["client"],
+                item["product"],
+                f"{total_value:.2f}"
+            ]
             rows.append(row)
+
         return rows
 
+    # ---------------------------------------------------------
+    # Справки: Наличности
+    # ---------------------------------------------------------
+
     def summary_report(self, _):
-        res = self.controller.report_inventory_summary()
+        """Обобщена справка за наличности."""
+        result = self.controller.report_inventory_summary()
         rows = []
 
-        for i in res.data:
-            locations = i.get("top_locations", "Няма наличност")
-            if len(str(locations)) > 40:
-                locations = str(locations)[:37] + "..."
+        for item in result.data:
+            locations = item.get("top_locations", "Няма наличност")
 
-            row = [i["product"], i["available"], i["sold"], locations]
+            locations_str = str(locations)
+            if len(locations_str) > 40:
+                locations_str = locations_str[:37] + "..."
+
+            row = [
+                item["product"],
+                item["available"],
+                item["sold"],
+                locations_str
+            ]
             rows.append(row)
 
-        self._display_report("Обобщена справка",
-                             ["Продукт", "Налично", "Продадено", "Локации"],
-                             rows)
+        self._display_report(
+            "Обобщена справка",
+            ["Продукт", "Налично", "Продадено", "Локации"],
+            rows
+        )
 
     def inventory_by_warehouse(self, _):
+        """Показва наличностите по складове."""
         inv_data = self.controller.inventory_controller.data.get("products", {})
         loc_map = {loc.location_id: loc for loc in self.controller.location_controller.get_all()}
+
         rows = []
 
         for pid, pdata in inv_data.items():
             product = self.controller.product_controller.get_by_id(pid)
-            p_name = product.name if product else f"Изтрит продукт ({pid[:8]})"
-            p_unit = product.unit if product else "бр."
+
+            if product:
+                p_name = product.name
+                p_unit = product.unit
+            else:
+                p_name = f"Изтрит продукт ({pid[:8]})"
+                p_unit = "бр."
 
             for loc_id, qty in pdata.get("locations", {}).items():
                 qty_value = float(qty)
+
                 if qty_value > 0:
                     loc_obj = loc_map.get(loc_id)
                     loc_name = loc_obj.name if loc_obj else f"Склад {str(loc_id)[:8]}"
-                    rows.append([loc_name, p_name, f"{qty_value:.2f} {p_unit}"])
+
+                    rows.append([
+                        loc_name,
+                        p_name,
+                        f"{qty_value:.2f} {p_unit}"
+                    ])
 
         rows_sorted = sorted(rows, key=lambda x: x[0])
-        self._display_report("Наличност по складове",
-                             ["Склад", "Продукт", "Количество"],
-                             rows_sorted)
+
+        self._display_report(
+            "Наличност по складове",
+            ["Склад", "Продукт", "Количество"],
+            rows_sorted
+        )
+
+    # ---------------------------------------------------------
+    # Справки: Логистика
+    # ---------------------------------------------------------
 
     def report_movements(self, _):
-        res = self.controller.report_movements()
+        result = self.controller.report_movements()
         rows = []
-        for m in res.data:
+
+        for m in result.data:
             quantity_text = str(m["quantity"]) + " " + str(m["unit"])
-            row = [m["date"], m["movement_id"], m["type"], m["product"], quantity_text,
-                   m["from"], m["to"]]
+
+            row = [
+                m["date"],
+                m["movement_id"],
+                m["type"],
+                m["product"],
+                quantity_text,
+                m["from"],
+                m["to"]
+            ]
             rows.append(row)
 
-        self._display_report("Хронология на движенията",
-                             ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"],
-                             rows)
+        self._display_report(
+            "Хронология на движенията",
+            ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"],
+            rows
+        )
 
     def search_delivery(self, _):
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
-        self._search_flow("продукт или доставчик",
-                          self.controller.report_deliveries_all,
-                          self._fmt_delivery,
-                          "Доставки",
-                          headers)
+
+        self._search_flow(
+            "продукт или доставчик",
+            self.controller.report_deliveries_all,
+            self._fmt_delivery,
+            "Доставки",
+            headers
+        )
+
+    # ---------------------------------------------------------
+    # Справки: Продажби
+    # ---------------------------------------------------------
 
     def report_sales(self, _):
-        res = self.controller.report_sales()
-        formatted = self._fmt_sales(res.data)
-        self._display_report("Продажби", ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
-                             formatted)
+        result = self.controller.report_sales()
+        formatted = self._fmt_sales(result.data)
+
+        self._display_report(
+            "Продажби",
+            ["Фактура", "Дата", "Клиент", "Продукт", "Общо"],
+            formatted
+        )
 
     def search_sales_by_customer(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
-        self._search_flow("име на клиент",
-                          self.controller.report_sales_by_customer,
-                          self._fmt_sales, "Продажби", headers)
+
+        self._search_flow(
+            "име на клиент",
+            self.controller.report_sales_by_customer,
+            self._fmt_sales,
+            "Продажби",
+            headers
+        )
 
     def search_sales_by_product(self, _):
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо"]
-        self._search_flow("име на продукт",
-                          self.controller.report_sales_by_product, self._fmt_sales, "Продажби",
-                          headers)
+
+        self._search_flow(
+            "име на продукт",
+            self.controller.report_sales_by_product,
+            self._fmt_sales,
+            "Продажби",
+            headers
+        )
+
+    # ---------------------------------------------------------
+    # FIFO Анализ
+    # ---------------------------------------------------------
 
     def report_fifo_analysis(self, _):
+        """Интерактивен FIFO анализ за конкретен продукт."""
+
         while True:
             name = input("\nВъведете име или ID на продукт (или 'отказ' за изход): ").strip()
+
             if not name or name.lower() == "отказ":
                 break
 
             data = self.controller.product_lifecycle(name)
+
             if not data:
                 print(f"Продукт '{name}' не е намерен.")
                 continue
