@@ -22,7 +22,7 @@ class Menu:
             valid_keys = [item.key for item in self.items]
             if choice in valid_keys:
                 return choice
-            print(f"[!] '{choice}' не е валидна опция. Опитайте отново.\n")
+            print(f"'{choice}' не е валидна опция. Опитайте отново.\n")
 
 
     def execute(self, choice, user):

@@ -25,8 +25,8 @@ class UserView:
             MenuItem("4", "Деактивиране", self.deactivate_user),
             MenuItem("5", "Активиране", self.activate_user),
             MenuItem("6", "Изтриване от системата", self.delete_user),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
 
     def show_users(self, _):
         users = self.controller.get_all()
@@ -100,7 +100,6 @@ class UserView:
 
     def change_role(self, _):
         print("\nПромяна на роля")
-
         while True:
             target = input("Username или ID (или 'отказ'): ").strip()
             if not target or target.lower() == 'отказ':
@@ -127,7 +126,6 @@ class UserView:
 
     def deactivate_user(self, current_user):
         print("\nДеактивиране на потребител")
-
         target = input("Username или ID (или 'отказ'): ").strip()
         if not target or target.lower() == 'отказ':
             return
@@ -140,7 +138,6 @@ class UserView:
 
     def activate_user(self, current_user):
         print("\nАктивиране на потребител")
-
         target = input("Username или ID (или 'отказ'): ").strip()
         if not target or target.lower() == 'отказ':
             return

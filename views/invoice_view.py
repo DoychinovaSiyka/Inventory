@@ -12,23 +12,16 @@ class InvoiceView:
         return value if value != "" else None
 
     def _show_invoices(self, invoices):
-        """Унифицирано показване на фактури в таблица."""
+        """показване на фактури в таблица."""
         if not invoices:
             print("\nНяма намерени фактури.\n")
             return
 
         rows = []
         for inv in invoices:
-            # Използваме вградените свойства на обекта, които контролерът е подготвил
             total = float(inv.total_price)
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                f"{total:.2f} лв.",
-                inv.date[:16]
-            ])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer,
+                         f"{inv.quantity} {inv.unit}", f"{total:.2f} лв.", inv.date[:16]])
 
         print("\n" + format_table(
             ["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Дата"], rows))
@@ -61,16 +54,12 @@ class InvoiceView:
             print("Фактурата не е намерена.")
             return
 
-        # Показваме детайлна справка
-        rows = [
-            ["Пълно ID", invoice.invoice_id],
-            ["Продукт", invoice.product],
-            ["Количество", f"{invoice.quantity} {invoice.unit}"],
-            ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
-            ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
-            ["Клиент", invoice.customer],
-            ["Дата/Час", invoice.date]
-        ]
+
+        rows = [["Пълно ID", invoice.invoice_id], ["Продукт", invoice.product],
+                ["Количество", f"{invoice.quantity} {invoice.unit}"],
+                ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
+                ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
+                ["Клиент", invoice.customer], ["Дата/Час", invoice.date]]
         print("\n" + format_table(["Детайл", "Стойност"], rows))
         input("\nНатиснете Enter за продължение...")
 
@@ -87,15 +76,14 @@ class InvoiceView:
     def search_by_date(self, _):
         date_str = self._input("\nДата (ГГГГ-ММ-ДД): ")
         if date_str:
-            # Контролерът ще се погрижи за валидацията вътрешно
             try:
                 self._show_invoices(self.invoice_controller.search_by_date(date_str))
             except Exception as e:
                 print(f"Грешка: {e}")
 
+
     def advanced_search(self, _):
         print("\nРАЗШИРЕНО ТЪРСЕНЕ (Enter за пропускане)")
-
         customer = self._input("Клиент: ")
         product = self._input("Продукт: ")
         start_date = self._input("От дата (ГГГГ-ММ-ДД): ")
@@ -104,14 +92,10 @@ class InvoiceView:
         max_total = self._input("Максимална сума: ")
 
         try:
-            results = self.invoice_controller.advanced_search(
-                customer=customer,
-                product=product,
-                start_date=start_date,
-                end_date=end_date,
-                min_total=min_total,
-                max_total=max_total
-            )
+            results = self.invoice_controller.advanced_search(customer=customer, product=product,
+                                                              start_date=start_date,
+                                                              end_date=end_date, min_total=min_total,
+                                                              max_total=max_total)
             self._show_invoices(results)
         except Exception as e:
             print(f"\nГрешка при търсене: {e}")

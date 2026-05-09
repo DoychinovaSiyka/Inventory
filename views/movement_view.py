@@ -79,7 +79,6 @@ class MovementView:
             print("Невалиден избор. Опитайте пак.")
 
 
-
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
             MenuItem("1", "Доставка (вход)", self.process_delivery),

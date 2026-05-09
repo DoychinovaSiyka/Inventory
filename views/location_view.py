@@ -48,7 +48,6 @@ class LocationView:
     def add_location(self, _):
         print("\nНова локация")
         print("(Напишете 'отказ' за изход)")
-
         while True:
             name = input("Име: ").strip()
             if name.lower() == 'отказ':

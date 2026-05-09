@@ -50,7 +50,6 @@ class ProductMenuView:
             if 0 <= idx < len(categories):
                 return categories[idx].category_id
 
-
         for c in categories:
             if choice.lower() in c.name.lower():
                 return c.category_id
@@ -138,7 +137,6 @@ class ProductMenuView:
         print("3. По наличност")
 
         choice = input("\nИзбор: ").strip()
-
         if choice == "1":
             sorted_list = self.product_controller.get_sorted_by_name()
             self._print_products(sorted_list, "Сортиране по име")

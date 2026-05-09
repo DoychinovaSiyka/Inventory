@@ -20,7 +20,7 @@ class GraphView:
         for w in warehouses:
             self.graph.add_warehouse(w)
 
-        # ПРАВИМ ПЪТИЩАТА ДВУПОСОЧНИ
+        # ПЪТИЩАТА ДВУПОСОЧНИ
         edges = [("W1", "W2", 150), ("W2", "W4", 250), ("W4", "W3", 130), ("W1", "W5", 250), ("W5", "W3", 350)]
 
         for start, end, dist in edges:

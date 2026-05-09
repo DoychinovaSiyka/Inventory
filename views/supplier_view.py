@@ -18,6 +18,7 @@ class SupplierView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def _build_menu(self, is_admin):
         menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
 

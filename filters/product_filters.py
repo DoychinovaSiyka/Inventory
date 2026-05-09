@@ -6,8 +6,8 @@ def filter_search(products: List[Product], keyword: str) -> List[Product]:
     if not keyword: return products
     keyword = keyword.lower().strip()
     words = keyword.split()
-
     results = []
+
     for p in products:
         cat_names = " ".join([c.name.lower() for c in p.categories])
         full_text = f"{p.name.lower()} {p.description.lower()} {cat_names}"
