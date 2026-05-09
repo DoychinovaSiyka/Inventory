@@ -111,7 +111,7 @@ class InventoryApplication:
 
     def run(self):
         while True:
-            print("   СКЛАДОВА СИСТЕМА v3.0")
+            print("   СКЛАДОВА СИСТЕМА   ")
             print("1. Вход")
             print("2. Анонимен достъп (само преглед)")
             print("0. Изход")
