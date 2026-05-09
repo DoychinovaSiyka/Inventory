@@ -1,6 +1,7 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
-from models.movement_type import MovementType
+from models.movement import MovementType
+
 
 
 class MovementView:

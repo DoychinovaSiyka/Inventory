@@ -390,5 +390,21 @@
         "parent_id": "77811af5-5f96-44f2-b546-1e0d0ce6a198",
         "created": "2026-05-08 19:01:44",
         "modified": "2026-05-08 19:01:44"
+    },
+    {
+        "category_id": "cb60df67-1b2c-4b0a-af0a-00cb229ccf3f",
+        "name": "XXXXXX",
+        "description": "PQEOPQWEIO",
+        "parent_id": null,
+        "created": "2026-05-09 23:35:02",
+        "modified": "2026-05-09 23:35:02"
+    },
+    {
+        "category_id": "c60af637-fe38-4814-9494-032f7a993810",
+        "name": ",уе",
+        "description": ",\tе,у",
+        "parent_id": null,
+        "created": "2026-05-10 01:02:58",
+        "modified": "2026-05-10 01:02:58"
     }
 ]

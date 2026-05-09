@@ -190,5 +190,89 @@
         "price": 4.99,
         "created": "2026-05-08 22:47:34",
         "modified": "2026-05-08 22:47:34"
+    },
+    {
+        "product_id": "a71256f4-396e-45a5-9cc1-082a6b20b253",
+        "name": "oewo",
+        "categories": [
+            "b985b79f-c92e-4c42-9d69-36ecaf1972a8"
+        ],
+        "unit": "кг.",
+        "description": "едуз,дез,",
+        "price": 2.34,
+        "created": "2026-05-09 22:08:16",
+        "modified": "2026-05-09 22:08:16"
+    },
+    {
+        "product_id": "5686cf0f-69f1-4bbf-bbb9-248c2604d540",
+        "name": "oqwpeo",
+        "categories": [
+            "76f154c1-04c4-4cf5-95cb-6ac59feaa921"
+        ],
+        "unit": "бр.",
+        "description": "езд,уеду,дезу,дез",
+        "price": 23.99,
+        "created": "2026-05-09 22:14:42",
+        "modified": "2026-05-09 22:14:42"
+    },
+    {
+        "product_id": "b09703dd-1df8-4ac3-bee3-334de9961c2f",
+        "name": "qwope",
+        "categories": [
+            "76f154c1-04c4-4cf5-95cb-6ac59feaa921"
+        ],
+        "unit": "бр.",
+        "description": "н,узде",
+        "price": 3.29,
+        "created": "2026-05-09 22:41:57",
+        "modified": "2026-05-09 22:41:57"
+    },
+    {
+        "product_id": "6617475c-106b-4b20-a0e8-728fec8a3f72",
+        "name": "oqwpe",
+        "categories": [
+            "ac82c3b9-e838-4bad-92a8-9013d36052ef"
+        ],
+        "unit": "кг.",
+        "description": "здес",
+        "price": 3.1,
+        "created": "2026-05-09 22:44:34",
+        "modified": "2026-05-09 22:44:34"
+    },
+    {
+        "product_id": "61c787a3-92f0-4f8b-b9dc-8e8cc3944033",
+        "name": "RRRR",
+        "categories": [
+            "76f154c1-04c4-4cf5-95cb-6ac59feaa921"
+        ],
+        "unit": "кг.",
+        "description": "2д,е,дзуесдзу,",
+        "price": 9.99,
+        "created": "2026-05-09 23:25:00",
+        "modified": "2026-05-09 23:25:00"
+    },
+    {
+        "product_id": "313caf67-a3bf-49b2-b3d0-5516f024ba3c",
+        "name": "Sisis]]",
+        "categories": [
+            "16118f08-7ac7-4a34-b0b7-1aad040382c5"
+        ],
+        "unit": "кг",
+        "description": "qweo",
+        "price": 3.0,
+        "created": "2026-05-10 00:36:57",
+        "modified": "2026-05-10 00:37:43"
+    },
+    {
+        "product_id": "dd5f52e4-f23d-4fc8-9dcf-830473263a15",
+        "name": "ppp",
+        "categories": [
+            "16118f08-7ac7-4a34-b0b7-1aad040382c5"
+        ],
+        "unit": "кг.",
+        "description": "wqew",
+        "price": 44444444444.0,
+        "created": "2026-05-10 01:00:09",
+        "modified": "2026-05-10 01:01:47"
     }
 ]

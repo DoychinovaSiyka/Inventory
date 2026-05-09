@@ -34,6 +34,7 @@ def get_all_children_objects(categories: List[Category], parent_id: str) -> List
 
     return results
 
+
 def get_all_children_ids(categories: List[Category], parent_id: str) -> List[str]:
     """Връща списък от ID-то на родителя и ВСИЧКИ негови наследници - за филтриране."""
     # обектите наследници

@@ -113,6 +113,7 @@ def filter_advanced(movements: List[Movement], **kwargs):
             if str(m.user_id) != str(user_id):
                 continue
 
+
         if location_id:
             wanted_loc = str(location_id)
 
@@ -127,7 +128,6 @@ def filter_advanced(movements: List[Movement], **kwargs):
                 # При IN/OUT проверяваме само основната локация
                 if str(m.location_id) != wanted_loc:
                     continue
-
 
         results.append(m)
 

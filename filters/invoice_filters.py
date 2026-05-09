@@ -4,7 +4,6 @@ from datetime import datetime
 
 
 def _parse_invoice_date(date_str: str) -> Optional[datetime]:
-    """ Превръща текста в дата, за да можем да сравняваме периоди. """
     if not date_str:
         return None
     date_str = str(date_str).strip()
