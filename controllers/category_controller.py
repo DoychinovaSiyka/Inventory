@@ -96,6 +96,20 @@ class CategoryController:
                 return c
         return None
 
+    def get_all_hierarchical_ids(self, category_id: str) -> list:
+        """Връща списък от ID-то на категорията и всички нейни подкатегории (надолу по дървото)."""
+        result = [category_id]
+
+        all_cats = self.get_all()
+
+        # Намираме тези, на които родителят е текущата категория
+        for cat in all_cats:
+            if cat.parent_id == category_id:
+                # Рекурсивно добавяме и техните подкатегории
+                result.extend(self.get_all_hierarchical_ids(cat.category_id))
+
+        return list(set(result))  # Премахваме дубликати за всеки случай
+
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез филтър модула."""
         cleaned = (keyword or "").strip()
