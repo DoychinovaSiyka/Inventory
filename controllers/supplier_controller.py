@@ -56,6 +56,8 @@ class SupplierController:
         self.save_changes()
         return supplier
 
+
+
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
         if not supplier:
