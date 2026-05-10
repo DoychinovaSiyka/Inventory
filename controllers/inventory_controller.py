@@ -42,7 +42,6 @@ class InventoryController:
     def get_total_stock(self, product_id: str) -> float:
         """Общо количество от продукта във всички складове."""
         pid, _ = self._resolve_ids(product_id)
-
         if pid not in self.data["products"]:
             return 0.0
 
