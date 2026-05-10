@@ -34,6 +34,7 @@ class AdminMenuView:
 
         self.graph_view = controllers.get("graph")
 
+
     def _build_menu(self):
         return Menu("Администраторско меню", [
             MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),

@@ -14,6 +14,7 @@ def bubble_sort(products: List, key: Callable, reverse: bool) -> List:
     return arr
 
 
+
 def selection_sort(products: List, key: Callable, reverse: bool) -> List:
     arr = products[:]
     n = len(arr)

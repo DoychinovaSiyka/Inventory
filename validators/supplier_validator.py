@@ -50,6 +50,8 @@ class SupplierValidator:
             if s.name.lower() == clean:
                 raise ValueError(f"Доставчик '{name}' вече съществува.")
 
+
+
     @staticmethod
     def validate_exists(supplier_id, controller):
         if not supplier_id:
@@ -58,8 +60,8 @@ class SupplierValidator:
         supplier = controller.get_by_id(str(supplier_id).strip())
         if not supplier:
             raise ValueError(f"Доставчик с код '{supplier_id}' не е намерен.")
-
         return supplier
+
 
     @staticmethod
     def validate_all(name, contact, address):

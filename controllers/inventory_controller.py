@@ -2,18 +2,14 @@ from typing import List, Dict, Optional
 
 
 class InventoryController:
-    """
-    Управлява наличностите в реално време и поддържа сложни финансови
-    изчисления като FIFO стойност.
-    """
-
+    """Управлява наличностите в реално време и поддържа финансови изчисления."""
     def __init__(self, repository, product_controller, location_controller):
         self.repo = repository
         self.product_controller = product_controller
         self.location_controller = location_controller
 
         raw = self.repo.load()
-        # Гарантираме правилна структура на данните още при зареждане
+
         self.data = raw if (raw and "products" in raw) else {"products": {}}
 
     def _save(self) -> None:
@@ -21,10 +17,7 @@ class InventoryController:
         self.repo.save(self.data)
 
     def _resolve_ids(self, product_id: str, location_id: Optional[str] = None):
-        """
-        Вътрешен помощник за превръщане на частични/потребителски ID-та
-        в пълни системни UUID-та.
-        """
+        """ превръщане на частични/потребителски ID-та в пълни системни UUID-та."""
         prod = self.product_controller.get_by_id(str(product_id))
         full_pid = prod.product_id if prod else str(product_id)
 
@@ -35,16 +28,16 @@ class InventoryController:
 
         return full_pid, full_lid
 
-    # --- Наличности ---
+
     def get_stock(self, product_id: str, location_id: str) -> float:
         """Връща наличността на продукт в конкретен склад."""
         pid, lid = self._resolve_ids(product_id, location_id)
-
         if not lid or pid not in self.data["products"]:
             return 0.0
 
         locs = self.data["products"][pid].get("locations", {})
         return float(locs.get(lid, 0.0))
+
 
     def get_total_stock(self, product_id: str) -> float:
         """Общо количество от продукта във всички складове."""
@@ -56,7 +49,6 @@ class InventoryController:
         locs = self.data["products"][pid].get("locations", {})
         return sum(float(q) for q in locs.values())
 
-    # --- Промяна на количества ---
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str) -> None:
         """Увеличава наличността (при доставка или входящ трансфер)."""
@@ -71,7 +63,6 @@ class InventoryController:
         self._save()
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
-        """Намалява наличността. Връща False, ако няма достатъчно стока."""
         pid, lid = self._resolve_ids(product_id, location_id)
 
         if not lid or pid not in self.data["products"]:
@@ -88,7 +79,7 @@ class InventoryController:
         self._save()
         return True
 
-    # --- Сложни изчисления и рестарт ---
+
 
     def rebuild_inventory_from_movements(self, movements: List) -> None:
         """Пълна ревизия: Преизчислява целия инвентар от историята на движенията."""
@@ -118,18 +109,20 @@ class InventoryController:
 
         self._save()
 
+
+
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         """Пресмята себестойността на продадените количества по метода FIFO."""
         pid, _ = self._resolve_ids(product_id)
 
-        # 1. Намираме общото продадено количество
+        # Намираме общото продадено количество
         total_sold = sum(float(m.quantity) for m in movements
                          if str(m.product_id) == pid and
                          (m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)) == "OUT")
 
         if total_sold <= 0: return 0.0
 
-        # 2. Събираме всички входящи партиди (доставки)
+        # Събираме всички входящи партиди (доставки)
         batches = []
         for m in sorted(movements, key=lambda x: x.date):
             m_type = m.movement_type.name if hasattr(m.movement_type, "name") else str(m.movement_type)
@@ -137,7 +130,7 @@ class InventoryController:
                 price = float(m.price) if (m.price and float(m.price) > 0) else float(fallback_price)
                 batches.append({"qty": float(m.quantity), "price": price})
 
-        # 3. Разпределяме продажбите по партидите
+        # Разпределяме продажбите по партидите
         total_cost = 0.0
         remaining_to_calculate = total_sold
         for batch in batches:
@@ -152,6 +145,8 @@ class InventoryController:
             total_cost += remaining_to_calculate * fallback_price
 
         return round(total_cost, 2)
+
+
 
     def get_total_inventory_value_fifo(self, movement_controller) -> float:
         """Изчислява финансовата стойност на текущия остатък в склада по FIFO."""

@@ -50,7 +50,7 @@ class UserValidator:
         if user.status != "Active":
             raise ValueError("Този профил е деактивиран. Свържете се с администратор.")
 
-        # Използваме вътрешния метод на контролера за проверка на хеша
+
         if not controller._check_password(user.password, password):
             raise ValueError("Грешно потребителско име или парола.")
 
@@ -69,7 +69,7 @@ class UserValidator:
     @staticmethod
     def validate_not_last_admin(target_user, all_users):
         if target_user.role == "Admin" and target_user.status == "Active":
-            # Броим колко АКТИВНИ администратори има, изключвайки този, когото искаме да променим
+            # Колко АКТИВНИ администратори има, изключвайки този, когото искаме да променим
             active_admins = [ u for u in all_users if u.role == "Admin" and u.status == "Active" and
                               u.user_id != target_user.user_id]
             if not active_admins:

@@ -35,6 +35,8 @@ class SupplierView:
         print("\nСПИСЪК С ДОСТАВЧИЦИ")
         print(format_table(columns, rows))
 
+
+
     def add_supplier(self, _):
         print("\nНов доставчик (Enter за отказ)")
         while True:
@@ -53,7 +55,6 @@ class SupplierView:
                 if s.name.lower() == name.lower():
                     duplicate = True
                     break
-
             if duplicate:
                 print(f"Доставчик с име '{name}' вече съществува.")
                 continue
@@ -83,6 +84,8 @@ class SupplierView:
         except Exception as e:
             print(f"Грешка при запис: {e}")
 
+
+
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
         while True:
@@ -95,15 +98,34 @@ class SupplierView:
 
         print(f"\nРедакция на: {supplier.name} (Enter запазва старата стойност)")
         while True:
-            new_name = input(f"Ново име [{supplier.name}]: ").strip() or supplier.name
+            new_name = input(f"Ново име [{supplier.name}]: ").strip()
+            if new_name == "":
+                new_name = supplier.name
+
+
             error = self.controller.validate_field("name", new_name)
-            if not error:
-                all_sups = self.controller.get_all()
-                if any(s.name.lower() == new_name.lower() and s.supplier_id != supplier.supplier_id for s in all_sups):
-                    print(f"Името '{new_name}' вече се ползва от друг доставчик.")
+            if error:
+                print(f"Грешка: {error}")
+                continue
+
+            # Проверка дали името вече се използва от друг доставчик
+            all_sups = self.controller.get_all()
+            name_taken = False
+
+            for s in all_sups:
+                if s.supplier_id == supplier.supplier_id:
                     continue
-                break
-            print(f"Грешка: {error}")
+
+                if s.name.lower() == new_name.lower():
+                    name_taken = True
+                    break
+
+            if name_taken:
+                print(f"Името '{new_name}' вече се ползва от друг доставчик.")
+                continue
+
+            break
+
 
         while True:
             new_contact = input(f"Нов контакт [{supplier.contact}]: ").strip() or supplier.contact

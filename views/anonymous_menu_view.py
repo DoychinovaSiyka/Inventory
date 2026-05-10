@@ -14,12 +14,12 @@ class AnonymousMenuView:
         self.system_info_view = SystemInfoView()
 
     def _build_menu(self):
-        """Изгражда менюто за анонимен потребител. """
         return Menu("Меню за анонимен потребител", [
             MenuItem("1", "Разглеждане на продукти", self.open_products),
             MenuItem("2", "Разглеждане на категории", self.open_categories),
             MenuItem("3", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")])
+
 
     def show_menu(self, user=None):
         while True:
@@ -29,7 +29,7 @@ class AnonymousMenuView:
             if result == "break":
                 break
 
-    # Гостът вижда само списъка, без меню
+    # Гостът вижда списъка, без меню
     def open_products(self, user):
         self.product_view.show_all(user)
 

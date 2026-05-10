@@ -197,7 +197,7 @@ class ReportController:
 
         total_in = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
 
-        # СИНХРОН: Приходи и изходни количества само от активни фактури
+        # Приходи и изходни количества само от активни фактури
         active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active and i.product == product.name]
         total_out = sum(float(i.quantity) for i in active_invoices)
         revenue = sum(float(i.total_price) for i in active_invoices)

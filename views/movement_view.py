@@ -23,7 +23,6 @@ class MovementView:
                 return default
             if not val:
                 return None
-
             try:
                 num = float(val)
                 if num < 0:
@@ -32,6 +31,7 @@ class MovementView:
                 return num
             except ValueError:
                 print("Невалидно число. Опитайте пак.")
+
 
     def _select_item(self, items, label):
         if not items:
@@ -53,7 +53,6 @@ class MovementView:
             choice = input("\nНомер или ID (Enter за връщане): ").strip()
             if not choice:
                 return None
-
             if choice.isdigit():
                 index = int(choice) - 1
                 if 0 <= index < len(items):
@@ -74,6 +73,8 @@ class MovementView:
 
             print("Невалиден избор. Опитайте пак.")
 
+
+
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
             MenuItem("1", "Доставка (вход)", self.process_delivery),
@@ -88,6 +89,8 @@ class MovementView:
                 break
             if menu.execute(choice, user) == "break":
                 break
+
+
 
     def process_delivery(self, user):
         print("\nНова доставка")
@@ -117,6 +120,8 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при запис: {e}")
 
+
+
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
@@ -124,6 +129,7 @@ class MovementView:
             if stock > 0:
                 valid.append((loc, f"{loc.name} (налично: {stock:.2f} {product.unit})"))
         return valid
+
 
     def _select_location_for_sale(self, product):
         valid = self._get_locations_with_stock(product)
@@ -144,6 +150,8 @@ class MovementView:
             return valid[idx][0]
 
         return None
+
+
 
     def process_sale(self, user):
         print("\nНова продажба")
@@ -176,6 +184,8 @@ class MovementView:
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
 
+
+
     def process_transfer(self, user):
         print("\nВътрешно преместване")
         product = self._select_item(self.product_controller.get_all(), "продукт")
@@ -199,11 +209,12 @@ class MovementView:
             return
 
         try:
-            self.movement_controller.move_stock(product.product_id, qty,
-                                                from_loc.location_id, to_loc.location_id, user.user_id)
+            self.movement_controller.move_stock(product.product_id, qty, from_loc.location_id, to_loc.location_id, user.user_id)
             print(f"\nПреместени {qty:.2f} {product.unit}.")
         except Exception as e:
             print(f"Проблем при преместването: {e}")
+
+
 
     def _format_movement_row(self, m):
         prod = self.product_controller.get_by_id(m.product_id)
@@ -233,6 +244,7 @@ class MovementView:
 
         return [str(m.movement_id)[:8], str(m.date)[5:16], m_type, p_name,
                 f"{m.quantity:.2f}", f"{float(m.price):.2f}", partner, loc_text]
+
 
 
     def show_history(self, _):

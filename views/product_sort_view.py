@@ -22,45 +22,28 @@ class ProductSortView:
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
             MenuItem("4", "По количество (високо -> ниско)", self.sort_qty_desc),
             MenuItem("5", "По количество (ниско -> високо)", self.sort_qty_asc),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
+
 
     def sort_by_name(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="name",
-            algorithm="selection",
-            reverse=False
-        )
+        products = self.product_controller.get_custom_sort(sort_type="name", algorithm="selection", reverse=False)
         self.parent_view._print_products(products, "Име (A–Z)")
 
     def sort_price_desc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="price",
-            algorithm="selection",
-            reverse=True
-        )
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="selection", reverse=True)
         self.parent_view._print_products(products, "Цена (висока -> ниска)")
 
+
     def sort_price_asc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="price",
-            algorithm="bubble",
-            reverse=False
-        )
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="bubble", reverse=False)
         self.parent_view._print_products(products, "Цена (ниска -> висока)")
 
     def sort_qty_desc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="quantity",
-            algorithm="bubble",
-            reverse=True
-        )
+        products = self.product_controller.get_custom_sort(sort_type="quantity", algorithm="bubble", reverse=True)
         self.parent_view._print_products(products, "Количество (високо -> ниско)")
 
+
     def sort_qty_asc(self, _):
-        products = self.product_controller.get_custom_sort(
-            sort_type="quantity",
-            algorithm="selection",
-            reverse=False
-        )
+        products = self.product_controller.get_custom_sort(sort_type="quantity", algorithm="selection", reverse=False)
         self.parent_view._print_products(products, "Количество (ниско -> високо)")

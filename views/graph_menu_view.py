@@ -119,7 +119,7 @@ class GraphView:
             step = predecessors.get(step)
         path.reverse()
 
-        # Показвам резултата
+
         source_name = self.graph.nodes[best_source].name
 
         print("         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")

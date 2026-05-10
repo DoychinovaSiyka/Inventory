@@ -5,15 +5,10 @@ from filters import invoice_filters
 
 
 class InvoiceController:
-    """
-    Управлява жизнения цикъл на фактурите.
-    Гарантира финансова точност и синхрон с продажбите.
-    Реализира Soft Delete (анулиране), вместо изтриване.
-    """
+    """Управлява жизнения цикъл на фактурите."""
 
-    def __init__(self, repo, activity_log_controller=None):
+    def __init__(self, repo):
         self.repo = repo
-        self.activity_log = activity_log_controller
         self.invoices: List[Invoice] = []
         self._reload()
 
@@ -37,10 +32,7 @@ class InvoiceController:
         return invoice
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
-        """
-        Автоматично генерира фактура при продажба.
-        Централен метод за синхрон между Склад и Счетоводство.
-        """
+        """Автоматично генерира фактура при продажба. Метод за синхрон между Склад и Счетоводство."""
         # Проверка за съществуваща фактура към това движение
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
@@ -51,28 +43,17 @@ class InvoiceController:
         total = round(qty * u_price, 2)
         cust_name = str(customer).strip() if customer else "Общ клиент"
 
-        invoice = Invoice(
-            product=movement.product_name,
-            quantity=qty,
-            unit=movement.unit,
-            unit_price=u_price,
-            total_price=total,
-            customer=cust_name,
-            movement_id=movement.movement_id,
-            date=movement.date,
-            invoice_id=None,
-            is_active=True
-        )
+        invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
+                          unit_price=u_price, total_price=total, customer=cust_name,
+                          movement_id=movement.movement_id, date=movement.date,
+                          invoice_id=None, is_active=True)
 
         self.invoices.append(invoice)
         self._save_changes()
         return invoice
 
     def get_all(self, include_cancelled=True) -> List[Invoice]:
-        """
-        Връща хронологията на фактурите.
-        Параметърът include_cancelled позволява да скрием анулираните, ако желаем.
-        """
+        """ Хронологията на фактурите."""
         if include_cancelled:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
@@ -83,38 +64,32 @@ class InvoiceController:
         if not tid:
             return None
 
-        # 1. Търсене за точно съвпадение
         for inv in self.invoices:
             if inv.invoice_id == tid:
                 return inv
 
-        # 2. Търсене по префикс
         if len(tid) >= 4:
-            return next((inv for inv in self.invoices if inv.invoice_id.startswith(tid)), None)
+            for inv in self.invoices:
+                if inv.invoice_id.startswith(tid):
+                    return inv
+            return None
 
         return None
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        """
-        Вече не изтрива, а АНУЛИРА фактура (Soft Delete).
-        Връща True при успех.
-        """
+        """ АНУЛИРА фактура"""
         inv = self.get_by_id(invoice_id)
         if not inv or not inv.is_active:
             # Ако не съществува или вече е анулирана
             return False
 
-        # Извикваме метода от модела, който променя is_active на False
+        # променя is_active на False
         inv.cancel()
-
-        # Логване на активността (ако има контролер за логове)
-        if self.activity_log:
-            self.activity_log.add_entry(user_id, "CANCEL_INVOICE", f"Анулирана фактура: {inv.invoice_id[:8]}")
 
         self._save_changes()
         return True
 
-    # --- Справки и Филтри ---
+
 
     def search_by_customer(self, keyword: str) -> List[Invoice]:
         """ Филтрира фактури по име на контрагент. """
@@ -130,13 +105,6 @@ class InvoiceController:
         return invoice_filters.filter_by_date(self.invoices, date_str)
 
     def advanced_search(self, **kwargs) -> List[Invoice]:
-        """
-        Комплексна справка.
-        """
-        InvoiceValidator.validate_search_filters(
-            kwargs.get("start_date"),
-            kwargs.get("end_date"),
-            kwargs.get("min_total"),
-            kwargs.get("max_total")
-        )
+        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"), kwargs.get("min_total"),
+                                                 kwargs.get("max_total"))
         return invoice_filters.filter_advanced(self.invoices, **kwargs)

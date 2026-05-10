@@ -33,7 +33,6 @@ class InventoryValidator:
 
     @staticmethod
     def _resolve_id(short_id, keys_list):
-        """Намира пълното ID по въведено кратко ID."""
         short_id = str(short_id).lower()
         for full_id in keys_list:
             if full_id.lower().startswith(short_id):
@@ -72,6 +71,7 @@ class InventoryValidator:
         if current_qty < val:
             raise ValueError(f"Недостатъчна наличност! В склад {warehouse_id} има само {current_qty}.")
 
+
     @staticmethod
     def validate_move(product_id, from_wh, to_wh, qty, master_inventory):
         InventoryValidator._validate_ids(product_id)
@@ -87,13 +87,14 @@ class InventoryValidator:
 
         locations = products[p_id_full].get("locations", {})
         from_wh_full = InventoryValidator._resolve_id(from_wh, locations.keys())
-
         if not from_wh_full:
             raise ValueError(f"Изходният склад {from_wh} не е намерен или е празен.")
 
         from_wh_qty = float(locations.get(from_wh_full, 0.0))
         if from_wh_qty < val:
             raise ValueError(f"Няма достатъчно стока за преместване. (Налично в {from_wh}: {from_wh_qty})")
+
+
 
     @staticmethod
     def validate_inventory_integrity(master_inventory):
@@ -103,6 +104,7 @@ class InventoryValidator:
             total_recorded = float(data.get("total_stock", 0.0))
             if abs(wh_sum - total_recorded) > 0.0001:
                 raise ValueError(f"Разсинхронизация при {data['name']}!")
+
 
     @staticmethod
     def validate_movements(movements):

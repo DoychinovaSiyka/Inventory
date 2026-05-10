@@ -14,9 +14,9 @@ class Movement:
     def now():
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    def __init__(self, movement_id, product_id, product_name, user_id, location_id, movement_type,
-                 quantity, unit, price=None, supplier_id=None, customer=None, date=None,
-                 created=None, modified=None, from_location_id=None, to_location_id=None):
+    def __init__(self, movement_id, product_id, product_name, user_id, location_id, movement_type, quantity, unit, price=None,
+                 supplier_id=None, customer=None, date=None, created=None, modified=None,
+                 from_location_id=None, to_location_id=None):
 
         if movement_id:
             self.movement_id = str(movement_id)
@@ -108,6 +108,7 @@ class Movement:
                         supplier_id=data.get("supplier_id"), customer=data.get("customer"), date=data.get("date"),
                         created=data.get("created"), modified=data.get("modified"),
                         from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"))
+
 
     def __str__(self):
         mid = self.movement_id[:8]

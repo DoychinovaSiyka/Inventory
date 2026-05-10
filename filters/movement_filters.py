@@ -5,8 +5,6 @@ from datetime import datetime
 
 def _parse_movement_date(date_val) -> Optional[datetime]:
     # Опитваме се да превърнем входа в дата.
-    # Ако вече е datetime – връщаме го.
-    # Ако е текст – пробваме няколко формата.
     if not date_val:
         return None
 
@@ -25,10 +23,8 @@ def _parse_movement_date(date_val) -> Optional[datetime]:
     return None
 
 
-def filter_deliveries(movements: List[Movement], keyword: str,
-                      product_controller, supplier_controller) -> List[Movement]:
+def filter_deliveries(movements: List[Movement], keyword: str, product_controller, supplier_controller) -> List[Movement]:
     # Филтър само за доставки (IN)
-    # Търсим по име на продукт или име на доставчик
     if keyword:
         keyword = keyword.lower().strip()
     else:
@@ -80,7 +76,7 @@ def filter_advanced(movements: List[Movement], **kwargs):
     start_dt = _parse_movement_date(start_date)
     end_dt = _parse_movement_date(end_date)
 
-    # Ако movement_type е обект, взимаме името му
+
     expected_type = None
     if m_type:
         if isinstance(m_type, MovementType):

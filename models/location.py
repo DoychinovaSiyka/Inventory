@@ -4,8 +4,7 @@ from typing import Optional, Union
 
 
 class Location:
-    def __init__(self, location_id: Optional[Union[str, int]] = None,
-                 name: Optional[str] = "", zone: Optional[str] = "",
+    def __init__(self, location_id: Optional[Union[str, int]] = None, name: Optional[str] = "", zone: Optional[str] = "",
                  capacity: int = 0, created: Optional[str] = None, modified: Optional[str] = None):
 
 

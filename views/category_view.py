@@ -4,6 +4,7 @@ class CategoryView:
     def __init__(self, controller):
         self.controller = controller
 
+
     def _ask_required_string(self, prompt, min_len=2):
         while True:
             value = input(prompt).strip()
@@ -58,26 +59,22 @@ class CategoryView:
                 indent = "  " * level
                 print(f"{indent}- {cat.name} ({short_id})")
 
-
-
-
     def add_category(self, user):
         print("\nНОВА КАТЕГОРИЯ")
         name = self._ask_required_string("Име: ", 2)
         description = self._ask_required_string("Описание: ", 3)
 
-        print("\nИзберете родителска категория (Enter за главна):")
+        print("\nИзберете родителска категория (Натиснете Enter за ГЛАВНА категория):")
         parent = self.select_category()
-        if parent:
-            new_parent_id = parent.category_id
-        else:
-            new_parent_id = None
+        new_parent_id = parent.category_id if parent else None
 
         try:
-            self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
-            print(f"\nКатегорията '{name}' е добавена.")
+            self.controller.add({"name": name, "description": description, "parent_id": new_parent_id}, user_id=user.user_id)
+
+            print(f"\nКатегорията '{name}' е добавена успешно.")
         except Exception as e:
-            print(f"Грешка при добавяне: {e}")
+            print(f"\nГрешка при добавяне: {e}")
+
 
     def edit_category(self, user):
         print("\nРЕДАКТИРАНЕ")
@@ -116,7 +113,6 @@ class CategoryView:
             choice = input("\nИзбор (номер или ID, Enter за отказ/главна): ").strip()
             if not choice:
                 return None
-
             if choice.isdigit():
                 idx = int(choice) - 1
                 if 0 <= idx < len(categories):
@@ -128,16 +124,16 @@ class CategoryView:
             print("Невалиден избор. Опитайте пак.")
 
 
-
-    def delete_category(self, user):
-        print("\nИЗТРИВАНЕ")
+    def delete_category(self, user, product_controller):
+        print("\nИЗТРИВАНЕ НА КАТЕГОРИЯ")
         category = self.select_category()
         if not category:
             return
+
         try:
-            if self.controller.remove(category.category_id, user.user_id):
-                print(f"\nКатегорията '{category.name}' е изтрита.")
+            if self.controller.remove(category.category_id, user.user_id, product_controller):
+                print(f"\nКатегорията '{category.name}' е изтрита успешно.")
             else:
-                print("\nГрешка при изтриване.")
+                print("\nКатегорията не беше намерена в базата.")
         except Exception as e:
-            print(f"Неуспешно изтриване: {e}")
+            print(f"\nНеуспешно изтриване: {e}")

@@ -63,8 +63,7 @@ class MovementController:
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
             quantity: str, price: Optional[str], customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
-        """
-        Метод за създаване на движение.Гарантира синхронизация с инвентара и генериране на фактури."""
+        """ Метод за създаване на движение. Синхронизация с инвентара и генериране на фактури."""
 
         product = self.product_controller.get_by_id(product_id)
         if not product:

@@ -53,7 +53,7 @@ def filter_by_product(invoices: List[Invoice], keyword: str) -> List[Invoice]:
 
 
 def filter_by_date(invoices: List[Invoice], date_str: str) -> List[Invoice]:
-    """ Бързо търсене на фактури от конкретен ден. """
+    """ търсене на фактури от конкретен ден. """
     if not date_str:
         return invoices
     target = str(date_str).strip()
@@ -93,7 +93,7 @@ def filter_by_date_range(invoices: List[Invoice], start_str: Optional[str], end_
 
 
 def filter_advanced(invoices: List[Invoice], **kwargs) -> List[Invoice]:
-    """Комбинира всичко (клиент, продукт, дати и цени) в едно търсене. """
+    """Комбинира всичко в едно търсене. """
     res = invoices
     if kwargs.get("customer"):
         res = filter_by_customer(res, kwargs["customer"])

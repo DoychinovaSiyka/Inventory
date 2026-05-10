@@ -55,6 +55,7 @@ class MainMenuView:
     def open_reports(self, user):
         ReportsView(self.controllers["report"]).show_menu(user)
 
+
     def open_users(self, user):
         UserView(self.controllers["user"]).show_menu(user)
 

@@ -59,6 +59,7 @@ class LocationValidator:
                 return
         raise ValueError(f"Склад/Локация с код '{location_id}' не е намерен в базата.")
 
+
     @staticmethod
     def validate_can_delete(location_id, inventory_controller):
         stock_in_loc = inventory_controller.get_stock_by_location_total(location_id)

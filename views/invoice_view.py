@@ -51,11 +51,12 @@ class InvoiceView:
                 break
 
     def show_all(self, _):
-        """Показва всички записи, включително анулираните."""
         self._show_invoices(self.invoice_controller.get_all(include_cancelled=True))
 
     def show_active_only(self, _):
         self._show_invoices(self.invoice_controller.get_all(include_cancelled=False))
+
+
 
     def view_by_id(self, user):
         print("\nПРЕГЛЕД НА ФАКТУРА")

@@ -2,8 +2,8 @@ import uuid
 from datetime import datetime
 
 class User:
-    def __init__(self, first_name, last_name, email, username, password,
-                 role="Operator", status="Active", user_id=None, created=None, modified=None):
+    def __init__(self, first_name, last_name, email, username, password, role="Operator", status="Active",
+                 user_id=None, created=None, modified=None):
 
 
         if not user_id:

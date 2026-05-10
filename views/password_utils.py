@@ -44,19 +44,18 @@ def input_password(prompt="Въведете парола: "):
 
 def format_table(columns, rows):
     if not rows:
-        return "\n[!] Няма налични данни.\n"
+        return "\nНяма налични данни.\n"
 
     # Изчисляваме максималната ширина за всяка колона
     col_widths = [len(str(c)) for c in columns]
 
-    # Обхождаме редовете, за да намерим най-дългия елемент във всяка колона
     for row in rows:
         for i, val in enumerate(row):
             val_str = str(val)
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
-    # Добавяме фиксиран padding от общо 2 интервала (един отляво, един отдясно)
+    #  фиксиран padding от общо 2 интервала (един отляво, един отдясно)
     col_widths = [w + 2 for w in col_widths]
     separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 

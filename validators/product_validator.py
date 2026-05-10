@@ -1,9 +1,8 @@
 class ProductValidator:
-    """Валидатор за продуктови данни. Изчистен от мъртъв код."""
+
 
     @staticmethod
     def validate_name(name):
-        """Валидира името на продукта."""
         if not name or not isinstance(name, str):
             raise ValueError("Името е задължително.")
 
@@ -14,7 +13,6 @@ class ProductValidator:
 
     @staticmethod
     def validate_description(description):
-        """Валидира описанието (може да е празно)."""
         if description is None or str(description).strip() == "":
             return ""
 
@@ -25,10 +23,7 @@ class ProductValidator:
 
     @staticmethod
     def validate_unit(unit, allowed_units=None):
-        """
-        Валидира мерната единица.
-        Ако е подаден списък с разрешени единици, проверява срещу него.
-        """
+        """ Ако е подаден списък с разрешени единици, проверява срещу него."""
         u = str(unit).strip()
         if not u:
             return "бр."
@@ -65,7 +60,6 @@ class ProductValidator:
         """Проверява дали името вече съществува в списъка с продукти."""
         search_name = name.strip().lower()
         for p in products:
-            # Пропускаме текущия продукт при редакция
             if exclude_product_id and str(p.product_id) == str(exclude_product_id):
                 continue
             if p.name.lower() == search_name:

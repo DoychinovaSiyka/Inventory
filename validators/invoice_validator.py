@@ -19,6 +19,8 @@ class InvoiceValidator:
         except ValueError:
             raise ValueError(f"{field_name} трябва да бъде валидно число (напр. 12.50).")
 
+
+
     @staticmethod
     def validate_uuid(value, field_name="ID"):
         if value is None:
@@ -28,15 +30,20 @@ class InvoiceValidator:
         if len(val_str) == 36:
             try:
                 uuid.UUID(val_str)
-            except:
+            except Exception:
                 raise ValueError(f"Невалиден пълен UUID формат за {field_name}.")
+            return
+
+        if len(val_str) < 4:
+            raise ValueError(f"{field_name} трябва да е поне 4 символа или пълен UUID.")
+
+        for c in val_str:
+            if not (c.isalnum() or c == "-"):
+                raise ValueError("ID-то съдържа невалидни символи.")
+
+        return
 
 
-        elif len(val_str) >= 4:
-            if not all(c.isalnum() or c == "-" for c in val_str):
-                raise ValueError(f"ID-то съдържа невалидни символи.")
-        else:
-            raise ValueError(f"{field_name} трябва да е поне 4 символа (кратък код) или пълен UUID.")
 
     @staticmethod
     def validate_product(product):
@@ -68,12 +75,11 @@ class InvoiceValidator:
 
     @staticmethod
     def validate_total_price(total_price, quantity, unit_price):
-        """Проверка на математическата логика на фактурата."""
         try:
             total = float(total_price)
             expected = round(float(quantity) * float(unit_price), 2)
 
-            # Позволяваме разлика до 1 стотинка заради закръгляния
+            # Позволявам разлика до 1 стотинка заради закръгляния
             if abs(expected - total) > 0.01:
                 raise ValueError(f"Грешка в сметката! {quantity} x {unit_price} = {expected}, а е записано {total}")
         except (ValueError, TypeError):
@@ -107,14 +113,16 @@ class InvoiceValidator:
         InvoiceValidator.validate_unit_price(unit_price)
         InvoiceValidator.validate_total_price(total_price, quantity, unit_price)
         InvoiceValidator.validate_uuid(movement_id, "Movement ID")
-        if date:
+        if date is not None and str(date).strip() != "":
             InvoiceValidator.validate_date(date)
+
 
     @staticmethod
     def validate_movement_for_invoice(movement):
         m_type = str(movement.movement_type.name).upper()
         if m_type != "OUT":
             raise ValueError(f"Не може да се издаде фактура за движение тип '{m_type}'. Трябва да е продажба (OUT).")
+
 
     @staticmethod
     def validate_search_filters(start_date, end_date, min_total, max_total):

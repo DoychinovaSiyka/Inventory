@@ -19,6 +19,7 @@ class ProductMenuView:
     def _stock(self, product):
         return self.inventory_controller.get_total_stock(product.product_id)
 
+
     def _print_products(self, products, title=""):
         if not products:
             print("\nНяма намерени продукти.\n")
@@ -30,10 +31,10 @@ class ProductMenuView:
             short_id = str(p.product_id)[:8]
             price_text = f"{float(p.price):.2f} лв."
             rows.append([short_id, p.name[:30], f"{qty:.2f} {p.unit}", price_text])
-
         if title:
             print(f"\n{title.upper()}")
         print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
+
 
     def _select_category(self):
         categories = sorted(self.category_controller.get_all(), key=lambda x: x.name.lower())
@@ -96,9 +97,9 @@ class ProductMenuView:
             MenuItem("6", "Филтър по категория", self.filter_by_category),
             MenuItem("7", "Критични наличности", self.low_stock),
             MenuItem("8", "Сортиране", lambda u: self.sort_view.show_menu()),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
+
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -107,6 +108,7 @@ class ProductMenuView:
                 break
             if menu_obj.execute(choice, user) == "break":
                 break
+
 
     def create_product(self, user):
         print("\nНОВ ПРОДУКТ")
@@ -121,7 +123,6 @@ class ProductMenuView:
         while True:
             price_raw = input("Цена (напр. 2.50 лв): ").strip()
             try:
-                # Тук само проверяваме дали е валидно, контролерът ще го парсне
                 self.product_controller.validator.parse_float(price_raw, "Цена")
                 break
             except Exception as e:
@@ -151,31 +152,24 @@ class ProductMenuView:
 
         category_id = self._select_category()
 
-        product_data = {
-            "name": name,
-            "description": desc,
-            "price": price_raw,
-            "unit": unit_raw,
-            "category_ids": [category_id]
-        }
-
+        product_data = {"name": name, "description": desc, "price": price_raw, "unit": unit_raw, "category_ids": [category_id]}
         try:
             new_product = self.product_controller.add(product_data)
             print(f"\nПродуктът '{new_product.name}' е добавен успешно.")
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
 
+
+
     def edit_product(self, user):
         print("\nРЕДАКТИРАНЕ НА ПРОДУКТ")
         pid = input("ID на продукт: ").strip()
         product = self.product_controller.get_by_id(pid)
-
         if not product:
             print("Продуктът не е намерен.")
             return
 
         print(f"\nРедактирате: {product.name}")
-
         while True:
             new_name = input(f"Ново име [{product.name}]: ").strip()
             if not new_name:
@@ -211,14 +205,12 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
-
         while True:
             print("\nИзберете мерна единица:")
             for i, u in enumerate(self.allowed_units, start=1):
                 print(f"{i}. {u}")
 
             unit_choice = input(f"Номер [{product.unit}]: ").strip()
-
             if not unit_choice:
                 new_unit = product.unit
                 break
@@ -228,9 +220,7 @@ class ProductMenuView:
                 if 0 <= idx < len(self.allowed_units):
                     new_unit = self.allowed_units[idx]
                     break
-
             print("Невалидна мерна единица. Опитайте отново.")
-
 
         while True:
             new_cat_id = self._select_category()
@@ -239,7 +229,6 @@ class ProductMenuView:
                 break
             print("Невалидна категория. Опитайте отново.")
         else:
-            # Извличаме ID-тата директно от обектите
             new_category_ids = []
             for c in product.categories:
                 if isinstance(c, str):
@@ -247,24 +236,20 @@ class ProductMenuView:
                 else:
                     new_category_ids.append(str(c.category_id))
 
-        updates = {
-            "name": new_name,
-            "price": new_price,
-            "description": new_desc,
-            "unit": new_unit,
-            "category_ids": new_category_ids
-        }
+        updates = {"name": new_name, "price": new_price, "description": new_desc,
+                   "unit": new_unit, "category_ids": new_category_ids}
 
         if self.product_controller.update(product.product_id, updates):
             print("\nПродуктът е обновен успешно.")
         else:
             print("\nГрешка при обновяване.")
 
+
+
     def remove_product(self, user):
         print("\nИЗТРИВАНЕ НА ПРОДУКТ")
         pid = input("ID на продукт: ").strip()
         product = self.product_controller.get_by_id(pid)
-
         if not product:
             print("Продуктът не е намерен.")
             return
@@ -275,14 +260,17 @@ class ProductMenuView:
         except Exception as e:
             print(f"Грешка при изтриване: {e}")
 
+
     def show_all(self, _):
         self._print_products(self.product_controller.get_all(), "Всички налични продукти")
+
 
     def search(self, _):
         keyword = input("\nТърсене (име или описание): ").strip()
         if keyword:
             results = self.product_controller.search(keyword)
             self._print_products(results, f"Резултати за {keyword}")
+
 
     def filter_by_category(self, _):
         category_id = self._select_parent_category()
@@ -291,8 +279,9 @@ class ProductMenuView:
 
         all_ids = [category_id] + self.category_controller.get_all_hierarchical_ids(category_id)
         results = self.product_controller.filter_by_category_hierarchy(all_ids)
-
         self._print_products(results, "Резултати")
+
+
 
     def low_stock(self, _):
         print("\nПРОВЕРКА НА КРИТИЧНИ НАЛИЧНОСТИ")

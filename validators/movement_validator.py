@@ -104,8 +104,9 @@ class MovementValidator:
         found_loc = location_controller.get_by_id(loc_input)
         if found_loc:
             return found_loc.location_id
-
         raise ValueError(f"Склад с ID/номер '{loc_input}' не е намерен.")
+
+
 
     @staticmethod
     def validate_in_out_rules(movement_type, product, quantity, customer, inventory_controller, location_id):
@@ -119,7 +120,7 @@ class MovementValidator:
             if not customer or str(customer).strip() == "":
                 raise ValueError("При продажба (OUT) трябва да посочите име на клиент.")
 
-            available = inventory_controller.get_total_stock_for_location(product.product_id, location_id)
+            available = inventory_controller.get_stock(product.product_id, location_id)
             if available < quantity:
                 raise ValueError(f"Недостатъчна наличност. В този склад има само {available} {product.unit}.")
 

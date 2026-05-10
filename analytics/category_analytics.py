@@ -18,7 +18,7 @@ def build_category_tree(categories: List[Category]) -> List[dict]:
             if pid == "" or pid == "none":
                 root_categories.append(c)
 
-    # За всяка главна категория започваме да търсим нейните деца
+    # започваме да търсим нейните деца за главната категория
     for root in root_categories:
         tree.append({"category": root, "level": 0})
         _add_children_recursive_view(root.category_id, categories, tree, 1)

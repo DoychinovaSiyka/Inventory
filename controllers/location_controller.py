@@ -67,7 +67,6 @@ class LocationController:
 
         location.update_modified()
         self.save_changes()
-
         return True
 
     def remove(self, location_id: str) -> bool:

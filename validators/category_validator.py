@@ -15,11 +15,15 @@ class CategoryValidator:
         return cleaned
 
     @staticmethod
-    def validate_unique(name, existing_categories):
+    def validate_unique(name, existing_categories, exclude_id=None):
         target = name.strip().lower()
         for c in existing_categories:
+            if exclude_id and str(c.category_id) == str(exclude_id):
+                continue
+
             if c.name.strip().lower() == target:
                 raise ValueError(f"Категория с име '{name.strip()}' вече съществува.")
+
 
     @staticmethod
     def validate_update_name(new_name):
@@ -63,6 +67,7 @@ class CategoryValidator:
 
     @staticmethod
     def validate_no_cycle(category_id, parent_id, categories):
+        """ няма циклична зависимост без безкрайна рекурсия."""
         if not parent_id:
             return
 
@@ -77,20 +82,22 @@ class CategoryValidator:
                 if str(c.category_id) == str(current):
                     next_parent = c.parent_id
                     break
-
             current = next_parent
+
 
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
         target_id = str(category_id)
 
         for c in all_categories:
-            if str(c.parent_id) == target_id:
+            if c.parent_id and str(c.parent_id) == target_id:
                 raise ValueError("Категорията има подкатегории. Първо преместете или изтрийте тях.")
 
         for p in products:
-            if target_id in p.get_category_ids():
-                raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+            for cat_obj in p.categories:
+                if str(cat_obj.category_id) == target_id:
+                    raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+
 
     @staticmethod
     def validate_exists(category_id, categories):

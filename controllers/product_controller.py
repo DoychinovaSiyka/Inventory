@@ -6,7 +6,6 @@ from filters import product_filters, product_sorters
 
 class ProductController:
     """Управлява каталога с продукти. Синхронизиран с инвентара за безопасно триене."""
-
     def __init__(self, repo, category_controller, inventory_controller):
         self.repo = repo
         self.category_controller = category_controller
@@ -31,7 +30,7 @@ class ProductController:
 
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
-        """Намира продукт по пълно или частично ID (минимум 4 символа)."""
+        """Намира продукт по пълно или частично ID."""
         pid = str(product_id).strip()
         if not pid:
             return None
@@ -113,7 +112,7 @@ class ProductController:
         if not product:
             return False
 
-        # Проверка за наличност преди триене
+
         current_stock = self.inventory_controller.get_total_stock(product.product_id)
         if current_stock > 0:
             raise ValueError(f"Не може да изтриете '{product.name}', защото има наличност: {current_stock} {product.unit}")
@@ -122,7 +121,7 @@ class ProductController:
         self.save_changes()
         return True
 
-    # Търсене и Сортиране
+
     def search(self, keyword: str) -> List[Product]:
         """Търсене по ключова дума в името или описанието."""
         return product_filters.filter_combined(self.products, keyword=keyword)

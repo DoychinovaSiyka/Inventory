@@ -3,11 +3,11 @@ from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
 
+
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
     def __init__(self, repo):
         self.repo = repo
-
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
@@ -66,7 +66,6 @@ class SupplierController:
         self.suppliers.remove(supplier)
         self.save_changes()
         return True
-
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:

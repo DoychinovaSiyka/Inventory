@@ -17,7 +17,7 @@ class UserController:
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
-        # Ако няма админ и оператор, създаваме ги
+
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
@@ -29,7 +29,6 @@ class UserController:
             return None
 
         identifier = str(identifier).strip()
-
         user = self.get_by_id(identifier)
         if user:
             return user

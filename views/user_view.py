@@ -26,6 +26,8 @@ class UserView:
             MenuItem("6", "Изтриване от системата", self.delete_user),
             MenuItem("0", "Назад", lambda u: "break")])
 
+
+
     def show_users(self, _):
         users = self.controller.get_all()
         if not users:
@@ -36,6 +38,8 @@ class UserView:
         columns = ["ID", "Username", "Имейл", "Роля", "Статус"]
         rows = [[u.user_id[:8], u.username, u.email, u.role, u.status] for u in users]
         print(format_table(columns, rows))
+
+
 
     def add_user(self, _):
         print("\nНОВ ПОТРЕБИТЕЛ (Enter за отказ)")
@@ -62,7 +66,6 @@ class UserView:
                 break
             print(f"Грешка: {error}")
 
-
         while True:
             role = input("Роля (Admin/Operator) [Operator]: ").strip().capitalize() or "Operator"
             error = self.controller.validate_field("role", role)
@@ -72,7 +75,6 @@ class UserView:
 
         fn = input("Име (Enter за '-' ): ").strip() or "-"
         ln = input("Фамилия (Enter за '-' ): ").strip() or "-"
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен успешно.")

@@ -6,6 +6,7 @@ class LocationView:
     def __init__(self, location_controller):
         self.controller = location_controller
 
+
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")
@@ -75,7 +76,8 @@ class LocationView:
             capacity_raw = input("Капацитет (цяло число): ").strip()
             if not capacity_raw: return
             error = self.controller.validate_field("capacity", capacity_raw)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
         try:
@@ -96,21 +98,39 @@ class LocationView:
 
         print(f"\nРедакция на {location.name} (Enter запазва старата стойност)")
         while True:
-            new_name = input(f"Ново име [{location.name}]: ").strip() or location.name
+            new_name = input(f"Ново име [{location.name}]: ").strip()
+            if new_name == "":
+                new_name = location.name
+
             error = self.controller.validate_field("name", new_name)
-            if not error:
-                all_locs = self.controller.get_all()
-                if any(l.name.lower() == new_name.lower() and l.location_id != location.location_id for l in all_locs):
-                    print(f"Името '{new_name}' вече е заето от друга локация.")
+            if error:
+                print(f"Грешка: {error}")
+                continue
+
+            # Проверка дали името вече се използва от друга локация
+            all_locs = self.controller.get_all()
+            name_taken = False
+            for l in all_locs:
+                if l.location_id == location.location_id:
                     continue
-                break
-            print(f"Грешка: {error}")
+
+                if l.name.lower() == new_name.lower():
+                    name_taken = True
+                    break
+
+            if name_taken:
+                print(f"Името '{new_name}' вече е заето от друга локация.")
+                continue
+
+            break
+
 
 
         while True:
             new_zone = input(f"Нова зона [{location.zone}]: ").strip() or location.zone
             error = self.controller.validate_field("zone", new_zone)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
         while True:
@@ -129,6 +149,7 @@ class LocationView:
             print("Данните са обновени успешно.")
         except Exception as e:
             print(f"Проблем при обновяване: {e}")
+
 
     def delete_location(self, _):
         print("\nИзтриване на локация")

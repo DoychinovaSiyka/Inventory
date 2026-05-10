@@ -11,14 +11,13 @@ def filter_search(products: List, keyword: str) -> List:
     results = []
 
     for p in products:
-        # Имена на категориите
         category_names = [c.name.lower() for c in p.categories]
 
         full_text = (f"{p.name.lower()} " 
                      f"{p.description.lower()} " 
                      f"{' '.join(category_names)}")
 
-        # Всички думи трябва да присъстват
+
         if all(word in full_text for word in words):
             results.append(p)
 

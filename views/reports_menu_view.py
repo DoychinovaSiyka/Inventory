@@ -8,7 +8,6 @@ class ReportsView:
         self.controller = controller
 
     def _display_report(self, title, headers, rows):
-        """Универсален метод за показване на таблица."""
         if not rows:
             print("\nНяма данни за показване.\n")
             return
@@ -57,14 +56,8 @@ class ReportsView:
         for item in data:
             price_value = float(item["price"])
             quantity_text = f"{item['quantity']} {item['unit']}"
-            row = [
-                item["date"],
-                item["movement_id"],
-                item["product"],
-                quantity_text,
-                f"{price_value:.2f} лв.",
-                item["supplier"]
-            ]
+            row = [item["date"], item["movement_id"], item["product"],
+                   quantity_text, f"{price_value:.2f} лв.", item["supplier"]]
             rows.append(row)
         return rows
 
@@ -164,8 +157,8 @@ class ReportsView:
         self._search_flow("име на продукт", self.controller.report_sales_by_product,
                           self._fmt_sales, "Резултати за продукт", headers)
 
+
     def report_fifo_analysis(self, _):
-        """Интерактивен FIFO анализ."""
         while True:
             name = input("\nВъведете име или ID на продукт (или 'отказ' за изход): ").strip()
             if not name or name.lower() == "отказ":

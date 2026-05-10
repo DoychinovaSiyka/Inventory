@@ -10,7 +10,6 @@ def _match_string(target: str, keyword: str) -> bool:
 
 
 def _match_date(date_val: str, date_str: str) -> bool:
-    """Помощна функция за филтриране по дата."""
     if not date_str:
         return True
     return str(date_val).startswith(date_str.strip())
@@ -33,7 +32,6 @@ def filter_movements_by_type(movements: List[Movement], m_type: str):
 
 def filter_sales_by_customer(invoices: List[Invoice], keyword: str):
     """Търсене на продажби по име на клиент (само за активни фактури)."""
-    # СИНХРОН: Първо филтрираме само активните
     active_invoices = [inv for inv in invoices if inv.is_active]
 
     if not keyword or len(keyword.strip()) < 2:
@@ -51,7 +49,7 @@ def filter_sales_by_product(invoices: List[Invoice], product_name: str):
 def group_turnover_by_day(invoices: List[Invoice]):
     """Групира оборота по дни за статистически справки."""
     turnover = {}
-    # СИНХРОН: Гледаме само активните фактури, за да не товарим оборота с анулирани суми
+    # само активните фактури, за да не товарим оборота с анулирани суми
     active_invoices = [inv for inv in invoices if inv.is_active]
 
     for inv in active_invoices:
@@ -72,7 +70,7 @@ def group_turnover_by_day(invoices: List[Invoice]):
 def group_top_products(invoices: List[Invoice]):
     """Статистика за най-продаваните продукти (само от валидни продажби)."""
     stats = {}
-    # СИНХРОН: Анулирана фактура означава върната стока, затова не я броим тук
+    # Анулирана фактура означава върната стока, затова не я броим тук
     active_invoices = [inv for inv in invoices if inv.is_active]
 
     for inv in active_invoices:
