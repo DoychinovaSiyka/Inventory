@@ -11,51 +11,52 @@ def filter_search(products: List, keyword: str) -> List:
     results = []
 
     for p in products:
-        # Извличаме имената на категориите безопасно
-        cat_names_list = []
-        for c in p.categories:
-            if hasattr(c, "name"):
-                cat_names_list.append(c.name.lower())
+        # Имена на категориите
+        category_names = [c.name.lower() for c in p.categories]
 
-        cat_names = " ".join(cat_names_list)
+        full_text = (f"{p.name.lower()} " 
+                     f"{p.description.lower()} " 
+                     f"{' '.join(category_names)}")
 
-        # Генерираме целия текст за търсене веднъж за продукта
-        full_text = f"{p.name.lower()} {p.description.lower()} {cat_names}"
-
-        # Проверка дали ВСИЧКИ думи от търсенето присъстват в текста
+        # Всички думи трябва да присъстват
         if all(word in full_text for word in words):
             results.append(p)
 
     return results
 
 
+
+
 def filter_combined(products: List, **kwargs):
-    """
-    Универсален филтър с оптимизирана производителност. Поддържа: keyword, category_ids (list), min_price, max_price."""
+    """ Универсален филтър - keyword, category_ids (list), min_price, max_price."""
     results = products
+    keyword = kwargs.get("keyword")
+    if keyword:
+        results = filter_search(results, keyword)
 
-    if kwargs.get("keyword"):
-        results = filter_search(results, kwargs["keyword"])
-
-    # Йерархичен филтър по категории
+    #  Филтър по категории (включително йерархия)
     category_ids = kwargs.get("category_ids")
     if category_ids:
-        # Използваме set за O(1) скорост на търсене
-        search_set = set(str(cid) for cid in category_ids)
-        results = [p for p in results if set(p.get_category_ids()).intersection(search_set)]
+        wanted = set(str(cid) for cid in category_ids)
 
-    #  филтър по цена
+        filtered = []
+        for p in results:
+            product_cats = {str(c.category_id) for c in p.categories}
+            if product_cats & wanted:
+                filtered.append(p)
+        results = filtered
+
+
+    min_p = kwargs.get("min_price")
+    max_p = kwargs.get("max_price")
     try:
-        # Конвертираме границите към float ВЕДНЪЖ преди циклите
-        min_p = kwargs.get("min_price")
-        if min_p is not None and min_p != "":
+        if min_p not in (None, ""):
             min_val = float(min_p)
-            results = [p for p in results if p.price >= min_val]
+            results = [p for p in results if float(p.price) >= min_val]
 
-        max_p = kwargs.get("max_price")
-        if max_p is not None and max_p != "":
+        if max_p not in (None, ""):
             max_val = float(max_p)
-            results = [p for p in results if p.price <= max_val]
+            results = [p for p in results if float(p.price) <= max_val]
 
     except (ValueError, TypeError):
         pass

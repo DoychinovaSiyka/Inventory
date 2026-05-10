@@ -1,5 +1,6 @@
 from typing import List, Optional, Dict
 
+
 def calculate_average_price(products: List) -> float:
     if not products:
         return 0.0
@@ -14,6 +15,7 @@ def calculate_total_inventory_value(products: List, inventory_controller) -> flo
         stock = inventory_controller.get_total_stock(p.product_id)
         total += p.price * stock
     return round(total, 2)
+
 
 def group_products_by_category(products: List) -> Dict[str, List]:
     """Групира продукти по име на категория. Защитен от невалидни обекти."""

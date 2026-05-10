@@ -122,6 +122,7 @@ class ProductMenuView:
         while True:
             price_raw = input("Цена (напр. 2.50 лв): ").strip()
             try:
+                # Тук само проверяваме дали е валидно, контролерът ще го парсне
                 self.product_controller.validator.parse_float(price_raw, "Цена")
                 break
             except Exception as e:
@@ -176,6 +177,7 @@ class ProductMenuView:
 
         print(f"\nРедактирате: {product.name}")
 
+        # Име
         while True:
             new_name = input(f"Ново име [{product.name}]: ").strip()
             if not new_name:
@@ -187,6 +189,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
+        # Цена
         while True:
             price_raw = input(f"Нова цена [{product.price:.2f}]: ").strip()
             if not price_raw:
@@ -198,6 +201,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
+        # Описание
         while True:
             new_desc = input(f"Ново описание [{product.description}]: ").strip()
             if not new_desc:
@@ -209,6 +213,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
+        # Единица
         while True:
             print("\nИзберете мерна единица:")
             for i, u in enumerate(self.allowed_units, start=1):
@@ -228,9 +233,9 @@ class ProductMenuView:
 
             print("Невалидна мерна единица. Опитайте отново.")
 
+
         print("\nАко искате да запазите старата категория, натиснете Enter.")
         change_cat = input("Промяна на категория? (y/Enter): ").strip().lower()
-
         if change_cat == "y":
             while True:
                 new_cat_id = self._select_category()
@@ -239,7 +244,15 @@ class ProductMenuView:
                     break
                 print("Невалидна категория. Опитайте отново.")
         else:
-            new_category_ids = product.get_category_ids()
+            # Извличаме ID-тата директно от обектите, тъй като get_category_ids() беше изтрит
+            new_category_ids = []
+            for c in product.categories:
+                if isinstance(c, str):
+                    # Вече е ID (стринг), просто го добавяме
+                    new_category_ids.append(c)
+                else:
+                    # Приемаме, че е обект и вземаме атрибута му директно
+                    new_category_ids.append(str(c.category_id))
 
         updates = {
             "name": new_name,
