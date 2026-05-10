@@ -77,7 +77,7 @@ class ProductController:
         if not product:
             return False
 
-        # Обновяваме само подадените полета
+
         if "name" in updates:
             new_name = self.validator.validate_name(updates["name"])
             self.validator.validate_unique_name(new_name, self.products, exclude_product_id=product.product_id)
@@ -133,13 +133,19 @@ class ProductController:
 
     def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
         if sort_type == "name":
-            key_fn = lambda p: p.name.lower()
+            key_fn = lambda p:(
+                p.name.lower())
+
         elif sort_type == "price":
-            key_fn = lambda p: p.price
+            key_fn = lambda p:(
+                p.price)
+
         elif sort_type == "quantity":
-            key_fn = lambda p: self.inventory_controller.get_total_stock(p.product_id)
+            key_fn = lambda p:(
+                self.inventory_controller.get_total_stock(p.product_id))
         else:
-            key_fn = lambda p: p.name.lower()
+            key_fn = lambda p:(
+                p.name.lower())
 
         products_copy = self.products[:]
 
