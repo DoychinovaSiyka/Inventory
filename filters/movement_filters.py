@@ -43,13 +43,11 @@ def filter_deliveries(movements: List[Movement], keyword: str, product_controlle
     results = []
 
     for m in deliveries:
-        # Проверка по име на продукт
         product_name = m.product_name or ""
         if keyword in product_name.lower():
             results.append(m)
             continue
 
-        # Проверка по име на доставчик
         if m.supplier_id and supplier_controller:
             supplier = supplier_controller.get_by_id(m.supplier_id)
             if supplier:
@@ -71,7 +69,6 @@ def filter_advanced(movements: List[Movement], **kwargs):
     product_id = kwargs.get("product_id")
     location_id = kwargs.get("location_id")
     user_id = kwargs.get("user_id")
-
 
     start_dt = _parse_movement_date(start_date)
     end_dt = _parse_movement_date(end_date)

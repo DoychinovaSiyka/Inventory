@@ -117,9 +117,8 @@ class CategoryController:
         if not category:
             return False
 
-        # Взимаме всички продукти като списък от обекти
-        products = product_controller.get_all() if product_controller else []
 
+        products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
