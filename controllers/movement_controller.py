@@ -113,7 +113,7 @@ class MovementController:
                 self.invoice_controller.create_from_movement(movement=movement, product=product, customer=customer or "Общ клиент",
                                                              user_id=user.user_id)
             except Exception as e:
-                print(f"Предупреждение: движението е записано, но фактурата не беше генерирана: {e}")
+                print(f"Движението е записано, но фактурата не беше генерирана: {e}")
 
         return movement
 
