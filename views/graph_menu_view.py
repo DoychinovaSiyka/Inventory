@@ -57,7 +57,7 @@ class GraphView:
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
-        # Взимам всички складове, които имат продукта
+        #  всички складове, които имат продукта
         sources = self.inventory_controller.get_warehouses_with_product(product_name)
 
         # ако няма никъде наличност
@@ -86,7 +86,7 @@ class GraphView:
         if len(other_sources) == 1:
             print(f"Продуктът е наличен само в {other_sources[0]}. Разстоянието е ...\n")
 
-        # Стартирам Dijkstra
+
         distances, predecessors = self.graph.dijkstra(my_location)
 
         # Филтрирам складовете, до които има път
