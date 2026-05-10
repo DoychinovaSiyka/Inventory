@@ -99,6 +99,18 @@ class LocationController:
         self.save_changes()
         return True
 
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "name":
+                LocationValidator.validate_name(value)
+            elif field_type == "zone":
+                LocationValidator.validate_zone(value)
+            elif field_type == "capacity":
+                LocationValidator.validate_capacity(value)
+            return None
+        except ValueError as e:
+            return str(e)
+
     def save_changes(self) -> None:
         data = []
         for l in self.locations:

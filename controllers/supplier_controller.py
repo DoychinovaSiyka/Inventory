@@ -66,6 +66,7 @@ class SupplierController:
         return True
 
 
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":

@@ -1,3 +1,4 @@
+import re
 from typing import Optional, List
 from models.user import User
 from validators.user_validator import UserValidator
@@ -7,12 +8,12 @@ class UserController:
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
 
-        # Зареждаме потребителите от файла
+        # Зареждам потребителите от файла
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
 
-        # Превръщаме речниците в User обекти
+        # речници в User обекти
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
@@ -82,24 +83,15 @@ class UserController:
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        # Създаваме нов потребител
-        new_user = User(
-            user_id=None,
-            first_name=first_name.strip(),
-            last_name=last_name.strip(),
-            email=email.strip(),
-            username=username.strip().lower(),
-            password=self._hash_password(password),
-            role=role,
-            status="Active"
-        )
+        new_user = User(user_id=None, first_name=first_name.strip(),last_name=last_name.strip(), email=email.strip(),
+                        username=username.strip().lower(), password=self._hash_password(password),
+                        role=role, status="Active")
 
         self.users.append(new_user)
         self.save_changes()
         return new_user
 
     def change_role(self, identifier, new_role):
-        # Смяна на роля
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
@@ -113,8 +105,8 @@ class UserController:
         user.update_modified()
         self.save_changes()
 
+    # Активиране/деактивиране на потребител
     def change_status(self, acting_user: User, identifier: str, new_status: str):
-        # Активиране/деактивиране на потребител
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
@@ -129,7 +121,6 @@ class UserController:
         return True
 
     def delete_user(self, acting_user: User, identifier: str):
-        # Изтриване на потребител
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
@@ -142,20 +133,14 @@ class UserController:
         self.save_changes()
         return True
 
+
+    # Създаваме администратор по подразбиране
     def _create_default_admin(self):
-        # Създаваме администратор по подразбиране
-        admin = User(
-            user_id=None,
-            first_name="Admin",
-            last_name="System",
-            email="admin@system.local",
-            username="admin",
-            password=self._hash_password("admin123"),
-            role="Admin",
-            status="Active"
-        )
+        admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
+                     username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_changes()
+
 
     def _create_default_operator(self):
         operator = User(user_id=None, first_name="Operator", last_name="User",
@@ -163,3 +148,31 @@ class UserController:
                         role="Operator", status="Active")
         self.users.append(operator)
         self.save_changes()
+
+
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "username":
+                if not value or len(value.strip()) < 3:
+                    raise ValueError("Потребителското име трябва да е поне 3 символа.")
+                if not value.isalnum():
+                    raise ValueError("Потребителското име може да съдържа само букви и цифри.")
+                UserValidator.validate_unique_username(value, self)
+
+            elif field_type == "email":
+                email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+                if not re.match(email_regex, value):
+                    raise ValueError(f"Невалиден формат на имейл: {value}")
+
+            elif field_type == "password":
+                if len(value) < 6:
+                    raise ValueError("Паролата трябва да бъде поне 6 символа.")
+                if value.isdigit() or value.isalpha():
+                    raise ValueError("Паролата трябва да съдържа комбинация от букви и цифри.")
+
+            elif field_type == "role":
+                UserValidator.validate_role(value)
+            return None
+
+        except ValueError as e:
+            return str(e)

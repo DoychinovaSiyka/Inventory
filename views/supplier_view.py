@@ -24,6 +24,7 @@ class SupplierView:
         menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", menu_items)
 
+
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
@@ -80,7 +81,7 @@ class SupplierView:
             new_sup = self.controller.add(name=name, contact=contact, address=address)
             print(f"\nДоставчикът е добавен. ID: {new_sup.supplier_id[:8]}")
         except Exception as e:
-            print(f"Критична грешка при запис: {e}")
+            print(f"Грешка при запис: {e}")
 
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
@@ -124,6 +125,8 @@ class SupplierView:
             print("Данните са обновени успешно.")
         except Exception as e:
             print(f"Проблем при обновяване: {e}")
+
+
 
     def delete_supplier(self, _):
         print("\nИзтриване на доставчик")

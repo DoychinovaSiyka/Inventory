@@ -6,9 +6,8 @@ class UserView:
         self.controller = controller
 
     def show_menu(self, user):
-        # Проверката за админ става през контролера
         if not self.controller.is_admin(user):
-            print("\nГрешка: Нямате администраторски права.")
+            print("\nНямате администраторски права.")
             return
 
         while True:
@@ -40,34 +39,35 @@ class UserView:
 
     def add_user(self, _):
         print("\nНОВ ПОТРЕБИТЕЛ (Enter за отказ)")
-
-        # Име
         while True:
             username = input("Потребителско име: ").strip()
             if not username: return
             error = self.controller.validate_field("username", username)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
-        # Имейл
+
         while True:
             email = input("Имейл: ").strip()
             error = self.controller.validate_field("email", email)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
-        # Парола
         while True:
             password = input_password("Парола: ").strip()
             error = self.controller.validate_field("password", password)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
-        # Роля
+
         while True:
             role = input("Роля (Admin/Operator) [Operator]: ").strip().capitalize() or "Operator"
             error = self.controller.validate_field("role", role)
-            if not error: break
+            if not error:
+                break
             print(f"Грешка: {error}")
 
         fn = input("Име (Enter за '-' ): ").strip() or "-"
@@ -79,11 +79,13 @@ class UserView:
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
 
-    # Пример за изчистено триене
+
+
     def delete_user(self, current_user):
         print("\nИЗТРИВАНЕ")
         target = input("Username или ID за изтриване: ").strip()
-        if not target: return
+        if not target:
+            return
 
         try:
             self.controller.delete_user(current_user, target)
