@@ -100,7 +100,7 @@ class GraphView:
             print(f"\nИма складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return
 
-        # Избирам най-близкия склад
+        # най-близкия склад
         best_source = reachable[0]
         best_distance = distances[best_source]
         for s in reachable:

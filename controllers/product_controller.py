@@ -47,7 +47,6 @@ class ProductController:
 
 
     def add(self, product_data: dict) -> Product:
-        """Добавя нов продукт с пълна валидация на полетата."""
         name = self.validator.validate_name(product_data["name"])
         self.validator.validate_unique_name(name, self.products)
 
@@ -64,15 +63,13 @@ class ProductController:
             if cat:
                 categories.append(cat)
 
-        product = Product(product_id=None, name=name, categories=categories,
-                          unit=unit, description=description, price=price)
-
+        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
         self.products.append(product)
         self.save_changes()
         return product
 
+
     def update(self, product_id: str, updates: dict) -> bool:
-        """Обновява данни на продукт, като следи за уникалност на името."""
         product = self.get_by_id(product_id)
         if not product:
             return False
@@ -133,19 +130,15 @@ class ProductController:
 
     def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
         if sort_type == "name":
-            key_fn = lambda p:(
-                p.name.lower())
+            key_fn = lambda p: (p.name.lower())
 
         elif sort_type == "price":
-            key_fn = lambda p:(
-                p.price)
+            key_fn = lambda p:(p.price)
 
         elif sort_type == "quantity":
-            key_fn = lambda p:(
-                self.inventory_controller.get_total_stock(p.product_id))
+            key_fn = lambda p:(self.inventory_controller.get_total_stock(p.product_id))
         else:
-            key_fn = lambda p:(
-                p.name.lower())
+            key_fn = lambda p:(p.name.lower())
 
         products_copy = self.products[:]
 

@@ -34,7 +34,6 @@ class ReportController:
 
     # Обща справка за всички продажби
     def report_sales(self):
-        """Справка за продажби - СИНХРОНИЗИРАНА с анулиранията."""
         all_invoices = self.invoice_controller.get_all() or []
 
         # Филтрираме само активните за финансовия отчет
