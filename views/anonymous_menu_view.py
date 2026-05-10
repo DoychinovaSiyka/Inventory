@@ -33,7 +33,7 @@ class AnonymousMenuView:
     def open_products(self, user):
         self.product_view.show_all(user)
 
-    # Гостът вижда категориите
+
     def open_categories(self, user):
         self.category_view.show_menu(user)
 

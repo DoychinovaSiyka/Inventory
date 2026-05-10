@@ -15,6 +15,7 @@ class MovementView:
         self.supplier_controller = supplier_controller
         self.inventory_controller = inventory_controller
 
+
     def _ask_float(self, prompt, allow_empty=False, default=None):
         while True:
             val = input(prompt).strip()
@@ -126,10 +127,8 @@ class MovementView:
 
     def _select_location_for_sale(self, product):
         valid = self._get_locations_with_stock(product)
-
         if not valid:
             print(f"\n'{product.name}' не е наличен в нито един склад.")
-            input("Enter за връщане...")
             return None
 
         print("\nИзбор на склад за продажба:")
@@ -246,4 +245,3 @@ class MovementView:
         print("\nХронология на движенията")
         headers = ["ID", "Дата", "Тип", "Продукт", "К-во", "Цена", "Партньор", "Локация"]
         print(format_table(headers, rows))
-        input("\nEnter за връщане...")

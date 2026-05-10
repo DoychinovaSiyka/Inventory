@@ -9,7 +9,6 @@ class GraphView:
         self.inventory_controller = inventory_controller
         self.location_controller = location_controller
         self.graph = WarehouseGraph()
-        # Подготвям мрежата от складове и разстоянията между тях
         self._setup_network()
 
     def _setup_network(self):
@@ -41,7 +40,7 @@ class GraphView:
                 break
 
     def calculate_best_delivery(self, user: User):
-        """Намира най-близкия склад, в който се среща продуктът. Разглежда всички случаи:
+        """Най-близкия склад, в който се среща продуктът. Всички случаи:
         наличен / неналичен / един склад / много складове / няма път."""
 
         product_name = input("\nИме на стока (Enter = отказ): ").strip()
@@ -54,7 +53,7 @@ class GraphView:
             print("Операцията е отказана.")
             return
         if my_location not in self.graph.nodes:
-            print(f"[!] Локация '{my_location}' не съществува.")
+            print(f"Локация '{my_location}' не съществува.")
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
@@ -63,7 +62,7 @@ class GraphView:
 
         # ако няма никъде наличност
         if not sources:
-            print(f"[!] '{product_name}' не е наличен в нито един склад.")
+            print(f"'{product_name}' не е наличен в нито един склад.")
             return
 
         # превръщам в списък от warehouse_id
@@ -80,12 +79,12 @@ class GraphView:
 
         # ако продуктът е само в стартовия склад
         if not other_sources:
-            print(f"[!] '{product_name}' се среща само в {my_location}.")
+            print(f"'{product_name}' се среща само в {my_location}.")
             return
 
         # ако продуктът е само в един друг склад
         if len(other_sources) == 1:
-            print(f"[*] Продуктът е наличен само в {other_sources[0]}. Изчислявам разстоянието...\n")
+            print(f"Продуктът е наличен само в {other_sources[0]}. Разстоянието е ...\n")
 
         # Стартирам Dijkstra
         distances, predecessors = self.graph.dijkstra(my_location)
@@ -98,7 +97,7 @@ class GraphView:
                 reachable.append(s)
 
         if not reachable:
-            print(f"\n[!] Има складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
+            print(f"\nИма складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return
 
         # Избирам най-близкия склад
@@ -123,12 +122,9 @@ class GraphView:
         # Показвам резултата
         source_name = self.graph.nodes[best_source].name
 
-        print("\n" + "═" * 45)
         print("         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")
-        print("═" * 45)
         print(f"  Продукт:    {product_name}")
         print(f"  Източник:   {source_name} ({best_source})")
         print(f"  Разстояние: {shortest_distance} км")
         print(f"  Маршрут:    {' -> '.join(path)}")
-        print("═" * 45)
-        input("\nНатиснете Enter за връщане към менюто...")
+

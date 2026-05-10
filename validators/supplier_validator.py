@@ -2,7 +2,7 @@ import re
 
 
 class SupplierValidator:
-    # Имейл регекс
+
     email_regex = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
     phone_regex = re.compile(r"\+?[\d\s\-]{7,15}")
 

@@ -85,7 +85,7 @@ class OperatorMenuView:
         print("\nСкладови локации:")
         view = LocationView(self.location_controller)
         view.show_all(user)
-        input("\nEnter за връщане...")
+
 
     def open_system_info(self, _):
         SystemInfoView().show_menu()

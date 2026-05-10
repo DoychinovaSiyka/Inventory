@@ -51,7 +51,6 @@ class ProductMenuView:
                 print(f"{i}. {cat.name}{parent_info}")
 
             choice = input("\nИзберете номер на категория или точно име: ").strip()
-
             if choice.isdigit():
                 idx = int(choice) - 1
                 if 0 <= idx < len(categories):
@@ -60,8 +59,8 @@ class ProductMenuView:
             for cat in categories:
                 if choice.lower() == cat.name.lower():
                     return cat.category_id
-
             print("Невалидна категория. Опитайте отново.")
+
 
     def _select_parent_category(self):
         categories = [c for c in self.category_controller.get_all() if not c.parent_id]
@@ -177,7 +176,6 @@ class ProductMenuView:
 
         print(f"\nРедактирате: {product.name}")
 
-        # Име
         while True:
             new_name = input(f"Ново име [{product.name}]: ").strip()
             if not new_name:
@@ -189,7 +187,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
-        # Цена
+
         while True:
             price_raw = input(f"Нова цена [{product.price:.2f}]: ").strip()
             if not price_raw:
@@ -201,7 +199,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
-        # Описание
+
         while True:
             new_desc = input(f"Ново описание [{product.description}]: ").strip()
             if not new_desc:
@@ -213,7 +211,7 @@ class ProductMenuView:
             except Exception as e:
                 print(f"Грешка: {e}")
 
-        # Единица
+
         while True:
             print("\nИзберете мерна единица:")
             for i, u in enumerate(self.allowed_units, start=1):
@@ -234,24 +232,19 @@ class ProductMenuView:
             print("Невалидна мерна единица. Опитайте отново.")
 
 
-        print("\nАко искате да запазите старата категория, натиснете Enter.")
-        change_cat = input("Промяна на категория? (y/Enter): ").strip().lower()
-        if change_cat == "y":
-            while True:
-                new_cat_id = self._select_category()
-                if new_cat_id:
-                    new_category_ids = [new_cat_id]
-                    break
-                print("Невалидна категория. Опитайте отново.")
+        while True:
+            new_cat_id = self._select_category()
+            if new_cat_id:
+                new_category_ids = [new_cat_id]
+                break
+            print("Невалидна категория. Опитайте отново.")
         else:
-            # Извличаме ID-тата директно от обектите, тъй като get_category_ids() беше изтрит
+            # Извличаме ID-тата директно от обектите
             new_category_ids = []
             for c in product.categories:
                 if isinstance(c, str):
-                    # Вече е ID (стринг), просто го добавяме
                     new_category_ids.append(c)
                 else:
-                    # Приемаме, че е обект и вземаме атрибута му директно
                     new_category_ids.append(str(c.category_id))
 
         updates = {
@@ -276,13 +269,11 @@ class ProductMenuView:
             print("Продуктът не е намерен.")
             return
 
-        confirm = input(f"Да изтрием ли '{product.name}'? (y/n): ").strip().lower()
-        if confirm == "y":
-            try:
-                self.product_controller.delete_by_id(product.product_id)
-                print("Продуктът е изтрит успешно.")
-            except Exception as e:
-                print(f"Грешка при изтриване: {e}")
+        try:
+            self.product_controller.delete_by_id(product.product_id)
+            print("Продуктът е изтрит успешно.")
+        except Exception as e:
+            print(f"Грешка при изтриване: {e}")
 
     def show_all(self, _):
         self._print_products(self.product_controller.get_all(), "Всички налични продукти")

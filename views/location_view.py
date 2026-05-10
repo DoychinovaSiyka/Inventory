@@ -40,7 +40,6 @@ class LocationView:
 
         print("\nСписък с локации")
         print(format_table(columns, rows))
-        input("\nEnter за продължение...")
 
     def add_location(self, _):
         print("\nНова локация")
@@ -53,7 +52,6 @@ class LocationView:
             break
 
         zone = input("Зона (Enter за General): ").strip() or "General"
-
         while True:
             capacity_raw = input("Капацитет: ").strip()
             if not capacity_raw:
@@ -118,7 +116,6 @@ class LocationView:
     def delete_location(self, _):
         print("\nИзтриване на локация")
 
-        location = None
         while True:
             loc_id = input("ID на локация: ").strip()
             if not loc_id:
@@ -129,12 +126,8 @@ class LocationView:
                 break
             print("Не е намерена такава локация.")
 
-        confirm = input(f"Искате ли да изтрием '{location.name}'? (y/n): ").lower()
-        if confirm == 'y':
-            try:
-                self.location_controller.remove(location.location_id)
-                print("Локацията е изтрита.")
-            except Exception as e:
-                print(f"Проблем при изтриване: {e}")
-        else:
-            print("Операцията е прекратена.")
+        try:
+            self.location_controller.remove(location.location_id)
+            print("Локацията е изтрита.")
+        except Exception as e:
+            print(f"Проблем при изтриване: {e}")

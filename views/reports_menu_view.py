@@ -15,7 +15,7 @@ class ReportsView:
 
         print(f"\n{title}")
         print(format_table(headers, rows))
-        input("\nНатиснете Enter за връщане...")
+
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -176,9 +176,8 @@ class ReportsView:
                 print(f"Продукт '{name}' не е намерен.")
                 continue
 
-            print("\n" + "=" * 40)
+            print("\n" + "-" * 40)
             print(f" АНАЛИЗ ПО FIFO ЗА: {data['product'].upper()}")
-            print("=" * 40)
             print(f" Наличност в склада: {data['current_stock']} {data['unit']}")
             print(f" История: Влезли: {data['total_in']} | Продадени: {data['total_out']}")
             print("-" * 40)
@@ -186,7 +185,4 @@ class ReportsView:
             print(f" СЕБЕСТОЙНОСТ: {float(data['fifo_cost']):>10.2f} лв.")
             print("-" * 40)
             print(f" ЧИСТА ПЕЧАЛБА: {float(data['profit']):>10.2f} лв.")
-            print("=" * 40)
-
-            input("\nНатиснете Enter за връщане...")
             break

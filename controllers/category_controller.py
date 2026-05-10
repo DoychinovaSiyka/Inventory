@@ -5,16 +5,16 @@ from filters.category_filters import filter_categories, get_all_children_objects
 from analytics.category_analytics import build_category_tree, get_category_stats
 
 
+
 class CategoryController:
     """Управлява категориите и гарантира йерархичната цялост."""
-
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         raw_data = self.repo.load() or []
         self.categories: List[Category] = [Category.from_dict(c) for c in raw_data]
 
     def get_all(self) -> List[Category]:
-        """Връща списък с всички категории (нужен за View-тата)."""
+        """списък с всички категории."""
         return self.categories
 
     def _save_changes(self) -> None:
@@ -26,12 +26,11 @@ class CategoryController:
         description = category_data.get("description", "").strip()
         parent_input = category_data.get("parent_id")
 
-        # 1. Валидация на текстовите полета
         CategoryValidator.validate_name(name)
-        CategoryValidator.validate_description(description)  # ОПРАВЕНО: Вече се валидира!
+        CategoryValidator.validate_description(description)
         CategoryValidator.validate_unique(name, self.categories)
 
-        # 2. Проверка на родителя
+        #  Проверка на родителя
         parent_id = None
         if parent_input:
             parent = self.get_by_id(parent_input)
@@ -39,15 +38,10 @@ class CategoryController:
                 raise ValueError(f"Родителска категория {parent_input} не съществува.")
             parent_id = parent.category_id
 
-        # 3. Проверка за цикли
+        #  Проверка за цикли
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
-        category = Category(
-            category_id=None,
-            name=name,
-            description=description,
-            parent_id=parent_id
-        )
+        category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
 
         self.categories.append(category)
         self._save_changes()
@@ -59,7 +53,7 @@ class CategoryController:
         if not category:
             return False
 
-        # Подготовка на новите данни
+
         name = updates.get("name", category.name).strip()
         description = updates.get("description", category.description).strip()
 
@@ -71,20 +65,20 @@ class CategoryController:
         else:
             new_parent_id = category.parent_id
 
-        # 1. Валидация при промяна на име
+
         if name != category.name:
             CategoryValidator.validate_name(name)
             CategoryValidator.validate_unique(name, self.categories)
 
-        # 2. Валидация при промяна на описание
-        if description != category.description:
-            CategoryValidator.validate_description(description)  # ОПРАВЕНО: Вече се валидира!
 
-        # 3. Проверка за цикличност само ако се сменя родителят
+        if description != category.description:
+            CategoryValidator.validate_description(description)
+
+        # Проверка за цикличност само ако се сменя родителят
         if new_parent_id != category.parent_id:
             CategoryValidator.validate_no_cycle(category.category_id, new_parent_id, self.categories)
 
-        # Прилагане на промените
+
         category.name = name
         category.description = description
         category.parent_id = new_parent_id
@@ -98,12 +92,9 @@ class CategoryController:
         if not target:
             return None
 
-        # Първо търсим точно съвпадение
         for c in self.categories:
             if c.category_id == target:
                 return c
-
-        # Второ търсим по префикс (за удобство в конзолата)
         for c in self.categories:
             if c.category_id.startswith(target):
                 return c
@@ -151,7 +142,6 @@ class CategoryController:
 
         products = product_controller.get_all() if product_controller else []
 
-        # Стриктна проверка преди изтриване
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]

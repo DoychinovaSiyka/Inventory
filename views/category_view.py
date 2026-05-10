@@ -33,19 +33,18 @@ class CategoryView:
             items.append(MenuItem("4", "Изтриване на категория", self.delete_category))
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
-
         menu = Menu("Меню Категории", items)
         self._run_menu(menu, user)
 
+
+
     def show_all(self, _):
-        """ПОПРАВЕНО: Показва категориите чрез йерархията от контролера, запазвайки твоя стил."""
         visual_tree = self.controller.get_visual_tree()
         if not visual_tree:
             print("\nНяма дефинирани категории.")
             return
 
-        print("\n--- ЙЕРАРХИЯ НА КАТЕГОРИИТЕ ---")
-
+        print("\nЙЕРАРХИЯ НА КАТЕГОРИИТЕ")
         main_counter = 0
         for item in visual_tree:
             cat = item["category"]
@@ -53,16 +52,14 @@ class CategoryView:
             short_id = str(cat.category_id)[:8]
 
             if level == 0:
-                # Главна категория - твоят стил (1. ИМЕ)
                 main_counter += 1
                 print(f"\n{main_counter}. {cat.name.upper()} ({short_id})")
             else:
-                # Подкатегория - твоят стил (отместване и тире)
                 indent = "  " * level
                 print(f"{indent}- {cat.name} ({short_id})")
 
-        print("\n" + "-" * 30)
-        input("Enter за продължение...")
+
+
 
     def add_category(self, user):
         print("\nНОВА КАТЕГОРИЯ")
@@ -71,15 +68,14 @@ class CategoryView:
 
         print("\nИзберете родителска категория (Enter за главна):")
         parent = self.select_category()
-        parent_id = parent.category_id if parent else None
+        if parent:
+            new_parent_id = parent.category_id
+        else:
+            new_parent_id = None
 
         try:
-            self.controller.add({
-                "name": name,
-                "description": description,
-                "parent_id": parent_id
-            }, user_id=user.user_id)
-            print(f"\nУспех: Категорията '{name}' е добавена.")
+            self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
+            print(f"\nКатегорията '{name}' е добавена.")
         except Exception as e:
             print(f"Грешка при добавяне: {e}")
 
@@ -90,35 +86,24 @@ class CategoryView:
             return
 
         print(f"\nРедакция на: {category.name}")
-        print("(Enter запазва старата стойност)")
-
         new_name = input(f"Ново име [{category.name}]: ").strip() or category.name
         new_desc = input(f"Ново описание [{category.description}]: ").strip() or category.description
 
-        # ПОПРАВЕНО: Питаме за промяна на родител, за да не стане случайно главна при Enter
-        print("\nПромяна на родителската категория? (y/N)")
-        if input().strip().lower() == 'y':
-            print("Изберете нов родител (Enter за ГЛАВНА):")
-            parent = self.select_category()
-            new_parent_id = parent.category_id if parent else None
-        else:
-            new_parent_id = category.parent_id
+        print("\nИзберете нов родител (Enter за ГЛАВНА, Enter за пропускане):")
+        parent = self.select_category()
+        new_parent_id = parent.category_id if parent else category.parent_id
 
         try:
-            updates = {
-                "name": new_name,
-                "description": new_desc,
-                "parent_id": new_parent_id
-            }
+            updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
             if self.controller.update(category.category_id, updates):
-                print("\nУспех: Промените са запазени.")
+                print("\nПромените са запазени.")
             else:
-                print("\nГрешка: Категорията не бе намерена.")
+                print("\nКатегорията не беше намерена.")
         except Exception as e:
             print(f"Неуспешен запис: {e}")
 
+
     def select_category(self):
-        """Помощен метод за избор на категория от списък."""
         categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
         if not categories:
             return None
@@ -140,21 +125,19 @@ class CategoryView:
             found = self.controller.get_by_id(choice)
             if found:
                 return found
-
             print("Невалиден избор. Опитайте пак.")
+
+
 
     def delete_category(self, user):
         print("\nИЗТРИВАНЕ")
         category = self.select_category()
         if not category:
             return
-
-        confirm = input(f"Сигурни ли сте, че искате да изтриете '{category.name}'? (y/n): ").strip().lower()
-        if confirm == "y":
-            try:
-                if self.controller.remove(category.category_id, user.user_id):
-                    print(f"\nУспех: Категорията '{category.name}' е изтрита.")
-                else:
-                    print("\nГрешка при изтриване.")
-            except Exception as e:
-                print(f"Неуспешно изтриване: {e}")
+        try:
+            if self.controller.remove(category.category_id, user.user_id):
+                print(f"\nКатегорията '{category.name}' е изтрита.")
+            else:
+                print("\nГрешка при изтриване.")
+        except Exception as e:
+            print(f"Неуспешно изтриване: {e}")

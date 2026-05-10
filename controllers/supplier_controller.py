@@ -65,5 +65,18 @@ class SupplierController:
         self.save_changes()
         return True
 
+
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "name":
+                SupplierValidator.validate_name(value)
+            elif field_type == "contact":
+                SupplierValidator.validate_contact(value)
+            elif field_type == "address":
+                SupplierValidator.validate_address(value)
+            return None
+        except ValueError as e:
+            return str(e)
+
     def save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])

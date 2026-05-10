@@ -36,7 +36,6 @@ class InventoryController:
         return full_pid, full_lid
 
     # --- Наличности ---
-
     def get_stock(self, product_id: str, location_id: str) -> float:
         """Връща наличността на продукт в конкретен склад."""
         pid, lid = self._resolve_ids(product_id, location_id)

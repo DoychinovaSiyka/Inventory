@@ -8,7 +8,7 @@ def build_category_tree(categories: List[Category]) -> List[dict]:
     if not categories:
         return tree
 
-    # Намираме кои са главните категории
+    # кои са главните категории
     root_categories = []
     for c in categories:
         if c.parent_id is None:

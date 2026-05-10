@@ -13,12 +13,12 @@ def input_password(prompt="Въведете парола: "):
         ch = msvcrt.getch()  # getch() връща байт — не буква, а суров код от клавиатурата
         code = ord(ch)       # превръщаме байта в число, за да не пишем хардкоднати \x08, \x00, \xe0
 
-        # Enter
+
         if code in (10, 13):     # 10 = '\n', 13 = '\r' — извлечени от Windows при натискане на Enter
             print()
             break
 
-        # Backspace
+
         if code == 8:            # 8 = '\x08' — извлечено от Windows при натискане на Backspace
             if password:
                 password = password[:-1]
@@ -73,7 +73,6 @@ def format_table(columns, rows):
     for row in rows:
         row_parts = []
         for i, cell_val in enumerate(row):
-            # Подравняваме съдържанието на всяка клетка спрямо col_widths[i]
             cell_str = f" {cell_val}".ljust(col_widths[i])
             row_parts.append(cell_str)
         table_lines.append("|" + "|".join(row_parts) + "|")
