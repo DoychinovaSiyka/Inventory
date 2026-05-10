@@ -81,16 +81,16 @@ class InventoryController:
 
 
     def rebuild_inventory_from_movements(self, movements: List) -> None:
-        """Пълна ревизия: Преизчислява целия инвентар от историята на движенията."""
+        """Преизчислява целия инвентар от историята на движенията."""
         self.data = {"products": {}}
 
-        # Важно е движенията да са хронологично подредени
+
         sorted_moves = sorted(movements, key=lambda m: m.date)
         for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
 
-            # Опитваме се да вземем името на типа движение
+
             try:
                 m_type = m.movement_type.name
             except Exception:
