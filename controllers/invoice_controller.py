@@ -6,7 +6,6 @@ from filters import invoice_filters
 
 class InvoiceController:
     """Управлява жизнения цикъл на фактурите."""
-
     def __init__(self, repo):
         self.repo = repo
         self.invoices: List[Invoice] = []

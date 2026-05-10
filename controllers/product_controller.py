@@ -5,7 +5,7 @@ from filters import product_filters, product_sorters
 
 
 class ProductController:
-    """Управлява каталога с продукти. Синхронизиран с инвентара за безопасно триене."""
+    """Управлява каталога с продукти."""
     def __init__(self, repo, category_controller, inventory_controller):
         self.repo = repo
         self.category_controller = category_controller

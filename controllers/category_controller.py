@@ -7,7 +7,6 @@ from analytics.category_analytics import build_category_tree, get_category_stats
 
 class CategoryController:
     """Управлява категориите и гарантира йерархичната цялост."""
-
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
         raw_data = self.repo.load() or []
@@ -63,14 +62,12 @@ class CategoryController:
         else:
             new_parent_id = category.parent_id
 
-
         if name != category.name:
             CategoryValidator.validate_name(name)
             CategoryValidator.validate_unique(name, self.categories, exclude_id=category.category_id)
 
         if description != category.description:
             CategoryValidator.validate_description(description)
-
 
         if new_parent_id != category.parent_id:
             CategoryValidator.validate_no_cycle(category.category_id, new_parent_id, self.categories)
@@ -99,7 +96,6 @@ class CategoryController:
     def get_all_hierarchical_ids(self, category_id: str) -> list:
         """Връща списък от ID-то на категорията и всички нейни подкатегории (надолу по дървото)."""
         result = [category_id]
-
         all_cats = self.get_all()
 
         # Намираме тези, на които родителят е текущата категория
@@ -108,7 +104,7 @@ class CategoryController:
                 # Рекурсивно добавяме и техните подкатегории
                 result.extend(self.get_all_hierarchical_ids(cat.category_id))
 
-        return list(set(result))  # Премахваме дубликати за всеки случай
+        return list(set(result))
 
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез филтър модула."""
@@ -126,11 +122,11 @@ class CategoryController:
         """Изгражда йерархичното дърво за визуализация (Отчет)."""
         return build_category_tree(self.categories)
 
+
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
         category = self.get_by_id(category_id)
         if not category:
             return False
-
 
         products = product_controller.get_all() if product_controller else []
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)

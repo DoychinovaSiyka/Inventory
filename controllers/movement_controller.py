@@ -73,7 +73,7 @@ class MovementController:
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
-        #  Подготовка на данните
+
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
@@ -103,7 +103,7 @@ class MovementController:
                             customer=customer or "Общ клиент", from_location_id=from_location_id,
                             to_location_id=to_location_id)
 
-        # Записване в историята
+
         self.movements.append(movement)
         self.save_changes()
 

@@ -21,20 +21,16 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
+
     def _map_invoices_to_data(self, invoices):
         """Помощен метод за преобразуване на фактури в речници за справки."""
         rows = []
         for i in invoices:
             status = "АКТИВНА" if i.is_active else "АНУЛИРАНА"
-            rows.append({
-                "invoice_number": i.invoice_id[:8],
-                "date": str(i.date)[:10],
-                "client": i.customer,
-                "product": i.product,
-                "total_price": i.total_price,
-                "status": status
-            })
+            rows.append({"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10],
+                         "client": i.customer, "product": i.product, "total_price": i.total_price, "status": status})
         return rows
+
 
     # Обща справка за всички продажби
     def report_sales(self):
@@ -51,11 +47,8 @@ class ReportController:
             except:
                 pass
 
-        summary = {
-            "total_count": len(active_invoices),
-            "total_revenue": round(total_sum, 2),
-            "cancelled_count": len(all_invoices) - len(active_invoices)
-        }
+        summary = {"total_count": len(active_invoices), "total_revenue": round(total_sum, 2),
+                   "cancelled_count": len(all_invoices) - len(active_invoices)}
 
         # Показваме активните в основната таблица
         data = self._map_invoices_to_data(active_invoices)
@@ -103,16 +96,9 @@ class ReportController:
                 from_loc = fl.name if fl else "Източник"
                 to_loc = tl.name if tl else "Цел"
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "type": mtype,
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_loc,
-                "to": to_loc
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "type": mtype,
+                         "product": m.product_name, "quantity": m.quantity,
+                         "unit": m.unit, "from": from_loc, "to": to_loc})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
@@ -132,15 +118,9 @@ class ReportController:
                 if kw not in m.product_name.lower() and kw not in supplier_name.lower():
                     continue
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "price": float(m.price or 0),
-                "supplier": supplier_name
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10],
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                         "price": float(m.price or 0), "supplier": supplier_name})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
@@ -161,20 +141,15 @@ class ReportController:
 
             loc_str = ", ".join(loc_names) if loc_names else "Няма наличност"
 
-            # СИНХРОН: Броим за продадени само тези, чиито фактури не са анулирани
+            # Броим за продадени само тези, чиито фактури не са анулирани
             sold = 0.0
             active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active]
             for inv in active_invoices:
-                # Тук приемаме, че в Invoice съхраняваме product_name или търсим по movement_id
                 if inv.product == p.name:
                     sold += float(inv.quantity)
 
-            rows.append({
-                "product": p.name,
-                "available": f"{stock} {p.unit}",
-                "sold": f"{sold} {p.unit}" if sold > 0 else "0",
-                "top_locations": loc_str
-            })
+            rows.append({"product": p.name, "available": f"{stock} {p.unit}",
+                         "sold": f"{sold} {p.unit}" if sold > 0 else "0", "top_locations": loc_str})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
@@ -206,13 +181,7 @@ class ReportController:
                                                                   product.price)
         current_stock = self.inventory_controller.get_total_stock(pid)
 
-        return {
-            "product": product.name,
-            "unit": product.unit,
-            "total_in": total_in,
-            "total_out": total_out,
-            "current_stock": current_stock,
-            "revenue": round(revenue, 2),
-            "fifo_cost": round(fifo_cost, 2),
-            "profit": round(revenue - fifo_cost, 2)
-        }
+        return {"product": product.name, "unit": product.unit,
+                "total_in": total_in, "total_out": total_out, "current_stock": current_stock,
+                "revenue": round(revenue, 2),
+                "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}

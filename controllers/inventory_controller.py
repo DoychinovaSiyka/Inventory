@@ -87,7 +87,6 @@ class InventoryController:
 
         # Важно е движенията да са хронологично подредени
         sorted_moves = sorted(movements, key=lambda m: m.date)
-
         for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
@@ -141,7 +140,6 @@ class InventoryController:
         # Събираме всички входящи партиди (доставки)
         batches = []
         sorted_moves = sorted(movements, key=lambda x: x.date)
-
         for m in sorted_moves:
             try:
                 m_type = m.movement_type.name
