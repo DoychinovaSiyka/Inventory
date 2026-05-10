@@ -6,6 +6,7 @@ class SupplierView:
     def __init__(self, controller):
         self.controller = controller
 
+
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")
@@ -102,13 +103,11 @@ class SupplierView:
             if new_name == "":
                 new_name = supplier.name
 
-
             error = self.controller.validate_field("name", new_name)
             if error:
                 print(f"Грешка: {error}")
                 continue
 
-            # Проверка дали името вече се използва от друг доставчик
             all_sups = self.controller.get_all()
             name_taken = False
 

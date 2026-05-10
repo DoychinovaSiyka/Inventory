@@ -25,17 +25,22 @@ class ReportsView:
                 break
 
     def _search_flow(self, prompt, controller_fn, format_fn, title, headers):
-        """Помощен метод за изпълнение на търсене и показване на резултата."""
         keyword = input(f"Въведете {prompt} (Enter за всички): ").strip()
         result = controller_fn(keyword)
+        # Форматираме данните
+        formatted_data = format_fn(result.data)
 
-        formatted = format_fn(result.data)
-        # Добавяме резюме към заглавието, ако има такова
         full_title = title
-        if hasattr(result, 'summary') and 'total_revenue' in result.summary:
-            full_title += f" (Общ оборот: {result.summary['total_revenue']:.2f} лв.)"
 
-        self._display_report(full_title, headers, formatted)
+        # Ако result има summary и в него има total_revenue → добавяме го
+        try:
+            total = result.summary["total_revenue"]
+            full_title = f"{title} (Общ оборот: {total:.2f} лв.)"
+        except:
+            pass
+
+        self._display_report(full_title, headers, formatted_data)
+
 
     def show_menu(self, user):
         menu = Menu("СПРАВКИ", [
@@ -68,16 +73,10 @@ class ReportsView:
             total_value = float(item.get("total_price", 0))
             status = item.get("status", "АКТИВНА")
 
-            row = [
-                item["invoice_number"],
-                item["date"],
-                item["client"],
-                item["product"],
-                f"{total_value:.2f} лв.",
-                status
-            ]
+            row = [item["invoice_number"], item["date"], item["client"], item["product"], f"{total_value:.2f} лв.", status]
             rows.append(row)
         return rows
+
 
     def summary_report(self, _):
         """Обобщена справка за наличности."""

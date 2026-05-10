@@ -1,6 +1,8 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import input_password, format_table
 
+
+
 class UserView:
     def __init__(self, controller):
         self.controller = controller
@@ -45,7 +47,8 @@ class UserView:
         print("\nНОВ ПОТРЕБИТЕЛ (Enter за отказ)")
         while True:
             username = input("Потребителско име: ").strip()
-            if not username: return
+            if not username:
+                return
             error = self.controller.validate_field("username", username)
             if not error:
                 break

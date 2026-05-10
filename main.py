@@ -122,7 +122,7 @@ class InventoryApplication:
             elif choice == "2":
                 self._anonymous_flow()
             elif choice == "0":
-                print("\nПриключване на работа. Довиждане!")
+                print("\nДовиждане!")
                 sys.exit()
             else:
                 print("\nНевалиден избор. Моля, изберете опция от менюто.")
@@ -136,5 +136,5 @@ if __name__ == "__main__":
         print("\n\nПрограмата е прекъсната ръчно.")
         sys.exit()
     except Exception as e:
-        print(f"\nКритична грешка при стартиране: {e}")
+        print(f"\nГрешка при стартиране: {e}")
         sys.exit(1)
