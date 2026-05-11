@@ -36,7 +36,7 @@ class InventoryApplication:
         self.inventory_repo = JSONRepository("data/inventory.json")
 
     def _init_controllers(self):
-        # създаваме тези, които не зависят от нищо друго
+
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -82,6 +82,7 @@ class InventoryApplication:
 
     def _login_flow(self):
         while True:
+            print("\n-----------------------------------------------------------")
             print("\nВХОД В СИСТЕМАТА")
             username = input("Потребителско име (Enter за връщане): ").strip()
             if not username:
@@ -111,7 +112,8 @@ class InventoryApplication:
 
     def run(self):
         while True:
-            print("   СКЛАДОВА СИСТЕМА   ")
+            print("\n-----------------------------------------------------------\n")
+            print("\n   СКЛАДОВА СИСТЕМА   ")
             print("1. Вход")
             print("2. Анонимен достъп (само преглед)")
             print("0. Изход")
