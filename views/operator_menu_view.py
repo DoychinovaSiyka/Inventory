@@ -62,7 +62,7 @@ class OperatorMenuView:
 
     @require_password("parola123")
     def open_categories(self, user):
-        view = CategoryView(self.category_controller)
+        view = CategoryView(self.category_controller, self.product_controller)
         view.show_menu(user)
 
     @require_password("parola123")

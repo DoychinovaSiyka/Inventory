@@ -10,7 +10,8 @@ class AnonymousMenuView:
         self.product_view = ProductMenuView(controllers["product"], controllers["category"],
                                             controllers["inventory"], controllers["movement"])
 
-        self.category_view = CategoryView(controllers["category"])
+
+        self.category_view = CategoryView(controllers["category"], controllers["product"])
         self.system_info_view = SystemInfoView()
 
 
@@ -27,6 +28,8 @@ class AnonymousMenuView:
         while True:
             menu = self._build_menu()
             choice = menu.show()
+            if choice == "0" or choice is None:
+                break
             result = menu.execute(choice, user)
             if result == "break":
                 break

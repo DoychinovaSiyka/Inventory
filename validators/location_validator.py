@@ -12,27 +12,37 @@ class LocationValidator:
             raise ValueError("Името е твърде кратко (минимум 2 символа).")
         if len(cleaned) > 100:
             raise ValueError("Името е твърде дълго.")
-
         return cleaned
+
+
 
     @staticmethod
     def validate_zone(zone):
-        if zone is None or zone == "":
-            return ""
+        if zone is None or zone.strip() == "":
+            raise ValueError("Зоната/секторът е задължителна.")
+
         if not isinstance(zone, str):
             raise ValueError("Зоната/секторът трябва да е текст.")
 
         cleaned = zone.strip()
+        if len(cleaned) < 2:
+            raise ValueError("Зоната трябва да е поне 2 символа.")
         if len(cleaned) > 50:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
+
         return cleaned
 
     @staticmethod
     def validate_capacity(capacity):
         if isinstance(capacity, str):
             cleaned = capacity.strip()
+
+            if cleaned.startswith("0") and cleaned != "0":
+                raise ValueError("Капацитетът не може да започва с 0.")
+
             if not cleaned.isdigit():
                 raise ValueError("Капацитетът трябва да съдържа само цифри.")
+
             capacity = int(cleaned)
 
         if not isinstance(capacity, int):
@@ -41,28 +51,3 @@ class LocationValidator:
             raise ValueError("Капацитетът трябва да е положително число.")
 
         return capacity
-
-    @staticmethod
-    def validate_unique_name(name, locations, exclude_id=None):
-        target = name.strip().lower()
-        for l in locations:
-            if l.name.strip().lower() == target:
-                if exclude_id and str(l.location_id) == str(exclude_id):
-                    continue
-                raise ValueError(f"Локация с име '{name.strip()}' вече съществува.")
-
-
-    @staticmethod
-    def validate_exists(location_id, locations):
-        search_id = str(location_id).strip().lower()
-        for l in locations:
-            if str(l.location_id).lower().startswith(search_id):
-                return
-        raise ValueError(f"Склад/Локация с код '{location_id}' не е намерен в базата.")
-
-
-    @staticmethod
-    def validate_can_delete(location_id, inventory_controller):
-        stock_in_loc = inventory_controller.get_stock_by_location_total(location_id)
-        if stock_in_loc > 0:
-            raise ValueError(f"Локацията не може да бъде изтрита, защото в нея има {stock_in_loc} налични единици стока.")

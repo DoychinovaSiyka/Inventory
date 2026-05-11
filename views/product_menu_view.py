@@ -35,8 +35,39 @@ class ProductMenuView:
             print(f"\n{title.upper()}")
         print(format_table(["ID", "Име", "Наличност", "Цена"], rows))
 
+    def _select_parent_category(self):
+        all_categories = self.category_controller.get_all()
+        categories = [c for c in all_categories if not c.parent_id]
+        categories = sorted(categories, key=lambda x: x.name.lower())
+
+        if not categories:
+            print("\nНяма дефинирани главни категории.")
+            return None
+
+        while True:
+            print("\nИЗБОР НА ГЛАВНА КАТЕГОРИЯ")
+            for i, cat in enumerate(categories, start=1):
+                sid = str(cat.category_id)[:8]
+                print(f"{i}. {cat.name} ({sid})")
+
+            choice = input("\nИзберете номер, име или съкратено ID (Enter за отказ): ").strip()
+            if not choice:
+                return None
+
+            if choice.isdigit():
+                idx = int(choice) - 1
+                if 0 <= idx < len(categories):
+                    return categories[idx].category_id
+
+            for cat in categories:
+                sid = str(cat.category_id)[:8]
+                if choice.lower() == cat.name.lower() or choice.lower() == sid:
+                    return cat.category_id
+
+            print("Невалидна категория. Опитайте отново.")
 
     def _select_category(self):
+        """Метод за избор на произволна категория (подкатегория)."""
         categories = sorted(self.category_controller.get_all(), key=lambda x: x.name.lower())
         if not categories:
             print("\nНяма дефинирани категории.")
@@ -45,44 +76,20 @@ class ProductMenuView:
         while True:
             print("\nИЗБОР НА КАТЕГОРИЯ")
             for i, cat in enumerate(categories, start=1):
-                parent_info = ""
-                if cat.parent_id:
-                    parent = self.category_controller.get_by_id(cat.parent_id)
-                    parent_info = f" (в {parent.name})" if parent else ""
-                print(f"{i}. {cat.name}{parent_info}")
+                short_id = str(cat.category_id)[:8]
+                print(f"{i}. {cat.name} ({short_id})")
 
-            choice = input("\nИзберете номер на категория или точно име: ").strip()
+            choice = input("\nИзберете номер, име или съкратено ID: ").strip()
+            if not choice:
+                return None
             if choice.isdigit():
                 idx = int(choice) - 1
                 if 0 <= idx < len(categories):
                     return categories[idx].category_id
 
             for cat in categories:
-                if choice.lower() == cat.name.lower():
-                    return cat.category_id
-            print("Невалидна категория. Опитайте отново.")
-
-
-    def _select_parent_category(self):
-        categories = [c for c in self.category_controller.get_all() if not c.parent_id]
-        categories = sorted(categories, key=lambda x: x.name.lower())
-        if not categories:
-            print("\nНяма дефинирани родителски категории.")
-            return None
-
-        while True:
-            print("\nИЗБОР НА ГЛАВНА КАТЕГОРИЯ")
-            for i, cat in enumerate(categories, start=1):
-                print(f"{i}. {cat.name}")
-
-            choice = input("\nИзберете номер или име: ").strip()
-            if choice.isdigit():
-                idx = int(choice) - 1
-                if 0 <= idx < len(categories):
-                    return categories[idx].category_id
-
-            for cat in categories:
-                if choice.lower() in cat.name.lower():
+                short_id = str(cat.category_id)[:8]
+                if choice.lower() == cat.name.lower() or choice.lower() == short_id:
                     return cat.category_id
 
             print("Невалидна категория. Опитайте отново.")
@@ -226,15 +233,9 @@ class ProductMenuView:
             new_cat_id = self._select_category()
             if new_cat_id:
                 new_category_ids = [new_cat_id]
-                break
-            print("Невалидна категория. Опитайте отново.")
-        else:
-            new_category_ids = []
-            for c in product.categories:
-                if isinstance(c, str):
-                    new_category_ids.append(c)
-                else:
-                    new_category_ids.append(str(c.category_id))
+            else:
+                new_category_ids = [str(c.category_id) for c in product.categories]
+            break
 
         updates = {"name": new_name, "price": new_price, "description": new_desc,
                    "unit": new_unit, "category_ids": new_category_ids}

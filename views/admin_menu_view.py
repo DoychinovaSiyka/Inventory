@@ -19,7 +19,8 @@ class AdminMenuView:
         self.product_view = ProductMenuView(controllers["product"], controllers["category"],
                                             controllers["inventory"], controllers["movement"])
 
-        self.category_view = CategoryView(controllers["category"])
+
+        self.category_view = CategoryView(controllers["category"], controllers["product"])
 
         self.movement_view = MovementView(controllers["product"], controllers["movement"],
                                           controllers["user"], controllers["location"],

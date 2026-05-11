@@ -6,7 +6,6 @@ class SupplierView:
     def __init__(self, controller):
         self.controller = controller
 
-
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")
@@ -16,14 +15,14 @@ class SupplierView:
                 break
 
     def _build_menu(self, is_admin):
-        menu_items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
+        items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
         if is_admin:
-            menu_items.extend([
+            items.extend([
                 MenuItem("2", "Добавяне на доставчик", self.add_supplier),
                 MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
                 MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
-        menu_items.append(MenuItem("0", "Назад", lambda u: "break"))
-        return Menu("Меню Доставчици", menu_items)
+        items.append(MenuItem("0", "Назад", lambda u: "break"))
+        return Menu("Меню Доставчици", items)
 
 
     def show_suppliers(self, _):
@@ -31,19 +30,24 @@ class SupplierView:
         if not suppliers:
             print("\nНяма налични доставчици.")
             return
+
+        print("\nСПИСЪК С ДОСТАВЧИЦИ")
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
-        print("\nСПИСЪК С ДОСТАВЧИЦИ")
         print(format_table(columns, rows))
 
 
 
     def add_supplier(self, _):
-        print("\nНов доставчик (Enter за отказ)")
+        print("\nНов доставчик")
         while True:
             name = input("Име: ").strip()
             if not name:
-                return
+                print("Името е задължително.")
+                continue
+            if len(name) < 2:
+                print("Името трябва да е поне 2 символа.")
+                continue
 
             error = self.controller.validate_field("name", name)
             if error:
@@ -56,6 +60,7 @@ class SupplierView:
                 if s.name.lower() == name.lower():
                     duplicate = True
                     break
+
             if duplicate:
                 print(f"Доставчик с име '{name}' вече съществува.")
                 continue
@@ -65,7 +70,12 @@ class SupplierView:
         while True:
             contact = input("Контакт: ").strip()
             if not contact:
-                return
+                print("Контактът е задължителен.")
+                continue
+            if len(contact) < 2:
+                print("Контактът трябва да е поне 2 символа.")
+                continue
+
             error = self.controller.validate_field("contact", contact)
             if not error:
                 break
@@ -73,7 +83,13 @@ class SupplierView:
 
         while True:
             address = input("Адрес: ").strip()
-            if not address: return
+            if not address:
+                print("Адресът е задължителен.")
+                continue
+            if len(address) < 2:
+                print("Адресът трябва да е поне 2 символа.")
+                continue
+
             error = self.controller.validate_field("address", address)
             if not error:
                 break
@@ -87,21 +103,31 @@ class SupplierView:
 
 
 
+
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
+
+        # Избор по ID
         while True:
             sid = input("Въведете ID за търсене: ").strip()
-            if not sid: return
+            if not sid:
+                return
             supplier = self.controller.get_by_id(sid)
             if supplier:
                 break
             print("Не е намерен доставчик с такова ID.")
 
         print(f"\nРедакция на: {supplier.name} (Enter запазва старата стойност)")
+
+
         while True:
             new_name = input(f"Ново име [{supplier.name}]: ").strip()
-            if new_name == "":
+            if not new_name:
                 new_name = supplier.name
+                break
+            if len(new_name) < 2:
+                print("Името трябва да е поне 2 символа.")
+                continue
 
             error = self.controller.validate_field("name", new_name)
             if error:
@@ -109,31 +135,43 @@ class SupplierView:
                 continue
 
             all_sups = self.controller.get_all()
-            name_taken = False
+            duplicate = False
             for s in all_sups:
-                if s.supplier_id == supplier.supplier_id:
-                    continue
+                if s.supplier_id != supplier.supplier_id:
+                    if s.name.lower() == new_name.lower():
+                        duplicate = True
+                        break
 
-                if s.name.lower() == new_name.lower():
-                    name_taken = True
-                    break
-
-            if name_taken:
-                print(f"Името '{new_name}' вече се ползва от друг доставчик.")
+            if duplicate:
+                print(f"Името '{new_name}' вече се използва.")
                 continue
 
             break
 
 
         while True:
-            new_contact = input(f"Нов контакт [{supplier.contact}]: ").strip() or supplier.contact
+            new_contact = input(f"Нов контакт [{supplier.contact}]: ").strip()
+            if not new_contact:
+                new_contact = supplier.contact
+                break
+            if len(new_contact) < 2:
+                print("Контактът трябва да е поне 2 символа.")
+                continue
+
             error = self.controller.validate_field("contact", new_contact)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
-            new_address = input(f"Нов адрес [{supplier.address}]: ").strip() or supplier.address
+            new_address = input(f"Нов адрес [{supplier.address}]: ").strip()
+            if not new_address:
+                new_address = supplier.address
+                break
+            if len(new_address) < 2:
+                print("Адресът трябва да е поне 2 символа.")
+                continue
+
             error = self.controller.validate_field("address", new_address)
             if not error:
                 break
