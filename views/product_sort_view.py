@@ -6,6 +6,8 @@ class ProductSortView:
         self.inventory_controller = inventory_controller
         self.parent_view = parent_view
 
+
+
     def show_menu(self, _=None):
         menu = self._build_menu()
         while True:

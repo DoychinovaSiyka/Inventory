@@ -19,6 +19,7 @@ class Supplier:
         self.modified = modified or now_val
 
 
+
     def update_modified(self):
         """Обновява времето на последна промяна."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -27,6 +28,7 @@ class Supplier:
         """Превръща обекта в речник за JSON."""
         return {"supplier_id": self.supplier_id, "name": self.name, "contact": self.contact,
                 "address": self.address, "created": self.created, "modified": self.modified}
+
 
     @staticmethod
     def from_dict(d):

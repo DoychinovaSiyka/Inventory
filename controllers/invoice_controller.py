@@ -82,7 +82,7 @@ class InvoiceController:
             # Ако не съществува или вече е анулирана
             return False
 
-        # променя is_active на False
+
         inv.cancel()
 
         self._save_changes()

@@ -110,7 +110,6 @@ class SupplierView:
 
             all_sups = self.controller.get_all()
             name_taken = False
-
             for s in all_sups:
                 if s.supplier_id == supplier.supplier_id:
                     continue

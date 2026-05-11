@@ -89,7 +89,6 @@ class CategoryView:
         print("\nИзберете нов родител (Enter за ГЛАВНА, Enter за пропускане):")
         parent = self.select_category()
         new_parent_id = parent.category_id if parent else category.parent_id
-
         try:
             updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
             if self.controller.update(category.category_id, updates):

@@ -51,6 +51,7 @@ class LocationValidator:
                     continue
                 raise ValueError(f"Локация с име '{name.strip()}' вече съществува.")
 
+
     @staticmethod
     def validate_exists(location_id, locations):
         search_id = str(location_id).strip().lower()

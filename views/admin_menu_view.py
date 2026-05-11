@@ -66,6 +66,8 @@ class AdminMenuView:
             if result == "break":
                 break
 
+
+
     def open_graph(self, user):
         if self.graph_view:
             self.graph_view.show_menu()

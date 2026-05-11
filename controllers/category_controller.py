@@ -58,7 +58,11 @@ class CategoryController:
         new_parent_input = updates.get("parent_id")
         if new_parent_input and new_parent_input != category.parent_id:
             parent_obj = self.get_by_id(new_parent_input)
-            new_parent_id = parent_obj.category_id if parent_obj else None
+            if parent_obj is not None:
+                new_parent_id = parent_obj.category_id
+            else:
+                new_parent_id = None
+
         else:
             new_parent_id = category.parent_id
 
@@ -115,7 +119,11 @@ class CategoryController:
 
     def get_stats(self, product_controller) -> dict:
         """Статистика за броя продукти във всяка категория (Отчет)."""
-        products = product_controller.get_all() if product_controller else []
+        if product_controller is not None:
+            products = product_controller.get_all()
+        else:
+            products = []
+
         return get_category_stats(self.categories, products)
 
     def get_visual_tree(self) -> List[dict]:
@@ -128,7 +136,11 @@ class CategoryController:
         if not category:
             return False
 
-        products = product_controller.get_all() if product_controller else []
+        if product_controller is not None:
+            products = product_controller.get_all()
+        else:
+            products = []
+
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]

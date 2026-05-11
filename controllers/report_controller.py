@@ -66,12 +66,14 @@ class ReportController:
     # Продажби за конкретен продукт
     def report_sales_by_product(self, product_name: str):
         invoices = self.invoice_controller.get_all() or []
-        # Използваме обновения филтър, който връща само активните
         filtered = report_filters.filter_sales_by_product(invoices, product_name)
 
         summary = {"product": product_name, "count": len(filtered)}
         data = self._map_invoices_to_data(filtered)
         return ReportResult(summary, data)
+
+
+
 
     def report_movements(self):
         # Списък на всички движения
@@ -124,6 +126,8 @@ class ReportController:
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
+
+
     # Обобщена справка за наличностите по локации
     def report_inventory_summary(self):
         rows = []
@@ -153,34 +157,37 @@ class ReportController:
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
-    # Пълен жизнен цикъл на продукт
-    def product_lifecycle(self, name_or_id):
-        product = self.product_controller.get_by_id(name_or_id)
-        if not product:
-            search = str(name_or_id).lower()
-            for p in self.product_controller.get_all():
-                if search in p.name.lower():
-                    product = p
-                    break
 
-        if not product:
-            return None
 
-        pid = str(product.product_id)
-        moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-        total_in = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
+        # Пълен жизнен цикъл на продукт
+        def product_lifecycle(self, name_or_id):
+            product = self.product_controller.get_by_id(name_or_id)
+            if not product:
+                search = str(name_or_id).lower()
+                for p in self.product_controller.get_all():
+                    if search in p.name.lower():
+                        product = p
+                        break
 
-        # Приходи и изходни количества само от активни фактури
-        active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active and i.product == product.name]
-        total_out = sum(float(i.quantity) for i in active_invoices)
-        revenue = sum(float(i.total_price) for i in active_invoices)
+            if not product:
+                return None
 
-        fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements,
-                                                                  product.price)
-        current_stock = self.inventory_controller.get_total_stock(pid)
+            pid = str(product.product_id)
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-        return {"product": product.name, "unit": product.unit,
-                "total_in": total_in, "total_out": total_out, "current_stock": current_stock,
-                "revenue": round(revenue, 2),
-                "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}
+            total_in = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
+
+            # Приходи и изходни количества само от активни фактури
+            active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active and i.product == product.name]
+            total_out = sum(float(i.quantity) for i in active_invoices)
+            revenue = sum(float(i.total_price) for i in active_invoices)
+
+            fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements,
+                                                                      product.price)
+            current_stock = self.inventory_controller.get_total_stock(pid)
+
+            return {"product": product.name, "unit": product.unit,
+                    "total_in": total_in, "total_out": total_out, "current_stock": current_stock,
+                    "revenue": round(revenue, 2),
+                    "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}

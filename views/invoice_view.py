@@ -102,6 +102,8 @@ class InvoiceView:
             results = self.invoice_controller.search_by_product(keyword)
             self._show_invoices(results)
 
+
+
     def search_by_date(self, _):
         date_str = self._input("\nДата (ГГГГ-ММ-ДД): ")
         if date_str:
@@ -110,6 +112,8 @@ class InvoiceView:
                 self._show_invoices(results)
             except Exception as e:
                 print(f"Грешка: {e}")
+
+
 
 
     def advanced_search(self, _):

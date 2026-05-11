@@ -1,8 +1,9 @@
 from typing import List
 from models.category import Category
 
+
+
 def filter_categories(categories: List[Category], keyword: str) -> List[Category]:
-    """Търси в списък с категории по име или описание."""
     if not keyword:
         return categories
 

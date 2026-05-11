@@ -19,8 +19,9 @@ def calculate_total_inventory_value(products: List, inventory_controller) -> flo
     return round(total, 2)
 
 
+
 def group_products_by_category(products: List) -> Dict[str, List]:
-    """Групира продукти по име на категория. Защитен от невалидни обекти."""
+    """Групира продукти по име на категория."""
     grouped = {}
 
     for p in products:

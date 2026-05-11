@@ -65,6 +65,9 @@ class MovementController:
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
         """ Метод за създаване на движение. Синхронизация с инвентара и генериране на фактури."""
 
+
+
+
         product = self.product_controller.get_by_id(product_id)
         if not product:
             raise ValueError("Продуктът не съществува в базата.")
@@ -77,13 +80,12 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        #  ЛОГИКА ЗА ЦЕНАТА
+
         if m_type_str == "MOVE":
             prc = 0.0
         elif price is not None and str(price).strip() != "":
             prc = float(price)
         else:
-            # Ако няма цена, вземаме текущата от каталога
             prc = float(product.price)
 
         # Синхронизиране на Инвентара

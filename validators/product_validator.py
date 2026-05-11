@@ -44,7 +44,7 @@ class ProductValidator:
         if value is None or str(value).strip() == "":
             raise ValueError(f"Полето '{field_name}' е задължително.")
 
-        # Почистване на типични символи за валута и форматиране
+
         v = str(value).lower().replace("лв", "").replace(",", ".").replace(" ", "").strip()
 
         try:

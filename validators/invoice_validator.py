@@ -50,10 +50,12 @@ class InvoiceValidator:
         if not product or not isinstance(product, str) or len(product.strip()) < 2:
             raise ValueError("Името на продукта е задължително и трябва да е поне 2 символа.")
 
+
     @staticmethod
     def validate_customer(customer):
         if not customer or not isinstance(customer, str) or len(customer.strip()) < 2:
             raise ValueError("Името на клиента е задължително.")
+
 
     @staticmethod
     def validate_quantity(quantity):
@@ -64,6 +66,7 @@ class InvoiceValidator:
         except (ValueError, TypeError):
             raise ValueError("Количеството трябва да е валидно число.")
 
+
     @staticmethod
     def validate_unit_price(unit_price):
         try:
@@ -72,6 +75,7 @@ class InvoiceValidator:
                 raise ValueError("Единичната цена трябва да е положителна.")
         except (ValueError, TypeError):
             raise ValueError("Единичната цена трябва да е валидно число.")
+
 
     @staticmethod
     def validate_total_price(total_price, quantity, unit_price):
@@ -85,10 +89,12 @@ class InvoiceValidator:
         except (ValueError, TypeError):
             raise ValueError("Грешка при изчисляване на сумите.")
 
+
     @staticmethod
     def validate_unit(unit):
         if not unit or not isinstance(unit, str):
             raise ValueError("Мерната единица е задължителна.")
+
 
     @staticmethod
     def validate_date(date_str):
@@ -104,6 +110,8 @@ class InvoiceValidator:
                 pass
         raise ValueError("Невалидна дата. Моля, използвайте формат ГГГГ-ММ-ДД.")
 
+
+
     @staticmethod
     def validate_all(product, customer, quantity, unit, unit_price, movement_id, total_price, date=None):
         InvoiceValidator.validate_product(product)
@@ -115,6 +123,7 @@ class InvoiceValidator:
         InvoiceValidator.validate_uuid(movement_id, "Movement ID")
         if date is not None and str(date).strip() != "":
             InvoiceValidator.validate_date(date)
+
 
 
     @staticmethod

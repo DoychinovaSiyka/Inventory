@@ -13,6 +13,8 @@ class AnonymousMenuView:
         self.category_view = CategoryView(controllers["category"])
         self.system_info_view = SystemInfoView()
 
+
+
     def _build_menu(self):
         return Menu("Меню за анонимен потребител", [
             MenuItem("1", "Разглеждане на продукти", self.open_products),

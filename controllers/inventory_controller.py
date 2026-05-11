@@ -1,6 +1,9 @@
 from typing import List, Dict, Optional
 
 
+
+
+
 class InventoryController:
     """Управлява наличностите в реално време и поддържа финансови изчисления."""
     def __init__(self, repository, product_controller, location_controller):
@@ -61,6 +64,8 @@ class InventoryController:
         locs = self.data["products"][pid]["locations"]
         locs[lid] = round(float(locs.get(lid, 0.0)) + float(quantity), 2)
         self._save()
+
+
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid, lid = self._resolve_ids(product_id, location_id)

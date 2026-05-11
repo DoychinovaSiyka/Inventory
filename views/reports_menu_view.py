@@ -24,6 +24,7 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
+
     def _search_flow(self, prompt, controller_fn, format_fn, title, headers):
         keyword = input(f"Въведете {prompt} (Enter за всички): ").strip()
         result = controller_fn(keyword)
@@ -32,7 +33,7 @@ class ReportsView:
 
         full_title = title
 
-        # Ако result има summary и в него има total_revenue → добавяме го
+        # Ако result има summary и в него има total_revenue - добавяме го
         try:
             total = result.summary["total_revenue"]
             full_title = f"{title} (Общ оборот: {total:.2f} лв.)"

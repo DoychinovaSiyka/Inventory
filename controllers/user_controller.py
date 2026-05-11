@@ -13,7 +13,7 @@ class UserController:
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
 
-        # речници в User обекти
+
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
 
@@ -71,7 +71,6 @@ class UserController:
         return None
 
     def login(self, username: str, password: str) -> Optional[User]:
-        # Проверка на входните данни чрез валидатора
         user = UserValidator.validate_login(username, password, self)
         if user:
             self.logged_user = user

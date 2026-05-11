@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from storage.repository import Repository
 
-# родителската директория, за да работят импортите нормално
+
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 

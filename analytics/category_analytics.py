@@ -44,8 +44,10 @@ def _add_children_recursive_view(parent_id: str, all_categories: List[Category],
                 _add_children_recursive_view(c.category_id, all_categories, tree, current_level + 1)
 
 
+
+
 def get_category_stats(categories: List[Category], products: List) -> dict:
-    """Изчислява колко продукта има във всяка категория."""
+    """Колко продукта има във всяка категория."""
 
     stats = {}
 

@@ -41,6 +41,8 @@ class SupplierValidator:
             raise ValueError("Адресът е твърде кратък.")
         return clean
 
+
+
     @staticmethod
     def validate_unique(name, suppliers, exclude_id=None):
         clean = str(name).strip().lower()

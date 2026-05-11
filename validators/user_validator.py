@@ -50,7 +50,6 @@ class UserValidator:
         if user.status != "Active":
             raise ValueError("Този профил е деактивиран. Свържете се с администратор.")
 
-
         if not controller._check_password(user.password, password):
             raise ValueError("Грешно потребителско име или парола.")
 

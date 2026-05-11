@@ -4,6 +4,8 @@ from validators.product_validator import ProductValidator
 from filters import product_filters, product_sorters
 
 
+
+
 class ProductController:
     """Управлява каталога с продукти."""
     def __init__(self, repo, category_controller, inventory_controller):

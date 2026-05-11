@@ -24,12 +24,15 @@ class InventoryValidator:
         except (ValueError, TypeError):
             raise ValueError(f"{field_name} трябва да бъде валидно число.")
 
+
+
     @staticmethod
     def _validate_ids(product_id, warehouse_id=None):
         if not product_id:
             raise ValueError("ID на продукт е задължително.")
         if warehouse_id is not None and not warehouse_id:
             raise ValueError("ID на склад е задължително.")
+
 
     @staticmethod
     def _resolve_id(short_id, keys_list):
@@ -55,7 +58,6 @@ class InventoryValidator:
             raise ValueError("Количеството за OUT трябва да бъде по-голямо от 0.")
 
         products = master_inventory.get("products", {})
-
         p_id_full = InventoryValidator._resolve_id(product_id, products.keys())
         if not p_id_full:
             raise ValueError(f"Продукт с ID {product_id} не съществува.")

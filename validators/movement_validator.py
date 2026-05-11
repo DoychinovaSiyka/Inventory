@@ -51,6 +51,7 @@ class MovementValidator:
         except Exception:
             raise ValueError("Невалидно количество. Въведете число (напр. 5 или 12.50).")
 
+
     @staticmethod
     def parse_price(price):
         if price is None or str(price).strip() == "":
@@ -72,6 +73,7 @@ class MovementValidator:
         except Exception:
             raise ValueError("Невалидна цена. Въведете число.")
 
+
     @staticmethod
     def validate_user_exists(user_id, user_controller):
         user = user_controller.get_by_id(user_id)
@@ -85,6 +87,8 @@ class MovementValidator:
         if not product:
             raise ValueError(f"Продукт с ID {product_id} не съществува.")
         return product
+
+
 
     @staticmethod
     def validate_location_id(loc_id, location_controller):
@@ -127,6 +131,8 @@ class MovementValidator:
         if mt == "MOVE":
             if customer:
                 raise ValueError("Вътрешните премествания (MOVE) не използват клиент.")
+
+
 
     @staticmethod
     def validate_move_locations(from_loc, to_loc):

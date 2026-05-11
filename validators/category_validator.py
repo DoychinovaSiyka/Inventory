@@ -65,6 +65,7 @@ class CategoryValidator:
             return None
         return choice.strip()
 
+
     @staticmethod
     def validate_no_cycle(category_id, parent_id, categories):
         """ няма циклична зависимост без безкрайна рекурсия."""
@@ -97,6 +98,7 @@ class CategoryValidator:
             for cat_obj in p.categories:
                 if str(cat_obj.category_id) == target_id:
                     raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+
 
 
     @staticmethod
