@@ -105,10 +105,13 @@ class InventoryApplication:
                 print(f"\nГрешка при вход: {e}")
                 print("Опитайте отново.\n")
 
+
+
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
         print("\nВлизане като Гост (Само за четене)...")
         self.anonymous_menu.show_menu(guest)
+
 
     def run(self):
         while True:
