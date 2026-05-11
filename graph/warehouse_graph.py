@@ -10,12 +10,13 @@ class WarehouseGraph(Graph):
         self.edges = {}   # Съседни складове и разстояния
 
     def add_warehouse(self, warehouse):
-        # Добавям склад по неговото ID
-        self.nodes[warehouse.warehouse_id] = warehouse
+        # Добавяме в речника на наследника
+        wid = warehouse.warehouse_id
+        self.nodes[wid] = warehouse
 
-        # Ако няма запис за ребра – създавам празен речник
-        if warehouse.warehouse_id not in self.edges:
-            self.edges[warehouse.warehouse_id] = {}
+        # базовият клас има структура за ребрата
+        if wid not in self.edges:
+            self.edges[wid] = {}
 
     def add_edge(self, from_id, to_id, distance):
         # Добавяне на двупосочна връзка между два склада

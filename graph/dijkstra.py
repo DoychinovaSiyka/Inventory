@@ -1,10 +1,10 @@
 NodeType = str
 
 
-
 class Graph:
     def __init__(self, nodes: list[NodeType] = None,
                  edges: list[tuple[NodeType, NodeType, int]] = None) -> None:
+
 
         self.nodes: set[NodeType] = set() if nodes is None else set(nodes)
         self.edges: dict[NodeType, dict[NodeType, int]] = {}
@@ -25,14 +25,23 @@ class Graph:
         return result
 
     def add_edge(self, start: NodeType, end: NodeType, dist: int) -> None:
+        # ако възлите не съществуват - добавяме ги
+        if start not in self.nodes:
+            self.nodes.add(start)
+            self.edges[start] = {}
+
+        if end not in self.nodes:
+            self.nodes.add(end)
+            self.edges[end] = {}
+
+        # добавяме реброто
         self.edges[start][end] = dist
 
-    
     def dijkstra(self, initial: NodeType) -> tuple[dict[NodeType, int], dict[NodeType, NodeType]]:
-        visited: dict[NodeType, int] = {initial: 0}   # най-кратко разстояние до всеки възел
-        prev: dict[NodeType, NodeType] = {}           # предишен възел по най-краткия път
+        visited: dict[NodeType, int] = {initial: 0}  # най-кратко разстояние до всеки възел
+        prev: dict[NodeType, NodeType] = {}  # предишен възел по най-краткия път
 
-        nodes = set(self.nodes)                       # всички необработени възли
+        nodes = set(self.nodes)  # всички необработени възли
 
         while nodes:
             min_node = None
@@ -53,12 +62,13 @@ class Graph:
             for neighbor, weight in self.edges[min_node].items():
                 new_dist = current_dist + weight
 
-                # ако намерим по-кратък път → обновяваме
+                # ако намерим по-кратък път - обновяваме
                 if neighbor not in visited or new_dist < visited[neighbor]:
                     visited[neighbor] = new_dist
                     prev[neighbor] = min_node
 
         return visited, prev
+
 
 # Възстановяване на пътя — трябва за логистичната система
 def reconstruct_path(start: NodeType, end: NodeType, prev: dict[NodeType, NodeType]):
