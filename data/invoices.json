@@ -1,3 +1,72 @@
 [
-
+    {
+        "invoice_id": "2f2413e6-0b50-4c4f-a836-b14545e9c5dc",
+        "movement_id": "2faec0d8-3a25-40dd-8d2a-d898ad9c1012",
+        "product": "Кисело мляко Елена 4%",
+        "quantity": 454.0,
+        "unit": "бр.",
+        "unit_price": 2.0,
+        "total_price": 908.0,
+        "customer": "454",
+        "is_active": true,
+        "date": "2026-05-11 20:15:11",
+        "created": "2026-05-11 20:15:11",
+        "modified": "2026-05-11 20:15:11"
+    },
+    {
+        "invoice_id": "7ad31159-a39f-4330-aaa5-8545e6c1d6aa",
+        "movement_id": "58cbfd5c-0a5d-424d-86e5-86b88d1e5bee",
+        "product": "Течен сапун Палмолив",
+        "quantity": 9.0,
+        "unit": "бр.",
+        "unit_price": 2.0,
+        "total_price": 18.0,
+        "customer": "Sisis",
+        "is_active": true,
+        "date": "2026-05-11 20:17:10",
+        "created": "2026-05-11 20:17:10",
+        "modified": "2026-05-11 20:17:10"
+    },
+    {
+        "invoice_id": "6689e0ae-46cf-42a0-bf1b-11fd66ad2c56",
+        "movement_id": "1c696b1a-de78-4609-a20a-fea3ce0e48af",
+        "product": "Кисело мляко Елена 4%",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 12.0,
+        "total_price": 144.0,
+        "customer": "EOPWE",
+        "is_active": true,
+        "date": "2026-05-11 20:17:23",
+        "created": "2026-05-11 20:17:23",
+        "modified": "2026-05-11 20:17:23"
+    },
+    {
+        "invoice_id": "8606adb8-29d9-4930-8f43-f06a0519e467",
+        "movement_id": "952defb3-c318-4ccc-9262-e94c51be1915",
+        "product": "Кисело мляко Елена 4%",
+        "quantity": 71.0,
+        "unit": "бр.",
+        "unit_price": 1.98,
+        "total_price": 140.58,
+        "customer": "71",
+        "is_active": true,
+        "date": "2026-05-11 22:17:36",
+        "created": "2026-05-11 22:17:36",
+        "modified": "2026-05-11 22:17:36"
+    },
+    {
+        "invoice_id": "85db05ba-2ddd-403b-93f5-ab500d33ed5d",
+        "movement_id": "50f1a5da-b42a-4662-bfba-67537c26d50e",
+        "product": "Портокали за сок",
+        "quantity": 11.0,
+        "unit": "кг.",
+        "unit_price": 4.0,
+        "total_price": 44.0,
+        "customer": "еудисзд",
+        "is_active": true,
+        "date": "2026-05-12 01:27:01",
+        "created": "2026-05-12 01:27:01",
+        "modified": "2026-05-12 01:27:01"
+    }
 ]

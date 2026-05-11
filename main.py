@@ -6,7 +6,7 @@ from controllers.supplier_controller import SupplierController
 from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
-from controllers.report_controller import ReportController
+from controllers.inventory_report_controller import ReportController
 from controllers.inventory_controller import InventoryController
 
 from views.admin_menu_view import AdminMenuView
@@ -37,35 +37,56 @@ class InventoryApplication:
 
     def _init_controllers(self):
 
+        # Основни CRUD контролери
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
+        # 1) InventoryController – създаваме го първи, но без product_controller
+        self.inventory_controller = InventoryController(
+            self.inventory_repo,
+            None,  # product_controller ще се закачи по-късно
+            self.location_controller
+        )
 
-        #  създаваме първо Инвентара, защото той е нужен на Продукта
-        self.inventory_controller = InventoryController(self.inventory_repo, None, self.location_controller)
+        # 2) ProductController – зависи от inventory, но НЕ зависи от movement
+        self.product_controller = ProductController(
+            self.product_repo,
+            self.category_controller
+        )
 
-
-        self.product_controller = ProductController(self.product_repo, self.category_controller, self.inventory_controller)
-
-        # инжектираме product_controller обратно в инвентара
+        # Закачаме product_controller обратно в инвентара
         self.inventory_controller.product_controller = self.product_controller
 
+        # 3) MovementController – зависи от product, user, location, supplier, invoice, inventory
+        self.movement_controller = MovementController(
+            self.movement_repo,
+            self.product_controller,
+            self.user_controller,
+            self.location_controller,
+            self.supplier_controller,
+            self.invoice_controller,
+            self.inventory_controller
+        )
 
-        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
-                                                      self.user_controller, self.location_controller,
-                                                      self.supplier_controller, self.invoice_controller,
-                                                      self.inventory_controller)
+        # 4) ReportController – зависи от всички
+        self.report_controller = ReportController(
+            self.report_repo,
+            self.product_controller,
+            self.movement_controller,
+            self.invoice_controller,
+            self.location_controller,
+            self.inventory_controller,
+            self.supplier_controller
+        )
 
-        self.report_controller = ReportController(self.report_repo, self.product_controller,
-                                                  self.movement_controller, self.invoice_controller,
-                                                  self.location_controller, self.inventory_controller,
-                                                  self.supplier_controller)
-
-        self.graph_view = GraphView(self.inventory_controller, self.location_controller)
-
+        # 5) Логистичен модул (граф)
+        self.graph_view = GraphView(
+            self.inventory_controller,
+            self.location_controller
+        )
 
     def _init_menus(self):
         """Инициализация на всички изгледи и менюта."""

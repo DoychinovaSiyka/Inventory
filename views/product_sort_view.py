@@ -22,8 +22,6 @@ class ProductSortView:
             MenuItem("1", "По име (A–Z)", self.sort_by_name),
             MenuItem("2", "По цена (висока -> ниска)", self.sort_price_desc),
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
-            MenuItem("4", "По количество (високо -> ниско)", self.sort_qty_desc),
-            MenuItem("5", "По количество (ниско -> високо)", self.sort_qty_asc),
             MenuItem("0", "Назад", lambda u: "break")])
 
 
@@ -41,11 +39,3 @@ class ProductSortView:
         products = self.product_controller.get_custom_sort(sort_type="price", algorithm="bubble", reverse=False)
         self.parent_view._print_products(products, "Цена (ниска -> висока)")
 
-    def sort_qty_desc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="quantity", algorithm="bubble", reverse=True)
-        self.parent_view._print_products(products, "Количество (високо -> ниско)")
-
-
-    def sort_qty_asc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="quantity", algorithm="selection", reverse=False)
-        self.parent_view._print_products(products, "Количество (ниско -> високо)")

@@ -84,17 +84,14 @@ class InventoryController:
         self._save()
         return True
 
-
     def rebuild_inventory_from_movements(self, movements: List) -> None:
         """Преизчислява целия инвентар от историята на движенията."""
         self.data = {"products": {}}
-
 
         sorted_moves = sorted(movements, key=lambda m: m.date)
         for m in sorted_moves:
             pid = str(m.product_id)
             qty = float(m.quantity)
-
 
             try:
                 m_type = m.movement_type.name
@@ -122,6 +119,15 @@ class InventoryController:
                     locs[m.to_location_id] = locs.get(m.to_location_id, 0.0) + qty
 
         self._save()
+
+
+
+
+    def sort_products_by_quantity(self, reverse=True):
+        """Връща продуктите, сортирани по общо количество."""
+        products = self.product_controller.get_all()
+        return sorted(products, key=lambda p: self.get_total_stock(p.product_id), reverse=reverse)
+
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         """Пресмята себестойността на продадените количества по метода FIFO."""

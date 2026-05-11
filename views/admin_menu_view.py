@@ -16,8 +16,7 @@ class AdminMenuView:
         self.inventory_controller = controllers["inventory"]
         self.movement_controller = controllers["movement"]
 
-        self.product_view = ProductMenuView(controllers["product"], controllers["category"],
-                                            controllers["inventory"], controllers["movement"])
+        self.product_view = ProductMenuView(controllers["product"], controllers["category"])
 
 
         self.category_view = CategoryView(controllers["category"], controllers["product"])

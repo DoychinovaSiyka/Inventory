@@ -3,16 +3,13 @@ from views.password_utils import format_table
 
 
 class InvoiceView:
-    def __init__(self, invoice_controller, activity_log_controller=None):
+    def __init__(self, invoice_controller):
         self.invoice_controller = invoice_controller
-        self.activity_log = activity_log_controller
+
 
     def _input(self, prompt):
         user_input = input(prompt).strip()
-        if user_input == "":
-            return None
-        return user_input
-
+        return user_input if user_input else None
 
     def _show_invoices(self, invoices):
         if not invoices:
@@ -22,25 +19,24 @@ class InvoiceView:
         rows = []
         for inv in invoices:
             status_text = "V" if inv.is_active else "X (АНУЛИРАНА)"
-
             total = float(inv.total_price)
             total_display = f"{total:.2f} лв." if inv.is_active else f"[{total:.2f} лв.]"
 
             rows.append([inv.invoice_id[:8], inv.product[:15], inv.customer[:12],
                          f"{inv.quantity} {inv.unit}", total_display, status_text, inv.date[:16]])
 
-        headers = ["ID (кратко)", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
+        headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
+
+
 
 
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
-            MenuItem("1", "Всички фактури (хронология)", self.show_all),
+            MenuItem("1", "Всички фактури", self.show_all),
             MenuItem("2", "Само активни фактури", self.show_active_only),
-            MenuItem("3", "Преглед по ID / Анулиране", self.view_by_id),
-            MenuItem("4", "Търсене по клиент", self.search_by_customer),
-            MenuItem("5", "Търсене по продукт", self.search_by_product),
-            MenuItem("6", "Разширено търсене", self.advanced_search),
+            MenuItem("3", "Преглед / Анулиране по ID", self.view_by_id),
+            MenuItem("4", "Търсене (клиент / продукт / дата / сума)", self.advanced_search),
             MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
@@ -50,6 +46,7 @@ class InvoiceView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def show_all(self, _):
         self._show_invoices(self.invoice_controller.get_all(include_cancelled=True))
 
@@ -57,10 +54,9 @@ class InvoiceView:
         self._show_invoices(self.invoice_controller.get_all(include_cancelled=False))
 
 
-
+    # ПРЕГЛЕД / АНУЛИРАНЕ
     def view_by_id(self, user):
-        print("\nПРЕГЛЕД НА ФАКТУРА")
-        invoice_id = self._input("Въведете ID (или част от него): ")
+        invoice_id = self._input("\nВъведете ID (или част от него): ")
         if not invoice_id:
             return
 
@@ -69,17 +65,12 @@ class InvoiceView:
             print("Фактурата не е намерена.")
             return
 
-
         status_str = "АКТИВНА" if invoice.is_active else "АНУЛИРАНА"
-        rows = [["Статус", status_str], ["Пълно ID", invoice.invoice_id],
-                ["Продукт", invoice.product],
-                ["Количество", f"{invoice.quantity} {invoice.unit}"],
-                ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
-                ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
-                ["Клиент", invoice.customer], ["Дата/Час", invoice.date]]
+        rows = [["Статус", status_str], ["Пълно ID", invoice.invoice_id], ["Продукт", invoice.product],
+                ["Количество", f"{invoice.quantity} {invoice.unit}"], ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
+                ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."], ["Клиент", invoice.customer], ["Дата/Час", invoice.date]]
 
         print("\n" + format_table(["Детайл", "Стойност"], rows))
-
 
         if invoice.is_active:
             if self.invoice_controller.remove(invoice.invoice_id, user.user_id):
@@ -90,33 +81,9 @@ class InvoiceView:
             print("\nТази фактура вече е анулирана.")
 
 
-    def search_by_customer(self, _):
-        keyword = self._input("\nИме на клиент: ")
-        if keyword:
-            results = self.invoice_controller.search_by_customer(keyword)
-            self._show_invoices(results)
-
-    def search_by_product(self, _):
-        keyword = self._input("\nИме на продукт: ")
-        if keyword:
-            results = self.invoice_controller.search_by_product(keyword)
-            self._show_invoices(results)
-
-
-
-    def search_by_date(self, _):
-        date_str = self._input("\nДата (ГГГГ-ММ-ДД): ")
-        if date_str:
-            try:
-                results = self.invoice_controller.search_by_date(date_str)
-                self._show_invoices(results)
-            except Exception as e:
-                print(f"Грешка: {e}")
-
-
-
 
     def advanced_search(self, _):
+        print("\nТЪРСЕНЕ НА ФАКТУРИ (оставете празно за пропускане):")
         customer = self._input("Клиент: ")
         product = self._input("Продукт: ")
         start_date = self._input("От дата (ГГГГ-ММ-ДД): ")

@@ -80,7 +80,6 @@ class MovementView:
             MenuItem("1", "Доставка (вход)", self.process_delivery),
             MenuItem("2", "Продажба (изход)", self.process_sale),
             MenuItem("3", "Вътрешно преместване", self.process_transfer),
-            MenuItem("4", "Хронология", self.show_history),
             MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
@@ -113,7 +112,6 @@ class MovementView:
         price = self._ask_float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True, default=product.price)
         if price == "cancel":
             return
-
         try:
             self.movement_controller.add_in(product.product_id, qty, price, location.location_id, supplier.supplier_id, user.user_id)
             print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
@@ -247,13 +245,3 @@ class MovementView:
 
 
 
-    def show_history(self, _):
-        movements = self.movement_controller.get_all()
-        if not movements:
-            print("\nНяма движения.")
-            return
-
-        rows = [self._format_movement_row(m) for m in reversed(movements)]
-        print("\nХронология на движенията")
-        headers = ["ID", "Дата", "Тип", "Продукт", "К-во", "Цена", "Партньор", "Локация"]
-        print(format_table(headers, rows))

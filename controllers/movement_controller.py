@@ -60,14 +60,14 @@ class MovementController:
                         movement_type="MOVE", quantity=quantity, price="0",
                         from_location_id=from_loc, to_location_id=to_loc)
 
+
     def add(self, product_id: str, user_id: str, location_id: Optional[str], movement_type: str,
             quantity: str, price: Optional[str], customer: Optional[str] = None, supplier_id: Optional[str] = None,
             from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
         """ Метод за създаване на движение. Синхронизация с инвентара и генериране на фактури."""
 
 
-
-
+        #  ДВИЖЕНИЯ (IN, OUT, MOVE)
         product = self.product_controller.get_by_id(product_id)
         if not product:
             raise ValueError("Продуктът не съществува в базата.")
@@ -76,11 +76,10 @@ class MovementController:
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
-
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-
+        # Цена
         if m_type_str == "MOVE":
             prc = 0.0
         elif price is not None and str(price).strip() != "":
@@ -126,3 +125,5 @@ class MovementController:
     def filter_deliveries(self, keyword: str) -> List[Movement]:
         """филтриране само за доставки (IN)."""
         return movement_filters.filter_deliveries(self.movements, keyword, self.product_controller, self.supplier_controller)
+
+

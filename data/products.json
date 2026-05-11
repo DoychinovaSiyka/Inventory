@@ -178,5 +178,41 @@
         "price": 6.01,
         "created": "2026-05-11 17:24:24",
         "modified": "2026-05-11 17:42:08"
+    },
+    {
+        "product_id": "911ce0dd-9a5e-4db8-96e9-57f7d0f7f87e",
+        "name": "XXX",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "кг.",
+        "description": "KWPOE",
+        "price": 2.0,
+        "created": "2026-05-11 19:53:59",
+        "modified": "2026-05-11 19:53:59"
+    },
+    {
+        "product_id": "1af72d0a-d64d-4f18-b7e2-36d460496cc9",
+        "name": "wiepowip",
+        "categories": [
+            "a493e68b-9e54-4115-a9f1-62afad68e7a8"
+        ],
+        "unit": "кг.",
+        "description": "qwepo",
+        "price": 3.0,
+        "created": "2026-05-11 20:06:45",
+        "modified": "2026-05-11 20:06:45"
+    },
+    {
+        "product_id": "7393a6ef-d4f6-4135-93c1-c758989782f7",
+        "name": "wqowiepoq",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "кг.",
+        "description": "pwe",
+        "price": 3.0,
+        "created": "2026-05-11 20:11:17",
+        "modified": "2026-05-11 20:11:17"
     }
 ]
