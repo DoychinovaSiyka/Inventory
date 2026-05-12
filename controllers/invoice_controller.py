@@ -43,26 +43,19 @@ class InvoiceController:
         return invoice
 
     def get_all(self, include_cancelled=True) -> List[Invoice]:
-        """ Хронологията на фактурите."""
         if include_cancelled:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        """ Търси фактура по пълно или частично ID. """
+        """Търси фактура само по началото на ID-то."""
         tid = str(invoice_id or "").strip()
         if not tid:
             return None
 
         for inv in self.invoices:
-            if inv.invoice_id == tid:
+            if inv.invoice_id.startswith(tid):
                 return inv
-
-        if len(tid) >= 4:
-            for inv in self.invoices:
-                if inv.invoice_id.startswith(tid):
-                    return inv
-            return None
 
         return None
 

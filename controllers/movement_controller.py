@@ -78,7 +78,7 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        # Цена
+
         if m_type_str == "MOVE":
             prc = 0.0
         elif price is not None and str(price).strip() != "":

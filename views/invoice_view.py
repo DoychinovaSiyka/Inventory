@@ -22,13 +22,10 @@ class InvoiceView:
             total = float(inv.total_price)
             total_display = f"{total:.2f} лв." if inv.is_active else f"[{total:.2f} лв.]"
 
-            rows.append([inv.invoice_id[:8], inv.product[:15], inv.customer[:12],
-                         f"{inv.quantity} {inv.unit}", total_display, status_text, inv.date[:16]])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}", total_display, status_text, inv.date])
 
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
-
-
 
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [

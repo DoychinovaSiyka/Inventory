@@ -22,10 +22,10 @@
         "unit_price": 2.0,
         "total_price": 18.0,
         "customer": "Sisis",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-05-11 20:17:10",
         "created": "2026-05-11 20:17:10",
-        "modified": "2026-05-11 20:17:10"
+        "modified": "2026-05-12 12:42:16"
     },
     {
         "invoice_id": "6689e0ae-46cf-42a0-bf1b-11fd66ad2c56",
