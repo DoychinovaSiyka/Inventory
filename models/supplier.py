@@ -21,18 +21,15 @@ class Supplier:
 
 
     def update_modified(self):
-        """Обновява времето на последна промяна."""
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def to_dict(self):
-        """Превръща обекта в речник за JSON."""
         return {"supplier_id": self.supplier_id, "name": self.name, "contact": self.contact,
                 "address": self.address, "created": self.created, "modified": self.modified}
 
 
     @staticmethod
     def from_dict(d):
-        """Зарежда обекта от JSON речник."""
         if not d:
             return None
         return Supplier(supplier_id=d.get("supplier_id"), name=d.get("name", ""),

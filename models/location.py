@@ -49,13 +49,11 @@ class Location:
         self.modified = Location.now()
 
     def to_dict(self):
-        """Записваме в JSON."""
         return {"location_id": self.location_id, "name": self.name, "zone": self.zone,
                 "capacity": self.capacity, "created": self.created, "modified": self.modified}
 
     @staticmethod
     def from_dict(data):
-        """Създавам Location от JSON речник."""
         if not data:
             return None
 
