@@ -50,7 +50,6 @@ class LocationView:
             if len(name) < 2:
                 print("Името трябва да е поне 2 символа.")
                 continue
-
             try:
                 self.controller.validate_field("name", name)
 

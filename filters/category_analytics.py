@@ -20,7 +20,6 @@ def build_category_tree(categories, parent_id=None, level=0):
 
 
 
-
 def get_category_stats(categories, products):
     """Брои продуктите във всяка категория по по-прост начин."""
     stats = {}

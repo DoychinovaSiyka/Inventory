@@ -5,7 +5,6 @@ def filter_combined(products: List, **kwargs):
     """Филтър за продукти. Поддържа: keyword (име/описание/категория), category_ids (списък)."""
     results = products
 
-
     keyword = kwargs.get("keyword")
     if keyword:
         keyword = keyword.lower().strip()
@@ -13,11 +12,10 @@ def filter_combined(products: List, **kwargs):
 
         filtered_by_text = []
         for p in results:
-            # Събираме целия текст, в който ще търсим (име, описание и имена на категории)
             cat_names = " ".join([c.name.lower() for c in p.categories])
             full_text = f"{p.name.lower()} {p.description.lower()} {cat_names}"
 
-            # Проверяваме дали ВСЯКА от думите в търсенето присъства в текста
+
             if all(word in full_text for word in words):
                 filtered_by_text.append(p)
         results = filtered_by_text
@@ -30,7 +28,6 @@ def filter_combined(products: List, **kwargs):
         filtered_by_cat = []
         for p in results:
             product_cat_ids = {str(c.category_id) for c in p.categories}
-
             if product_cat_ids & wanted_ids:
                 filtered_by_cat.append(p)
         results = filtered_by_cat
