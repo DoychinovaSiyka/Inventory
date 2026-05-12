@@ -24,15 +24,8 @@ class InvoiceView:
             total = float(inv.total_price)
             total_display = f"{total:.2f} лв." if inv.is_active else f"[{total:.2f} лв.]"
 
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                total_display,
-                status_text,
-                inv.date
-            ])
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer, f"{inv.quantity} {inv.unit}",
+                         total_display, status_text, inv.date])
 
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
@@ -41,8 +34,7 @@ class InvoiceView:
         menu = Menu("Меню Фактури", [
             MenuItem("1", "Активни фактури", self.show_all),
             MenuItem("2", "Анулиране по ID", self.view_by_id),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
             choice = menu.show()
@@ -68,16 +60,10 @@ class InvoiceView:
 
         status_str = "АКТИВНА" if invoice.is_active else "АНУЛИРАНА"
 
-        rows = [
-            ["Статус", status_str],
-            ["Пълно ID", invoice.invoice_id],
-            ["Продукт", invoice.product],
-            ["Количество", f"{invoice.quantity} {invoice.unit}"],
-            ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
-            ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
-            ["Клиент", invoice.customer],
-            ["Дата/Час", str(invoice.date)]
-        ]
+        rows = [ ["Статус", status_str], ["Пълно ID", invoice.invoice_id], ["Продукт", invoice.product],
+                 ["Количество", f"{invoice.quantity} {invoice.unit}"],
+                 ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."], ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
+                 ["Клиент", invoice.customer], ["Дата/Час", str(invoice.date)]]
 
         print("\n" + format_table(["Детайл", "Стойност"], rows))
 
