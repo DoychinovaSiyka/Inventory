@@ -1,5 +1,5 @@
 from views.menu import Menu, MenuItem
-
+from validators.category_validator import CategoryValidator
 
 class CategoryView:
 
@@ -59,29 +59,24 @@ class CategoryView:
                 indent = "  " * level
                 print(f"{indent}- {cat.name} ({short_id})")
 
-
-
-
     def add_category(self, user):
         print("\nНОВА КАТЕГОРИЯ")
         while True:
-            name = self._ask_required_string("Име: ", 2)
+            name = input("Име: ").strip()
+            try:
+                CategoryValidator.validate_name(name)
+                CategoryValidator.validate_unique(name, self.controller.get_all())
+                break
+            except ValueError as e:
+                print(e)
 
-            all_cats = self.controller.get_all()
-            duplicate = False
-            for c in all_cats:
-                if c.name.lower() == name.lower():
-                    duplicate = True
-                    break
-
-            if duplicate:
-                print("Категория с такова име вече съществува.")
-                continue
-
-            break
-
-
-        description = self._ask_required_string("Описание: ", 3)
+        while True:
+            description = input("Описание: ").strip()
+            try:
+                CategoryValidator.validate_description(description)
+                break
+            except ValueError as e:
+                print(e)
 
         print("\nИзберете родителска категория (Enter за ГЛАВНА категория):")
         parent = self.select_category()
@@ -93,8 +88,6 @@ class CategoryView:
         except Exception as e:
             print(f"\nГрешка при добавяне: {e}")
 
-
-
     def edit_category(self, user):
         print("\nРЕДАКТИРАНЕ НА КАТЕГОРИЯ")
         category = self.select_category()
@@ -103,68 +96,47 @@ class CategoryView:
 
         print(f"\nРедакция на: {category.name} (Оставете празно за запазване)")
 
-
         while True:
             new_name = input(f"Ново име [{category.name}]: ").strip()
             if not new_name:
                 new_name = category.name
                 break
-            if len(new_name) < 2:
-                print("Името трябва да е поне 2 символа.")
-                continue
-
-            all_cats = self.controller.get_all()
-            duplicate = False
-            for c in all_cats:
-                if c.category_id != category.category_id:
-                    if c.name.lower() == new_name.lower():
-                        duplicate = True
-                        break
-
-            if duplicate:
-                print("Категория с такова име вече съществува.")
-                continue
-
-            break
-
+            try:
+                CategoryValidator.validate_name(new_name)
+                CategoryValidator.validate_unique(new_name, self.controller.get_all(), exclude_id=category.category_id)
+                break
+            except ValueError as e:
+                print(e)
 
         while True:
             new_desc = input(f"Ново описание [{category.description}]: ").strip()
             if not new_desc:
                 new_desc = category.description
                 break
-            if len(new_desc) < 3:
-                print("Описанието трябва да е поне 3 символа.")
-                continue
-            break
-
+            try:
+                CategoryValidator.validate_description(new_desc)
+                break
+            except ValueError as e:
+                print(e)
 
         print("\nИзберете нов родител")
         parent = self.select_category()
         new_parent_id = parent.category_id if parent else category.parent_id
 
-        if parent and parent.category_id == category.category_id:
-            print("Категория не може да бъде родител сама на себе си.")
-            return
-
-
-        current = parent
-        while current:
-            if current.category_id == category.category_id:
-                print("Невалидна йерархия. Това ще създаде цикъл.")
-                return
-            current = self.controller.get_by_id(current.parent_id)
-
         try:
+            if new_parent_id != category.parent_id:
+                CategoryValidator.validate_no_cycle(category.category_id, new_parent_id, self.controller.get_all())
+
             updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
             if self.controller.update(category.category_id, updates):
                 print("\nПромените са запазени успешно.")
             else:
                 print("\nКатегорията не беше намерена.")
 
+        except ValueError as e:
+            print(f"\nПроблем с йерархията: {e}")
         except Exception as e:
             print(f"\nНеуспешен запис: {e}")
-
 
     def select_category(self):
         categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
@@ -190,9 +162,6 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
-
-
-
 
     def delete_category(self, user):
         print("\nИЗТРИВАНЕ НА КАТЕГОРИЯ")

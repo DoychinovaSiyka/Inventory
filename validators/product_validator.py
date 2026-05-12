@@ -29,7 +29,6 @@ class ProductValidator:
             return "бр."
 
         if allowed_units and u not in allowed_units:
-            # Ако единицата не е в списъка, опитваме да я напаснем
             clean_u = u.lower().replace(".", "")
             for allowed in allowed_units:
                 if clean_u in allowed.lower():
@@ -46,7 +45,6 @@ class ProductValidator:
 
 
         v = str(value).lower().replace("лв", "").replace(",", ".").replace(" ", "").strip()
-
         try:
             num = float(v)
             if num <= 0:
@@ -55,9 +53,9 @@ class ProductValidator:
         except ValueError:
             raise ValueError(f"Въведете валидно число за '{field_name}' (напр. 12.50).")
 
+
     @staticmethod
     def validate_unique_name(name, products, exclude_product_id=None):
-        """Проверява дали името вече съществува в списъка с продукти."""
         search_name = name.strip().lower()
         for p in products:
             if exclude_product_id and str(p.product_id) == str(exclude_product_id):

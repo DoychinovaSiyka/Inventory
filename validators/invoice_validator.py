@@ -1,12 +1,9 @@
 from datetime import datetime
 
 class InvoiceValidator:
-    """Валидатор за фактури. Фокусиран върху бизнес правилата за издаване
-    и анулиране, тъй като основните данни идват от складови движения."""
 
     @staticmethod
     def validate_movement_for_invoice(movement):
-        """Гарантира, че фактура се издава само за изходящи движения (продажби)."""
         try:
             m_type = movement.movement_type.name.upper()
         except AttributeError:

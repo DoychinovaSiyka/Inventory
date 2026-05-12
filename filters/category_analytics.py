@@ -1,65 +1,39 @@
-from typing import List
-from models.category import Category
-
-
-def build_category_tree(categories: List[Category]) -> List[dict]:
-    """Изгражда йерархията на категориите стъпка по стъпка."""
+def build_category_tree(categories, parent_id=None, level=0):
+    """Изгражда дървото по по-прост начин, но със същата логика."""
     tree = []
-    if not categories:
-        return tree
-
-    # кои са главните категории
-    root_categories = []
+    children = []
     for c in categories:
-        if c.parent_id is None:
-            root_categories.append(c)
-        else:
-            pid = str(c.parent_id).strip().lower()
-            if pid == "" or pid == "none":
-                root_categories.append(c)
+        if (c.parent_id is None and parent_id is None) or str(c.parent_id) == str(parent_id):
+            children.append(c)
 
-    # започваме да търсим нейните деца за главната категория
-    for root in root_categories:
-        tree.append({"category": root, "level": 0})
-        _add_children_recursive_view(root.category_id, categories, tree, 1)
+    children.sort(key=lambda x: x.name)
+
+    # Добавяме ги в дървото и викаме рекурсия за всяко дете
+    for child in children:
+        tree.append({"category": child, "level": level})
+        subtree = build_category_tree(categories, child.category_id, level + 1)
+        for item in subtree:
+            tree.append(item)
 
     return tree
 
 
-def _add_children_recursive_view(parent_id: str, all_categories: List[Category], tree: List[dict], current_level: int):
-    """Търси подкатегории рекурсивно и ги добавя в списъка с ниво на отместване."""
-
-    if not parent_id:
-        return
-
-    parent_id_str = str(parent_id).strip()
-
-    for c in all_categories:
-        if c.parent_id is not None:
-            c_parent_str = str(c.parent_id).strip()
-            if c_parent_str == parent_id_str:
-                tree.append({"category": c, "level": current_level})
-                # Проверяваме за наследници на по-долно ниво
-                _add_children_recursive_view(c.category_id, all_categories, tree, current_level + 1)
 
 
 
-
-def get_category_stats(categories: List[Category], products: List) -> dict:
-    """Колко продукта има във всяка категория."""
-
+def get_category_stats(categories, products):
+    """Брои продуктите във всяка категория по по-прост начин."""
     stats = {}
 
     for cat in categories:
+        cat_id = str(cat.category_id)
         count = 0
-        current_cat_id = str(cat.category_id).strip()
 
-        for prod in products:
-            for p_cat in prod.categories:
-                p_cat_id = str(p_cat.category_id).strip()
-                if p_cat_id == current_cat_id:
+        for p in products:
+            for pc in p.categories:
+                if str(pc.category_id) == cat_id:
                     count += 1
-                    break  # не проверяваме другите категории на продукта
+                    break
 
         stats[cat.name] = count
 

@@ -1,8 +1,5 @@
+
 class InventoryValidator:
-    """
-    Валидатор за инвентара и справките.
-    Осигурява интегритет на данните преди показване в отчетите.
-    """
 
     @staticmethod
     def validate_string(text, field_name, min_len=2):
@@ -15,17 +12,13 @@ class InventoryValidator:
 
     @staticmethod
     def parse_and_validate_number(value, field_name="Количество"):
-        """
-        Приема числа или стрингове (напр. '10.5 лв', '5 бр'), изчиства ги
-        и проверява дали са валидни. Преместено тук от ReportController.
-        """
+        """ Приема числа или стрингове (напр. '10.5 лв', '5 бр'), изчиства ги и проверява дали са валидни."""
         if value is None:
             return 0.0
 
         if isinstance(value, (int, float)):
             val = float(value)
         else:
-            # Изчистване на стринга от мерни единици и интервали
             cleaned = "".join(ch for ch in str(value) if ch.isdigit() or ch == "." or ch == ",")
             cleaned = cleaned.replace(",", ".")
             try:
@@ -37,9 +30,10 @@ class InventoryValidator:
             raise ValueError(f"{field_name} не може да бъде отрицателно.")
         return val
 
+
+
     @staticmethod
     def validate_stock_availability(product_name, requested_qty, available_qty, location_name):
-        """Проверява дали има достатъчно наличност за операция."""
         if requested_qty > available_qty:
             raise ValueError(
                 f"Недостатъчна наличност на '{product_name}'! "
@@ -47,10 +41,11 @@ class InventoryValidator:
 
     @staticmethod
     def validate_report_result(data):
-        """Гарантира, че данните за отчета са в правилен формат преди показване."""
         if not isinstance(data, list):
             raise ValueError("Грешка при генериране на справката: Невалиден формат на данните.")
         return True
+
+
 
     @staticmethod
     def validate_move_locations(from_wh_id, to_wh_id):

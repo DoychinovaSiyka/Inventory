@@ -17,72 +17,72 @@ class CategoryController:
         return self.categories
 
     def _save_changes(self) -> None:
-        """Записва промените в репозиторито (JSON файл)."""
+        """Записва промените в репозиторито."""
         self.repo.save([c.to_dict() for c in self.categories])
-
-
 
     def add(self, category_data: dict, user_id: str) -> Category:
         """Добавя категория с пълна валидация на име, описание и йерархия."""
-        name = category_data.get("name", "").strip()
-        description = category_data.get("description", "").strip()
-        parent_input = category_data.get("parent_id")
+        name = CategoryValidator.validate_name(category_data.get("name", ""))
+        description = CategoryValidator.validate_description(category_data.get("description", ""))
 
-        CategoryValidator.validate_name(name)
-        CategoryValidator.validate_description(description)
+
         CategoryValidator.validate_unique(name, self.categories)
 
-        # Проверка на родителя
+
         parent_id = None
+        parent_input = category_data.get("parent_id")
         if parent_input:
             parent = self.get_by_id(parent_input)
             if not parent:
-                raise ValueError(f"Родителска категория {parent_input} не съществува.")
+                raise ValueError(f"Родителска категория '{parent_input}' не съществува.")
             parent_id = parent.category_id
 
 
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
+
 
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
         self._save_changes()
         return category
 
-
     def update(self, category_id: str, updates: dict) -> bool:
+        """Обновява категория с валидация само на променените полета."""
         category = self.get_by_id(category_id)
         if not category:
             return False
 
-        name = updates.get("name", category.name).strip()
-        description = updates.get("description", category.description).strip()
+        # Вземаме новите стойности или запазваме старите, ако не са подадени в updates
+        new_name = updates.get("name", category.name).strip()
+        new_desc = updates.get("description", category.description).strip()
 
-        # Обработка на новия родител
+        # Обработка на родителя
         new_parent_input = updates.get("parent_id")
-        if new_parent_input and new_parent_input != category.parent_id:
+        if new_parent_input:
             parent_obj = self.get_by_id(new_parent_input)
-            if parent_obj is not None:
-                new_parent_id = parent_obj.category_id
-            else:
-                new_parent_id = None
-
+            new_parent_id = parent_obj.category_id if parent_obj else None
         else:
             new_parent_id = category.parent_id
 
-        if name != category.name:
-            CategoryValidator.validate_name(name)
-            CategoryValidator.validate_unique(name, self.categories, exclude_id=category.category_id)
 
-        if description != category.description:
-            CategoryValidator.validate_description(description)
+        if new_name != category.name:
+            CategoryValidator.validate_name(new_name)
+            CategoryValidator.validate_unique(new_name, self.categories, exclude_id=category.category_id)
+
+
+        if new_desc != category.description:
+            CategoryValidator.validate_description(new_desc)
+
 
         if new_parent_id != category.parent_id:
             CategoryValidator.validate_no_cycle(category.category_id, new_parent_id, self.categories)
 
-        category.name = name
-        category.description = description
+
+        category.name = new_name
+        category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
+
         self._save_changes()
         return True
 
