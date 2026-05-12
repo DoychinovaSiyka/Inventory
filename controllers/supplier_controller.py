@@ -25,13 +25,15 @@ class SupplierController:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        sid = str(supplier_id).strip()
-        if not sid:
+        sid = str(supplier_id or "").strip()
+        if len(sid) != 8:
             return None
 
         for supplier in self.suppliers:
-            if supplier.supplier_id.startswith(sid):
+            short_id = str(supplier.supplier_id)[:8]
+            if short_id == sid:
                 return supplier
+
         return None
 
     def update(self, supplier_id: str, name: Optional[str] = None,

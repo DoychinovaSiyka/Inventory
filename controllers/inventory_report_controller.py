@@ -46,8 +46,6 @@ class ReportController:
     # Обща справка за всички продажби
     def report_sales(self):
         all_invoices = self.invoice_controller.get_all() or []
-
-        # Филтрираме само активните за финансовия отчет
         active_invoices = [i for i in all_invoices if i.is_active]
 
         total_sum = 0.0
@@ -60,14 +58,13 @@ class ReportController:
         summary = {"total_count": len(active_invoices), "total_revenue": round(total_sum, 2),
                    "cancelled_count": len(all_invoices) - len(active_invoices)}
 
-        # Показваме активните в основната таблица
+
         data = self._map_invoices_to_data(active_invoices)
         return ReportResult(summary, data)
 
-    # Продажби за конкретен клиент
+    # Продажби за конкретен клиент - използваме обновения филтър, който връща само активните
     def report_sales_by_customer(self, customer_name: str):
         invoices = self.invoice_controller.get_all() or []
-        # Използваме обновения филтър, който връща само активните
         filtered = report_filters.filter_sales_by_customer(invoices, customer_name)
 
         summary = {"customer": customer_name, "count": len(filtered)}

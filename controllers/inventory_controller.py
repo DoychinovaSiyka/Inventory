@@ -17,78 +17,119 @@ class InventoryController:
         """Записва текущото състояние в хранилището."""
         self.repo.save(self.data)
 
-    def _resolve_ids(self, product_id: str, location_id: Optional[str] = None):
-        """Превръща частични ID-та в пълни системни UUID-та."""
-        prod = self.product_controller.get_by_id(str(product_id))
-        full_pid = prod.product_id if prod else str(product_id)
-
-        full_lid = None
-        if location_id:
-            loc = self.location_controller.get_by_id(str(location_id))
-            full_lid = loc.location_id if loc else str(location_id)
-
-        return full_pid, full_lid
-
     def get_stock(self, product_id: str, location_id: str) -> float:
-        """Връща наличността на продукт в конкретен склад."""
-        pid, lid = self._resolve_ids(product_id, location_id)
-        if not lid or pid not in self.data["products"]:
+        pid = str(product_id or "").strip()
+        lid = str(location_id or "").strip()
+
+        #  продуктът дали съществува в инвентара
+        if pid not in self.data.get("products", {}):
             return 0.0
 
-        locs = self.data["products"][pid].get("locations", {})
-        return InventoryValidator.parse_and_validate_number(locs.get(lid, 0.0))
+        # Проверяваме дали локацията е валидна
+        if lid == "":
+            return 0.0
+
+        # Всички локации за този продукт
+        product_info = self.data["products"][pid]
+        locations = product_info.get("locations", {})
+
+        # Количеството за конкретната локация
+        raw_qty = locations.get(lid, 0.0)
+        return InventoryValidator.parse_and_validate_number(raw_qty)
+
 
 
     def get_total_stock(self, product_id: str) -> float:
-        """Общо количество от продукта във всички складове."""
-        pid, _ = self._resolve_ids(product_id)
-        if pid not in self.data["products"]:
+        """Връща общото количество от продукта във всички складове."""
+
+        pid = str(product_id or "").strip()
+        if pid not in self.data.get("products", {}):
             return 0.0
 
-        locs = self.data["products"][pid].get("locations", {})
-        return sum(InventoryValidator.parse_and_validate_number(q) for q in locs.values())
+        product_info = self.data["products"][pid]
+        locations = product_info.get("locations", {})
+        total = 0.0
+
+
+        for loc_id in locations:
+            qty = locations[loc_id]
+            qty = InventoryValidator.parse_and_validate_number(qty)
+            total += qty
+
+        return total
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str) -> None:
-        """Увеличава наличността с валидация на количеството."""
-        pid, lid = self._resolve_ids(product_id, location_id)
-        if not lid:
+        """Увеличава наличността по прост и разбираем начин."""
+
+        pid = str(product_id or "").strip()
+        lid = str(location_id or "").strip()
+
+        if lid == "":
             return
 
-        valid_qty = InventoryValidator.parse_and_validate_number(quantity, "Количество")
 
-        if pid not in self.data["products"]:
+        qty_to_add = InventoryValidator.parse_and_validate_number(quantity, "Количество")
+
+        # Ако продуктът не съществува - създаваме го
+        if pid not in self.data.get("products", {}):
             self.data["products"][pid] = {"locations": {}}
 
-        locs = self.data["products"][pid]["locations"]
-        current = InventoryValidator.parse_and_validate_number(locs.get(lid, 0.0))
+        product_info = self.data["products"][pid]
+        locations = product_info.get("locations", {})
 
-        locs[lid] = round(current + valid_qty, 2)
+
+        current_qty = locations.get(lid, 0.0)
+        current_qty = InventoryValidator.parse_and_validate_number(current_qty)
+        new_qty = current_qty + qty_to_add
+        locations[lid] = round(new_qty, 2)
+
         self._save()
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
-        """Намалява наличност, използвайки бизнес логиката на Валидатора."""
-        pid, lid = self._resolve_ids(product_id, location_id)
-
-        if not lid or pid not in self.data["products"]:
+        pid = str(product_id or "").strip()
+        lid = str(location_id or "").strip()
+        if pid not in self.data.get("products", {}):
             return False
 
+        if lid == "":
+            return False
+
+
         qty_to_remove = InventoryValidator.parse_and_validate_number(quantity, "Количество")
-        locs = self.data["products"][pid]["locations"]
-        current = InventoryValidator.parse_and_validate_number(locs.get(lid, 0.0))
+        product_info = self.data["products"][pid]
+        locations = product_info.get("locations", {})
+
+
+        current_qty = locations.get(lid, 0.0)
+        current_qty = InventoryValidator.parse_and_validate_number(current_qty)
+
+
+        prod_obj = self.product_controller.get_by_id(pid)
+        loc_obj = self.location_controller.get_by_id(lid)
+
+        if prod_obj:
+            product_name = prod_obj.name
+        else:
+            product_name = pid
+
+        if loc_obj:
+            location_name = loc_obj.name
+        else:
+            location_name = lid
+
 
         try:
-            prod_obj = self.product_controller.get_by_id(pid)
-            loc_obj = self.location_controller.get_by_id(lid)
-            p_name = prod_obj.name if prod_obj else pid
-            l_name = loc_obj.name if loc_obj else lid
-
-            InventoryValidator.validate_stock_availability(p_name, qty_to_remove, current, l_name)
+            InventoryValidator.validate_stock_availability(product_name, qty_to_remove, current_qty, location_name)
         except ValueError:
-            return False  # Недостатъчна наличност
+            return False
 
-        locs[lid] = round(current - qty_to_remove, 2)
+        new_qty = current_qty - qty_to_remove
+        locations[lid] = round(new_qty, 2)
+
         self._save()
         return True
+
+
 
     def rebuild_inventory_from_movements(self, movements: List) -> None:
         """Преизчислява целия инвентар от историята."""
@@ -140,33 +181,58 @@ class InventoryController:
         return sorted(products, key=lambda p: self.get_total_stock(p.product_id), reverse=reverse)
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        """Пресмята себестойност по FIFO."""
+        """Пресмята себестойността по FIFO, без магически атрибути и без getattr."""
+
+
         pid, _ = self._resolve_ids(product_id)
 
+        #  колко бройки са продадени
         total_sold = 0.0
         for m in movements:
-            m_type = getattr(m.movement_type, 'name', str(m.movement_type))
+            m_type = str(m.movement_type).upper()
+
             if str(m.product_id) == pid and m_type == "OUT":
-                total_sold += InventoryValidator.parse_and_validate_number(m.quantity)
+                qty = InventoryValidator.parse_and_validate_number(m.quantity)
+                total_sold += qty
+
 
         if total_sold <= 0:
             return 0.0
 
+        # Събираме всички входящи партиди
         batches = []
-        for m in sorted(movements, key=lambda x: x.date):
-            m_type = getattr(m.movement_type, 'name', str(m.movement_type))
+        sorted_moves = sorted(movements, key=lambda x: x.date)
+
+        for m in sorted_moves:
+            m_type = str(m.movement_type).upper()
+
             if str(m.product_id) == pid and m_type == "IN":
-                price = InventoryValidator.parse_and_validate_number(m.price) if m.price else fallback_price
+                if m.price:
+                    price = InventoryValidator.parse_and_validate_number(m.price)
+                else:
+                    price = fallback_price
+
                 qty = InventoryValidator.parse_and_validate_number(m.quantity)
+
+                # Добавяме партида
                 batches.append({"qty": qty, "price": price})
 
+
+        # изчисляваме себестойността по FIFO
         total_cost = 0.0
         remaining = total_sold
+
         for batch in batches:
-            if remaining <= 0: break
-            take = min(batch["qty"], remaining)
+            if remaining <= 0:
+                break
+
+            take = batch["qty"]
+            if take > remaining:
+                take = remaining
+
             total_cost += take * batch["price"]
             remaining -= take
+
 
         if remaining > 0:
             total_cost += remaining * fallback_price
@@ -174,34 +240,56 @@ class InventoryController:
         return round(total_cost, 2)
 
     def get_total_inventory_value_fifo(self, movement_controller) -> float:
-        """Пълна финансова стойност на склада."""
+        """Изчислява общата стойност на склада по FIFO, без магически атрибути."""
         total_value = 0.0
         all_moves = movement_controller.get_all()
 
+        # Минаваме през всички продукти, които са записани в инвентара
         for pid in self.data.get("products", {}):
             product_obj = self.product_controller.get_by_id(pid)
-            fb_price = float(product_obj.price) if product_obj else 0.0
+            if product_obj:
+                fallback_price = float(product_obj.price)
+            else:
+                fallback_price = 0.0
 
-            prod_moves = sorted([m for m in all_moves if str(m.product_id) == pid], key=lambda x: x.date)
+            product_moves = []
+            for m in all_moves:
+                if str(m.product_id) == pid:
+                    product_moves.append(m)
+
+            product_moves.sort(key=lambda x: x.date)
+
+            # държим FIFO партидите
             batches = []
 
-            for m in prod_moves:
-                m_type = getattr(m.movement_type, 'name', str(m.movement_type))
+            for m in product_moves:
+                m_type = str(m.movement_type).upper()
+
                 qty = InventoryValidator.parse_and_validate_number(m.quantity)
 
                 if m_type == "IN":
-                    price = InventoryValidator.parse_and_validate_number(m.price) if m.price else fb_price
+                    # Ако има цена → ползваме я, иначе fallback
+                    if m.price:
+                        price = InventoryValidator.parse_and_validate_number(m.price)
+                    else:
+                        price = fallback_price
+
                     batches.append({"qty": qty, "price": price})
+
+
                 elif m_type == "OUT":
-                    while qty > 0 and batches:
-                        if batches[0]["qty"] <= qty:
-                            qty -= batches[0]["qty"]
+                    remaining = qty
+                    while remaining > 0 and batches:
+                        first_batch = batches[0]
+                        if first_batch["qty"] <= remaining:
+                            remaining -= first_batch["qty"]
                             batches.pop(0)
                         else:
-                            batches[0]["qty"] -= qty
-                            qty = 0
+                            first_batch["qty"] -= remaining
+                            remaining = 0
 
-            for b in batches:
-                total_value += b["qty"] * b["price"]
+
+            for batch in batches:
+                total_value += batch["qty"] * batch["price"]
 
         return round(total_value, 2)

@@ -34,9 +34,10 @@ class MovementValidator:
             if available < quantity:
                 raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
 
+
+
     @staticmethod
     def validate_move_locations(from_loc, to_loc):
-        """Валидация на трансфер."""
         if not from_loc or not to_loc:
             raise ValueError("Трансферът изисква два склада.")
         if str(from_loc) == str(to_loc):

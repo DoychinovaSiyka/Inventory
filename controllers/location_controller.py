@@ -36,13 +36,15 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        target_id = str(location_id).strip()
-        if not target_id:
+        target_id = str(location_id or "").strip()
+        if len(target_id) != 8:
             return None
 
         for loc in self.locations:
-            if loc.location_id.startswith(target_id):
+            short_id = str(loc.location_id)[:8]
+            if short_id == target_id:
                 return loc
+
         return None
 
     def update(self, location_id: str, name: Optional[str] = None,

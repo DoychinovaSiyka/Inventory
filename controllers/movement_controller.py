@@ -106,7 +106,7 @@ class MovementController:
         self.movements.append(movement)
         self.save_changes()
 
-        # Автоматично издаване на фактура при продажба
+
         if m_type_str == "OUT" and self.invoice_controller:
             try:
                 self.invoice_controller.create_from_movement(movement=movement, product=product, customer=customer or "Общ клиент",

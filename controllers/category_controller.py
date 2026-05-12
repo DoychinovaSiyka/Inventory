@@ -12,22 +12,20 @@ class CategoryController:
         raw_data = self.repo.load() or []
         self.categories: List[Category] = [Category.from_dict(c) for c in raw_data]
 
+
     def get_all(self) -> List[Category]:
-        """списък с всички категории."""
         return self.categories
 
     def _save_changes(self) -> None:
         """Записва промените в репозиторито."""
         self.repo.save([c.to_dict() for c in self.categories])
 
+
     def add(self, category_data: dict, user_id: str) -> Category:
-        """Добавя категория с пълна валидация на име, описание и йерархия."""
         name = CategoryValidator.validate_name(category_data.get("name", ""))
         description = CategoryValidator.validate_description(category_data.get("description", ""))
 
-
         CategoryValidator.validate_unique(name, self.categories)
-
 
         parent_id = None
         parent_input = category_data.get("parent_id")
@@ -40,11 +38,12 @@ class CategoryController:
 
         CategoryValidator.validate_no_cycle(None, parent_id, self.categories)
 
-
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
         self._save_changes()
         return category
+
+
 
     def update(self, category_id: str, updates: dict) -> bool:
         """Обновява категория с валидация само на променените полета."""
@@ -52,11 +51,10 @@ class CategoryController:
         if not category:
             return False
 
-        # Вземаме новите стойности или запазваме старите, ако не са подадени в updates
+
         new_name = updates.get("name", category.name).strip()
         new_desc = updates.get("description", category.description).strip()
 
-        # Обработка на родителя
         new_parent_input = updates.get("parent_id")
         if new_parent_input:
             parent_obj = self.get_by_id(new_parent_input)
@@ -69,10 +67,8 @@ class CategoryController:
             CategoryValidator.validate_name(new_name)
             CategoryValidator.validate_unique(new_name, self.categories, exclude_id=category.category_id)
 
-
         if new_desc != category.description:
             CategoryValidator.validate_description(new_desc)
-
 
         if new_parent_id != category.parent_id:
             CategoryValidator.validate_no_cycle(category.category_id, new_parent_id, self.categories)
@@ -82,34 +78,30 @@ class CategoryController:
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
-
         self._save_changes()
         return True
 
-
-
-    def get_by_id(self, category_id: str) -> Optional[Category]:
-        """Търси категория по точно ID или по начални символи."""
-        target = str(category_id or "").strip()
-        if not target:
+    def get_by_id(self, user_input: str) -> Optional[Category]:
+        target = str(user_input or "").strip()
+        if len(target) != 8:
             return None
 
         for c in self.categories:
-            if c.category_id == target:
-                return c
-        for c in self.categories:
-            if c.category_id.startswith(target):
+            if c.category_id[:8] == target:
                 return c
         return None
 
+    def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
+        """ Връща списък от всички подкатегории"""
+        parent_cat = self.get_by_id(parent_short_id)
+        if not parent_cat:
+            return []
 
-    def get_all_hierarchical_ids(self, category_id: str) -> list:
-        """Връща списък от ID-то на категорията и всички нейни подкатегории (надолу по дървото)."""
-        result = [category_id]
+        result = [parent_cat.category_id]
         all_cats = self.get_all()
         for cat in all_cats:
-            if cat.parent_id == category_id:
-                result.extend(self.get_all_hierarchical_ids(cat.category_id))
+            if cat.parent_id == parent_cat.category_id:
+                result.extend(self.get_all_hierarchical_ids(cat.category_id[:8]))
 
         return list(set(result))
 
@@ -117,12 +109,12 @@ class CategoryController:
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез филтър модула."""
         cleaned = (keyword or "").strip()
-        if len(cleaned) < 2:
+        if len(cleaned) < 3:
             return []
         return filter_categories(self.categories, cleaned)
 
     def get_stats(self, product_controller) -> dict:
-        """Статистика за броя продукти във всяка категория (Отчет)."""
+        """Статистика за броя продукти във всяка категория."""
         if product_controller is not None:
             products = product_controller.get_all()
         else:
@@ -131,7 +123,7 @@ class CategoryController:
         return get_category_stats(self.categories, products)
 
     def get_visual_tree(self) -> List[dict]:
-        """Изгражда йерархичното дърво за визуализация (Отчет)."""
+        """Изгражда йерархичното дърво за визуализация."""
         return build_category_tree(self.categories)
 
 
@@ -149,3 +141,19 @@ class CategoryController:
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
         self._save_changes()
         return True
+
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "name":
+                CategoryValidator.validate_name(value)
+
+            elif field_type == "description":
+                CategoryValidator.validate_description(value)
+
+            elif field_type == "parent":
+                if value and not self.get_by_id(value):
+                    raise ValueError("Невалидна родителска категория.")
+
+            return None
+        except ValueError as e:
+            return str(e)

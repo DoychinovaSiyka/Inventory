@@ -61,13 +61,15 @@ class UserController:
         return self.users
 
     def get_by_id(self, user_id: str) -> Optional[User]:
-        if not user_id:
+        uid = str(user_id or "").strip()
+        if len(uid) != 8:
             return None
 
-        user_id = str(user_id).strip()
         for u in self.users:
-            if u.user_id == user_id or u.user_id.startswith(user_id):
+            short_id = str(u.user_id)[:8]
+            if short_id == uid:
                 return u
+
         return None
 
     def login(self, username: str, password: str) -> Optional[User]:

@@ -20,27 +20,22 @@ class ProductController:
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
     def save_changes(self) -> None:
-        """Записва текущото състояние в базата/файла."""
+        """Записва текущото състояние в базата."""
         self.repo.save([p.to_dict() for p in self.products])
 
     def get_all(self) -> List[Product]:
-        """Връща всички продукти в каталога."""
         return self.products
 
+
     def get_by_id(self, product_id: str) -> Optional[Product]:
-        """Намира продукт по пълно или частично ID."""
-        pid = str(product_id).strip()
-        if not pid:
+        pid = str(product_id or "").strip()
+        if len(pid) != 8:
             return None
 
         for p in self.products:
-            if str(p.product_id) == pid:
+            short_id = str(p.product_id)[:8]
+            if short_id == pid:
                 return p
-
-        if len(pid) >= 4:
-            for p in self.products:
-                if str(p.product_id).startswith(pid):
-                    return p
 
         return None
 
@@ -133,3 +128,23 @@ class ProductController:
             return product_sorters.bubble_sort(products_copy, key=key_fn, reverse=reverse)
 
         return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
+
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "name":
+                self.validator.validate_name(value)
+            elif field_type == "price":
+                self.validator.parse_float(value, "Цена")
+            elif field_type == "description":
+                self.validator.validate_description(value)
+            elif field_type == "unit":
+                self.validator.validate_unit(value)
+            elif field_type == "category":
+                if not self.category_controller.get_by_id(value):
+                    return "Невалидна категория."
+            else:
+                return f"Непознат тип поле: {field_type}"
+        except Exception as e:
+            return str(e)
+
+        return None
