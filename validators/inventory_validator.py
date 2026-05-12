@@ -54,7 +54,6 @@ class InventoryValidator:
 
     @staticmethod
     def validate_move_locations(from_wh_id, to_wh_id):
-        """Проверява логиката на преместване (MOVE)."""
         if not from_wh_id or not to_wh_id:
             raise ValueError("MOVE операцията изисква изходен и целеви склад.")
         if str(from_wh_id) == str(to_wh_id):
