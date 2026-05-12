@@ -26,15 +26,16 @@ class ProductController:
     def get_all(self) -> List[Product]:
         return self.products
 
-
     def get_by_id(self, product_id: str) -> Optional[Product]:
         pid = str(product_id or "").strip()
-        if len(pid) != 8:
+        if not pid:
             return None
 
         for p in self.products:
-            short_id = str(p.product_id)[:8]
-            if short_id == pid:
+            full_id = str(p.product_id)
+            short_id = full_id[:8]
+
+            if pid == short_id or pid == full_id:
                 return p
 
         return None

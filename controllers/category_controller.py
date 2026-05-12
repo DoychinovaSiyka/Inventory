@@ -83,12 +83,14 @@ class CategoryController:
 
     def get_by_id(self, user_input: str) -> Optional[Category]:
         target = str(user_input or "").strip()
-        if len(target) != 8:
-            return None
 
         for c in self.categories:
-            if c.category_id[:8] == target:
+            full_id = str(c.category_id)
+            short_id = full_id[:8]
+
+            if target == short_id or target == full_id:
                 return c
+
         return None
 
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:

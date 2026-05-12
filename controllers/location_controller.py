@@ -36,13 +36,13 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        target_id = str(location_id or "").strip()
-        if len(target_id) != 8:
-            return None
+        target = str(location_id or "").strip()
 
         for loc in self.locations:
-            short_id = str(loc.location_id)[:8]
-            if short_id == target_id:
+            full_id = str(loc.location_id)
+            short_id = full_id[:8]
+
+            if target == short_id or target == full_id:
                 return loc
 
         return None
@@ -76,11 +76,24 @@ class LocationController:
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
+        # Проверка за наличности
         if self.inventory_controller:
             products_data = self.inventory_controller.data.get("products", {})
+
             for pid, pdata in products_data.items():
                 locations_map = pdata.get("locations", {})
-                qty = locations_map.get(location.location_id, 0)
+
+                # НОВО: нормализиране на ключовете (късо/дълго ID)
+                normalized_map = {}
+                for key, qty in locations_map.items():
+                    loc_obj = self.get_by_id(key)
+                    if loc_obj:
+                        normalized_map[loc_obj.location_id] = qty
+                    else:
+                        normalized_map[key] = qty
+
+                qty = normalized_map.get(location.location_id, 0)
+
                 try:
                     qty_value = float(qty)
                 except Exception:
@@ -99,8 +112,6 @@ class LocationController:
         self.locations = new_list
         self.save_changes()
         return True
-
-
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:

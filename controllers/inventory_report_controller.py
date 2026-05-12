@@ -20,6 +20,11 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
+    # нормализиране на short/long ID
+    def _resolve_location(self, loc_id):
+        if not loc_id:
+            return None
+        return self.location_controller.get_by_id(str(loc_id))
 
     def _map_invoices_to_data(self, invoices):
         """Помощен метод за преобразуване на фактури в речници за справки."""
@@ -58,11 +63,9 @@ class ReportController:
         summary = {"total_count": len(active_invoices), "total_revenue": round(total_sum, 2),
                    "cancelled_count": len(all_invoices) - len(active_invoices)}
 
-
         data = self._map_invoices_to_data(active_invoices)
         return ReportResult(summary, data)
 
-    # Продажби за конкретен клиент - използваме обновения филтър, който връща само активните
     def report_sales_by_customer(self, customer_name: str):
         invoices = self.invoice_controller.get_all() or []
         filtered = report_filters.filter_sales_by_customer(invoices, customer_name)
@@ -71,7 +74,6 @@ class ReportController:
         data = self._map_invoices_to_data(filtered)
         return ReportResult(summary, data)
 
-    # Продажби за конкретен продукт
     def report_sales_by_product(self, product_name: str):
         invoices = self.invoice_controller.get_all() or []
         filtered = report_filters.filter_sales_by_product(invoices, product_name)
@@ -80,27 +82,28 @@ class ReportController:
         data = self._map_invoices_to_data(filtered)
         return ReportResult(summary, data)
 
-
-
-
     def report_movements(self):
         rows = []
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
+
+            # нормализиране на ID-тата
+            loc = self._resolve_location(m.location_id)
+            fl = self._resolve_location(m.from_location_id)
+            tl = self._resolve_location(m.to_location_id)
+
             from_loc = "Няма"
             to_loc = "Няма"
 
             if mtype == "IN":
                 from_loc = "Доставчик"
-                loc = self.location_controller.get_by_id(m.location_id)
                 to_loc = loc.name if loc else "Склад"
+
             elif mtype == "OUT":
-                loc = self.location_controller.get_by_id(m.location_id)
                 from_loc = loc.name if loc else "Склад"
                 to_loc = m.customer or "Клиент"
+
             elif mtype == "MOVE":
-                fl = self.location_controller.get_by_id(m.from_location_id)
-                tl = self.location_controller.get_by_id(m.to_location_id)
                 from_loc = fl.name if fl else "Източник"
                 to_loc = tl.name if tl else "Цел"
 
@@ -111,7 +114,6 @@ class ReportController:
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
-    # Всички доставки (IN)
     def report_deliveries_all(self, keyword=None):
         all_moves = self.movement_controller.movements
         deliveries = report_filters.filter_movements_by_type(all_moves, "IN")
@@ -133,11 +135,6 @@ class ReportController:
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
-
-
-
-
-    # Пълен жизнен цикъл на продукт
     def product_lifecycle(self, name_or_id):
         product = self.product_controller.get_by_id(name_or_id)
         if not product:
@@ -155,7 +152,6 @@ class ReportController:
 
         total_in = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
 
-        # Приходи и изходни количества само от активни фактури
         active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active and i.product == product.name]
         total_out = sum(float(i.quantity) for i in active_invoices)
         revenue = sum(float(i.total_price) for i in active_invoices)
@@ -168,8 +164,6 @@ class ReportController:
                 "total_in": total_in, "total_out": total_out, "current_stock": current_stock,
                 "revenue": round(revenue, 2),
                 "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}
-
-
 
     def report_inventory_full(self):
         """Обединен отчет за наличностите: Общо количество, Разпределение по складове, Доставено / Продадено, Средни цени,
@@ -189,13 +183,12 @@ class ReportController:
             for loc_id, qty in inv_data.get("locations", {}).items():
                 qty = float(qty)
                 if qty > 0:
-                    loc = self.location_controller.get_by_id(loc_id)
+                    loc = self._resolve_location(loc_id)   # ← НОВО
                     name = loc.name if loc else f"Склад {loc_id[:8]}"
                     warehouse_map[name] = qty
 
             warehouse_str = ", ".join(f"{k}: {v} {p.unit}" for k, v in warehouse_map.items()) \
                 if warehouse_map else "–"
-
 
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
@@ -206,14 +199,12 @@ class ReportController:
             avg_in_price = round(sum(delivered_prices) / len(delivered_prices), 2) if delivered_prices else None
             avg_in_str = f"{avg_in_price} лв." if avg_in_price else "–"
 
-            # Продадено
             sold_qty = sum(float(m.quantity) for m in moves if m.movement_type.name == "OUT")
             sold_str = f"{sold_qty} {p.unit}" if sold_qty > 0 else "–"
 
             sold_prices = [float(m.price) for m in moves if m.movement_type.name == "OUT"]
             avg_out_price = round(sum(sold_prices) / len(sold_prices), 2) if sold_prices else None
             avg_out_str = f"{avg_out_price} лв." if avg_out_price else "–"
-
 
             if moves:
                 last_move = max(moves, key=lambda x: x.date)

@@ -11,7 +11,6 @@ class InvoiceController:
         self.invoices: List[Invoice] = []
         self._reload()
 
-
     def _reload(self) -> None:
         """ Зарежда всички фактури от базата и ги превръща в обекти. """
         raw = self.repo.load() or []
@@ -21,10 +20,10 @@ class InvoiceController:
         """ Записва списъка с фактури обратно в базата. """
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         """Автоматично генерира фактура при продажба."""
 
+        # Проверка дали вече има фактура за това движение
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
@@ -43,7 +42,6 @@ class InvoiceController:
         self._save_changes()
         return invoice
 
-
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
         """Връща всички фактури или само активните."""
         if include_cancelled:
@@ -51,20 +49,22 @@ class InvoiceController:
         return [inv for inv in self.invoices if inv.is_active]
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
+        """Приема short или long ID и връща фактурата."""
         tid = str(invoice_id or "").strip()
-        if len(tid) != 8:
+        if not tid:
             return None
 
         for inv in self.invoices:
-            if inv.invoice_id.startswith(tid):
+            full_id = str(inv.invoice_id)
+            short_id = full_id[:8]
+
+            if tid == short_id or tid == full_id:
                 return inv
 
         return None
 
-
-
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        """Анулира фактура по кратко ID."""
+        """Анулира фактура по кратко или дълго ID."""
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False

@@ -26,12 +26,14 @@ class SupplierController:
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         sid = str(supplier_id or "").strip()
-        if len(sid) != 8:
+        if not sid:
             return None
 
         for supplier in self.suppliers:
-            short_id = str(supplier.supplier_id)[:8]
-            if short_id == sid:
+            full_id = str(supplier.supplier_id)
+            short_id = full_id[:8]
+
+            if sid == short_id or sid == full_id:
                 return supplier
 
         return None

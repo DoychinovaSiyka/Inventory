@@ -62,12 +62,14 @@ class UserController:
 
     def get_by_id(self, user_id: str) -> Optional[User]:
         uid = str(user_id or "").strip()
-        if len(uid) != 8:
+        if not uid:
             return None
 
         for u in self.users:
-            short_id = str(u.user_id)[:8]
-            if short_id == uid:
+            full_id = str(u.user_id)
+            short_id = full_id[:8]
+
+            if uid == short_id or uid == full_id:
                 return u
 
         return None

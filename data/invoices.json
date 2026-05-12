@@ -50,10 +50,10 @@
         "unit_price": 1.98,
         "total_price": 140.58,
         "customer": "71",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-05-11 22:17:36",
         "created": "2026-05-11 22:17:36",
-        "modified": "2026-05-11 22:17:36"
+        "modified": "2026-05-12 18:42:06"
     },
     {
         "invoice_id": "85db05ba-2ddd-403b-93f5-ab500d33ed5d",

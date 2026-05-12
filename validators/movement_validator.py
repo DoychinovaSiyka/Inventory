@@ -1,7 +1,25 @@
-import uuid
-
-
 class MovementValidator:
+
+    @staticmethod
+    def normalize_movement_type(movement_type):
+        """Нормализира типа движение до IN, OUT или MOVE."""
+        if not movement_type:
+            raise ValueError("Типът движение е задължителен.")
+
+        t = str(movement_type).strip().upper()
+
+        if t in ["IN", "OUT", "MOVE"]:
+            return t
+
+        if t.startswith("IN"):
+            return "IN"
+        if t.startswith("OUT"):
+            return "OUT"
+        if t.startswith("MO") or t.startswith("TR"):
+            return "MOVE"
+
+        raise ValueError("Невалиден тип движение. Разрешени: IN, OUT, MOVE.")
+
     @staticmethod
     def parse_quantity(quantity):
         """Превръща входа в число и чисти мерни единици."""
@@ -22,23 +40,30 @@ class MovementValidator:
             raise ValueError("Невалидно количество. Въведете число.")
 
     @staticmethod
-    def validate_in_out_rules(movement_type, product, quantity, customer, inventory_controller, location_id):
-        """Бизнес правила за наличност и клиенти."""
-        mt = str(movement_type).upper()
-
-        if mt == "OUT":
-            if not customer or str(customer).strip() == "":
-                raise ValueError("При продажба трябва да посочите клиент.")
-
-            available = inventory_controller.get_stock(product.product_id, location_id)
-            if available < quantity:
-                raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
-
-
+    def validate_in_rules(product, quantity):
+        if quantity <= 0:
+            raise ValueError("Количеството трябва да е положително.")
+        return True
 
     @staticmethod
-    def validate_move_locations(from_loc, to_loc):
-        if not from_loc or not to_loc:
+    def validate_out_rules(product, quantity, customer, inventory_controller, location_id):
+        if not customer or str(customer).strip() == "":
+            raise ValueError("При продажба трябва да посочите клиент.")
+
+        available = inventory_controller.get_stock(product.product_id, location_id)
+        if available < quantity:
+            raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
+        return True
+
+    @staticmethod
+    def validate_move_rules(product, quantity, inventory_controller, from_location_id, to_location_id):
+        if not from_location_id or not to_location_id:
             raise ValueError("Трансферът изисква два склада.")
-        if str(from_loc) == str(to_loc):
+
+        if str(from_location_id) == str(to_location_id):
             raise ValueError("Складовете трябва да са различни.")
+
+        available = inventory_controller.get_stock(product.product_id, from_location_id)
+        if available < quantity:
+            raise ValueError(f"Недостатъчна наличност за преместване! Налично: {available} {product.unit}.")
+        return True

@@ -322,5 +322,41 @@
         "modified": "2026-05-12 01:27:01",
         "from_location_id": null,
         "to_location_id": null
+    },
+    {
+        "movement_id": "62c2a841-7b19-4035-a7fb-a177edbf0adc",
+        "product_id": "c92e96cb-5f61-450c-9373-78768529df3b",
+        "product_name": "Свинска плешка без кост",
+        "user_id": "446e8664-2608-410d-9ad1-0fac87b93aad",
+        "location_id": "03d98b48",
+        "movement_type": "IN",
+        "quantity": 999999.0,
+        "unit": "кг.",
+        "price": 9.0,
+        "supplier_id": "3496b634",
+        "customer": "Общ клиент",
+        "date": "2026-05-12 19:27:43",
+        "created": "2026-05-12 19:27:43",
+        "modified": "2026-05-12 19:27:43",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "8fbe0d23-7b16-4a44-90f0-8aa89340a44b",
+        "product_id": "7a4cc13b-90f6-4be3-a25c-36121a2a1ce4",
+        "product_name": "Салам Бургас",
+        "user_id": "446e8664-2608-410d-9ad1-0fac87b93aad",
+        "location_id": "c92d9984",
+        "movement_type": "IN",
+        "quantity": 99999.0,
+        "unit": "бр.",
+        "price": 23.0,
+        "supplier_id": "3496b634",
+        "customer": "Общ клиент",
+        "date": "2026-05-12 19:42:34",
+        "created": "2026-05-12 19:42:34",
+        "modified": "2026-05-12 19:42:34",
+        "from_location_id": null,
+        "to_location_id": null
     }
 ]

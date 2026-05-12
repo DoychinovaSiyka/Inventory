@@ -30,6 +30,7 @@ class InvoiceView:
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
 
+
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
             MenuItem("1", "Активни фактури", self.show_all),
