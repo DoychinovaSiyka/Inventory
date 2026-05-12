@@ -1,44 +1,14 @@
 import uuid
-from datetime import datetime
 
 
 class MovementValidator:
-
-    @staticmethod
-    def validate_uuid(value, field_name):
-        if value is None or str(value).strip() == "":
-            raise ValueError(f"{field_name} е задължително поле.")
-
-        val_str = str(value).strip()
-        if len(val_str) == 8:
-            for c in val_str:
-                if not c.isalnum():
-                    raise ValueError(f"{field_name} съдържа невалидни символи.")
-            return
-
-        try:
-            uuid.UUID(val_str)
-        except Exception:
-            raise ValueError(f"{field_name} е невалидно ID. Въведете 8 символа или пълен UUID.")
-
-    @staticmethod
-    def normalize_movement_type(movement_type):
-        mt = str(movement_type).strip().upper()
-
-        mapping = {"1": "IN", "2": "OUT", "3": "MOVE", "IN": "IN", "OUT": "OUT", "MOVE": "MOVE"}
-        if mt not in mapping:
-            raise ValueError("Невалиден тип движение. Допустими: IN, OUT, MOVE.")
-
-        return mapping[mt]
-
     @staticmethod
     def parse_quantity(quantity):
+        """Превръща входа в число и чисти мерни единици."""
         if quantity is None or str(quantity).strip() == "":
             raise ValueError("Количеството е задължително.")
 
-        raw = str(quantity).lower().strip()
-        raw = raw.replace(",", ".")
-
+        raw = str(quantity).lower().strip().replace(",", ".")
         tokens = ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]
         for t in tokens:
             raw = raw.replace(t, "")
@@ -49,106 +19,25 @@ class MovementValidator:
                 raise ValueError("Количеството трябва да е по-голямо от 0.")
             return round(q, 2)
         except Exception:
-            raise ValueError("Невалидно количество. Въведете число (напр. 5 или 12.50).")
-
-
-    @staticmethod
-    def parse_price(price):
-        if price is None or str(price).strip() == "":
-            raise ValueError("Цената е задължителна.")
-
-        p = str(price).lower().strip()
-
-        tokens = ["лв.", "лв", "lv.", "lv", " "]
-        for t in tokens:
-            p = p.replace(t, "")
-
-        p = p.replace(",", ".")
-
-        try:
-            value = float(p)
-            if value < 0:
-                raise ValueError("Цената не може да е отрицателна.")
-            return round(value, 2)
-        except Exception:
-            raise ValueError("Невалидна цена. Въведете число.")
-
-
-    @staticmethod
-    def validate_user_exists(user_id, user_controller):
-        user = user_controller.get_by_id(user_id)
-        if not user:
-            raise ValueError(f"Потребител с ID {user_id} не съществува.")
-        return user.user_id
-
-    @staticmethod
-    def validate_product_exists(product_id, product_controller):
-        product = product_controller.get_by_id(product_id)
-        if not product:
-            raise ValueError(f"Продукт с ID {product_id} не съществува.")
-        return product
-
-
-
-    @staticmethod
-    def validate_location_id(loc_id, location_controller):
-        if loc_id is None or str(loc_id).strip() == "":
-            raise ValueError("Код на склад е задължителен.")
-
-        loc_input = str(loc_id).strip()
-        locations = location_controller.get_all()
-
-        if loc_input.isdigit() and len(loc_input) < 3:
-            num = int(loc_input)
-            if 1 <= num <= len(locations):
-                return locations[num - 1].location_id
-            raise ValueError(f"Невалиден номер. Изберете от 1 до {len(locations)}.")
-
-
-        found_loc = location_controller.get_by_id(loc_input)
-        if found_loc:
-            return found_loc.location_id
-        raise ValueError(f"Склад с ID/номер '{loc_input}' не е намерен.")
-
-
+            raise ValueError("Невалидно количество. Въведете число.")
 
     @staticmethod
     def validate_in_out_rules(movement_type, product, quantity, customer, inventory_controller, location_id):
+        """Бизнес правила за наличност и клиенти."""
         mt = str(movement_type).upper()
-
-        if mt == "IN":
-            if customer:
-                raise ValueError("При заприхождаване (IN) не може да има клиент.")
 
         if mt == "OUT":
             if not customer or str(customer).strip() == "":
-                raise ValueError("При продажба (OUT) трябва да посочите име на клиент.")
+                raise ValueError("При продажба трябва да посочите клиент.")
 
             available = inventory_controller.get_stock(product.product_id, location_id)
             if available < quantity:
-                raise ValueError(f"Недостатъчна наличност. В този склад има само {available} {product.unit}.")
-
-        if mt == "MOVE":
-            if customer:
-                raise ValueError("Вътрешните премествания (MOVE) не използват клиент.")
-
-
+                raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
 
     @staticmethod
     def validate_move_locations(from_loc, to_loc):
+        """Валидация на трансфер."""
         if not from_loc or not to_loc:
-            raise ValueError("MOVE операцията изисква изходен и целеви склад.")
-
+            raise ValueError("Трансферът изисква два склада.")
         if str(from_loc) == str(to_loc):
-            raise ValueError("Не можете да местите стока в същия склад.")
-
-    @staticmethod
-    def validate_date(date_str):
-        if not date_str:
-            return datetime.now().strftime("%Y-%m-%d")
-
-        try:
-            datetime.strptime(date_str.strip(), "%Y-%m-%d")
-            return date_str.strip()
-        except Exception:
-            raise ValueError("Невалидна дата. Използвайте формат ГГГГ-ММ-ДД.")
+            raise ValueError("Складовете трябва да са различни.")

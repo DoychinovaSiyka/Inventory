@@ -4,7 +4,6 @@ from filters import report_filters
 
 
 class ReportResult:
-    # контейнер за резултатите от справките
     def __init__(self, summary, data):
         self.summary = summary
         self.data = data
@@ -89,7 +88,6 @@ class ReportController:
 
 
     def report_movements(self):
-        # Списък на всички движения
         rows = []
         for m in self.movement_controller.movements:
             mtype = m.movement_type.name
@@ -141,36 +139,6 @@ class ReportController:
 
 
 
-    # Обобщена справка за наличностите по локации
-    def report_inventory_summary(self):
-        rows = []
-        for p in self.product_controller.get_all():
-            pid = str(p.product_id)
-            stock = self.inventory_controller.get_total_stock(pid)
-
-            loc_names = []
-            inv_data = self.inventory_controller.data.get("products", {}).get(pid, {})
-            for loc_id, qty in inv_data.get("locations", {}).items():
-                if float(qty) > 0:
-                    loc_obj = self.location_controller.get_by_id(loc_id)
-                    loc_names.append(loc_obj.name if loc_obj else "Склад")
-
-            loc_str = ", ".join(loc_names) if loc_names else "Няма наличност"
-
-            # Броим за продадени само тези, чиито фактури не са анулирани
-            sold = 0.0
-            active_invoices = [i for i in self.invoice_controller.get_all() if i.is_active]
-            for inv in active_invoices:
-                if inv.product == p.name:
-                    sold += float(inv.quantity)
-
-            rows.append({"product": p.name, "available": stock,
-                         "sold": f"{sold} {p.unit}" if sold > 0 else "0", "top_locations": loc_str})
-
-        summary = {"total": len(rows)}
-        return ReportResult(summary, rows)
-
-
 
 
     # Пълен жизнен цикъл на продукт
@@ -206,27 +174,19 @@ class ReportController:
                 "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}
 
     def report_inventory_full(self):
-        """Обединен отчет за наличностите:
-        - Общо количество
-        - Разпределение по складове
-        - Доставено / Продадено
-        - Средни цени
-        - Последно движение
-        """
+        """Обединен отчет за наличностите: Общо количество, Разпределение по складове, Доставено / Продадено, Средни цени,
+        Последно движение """
 
         rows = []
 
         for p in self.product_controller.get_all():
             pid = str(p.product_id)
 
-            # --- ОБЩО НАЛИЧНО ---
             total_stock = self.inventory_controller.get_total_stock(pid)
-
-            # Показваме само продукти с наличност > 0
             if total_stock == 0:
                 continue
 
-            # --- РАЗПРЕДЕЛЕНИЕ ПО СКЛАДОВЕ ---
+
             warehouse_map = {}
             inv_data = self.inventory_controller.data.get("products", {}).get(pid, {})
             for loc_id, qty in inv_data.get("locations", {}).items():
@@ -239,10 +199,10 @@ class ReportController:
             warehouse_str = ", ".join(f"{k}: {v} {p.unit}" for k, v in warehouse_map.items()) \
                 if warehouse_map else "–"
 
-            # --- ДВИЖЕНИЯ ---
+
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-            # Доставено
+
             delivered_qty = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
             delivered_str = f"{delivered_qty} {p.unit}" if delivered_qty > 0 else "–"
 
@@ -265,16 +225,9 @@ class ReportController:
             else:
                 last_move_str = "–"
 
-            rows.append({
-                "product": p.name,
-                "total": f"{total_stock} {p.unit}",
-                "warehouses": warehouse_str,
-                "delivered": delivered_str,
-                "sold": sold_str,
-                "avg_in_price": avg_in_str,
-                "avg_out_price": avg_out_str,
-                "last_move": last_move_str
-            })
+            rows.append({"product": p.name, "total": f"{total_stock} {p.unit}", "warehouses": warehouse_str,
+                         "delivered": delivered_str, "sold": sold_str, "avg_in_price": avg_in_str,
+                         "avg_out_price": avg_out_str, "last_move": last_move_str})
 
         summary = {"total_products": len(rows)}
         return ReportResult(summary, rows)

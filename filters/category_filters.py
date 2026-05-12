@@ -19,6 +19,7 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
 
     return results
 
+
 def get_all_children_objects(categories: List[Category], parent_id: str) -> List[Category]:
     """Рекурсивно събира ВСИЧКИ обекти, които са наследници на parent_id."""
     results = []

@@ -4,7 +4,6 @@ import re
 class UserValidator:
     @staticmethod
     def validate_user_data(username: str, password: str, email: str, role: str, status: str):
-        """Основна валидация при регистрация или редакция."""
 
         if not username or len(username.strip()) < 3:
             raise ValueError("Потребителското име трябва да е поне 3 символа.")

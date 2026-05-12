@@ -1,8 +1,8 @@
 from typing import List, Optional
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_filters import filter_categories, get_all_children_objects, get_all_children_ids
-from analytics.category_analytics import build_category_tree, get_category_stats
+from filters.category_filters import filter_categories
+from filters.category_analytics import build_category_tree, get_category_stats
 
 
 class CategoryController:
@@ -19,6 +19,8 @@ class CategoryController:
     def _save_changes(self) -> None:
         """Записва промените в репозиторито (JSON файл)."""
         self.repo.save([c.to_dict() for c in self.categories])
+
+
 
     def add(self, category_data: dict, user_id: str) -> Category:
         """Добавя категория с пълна валидация на име, описание и йерархия."""
@@ -45,6 +47,7 @@ class CategoryController:
         self.categories.append(category)
         self._save_changes()
         return category
+
 
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
@@ -83,6 +86,8 @@ class CategoryController:
         self._save_changes()
         return True
 
+
+
     def get_by_id(self, category_id: str) -> Optional[Category]:
         """Търси категория по точно ID или по начални символи."""
         target = str(category_id or "").strip()
@@ -97,6 +102,7 @@ class CategoryController:
                 return c
         return None
 
+
     def get_all_hierarchical_ids(self, category_id: str) -> list:
         """Връща списък от ID-то на категорията и всички нейни подкатегории (надолу по дървото)."""
         result = [category_id]
@@ -109,6 +115,7 @@ class CategoryController:
                 result.extend(self.get_all_hierarchical_ids(cat.category_id))
 
         return list(set(result))
+
 
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез филтър модула."""
@@ -142,7 +149,6 @@ class CategoryController:
             products = []
 
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
-
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
         self._save_changes()
         return True

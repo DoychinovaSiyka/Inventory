@@ -20,19 +20,10 @@ class InvoiceController:
         """ Записва списъка с фактури обратно в базата. """
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-    def add(self, invoice_data: dict, user_id: str) -> Invoice:
-        """ Ръчно добавяне на фактура с пълна валидация. """
-        InvoiceValidator.validate_all(**invoice_data)
 
-        invoice = Invoice(**invoice_data)
-        self.invoices.append(invoice)
-        self._save_changes()
-
-        return invoice
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
-        """Автоматично генерира фактура при продажба. Метод за синхрон между Склад и Счетоводство."""
-        # Проверка за съществуваща фактура към това движение
+        """Автоматично генерира фактура при продажба."""
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
@@ -79,7 +70,6 @@ class InvoiceController:
         """ АНУЛИРА фактура"""
         inv = self.get_by_id(invoice_id)
         if not inv or not inv.is_active:
-            # Ако не съществува или вече е анулирана
             return False
 
 
@@ -90,20 +80,4 @@ class InvoiceController:
 
 
 
-    def search_by_customer(self, keyword: str) -> List[Invoice]:
-        """ Филтрира фактури по име на контрагент. """
-        return invoice_filters.filter_by_customer(self.invoices, keyword)
 
-    def search_by_product(self, keyword: str) -> List[Invoice]:
-        """ Филтрира фактури по име на артикул. """
-        return invoice_filters.filter_by_product(self.invoices, keyword)
-
-    def search_by_date(self, date_str: str) -> List[Invoice]:
-        """ Връща всички фактури за конкретен ден. """
-        InvoiceValidator.validate_date(date_str)
-        return invoice_filters.filter_by_date(self.invoices, date_str)
-
-    def advanced_search(self, **kwargs) -> List[Invoice]:
-        InvoiceValidator.validate_search_filters(kwargs.get("start_date"), kwargs.get("end_date"), kwargs.get("min_total"),
-                                                 kwargs.get("max_total"))
-        return invoice_filters.filter_advanced(self.invoices, **kwargs)

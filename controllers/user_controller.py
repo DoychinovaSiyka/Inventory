@@ -8,7 +8,7 @@ class UserController:
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
 
-        # Зареждам потребителите от файла
+
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []

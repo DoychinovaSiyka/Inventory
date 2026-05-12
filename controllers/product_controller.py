@@ -52,7 +52,7 @@ class ProductController:
         unit = self.validator.validate_unit(product_data.get("unit", "бр."))
         description = product_data.get("description", "").strip()
 
-        # категории
+
         categories = []
         raw_ids = product_data.get("category_ids", [])
         id_list = raw_ids if isinstance(raw_ids, list) else [raw_ids]

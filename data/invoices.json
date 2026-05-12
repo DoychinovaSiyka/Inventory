@@ -8,10 +8,10 @@
         "unit_price": 2.0,
         "total_price": 908.0,
         "customer": "454",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-05-11 20:15:11",
         "created": "2026-05-11 20:15:11",
-        "modified": "2026-05-11 20:15:11"
+        "modified": "2026-05-12 12:19:38"
     },
     {
         "invoice_id": "7ad31159-a39f-4330-aaa5-8545e6c1d6aa",

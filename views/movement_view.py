@@ -214,34 +214,4 @@ class MovementView:
 
 
 
-    def _format_movement_row(self, m):
-        prod = self.product_controller.get_by_id(m.product_id)
-        p_name = prod.name[:15] if prod else "---"
-
-        if isinstance(m.movement_type, MovementType):
-            m_type = m.movement_type.name
-        else:
-            m_type = str(m.movement_type)
-
-        if m_type == "IN":
-            supp = self.supplier_controller.get_by_id(m.supplier_id)
-            partner = (supp.name if supp else "Доставчик")[:12]
-            loc = self.location_controller.get_by_id(m.location_id)
-            loc_text = loc.name[:10] if loc else "Склад"
-
-        elif m_type == "OUT":
-            partner = (m.customer if m.customer else "Клиент")[:12]
-            loc = self.location_controller.get_by_id(m.location_id)
-            loc_text = loc.name[:10] if loc else "Склад"
-
-        else:
-            partner = "Трансфер"
-            f_loc = self.location_controller.get_by_id(m.from_location_id)
-            t_loc = self.location_controller.get_by_id(m.to_location_id)
-            loc_text = f"{f_loc.name[:5]}->{t_loc.name[:5]}" if f_loc and t_loc else "MOVE"
-
-        return [str(m.movement_id)[:8], str(m.date)[5:16], m_type, p_name,
-                f"{m.quantity:.2f}", f"{float(m.price):.2f}", partner, loc_text]
-
-
 

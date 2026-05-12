@@ -9,7 +9,8 @@ class ProductMenuView:
         self.category_controller = category_controller
 
         self.allowed_units = ["кг.", "бр.", "л.", "пакет"]
-        self.sort_view = ProductSortView(product_controller, None, self)
+        self.sort_view = ProductSortView(product_controller, self)
+
 
     def _print_products(self, products, title=""):
         if not products:

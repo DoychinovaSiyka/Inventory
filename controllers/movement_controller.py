@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Optional, List
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
-from filters import movement_filters
 
 
 class MovementController:
@@ -117,13 +116,4 @@ class MovementController:
                 print(f"Движението е записано, но фактурата не беше генерирана: {e}")
 
         return movement
-
-    def advanced_filter(self, **kwargs) -> List[Movement]:
-        """Филтриране на историята по различни критерии."""
-        return movement_filters.filter_advanced(self.movements, **kwargs)
-
-    def filter_deliveries(self, keyword: str) -> List[Movement]:
-        """филтриране само за доставки (IN)."""
-        return movement_filters.filter_deliveries(self.movements, keyword, self.product_controller, self.supplier_controller)
-
 
