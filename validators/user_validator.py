@@ -21,7 +21,7 @@ class UserValidator:
         if not re.match(email_regex, email):
             raise ValueError(f"Невалиден формат на имейл: {email}")
 
-        # Валидация на системни константи
+
         UserValidator.validate_role(role)
         UserValidator.validate_status(status)
 
