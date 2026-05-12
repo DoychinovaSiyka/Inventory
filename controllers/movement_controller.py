@@ -44,7 +44,6 @@ class MovementController:
 
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         """Продажба: Записва движение 'ИЗХОД' с РЕАЛНАТА продажна цена."""
-        # Проверка на наличността преди извършване на операцията
         current_stock = self.inventory_controller.get_stock(product_id, location_id)
         if current_stock < float(quantity):
             raise ValueError(f"Недостатъчна наличност в избрания склад! Налично: {current_stock}")
@@ -54,7 +53,7 @@ class MovementController:
 
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
-        """Трансфер: Преместване на стока между два склада (без промяна на цена)."""
+        """Трансфер: Преместване на стока между два склада."""
         return self.add(product_id=product_id, user_id=user_id, location_id=None,
                         movement_type="MOVE", quantity=quantity, price="0",
                         from_location_id=from_loc, to_location_id=to_loc)

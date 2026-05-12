@@ -67,7 +67,6 @@ class InvoiceController:
 
 
         inv.cancel()
-
         self._save_changes()
         return True
 

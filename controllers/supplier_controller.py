@@ -25,7 +25,6 @@ class SupplierController:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        """Търсене по кратко ID."""
         sid = str(supplier_id).strip()
         if not sid:
             return None

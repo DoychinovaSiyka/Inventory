@@ -117,7 +117,6 @@ class ProductController:
         return product_filters.filter_combined(self.products, category_ids=category_ids)
 
     def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
-        """Сортиране само по име или цена."""
 
         if sort_type == "name":
             key_fn = lambda p: p.name.lower()

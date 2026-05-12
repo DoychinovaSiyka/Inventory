@@ -31,7 +31,6 @@ class ReportController:
         return rows
 
     def _parse_number(self, value):
-        """Приема '600.0', '600.0 л.', '600 л', '600' и връща float."""
         if isinstance(value, (int, float)):
             return float(value)
 
@@ -173,6 +172,8 @@ class ReportController:
                 "revenue": round(revenue, 2),
                 "fifo_cost": round(fifo_cost, 2), "profit": round(revenue - fifo_cost, 2)}
 
+
+
     def report_inventory_full(self):
         """Обединен отчет за наличностите: Общо количество, Разпределение по складове, Доставено / Продадено, Средни цени,
         Последно движение """
@@ -185,7 +186,6 @@ class ReportController:
             total_stock = self.inventory_controller.get_total_stock(pid)
             if total_stock == 0:
                 continue
-
 
             warehouse_map = {}
             inv_data = self.inventory_controller.data.get("products", {}).get(pid, {})
@@ -202,7 +202,6 @@ class ReportController:
 
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-
             delivered_qty = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
             delivered_str = f"{delivered_qty} {p.unit}" if delivered_qty > 0 else "–"
 
@@ -218,7 +217,7 @@ class ReportController:
             avg_out_price = round(sum(sold_prices) / len(sold_prices), 2) if sold_prices else None
             avg_out_str = f"{avg_out_price} лв." if avg_out_price else "–"
 
-            # Последно движение
+
             if moves:
                 last_move = max(moves, key=lambda x: x.date)
                 last_move_str = f"{last_move.movement_type.name} – {str(last_move.date)[:10]}"

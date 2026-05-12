@@ -24,7 +24,7 @@ class UserController:
             self._create_default_operator()
 
     def find_user_flexible(self, identifier: str) -> Optional[User]:
-        # Позволява търсене по ID или username
+        # търсене по ID или username
         if not identifier:
             return None
 
