@@ -36,10 +36,10 @@
         "unit_price": 12.0,
         "total_price": 144.0,
         "customer": "EOPWE",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-05-11 20:17:23",
         "created": "2026-05-11 20:17:23",
-        "modified": "2026-05-11 20:17:23"
+        "modified": "2026-05-12 17:03:37"
     },
     {
         "invoice_id": "8606adb8-29d9-4930-8f43-f06a0519e467",
@@ -64,9 +64,9 @@
         "unit_price": 4.0,
         "total_price": 44.0,
         "customer": "еудисзд",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-05-12 01:27:01",
         "created": "2026-05-12 01:27:01",
-        "modified": "2026-05-12 01:27:01"
+        "modified": "2026-05-12 17:10:07"
     }
 ]

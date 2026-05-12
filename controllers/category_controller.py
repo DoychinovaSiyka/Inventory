@@ -92,7 +92,7 @@ class CategoryController:
         return None
 
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
-        """ Връща списък от всички подкатегории"""
+
         parent_cat = self.get_by_id(parent_short_id)
         if not parent_cat:
             return []
@@ -104,7 +104,6 @@ class CategoryController:
                 result.extend(self.get_all_hierarchical_ids(cat.category_id[:8]))
 
         return list(set(result))
-
 
     def search(self, keyword: str) -> List[Category]:
         """Търсене по име или описание чрез филтър модула."""
