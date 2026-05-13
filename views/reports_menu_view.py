@@ -34,6 +34,8 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
+
+
     def format_card(self, item):
         lines = []
         lines.append("─" * 40)
@@ -59,7 +61,6 @@ class ReportsView:
         result = self.controller.report_inventory_full()
 
         print("\nОБЕДИНЕН ОТЧЕТ – КАРТИ\n")
-
         for item in result.data:
             print(self.format_card(item))
             print()

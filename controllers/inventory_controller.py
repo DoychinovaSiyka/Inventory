@@ -11,13 +11,11 @@ class InventoryController:
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Вътрешните данни са винаги сурова структура, изградена от движенията
+
         self.data = {"products": {}}
         self.rebuild_inventory_from_movements(self.movement_controller.movements)
 
-    # -------------------------------------------------------
-    #   ГЕНЕРИРАНЕ НА ЧОВЕШКИ ОТЧЕТ ОТ self.data
-    # -------------------------------------------------------
+
     def _build_inventory(self):
         rows = []
 
@@ -55,28 +53,15 @@ class InventoryController:
             else:
                 last_move_str = "–"
 
-            row = {
-                "product": p.name,
-                "unit": p.unit,
-                "total": total_stock,
-                "warehouses": warehouse_map,
-                "delivered": delivered_qty,
-                "sold": sold_qty,
-                "avg_in_price": avg_in_price,
-                "avg_out_price": avg_out_price,
-                "last_move": last_move_str
-            }
+            row = {"product": p.name, "unit": p.unit, "total": total_stock, "warehouses": warehouse_map,
+                   "delivered": delivered_qty, "sold": sold_qty, "avg_in_price": avg_in_price, "avg_out_price": avg_out_price,
+                   "last_move": last_move_str}
 
             rows.append(row)
 
-        return {
-            "summary": {"total_products": len(rows)},
-            "products": rows
-        }
+        return {"summary": {"total_products": len(rows)}, "products": rows}
 
-    # -------------------------------------------------------
-    #   ЗАПИС – ВЕЧЕ ЗАПИСВАМЕ ОТЧЕТ, НЕ СУРОВИ ДАННИ
-    # -------------------------------------------------------
+
     def _save(self) -> None:
         human = self._build_inventory()
         self.repo.save(human)
@@ -86,9 +71,8 @@ class InventoryController:
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
-    # -------------------------------------------------------
-    #   short/long ID за продукт
-    # -------------------------------------------------------
+
+
     def _resolve_product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -104,9 +88,7 @@ class InventoryController:
 
         return user_input
 
-    # -------------------------------------------------------
-    #   short/long ID за локации
-    # -------------------------------------------------------
+
     def _resolve_location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -123,9 +105,7 @@ class InventoryController:
 
         return None
 
-    # -------------------------------------------------------
-    #   ВЗИМАНЕ НА НАЛИЧНОСТ
-    # -------------------------------------------------------
+
     def get_stock(self, product_id: str, location_id: str) -> float:
         pid = self._resolve_product_id(product_id)
         lid = self._resolve_location_id(location_id)
@@ -153,9 +133,7 @@ class InventoryController:
 
         return total
 
-    # -------------------------------------------------------
-    #   УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ (IN)
-    # -------------------------------------------------------
+
     def increase_stock(self, product_id: str, quantity: float, location_id: str) -> None:
         pid = self._resolve_product_id(product_id)
         lid = self._resolve_location_id(location_id)
@@ -172,9 +150,8 @@ class InventoryController:
         current_qty = InventoryValidator.parse_and_validate_number(locations.get(lid, 0.0))
         locations[lid] = round(current_qty + qty_to_add, 2)
 
-    # -------------------------------------------------------
-    #   НАМАЛЯВАНЕ НА НАЛИЧНОСТ (OUT)
-    # -------------------------------------------------------
+
+
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._resolve_product_id(product_id)
         lid = self._resolve_location_id(location_id)
@@ -190,18 +167,15 @@ class InventoryController:
         current_qty = InventoryValidator.parse_and_validate_number(locations.get(lid, 0.0))
 
         try:
-            InventoryValidator.validate_stock_availability(
-                product_info, qty_to_remove, current_qty, lid
-            )
+            InventoryValidator.validate_stock_availability(product_info, qty_to_remove, current_qty, lid)
         except ValueError:
             return False
 
         locations[lid] = round(current_qty - qty_to_remove, 2)
         return True
 
-    # -------------------------------------------------------
-    #   ПРЕМЕСТВАНЕ НА НАЛИЧНОСТ (MOVE)
-    # -------------------------------------------------------
+
+
     def move_stock(self, product_id: str, from_location_id: str, to_location_id: str, quantity: float) -> None:
         pid = self._resolve_product_id(product_id)
         from_lid = self._resolve_location_id(from_location_id)
@@ -213,9 +187,8 @@ class InventoryController:
         self.decrease_stock(pid, quantity, from_lid)
         self.increase_stock(pid, quantity, to_lid)
 
-    # -------------------------------------------------------
-    #   ПЪЛЕН REBUILD (атомичен)
-    # -------------------------------------------------------
+
+
     def rebuild_inventory_from_movements(self, movements) -> None:
         self.data = {"products": {}}
 
@@ -243,5 +216,5 @@ class InventoryController:
                 if to_lid:
                     self.increase_stock(pid, qty, to_lid)
 
-        # Записваме само веднъж – вече като човешки отчет
+
         self._save()

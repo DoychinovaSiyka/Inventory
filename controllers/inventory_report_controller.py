@@ -27,19 +27,17 @@ class ReportController:
             return None
         return self.location_controller.get_by_id(str(loc_id))
 
+
+
     def _map_invoices_to_data(self, invoices):
         rows = []
         for i in invoices:
             status = "АКТИВНА" if i.is_active else "АНУЛИРАНА"
-            rows.append({
-                "invoice_number": i.invoice_id[:8],
-                "date": str(i.date)[:10],
-                "client": i.customer,
-                "product": i.product,
-                "total_price": i.total_price,
-                "status": status
-            })
+            rows.append({"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10], "client": i.customer,
+                         "product": i.product, "total_price": i.total_price, "status": status})
         return rows
+
+
 
     def _parse_number(self, value):
         if isinstance(value, (int, float)):
@@ -52,20 +50,15 @@ class ReportController:
         except:
             return 0.0
 
-    # -----------------------------
-    #   ПРОДАЖБИ
-    # -----------------------------
+
     def report_sales(self):
         all_invoices = self.invoice_controller.get_all() or []
         active_invoices = [i for i in all_invoices if i.is_active]
 
         total_sum = sum(float(i.total_price) for i in active_invoices)
 
-        summary = {
-            "total_count": len(active_invoices),
-            "total_revenue": round(total_sum, 2),
-            "cancelled_count": len(all_invoices) - len(active_invoices)
-        }
+        summary = {"total_count": len(active_invoices), "total_revenue": round(total_sum, 2),
+                   "cancelled_count": len(all_invoices) - len(active_invoices)}
 
         data = self._map_invoices_to_data(active_invoices)
         return ReportResult(summary, data)
@@ -86,9 +79,8 @@ class ReportController:
         data = self._map_invoices_to_data(filtered)
         return ReportResult(summary, data)
 
-    # -----------------------------
-    #   ДВИЖЕНИЯ
-    # -----------------------------
+
+
     def report_movements(self):
         rows = []
         for m in self.movement_controller.movements:
@@ -106,27 +98,19 @@ class ReportController:
                 from_loc = loc.name if loc else "Склад"
                 to_loc = m.customer or "Клиент"
 
-            else:  # MOVE
+            else:
                 from_loc = fl.name if fl else "Източник"
                 to_loc = tl.name if tl else "Цел"
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "type": mtype,
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_loc,
-                "to": to_loc
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "type": mtype,
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "from": from_loc, "to": to_loc})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
 
-    # -----------------------------
-    #   ДОСТАВКИ
-    # -----------------------------
+
+
+
     def report_deliveries_all(self, keyword=None):
         all_moves = self.movement_controller.movements
         deliveries = report_filters.filter_movements_by_type(all_moves, "IN")
@@ -141,15 +125,8 @@ class ReportController:
                 if kw not in m.product_name.lower() and kw not in supplier_name.lower():
                     continue
 
-            rows.append({
-                "movement_id": m.movement_id[:8],
-                "date": str(m.date)[:10],
-                "product": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "price": float(m.price or 0),
-                "supplier": supplier_name
-            })
+            rows.append({"movement_id": m.movement_id[:8], "date": str(m.date)[:10], "product": m.product_name,
+                         "quantity": m.quantity, "unit": m.unit, "price": float(m.price or 0), "supplier": supplier_name})
 
         summary = {"total": len(rows)}
         return ReportResult(summary, rows)
@@ -189,21 +166,13 @@ class ReportController:
             else:
                 last_move_str = "–"
 
-            row = {
-                "product": p.name,
-                "unit": p.unit,
-                "total": total_stock,
-                "warehouses": warehouse_map,
-                "delivered": delivered_qty,
-                "sold": sold_qty,
-                "avg_in_price": avg_in_price,
-                "avg_out_price": avg_out_price,
-                "last_move": last_move_str
-            }
+            row = {"product": p.name, "unit": p.unit, "total": total_stock, "warehouses": warehouse_map,
+                   "delivered": delivered_qty, "sold": sold_qty, "avg_in_price": avg_in_price,
+                   "avg_out_price": avg_out_price, "last_move": last_move_str}
 
             rows.append(row)
 
         summary = {"total_products": len(rows)}
 
-        # ❗ НИЩО НЕ ЗАПИСВАМЕ В JSON
+
         return ReportResult(summary, rows)

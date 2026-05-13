@@ -14,7 +14,7 @@ class MovementView:
         self.inventory_controller = inventory_controller
 
 
-    def _ask_float(self, prompt, allow_empty=False, default=None):
+    def _float(self, prompt, allow_empty=False, default=None):
         while True:
             val = input(prompt).strip()
             if not val and allow_empty:
@@ -29,7 +29,6 @@ class MovementView:
                 return num
             except ValueError:
                 print("Невалидно число. Опитайте пак.")
-
 
 
     def _select_item(self, items, label):
@@ -71,6 +70,7 @@ class MovementView:
             else:
                 print("Невалиден избор. Опитайте пак.")
 
+
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
             MenuItem("1", "Доставка (вход)", self.process_delivery),
@@ -84,7 +84,6 @@ class MovementView:
                 break
             if menu.execute(choice, user) == "break":
                 break
-
 
 
     def process_delivery(self, user):
@@ -101,19 +100,17 @@ class MovementView:
         if not location:
             return
 
-        qty = self._ask_float(f"Количество ({product.unit}): ")
+        qty = self._float(f"Количество ({product.unit}): ")
         if qty is None:
             return
 
-        price = self._ask_float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True, default=product.price)
+        price = self._float(f"Цена (Enter за {product.price} лв.): ",
+                            allow_empty=True, default=product.price)
         if price == "cancel":
             return
 
-        # 🔥 ПЪЛНИ UUID — НИКАКВИ [:8]
         movement = self.movement_controller.add_in(
-            str(product.product_id),
-            qty,
-            price,
+            str(product.product_id), qty, price,
             str(location.location_id),
             str(supplier.supplier_id),
             str(user.user_id)
@@ -125,11 +122,12 @@ class MovementView:
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
 
 
-
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
-            stock = self.inventory_controller.get_stock(str(product.product_id), str(loc.location_id))
+            stock = self.inventory_controller.get_stock(
+                str(product.product_id), str(loc.location_id)
+            )
             if stock > 0:
                 valid.append((loc, f"{loc.name} (налично: {stock:.2f} {product.unit})"))
         return valid
@@ -169,30 +167,33 @@ class MovementView:
 
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
 
-        max_stock = self.inventory_controller.get_stock(str(product.product_id), str(location.location_id))
-        qty = self._ask_float(f"Количество (макс {max_stock}): ")
+        max_stock = self.inventory_controller.get_stock(
+            str(product.product_id), str(location.location_id)
+        )
+
+        qty = self._float(f"Количество (макс {max_stock}): ")
         if qty is None:
             return
         if qty > max_stock:
             print(f"Няма толкова наличност ({max_stock}).")
             return
 
-        sale_price = self._ask_float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True, default=product.price)
+        sale_price = self._float(
+            f"Цена (Enter за {product.price} лв.): ",
+            allow_empty=True, default=product.price
+        )
         if sale_price == "cancel":
             return
 
         try:
             self.movement_controller.add_out(
-                str(product.product_id),
-                qty,
-                customer,
-                str(location.location_id),
-                str(user.user_id),
-                sale_price
+                str(product.product_id), qty, customer,
+                str(location.location_id), str(user.user_id), sale_price
             )
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
+
 
     def process_transfer(self, user):
         print("\nВътрешно преместване")
@@ -236,7 +237,10 @@ class MovementView:
         print(f"\nИзбран склад ИЗТОЧНИК: {from_loc.name} (налично: {available:.2f} {product.unit})")
 
         print("\nИзбор на склад ПОЛУЧАТЕЛ:")
-        all_locs = [loc for loc in self.location_controller.get_all() if str(loc.location_id) != from_loc_id]
+        all_locs = [
+            loc for loc in self.location_controller.get_all()
+            if str(loc.location_id) != from_loc_id
+        ]
 
         for i, loc in enumerate(all_locs, 1):
             print(f"{i}. {loc.name} (ID: {loc.location_id})")
@@ -253,7 +257,10 @@ class MovementView:
                 print("Невалиден избор.")
                 return
         else:
-            matches = [loc for loc in all_locs if str(loc.location_id).startswith(choice)]
+            matches = [
+                loc for loc in all_locs
+                if str(loc.location_id).startswith(choice)
+            ]
             if len(matches) == 1:
                 to_loc = matches[0]
             else:
@@ -262,7 +269,7 @@ class MovementView:
 
         to_loc_id = str(to_loc.location_id)
 
-        qty = self._ask_float(f"Количество ({product.unit}, макс {available}): ")
+        qty = self._float(f"Количество ({product.unit}, макс {available}): ")
         if qty is None:
             return
         if qty > available:
@@ -271,11 +278,7 @@ class MovementView:
 
         try:
             self.movement_controller.move_stock(
-                product_id,
-                qty,
-                from_loc_id,
-                to_loc_id,
-                str(user.user_id)
+                product_id, qty, from_loc_id, to_loc_id, str(user.user_id)
             )
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} към {to_loc.name}.")
         except Exception as e:

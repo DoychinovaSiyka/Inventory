@@ -7,14 +7,11 @@ from validators.movement_validator import MovementValidator
 
 
 class MovementController:
-    """
-    Контролер за всички складови движения.
-    Гарантира:
+    """Контролер за всички складови движения.
     - коректно записване в movements.json
     - коректно обновяване на inventory.json
     - валидни исторически цени
-    - уникални movement_id (UUID)
-    """
+    - уникални movement_id (UUID) """
 
     def __init__(self, repo, product_controller, user_controller,
                  location_controller, supplier_controller, invoice_controller):
@@ -38,19 +35,14 @@ class MovementController:
             except Exception:
                 continue
 
-        # Подаваме го от main.py
         self.inventory_controller = None
 
-    # ---------------------------------------------------------
-    #   Връзка с InventoryController
-    # ---------------------------------------------------------
 
+    # Връзка с InventoryController
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
-    # ---------------------------------------------------------
-    #   Помощни методи
-    # ---------------------------------------------------------
+
 
     def _resolve_location_id(self, loc_id: Optional[str]) -> Optional[str]:
         if not loc_id:
@@ -67,20 +59,11 @@ class MovementController:
         """Записва всички движения в movements.json"""
         self.repo.save([m.to_dict() for m in self.movements])
 
-    # ---------------------------------------------------------
-    #   ПУБЛИЧНИ МЕТОДИ ЗА ДВИЖЕНИЯ
-    # ---------------------------------------------------------
+
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
-        movement = self._create_movement(
-            product_id=product_id,
-            user_id=user_id,
-            movement_type="IN",
-            quantity=quantity,
-            price=price,
-            location_id=location_id,
-            supplier_id=supplier_id
-        )
+        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
+                                         quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
 
         # Обновяване на инвентара
         if self.inventory_controller:
@@ -91,23 +74,11 @@ class MovementController:
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         resolved_loc = self._resolve_location_id(location_id)
 
-        MovementValidator.validate_out_rules(
-            self.product_controller.get_by_id(product_id),
-            float(quantity),
-            customer,
-            self.inventory_controller,
-            resolved_loc
-        )
+        MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity), customer,
+                                             self.inventory_controller, resolved_loc)
 
-        movement = self._create_movement(
-            product_id=product_id,
-            user_id=user_id,
-            movement_type="OUT",
-            quantity=quantity,
-            price=price,
-            location_id=location_id,
-            customer=customer
-        )
+        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
+                                         quantity=quantity, price=price, location_id=location_id, customer=customer)
 
         # Обновяване на инвентара
         if self.inventory_controller:
@@ -115,25 +86,14 @@ class MovementController:
 
         # Автоматична фактура
         if self.invoice_controller:
-            self.invoice_controller.create_from_movement(
-                movement=movement,
-                product=self.product_controller.get_by_id(product_id),
-                customer=customer or "Общ клиент",
-                user_id=user_id
-            )
+            self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
+                                                         customer=customer or "Общ клиент", user_id=user_id)
 
         return movement
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
-        movement = self._create_movement(
-            product_id=product_id,
-            user_id=user_id,
-            movement_type="MOVE",
-            quantity=quantity,
-            price="0",
-            from_location_id=from_loc,
-            to_location_id=to_loc
-        )
+        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
+                                         quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
 
         # Обновяване на инвентара
         if self.inventory_controller:
@@ -141,9 +101,8 @@ class MovementController:
 
         return movement
 
-    # ---------------------------------------------------------
-    #   ОСНОВЕН МЕТОД ЗА СЪЗДАВАНЕ НА ДВИЖЕНИЕ
-    # ---------------------------------------------------------
+
+
 
     def _create_movement(self, product_id: str, user_id: str, movement_type: str,
                          quantity: str, price: Optional[str], location_id: Optional[str] = None,
@@ -165,21 +124,17 @@ class MovementController:
         resolved_from = self._resolve_location_id(from_location_id)
         resolved_to = self._resolve_location_id(to_location_id)
 
-        # Валидации
+
         if m_type_str == "IN":
             MovementValidator.validate_in_rules(product, qty)
 
         elif m_type_str == "OUT":
-            MovementValidator.validate_out_rules(
-                product, qty, customer, self.inventory_controller, resolved_loc
-            )
+            MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
 
         elif m_type_str == "MOVE":
-            MovementValidator.validate_move_rules(
-                product, qty, self.inventory_controller, resolved_from, resolved_to
-            )
+            MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
 
-        # Цена
+
         if m_type_str == "MOVE":
             prc = 0.0
         elif price is not None and str(price).strip() != "":
@@ -187,26 +142,15 @@ class MovementController:
         else:
             prc = float(product.price)
 
-        # 🔥 Генерираме уникално movement_id
+
         movement_id = str(uuid.uuid4())
 
-        movement = Movement(
-            movement_id=movement_id,
-            product_id=product.product_id,
-            product_name=product.name,
-            user_id=user.user_id,
-            location_id=resolved_loc,
-            movement_type=MovementType[m_type_str],
-            quantity=qty,
-            unit=product.unit,
-            price=prc,
-            supplier_id=supplier_id,
-            customer=customer or "Общ клиент",
-            from_location_id=resolved_from,
-            to_location_id=resolved_to
-        )
+        movement = Movement(movement_id=movement_id, product_id=product.product_id, product_name=product.name,
+                            user_id=user.user_id, location_id=resolved_loc, movement_type=MovementType[m_type_str],
+                            quantity=qty, unit=product.unit, price=prc, supplier_id=supplier_id,
+                            customer=customer or "Общ клиент", from_location_id=resolved_from, to_location_id=resolved_to)
 
-        # Добавяме и записваме
+
         self.movements.append(movement)
         self.save_changes()
 
