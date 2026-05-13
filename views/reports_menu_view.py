@@ -34,22 +34,35 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
+    def format_card(self, item):
+        lines = []
+        lines.append("─" * 40)
+        lines.append(f"Продукт:          {item['product']}")
+        lines.append(f"Общо количество:  {item['total']}")
+        lines.append("")
+        lines.append("По складове:")
 
+
+        for wh, qty in item["warehouses"].items():
+            lines.append(f"  - {wh}: {qty}")
+
+        lines.append("")
+        lines.append(f"Доставено:        {item['delivered']}")
+        lines.append(f"Продадено:        {item['sold']}")
+        lines.append(f"Средна входна:    {item['avg_in_price']}")
+        lines.append(f"Средна изходна:   {item['avg_out_price']}")
+        lines.append(f"Последно движение:{item['last_move']}")
+        lines.append("─" * 40)
+        return "\n".join(lines)
 
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
 
-        rows = []
+        print("\nОБЕДИНЕН ОТЧЕТ – КАРТИ\n")
+
         for item in result.data:
-            rows.append([item["product"], item["total"], item["warehouses"], item["delivered"],
-                         item["sold"], item["avg_in_price"], item["avg_out_price"], item["last_move"]])
-
-        headers = ["Продукт", "Общо", "По складове", "Доставено", "Продадено",
-                   "Средна входна", "Средна изходна", "Последно движение"]
-
-        self._display_report("Обединен отчет за наличностите", headers, rows)
-
-
+            print(self.format_card(item))
+            print()
 
     def report_movements(self, _):
         result = self.controller.report_movements()

@@ -43,6 +43,11 @@ class UserController:
     def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
         return stored_password_hash == self._hash_password(provided_password)
 
+    def is_admin(self, user):
+        if not user:
+            return False
+        return str(user.role).lower() == "admin"
+
     def save_changes(self):
         # Записваме всички потребители обратно в JSON
         self.repo.save([u.to_dict() for u in self.users])

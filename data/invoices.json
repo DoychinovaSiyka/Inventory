@@ -68,5 +68,61 @@
         "date": "2026-05-12 01:27:01",
         "created": "2026-05-12 01:27:01",
         "modified": "2026-05-12 17:10:07"
+    },
+    {
+        "invoice_id": "cfafb9d1-ce42-41dd-896a-54e9df2a7891",
+        "movement_id": "0ff6b3a3-1556-410d-b5aa-f9f72ef3198d",
+        "product": "ракия",
+        "quantity": 123.0,
+        "unit": "л.",
+        "unit_price": 3.09,
+        "total_price": 380.07,
+        "customer": "Сийка",
+        "is_active": true,
+        "date": "2026-05-12 21:35:26",
+        "created": "2026-05-12 21:35:26",
+        "modified": "2026-05-12 21:35:26"
+    },
+    {
+        "invoice_id": "1357b9e4-396d-4445-9e56-9aa424e58c6b",
+        "movement_id": "4725cd30-00ef-4828-ae03-0b0ebac66db8",
+        "product": "чушки",
+        "quantity": 45.0,
+        "unit": "кг.",
+        "unit_price": 9.0,
+        "total_price": 405.0,
+        "customer": "Сийка",
+        "is_active": true,
+        "date": "2026-05-12 22:48:57",
+        "created": "2026-05-12 22:48:57",
+        "modified": "2026-05-12 22:48:57"
+    },
+    {
+        "invoice_id": "b1a6dea5-8cbd-4b7c-ac65-f33877485a22",
+        "movement_id": "b9b0fe97-76bf-4226-9abd-7a8c533be5bc",
+        "product": "пъпеш",
+        "quantity": 124.0,
+        "unit": "кг.",
+        "unit_price": 8.0,
+        "total_price": 992.0,
+        "customer": "Сийка",
+        "is_active": true,
+        "date": "2026-05-13 09:35:21",
+        "created": "2026-05-13 09:35:21",
+        "modified": "2026-05-13 09:35:21"
+    },
+    {
+        "invoice_id": "ffb68560-e280-47d5-95bc-b462050437b4",
+        "movement_id": "fb0baba0-de66-44b9-bcbe-f725602000a7",
+        "product": "пъпеш",
+        "quantity": 9.0,
+        "unit": "кг.",
+        "unit_price": 9.0,
+        "total_price": 81.0,
+        "customer": "iewo",
+        "is_active": true,
+        "date": "2026-05-13 09:52:16",
+        "created": "2026-05-13 09:52:16",
+        "modified": "2026-05-13 09:52:16"
     }
 ]

@@ -32,8 +32,8 @@ class InventoryApplication:
         self.location_repo = JSONRepository("data/locations.json")
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
-        self.report_repo = JSONRepository("data/reports.json")
-        self.inventory_repo = JSONRepository("data/inventory.json")
+
+        self.inventory_repo = JSONRepository(r"C:\Inventory\data\inventory.json", is_dict=True)
 
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)
@@ -42,33 +42,65 @@ class InventoryApplication:
         self.location_controller = LocationController(self.location_repo)
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
+        # Продукти
+        self.product_controller = ProductController(
+            self.product_repo,
+            self.category_controller
+        )
 
-        self.product_controller = ProductController(self.product_repo, self.category_controller)
+        # Движения
+        self.movement_controller = MovementController(
+            self.movement_repo,
+            self.product_controller,
+            self.user_controller,
+            self.location_controller,
+            self.supplier_controller,
+            self.invoice_controller
+        )
 
+        # Инвентар
+        self.inventory_controller = InventoryController(
+            self.inventory_repo,
+            self.product_controller,
+            self.location_controller,
+            self.movement_controller
+        )
 
-        self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller, self.location_controller)
+        # даваме inventory_controller обратно на movement_controller
+        self.movement_controller.set_inventory_controller(self.inventory_controller)
 
+        # Отчети (repo вече НЕ записва inventory.json)
+        self.report_controller = ReportController(
+            self.inventory_repo,
+            self.product_controller,
+            self.movement_controller,
+            self.invoice_controller,
+            self.location_controller,
+            self.inventory_controller,
+            self.supplier_controller
+        )
 
-        self.movement_controller = MovementController(self.movement_repo, self.product_controller, self.user_controller,
-                                                      self.location_controller, self.supplier_controller, self.invoice_controller,
-                                                      self.inventory_controller)
-
-
-        self.report_controller = ReportController(self.report_repo, self.product_controller, self.movement_controller,
-                                                  self.invoice_controller, self.location_controller, self.inventory_controller,
-                                                  self.supplier_controller)
-
-
-        self.graph_view = GraphView(self.inventory_controller, self.location_controller)
+        # Графики
+        self.graph_view = GraphView(
+            self.inventory_controller,
+            self.location_controller,
+            self.product_controller
+        )
 
     def _init_menus(self):
         """Инициализация на всички изгледи и менюта."""
-        self.controllers = {"user": self.user_controller, "product": self.product_controller,
-                            "category": self.category_controller, "supplier": self.supplier_controller,
-                            "location": self.location_controller, "movement": self.movement_controller,
-                            "invoice": self.invoice_controller, "report": self.report_controller,
-                            "inventory": self.inventory_controller, "graph": self.graph_view}
-
+        self.controllers = {
+            "user": self.user_controller,
+            "product": self.product_controller,
+            "category": self.category_controller,
+            "supplier": self.supplier_controller,
+            "location": self.location_controller,
+            "movement": self.movement_controller,
+            "invoice": self.invoice_controller,
+            "report": self.report_controller,
+            "inventory": self.inventory_controller,
+            "graph": self.graph_view
+        }
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -99,13 +131,10 @@ class InventoryApplication:
                 print(f"\nГрешка при вход: {e}")
                 print("Опитайте отново.\n")
 
-
-
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
         print("\nВлизане като Гост (Само за четене)...")
         self.anonymous_menu.show_menu(guest)
-
 
     def run(self):
         while True:

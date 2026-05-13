@@ -46,7 +46,7 @@ class AdminMenuView:
             MenuItem("7", "Информация за системата", lambda u: self.system_info_view.show_menu()),
             MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
             MenuItem("9", "Управление на локации", lambda u: self.location_view.show_menu(u)),
-            MenuItem("10", "Най-кратък път (Dijkstra)", lambda u: self.open_graph(u)),
+            MenuItem("10", "Логистичен модул (Dijkstra)", lambda u: self.graph_view.show_menu(u)),
             MenuItem("0", "Назад", lambda u: "break")])
 
 

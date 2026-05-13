@@ -214,5 +214,89 @@
         "price": 3.0,
         "created": "2026-05-11 20:11:17",
         "modified": "2026-05-11 20:11:17"
+    },
+    {
+        "product_id": "154ebbfe-b09a-4ca9-b66c-3801fd13738a",
+        "name": "ракия",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "л.",
+        "description": "алкохол с високо съдържание на спирт",
+        "price": 4.0,
+        "created": "2026-05-12 21:34:20",
+        "modified": "2026-05-12 21:34:20"
+    },
+    {
+        "product_id": "36240bd4-70e4-47d1-b4c7-c017589e290e",
+        "name": "вафли",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "бр.",
+        "description": "нуедз",
+        "price": 9.0,
+        "created": "2026-05-12 22:10:24",
+        "modified": "2026-05-12 22:10:24"
+    },
+    {
+        "product_id": "a397bc35-611a-408d-809e-6f2244986a43",
+        "name": "бира",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "л.",
+        "description": "алк",
+        "price": 3.0,
+        "created": "2026-05-12 22:17:56",
+        "modified": "2026-05-12 22:17:56"
+    },
+    {
+        "product_id": "718ca3dd-9d22-4629-a6fc-f1a63c1166ef",
+        "name": "limon",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "кг.",
+        "description": "wek",
+        "price": 3.0,
+        "created": "2026-05-12 22:21:54",
+        "modified": "2026-05-12 22:21:54"
+    },
+    {
+        "product_id": "b4b807ca-e0e3-4b88-8bc2-93847e4a9d26",
+        "name": "чушки",
+        "categories": [
+            "ce04ebbf-fb6f-4b06-bcbf-1da7d03b5b87"
+        ],
+        "unit": "кг.",
+        "description": "зеленчук",
+        "price": 2.0,
+        "created": "2026-05-12 22:47:43",
+        "modified": "2026-05-12 22:47:43"
+    },
+    {
+        "product_id": "47a6056c-2e3a-4d1c-851c-2f025a77c67c",
+        "name": "пъпеш",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "кг.",
+        "description": "за ядене",
+        "price": 8.0,
+        "created": "2026-05-13 09:33:58",
+        "modified": "2026-05-13 09:33:58"
+    },
+    {
+        "product_id": "3abff4e7-33a0-4d13-a3d3-8de4f9740430",
+        "name": "слива",
+        "categories": [
+            "aac7a863-5231-419d-a1a1-a5892790e1c1"
+        ],
+        "unit": "кг.",
+        "description": ",удес",
+        "price": 3.0,
+        "created": "2026-05-13 10:20:13",
+        "modified": "2026-05-13 10:20:13"
     }
 ]

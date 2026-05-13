@@ -1,53 +1,99 @@
 import json
-import sys
 import os
 from pathlib import Path
 from storage.repository import Repository
 
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-
-
 class JSONRepository(Repository):
+    """
+    Унифициран JSON Repository с правилна логика:
+    - inventory.json → речник
+    - всички други → списък
+    - стабилен кеш
+    - никога не връща грешен тип
+    """
+
     def __init__(self, filepath, is_dict=False):
         self.filepath = Path(filepath)
-        # речник за inventory, списък за останалите
-        self.default_data = {} if is_dict else []
-        # Създаваме папката data/, ако не съществува
-        self.filepath.parent.mkdir(parents=True, exist_ok=True)
-        self._cache = self.load()
 
-    def load(self):
+        # inventory.json → dict
+        # всички други → list
+        self.is_dict = is_dict
+        self.default_data = {} if is_dict else []
+
+        # Създаваме папката, ако липсва
+        self.filepath.parent.mkdir(parents=True, exist_ok=True)
+
+
+        # Зареждаме кеша
+        self._cache = self._safe_load()
+
+    # -----------------------------
+    #   Вътрешно безопасно зареждане
+    # -----------------------------
+    def _safe_load(self):
+        """Гарантира, че винаги връщаме правилния тип (dict или list)."""
+
         if not self.filepath.exists():
-            return self.default_data
+            return self.default_data.copy()
 
         try:
             with open(self.filepath, "r", encoding="utf-8") as f:
                 content = f.read().strip()
+
                 if not content:
-                    return self.default_data
+                    return self.default_data.copy()
 
                 data = json.loads(content)
-                self._cache = data  # Обновяваме кеша при всяко успешно четене
-                return data
-        except Exception:
-            return self.default_data
 
+                # Ако структурата е грешна → връщаме default
+                if self.is_dict and not isinstance(data, dict):
+                    return self.default_data.copy()
+
+                if not self.is_dict and not isinstance(data, list):
+                    return self.default_data.copy()
+
+                return data
+
+        except Exception:
+            return self.default_data.copy()
+
+    # -----------------------------
+    #   Публично зареждане
+    # -----------------------------
+    def load(self):
+        """Връща последното валидно състояние."""
+        self._cache = self._safe_load()
+        return self._cache
+
+    # -----------------------------
+    #   Запис
+    # -----------------------------
     def save(self, data):
-        """ Записва данните само ако има реална промяна. """
+        """Записва само ако има промяна и гарантира правилен тип."""
+
+        # Гарантираме тип
+        if self.is_dict and not isinstance(data, dict):
+            return
+        if not self.is_dict and not isinstance(data, list):
+            return
+
+        # Ако няма промяна → не пишем
         if data == self._cache:
             return
 
         try:
             with open(self.filepath, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
+
             self._cache = data
+
         except Exception as e:
             print(f"Грешка при запис в {self.filepath.name}: {e}")
 
-
-
+    # -----------------------------
+    #   get_all()
+    # -----------------------------
     def get_all(self):
-        """ Връща текущото състояние на данните. """
+        """Връща текущото състояние."""
         return self.load()

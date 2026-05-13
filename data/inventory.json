@@ -1,9 +1,266 @@
 {
-    "products": {
-        "d87f96b2-5474-4ea8-8bc3-70d28a9e928b": {
-            "locations": {
-                "3a94c75c-a29a-440e-b9f1-8edd5884bbae": 600.0
-            }
+    "summary": {
+        "total_products": 19
+    },
+    "products": [
+        {
+            "product": "Прясно мляко Верея 3.6%",
+            "unit": "л.",
+            "total": 3336702.0,
+            "warehouses": {
+                "София (W1)": 2929.0,
+                "Пловдив (W2)": 3333349.0,
+                "Смолян (W5)": 300.0,
+                "Бургас (W4)": 124.0
+            },
+            "delivered": 3336402.0,
+            "sold": 0,
+            "avg_in_price": 2.67,
+            "avg_out_price": null,
+            "last_move": "MOVE – 2026-05-12"
+        },
+        {
+            "product": "Кисело мляко Елена 4%",
+            "unit": "бр.",
+            "total": 44464.0,
+            "warehouses": {
+                "Варна (W3)": 43664.0,
+                "Смолян (W5)": 800.0
+            },
+            "delivered": 45001.0,
+            "sold": 537.0,
+            "avg_in_price": 3.85,
+            "avg_out_price": 5.33,
+            "last_move": "OUT – 2026-05-11"
+        },
+        {
+            "product": "Кашкавал от краве мляко",
+            "unit": "кг.",
+            "total": 10.0,
+            "warehouses": {
+                "Варна (W3)": 10.0
+            },
+            "delivered": 10.0,
+            "sold": 0,
+            "avg_in_price": 13.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Краве масло Президент",
+            "unit": "бр.",
+            "total": 900.0,
+            "warehouses": {
+                "Бургас (W4)": 900.0
+            },
+            "delivered": 900.0,
+            "sold": 0,
+            "avg_in_price": 12.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Свинска плешка без кост",
+            "unit": "кг.",
+            "total": 999999.0,
+            "warehouses": {
+                "Пловдив (W2)": 999999.0
+            },
+            "delivered": 999999.0,
+            "sold": 0,
+            "avg_in_price": 9.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Салам Бургас",
+            "unit": "бр.",
+            "total": 99999.0,
+            "warehouses": {
+                "Варна (W3)": 99999.0
+            },
+            "delivered": 99999.0,
+            "sold": 0,
+            "avg_in_price": 23.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Портокали за сок",
+            "unit": "кг.",
+            "total": 100.0,
+            "warehouses": {
+                "София (W1)": 100.0
+            },
+            "delivered": 111.0,
+            "sold": 11.0,
+            "avg_in_price": 1.0,
+            "avg_out_price": 4.0,
+            "last_move": "OUT – 2026-05-12"
+        },
+        {
+            "product": "Домати Чери",
+            "unit": "бр.",
+            "total": 23.0,
+            "warehouses": {
+                "Варна (W3)": 23.0
+            },
+            "delivered": 23.0,
+            "sold": 0,
+            "avg_in_price": 1.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Кафе Лаваца Роса",
+            "unit": "бр.",
+            "total": 1111100.0,
+            "warehouses": {
+                "Пловдив (W2)": 1111100.0
+            },
+            "delivered": 1111100.0,
+            "sold": 0,
+            "avg_in_price": 23.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Шоколад Линд 70%",
+            "unit": "бр.",
+            "total": 111111111.0,
+            "warehouses": {
+                "Варна (W3)": 111111111.0
+            },
+            "delivered": 111111111.0,
+            "sold": 0,
+            "avg_in_price": 22.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "Течен сапун Палмолив",
+            "unit": "бр.",
+            "total": 87.0,
+            "warehouses": {
+                "Пловдив (W2)": 80.0,
+                "Бургас (W4)": 7.0
+            },
+            "delivered": 89.0,
+            "sold": 9.0,
+            "avg_in_price": 7.0,
+            "avg_out_price": 2.0,
+            "last_move": "MOVE – 2026-05-11"
+        },
+        {
+            "product": "wqowiepoq",
+            "unit": "кг.",
+            "total": 1.0,
+            "warehouses": {
+                "София (W1)": 1.0
+            },
+            "delivered": 1.0,
+            "sold": 0,
+            "avg_in_price": 0.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-11"
+        },
+        {
+            "product": "ракия",
+            "unit": "л.",
+            "total": 776.0,
+            "warehouses": {
+                "Пловдив (W2)": 431.0,
+                "Бургас (W4)": 345.0
+            },
+            "delivered": 899.0,
+            "sold": 123.0,
+            "avg_in_price": 12.0,
+            "avg_out_price": 3.09,
+            "last_move": "MOVE – 2026-05-12"
+        },
+        {
+            "product": "вафли",
+            "unit": "бр.",
+            "total": 333337666.0,
+            "warehouses": {
+                "Бургас (W4)": 1000.0,
+                "Пловдив (W2)": 333336666.0
+            },
+            "delivered": 333337666.0,
+            "sold": 0,
+            "avg_in_price": 2.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-13"
+        },
+        {
+            "product": "бира",
+            "unit": "л.",
+            "total": 3447888.0,
+            "warehouses": {
+                "Бургас (W4)": 3421.0,
+                "Пловдив (W2)": 3444444.0,
+                "София (W1)": 23.0
+            },
+            "delivered": 3447888.0,
+            "sold": 0,
+            "avg_in_price": 7.0,
+            "avg_out_price": null,
+            "last_move": "MOVE – 2026-05-12"
+        },
+        {
+            "product": "limon",
+            "unit": "кг.",
+            "total": 5.0,
+            "warehouses": {
+                "Варна (W3)": 5.0
+            },
+            "delivered": 5.0,
+            "sold": 0,
+            "avg_in_price": 4.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-12"
+        },
+        {
+            "product": "чушки",
+            "unit": "кг.",
+            "total": 300.0,
+            "warehouses": {
+                "Варна (W3)": 180.0,
+                "Смолян (W5)": 119.0,
+                "София (W1)": 1.0
+            },
+            "delivered": 345.0,
+            "sold": 45.0,
+            "avg_in_price": 4.0,
+            "avg_out_price": 9.0,
+            "last_move": "MOVE – 2026-05-12"
+        },
+        {
+            "product": "пъпеш",
+            "unit": "кг.",
+            "total": 767.0,
+            "warehouses": {
+                "Пловдив (W2)": 687.0,
+                "Смолян (W5)": 80.0
+            },
+            "delivered": 900.0,
+            "sold": 133.0,
+            "avg_in_price": 45.0,
+            "avg_out_price": 8.5,
+            "last_move": "OUT – 2026-05-13"
+        },
+        {
+            "product": "слива",
+            "unit": "кг.",
+            "total": 1000.0,
+            "warehouses": {
+                "Варна (W3)": 1000.0
+            },
+            "delivered": 1000.0,
+            "sold": 0,
+            "avg_in_price": 3.0,
+            "avg_out_price": null,
+            "last_move": "IN – 2026-05-13"
         }
-    }
+    ]
 }

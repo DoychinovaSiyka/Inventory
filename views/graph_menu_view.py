@@ -5,32 +5,82 @@ from models.user import User
 
 
 class GraphView:
-    def __init__(self, inventory_controller, location_controller=None):
+    def __init__(self, inventory_controller, location_controller, product_controller):
         self.inventory_controller = inventory_controller
         self.location_controller = location_controller
+        self.product_controller = product_controller
         self.graph = WarehouseGraph()
         self._setup_network()
 
     def _setup_network(self):
-        warehouses = [Warehouse("W1", "София"), Warehouse("W2", "Пловдив"),
-                      Warehouse("W3", "Варна"), Warehouse("W4", "Бургас"),
-                      Warehouse("W5", "Магазин Смолян")]
+        warehouses = [
+            Warehouse("W1", "София"),
+            Warehouse("W2", "Пловдив"),
+            Warehouse("W3", "Варна"),
+            Warehouse("W4", "Бургас"),
+            Warehouse("W5", "Магазин Смолян")
+        ]
 
         for w in warehouses:
             self.graph.add_warehouse(w)
 
-
-        edges = [("W1", "W2", 150), ("W2", "W4", 250), ("W4", "W3", 130), ("W1", "W5", 250), ("W5", "W3", 350)]
+        edges = [
+            ("W1", "W2", 150),
+            ("W2", "W4", 250),
+            ("W4", "W3", 130),
+            ("W1", "W5", 250),
+            ("W5", "W3", 350)
+        ]
 
         for start, end, dist in edges:
             self.graph.add_edge(start, end, dist)
             self.graph.add_edge(end, start, dist)
 
+    # ---------------------------------------------------------
+    # ЛОКАЛЕН МЕТОД – работим с реалния инвентар (UUID)
+    # ---------------------------------------------------------
+    def _get_warehouses_with_product(self, product_name):
+        result = []
+
+        # намираме продукта по име
+        product = None
+        for p in self.product_controller.get_all():
+            if p.name.lower() == product_name.lower():
+                product = p
+                break
+
+        if not product:
+            return []
+
+        # InventoryController работи с ПЪЛЕН product_id (UUID)
+        product_id = str(product.product_id)
+
+        # проверяваме наличностите по всички складове
+        for loc in self.location_controller.get_all():
+
+            warehouse_code = loc.code          # W1, W2, W3...
+            warehouse_uuid = str(loc.location_id)   # реалният UUID
+
+            if not warehouse_code:
+                continue  # ако няма код, пропускаме
+
+            qty = self.inventory_controller.get_stock(product_id, warehouse_uuid)
+
+            if qty > 0:
+                result.append((warehouse_code, qty))
+
+        return result
+
+    # ---------------------------------------------------------
+
     def _build_menu(self):
-        # Търсене на най-близък склад
-        return Menu("Логистичен Модул (Dijkstra)",
-                    [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-                     MenuItem("0", "Назад", lambda u: "break")])
+        return Menu(
+            "Логистичен Модул (Dijkstra)",
+            [
+                MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+                MenuItem("0", "Назад", lambda u: "break")
+            ]
+        )
 
     def show_menu(self, user: User):
         while True:
@@ -40,9 +90,6 @@ class GraphView:
                 break
 
     def calculate_best_delivery(self, user: User):
-        """Най-близкия склад, в който се среща продуктът. Всички случаи:
-        наличен / неналичен / един склад / много складове / няма път."""
-
         product_name = input("\nИме на стока (Enter = отказ): ").strip()
         if not product_name:
             print("Операцията е отказана.")
@@ -57,59 +104,31 @@ class GraphView:
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
-        #  всички складове, които имат продукта
-        sources = self.inventory_controller.get_warehouses_with_product(product_name)
+        # Взимаме складовете с наличност (локален метод!)
+        sources = self._get_warehouses_with_product(product_name)
 
-        # ако няма никъде наличност
         if not sources:
             print(f"'{product_name}' не е наличен в нито един склад.")
             return
 
-        # превръщам в списък от warehouse_id
-        all_sources = []
-        for wid, qty in sources:
-            wid_up = str(wid).upper()
-            all_sources.append(wid_up)
+        all_sources = [wid.upper() for wid, qty in sources]
+        other_sources = [s for s in all_sources if s != my_location]
 
-        # Премахвам стартовия склад – търсим най-близкия ДРУГ склад
-        other_sources = []
-        for s in all_sources:
-            if s != my_location:
-                other_sources.append(s)
-
-        # ако продуктът е само в стартовия склад
         if not other_sources:
             print(f"'{product_name}' се среща само в {my_location}.")
             return
 
-        # ако продуктът е само в един друг склад
-        if len(other_sources) == 1:
-            print(f"Продуктът е наличен само в {other_sources[0]}. Разстоянието е ...\n")
-
-
         distances, predecessors = self.graph.dijkstra(my_location)
 
-        # Филтрирам складовете, до които има път
-        reachable = []
-        for s in other_sources:
-            d = distances.get(s, float('inf'))
-            if d < float('inf'):
-                reachable.append(s)
+        reachable = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
 
         if not reachable:
             print(f"\nИма складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return
 
-        # най-близкия склад
-        best_source = reachable[0]
-        best_distance = distances[best_source]
-        for s in reachable:
-            if distances[s] < best_distance:
-                best_distance = distances[s]
-                best_source = s
-        shortest_distance = best_distance
+        best_source = min(reachable, key=lambda s: distances[s])
+        shortest_distance = distances[best_source]
 
-        # Възстановявам маршрута
         path = []
         step = best_source
         while step is not None:
@@ -119,12 +138,10 @@ class GraphView:
             step = predecessors.get(step)
         path.reverse()
 
-
         source_name = self.graph.nodes[best_source].name
 
-        print("         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")
+        print("\n         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")
         print(f"  Продукт:    {product_name}")
         print(f"  Източник:   {source_name} ({best_source})")
         print(f"  Разстояние: {shortest_distance} км")
         print(f"  Маршрут:    {' -> '.join(path)}")
-

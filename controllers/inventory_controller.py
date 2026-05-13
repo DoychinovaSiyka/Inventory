@@ -1,186 +1,247 @@
-from typing import List, Dict, Optional
+from typing import Optional
 from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
-    """Управлява наличностите в реално време и поддържа финансови изчисления."""
+    """Управлява наличностите в реално време и записва inventory.json като човешки отчет."""
 
-    def __init__(self, repository, product_controller, location_controller):
+    def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
         self.location_controller = location_controller
+        self.movement_controller = movement_controller
 
-        raw = self.repo.load()
-        self.data = raw if (raw and "products" in raw) else {"products": {}}
+        # Вътрешните данни са винаги сурова структура, изградена от движенията
+        self.data = {"products": {}}
+        self.rebuild_inventory_from_movements(self.movement_controller.movements)
 
+    # -------------------------------------------------------
+    #   ГЕНЕРИРАНЕ НА ЧОВЕШКИ ОТЧЕТ ОТ self.data
+    # -------------------------------------------------------
+    def _build_inventory(self):
+        rows = []
+
+        for p in self.product_controller.get_all():
+            pid = str(p.product_id)
+
+            total_stock = self.get_total_stock(pid)
+            if total_stock == 0:
+                continue
+
+            # Складове с имена
+            warehouse_map = {}
+            inv_data = self.data.get("products", {}).get(pid, {})
+            for loc_id, qty in inv_data.get("locations", {}).items():
+                qty = float(qty)
+                if qty > 0:
+                    loc = self.location_controller.get_by_id(loc_id)
+                    name = loc.name if loc else f"Склад {loc_id[:8]}"
+                    warehouse_map[name] = qty
+
+            # Движения за този продукт
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
+
+            delivered_qty = sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
+            delivered_prices = [float(m.price) for m in moves if m.movement_type.name == "IN"]
+            avg_in_price = round(sum(delivered_prices) / len(delivered_prices), 2) if delivered_prices else None
+
+            sold_qty = sum(float(m.quantity) for m in moves if m.movement_type.name == "OUT")
+            sold_prices = [float(m.price) for m in moves if m.movement_type.name == "OUT"]
+            avg_out_price = round(sum(sold_prices) / len(sold_prices), 2) if sold_prices else None
+
+            if moves:
+                last_move = max(moves, key=lambda x: x.date)
+                last_move_str = f"{last_move.movement_type.name} – {str(last_move.date)[:10]}"
+            else:
+                last_move_str = "–"
+
+            row = {
+                "product": p.name,
+                "unit": p.unit,
+                "total": total_stock,
+                "warehouses": warehouse_map,
+                "delivered": delivered_qty,
+                "sold": sold_qty,
+                "avg_in_price": avg_in_price,
+                "avg_out_price": avg_out_price,
+                "last_move": last_move_str
+            }
+
+            rows.append(row)
+
+        return {
+            "summary": {"total_products": len(rows)},
+            "products": rows
+        }
+
+    # -------------------------------------------------------
+    #   ЗАПИС – ВЕЧЕ ЗАПИСВАМЕ ОТЧЕТ, НЕ СУРОВИ ДАННИ
+    # -------------------------------------------------------
     def _save(self) -> None:
-        """Записва текущото състояние в хранилището."""
-        self.repo.save(self.data)
+        human = self._build_inventory()
+        self.repo.save(human)
 
-    #   АВТОМАТИЧНО СЪЗДАВАНЕ НА ПРОДУКТ В ИНВЕНТАРА
     def _ensure_product(self, product_id: str):
         pid = str(product_id).strip()
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
-    #   нормализиране на short/long ID
-    def _resolve_location_id(self, user_input: str) -> Optional[str]:
-        """Приема short или long ID и връща long ID."""
+    # -------------------------------------------------------
+    #   short/long ID за продукт
+    # -------------------------------------------------------
+    def _resolve_product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
 
-        loc = self.location_controller.get_by_id(user_input)
-        if not loc:
+        user_input = str(user_input).strip()
+
+        if user_input in self.data.get("products", {}):
+            return user_input
+
+        for full_id in self.data.get("products", {}).keys():
+            if full_id.startswith(user_input):
+                return full_id
+
+        return user_input
+
+    # -------------------------------------------------------
+    #   short/long ID за локации
+    # -------------------------------------------------------
+    def _resolve_location_id(self, user_input: str) -> Optional[str]:
+        if not user_input:
             return None
 
-        return str(loc.location_id)
+        user_input = str(user_input).strip()
 
+        loc = self.location_controller.get_by_id(user_input)
+        if loc:
+            return str(loc.location_id)
+
+        for l in self.location_controller.get_all():
+            if str(l.location_id).startswith(user_input):
+                return str(l.location_id)
+
+        return None
+
+    # -------------------------------------------------------
+    #   ВЗИМАНЕ НА НАЛИЧНОСТ
+    # -------------------------------------------------------
     def get_stock(self, product_id: str, location_id: str) -> float:
-        pid = str(product_id or "").strip()
-        lid = self._resolve_location_id(location_id)   # ← добавено
+        pid = self._resolve_product_id(product_id)
+        lid = self._resolve_location_id(location_id)
 
-        #  продуктът дали съществува в инвентара
-        if pid not in self.data.get("products", {}):
+        if not pid or not lid:
             return 0.0
 
-        # Проверяваме дали локацията е валидна
-        if not lid:
-            return 0.0
-
-        # Всички локации за този продукт
-        product_info = self.data["products"][pid]
+        product_info = self.data["products"].get(pid, {})
         locations = product_info.get("locations", {})
 
-        # Количеството за конкретната локация
         raw_qty = locations.get(lid, 0.0)
         return InventoryValidator.parse_and_validate_number(raw_qty)
 
     def get_total_stock(self, product_id: str) -> float:
-        """Връща общото количество от продукта във всички складове."""
-
-        pid = str(product_id or "").strip()
-        if pid not in self.data.get("products", {}):
+        pid = self._resolve_product_id(product_id)
+        if not pid:
             return 0.0
 
-        product_info = self.data["products"][pid]
+        product_info = self.data["products"].get(pid, {})
         locations = product_info.get("locations", {})
-        total = 0.0
 
-        for loc_id in locations:
-            qty = locations[loc_id]
-            qty = InventoryValidator.parse_and_validate_number(qty)
-            total += qty
+        total = 0.0
+        for _, qty in locations.items():
+            total += InventoryValidator.parse_and_validate_number(qty)
 
         return total
 
+    # -------------------------------------------------------
+    #   УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ (IN)
+    # -------------------------------------------------------
     def increase_stock(self, product_id: str, quantity: float, location_id: str) -> None:
-        """Увеличава наличността по прост и разбираем начин."""
+        pid = self._resolve_product_id(product_id)
+        lid = self._resolve_location_id(location_id)
 
-        pid = str(product_id or "").strip()
-        lid = self._resolve_location_id(location_id)   # ← добавено
-
-        if not lid:
+        if not pid or not lid:
             return
 
         qty_to_add = InventoryValidator.parse_and_validate_number(quantity, "Количество")
 
-        # Ако продуктът не съществува - създаваме го
-        if pid not in self.data.get("products", {}):
-            self.data["products"][pid] = {"locations": {}}
-
+        self._ensure_product(pid)
         product_info = self.data["products"][pid]
-        locations = product_info.get("locations", {})
+        locations = product_info["locations"]
 
-        current_qty = locations.get(lid, 0.0)
-        current_qty = InventoryValidator.parse_and_validate_number(current_qty)
-        new_qty = current_qty + qty_to_add
-        locations[lid] = round(new_qty, 2)
+        current_qty = InventoryValidator.parse_and_validate_number(locations.get(lid, 0.0))
+        locations[lid] = round(current_qty + qty_to_add, 2)
 
-        self._save()
-
+    # -------------------------------------------------------
+    #   НАМАЛЯВАНЕ НА НАЛИЧНОСТ (OUT)
+    # -------------------------------------------------------
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
-        pid = str(product_id or "").strip()
-        lid = self._resolve_location_id(location_id)   # ← добавено
+        pid = self._resolve_product_id(product_id)
+        lid = self._resolve_location_id(location_id)
 
-        if pid not in self.data.get("products", {}):
+        if not pid or not lid:
             return False
 
-        if not lid:
-            return False
+        self._ensure_product(pid)
+        product_info = self.data["products"][pid]
+        locations = product_info["locations"]
 
         qty_to_remove = InventoryValidator.parse_and_validate_number(quantity, "Количество")
-        product_info = self.data["products"][pid]
-        locations = product_info.get("locations", {})
-
-        current_qty = locations.get(lid, 0.0)
-        current_qty = InventoryValidator.parse_and_validate_number(current_qty)
-
-        prod_obj = self.product_controller.get_by_id(pid)
-        loc_obj = self.location_controller.get_by_id(lid)
-
-        if prod_obj:
-            product_name = prod_obj.name
-        else:
-            product_name = pid
-
-        if loc_obj:
-            location_name = loc_obj.name
-        else:
-            location_name = lid
+        current_qty = InventoryValidator.parse_and_validate_number(locations.get(lid, 0.0))
 
         try:
-            InventoryValidator.validate_stock_availability(product_name, qty_to_remove, current_qty, location_name)
+            InventoryValidator.validate_stock_availability(
+                product_info, qty_to_remove, current_qty, lid
+            )
         except ValueError:
             return False
 
-        new_qty = current_qty - qty_to_remove
-        locations[lid] = round(new_qty, 2)
-
-        self._save()
+        locations[lid] = round(current_qty - qty_to_remove, 2)
         return True
 
-    def rebuild_inventory_from_movements(self, movements: List) -> None:
-        """Преизчислява целия инвентар от историята."""
+    # -------------------------------------------------------
+    #   ПРЕМЕСТВАНЕ НА НАЛИЧНОСТ (MOVE)
+    # -------------------------------------------------------
+    def move_stock(self, product_id: str, from_location_id: str, to_location_id: str, quantity: float) -> None:
+        pid = self._resolve_product_id(product_id)
+        from_lid = self._resolve_location_id(from_location_id)
+        to_lid = self._resolve_location_id(to_location_id)
+
+        if not pid or not from_lid or not to_lid:
+            return
+
+        self.decrease_stock(pid, quantity, from_lid)
+        self.increase_stock(pid, quantity, to_lid)
+
+    # -------------------------------------------------------
+    #   ПЪЛЕН REBUILD (атомичен)
+    # -------------------------------------------------------
+    def rebuild_inventory_from_movements(self, movements) -> None:
         self.data = {"products": {}}
 
-        sorted_moves = sorted(movements, key=lambda m: m.date)
-        for m in sorted_moves:
-            pid = str(m.product_id)
-            qty = InventoryValidator.parse_and_validate_number(m.quantity)
+        for mv in movements:
+            pid = str(mv.product_id)
+            qty = mv.quantity
+            mtype = mv.movement_type.name
 
-            try:
-                m_type = m.movement_type.name
-            except Exception:
-                m_type = str(m.movement_type)
+            lid = mv.location_id
+            from_lid = mv.from_location_id
+            to_lid = mv.to_location_id
 
-            if pid not in self.data["products"]:
-                self.data["products"][pid] = {"locations": {}}
+            if not pid:
+                continue
 
-            locs = self.data["products"][pid]["locations"]
+            if mtype == "IN" and lid:
+                self.increase_stock(pid, qty, lid)
 
-            # нормализиране на ID-тата
-            long_loc = self._resolve_location_id(m.location_id)
-            long_from = self._resolve_location_id(m.from_location_id)
-            long_to = self._resolve_location_id(m.to_location_id)
+            elif mtype == "OUT" and lid:
+                self.decrease_stock(pid, qty, lid)
 
-            if m_type == "IN" and long_loc:
-                locs[long_loc] = round(locs.get(long_loc, 0.0) + qty, 2)
+            elif mtype == "MOVE":
+                if from_lid:
+                    self.decrease_stock(pid, qty, from_lid)
+                if to_lid:
+                    self.increase_stock(pid, qty, to_lid)
 
-            elif m_type == "OUT" and long_loc:
-                current = locs.get(long_loc, 0.0)
-                locs[long_loc] = round(max(0.0, current - qty), 2)
-
-            elif m_type == "MOVE":
-                if long_from and long_to:
-                    try:
-                        InventoryValidator.validate_move_locations(long_from, long_to)
-
-                        curr_from = locs.get(long_from, 0.0)
-                        locs[long_from] = round(max(0.0, curr_from - qty), 2)
-
-                        curr_to = locs.get(long_to, 0.0)
-                        locs[long_to] = round(curr_to + qty, 2)
-                    except ValueError:
-                        continue
-
+        # Записваме само веднъж – вече като човешки отчет
         self._save()

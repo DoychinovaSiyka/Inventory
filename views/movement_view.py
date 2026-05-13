@@ -37,7 +37,6 @@ class MovementView:
             print(f"\nНяма {label}.\n")
             return None
 
-
         def get_id(obj):
             if label in ["продукт", "продукт за продажба"]:
                 return str(obj.product_id)
@@ -55,14 +54,12 @@ class MovementView:
             if not choice:
                 return None
 
-
             if choice.isdigit():
                 index = int(choice) - 1
                 if 0 <= index < len(items):
                     return items[index]
                 print("Невалиден номер.")
                 continue
-
 
             matches = [item for item in items if get_id(item).startswith(choice)]
 
@@ -112,8 +109,15 @@ class MovementView:
         if price == "cancel":
             return
 
-        movement = self.movement_controller.add_in(str(product.product_id)[:8], qty, price, str(location.location_id)[:8],
-                                                   str(supplier.supplier_id)[:8], str(user.user_id)[:8])
+        # 🔥 ПЪЛНИ UUID — НИКАКВИ [:8]
+        movement = self.movement_controller.add_in(
+            str(product.product_id),
+            qty,
+            price,
+            str(location.location_id),
+            str(supplier.supplier_id),
+            str(user.user_id)
+        )
 
         if not movement:
             return
@@ -125,7 +129,7 @@ class MovementView:
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
-            stock = self.inventory_controller.get_stock(str(product.product_id)[:8], str(loc.location_id)[:8])
+            stock = self.inventory_controller.get_stock(str(product.product_id), str(loc.location_id))
             if stock > 0:
                 valid.append((loc, f"{loc.name} (налично: {stock:.2f} {product.unit})"))
         return valid
@@ -158,14 +162,14 @@ class MovementView:
         if not selected:
             return
 
-        product = self.product_controller.get_by_id(str(selected.product_id)[:8])
+        product = self.product_controller.get_by_id(str(selected.product_id))
         location = self._select_location_for_sale(product)
         if not location:
             return
 
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
 
-        max_stock = self.inventory_controller.get_stock(str(product.product_id)[:8], str(location.location_id)[:8])
+        max_stock = self.inventory_controller.get_stock(str(product.product_id), str(location.location_id))
         qty = self._ask_float(f"Количество (макс {max_stock}): ")
         if qty is None:
             return
@@ -178,40 +182,101 @@ class MovementView:
             return
 
         try:
-            self.movement_controller.add_out(str(product.product_id)[:8], qty, customer, str(location.location_id)[:8],
-                                             str(user.user_id)[:8], sale_price)
+            self.movement_controller.add_out(
+                str(product.product_id),
+                qty,
+                customer,
+                str(location.location_id),
+                str(user.user_id),
+                sale_price
+            )
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
 
-
-
-
     def process_transfer(self, user):
         print("\nВътрешно преместване")
+
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
 
-        from_loc = self._select_item(self.location_controller.get_all(), "склад ИЗТОЧНИК")
-        if not from_loc:
+        product_id = str(product.product_id)
+
+        print("\nСкладове, в които има наличност от този продукт:")
+
+        valid_sources = []
+        for loc in self.location_controller.get_all():
+            loc_id = str(loc.location_id)
+            qty = self.inventory_controller.get_stock(product_id, loc_id)
+            if qty > 0:
+                valid_sources.append((loc, qty))
+
+        if not valid_sources:
+            print(f"\n'{product.name}' не е наличен в нито един склад.")
             return
 
-        to_loc = self._select_item(self.location_controller.get_all(), "склад ПОЛУЧАТЕЛ")
-        if not to_loc:
+        for i, (loc, qty) in enumerate(valid_sources, 1):
+            print(f"{i}. {loc.name} ({loc.location_id}) – {qty:.2f} {product.unit}")
+
+        choice = input("\nИзберете склад ИЗТОЧНИК: ").strip()
+        if not choice.isdigit():
+            print("Невалиден избор.")
             return
 
-        if from_loc.location_id == to_loc.location_id:
-            print("Двата склада съвпадат.")
+        idx = int(choice) - 1
+        if idx < 0 or idx >= len(valid_sources):
+            print("Невалиден избор.")
             return
 
-        qty = self._ask_float(f"Количество ({product.unit}): ")
+        from_loc = valid_sources[idx][0]
+        from_loc_id = str(from_loc.location_id)
+        available = valid_sources[idx][1]
+
+        print(f"\nИзбран склад ИЗТОЧНИК: {from_loc.name} (налично: {available:.2f} {product.unit})")
+
+        print("\nИзбор на склад ПОЛУЧАТЕЛ:")
+        all_locs = [loc for loc in self.location_controller.get_all() if str(loc.location_id) != from_loc_id]
+
+        for i, loc in enumerate(all_locs, 1):
+            print(f"{i}. {loc.name} (ID: {loc.location_id})")
+
+        choice = input("\nНомер или ID (Enter за връщане): ").strip()
+        if not choice:
+            return
+
+        if choice.isdigit():
+            idx = int(choice) - 1
+            if 0 <= idx < len(all_locs):
+                to_loc = all_locs[idx]
+            else:
+                print("Невалиден избор.")
+                return
+        else:
+            matches = [loc for loc in all_locs if str(loc.location_id).startswith(choice)]
+            if len(matches) == 1:
+                to_loc = matches[0]
+            else:
+                print("Невалиден избор.")
+                return
+
+        to_loc_id = str(to_loc.location_id)
+
+        qty = self._ask_float(f"Количество ({product.unit}, макс {available}): ")
         if qty is None:
+            return
+        if qty > available:
+            print(f"Няма толкова наличност ({available}).")
             return
 
         try:
-            self.movement_controller.move_stock(str(product.product_id)[:8], qty, str(from_loc.location_id)[:8],
-                                                str(to_loc.location_id)[:8], str(user.user_id)[:8])
-            print(f"\nПреместени {qty:.2f} {product.unit}.")
+            self.movement_controller.move_stock(
+                product_id,
+                qty,
+                from_loc_id,
+                to_loc_id,
+                str(user.user_id)
+            )
+            print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} към {to_loc.name}.")
         except Exception as e:
             print(f"Проблем при преместването: {e}")
