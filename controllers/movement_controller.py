@@ -1,7 +1,6 @@
 import uuid
 from typing import Optional, List
 from datetime import datetime
-
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
 
@@ -32,9 +31,7 @@ class MovementController:
 
         self.inventory_controller = None
 
-
-
-    def set_inventory_controller(self, inventory_controller):
+    def _set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
 
@@ -50,7 +47,7 @@ class MovementController:
     def get_all(self) -> List[Movement]:
         return self.movements
 
-    def save_changes(self) -> None:
+    def _save_changes(self) -> None:
         """Записва всички движения в movements.json"""
         self.repo.save([m.to_dict() for m in self.movements])
 
@@ -79,12 +76,14 @@ class MovementController:
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, quantity, location_id)
 
-        # Автоматична фактура
         if self.invoice_controller:
-            self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
-                                                         customer=customer or "Общ клиент", user_id=user_id)
+            self.invoice_controller.create_from_movement(movement=movement,
+                                                          product=self.product_controller.get_by_id(product_id),
+                                                          customer=customer or "Общ клиент", user_id=user_id)
 
         return movement
+
+
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
         movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
@@ -98,48 +97,39 @@ class MovementController:
 
 
 
-
-
-
     def search_movements(self, product_id=None, movement_type=None,
                          date=None, location_id=None, customer=None, supplier_id=None):
-        """Търси движения по различни критерии."""
 
         results = []
 
         for m in self.movements:
             ok = True
 
+            if product_id is not None and str(m.product_id) != str(product_id):
+                ok = False
 
-            if product_id is not None:
-                if str(m.product_id) != str(product_id):
-                    ok = False
+            if movement_type is not None and m.movement_type.name != movement_type:
+                ok = False
 
-
-            if movement_type is not None:
-                if m.movement_type.name != movement_type:
-                    ok = False
-
-            if date is not None:
-                if str(m.date)[:10] != str(date):
-                    ok = False
+            if date is not None and str(m.date)[:10] != str(date):
+                ok = False
 
             if location_id is not None:
                 if m.location_id != location_id and m.from_location_id != location_id and m.to_location_id != location_id:
                     ok = False
 
-            if customer is not None:
-                if m.customer != customer:
-                    ok = False
+            if customer is not None and m.customer != customer:
+                ok = False
 
-            if supplier_id is not None:
-                if m.supplier_id != supplier_id:
-                    ok = False
+            if supplier_id is not None and m.supplier_id != supplier_id:
+                ok = False
 
             if ok:
                 results.append(m)
 
         return results
+
+
 
 
     def _create_movement(self, product_id: str, user_id: str, movement_type: str,
@@ -162,7 +152,6 @@ class MovementController:
         resolved_from = self._resolve_location_id(from_location_id)
         resolved_to = self._resolve_location_id(to_location_id)
 
-
         if m_type_str == "IN":
             MovementValidator.validate_in_rules(product, qty)
 
@@ -172,14 +161,12 @@ class MovementController:
         elif m_type_str == "MOVE":
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
 
-
         if m_type_str == "MOVE":
             prc = 0.0
         elif price is not None and str(price).strip() != "":
             prc = float(price)
         else:
             prc = float(product.price)
-
 
         movement_id = str(uuid.uuid4())
 
@@ -190,6 +177,6 @@ class MovementController:
 
 
         self.movements.append(movement)
-        self.save_changes()
+        self._save_changes()
 
         return movement

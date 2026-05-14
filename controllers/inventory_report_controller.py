@@ -20,10 +20,32 @@ class ReportController:
         self.supplier_controller = supplier_controller
 
 
-    #  ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ
-    def report_inventory_full(self):
-        """Обединен отчет за наличностите."""
 
+    def _get_product_moves(self, pid):
+        return [m for m in self.movement_controller.movements if str(m.product_id) == pid]
+
+    def _get_avg_price(self, moves, movement_type):
+        prices = [float(m.price) for m in moves if m.movement_type.name == movement_type and m.price]
+        return sum(prices) / len(prices) if prices else 0.0
+
+    def _get_last_move(self, moves):
+        if not moves:
+            return None
+        last = moves[0]
+        for m in moves:
+            if m.date > last.date:
+                last = m
+        return last
+
+    def _get_total_in(self, moves):
+        return sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
+
+    def _get_total_out(self, moves):
+        return sum(float(m.quantity) for m in moves if m.movement_type.name == "OUT")
+
+
+    #   ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ
+    def report_inventory_full(self):
         data = self.inventory_controller._build_inventory()
 
         for item in data["products"]:
@@ -43,76 +65,40 @@ class ReportController:
 
             pid = str(product.product_id)
 
-            # Събираме всички движения за този продукт
-            moves = []
-            for m in self.movement_controller.movements:
-                if str(m.product_id) == pid:
-                    moves.append(m)
+            moves = self._get_product_moves(pid)
 
+            avg_in = self._get_avg_price(moves, "IN")
+            item["avg_in_price"] = f"{avg_in:.2f} лв."
 
-            in_prices = []
-            for m in moves:
-                if m.movement_type.name == "IN" and m.price:
-                    in_prices.append(float(m.price))
+            avg_out = self._get_avg_price(moves, "OUT")
+            item["avg_out_price"] = f"{avg_out:.2f} лв."
 
-            if in_prices:
-                avg_in = sum(in_prices) / len(in_prices)
-                item["avg_in_price"] = f"{avg_in:.2f} лв."
-            else:
-                item["avg_in_price"] = "0.00 лв."
+            last_move = self._get_last_move(moves)
+            item["last_move"] = f"{last_move.movement_type.name} - {str(last_move.date)[:10]}" if last_move else "Няма"
 
-
-            out_prices = []
-            for m in moves:
-                if m.movement_type.name == "OUT" and m.price:
-                    out_prices.append(float(m.price))
-
-            if out_prices:
-                avg_out = sum(out_prices) / len(out_prices)
-                item["avg_out_price"] = f"{avg_out:.2f} лв."
-            else:
-                item["avg_out_price"] = "0.00 лв."
-
-
-            if moves:
-                last_move = moves[0]
-                for m in moves:
-                    if m.date > last_move.date:
-                        last_move = m
-                item["last_move"] = f"{last_move.movement_type.name} - {str(last_move.date)[:10]}"
-            else:
-                item["last_move"] = "Няма"
-
-
-            delivered = 0
-            for m in moves:
-                if m.movement_type.name == "IN":
-                    delivered += float(m.quantity)
+            delivered = self._get_total_in(moves)
             item["delivered"] = f"{delivered} {item['unit']}"
 
-
-            sold = 0
-            for m in moves:
-                if m.movement_type.name == "OUT":
-                    sold += float(m.quantity)
+            sold = self._get_total_out(moves)
             item["sold"] = f"{sold} {item['unit']}"
 
         return ReportResult(data["summary"], data["products"])
 
-    #  ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА
+
+
+
     def report_movements(self):
         rows = []
 
         for m in self.movement_controller.movements:
             loc = self.location_controller.get_by_id(m.location_id)
-            rows.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
-                         "type": m.movement_type.name,
-                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
-                         "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
-                         "to": m.customer if m.movement_type.name == "OUT"
-                         else (loc.name if loc else "Склад")})
-        return ReportResult({"total": len(rows)}, rows)
+            rows.append({ "date": str(m.date)[:10], "movement_id": m.movement_id[:8], "type": m.movement_type.name, "product": m.product_name, "quantity": m.quantity,
+                          "unit": m.unit,
+                          "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
+                          "to": m.customer if m.movement_type.name == "OUT"
+                          else (loc.name if loc else "Склад")})
 
+        return ReportResult({"total": len(rows)}, rows)
 
 
 

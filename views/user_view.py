@@ -7,6 +7,7 @@ class UserView:
     def __init__(self, controller):
         self.controller = controller
 
+
     def show_menu(self, user):
         if not self.controller.is_admin(user):
             print("\nНямате администраторски права.")
@@ -17,6 +18,8 @@ class UserView:
             choice = menu.show()
             if menu.execute(choice, user) == "break":
                 break
+
+
 
     def _build_menu(self):
         return Menu("Администрация на потребители", [

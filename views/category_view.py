@@ -7,6 +7,7 @@ class CategoryView:
         self.controller = controller
         self.product_controller = product_controller
 
+
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")

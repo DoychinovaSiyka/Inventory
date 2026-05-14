@@ -3,14 +3,14 @@ from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
 
+
+
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
     def __init__(self, repo):
         self.repo = repo
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
-
-
 
 
     def add(self, name: str, contact: str, address: str) -> Supplier:

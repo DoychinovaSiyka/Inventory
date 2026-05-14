@@ -8,31 +8,26 @@ class UserController:
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
 
-
         raw_data = self.repo.load()
         if not raw_data or not isinstance(raw_data, list):
             raw_data = []
 
-
         self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
         self.logged_user: Optional[User] = None
-
 
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
+    # търсене по ID или username
     def find_user_flexible(self, identifier: str) -> Optional[User]:
-        # търсене по ID или username
         if not identifier:
             return None
-
         identifier = str(identifier).strip()
         user = self.get_by_id(identifier)
         if user:
             return user
-
         return self.get_by_username(identifier)
 
     def _hash_password(self, password: str) -> str:
@@ -48,7 +43,7 @@ class UserController:
             return False
         return str(user.role).lower() == "admin"
 
-    def save_changes(self):
+    def _save_changes(self):
         # Записваме всички потребители обратно в JSON
         self.repo.save([u.to_dict() for u in self.users])
 
@@ -95,7 +90,7 @@ class UserController:
                         role=role, status="Active")
 
         self.users.append(new_user)
-        self.save_changes()
+        self._save_changes()
         return new_user
 
     def change_role(self, identifier, new_role):
@@ -110,9 +105,8 @@ class UserController:
 
         user.role = new_role
         user.update_modified()
-        self.save_changes()
+        self._save_changes()
 
-    # Активиране/деактивиране на потребител
     def change_status(self, acting_user: User, identifier: str, new_status: str):
         user = self.find_user_flexible(identifier)
         if not user:
@@ -124,7 +118,7 @@ class UserController:
 
         user.status = new_status
         user.update_modified()
-        self.save_changes()
+        self._save_changes()
         return True
 
     def delete_user(self, acting_user: User, identifier: str):
@@ -137,25 +131,21 @@ class UserController:
         UserValidator.validate_not_last_admin(user, self.users)
 
         self.users.remove(user)
-        self.save_changes()
+        self._save_changes()
         return True
 
-
-    # Създаваме администратор по подразбиране
     def _create_default_admin(self):
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                      username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
-        self.save_changes()
-
+        self._save_changes()
 
     def _create_default_operator(self):
         operator = User(user_id=None, first_name="Operator", last_name="User",
                         email="operator@example.com", username="operator", password=self._hash_password("operator123"),
                         role="Operator", status="Active")
         self.users.append(operator)
-        self.save_changes()
-
+        self._save_changes()
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
@@ -179,6 +169,7 @@ class UserController:
 
             elif field_type == "role":
                 UserValidator.validate_role(value)
+
             return None
 
         except ValueError as e:

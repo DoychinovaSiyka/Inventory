@@ -13,12 +13,8 @@ class MovementView:
         self.supplier_controller = supplier_controller
         self.inventory_controller = inventory_controller
 
-    # ---------------------------------------------------------
-    #  Помощни методи
-    # ---------------------------------------------------------
 
     def _float(self, prompt, allow_empty=False, default=None):
-        """Стабилно въвеждане на число."""
         while True:
             val = input(prompt).strip()
 
@@ -39,7 +35,6 @@ class MovementView:
                 print("Невалидно число. Опитайте пак.")
 
     def _select_item(self, items, label):
-        """Стабилен избор на продукт/склад/доставчик."""
         if not items:
             print(f"\nНяма {label}.\n")
             return None
@@ -61,7 +56,7 @@ class MovementView:
             if not choice:
                 return None
 
-            # Избор по номер
+
             if choice.isdigit():
                 index = int(choice) - 1
                 if 0 <= index < len(items):
@@ -69,7 +64,7 @@ class MovementView:
                 print("Невалиден номер.")
                 continue
 
-            # Избор по ID
+
             matches = [item for item in items if get_id(item).startswith(choice)]
             if len(matches) == 1:
                 return matches[0]
@@ -79,9 +74,8 @@ class MovementView:
             else:
                 print("Невалиден избор. Опитайте пак.")
 
-    # ---------------------------------------------------------
-    #  Основно меню
-    # ---------------------------------------------------------
+
+
 
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
@@ -89,8 +83,7 @@ class MovementView:
             MenuItem("2", "Продажба (изход)", self.process_sale),
             MenuItem("3", "Вътрешно преместване", self.process_transfer),
             MenuItem("4", "Търсене на движения", self.advanced_search),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
             choice = menu.show()
@@ -99,9 +92,7 @@ class MovementView:
             if menu.execute(choice, user) == "break":
                 break
 
-    # ---------------------------------------------------------
-    #  Доставка
-    # ---------------------------------------------------------
+
 
     def process_delivery(self, user):
         print("\nНова доставка")
@@ -122,25 +113,19 @@ class MovementView:
         price = self._float(f"Цена (Enter за {product.price} лв.): ",
                             allow_empty=True, default=product.price)
 
-        movement = self.movement_controller.add_in(
-            str(product.product_id), qty, price,
-            str(location.location_id),
-            str(supplier.supplier_id),
-            str(user.user_id)
-        )
+        movement = self.movement_controller.add_in(str(product.product_id), qty, price,
+                                                   str(location.location_id), str(supplier.supplier_id),
+                                                   str(user.user_id))
 
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
 
-    # ---------------------------------------------------------
-    #  Продажба
-    # ---------------------------------------------------------
+
+
 
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
-            stock = self.inventory_controller.get_stock(
-                str(product.product_id), str(loc.location_id)
-            )
+            stock = self.inventory_controller.get_stock(str(product.product_id), str(loc.location_id))
             if stock > 0:
                 valid.append((loc, stock))
         return valid
@@ -180,32 +165,28 @@ class MovementView:
 
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
 
-        max_stock = self.inventory_controller.get_stock(
-            str(product.product_id), str(location.location_id)
-        )
+        max_stock = self.inventory_controller.get_stock(str(product.product_id),
+                                                        str(location.location_id))
+
 
         qty = self._float(f"Количество (макс {max_stock}): ")
         if qty > max_stock:
             print(f"Няма толкова наличност ({max_stock}).")
             return
 
-        sale_price = self._float(
-            f"Цена (Enter за {product.price} лв.): ",
-            allow_empty=True, default=product.price
-        )
+        sale_price = self._float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True,
+                                 default=product.price)
 
         try:
-            self.movement_controller.add_out(
-                str(product.product_id), qty, customer,
-                str(location.location_id), str(user.user_id), sale_price
-            )
+            self.movement_controller.add_out(str(product.product_id), qty, customer,
+                                             str(location.location_id), str(user.user_id),
+                                             sale_price)
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
 
-    # ---------------------------------------------------------
-    #  Вътрешно преместване
-    # ---------------------------------------------------------
+
+
 
     def process_transfer(self, user):
         print("\nВътрешно преместване")
@@ -277,9 +258,8 @@ class MovementView:
             return
 
         try:
-            self.movement_controller.move_stock(
-                product_id, qty, from_loc_id, str(to_loc.location_id), str(user.user_id)
-            )
+            self.movement_controller.move_stock(product_id, qty, from_loc_id,
+                                                str(to_loc.location_id), str(user.user_id))
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} към {to_loc.name}.")
         except Exception as e:
             print(f"Проблем при преместването: {e}")

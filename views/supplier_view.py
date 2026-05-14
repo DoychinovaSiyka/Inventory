@@ -16,17 +16,13 @@ class SupplierView:
                 break
 
     def _build_menu(self, is_admin):
-        items = [
-            MenuItem("1", "Списък с доставчици", self.show_suppliers),
-            MenuItem("2", "Търсене на доставчик", self.search_supplier)
-        ]
+        items = [MenuItem("1", "Списък с доставчици", self.show_suppliers),
+                 MenuItem("2", "Търсене на доставчик", self.search_supplier)]
 
         if is_admin:
-            items.extend([
-                MenuItem("3", "Добавяне на доставчик", self.add_supplier),
-                MenuItem("4", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("5", "Изтриване на доставчик", self.delete_supplier)
-            ])
+            items.extend([MenuItem("3", "Добавяне на доставчик", self.add_supplier),
+                          MenuItem("4", "Редактиране на доставчик", self.edit_supplier),
+                          MenuItem("5", "Изтриване на доставчик", self.delete_supplier)])
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", items)
@@ -41,10 +37,7 @@ class SupplierView:
 
         print("\nСПИСЪК С ДОСТАВЧИЦИ")
         columns = ["ID", "Име", "Контакт", "Адрес"]
-        rows = [
-            [s.supplier_id[:8], s.name, s.contact, s.address]
-            for s in suppliers
-        ]
+        rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
         print(format_table(columns, rows))
 
 
@@ -64,17 +57,13 @@ class SupplierView:
 
         print("\nНамерени доставчици:")
         columns = ["ID", "Име", "Контакт", "Адрес"]
-        rows = [
-            [s.supplier_id[:8], s.name, s.contact, s.address]
-            for s in results
-        ]
+        rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in results]
         print(format_table(columns, rows))
 
 
 
     def add_supplier(self, _):
         print("\nНов доставчик")
-
 
         while True:
             name = input("Име: ").strip()
@@ -87,7 +76,7 @@ class SupplierView:
                 print(f"Грешка: {error}")
                 continue
 
-            # Проверка за дублиране
+
             if any(s.name.lower() == name.lower() for s in self.controller.get_all()):
                 print(f"Доставчик с име '{name}' вече съществува.")
                 continue

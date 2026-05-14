@@ -48,7 +48,6 @@ class ProductController:
         unit = self.validator.validate_unit(product_data.get("unit", "бр."))
         description = product_data.get("description", "").strip()
 
-
         categories = []
         raw_ids = product_data.get("category_ids", [])
         id_list = raw_ids if isinstance(raw_ids, list) else [raw_ids]
@@ -60,8 +59,8 @@ class ProductController:
         if not categories and raw_ids:
             raise ValueError("Нито една от избраните категории не е валидна.")
 
-
-        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
+        product = Product(product_id=None, name=name, categories=categories,
+                          unit=unit, description=description, price=price)
 
         self.products.append(product)
         self._save_changes()
@@ -86,16 +85,18 @@ class ProductController:
         if "unit" in updates:
             product.unit = self.validator.validate_unit(updates["unit"])
 
+
         if "category_ids" in updates:
             new_cats = []
             for cid in updates["category_ids"]:
                 cat = self.category_controller.get_by_id(cid)
                 if cat:
                     new_cats.append(cat)
-            product.categories = new_cats
 
-        if not new_cats and updates["category_ids"]:
-            raise ValueError("Нито една от новите категории не е валидна.")
+            if not new_cats and updates["category_ids"]:
+                raise ValueError("Нито една от новите категории не е валидна.")
+
+            product.categories = new_cats
 
         product.update_modified()
         self._save_changes()
@@ -136,10 +137,7 @@ class ProductController:
 
         return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
 
-
-
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
-
         try:
             if field_type == "name":
                 self.validator.validate_name(value)

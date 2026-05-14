@@ -19,12 +19,6 @@ class LocationController:
             if obj:
                 self.locations.append(obj)
 
-
-
-    def save(self) -> None:
-        self._save_changes()
-
-
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -38,8 +32,6 @@ class LocationController:
 
         return location
 
-
-
     def get_all(self) -> List[Location]:
         return self.locations
 
@@ -52,7 +44,6 @@ class LocationController:
 
         return None
 
-
     def search(self, query: str) -> List[Location]:
         q = str(query or "").strip().lower()
         if not q:
@@ -64,13 +55,10 @@ class LocationController:
             name = loc.name.lower()
             zone = loc.zone.lower()
             cap = str(loc.capacity).lower()
-
-
             if (q in short_id or q in name or q in zone or q in cap):
                 results.append(loc)
 
         return results
-
 
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
@@ -96,13 +84,11 @@ class LocationController:
         self._save_changes()
         return True
 
-
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с ID {location_id} не съществува.")
 
-        # Проверка за наличности
         if self.inventory_controller:
             products_data = self.inventory_controller.data.get("products", {})
 
@@ -132,7 +118,17 @@ class LocationController:
         self._save_changes()
         return True
 
-
+    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        try:
+            if field_type == "name":
+                LocationValidator.validate_name(value)
+            elif field_type == "zone":
+                LocationValidator.validate_zone(value)
+            elif field_type == "capacity":
+                LocationValidator.validate_capacity(value)
+            return None
+        except ValueError as e:
+            return str(e)
 
     def _save_changes(self) -> None:
         data = [l.to_dict() for l in self.locations]

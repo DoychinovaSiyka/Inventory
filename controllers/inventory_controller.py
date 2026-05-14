@@ -11,15 +11,25 @@ class InventoryController:
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Основна структура: { product_id: { locations: { location_id: qty } } }
-        self.data = {"products": {}}
+        self.data = self._load()
 
         # Първоначално изграждане на наличностите от историята
         self.update_inventory_from_movements(self.movement_controller.movements)
 
 
+
+    def _load(self):
+        """Зарежда инвентара от хранилището."""
+        data = self.repo.load()
+        return data if data else {"products": {}}
+
+    def _save(self):
+        """Записва текущото състояние в хранилището."""
+        self.repo.save(self._build_inventory())
+
+
+
     def _product_id(self, user_input: str) -> Optional[str]:
-        """Превръща късо ID или име в пълно UUID от базата данни."""
         if not user_input:
             return None
 
@@ -34,7 +44,6 @@ class InventoryController:
             if full_id.startswith(user_input):
                 return full_id
 
-        # Проверка по име или ID от ProductController
         for p in self.product_controller.get_all():
             if user_input.lower() == p.name.lower() or str(p.product_id).startswith(user_input):
                 return str(p.product_id)
@@ -70,6 +79,8 @@ class InventoryController:
         current = float(locs.get(lid, 0))
         locs[lid] = round(current + float(quantity), 2)
 
+
+
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -83,6 +94,7 @@ class InventoryController:
         locs[lid] = round(current - float(quantity), 2)
         return True
 
+
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         pid = self._product_id(product_id)
         from_lid = self._location_id(from_location_id)
@@ -95,18 +107,23 @@ class InventoryController:
         return True
 
 
-    #  Справки и изчисления
+
+
+    #   СПРАВКИ
     def get_total_stock(self, product_id: str) -> float:
         """Обща наличност на продукт във всички складове."""
         pid = self._product_id(product_id)
         product_info = self.data["products"].get(pid, {})
         return sum(float(q) for q in product_info.get("locations", {}).values())
 
+
     def get_stock(self, product_id, location_id):
         """Наличност на продукт в конкретен склад."""
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
         return float(self.data.get("products", {}).get(pid, {}).get("locations", {}).get(lid, 0))
+
+
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         """Изчислява себестойността на продадените стоки по FIFO."""
@@ -146,8 +163,9 @@ class InventoryController:
 
 
 
+
     def _build_inventory(self):
-        """Подготвя структурата за запис и отчети."""
+        """Структурата за запис и отчети."""
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
@@ -171,9 +189,7 @@ class InventoryController:
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
 
-    def _save(self):
-        """Записва текущото състояние в хранилището."""
-        self.repo.save(self._build_inventory())
+
 
     def update_inventory_from_movements(self, movements):
         """Синхронизира инвентара на база списък от движения."""
@@ -190,6 +206,5 @@ class InventoryController:
 
             elif mtype == "MOVE":
                 self.move_stock(mv.product_id, mv.quantity, mv.from_location_id, mv.to_location_id)
-
 
         self._save()

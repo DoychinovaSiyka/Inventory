@@ -18,10 +18,6 @@ class InvoiceController:
     def _save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-    def save(self) -> None:
-        self._save_changes()
-
-
     #  Създаване на фактура при продажба
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         for inv in self.invoices:
@@ -49,6 +45,7 @@ class InvoiceController:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
+
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
         tid = str(invoice_id or "").strip().lower()
         if not tid:
@@ -59,6 +56,7 @@ class InvoiceController:
                 return inv
 
         return None
+
 
 
 
