@@ -94,6 +94,9 @@ class ProductController:
                     new_cats.append(cat)
             product.categories = new_cats
 
+        if not new_cats and updates["category_ids"]:
+            raise ValueError("Нито една от новите категории не е валидна.")
+
         product.update_modified()
         self._save_changes()
         return True

@@ -112,11 +112,8 @@ class InventoryController:
         pid = self._product_id(product_id)
 
         # Общо продадено количество
-        total_sold = sum(
-            float(m.quantity)
-            for m in movements
-            if str(m.product_id) == pid and m.movement_type.name == "OUT"
-        )
+        total_sold = sum(float(m.quantity) for m in movements
+                         if str(m.product_id) == pid and m.movement_type.name == "OUT")
 
         if total_sold <= 0:
             return 0.0
