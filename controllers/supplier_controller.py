@@ -3,7 +3,6 @@ from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
 
-
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
     def __init__(self, repo):
@@ -11,32 +10,49 @@ class SupplierController:
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
+
+
+
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
 
-        supplier = Supplier(supplier_id=None, name=name.strip(), contact=contact.strip(), address=address.strip())
+        supplier = Supplier(supplier_id=None, name=name.strip(),
+                            contact=contact.strip(), address=address.strip())
+
         self.suppliers.append(supplier)
         self._save_changes()
         return supplier
 
 
-    # READ
     def get_all(self) -> List[Supplier]:
         return self.suppliers
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
-        sid = str(supplier_id or "").strip()
+        sid = str(supplier_id or "").strip().lower()
         if not sid:
             return None
 
         for supplier in self.suppliers:
-            full_id = str(supplier.supplier_id)
-            short_id = full_id[:8]
-
-            if sid == short_id or sid == full_id:
+            short_id = str(supplier.supplier_id).lower()[:8]
+            if sid == short_id:
                 return supplier
 
         return None
+
+
+    def search(self, supplier_id: str) -> List[Supplier]:
+        sid = str(supplier_id or "").strip().lower()
+        if not sid:
+            return []
+
+        results = []
+        for s in self.suppliers:
+            if s.supplier_id[:8].lower() == sid:
+                results.append(s)
+
+        return results
+
+
 
     def update(self, supplier_id: str, name: Optional[str] = None,
                contact: Optional[str] = None, address: Optional[str] = None) -> Supplier:
@@ -48,9 +64,11 @@ class SupplierController:
         if name is not None:
             SupplierValidator.validate_name(name)
             supplier.name = name.strip()
+
         if contact is not None:
             SupplierValidator.validate_contact(contact)
             supplier.contact = contact.strip()
+
         if address is not None:
             SupplierValidator.validate_address(address)
             supplier.address = address.strip()
@@ -58,7 +76,6 @@ class SupplierController:
         supplier.update_modified()
         self._save_changes()
         return supplier
-
 
 
     def remove(self, supplier_id: str) -> bool:

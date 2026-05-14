@@ -19,6 +19,12 @@ class LocationController:
             if obj:
                 self.locations.append(obj)
 
+
+
+    def save(self) -> None:
+        self._save_changes()
+
+
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -28,24 +34,43 @@ class LocationController:
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity)
         self.locations.append(location)
-        self.save_changes()
+        self._save_changes()
 
         return location
+
+
 
     def get_all(self) -> List[Location]:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        target = str(location_id or "").strip()
+        target = str(location_id or "").strip().lower()
 
         for loc in self.locations:
-            full_id = str(loc.location_id)
-            short_id = full_id[:8]
-
-            if target == short_id or target == full_id:
+            if loc.location_id[:8].lower() == target:
                 return loc
 
         return None
+
+
+    def search(self, query: str) -> List[Location]:
+        q = str(query or "").strip().lower()
+        if not q:
+            return []
+
+        results = []
+        for loc in self.locations:
+            short_id = loc.location_id[:8].lower()
+            name = loc.name.lower()
+            zone = loc.zone.lower()
+            cap = str(loc.capacity).lower()
+
+
+            if (q in short_id or q in name or q in zone or q in cap):
+                results.append(loc)
+
+        return results
+
 
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
@@ -68,8 +93,9 @@ class LocationController:
             location.capacity = capacity
 
         location.update_modified()
-        self.save_changes()
+        self._save_changes()
         return True
+
 
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
@@ -83,7 +109,6 @@ class LocationController:
             for pid, pdata in products_data.items():
                 locations_map = pdata.get("locations", {})
 
-                # НОВО: нормализиране на ключовете (късо/дълго ID)
                 normalized_map = {}
                 for key, qty in locations_map.items():
                     loc_obj = self.get_by_id(key)
@@ -103,30 +128,12 @@ class LocationController:
                     raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
 
         full_id = location.location_id
-
-        new_list = []
-        for l in self.locations:
-            if l.location_id != full_id:
-                new_list.append(l)
-
-        self.locations = new_list
-        self.save_changes()
+        self.locations = [l for l in self.locations if l.location_id != full_id]
+        self._save_changes()
         return True
 
-    def validate_field(self, field_type: str, value: str) -> Optional[str]:
-        try:
-            if field_type == "name":
-                LocationValidator.validate_name(value)
-            elif field_type == "zone":
-                LocationValidator.validate_zone(value)
-            elif field_type == "capacity":
-                LocationValidator.validate_capacity(value)
-            return None
-        except ValueError as e:
-            return str(e)
 
-    def save_changes(self) -> None:
-        data = []
-        for l in self.locations:
-            data.append(l.to_dict())
+
+    def _save_changes(self) -> None:
+        data = [l.to_dict() for l in self.locations]
         self.repo.save(data)

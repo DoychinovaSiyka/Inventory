@@ -6,6 +6,7 @@ class SupplierView:
     def __init__(self, controller):
         self.controller = controller
 
+
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")
@@ -15,14 +16,21 @@ class SupplierView:
                 break
 
     def _build_menu(self, is_admin):
-        items = [MenuItem("1", "Списък с доставчици", self.show_suppliers)]
+        items = [
+            MenuItem("1", "Списък с доставчици", self.show_suppliers),
+            MenuItem("2", "Търсене на доставчик", self.search_supplier)
+        ]
+
         if is_admin:
             items.extend([
-                MenuItem("2", "Добавяне на доставчик", self.add_supplier),
-                MenuItem("3", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("4", "Изтриване на доставчик", self.delete_supplier)])
+                MenuItem("3", "Добавяне на доставчик", self.add_supplier),
+                MenuItem("4", "Редактиране на доставчик", self.edit_supplier),
+                MenuItem("5", "Изтриване на доставчик", self.delete_supplier)
+            ])
+
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", items)
+
 
 
     def show_suppliers(self, _):
@@ -33,20 +41,45 @@ class SupplierView:
 
         print("\nСПИСЪК С ДОСТАВЧИЦИ")
         columns = ["ID", "Име", "Контакт", "Адрес"]
-        rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
+        rows = [
+            [s.supplier_id[:8], s.name, s.contact, s.address]
+            for s in suppliers
+        ]
+        print(format_table(columns, rows))
+
+
+
+
+    def search_supplier(self, _):
+        print("\nТърсене на доставчик")
+        sid = input("Въведете кратко ID (8 символа): ").strip()
+        if not sid:
+            print("Празно търсене.")
+            return
+
+        results = self.controller.search(sid)
+        if not results:
+            print("Няма доставчик с такова ID.")
+            return
+
+        print("\nНамерени доставчици:")
+        columns = ["ID", "Име", "Контакт", "Адрес"]
+        rows = [
+            [s.supplier_id[:8], s.name, s.contact, s.address]
+            for s in results
+        ]
         print(format_table(columns, rows))
 
 
 
     def add_supplier(self, _):
         print("\nНов доставчик")
+
+
         while True:
             name = input("Име: ").strip()
             if not name:
                 print("Името е задължително.")
-                continue
-            if len(name) < 2:
-                print("Името трябва да е поне 2 символа.")
                 continue
 
             error = self.controller.validate_field("name", name)
@@ -54,45 +87,37 @@ class SupplierView:
                 print(f"Грешка: {error}")
                 continue
 
-            all_sups = self.controller.get_all()
-            duplicate = False
-            for s in all_sups:
-                if s.name.lower() == name.lower():
-                    duplicate = True
-                    break
-
-            if duplicate:
+            # Проверка за дублиране
+            if any(s.name.lower() == name.lower() for s in self.controller.get_all()):
                 print(f"Доставчик с име '{name}' вече съществува.")
                 continue
 
             break
+
 
         while True:
             contact = input("Контакт: ").strip()
             if not contact:
                 print("Контактът е задължителен.")
                 continue
-            if len(contact) < 2:
-                print("Контактът трябва да е поне 2 символа.")
-                continue
 
             error = self.controller.validate_field("contact", contact)
             if not error:
                 break
+
             print(f"Грешка: {error}")
+
 
         while True:
             address = input("Адрес: ").strip()
             if not address:
                 print("Адресът е задължителен.")
                 continue
-            if len(address) < 2:
-                print("Адресът трябва да е поне 2 символа.")
-                continue
 
             error = self.controller.validate_field("address", address)
             if not error:
                 break
+
             print(f"Грешка: {error}")
 
         try:
@@ -102,19 +127,18 @@ class SupplierView:
             print(f"Грешка при запис: {e}")
 
 
-
-
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
 
-        # Избор по ID
         while True:
-            sid = input("Въведете ID за търсене: ").strip()
+            sid = input("Въведете кратко ID: ").strip()
             if not sid:
                 return
+
             supplier = self.controller.get_by_id(sid)
             if supplier:
                 break
+
             print("Не е намерен доставчик с такова ID.")
 
         print(f"\nРедакция на: {supplier.name} (Enter запазва старата стойност)")
@@ -125,24 +149,15 @@ class SupplierView:
             if not new_name:
                 new_name = supplier.name
                 break
-            if len(new_name) < 2:
-                print("Името трябва да е поне 2 символа.")
-                continue
 
             error = self.controller.validate_field("name", new_name)
             if error:
                 print(f"Грешка: {error}")
                 continue
 
-            all_sups = self.controller.get_all()
-            duplicate = False
-            for s in all_sups:
-                if s.supplier_id != supplier.supplier_id:
-                    if s.name.lower() == new_name.lower():
-                        duplicate = True
-                        break
 
-            if duplicate:
+            if any(s.name.lower() == new_name.lower() and s.supplier_id != supplier.supplier_id
+                   for s in self.controller.get_all()):
                 print(f"Името '{new_name}' вече се използва.")
                 continue
 
@@ -154,27 +169,24 @@ class SupplierView:
             if not new_contact:
                 new_contact = supplier.contact
                 break
-            if len(new_contact) < 2:
-                print("Контактът трябва да е поне 2 символа.")
-                continue
 
             error = self.controller.validate_field("contact", new_contact)
             if not error:
                 break
+
             print(f"Грешка: {error}")
+
 
         while True:
             new_address = input(f"Нов адрес [{supplier.address}]: ").strip()
             if not new_address:
                 new_address = supplier.address
                 break
-            if len(new_address) < 2:
-                print("Адресът трябва да е поне 2 символа.")
-                continue
 
             error = self.controller.validate_field("address", new_address)
             if not error:
                 break
+
             print(f"Грешка: {error}")
 
         try:
@@ -188,17 +200,20 @@ class SupplierView:
 
     def delete_supplier(self, _):
         print("\nИзтриване на доставчик")
+
         while True:
-            sid = input("ID на доставчик за изтриване: ").strip()
+            sid = input("Кратко ID на доставчик: ").strip()
             if not sid:
                 return
+
             supplier = self.controller.get_by_id(sid)
             if supplier:
                 break
+
             print("Няма доставчик с такова ID.")
 
         try:
-            self.controller.remove(supplier.supplier_id)
+            self.controller.remove(supplier.supplier_id[:8])
             print("Доставчикът е премахнат от системата.")
         except Exception as e:
             print(f"Грешка при изтриване: {e}")

@@ -92,11 +92,54 @@ class MovementController:
 
         # Обновяване на инвентара
         if self.inventory_controller:
-            self.inventory_controller.move_stock(product_id, from_loc, to_loc, quantity)
+            self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
 
         return movement
 
 
+
+
+
+
+    def search_movements(self, product_id=None, movement_type=None,
+                         date=None, location_id=None, customer=None, supplier_id=None):
+        """Търси движения по различни критерии."""
+
+        results = []
+
+        for m in self.movements:
+            ok = True
+
+
+            if product_id is not None:
+                if str(m.product_id) != str(product_id):
+                    ok = False
+
+
+            if movement_type is not None:
+                if m.movement_type.name != movement_type:
+                    ok = False
+
+            if date is not None:
+                if str(m.date)[:10] != str(date):
+                    ok = False
+
+            if location_id is not None:
+                if m.location_id != location_id and m.from_location_id != location_id and m.to_location_id != location_id:
+                    ok = False
+
+            if customer is not None:
+                if m.customer != customer:
+                    ok = False
+
+            if supplier_id is not None:
+                if m.supplier_id != supplier_id:
+                    ok = False
+
+            if ok:
+                results.append(m)
+
+        return results
 
 
     def _create_movement(self, product_id: str, user_id: str, movement_type: str,

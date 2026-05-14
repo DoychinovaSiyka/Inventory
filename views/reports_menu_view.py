@@ -10,12 +10,16 @@ class ReportsView:
     def __init__(self, controller):
         self.controller = controller
 
+
+
     def _display_report(self, title, headers, rows):
         if not rows:
             print("\nНяма данни за показване.\n")
             return
         print(f"\n{title}")
         print(format_table(headers, rows))
+
+
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -24,6 +28,7 @@ class ReportsView:
                 break
             if menu_obj.execute(choice, user) == "break":
                 break
+
 
     def show_menu(self, user):
         menu = Menu("Отчети", [
@@ -35,8 +40,9 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
+
+
     def format_card(self, item):
-        """Форматира данните за един продукт в карта без емоджита."""
         lines = []
         lines.append("─" * 45)
         lines.append(f"ПРОДУКТ:          {item['product'].upper()}")
@@ -58,9 +64,11 @@ class ReportsView:
 
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
-        print("\n=== ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ ===")
+        print("\n ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ ")
         for item in result.data:
             print(self.format_card(item))
+
+
 
     def report_movements(self, _):
         result = self.controller.report_movements()
@@ -73,6 +81,8 @@ class ReportsView:
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
+
+
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
@@ -83,6 +93,8 @@ class ReportsView:
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
 
+
+
     def report_sales_all(self, _):
         result = self.controller.report_sales()
         rows = []
@@ -92,6 +104,8 @@ class ReportsView:
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо", "Статус"]
         self._display_report("ВСИЧКИ ПРОДАЖБИ", headers, rows)
+
+
 
     def report_fifo_analysis(self, _):
         while True:

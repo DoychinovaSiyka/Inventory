@@ -136,7 +136,10 @@ class ProductController:
 
         return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
 
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
+
         try:
             if field_type == "name":
                 self.validator.validate_name(value)
@@ -151,6 +154,7 @@ class ProductController:
                     return "Невалидна категория."
             else:
                 return f"Непознат тип поле: {field_type}"
+
         except Exception as e:
             return str(e)
 

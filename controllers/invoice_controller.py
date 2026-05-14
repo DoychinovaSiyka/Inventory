@@ -12,18 +12,18 @@ class InvoiceController:
         self._reload()
 
     def _reload(self) -> None:
-        """ Зарежда всички фактури от базата и ги превръща в обекти. """
         raw = self.repo.load() or []
         self.invoices = [Invoice.from_dict(inv) for inv in raw if isinstance(inv, dict)]
 
     def _save_changes(self) -> None:
-        """ Записва списъка с фактури обратно в базата. """
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-    def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
-        """Автоматично генерира фактура при продажба."""
+    def save(self) -> None:
+        self._save_changes()
 
-        # Проверка дали вече има фактура за това движение
+
+    #  Създаване на фактура при продажба
+    def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
@@ -42,29 +42,41 @@ class InvoiceController:
         self._save_changes()
         return invoice
 
+
+
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
-        """Връща всички фактури или само активните."""
         if include_cancelled:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        """Приема short или long ID и връща фактурата."""
-        tid = str(invoice_id or "").strip()
+        tid = str(invoice_id or "").strip().lower()
         if not tid:
             return None
 
         for inv in self.invoices:
-            full_id = str(inv.invoice_id)
-            short_id = full_id[:8]
-
-            if tid == short_id or tid == full_id:
+            if inv.invoice_id[:8].lower() == tid:
                 return inv
 
         return None
 
+
+
+    def search(self, query: str) -> List[Invoice]:
+        q = str(query or "").strip().lower()
+        if not q:
+            return []
+
+        results = []
+        for inv in self.invoices:
+            if inv.invoice_id[:8].lower() == q:
+                results.append(inv)
+
+        return results
+
+
+
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        """Анулира фактура по кратко или дълго ID."""
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False

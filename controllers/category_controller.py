@@ -46,7 +46,6 @@ class CategoryController:
 
 
     def update(self, category_id: str, updates: dict) -> bool:
-        """Обновява категория с валидация само на променените полета."""
         category = self.get_by_id(category_id)
         if not category:
             return False

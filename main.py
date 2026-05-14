@@ -33,7 +33,8 @@ class InventoryApplication:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
 
-        self.inventory_repo = JSONRepository(r"C:\Inventory\data\inventory.json", is_dict=True)
+        self.inventory_repo = JSONRepository("data/inventory.json", is_dict=True)
+
 
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)

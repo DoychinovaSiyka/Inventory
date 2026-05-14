@@ -41,7 +41,7 @@ class AdminMenuView:
             MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
             MenuItem("3", "Доставки и продажби", lambda u: self.movement_view.show_menu(u)),
             MenuItem("4", "Управление на потребители", lambda u: self.user_view.show_menu(u)),
-            MenuItem("5", "Справки и отчети", lambda u: self.reports_view.show_menu(u)),
+            MenuItem("5", "Отчети", lambda u: self.reports_view.show_menu(u)),
             MenuItem("6", "Фактури", lambda u: self.invoice_view.show_menu(u)),
             MenuItem("7", "Информация за системата", lambda u: self.system_info_view.show_menu()),
             MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
