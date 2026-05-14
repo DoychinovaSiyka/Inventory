@@ -33,7 +33,7 @@ class MovementController:
         self.inventory_controller = None
 
 
-    # Връзка с InventoryController
+
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 

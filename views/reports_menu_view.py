@@ -3,10 +3,12 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
+
 class ReportsView:
     def __init__(self, controller):
         self.controller = controller
-
 
     def _display_report(self, title, headers, rows):
         if not rows:
@@ -14,7 +16,6 @@ class ReportsView:
             return
         print(f"\n{title}")
         print(format_table(headers, rows))
-
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -34,89 +35,80 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-
-
     def format_card(self, item):
+        """Форматира данните за един продукт в карта без емоджита."""
         lines = []
-        lines.append("─" * 40)
-        lines.append(f"Продукт:          {item['product']}")
-        lines.append(f"Общо количество:  {item['total']}")
+        lines.append("─" * 45)
+        lines.append(f"ПРОДУКТ:          {item['product'].upper()}")
+        lines.append(f"Общо количество:  {item['total']} {item['unit']}")
         lines.append("")
-        lines.append("По складове:")
-
+        lines.append("ПО СКЛАДОВЕ:")
 
         for wh, qty in item["warehouses"].items():
-            lines.append(f"  - {wh}: {qty}")
+            lines.append(f"  • {wh}: {qty} {item['unit']}")
 
         lines.append("")
         lines.append(f"Доставено:        {item['delivered']}")
         lines.append(f"Продадено:        {item['sold']}")
         lines.append(f"Средна входна:    {item['avg_in_price']}")
         lines.append(f"Средна изходна:   {item['avg_out_price']}")
-        lines.append(f"Последно движение:{item['last_move']}")
-        lines.append("─" * 40)
+        lines.append(f"Последно:         {item['last_move']}")
+        lines.append("─" * 45)
         return "\n".join(lines)
 
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
-
-        print("\nОБЕДИНЕН ОТЧЕТ – КАРТИ\n")
+        print("\n=== ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ ===")
         for item in result.data:
             print(self.format_card(item))
-            print()
 
     def report_movements(self, _):
         result = self.controller.report_movements()
         rows = []
-
         for m in result.data:
             quantity_text = f"{m['quantity']} {m['unit']}"
-            rows.append([m["date"], m["movement_id"], m["type"], m["product"], quantity_text, m["from"], m["to"]])
+            rows.append([m["date"], m["movement_id"], m["type"], m["product"],
+                         quantity_text, m["from"], m["to"]])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
-        self._display_report("Хронология на движенията", headers, rows)
-
+        self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
-
         for item in result.data:
             rows.append([item["date"], item["movement_id"], item["product"],
-                         f"{item['quantity']} {item['unit']}", f"{float(item['price']):.2f} лв.", item["supplier"]])
+                         f"{item['quantity']} {item['unit']}", item["price"], item["supplier"]])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
-        self._display_report("Всички доставки (IN)", headers, rows)
-
+        self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
 
     def report_sales_all(self, _):
         result = self.controller.report_sales()
         rows = []
-
         for item in result.data:
             rows.append([item["invoice_number"], item["date"], item["client"],
-                         item["product"], f"{float(item['total_price']):.2f} лв.", item.get("status", "АКТИВНА")])
+                         item["product"], item["total_price"], item.get("status", "АКТИВНА")])
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо", "Статус"]
-        self._display_report("Всички продажби", headers, rows)
-
-
+        self._display_report("ВСИЧКИ ПРОДАЖБИ", headers, rows)
 
     def report_fifo_analysis(self, _):
         while True:
-            name = input("\nВъведете име или ID на продукт (или 'отказ'): ").strip()
-            if not name or name.lower() == "отказ":
+            name = input("\nВъведете име или ID на продукт (или '0' за изход): ").strip()
+            if not name or name == "0":
                 break
 
-            data = self.controller.product_lifecycle(name)
+            data = self.controller.fifo_analysis_for_product(name)
             if not data:
                 print(f"Продукт '{name}' не е намерен.")
                 continue
 
             print(f"\nАНАЛИЗ ПО FIFO ЗА: {data['product'].upper()}")
-            print(f"Наличност: {data['current_stock']} {data['unit']}")
-            print(f"История: Влезли: {data['total_in']} | Продадени: {data['total_out']}")
-            print(f"Приходи: {data['revenue']:.2f} лв.")
-            print(f"Себестойност: {data['fifo_cost']:.2f} лв.")
-            print(f"Печалба: {data['profit']:.2f} лв.")
+            print("─" * 40)
+            print(f"Продадено количество: {data['total_out']} {data['unit']}")
+            print(f"Приходи:              {data['revenue']:.2f} лв.")
+            print(f"Себестойност (FIFO):  {data['fifo_cost']:.2f} лв.")
+            print(f"Чиста печалба:        {data['profit']:.2f} лв.")
+            print("─" * 40)
             break

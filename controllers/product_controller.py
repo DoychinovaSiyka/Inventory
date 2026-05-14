@@ -19,7 +19,7 @@ class ProductController:
         data = self.repo.load() or []
         self.products = [Product.from_dict(p, self.category_controller) for p in data]
 
-    def save_changes(self) -> None:
+    def _save_changes(self) -> None:
         """Записва текущото състояние в базата."""
         self.repo.save([p.to_dict() for p in self.products])
 
@@ -57,11 +57,14 @@ class ProductController:
             if cat:
                 categories.append(cat)
 
+        if not categories and raw_ids:
+            raise ValueError("Нито една от избраните категории не е валидна.")
+
 
         product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
 
         self.products.append(product)
-        self.save_changes()
+        self._save_changes()
         return product
 
     def update(self, product_id: str, updates: dict) -> bool:
@@ -92,7 +95,7 @@ class ProductController:
             product.categories = new_cats
 
         product.update_modified()
-        self.save_changes()
+        self._save_changes()
         return True
 
     def delete_by_id(self, product_id: str) -> bool:
@@ -101,7 +104,7 @@ class ProductController:
             return False
 
         self.products = [p for p in self.products if p.product_id != product.product_id]
-        self.save_changes()
+        self._save_changes()
         return True
 
     def search(self, keyword: str) -> List[Product]:

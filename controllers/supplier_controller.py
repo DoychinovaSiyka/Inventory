@@ -16,7 +16,7 @@ class SupplierController:
 
         supplier = Supplier(supplier_id=None, name=name.strip(), contact=contact.strip(), address=address.strip())
         self.suppliers.append(supplier)
-        self.save_changes()
+        self._save_changes()
         return supplier
 
 
@@ -56,7 +56,7 @@ class SupplierController:
             supplier.address = address.strip()
 
         supplier.update_modified()
-        self.save_changes()
+        self._save_changes()
         return supplier
 
 
@@ -67,7 +67,7 @@ class SupplierController:
             raise ValueError(f"Доставчик с ID {supplier_id} не съществува.")
 
         self.suppliers.remove(supplier)
-        self.save_changes()
+        self._save_changes()
         return True
 
 
@@ -85,5 +85,5 @@ class SupplierController:
 
 
 
-    def save_changes(self) -> None:
+    def _save_changes(self) -> None:
         self.repo.save([s.to_dict() for s in self.suppliers])
