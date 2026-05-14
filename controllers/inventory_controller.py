@@ -194,22 +194,23 @@ class InventoryController:
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
 
-
-
-
     def update_inventory_from_movements(self, movements):
         """Синхронизира инвентара на база списък от движения."""
         self.data = {"products": {}}
 
         for mv in movements:
             mtype = mv.movement_type.name
-            if mv.location_id is None:
-                continue
 
 
             if mtype == "MOVE":
                 if mv.from_location_id is None or mv.to_location_id is None:
                     continue
+                self.move_stock(mv.product_id, mv.quantity, mv.from_location_id, mv.to_location_id)
+                continue
+
+            # За IN / OUT - location_id
+            if mv.location_id is None:
+                continue
 
             if mtype == "IN":
                 self.increase_stock(mv.product_id, mv.quantity, mv.location_id)
@@ -217,7 +218,5 @@ class InventoryController:
             elif mtype == "OUT":
                 self.decrease_stock(mv.product_id, mv.quantity, mv.location_id)
 
-            elif mtype == "MOVE":
-                self.move_stock(mv.product_id, mv.quantity, mv.from_location_id, mv.to_location_id)
-
         self._save()
+
