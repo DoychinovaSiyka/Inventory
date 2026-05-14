@@ -298,5 +298,41 @@
         "price": 3.0,
         "created": "2026-05-13 10:20:13",
         "modified": "2026-05-13 10:20:13"
+    },
+    {
+        "product_id": "922629f0-7029-4ecb-ac28-b497bddc0044",
+        "name": "Торта",
+        "categories": [
+            "9fee3af2-3b21-4684-baac-9ccf28aa4eba"
+        ],
+        "unit": "бр.",
+        "description": "сладко",
+        "price": 45.0,
+        "created": "2026-05-14 23:27:53",
+        "modified": "2026-05-14 23:28:34"
+    },
+    {
+        "product_id": "0b9142d9-3adb-4efc-95a9-44718fcfa319",
+        "name": "мюсли",
+        "categories": [
+            "a493e68b-9e54-4115-a9f1-62afad68e7a8"
+        ],
+        "unit": "бр.",
+        "description": "удедз",
+        "price": 2.0,
+        "created": "2026-05-14 23:48:17",
+        "modified": "2026-05-14 23:48:17"
+    },
+    {
+        "product_id": "8134ae59-4949-4a5c-bad9-dd3165bb796e",
+        "name": "ягода",
+        "categories": [
+            "a493e68b-9e54-4115-a9f1-62afad68e7a8"
+        ],
+        "unit": "кг.",
+        "description": "ну,зде",
+        "price": 4.0,
+        "created": "2026-05-15 00:20:01",
+        "modified": "2026-05-15 00:20:01"
     }
 ]

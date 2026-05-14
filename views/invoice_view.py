@@ -6,12 +6,11 @@ class InvoiceView:
     def __init__(self, invoice_controller):
         self.invoice_controller = invoice_controller
 
-
     def _input(self, prompt):
-        value = input(prompt).strip()
-        return value if value else None
-
-
+        text = input(prompt).strip()
+        if text == "":
+            return None
+        return text
 
     def _show_invoices(self, invoices):
         if not invoices:

@@ -55,7 +55,7 @@ class InventoryApplication:
                                                         self.location_controller, self.movement_controller)
 
 
-        self.movement_controller.set_inventory_controller(self.inventory_controller)
+        self.movement_controller._set_inventory_controller(self.inventory_controller)
 
         # Отчети
         self.report_controller = ReportController(self.inventory_repo, self.product_controller, self.movement_controller,

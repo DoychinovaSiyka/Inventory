@@ -10,16 +10,12 @@ class ReportsView:
     def __init__(self, controller):
         self.controller = controller
 
-
-
     def _display_report(self, title, headers, rows):
         if not rows:
             print("\nНяма данни за показване.\n")
             return
         print(f"\n{title}")
         print(format_table(headers, rows))
-
-
 
     def _run_menu(self, menu_obj, user):
         while True:
@@ -29,14 +25,13 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
-
     def show_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
             MenuItem("2", "Хронология на движенията", self.report_movements),
             MenuItem("3", "Всички доставки", self.report_deliveries_all),
             MenuItem("4", "Всички продажби", self.report_sales_all),
-            MenuItem("5", "Анализ по FIFO", self.report_fifo_analysis),
+            MenuItem("5", "Детайлен отчет за продукт", self.report_product_detail),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
@@ -51,7 +46,7 @@ class ReportsView:
         lines.append("ПО СКЛАДОВЕ:")
 
         for wh, qty in item["warehouses"].items():
-            lines.append(f"  • {wh}: {qty} {item['unit']}")
+            lines.append(f"   {wh}: {qty} {item['unit']}")
 
         lines.append("")
         lines.append(f"Доставено:        {item['delivered']}")
@@ -82,7 +77,6 @@ class ReportsView:
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
 
-
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
@@ -92,6 +86,7 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
+
 
 
 
@@ -107,22 +102,44 @@ class ReportsView:
 
 
 
-    def report_fifo_analysis(self, _):
-        while True:
-            name = input("\nВъведете име или ID на продукт (или '0' за изход): ").strip()
-            if not name or name == "0":
-                break
 
-            data = self.controller.fifo_analysis_for_product(name)
-            if not data:
-                print(f"Продукт '{name}' не е намерен.")
-                continue
 
-            print(f"\nАНАЛИЗ ПО FIFO ЗА: {data['product'].upper()}")
-            print("─" * 40)
-            print(f"Продадено количество: {data['total_out']} {data['unit']}")
-            print(f"Приходи:              {data['revenue']:.2f} лв.")
-            print(f"Себестойност (FIFO):  {data['fifo_cost']:.2f} лв.")
-            print(f"Чиста печалба:        {data['profit']:.2f} лв.")
-            print("─" * 40)
-            break
+    def report_product_detail(self, _):
+        name = input("\nВъведете име или ID на продукт (или '0' за изход): ").strip()
+        if not name or name == "0":
+            return
+
+        pid = self.controller.inventory_controller._product_id(name)
+        data = self.controller.full_product_report(pid)
+        if not data:
+            print(f"Продукт '{name}' не е намерен.")
+            return
+
+        print("\n" + "─" * 60)
+        print(f"ДЕТАЙЛЕН ОТЧЕТ ЗА: {data['product'].upper()}")
+        print("─" * 60)
+
+        print(f"Общо количество: {data['final_total']} {data['unit']}")
+        print("\nПО СКЛАДОВЕ:")
+        for wh, qty in data["warehouses"].items():
+            print(f"  • {wh}: {qty} {data['unit']}")
+
+        print("\nФИНАНСИ:")
+        print(f"  Доставено:       {data['delivered']} {data['unit']}")
+        print(f"  Продадено:       {data['sold']} {data['unit']}")
+        print(f"  Средна входна:   {data['avg_in']:.2f} лв.")
+        print(f"  Средна изходна:  {data['avg_out']:.2f} лв.")
+        print(f"  Приходи:         {data['revenue']:.2f} лв.")
+        print(f"  Себестойност:    {data['fifo_cost']:.2f} лв.")
+        print(f"  Печалба:         {data['profit']:.2f} лв.")
+
+        print("\nПОСЛЕДНО ДВИЖЕНИЕ:")
+        lm = data["last_movement"]
+        print(f"  {str(lm['date'])[:10]} – {lm['type']} – {lm['qty']} {data['unit']}")
+
+        print("\nПЪЛНА ИСТОРИЯ:")
+        print("Дата        Тип     Кол.   Преди   След")
+        print("─" * 60)
+        for h in data["history"]:
+            print(f"{str(h['date'])[:10]}   {h['type']:<6}  {h['qty']:<6}  {h['before']:<6}  {h['after']:<6}")
+        print("─" * 60)

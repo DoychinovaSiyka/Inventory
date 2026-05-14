@@ -34,14 +34,14 @@ class MovementController:
     def _set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
-
-
-    def _resolve_location_id(self, loc_id: Optional[str]) -> Optional[str]:
+    def _location_id(self, loc_id: Optional[str]) -> Optional[str]:
         if not loc_id:
-            return None
+            raise ValueError("Не е избран склад.")
+
         loc = self.location_controller.get_by_id(str(loc_id))
         if not loc:
-            return None
+            raise ValueError(f"Невалиден склад: {loc_id}")
+
         return str(loc.location_id)
 
     def get_all(self) -> List[Movement]:
@@ -64,7 +64,7 @@ class MovementController:
         return movement
 
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
-        resolved_loc = self._resolve_location_id(location_id)
+        resolved_loc = self._location_id(location_id)
 
         MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity), customer,
                                              self.inventory_controller, resolved_loc)
@@ -148,9 +148,16 @@ class MovementController:
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        resolved_loc = self._resolve_location_id(location_id)
-        resolved_from = self._resolve_location_id(from_location_id)
-        resolved_to = self._resolve_location_id(to_location_id)
+
+        if m_type_str == "MOVE":
+            resolved_loc = None
+            resolved_from = self._location_id(from_location_id)
+            resolved_to = self._location_id(to_location_id)
+        else:
+            resolved_loc = self._location_id(location_id)
+            resolved_from = None
+            resolved_to = None
+
 
         if m_type_str == "IN":
             MovementValidator.validate_in_rules(product, qty)
@@ -160,6 +167,7 @@ class MovementController:
 
         elif m_type_str == "MOVE":
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
+
 
         if m_type_str == "MOVE":
             prc = 0.0

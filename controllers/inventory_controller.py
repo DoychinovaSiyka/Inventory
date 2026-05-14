@@ -2,6 +2,8 @@ from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
 
 
+
+
 class InventoryController:
     """Управлява наличностите в реално време."""
 
@@ -16,18 +18,23 @@ class InventoryController:
         # Първоначално изграждане на наличностите от историята
         self.update_inventory_from_movements(self.movement_controller.movements)
 
-
-
     def _load(self):
         """Зарежда инвентара от хранилището."""
         data = self.repo.load()
-        return data if data else {"products": {}}
+
+        # Ако файлът е празен, None или невалиден → връщаме празна структура
+        if not isinstance(data, dict):
+            return {"products": {}}
+
+        # Ако липсва ключът "products" → добавяме го
+        if "products" not in data or not isinstance(data["products"], dict):
+            data["products"] = {}
+
+        return data
 
     def _save(self):
         """Записва текущото състояние в хранилището."""
-        self.repo.save(self._build_inventory())
-
-
+        self.repo.save(self.data)
 
     def _product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
@@ -35,14 +42,15 @@ class InventoryController:
 
         user_input = str(user_input).strip()
 
-        # Ако вече е в кеша
+
         if user_input in self.data.get("products", {}):
             return user_input
 
-        # Проверка по начало на ID
+
         for full_id in self.data.get("products", {}).keys():
             if full_id.startswith(user_input):
                 return full_id
+
 
         for p in self.product_controller.get_all():
             if user_input.lower() == p.name.lower() or str(p.product_id).startswith(user_input):
@@ -56,17 +64,17 @@ class InventoryController:
 
         user_input = str(user_input).strip()
 
+
         loc = self.location_controller.get_by_id(user_input)
         if loc:
             return str(loc.location_id)
+
 
         for l in self.location_controller.get_all():
             if str(l.location_id).startswith(user_input):
                 return str(l.location_id)
 
         return user_input
-
-
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
@@ -78,8 +86,6 @@ class InventoryController:
         locs = self.data["products"][pid]["locations"]
         current = float(locs.get(lid, 0))
         locs[lid] = round(current + float(quantity), 2)
-
-
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
@@ -94,7 +100,6 @@ class InventoryController:
         locs[lid] = round(current - float(quantity), 2)
         return True
 
-
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         pid = self._product_id(product_id)
         from_lid = self._location_id(from_location_id)
@@ -106,30 +111,24 @@ class InventoryController:
         self.increase_stock(pid, quantity, to_lid)
         return True
 
-
-
-
-    #   СПРАВКИ
+    # СПРАВКИ
     def get_total_stock(self, product_id: str) -> float:
-        """Обща наличност на продукт във всички складове."""
         pid = self._product_id(product_id)
         product_info = self.data["products"].get(pid, {})
         return sum(float(q) for q in product_info.get("locations", {}).values())
 
-
     def get_stock(self, product_id, location_id):
-        """Наличност на продукт в конкретен склад."""
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
         return float(self.data.get("products", {}).get(pid, {}).get("locations", {}).get(lid, 0))
 
 
 
+
+
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        """Изчислява себестойността на продадените стоки по FIFO."""
         pid = self._product_id(product_id)
 
-        # Колко е продадено общо
         total_sold = 0.0
         for m in movements:
             if str(m.product_id) == pid and m.movement_type.name == "OUT":
@@ -138,7 +137,6 @@ class InventoryController:
         if total_sold <= 0:
             return 0.0
 
-        # Събиране на входящите партиди
         batches = []
         for m in sorted(movements, key=lambda x: x.date):
             if str(m.product_id) == pid and m.movement_type.name == "IN":
@@ -155,7 +153,6 @@ class InventoryController:
             total_cost += take * batch["price"]
             remaining -= take
 
-        # Ако продажбите са повече от доставките
         if remaining > 0:
             total_cost += remaining * float(fallback_price)
 
@@ -165,7 +162,6 @@ class InventoryController:
 
 
     def _build_inventory(self):
-        """Структурата за запис и отчети."""
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
@@ -179,15 +175,25 @@ class InventoryController:
 
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
-                if qty > 0:
-                    loc = self.location_controller.get_by_id(lid)
-                    name = loc.name if loc else f"Склад {lid[:8]}"
+                if qty <= 0:
+                    continue
+
+                if lid is None:
+                    name = "Неизвестен склад"
                     warehouse_map[name] = qty
+                    continue
+
+                else:
+                    loc = self.location_controller.get_by_id(lid)
+                    name = loc.name if loc else f"Склад {str(lid)[:8]}"
+
+                warehouse_map[name] = qty
 
             rows.append({"product": product_obj.name, "unit": product_obj.unit,
                          "total": total, "warehouses": warehouse_map})
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
+
 
 
 
@@ -197,6 +203,13 @@ class InventoryController:
 
         for mv in movements:
             mtype = mv.movement_type.name
+            if mv.location_id is None:
+                continue
+
+
+            if mtype == "MOVE":
+                if mv.from_location_id is None or mv.to_location_id is None:
+                    continue
 
             if mtype == "IN":
                 self.increase_stock(mv.product_id, mv.quantity, mv.location_id)

@@ -124,5 +124,33 @@
         "date": "2026-05-13 09:52:16",
         "created": "2026-05-13 09:52:16",
         "modified": "2026-05-13 09:52:16"
+    },
+    {
+        "invoice_id": "81918104-680c-4fd0-bbfd-e2b3e38d26d5",
+        "movement_id": "94b19100-7ead-477d-8f4f-346f7a0febf0",
+        "product": "Торта",
+        "quantity": 7.0,
+        "unit": "бр.",
+        "unit_price": 88.0,
+        "total_price": 616.0,
+        "customer": "7",
+        "is_active": true,
+        "date": "2026-05-15 00:15:47",
+        "created": "2026-05-15 00:15:47",
+        "modified": "2026-05-15 00:15:47"
+    },
+    {
+        "invoice_id": "c79c1b14-4527-4eb6-bf46-fce3c37b514a",
+        "movement_id": "d32d62fc-c23c-4929-89a1-576d8eb18c63",
+        "product": "ягода",
+        "quantity": 345.0,
+        "unit": "кг.",
+        "unit_price": 5.0,
+        "total_price": 1725.0,
+        "customer": "Сийче",
+        "is_active": true,
+        "date": "2026-05-15 00:21:46",
+        "created": "2026-05-15 00:21:46",
+        "modified": "2026-05-15 00:21:46"
     }
 ]

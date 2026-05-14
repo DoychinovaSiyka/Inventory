@@ -36,7 +36,15 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
-        target = str(location_id or "").strip().lower()
+        if not location_id:
+            return None
+
+        target = str(location_id).strip().lower()
+
+        for loc in self.locations:
+            if loc.location_id.lower() == target:
+                return loc
+
 
         for loc in self.locations:
             if loc.location_id[:8].lower() == target:

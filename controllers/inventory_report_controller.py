@@ -19,41 +19,18 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
-
-
+    # Взимаме всички движения за продукт
     def _get_product_moves(self, pid):
         return [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-    def _get_avg_price(self, moves, movement_type):
-        prices = [float(m.price) for m in moves if m.movement_type.name == movement_type and m.price]
-        return sum(prices) / len(prices) if prices else 0.0
-
-    def _get_last_move(self, moves):
-        if not moves:
-            return None
-        last = moves[0]
-        for m in moves:
-            if m.date > last.date:
-                last = m
-        return last
-
-    def _get_total_in(self, moves):
-        return sum(float(m.quantity) for m in moves if m.movement_type.name == "IN")
-
-    def _get_total_out(self, moves):
-        return sum(float(m.quantity) for m in moves if m.movement_type.name == "OUT")
 
 
-    #   ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ
     def report_inventory_full(self):
         data = self.inventory_controller._build_inventory()
 
         for item in data["products"]:
-            product = None
-            for p in self.product_controller.get_all():
-                if p.name == item["product"]:
-                    product = p
-                    break
+            product = next((p for p in self.product_controller.get_all()
+                            if p.name == item["product"]), None)
 
             if not product:
                 item["avg_in_price"] = "0.00 лв."
@@ -64,22 +41,24 @@ class ReportController:
                 continue
 
             pid = str(product.product_id)
-
             moves = self._get_product_moves(pid)
 
-            avg_in = self._get_avg_price(moves, "IN")
-            item["avg_in_price"] = f"{avg_in:.2f} лв."
+            # Средни цени
+            in_prices = [float(m.price) for m in moves if m.movement_type.name == "IN" and m.price]
+            out_prices = [float(m.price) for m in moves if m.movement_type.name == "OUT" and m.price]
 
-            avg_out = self._get_avg_price(moves, "OUT")
-            item["avg_out_price"] = f"{avg_out:.2f} лв."
+            item["avg_in_price"] = f"{(sum(in_prices) / len(in_prices)):.2f} лв." if in_prices else "0.00 лв."
+            item["avg_out_price"] = f"{(sum(out_prices) / len(out_prices)):.2f} лв." if out_prices else "0.00 лв."
 
-            last_move = self._get_last_move(moves)
-            item["last_move"] = f"{last_move.movement_type.name} - {str(last_move.date)[:10]}" if last_move else "Няма"
+            # Последно движение
+            last = max(moves, key=lambda x: x.date) if moves else None
+            item["last_move"] = f"{last.movement_type.name} - {str(last.date)[:10]}" if last else "Няма"
 
-            delivered = self._get_total_in(moves)
+            # Доставено / Продадено
+            delivered = sum(m.quantity for m in moves if m.movement_type.name == "IN")
+            sold = sum(m.quantity for m in moves if m.movement_type.name == "OUT")
+
             item["delivered"] = f"{delivered} {item['unit']}"
-
-            sold = self._get_total_out(moves)
             item["sold"] = f"{sold} {item['unit']}"
 
         return ReportResult(data["summary"], data["products"])
@@ -133,22 +112,54 @@ class ReportController:
 
 
 
-    def fifo_analysis_for_product(self, name_or_id):
-        pid = self.inventory_controller._product_id(name_or_id)
-        product = self.product_controller.get_by_id(pid)
-
+    #   ДЕТАЙЛЕН ОТЧЕТ ЗА ПРОДУКТ
+    def full_product_report(self, product_id):
+        product = self.product_controller.get_by_id(product_id)
         if not product:
             return None
 
-        # Всички активни фактури за продукта
-        invoices = [i for i in self.invoice_controller.get_all()
-                    if i.is_active and i.product == product.name]
+        movements = [m for m in self.movement_controller.movements if str(m.product_id) == str(product_id)]
+        movements.sort(key=lambda x: x.date)
 
-        total_out = sum(float(i.quantity) for i in invoices)
-        revenue = sum(float(i.total_price) for i in invoices)
+        history = []
+        running_total = 0
 
-        fifo_cost = self.inventory_controller.calculate_fifo_cost(pid, self.movement_controller.movements, product.price)
+        for mv in movements:
+            entry = {"date": mv.date, "type": mv.movement_type.name, "qty": mv.quantity, "before": running_total}
 
-        return {"product": product.name, "unit": product.unit,
-                "total_out": total_out, "revenue": round(revenue, 2),
-                "fifo_cost": fifo_cost, "profit": round(revenue - fifo_cost, 2)}
+            if mv.movement_type.name == "IN":
+                running_total += mv.quantity
+                entry["location"] = mv.location_id
+
+            elif mv.movement_type.name == "OUT":
+                running_total -= mv.quantity
+                entry["location"] = mv.location_id
+
+            elif mv.movement_type.name == "MOVE":
+                entry["from"] = mv.from_location_id
+                entry["to"] = mv.to_location_id
+
+            entry["after"] = running_total
+            history.append(entry)
+
+        inventory = self.inventory_controller._build_inventory()
+        product_row = next((p for p in inventory["products"] if p["product"] == product.name), None)
+
+        total_in = sum(m.quantity for m in movements if m.movement_type.name == "IN")
+        total_out = sum(m.quantity for m in movements if m.movement_type.name == "OUT")
+
+        # Средни цени
+        in_prices = [float(m.price) for m in movements if m.movement_type.name == "IN" and m.price]
+        out_prices = [float(m.price) for m in movements if m.movement_type.name == "OUT" and m.price]
+
+        avg_in_price = sum(in_prices) / len(in_prices) if in_prices else 0
+        avg_out_price = sum(out_prices) / len(out_prices) if out_prices else 0
+
+        fifo_cost = self.inventory_controller.calculate_fifo_cost(product_id, movements)
+        revenue = total_out * avg_out_price if avg_out_price else 0
+        profit = revenue - fifo_cost
+
+        return {"product": product.name, "unit": product.unit, "history": history, "final_total": running_total,
+                 "warehouses": product_row["warehouses"] if product_row else {}, "delivered": total_in, "sold": total_out,
+                 "avg_in": avg_in_price, "avg_out": avg_out_price, "fifo_cost": fifo_cost, "revenue": revenue,
+                 "profit": profit, "last_movement": history[-1] if history else None}
