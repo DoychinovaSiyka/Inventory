@@ -55,7 +55,7 @@ def format_table(columns, rows):
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
-    #  фиксиран padding от общо 2 интервала - отляво и отдясно
+    #  padding от 2 интервала - отляво и отдясно
     col_widths = [w + 2 for w in col_widths]
     separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
 

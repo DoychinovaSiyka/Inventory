@@ -13,32 +13,20 @@ class GraphView:
         self._setup_network()
 
     def _setup_network(self):
-        warehouses = [
-            Warehouse("W1", "София"),
-            Warehouse("W2", "Пловдив"),
-            Warehouse("W3", "Варна"),
-            Warehouse("W4", "Бургас"),
-            Warehouse("W5", "Магазин Смолян")
-        ]
+        warehouses = [Warehouse("W1", "София"), Warehouse("W2", "Пловдив"),
+                      Warehouse("W3", "Варна"), Warehouse("W4", "Бургас"),
+                      Warehouse("W5", "Магазин Смолян")]
 
         for w in warehouses:
             self.graph.add_warehouse(w)
 
-        edges = [
-            ("W1", "W2", 150),
-            ("W2", "W4", 250),
-            ("W4", "W3", 130),
-            ("W1", "W5", 250),
-            ("W5", "W3", 350)
-        ]
-
+        edges = [("W1", "W2", 150), ("W2", "W4", 250), ("W4", "W3", 130), ("W1", "W5", 250), ("W5", "W3", 350)]
         for start, end, dist in edges:
             self.graph.add_edge(start, end, dist)
             self.graph.add_edge(end, start, dist)
 
-    # ---------------------------------------------------------
-    # ЛОКАЛЕН МЕТОД – работим с реалния инвентар (UUID)
-    # ---------------------------------------------------------
+
+
     def _get_warehouses_with_product(self, product_name):
         result = []
 
@@ -52,35 +40,29 @@ class GraphView:
         if not product:
             return []
 
-        # InventoryController работи с ПЪЛЕН product_id (UUID)
+
         product_id = str(product.product_id)
 
-        # проверяваме наличностите по всички складове
         for loc in self.location_controller.get_all():
 
-            warehouse_code = loc.code          # W1, W2, W3...
-            warehouse_uuid = str(loc.location_id)   # реалният UUID
+            warehouse_code = loc.code
+            warehouse_uuid = str(loc.location_id)
 
             if not warehouse_code:
-                continue  # ако няма код, пропускаме
+                continue
 
             qty = self.inventory_controller.get_stock(product_id, warehouse_uuid)
-
             if qty > 0:
                 result.append((warehouse_code, qty))
 
         return result
 
-    # ---------------------------------------------------------
+
 
     def _build_menu(self):
-        return Menu(
-            "Логистичен Модул (Dijkstra)",
-            [
-                MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
-                MenuItem("0", "Назад", lambda u: "break")
-            ]
-        )
+        return Menu("Логистичен Модул (Dijkstra)",
+            [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
+             MenuItem("0", "Назад", lambda u: "break")])
 
     def show_menu(self, user: User):
         while True:
@@ -104,7 +86,7 @@ class GraphView:
             print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
             return
 
-        # Взимаме складовете с наличност (локален метод!)
+        # Взимаме складовете с наличност
         sources = self._get_warehouses_with_product(product_name)
 
         if not sources:
@@ -113,7 +95,6 @@ class GraphView:
 
         all_sources = [wid.upper() for wid, qty in sources]
         other_sources = [s for s in all_sources if s != my_location]
-
         if not other_sources:
             print(f"'{product_name}' се среща само в {my_location}.")
             return

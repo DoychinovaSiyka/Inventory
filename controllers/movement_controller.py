@@ -7,11 +7,6 @@ from validators.movement_validator import MovementValidator
 
 
 class MovementController:
-    """Контролер за всички складови движения.
-    - коректно записване в movements.json
-    - коректно обновяване на inventory.json
-    - валидни исторически цени
-    - уникални movement_id (UUID) """
 
     def __init__(self, repo, product_controller, user_controller,
                  location_controller, supplier_controller, invoice_controller):
