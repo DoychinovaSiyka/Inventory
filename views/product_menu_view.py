@@ -3,6 +3,8 @@ from views.password_utils import format_table
 from views.product_sort_view import ProductSortView
 
 
+
+
 class ProductMenuView:
     def __init__(self, product_controller, category_controller):
         self.product_controller = product_controller
