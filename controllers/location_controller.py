@@ -43,11 +43,6 @@ class LocationController:
 
 
 
-    def get_all_clean(self) -> List[dict]:
-        return [{"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity} for loc in self.locations]
-
-
-
     def get_by_id(self, location_id: str) -> Optional[Location]:
         if not location_id:
             return None
@@ -150,6 +145,8 @@ class LocationController:
 
 
 
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":
@@ -161,6 +158,8 @@ class LocationController:
             return None
         except ValueError as e:
             return str(e)
+
+
 
 
     def _save_changes(self) -> None:

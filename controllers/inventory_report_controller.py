@@ -27,47 +27,79 @@ class ReportController:
         data = self.inventory_controller._build_inventory()
 
         for item in data["products"]:
-            product = next((p for p in self.product_controller.get_all()
-                            if p.name == item["product"]), None)
 
-            if not product:
-                item["avg_in_price"] = "0.00 лв."
-                item["avg_out_price"] = "0.00 лв."
-                item["expense"] = "0.00 лв."
-                item["revenue"] = "0.00 лв."
+            product = None
+            for p in self.product_controller.get_all():
+                if p.name == item["product"]:
+                    product = p
+                    break
+
+
+            if product is None:
+                item["avg_in_price"] = "-"
+                item["avg_out_price"] = "-"
+                item["expense"] = "-"
+                item["revenue"] = "-"
                 item["last_movement"] = "Няма"
                 continue
 
             pid = str(product.product_id)
-            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
+            moves = []
+            for m in self.movement_controller.movements:
+                if str(m.product_id) == pid:
+                    moves.append(m)
 
-            # Средни цени
-            in_prices = [float(m.price) for m in moves if m.movement_type.name == "IN" and m.price]
-            out_prices = [float(m.price) for m in moves if m.movement_type.name == "OUT" and m.price]
 
-            avg_in = (sum(in_prices) / len(in_prices)) if in_prices else 0.0
-            avg_out = (sum(out_prices) / len(out_prices)) if out_prices else 0.0
+            in_prices = []
+            out_prices = []
 
-            item["avg_in_price"] = f"{avg_in:.2f} лв."
-            item["avg_out_price"] = f"{avg_out:.2f} лв."
+            for m in moves:
+                if m.movement_type.name == "IN" and m.price:
+                    in_prices.append(float(m.price))
+                elif m.movement_type.name == "OUT" and m.price:
+                    out_prices.append(float(m.price))
 
-            # Доставено / Продадено
-            delivered = sum(m.quantity for m in moves if m.movement_type.name == "IN")
-            sold = sum(m.quantity for m in moves if m.movement_type.name == "OUT")
+            if len(in_prices) > 0:
+                avg_in = sum(in_prices) / len(in_prices)
+            else:
+                avg_in = 0.0
 
-            # Разходи и приходи
-            expense = delivered * avg_in
+            if len(out_prices) > 0:
+                avg_out = sum(out_prices) / len(out_prices)
+            else:
+                avg_out = 0.0
+
+
+            item["avg_in_price"] = f"{avg_in:.2f} лв." if avg_in > 0 else "-"
+            item["avg_out_price"] = f"{avg_out:.2f} лв." if avg_out > 0 else "-"
+            delivered = 0
+            sold = 0
+
+            for m in moves:
+                if m.movement_type.name == "IN":
+                    delivered += m.quantity
+                elif m.movement_type.name == "OUT":
+                    sold += m.quantity
+
+
+            expense = self.inventory_controller.calculate_fifo_cost(pid, moves, fallback_price=avg_in)
+            item["expense"] = f"{expense:.2f} лв." if expense > 0 else "-"
+
+
             revenue = sold * avg_out
+            item["revenue"] = f"{revenue:.2f} лв." if revenue > 0 else "-"
 
-            item["expense"] = f"{expense:.2f} лв."
-            item["revenue"] = f"{revenue:.2f} лв."
 
-            # Последно движение
-            last = max(moves, key=lambda x: x.date) if moves else None
-            item["last_movement"] = (f"{last.movement_type.name} - {str(last.date)[:19]}" if last else "Няма")
+            if len(moves) > 0:
+                last = moves[0]
+                for m in moves:
+                    if m.date > last.date:
+                        last = m
+                item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
+            else:
+                item["last_movement"] = "Няма"
 
         return ReportResult(data["summary"], data["products"])
-
 
 
 

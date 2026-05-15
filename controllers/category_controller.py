@@ -12,17 +12,12 @@ class CategoryController:
         self.repo = repo
         self.categories: List[Category] = self._load()
 
-
-
     def _load(self) -> List[Category]:
         raw = self.repo.load() or []
         return [Category.from_dict(c) for c in raw]
 
     def _save(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])
-
-
-
 
     def get_all(self) -> List[Category]:
         return self.categories
@@ -96,15 +91,11 @@ class CategoryController:
 
 
     def get_by_id(self, user_input: str) -> Optional[Category]:
-        target = str(user_input or "").strip()
-
+        target = str(user_input or "").strip().lower()
         for c in self.categories:
-            full_id = str(c.category_id)
-            short_id = full_id[:8]
-
-            if target == short_id or target == full_id:
+            full_id = str(c.category_id).lower()
+            if full_id.startswith(target) or target == full_id:
                 return c
-
         return None
 
 
@@ -121,19 +112,19 @@ class CategoryController:
 
         return list(set(result))
 
-
-
     def search(self, keyword: str) -> List[dict]:
-        """Търсене по име/описание."""
-        cleaned = (keyword or "").strip()
-        if len(cleaned) < 3:
+        cleaned = (keyword or "").strip().lower()
+        if not cleaned:
             return []
 
-        results = filter_categories(self.categories, cleaned)
-
-        return [{"id": c.category_id[:8], "name": c.name, "description": c.description,
-                 "parent": self.get_by_id(c.parent_id).name if c.parent_id else None} for c in results]
-
+        results = []
+        for c in self.categories:
+            full_id = str(c.category_id).lower()
+            if cleaned in c.name.lower() or full_id.startswith(cleaned):
+                parent_obj = self.get_by_id(c.parent_id) if c.parent_id else None
+                results.append({"id": c.category_id,  "name": c.name,
+                                "description": c.description, "parent": parent_obj.name if parent_obj else None})
+        return results
 
 
 
@@ -148,13 +139,17 @@ class CategoryController:
 
 
     def get_visual_tree(self) -> List[dict]:
-        tree = build_category_tree(self.categories)
+        def build_recursive_list(parent_id=None, level=0):
+            result = []
+            children = [c for c in self.categories if c.parent_id == parent_id]
+            children.sort(key=lambda x: x.name.lower())
 
-        def transform(node):
-            return {"id": node["id"][:8], "name": node["name"],
-                    "children": [transform(child) for child in node.get("children", [])]}
+            for child in children:
+                result.append({"category": child, "level": level})
+                result.extend(build_recursive_list(child.category_id, level + 1))
+            return result
 
-        return [transform(n) for n in tree]
+        return build_recursive_list()
 
 
 

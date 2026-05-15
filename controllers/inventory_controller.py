@@ -32,7 +32,6 @@ class InventoryController:
 
 
 
-
     def _save(self):
         summary = self._build_inventory()
         self.repo.save(summary)
@@ -84,12 +83,33 @@ class InventoryController:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
+        if "products" not in self.data:
+            self.data["products"] = {}
+
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
-        locs = self.data["products"][pid]["locations"]
-        current = float(locs.get(lid, 0))
-        locs[lid] = round(current + float(quantity), 2)
+
+        locations = self.data["products"][pid]["locations"]
+
+        # Текущо количество
+        if lid in locations:
+            try:
+                current = float(locations[lid])
+            except:
+                current = 0.0
+        else:
+            current = 0.0
+
+
+        try:
+            qty = float(quantity)
+        except:
+            qty = 0.0
+
+        new_value = current + qty
+        locations[lid] = round(new_value, 2)
+
 
 
 
@@ -97,15 +117,33 @@ class InventoryController:
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
-
-        locs = self.data.get("products", {}).get(pid, {}).get("locations", {})
-        current = float(locs.get(lid, 0))
-
-        if current < float(quantity):
+        products = self.data.get("products", {})
+        if pid not in products:
             return False
 
-        locs[lid] = round(current - float(quantity), 2)
+        product_info = products[pid]
+        locations = product_info.get("locations", {})
+        if lid not in locations:
+            return False
+
+        try:
+            current = float(locations[lid])
+        except:
+            current = 0.0
+
+        try:
+            qty = float(quantity)
+        except:
+            qty = 0.0
+
+        if current < qty:
+            return False
+
+        new_value = current - qty
+        locations[lid] = round(new_value, 2)
+
         return True
+
 
 
 
@@ -125,16 +163,41 @@ class InventoryController:
 
     def get_total_stock(self, product_id: str) -> float:
         pid = self._product_id(product_id)
-        product_info = self.data["products"].get(pid, {})
-        return sum(float(q) for q in product_info.get("locations", {}).values())
 
+        products = self.data.get("products", {})
+        product_info = products.get(pid, {})
+
+        locations = product_info.get("locations", {})
+        total = 0.0
+        for qty in locations.values():
+            try:
+                total += float(qty)
+            except:
+                total += 0.0
+
+        return total
 
 
 
     def get_stock(self, product_id, location_id):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
-        return float(self.data.get("products", {}).get(pid, {}).get("locations", {}).get(lid, 0))
+
+        products = self.data.get("products", {})
+
+        if pid not in products:
+            return 0.0
+
+        product_info = products[pid]
+        locations = product_info.get("locations", {})
+        if lid not in locations:
+            return 0.0
+
+        try:
+            return float(locations[lid])
+        except:
+            return 0.0
+
 
 
 
@@ -142,35 +205,52 @@ class InventoryController:
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         pid = self._product_id(product_id)
 
+        # смятаме колко е продадено общо
         total_sold = 0.0
         for m in movements:
             if str(m.product_id) == pid and m.movement_type.name == "OUT":
                 total_sold += float(m.quantity)
 
+
         if total_sold <= 0:
             return 0.0
 
+        # Събираме всички доставки като партиди
         batches = []
-        for m in sorted(movements, key=lambda x: x.date):
-            if str(m.product_id) == pid and m.movement_type.name == "IN":
-                price = float(m.price) if m.price and float(m.price) > 0 else float(fallback_price)
-                batches.append({"qty": float(m.quantity), "price": price})
+        sorted_moves = sorted(movements, key=lambda x: x.date)
 
-        total_cost, remaining = 0.0, total_sold
+        for m in sorted_moves:
+            if str(m.product_id) == pid and m.movement_type.name == "IN":
+                if m.price and float(m.price) > 0:
+                    price = float(m.price)
+                else:
+                    price = float(fallback_price)
+
+                qty = float(m.quantity)
+                batches.append({"qty": qty, "price": price})
+
+
+        total_cost = 0.0
+        remaining = total_sold
 
         for batch in batches:
             if remaining <= 0:
                 break
 
-            take = min(batch["qty"], remaining)
+            # Колко можем да вземем от тази партида
+            if batch["qty"] < remaining:
+                take = batch["qty"]
+            else:
+                take = remaining
+
             total_cost += take * batch["price"]
             remaining -= take
 
+        # Ако не стигат партидите - дописваме с fallback цена
         if remaining > 0:
             total_cost += remaining * float(fallback_price)
 
         return round(total_cost, 2)
-
 
 
 
@@ -224,6 +304,7 @@ class InventoryController:
                          "revenue": revenue, "last_movement": last_movement})
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
+
 
 
 

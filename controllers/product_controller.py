@@ -29,11 +29,6 @@ class ProductController:
 
 
 
-    def get_all_clean(self) -> List[dict]:
-        return [{"id": p.product_id[:8], "name": p.name, "price": p.price, "unit": p.unit,
-                 "description": p.description, "categories": [c.name for c in p.categories]} for p in self.products]
-
-
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
         pid = str(product_id or "").strip()
@@ -110,6 +105,8 @@ class ProductController:
         product.update_modified()
         self._save_changes()
         return True
+
+
 
     def delete_by_id(self, product_id: str) -> bool:
         product = self.get_by_id(product_id)

@@ -116,6 +116,8 @@ class SupplierView:
             print(f"Грешка при запис: {e}")
 
 
+
+
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
 
@@ -132,12 +134,14 @@ class SupplierView:
 
         print(f"\nРедакция на: {supplier.name} (Enter запазва старата стойност)")
 
-
         while True:
             new_name = input(f"Ново име [{supplier.name}]: ").strip()
+
+            # Ако е празно → запазваме старото
             if not new_name:
                 new_name = supplier.name
                 break
+
 
             error = self.controller.validate_field("name", new_name)
             if error:
@@ -145,12 +149,22 @@ class SupplierView:
                 continue
 
 
-            if any(s.name.lower() == new_name.lower() and s.supplier_id != supplier.supplier_id
-                   for s in self.controller.get_all()):
+            exists = False
+            for s in self.controller.get_all():
+                same_name = s.name.lower() == new_name.lower()
+                different_id = s.supplier_id != supplier.supplier_id
+
+                if same_name and different_id:
+                    exists = True
+                    break
+
+            if exists:
                 print(f"Името '{new_name}' вече се използва.")
                 continue
 
             break
+
+
 
 
         while True:

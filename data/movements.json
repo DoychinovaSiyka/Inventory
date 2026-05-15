@@ -1006,5 +1006,41 @@
         "modified": "2026-05-15 10:56:42",
         "from_location_id": "03d98b48-d4b9-4268-b867-516e7b7eceb0",
         "to_location_id": "9156e3a0-71cd-4d75-a5ef-600327e4a4e3"
+    },
+    {
+        "movement_id": "695e5eaf-4e80-4dd4-9718-d92dc18e15f2",
+        "product_id": "fe1dfd3d-827f-4fc1-827b-c44f32a77127",
+        "product_name": "пилешко филе",
+        "user_id": "446e8664-2608-410d-9ad1-0fac87b93aad",
+        "location_id": "3a94c75c-a29a-440e-b9f1-8edd5884bbae",
+        "movement_type": "OUT",
+        "quantity": 5.0,
+        "unit": "кг.",
+        "price": 11.0,
+        "supplier_id": null,
+        "customer": "Сиси",
+        "date": "2026-05-15 11:47:54",
+        "created": "2026-05-15 11:47:54",
+        "modified": "2026-05-15 11:47:54",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "20b36343-be08-4dd0-860f-49b6e8c34d7a",
+        "product_id": "fe1dfd3d-827f-4fc1-827b-c44f32a77127",
+        "product_name": "пилешко филе",
+        "user_id": "446e8664-2608-410d-9ad1-0fac87b93aad",
+        "location_id": "3a94c75c-a29a-440e-b9f1-8edd5884bbae",
+        "movement_type": "OUT",
+        "quantity": 3.0,
+        "unit": "кг.",
+        "price": 14.0,
+        "supplier_id": null,
+        "customer": "14",
+        "date": "2026-05-15 11:48:54",
+        "created": "2026-05-15 11:48:54",
+        "modified": "2026-05-15 11:48:54",
+        "from_location_id": null,
+        "to_location_id": null
     }
 ]

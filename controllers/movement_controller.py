@@ -95,9 +95,6 @@ class MovementController:
 
 
 
-
-
-
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         resolved_loc = self._location_id(location_id)
 

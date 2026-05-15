@@ -56,9 +56,13 @@ class ReportsView:
         lines.append(f"Продадено:        {item['sold']}")
         lines.append(f"Средна входна:    {item['avg_in_price']}")
         lines.append(f"Средна изходна:   {item['avg_out_price']}")
-        lines.append(f"Последно:         {item['last_move']}")
+        lines.append(f"Разходи (FIFO):   {item['expense']}")
+        lines.append(f"Приходи:          {item['revenue']}")
+        lines.append(f"Последно движение:{item['last_movement']}")
         lines.append("─" * 45)
         return "\n".join(lines)
+
+
 
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
@@ -82,7 +86,6 @@ class ReportsView:
 
 
 
-
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
@@ -93,7 +96,6 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
-
 
 
 

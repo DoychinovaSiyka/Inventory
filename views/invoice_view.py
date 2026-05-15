@@ -12,6 +12,8 @@ class InvoiceView:
             return None
         return text
 
+
+
     def _show_invoices(self, invoices):
         if not invoices:
             print("\nНяма намерени фактури.\n")

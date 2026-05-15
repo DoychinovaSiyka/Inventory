@@ -22,11 +22,6 @@ class UserController:
 
 
 
-    def get_all_clean(self) -> List[dict]:
-        return [{"id": u.user_id[:8], "username": u.username, "first_name": u.first_name, "last_name": u.last_name,
-                 "email": u.email, "role": u.role, "status": u.status} for u in self.users]
-
-
 
 
 

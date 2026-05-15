@@ -151,6 +151,9 @@ class MovementView:
         print("Невалиден избор.")
         return None
 
+
+
+
     def process_sale(self, user):
         print("\nНова продажба")
 
@@ -184,6 +187,7 @@ class MovementView:
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
+
 
 
 
@@ -263,6 +267,7 @@ class MovementView:
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} към {to_loc.name}.")
         except Exception as e:
             print(f"Проблем при преместването: {e}")
+
 
 
 

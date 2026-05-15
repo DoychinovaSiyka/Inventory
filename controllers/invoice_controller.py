@@ -49,6 +49,8 @@ class InvoiceController:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
+
+
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
         tid = str(invoice_id or "").strip().lower()
         if not tid:
@@ -75,14 +77,6 @@ class InvoiceController:
                                 "status": "АКТИВНА" if inv.is_active else "АНУЛИРАНА"})
 
         return results
-
-
-
-
-    def get_all_clean(self) -> List[dict]:
-        return [{"invoice_id": inv.invoice_id[:8], "date": str(inv.date)[:10], "customer": inv.customer,
-                 "product": inv.product, "total_price": inv.total_price, "status": "АКТИВНА" if inv.is_active else "АНУЛИРАНА"}
-                for inv in self.invoices]
 
 
 

@@ -28,9 +28,6 @@ class SupplierController:
         return self.suppliers
 
 
-    def get_all_clean(self) -> List[dict]:
-        return [{"id": s.supplier_id[:8], "name": s.name, "contact": s.contact, "address": s.address} for s in self.suppliers]
-
 
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:

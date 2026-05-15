@@ -166,5 +166,33 @@
         "date": "2026-05-15 10:56:00",
         "created": "2026-05-15 10:56:00",
         "modified": "2026-05-15 10:56:00"
+    },
+    {
+        "invoice_id": "b8a1fb89-cbb4-490a-ba05-e3ccd625e670",
+        "movement_id": "695e5eaf-4e80-4dd4-9718-d92dc18e15f2",
+        "product": "пилешко филе",
+        "quantity": 5.0,
+        "unit": "кг.",
+        "unit_price": 11.0,
+        "total_price": 55.0,
+        "customer": "Сиси",
+        "is_active": true,
+        "date": "2026-05-15 11:47:54",
+        "created": "2026-05-15 11:47:54",
+        "modified": "2026-05-15 11:47:54"
+    },
+    {
+        "invoice_id": "1fe3fa7c-431f-4953-b148-4babeeb114a3",
+        "movement_id": "20b36343-be08-4dd0-860f-49b6e8c34d7a",
+        "product": "пилешко филе",
+        "quantity": 3.0,
+        "unit": "кг.",
+        "unit_price": 14.0,
+        "total_price": 42.0,
+        "customer": "14",
+        "is_active": true,
+        "date": "2026-05-15 11:48:54",
+        "created": "2026-05-15 11:48:54",
+        "modified": "2026-05-15 11:48:54"
     }
 ]

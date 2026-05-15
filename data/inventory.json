@@ -13,6 +13,8 @@
             "sold": 0,
             "avg_in_price": 2.67,
             "avg_out_price": 0.0,
+            "expense": 8908193.34,
+            "revenue": 0.0,
             "last_movement": "MOVE - 2026-05-12 23:58:41"
         },
         {
@@ -26,6 +28,8 @@
             "sold": 0,
             "avg_in_price": 0.0,
             "avg_out_price": 0.0,
+            "expense": 0.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-11 20:11:17"
         },
         {
@@ -40,6 +44,8 @@
             "sold": 537.0,
             "avg_in_price": 3.85,
             "avg_out_price": 5.33,
+            "expense": 173253.85,
+            "revenue": 2862.21,
             "last_movement": "OUT - 2026-05-11 22:17:36"
         },
         {
@@ -53,6 +59,8 @@
             "sold": 9.0,
             "avg_in_price": 7.0,
             "avg_out_price": 2.0,
+            "expense": 623.0,
+            "revenue": 18.0,
             "last_movement": "MOVE - 2026-05-11 20:19:18"
         },
         {
@@ -66,6 +74,8 @@
             "sold": 0,
             "avg_in_price": 13.0,
             "avg_out_price": 0.0,
+            "expense": 130.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 00:53:57"
         },
         {
@@ -79,6 +89,8 @@
             "sold": 11.0,
             "avg_in_price": 1.0,
             "avg_out_price": 4.0,
+            "expense": 111.0,
+            "revenue": 44.0,
             "last_movement": "OUT - 2026-05-12 01:27:01"
         },
         {
@@ -92,6 +104,8 @@
             "sold": 0,
             "avg_in_price": 9.0,
             "avg_out_price": 0.0,
+            "expense": 8999991.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 19:27:43"
         },
         {
@@ -105,6 +119,8 @@
             "sold": 0,
             "avg_in_price": 23.0,
             "avg_out_price": 0.0,
+            "expense": 2299977.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 19:42:34"
         },
         {
@@ -118,6 +134,8 @@
             "sold": 0,
             "avg_in_price": 22.0,
             "avg_out_price": 0.0,
+            "expense": 2444444442.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 21:18:19"
         },
         {
@@ -131,6 +149,8 @@
             "sold": 0,
             "avg_in_price": 23.0,
             "avg_out_price": 0.0,
+            "expense": 25555300.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 21:24:13"
         },
         {
@@ -144,6 +164,8 @@
             "sold": 0,
             "avg_in_price": 12.0,
             "avg_out_price": 0.0,
+            "expense": 10800.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 21:28:58"
         },
         {
@@ -158,6 +180,8 @@
             "sold": 123.0,
             "avg_in_price": 12.0,
             "avg_out_price": 3.09,
+            "expense": 10788.0,
+            "revenue": 380.07,
             "last_movement": "MOVE - 2026-05-12 21:35:48"
         },
         {
@@ -172,6 +196,8 @@
             "sold": 0,
             "avg_in_price": 2.0,
             "avg_out_price": 0.0,
+            "expense": 666675332.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-13 10:27:33"
         },
         {
@@ -187,6 +213,8 @@
             "sold": 0,
             "avg_in_price": 7.0,
             "avg_out_price": 0.0,
+            "expense": 24135216.0,
+            "revenue": 0.0,
             "last_movement": "MOVE - 2026-05-12 23:00:14"
         },
         {
@@ -200,6 +228,8 @@
             "sold": 0,
             "avg_in_price": 4.0,
             "avg_out_price": 0.0,
+            "expense": 20.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 22:22:50"
         },
         {
@@ -213,6 +243,8 @@
             "sold": 0,
             "avg_in_price": 1.0,
             "avg_out_price": 0.0,
+            "expense": 23.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-12 22:30:52"
         },
         {
@@ -228,6 +260,8 @@
             "sold": 45.0,
             "avg_in_price": 4.0,
             "avg_out_price": 9.0,
+            "expense": 1380.0,
+            "revenue": 405.0,
             "last_movement": "MOVE - 2026-05-12 23:54:12"
         },
         {
@@ -242,6 +276,8 @@
             "sold": 133.0,
             "avg_in_price": 45.0,
             "avg_out_price": 8.5,
+            "expense": 40500.0,
+            "revenue": 1130.5,
             "last_movement": "OUT - 2026-05-13 09:52:16"
         },
         {
@@ -255,6 +291,8 @@
             "sold": 0,
             "avg_in_price": 3.0,
             "avg_out_price": 0.0,
+            "expense": 3000.0,
+            "revenue": 0.0,
             "last_movement": "IN - 2026-05-13 10:20:34"
         },
         {
@@ -269,10 +307,29 @@
             "sold": 345.0,
             "avg_in_price": 5.0,
             "avg_out_price": 5.0,
+            "expense": 50005.0,
+            "revenue": 1725.0,
             "last_movement": "OUT - 2026-05-15 00:21:46"
+        },
+        {
+            "product": "пилешко филе",
+            "unit": "кг.",
+            "total": 104.0,
+            "warehouses": {
+                "Пловдив (W2)": 73.0,
+                "София (W1)": 4.0,
+                "Смолян (W5)": 27.0
+            },
+            "delivered": 132.0,
+            "sold": 28.0,
+            "avg_in_price": 10.5,
+            "avg_out_price": 11.0,
+            "expense": 1386.0,
+            "revenue": 308.0,
+            "last_movement": "OUT - 2026-05-15 11:48:54"
         }
     ],
     "summary": {
-        "total_products": 20
+        "total_products": 21
     }
 }
