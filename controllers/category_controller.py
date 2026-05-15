@@ -8,29 +8,26 @@ from filters.category_analytics import build_category_tree, get_category_stats
 class CategoryController:
     """Управлява категориите и гарантира йерархичната цялост."""
 
-    def __init__(self, repo, activity_log_controller=None):
+    def __init__(self, repo):
         self.repo = repo
-        self.activity_log_controller = activity_log_controller
         self.categories: List[Category] = self._load()
 
 
+
     def _load(self) -> List[Category]:
-        """Зарежда категориите от хранилището."""
         raw = self.repo.load() or []
         return [Category.from_dict(c) for c in raw]
 
     def _save(self) -> None:
-        """Записва промените в хранилището."""
         self.repo.save([c.to_dict() for c in self.categories])
 
-    # ОСНОВНИ ОПЕРАЦИИ
+
+
 
     def get_all(self) -> List[Category]:
-        """Връща всички категории."""
         return self.categories
 
     def add(self, category_data: dict, user_id: str) -> Category:
-        """Създава нова категория с валидация и опционален родител."""
         name = CategoryValidator.validate_name(category_data.get("name", ""))
         description = CategoryValidator.validate_description(category_data.get("description", ""))
 
@@ -52,7 +49,6 @@ class CategoryController:
         return category
 
     def update(self, category_id: str, updates: dict) -> bool:
-        """Обновява съществуваща категория с валидация само на променените полета."""
         category = self.get_by_id(category_id)
         if not category:
             return False
@@ -86,7 +82,6 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
-        """Изтрива категория, ако няма зависими подкатегории/продукти."""
         category = self.get_by_id(category_id)
         if not category:
             return False
@@ -98,7 +93,7 @@ class CategoryController:
         self._save()
         return True
 
-    # СПРАВКИ И ПОМОЩНИ МЕТОДИ
+
 
     def get_by_id(self, user_input: str) -> Optional[Category]:
         target = str(user_input or "").strip()
@@ -112,38 +107,58 @@ class CategoryController:
 
         return None
 
+
+
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
-        """Връща всички ID-та в поддървото на дадена категория."""
         parent_cat = self.get_by_id(parent_short_id)
         if not parent_cat:
             return []
 
         result = [parent_cat.category_id]
-
         for cat in self.categories:
             if cat.parent_id == parent_cat.category_id:
                 result.extend(self.get_all_hierarchical_ids(cat.category_id[:8]))
 
         return list(set(result))
 
-    def search(self, keyword: str) -> List[Category]:
-        """Търсене по име или описание."""
+
+
+    def search(self, keyword: str) -> List[dict]:
+        """Търсене по име/описание."""
         cleaned = (keyword or "").strip()
         if len(cleaned) < 3:
             return []
-        return filter_categories(self.categories, cleaned)
+
+        results = filter_categories(self.categories, cleaned)
+
+        return [{"id": c.category_id[:8], "name": c.name, "description": c.description,
+                 "parent": self.get_by_id(c.parent_id).name if c.parent_id else None} for c in results]
+
+
+
 
     def get_stats(self, product_controller) -> dict:
-        """Статистика за броя продукти по категории."""
         products = product_controller.get_all() if product_controller else []
-        return get_category_stats(self.categories, products)
+        raw = get_category_stats(self.categories, products)
+
+        return {"total_categories": raw.get("total_categories", 0),
+                "categories": [{"id": c["id"][:8], "name": c["name"], "product_count": c["product_count"]}
+                               for c in raw.get("categories", [])]}
+
+
 
     def get_visual_tree(self) -> List[dict]:
-        """Връща йерархично дърво на категориите за визуализация."""
-        return build_category_tree(self.categories)
+        tree = build_category_tree(self.categories)
+
+        def transform(node):
+            return {"id": node["id"][:8], "name": node["name"],
+                    "children": [transform(child) for child in node.get("children", [])]}
+
+        return [transform(n) for n in tree]
+
+
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
-        """Валидация на единично поле за интерактивни форми."""
         try:
             if field_type == "name":
                 CategoryValidator.validate_name(value)

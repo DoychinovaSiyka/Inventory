@@ -20,7 +20,6 @@ class MovementController:
         raw = self.repo.load() or []
         self.movements: List[Movement] = []
 
-        # Зареждане на движенията от JSON
         for m in raw:
             try:
                 obj = Movement.from_dict(m)
@@ -31,8 +30,33 @@ class MovementController:
 
         self.inventory_controller = None
 
+
+
+
+    def get_all_clean(self) -> List[dict]:
+        rows = []
+        for m in self.movements:
+            loc = self.location_controller.get_by_id(m.location_id)
+            from_loc = self.location_controller.get_by_id(m.from_location_id)
+            to_loc = self.location_controller.get_by_id(m.to_location_id)
+
+            rows.append({"id": m.movement_id[:8], "date": str(m.date)[:10], "type": m.movement_type.name,
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                         "location": loc.name if loc else None, "from": from_loc.name if from_loc else None,
+                         "to": to_loc.name if to_loc else None, "customer": m.customer,
+                         "supplier": m.supplier_id[:8] if m.supplier_id else None})
+
+        return rows
+
+
+
+
+
     def _set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
+
+
+
 
     def _location_id(self, loc_id: Optional[str]) -> Optional[str]:
         if not loc_id:
@@ -44,12 +68,18 @@ class MovementController:
 
         return str(loc.location_id)
 
+
+
+
+
     def get_all(self) -> List[Movement]:
         return self.movements
 
+
+
     def _save_changes(self) -> None:
-        """Записва всички движения в movements.json"""
         self.repo.save([m.to_dict() for m in self.movements])
+
 
 
 
@@ -57,31 +87,36 @@ class MovementController:
         movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
                                          quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
 
-        # Обновяване на инвентара
         if self.inventory_controller:
             self.inventory_controller.increase_stock(product_id, quantity, location_id)
 
         return movement
 
+
+
+
+
+
+
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         resolved_loc = self._location_id(location_id)
 
-        MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity), customer,
-                                             self.inventory_controller, resolved_loc)
+        MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity),
+                                             customer, self.inventory_controller, resolved_loc)
 
         movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
                                          quantity=quantity, price=price, location_id=location_id, customer=customer)
 
-        # Обновяване на инвентара
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, quantity, location_id)
 
         if self.invoice_controller:
-            self.invoice_controller.create_from_movement(movement=movement,
-                                                          product=self.product_controller.get_by_id(product_id),
-                                                          customer=customer or "Общ клиент", user_id=user_id)
+            self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
+                                                         customer=customer or "Общ клиент", user_id=user_id)
 
         return movement
+
+
 
 
 
@@ -89,7 +124,6 @@ class MovementController:
         movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
                                          quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
 
-        # Обновяване на инвентара
         if self.inventory_controller:
             self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
 
@@ -97,8 +131,10 @@ class MovementController:
 
 
 
+
+
     def search_movements(self, product_id=None, movement_type=None,
-                         date=None, location_id=None, customer=None, supplier_id=None):
+                         date=None, location_id=None, customer=None, supplier_id=None) -> List[dict]:
 
         results = []
 
@@ -125,9 +161,17 @@ class MovementController:
                 ok = False
 
             if ok:
-                results.append(m)
+                loc = self.location_controller.get_by_id(m.location_id)
+                from_loc = self.location_controller.get_by_id(m.from_location_id)
+                to_loc = self.location_controller.get_by_id(m.to_location_id)
+
+                results.append({"id": m.movement_id[:8], "date": str(m.date)[:10], "type": m.movement_type.name,
+                                "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "location": loc.name if loc else None,
+                                "from": from_loc.name if from_loc else None, "to": to_loc.name if to_loc else None,
+                                "customer": m.customer, "supplier": m.supplier_id[:8] if m.supplier_id else None})
 
         return results
+
 
 
 
@@ -149,6 +193,7 @@ class MovementController:
         qty = MovementValidator.parse_quantity(quantity)
 
 
+
         if m_type_str == "MOVE":
             resolved_loc = None
             resolved_from = self._location_id(from_location_id)
@@ -158,12 +203,12 @@ class MovementController:
             resolved_from = None
             resolved_to = None
 
-
         if m_type_str == "IN":
             MovementValidator.validate_in_rules(product, qty)
 
         elif m_type_str == "OUT":
             MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
+
 
         elif m_type_str == "MOVE":
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
@@ -171,6 +216,8 @@ class MovementController:
 
         if m_type_str == "MOVE":
             prc = 0.0
+
+
         elif price is not None and str(price).strip() != "":
             prc = float(price)
         else:

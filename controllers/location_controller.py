@@ -5,7 +5,8 @@ from validators.location_validator import LocationValidator
 
 class LocationController:
     """Контролерът управлява локациите в системата."""
-    def __init__(self, repo, activity_log_controller=None, inventory_controller=None):
+
+    def __init__(self, repo, inventory_controller=None):
         self.repo = repo
         self.inventory_controller = inventory_controller
 
@@ -18,6 +19,8 @@ class LocationController:
             obj = Location.from_dict(l)
             if obj:
                 self.locations.append(obj)
+
+
 
     def add(self, name: str, zone: str = "", capacity=None) -> Location:
         name = LocationValidator.validate_name(name)
@@ -32,8 +35,18 @@ class LocationController:
 
         return location
 
+
+
+
     def get_all(self) -> List[Location]:
         return self.locations
+
+
+
+    def get_all_clean(self) -> List[dict]:
+        return [{"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity} for loc in self.locations]
+
+
 
     def get_by_id(self, location_id: str) -> Optional[Location]:
         if not location_id:
@@ -45,14 +58,16 @@ class LocationController:
             if loc.location_id.lower() == target:
                 return loc
 
-
         for loc in self.locations:
             if loc.location_id[:8].lower() == target:
                 return loc
 
         return None
 
-    def search(self, query: str) -> List[Location]:
+
+
+
+    def search(self, query: str) -> List[dict]:
         q = str(query or "").strip().lower()
         if not q:
             return []
@@ -63,10 +78,14 @@ class LocationController:
             name = loc.name.lower()
             zone = loc.zone.lower()
             cap = str(loc.capacity).lower()
-            if (q in short_id or q in name or q in zone or q in cap):
-                results.append(loc)
+
+            if q in short_id or q in name or q in zone or q in cap:
+                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity})
 
         return results
+
+
+
 
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None) -> bool:
@@ -91,6 +110,9 @@ class LocationController:
         location.update_modified()
         self._save_changes()
         return True
+
+
+
 
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
@@ -126,6 +148,8 @@ class LocationController:
         self._save_changes()
         return True
 
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":
@@ -137,6 +161,7 @@ class LocationController:
             return None
         except ValueError as e:
             return str(e)
+
 
     def _save_changes(self) -> None:
         data = [l.to_dict() for l in self.locations]

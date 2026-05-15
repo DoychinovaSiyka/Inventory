@@ -20,7 +20,16 @@ class UserController:
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
-    # търсене по ID или username
+
+
+    def get_all_clean(self) -> List[dict]:
+        return [{"id": u.user_id[:8], "username": u.username, "first_name": u.first_name, "last_name": u.last_name,
+                 "email": u.email, "role": u.role, "status": u.status} for u in self.users]
+
+
+
+
+
     def find_user_flexible(self, identifier: str) -> Optional[User]:
         if not identifier:
             return None
@@ -30,22 +39,30 @@ class UserController:
             return user
         return self.get_by_username(identifier)
 
+
+
     def _hash_password(self, password: str) -> str:
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
 
+
+
     def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
         return stored_password_hash == self._hash_password(provided_password)
+
+
 
     def is_admin(self, user):
         if not user:
             return False
         return str(user.role).lower() == "admin"
 
+
     def _save_changes(self):
-        # Записваме всички потребители обратно в JSON
         self.repo.save([u.to_dict() for u in self.users])
+
+
 
     def get_by_username(self, username: str) -> Optional[User]:
         if not username:
@@ -57,8 +74,11 @@ class UserController:
                 return u
         return None
 
+
     def get_all(self):
         return self.users
+
+
 
     def get_by_id(self, user_id: str) -> Optional[User]:
         uid = str(user_id or "").strip()
@@ -73,6 +93,9 @@ class UserController:
                 return u
 
         return None
+
+
+
 
     def login(self, username: str, password: str) -> Optional[User]:
         user = UserValidator.validate_login(username, password, self)
@@ -92,6 +115,9 @@ class UserController:
         self.users.append(new_user)
         self._save_changes()
         return new_user
+
+
+
 
     def change_role(self, identifier, new_role):
         user = self.find_user_flexible(identifier)
@@ -121,6 +147,9 @@ class UserController:
         self._save_changes()
         return True
 
+
+
+
     def delete_user(self, acting_user: User, identifier: str):
         user = self.find_user_flexible(identifier)
         if not user:
@@ -134,6 +163,9 @@ class UserController:
         self._save_changes()
         return True
 
+
+
+
     def _create_default_admin(self):
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                      username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
@@ -146,6 +178,9 @@ class UserController:
                         role="Operator", status="Active")
         self.users.append(operator)
         self._save_changes()
+
+
+
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:

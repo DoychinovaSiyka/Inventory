@@ -3,15 +3,13 @@ from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
 
 
-
-
 class SupplierController:
     """Контролерът управлява доставчиците и координира валидатора, модела и хранилището."""
+
     def __init__(self, repo):
         self.repo = repo
         data = self.repo.load() or []
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
-
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_all(name, contact, address)
@@ -24,8 +22,16 @@ class SupplierController:
         return supplier
 
 
+
+
     def get_all(self) -> List[Supplier]:
         return self.suppliers
+
+
+    def get_all_clean(self) -> List[dict]:
+        return [{"id": s.supplier_id[:8], "name": s.name, "contact": s.contact, "address": s.address} for s in self.suppliers]
+
+
 
     def get_by_id(self, supplier_id: str) -> Optional[Supplier]:
         sid = str(supplier_id or "").strip().lower()
@@ -39,8 +45,7 @@ class SupplierController:
 
         return None
 
-
-    def search(self, supplier_id: str) -> List[Supplier]:
+    def search(self, supplier_id: str) -> List[dict]:
         sid = str(supplier_id or "").strip().lower()
         if not sid:
             return []
@@ -48,9 +53,11 @@ class SupplierController:
         results = []
         for s in self.suppliers:
             if s.supplier_id[:8].lower() == sid:
-                results.append(s)
+                results.append({"id": s.supplier_id[:8], "name": s.name, "contact": s.contact, "address": s.address})
 
         return results
+
+
 
 
 
@@ -78,6 +85,8 @@ class SupplierController:
         return supplier
 
 
+
+
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
         if not supplier:
@@ -86,6 +95,8 @@ class SupplierController:
         self.suppliers.remove(supplier)
         self._save_changes()
         return True
+
+
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:

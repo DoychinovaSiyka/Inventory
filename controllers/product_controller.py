@@ -6,6 +6,7 @@ from filters import product_filters, product_sorters
 
 class ProductController:
     """Управлява каталога с продукти."""
+
     def __init__(self, repo, category_controller):
         self.repo = repo
         self.category_controller = category_controller
@@ -25,6 +26,14 @@ class ProductController:
 
     def get_all(self) -> List[Product]:
         return self.products
+
+
+
+    def get_all_clean(self) -> List[dict]:
+        return [{"id": p.product_id[:8], "name": p.name, "price": p.price, "unit": p.unit,
+                 "description": p.description, "categories": [c.name for c in p.categories]} for p in self.products]
+
+
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
         pid = str(product_id or "").strip()
@@ -51,6 +60,7 @@ class ProductController:
         categories = []
         raw_ids = product_data.get("category_ids", [])
         id_list = raw_ids if isinstance(raw_ids, list) else [raw_ids]
+
         for cid in id_list:
             cat = self.category_controller.get_by_id(cid)
             if cat:
@@ -85,7 +95,6 @@ class ProductController:
         if "unit" in updates:
             product.unit = self.validator.validate_unit(updates["unit"])
 
-
         if "category_ids" in updates:
             new_cats = []
             for cid in updates["category_ids"]:
@@ -111,22 +120,25 @@ class ProductController:
         self._save_changes()
         return True
 
-    def search(self, keyword: str) -> List[Product]:
-        """Търсене по ключова дума в името или описанието."""
-        return product_filters.filter_combined(self.products, keyword=keyword)
+    def search(self, keyword: str) -> List[dict]:
+        results = product_filters.filter_combined(self.products, keyword=keyword)
+
+        return [{"id": p.product_id[:8], "name": p.name, "price": p.price, "unit": p.unit,
+                 "description": p.description, "categories": [c.name for c in p.categories]} for p in results]
+
+
 
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
-        """Филтрира продукти, принадлежащи към списък от категории."""
         return product_filters.filter_combined(self.products, category_ids=category_ids)
+
+
 
     def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
 
         if sort_type == "name":
             key_fn = lambda p: p.name.lower()
-
         elif sort_type == "price":
             key_fn = lambda p: p.price
-
         else:
             key_fn = lambda p: p.name.lower()
 
@@ -136,6 +148,8 @@ class ProductController:
             return product_sorters.bubble_sort(products_copy, key=key_fn, reverse=reverse)
 
         return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
+
+
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:

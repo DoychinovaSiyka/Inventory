@@ -65,17 +65,16 @@ class ReportController:
 
 
 
-
     def report_movements(self):
         rows = []
 
         for m in self.movement_controller.movements:
             loc = self.location_controller.get_by_id(m.location_id)
-            rows.append({ "date": str(m.date)[:10], "movement_id": m.movement_id[:8], "type": m.movement_type.name, "product": m.product_name, "quantity": m.quantity,
-                          "unit": m.unit,
-                          "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
-                          "to": m.customer if m.movement_type.name == "OUT"
-                          else (loc.name if loc else "Склад")})
+
+            rows.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8], "type": m.movement_type.name,
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                         "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
+                         "to": m.customer if m.movement_type.name == "OUT" else (loc.name if loc else "Склад")})
 
         return ReportResult({"total": len(rows)}, rows)
 
@@ -91,10 +90,9 @@ class ReportController:
             supplier_name = sup.name if sup else "Неизвестен"
 
             if keyword in m.product_name.lower() or keyword in supplier_name.lower():
-                data.append({ "date": str(m.date)[:10], "movement_id": m.movement_id[:8],
-                              "product": m.product_name,
-                              "quantity": m.quantity, "unit": m.unit, "price": m.price,
-                              "supplier": supplier_name})
+                data.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
+                             "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                             "price": m.price, "supplier": supplier_name})
 
         return ReportResult({"total": len(data)}, data)
 
@@ -112,7 +110,6 @@ class ReportController:
 
 
 
-    #   ДЕТАЙЛЕН ОТЧЕТ ЗА ПРОДУКТ
     def full_product_report(self, product_id):
         product = self.product_controller.get_by_id(product_id)
         if not product:
@@ -127,17 +124,16 @@ class ReportController:
         for mv in movements:
             entry = {"date": mv.date, "type": mv.movement_type.name, "qty": mv.quantity, "before": running_total}
 
-            if mv.movement_type.name == "IN":
-                running_total += mv.quantity
-                entry["location"] = mv.location_id
-
-            elif mv.movement_type.name == "OUT":
-                running_total -= mv.quantity
-                entry["location"] = mv.location_id
+            if mv.movement_type.name in ("IN", "OUT"):
+                running_total += mv.quantity if mv.movement_type.name == "IN" else -mv.quantity
+                loc = self.location_controller.get_by_id(mv.location_id)
+                entry["location"] = loc.name if loc else "Неизвестен склад"
 
             elif mv.movement_type.name == "MOVE":
-                entry["from"] = mv.from_location_id
-                entry["to"] = mv.to_location_id
+                from_loc = self.location_controller.get_by_id(mv.from_location_id)
+                to_loc = self.location_controller.get_by_id(mv.to_location_id)
+                entry["from"] = from_loc.name if from_loc else "?"
+                entry["to"] = to_loc.name if to_loc else "?"
 
             entry["after"] = running_total
             history.append(entry)
@@ -148,7 +144,6 @@ class ReportController:
         total_in = sum(m.quantity for m in movements if m.movement_type.name == "IN")
         total_out = sum(m.quantity for m in movements if m.movement_type.name == "OUT")
 
-        # Средни цени
         in_prices = [float(m.price) for m in movements if m.movement_type.name == "IN" and m.price]
         out_prices = [float(m.price) for m in movements if m.movement_type.name == "OUT" and m.price]
 
@@ -160,6 +155,6 @@ class ReportController:
         profit = revenue - fifo_cost
 
         return {"product": product.name, "unit": product.unit, "history": history, "final_total": running_total,
-                 "warehouses": product_row["warehouses"] if product_row else {}, "delivered": total_in, "sold": total_out,
-                 "avg_in": avg_in_price, "avg_out": avg_out_price, "fifo_cost": fifo_cost, "revenue": revenue,
-                 "profit": profit, "last_movement": history[-1] if history else None}
+                "warehouses": product_row["warehouses"] if product_row else {}, "delivered": total_in, "sold": total_out,
+                "avg_in": avg_in_price, "avg_out": avg_out_price, "fifo_cost": fifo_cost,
+                "revenue": revenue, "profit": profit, "last_movement": history[-1] if history else None}

@@ -6,10 +6,13 @@ from filters import invoice_filters
 
 class InvoiceController:
     """Управлява жизнения цикъл на фактурите."""
+
     def __init__(self, repo):
         self.repo = repo
         self.invoices: List[Invoice] = []
         self._reload()
+
+
 
     def _reload(self) -> None:
         raw = self.repo.load() or []
@@ -18,7 +21,8 @@ class InvoiceController:
     def _save_changes(self) -> None:
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-    #  Създаване на фактура при продажба
+
+
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
@@ -45,7 +49,6 @@ class InvoiceController:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
-
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
         tid = str(invoice_id or "").strip().lower()
         if not tid:
@@ -59,8 +62,7 @@ class InvoiceController:
 
 
 
-
-    def search(self, query: str) -> List[Invoice]:
+    def search(self, query: str) -> List[dict]:
         q = str(query or "").strip().lower()
         if not q:
             return []
@@ -68,9 +70,20 @@ class InvoiceController:
         results = []
         for inv in self.invoices:
             if inv.invoice_id[:8].lower() == q:
-                results.append(inv)
+                results.append({"invoice_id": inv.invoice_id[:8], "date": str(inv.date)[:10],
+                                "customer": inv.customer, "product": inv.product, "total_price": inv.total_price,
+                                "status": "АКТИВНА" if inv.is_active else "АНУЛИРАНА"})
 
         return results
+
+
+
+
+    def get_all_clean(self) -> List[dict]:
+        return [{"invoice_id": inv.invoice_id[:8], "date": str(inv.date)[:10], "customer": inv.customer,
+                 "product": inv.product, "total_price": inv.total_price, "status": "АКТИВНА" if inv.is_active else "АНУЛИРАНА"}
+                for inv in self.invoices]
+
 
 
 
