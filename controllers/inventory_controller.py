@@ -2,8 +2,6 @@ from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
 
 
-
-
 class InventoryController:
     """Управлява наличностите в реално време."""
 
@@ -42,20 +40,21 @@ class InventoryController:
 
         user_input = str(user_input).strip()
 
-
+        # 1) директно ID в self.data
         if user_input in self.data.get("products", {}):
             return user_input
 
-
+        # 2) частично ID спрямо ключовете в self.data
         for full_id in self.data.get("products", {}).keys():
             if full_id.startswith(user_input):
                 return full_id
 
-
+        # 3) търсене по име или частично ID в ProductController
         for p in self.product_controller.get_all():
             if user_input.lower() == p.name.lower() or str(p.product_id).startswith(user_input):
                 return str(p.product_id)
 
+        # 4) ако нищо не хване – връщаме каквото е подадено
         return user_input
 
     def _location_id(self, user_input: str) -> Optional[str]:
@@ -64,16 +63,17 @@ class InventoryController:
 
         user_input = str(user_input).strip()
 
-
+        # 1) директно търсене по ID
         loc = self.location_controller.get_by_id(user_input)
         if loc:
             return str(loc.location_id)
 
-
+        # 2) частично ID
         for l in self.location_controller.get_all():
             if str(l.location_id).startswith(user_input):
                 return str(l.location_id)
 
+        # 3) fallback – връщаме каквото е подадено
         return user_input
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
@@ -122,10 +122,6 @@ class InventoryController:
         lid = self._location_id(location_id)
         return float(self.data.get("products", {}).get(pid, {}).get("locations", {}).get(lid, 0))
 
-
-
-
-
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         pid = self._product_id(product_id)
 
@@ -158,9 +154,6 @@ class InventoryController:
 
         return round(total_cost, 2)
 
-
-
-
     def _build_inventory(self):
         rows = []
 
@@ -182,7 +175,6 @@ class InventoryController:
                     name = "Неизвестен склад"
                     warehouse_map[name] = qty
                     continue
-
                 else:
                     loc = self.location_controller.get_by_id(lid)
                     name = loc.name if loc else f"Склад {str(lid)[:8]}"
@@ -201,22 +193,20 @@ class InventoryController:
         for mv in movements:
             mtype = mv.movement_type.name
 
-
+            # Първо MOVE – не ползва mv.location_id
             if mtype == "MOVE":
                 if mv.from_location_id is None or mv.to_location_id is None:
                     continue
                 self.move_stock(mv.product_id, mv.quantity, mv.from_location_id, mv.to_location_id)
                 continue
 
-            # За IN / OUT - location_id
+            # За IN / OUT – изискваме location_id
             if mv.location_id is None:
                 continue
 
             if mtype == "IN":
                 self.increase_stock(mv.product_id, mv.quantity, mv.location_id)
-
             elif mtype == "OUT":
                 self.decrease_stock(mv.product_id, mv.quantity, mv.location_id)
 
         self._save()
-

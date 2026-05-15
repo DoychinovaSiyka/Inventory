@@ -10,8 +10,8 @@ class CategoryController:
 
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
+        self.activity_log_controller = activity_log_controller
         self.categories: List[Category] = self._load()
-
 
 
     def _load(self) -> List[Category]:
@@ -23,13 +23,14 @@ class CategoryController:
         """Записва промените в хранилището."""
         self.repo.save([c.to_dict() for c in self.categories])
 
-
-
+    # ОСНОВНИ ОПЕРАЦИИ
 
     def get_all(self) -> List[Category]:
+        """Връща всички категории."""
         return self.categories
 
     def add(self, category_data: dict, user_id: str) -> Category:
+        """Създава нова категория с валидация и опционален родител."""
         name = CategoryValidator.validate_name(category_data.get("name", ""))
         description = CategoryValidator.validate_description(category_data.get("description", ""))
 
@@ -50,10 +51,8 @@ class CategoryController:
         self._save()
         return category
 
-
-
-
     def update(self, category_id: str, updates: dict) -> bool:
+        """Обновява съществуваща категория с валидация само на променените полета."""
         category = self.get_by_id(category_id)
         if not category:
             return False
@@ -87,22 +86,20 @@ class CategoryController:
         return True
 
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
+        """Изтрива категория, ако няма зависими подкатегории/продукти."""
         category = self.get_by_id(category_id)
         if not category:
             return False
 
         products = product_controller.get_all() if product_controller else []
-
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
         self._save()
         return True
 
+    # СПРАВКИ И ПОМОЩНИ МЕТОДИ
 
-
-
-    #   СПРАВКИ И ПОМОЩНИ МЕТОДИ
     def get_by_id(self, user_input: str) -> Optional[Category]:
         target = str(user_input or "").strip()
 
@@ -116,6 +113,7 @@ class CategoryController:
         return None
 
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
+        """Връща всички ID-та в поддървото на дадена категория."""
         parent_cat = self.get_by_id(parent_short_id)
         if not parent_cat:
             return []
@@ -129,35 +127,31 @@ class CategoryController:
         return list(set(result))
 
     def search(self, keyword: str) -> List[Category]:
+        """Търсене по име или описание."""
         cleaned = (keyword or "").strip()
         if len(cleaned) < 3:
             return []
         return filter_categories(self.categories, cleaned)
 
-
     def get_stats(self, product_controller) -> dict:
+        """Статистика за броя продукти по категории."""
         products = product_controller.get_all() if product_controller else []
         return get_category_stats(self.categories, products)
 
-
-
     def get_visual_tree(self) -> List[dict]:
+        """Връща йерархично дърво на категориите за визуализация."""
         return build_category_tree(self.categories)
 
-
-
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        """Валидация на единично поле за интерактивни форми."""
         try:
             if field_type == "name":
                 CategoryValidator.validate_name(value)
-
             elif field_type == "description":
                 CategoryValidator.validate_description(value)
-
             elif field_type == "parent":
                 if value and not self.get_by_id(value):
                     raise ValueError("Невалидна родителска категория.")
-
             return None
         except ValueError as e:
             return str(e)
