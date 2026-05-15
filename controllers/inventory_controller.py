@@ -208,6 +208,10 @@ class InventoryController:
             avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
             avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
+            expense = round(delivered * avg_in, 2)
+            revenue = round(sold * avg_out, 2)
+
+
             if movements:
                 last = sorted(movements, key=lambda x: x.date)[-1]
                 last_movement = f"{last.movement_type.name} - {last.date}"
@@ -215,8 +219,9 @@ class InventoryController:
                 last_movement = "Няма движения"
 
             rows.append({"product": product_obj.name, "unit": product_obj.unit, "total": total,
-                         "warehouses": warehouse_map, "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
-                         "avg_out_price": avg_out, "last_movement": last_movement})
+                         "warehouses": warehouse_map, "delivered": delivered, "sold": sold,
+                         "avg_in_price": avg_in, "avg_out_price": avg_out, "expense": expense,
+                         "revenue": revenue, "last_movement": last_movement})
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
 

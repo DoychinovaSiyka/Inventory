@@ -152,5 +152,19 @@
         "date": "2026-05-15 00:21:46",
         "created": "2026-05-15 00:21:46",
         "modified": "2026-05-15 00:21:46"
+    },
+    {
+        "invoice_id": "b3137caa-b94a-4813-ac19-359e8d6d1835",
+        "movement_id": "49222025-3aab-42d2-9d4f-bcdd96cad039",
+        "product": "пилешко филе",
+        "quantity": 20.0,
+        "unit": "кг.",
+        "unit_price": 8.0,
+        "total_price": 160.0,
+        "customer": "Сийка",
+        "is_active": true,
+        "date": "2026-05-15 10:56:00",
+        "created": "2026-05-15 10:56:00",
+        "modified": "2026-05-15 10:56:00"
     }
 ]

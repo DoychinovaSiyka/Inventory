@@ -33,9 +33,9 @@ class ReportController:
             if not product:
                 item["avg_in_price"] = "0.00 лв."
                 item["avg_out_price"] = "0.00 лв."
-                item["last_move"] = "Няма"
-                item["delivered"] = f"0 {item['unit']}"
-                item["sold"] = f"0 {item['unit']}"
+                item["expense"] = "0.00 лв."
+                item["revenue"] = "0.00 лв."
+                item["last_movement"] = "Няма"
                 continue
 
             pid = str(product.product_id)
@@ -45,19 +45,26 @@ class ReportController:
             in_prices = [float(m.price) for m in moves if m.movement_type.name == "IN" and m.price]
             out_prices = [float(m.price) for m in moves if m.movement_type.name == "OUT" and m.price]
 
-            item["avg_in_price"] = f"{(sum(in_prices) / len(in_prices)):.2f} лв." if in_prices else "0.00 лв."
-            item["avg_out_price"] = f"{(sum(out_prices) / len(out_prices)):.2f} лв." if out_prices else "0.00 лв."
+            avg_in = (sum(in_prices) / len(in_prices)) if in_prices else 0.0
+            avg_out = (sum(out_prices) / len(out_prices)) if out_prices else 0.0
 
-            # Последно движение
-            last = max(moves, key=lambda x: x.date) if moves else None
-            item["last_move"] = f"{last.movement_type.name} - {str(last.date)[:10]}" if last else "Няма"
+            item["avg_in_price"] = f"{avg_in:.2f} лв."
+            item["avg_out_price"] = f"{avg_out:.2f} лв."
 
             # Доставено / Продадено
             delivered = sum(m.quantity for m in moves if m.movement_type.name == "IN")
             sold = sum(m.quantity for m in moves if m.movement_type.name == "OUT")
 
-            item["delivered"] = f"{delivered} {item['unit']}"
-            item["sold"] = f"{sold} {item['unit']}"
+            # Разходи и приходи
+            expense = delivered * avg_in
+            revenue = sold * avg_out
+
+            item["expense"] = f"{expense:.2f} лв."
+            item["revenue"] = f"{revenue:.2f} лв."
+
+            # Последно движение
+            last = max(moves, key=lambda x: x.date) if moves else None
+            item["last_movement"] = (f"{last.movement_type.name} - {str(last.date)[:19]}" if last else "Няма")
 
         return ReportResult(data["summary"], data["products"])
 
