@@ -18,6 +18,7 @@ class InventoryController:
 
 
 
+
     def _load(self):
         data = self.repo.load()
 
@@ -29,11 +30,12 @@ class InventoryController:
 
         return data
 
+
+
+
     def _save(self):
-        """Записва обобщената карта на инвентара в JSON (presentation layer)."""
         summary = self._build_inventory()
         self.repo.save(summary)
-
 
 
 
@@ -56,6 +58,9 @@ class InventoryController:
 
         return user_input
 
+
+
+
     def _location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -74,6 +79,7 @@ class InventoryController:
 
 
 
+
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -84,6 +90,9 @@ class InventoryController:
         locs = self.data["products"][pid]["locations"]
         current = float(locs.get(lid, 0))
         locs[lid] = round(current + float(quantity), 2)
+
+
+
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
@@ -97,6 +106,9 @@ class InventoryController:
 
         locs[lid] = round(current - float(quantity), 2)
         return True
+
+
+
 
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         pid = self._product_id(product_id)
@@ -116,10 +128,16 @@ class InventoryController:
         product_info = self.data["products"].get(pid, {})
         return sum(float(q) for q in product_info.get("locations", {}).values())
 
+
+
+
     def get_stock(self, product_id, location_id):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
         return float(self.data.get("products", {}).get(pid, {}).get("locations", {}).get(lid, 0))
+
+
+
 
     def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
         pid = self._product_id(product_id)
@@ -155,6 +173,9 @@ class InventoryController:
 
 
 
+
+
+
     def _build_inventory(self):
         rows = []
 
@@ -166,7 +187,6 @@ class InventoryController:
             total = self.get_total_stock(pid)
             if total <= 0:
                 continue
-
 
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():

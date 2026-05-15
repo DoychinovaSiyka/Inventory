@@ -19,12 +19,10 @@ class ReportController:
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
 
-    # Взимаме всички движения за продукт
-    def _get_product_moves(self, pid):
-        return [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
 
 
+    # ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ
     def report_inventory_full(self):
         data = self.inventory_controller._build_inventory()
 
@@ -41,7 +39,7 @@ class ReportController:
                 continue
 
             pid = str(product.product_id)
-            moves = self._get_product_moves(pid)
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
             # Средни цени
             in_prices = [float(m.price) for m in moves if m.movement_type.name == "IN" and m.price]
@@ -65,6 +63,8 @@ class ReportController:
 
 
 
+
+
     def report_movements(self):
         rows = []
 
@@ -77,6 +77,8 @@ class ReportController:
                          "to": m.customer if m.movement_type.name == "OUT" else (loc.name if loc else "Склад")})
 
         return ReportResult({"total": len(rows)}, rows)
+
+
 
 
 
@@ -106,55 +108,3 @@ class ReportController:
                   "product": i.product, "total_price": i.total_price, "status": "АКТИВНА"} for i in active]
 
         return ReportResult({"total": len(active)}, data)
-
-
-
-
-    def full_product_report(self, product_id):
-        product = self.product_controller.get_by_id(product_id)
-        if not product:
-            return None
-
-        movements = [m for m in self.movement_controller.movements if str(m.product_id) == str(product_id)]
-        movements.sort(key=lambda x: x.date)
-
-        history = []
-        running_total = 0
-
-        for mv in movements:
-            entry = {"date": mv.date, "type": mv.movement_type.name, "qty": mv.quantity, "before": running_total}
-
-            if mv.movement_type.name in ("IN", "OUT"):
-                running_total += mv.quantity if mv.movement_type.name == "IN" else -mv.quantity
-                loc = self.location_controller.get_by_id(mv.location_id)
-                entry["location"] = loc.name if loc else "Неизвестен склад"
-
-            elif mv.movement_type.name == "MOVE":
-                from_loc = self.location_controller.get_by_id(mv.from_location_id)
-                to_loc = self.location_controller.get_by_id(mv.to_location_id)
-                entry["from"] = from_loc.name if from_loc else "?"
-                entry["to"] = to_loc.name if to_loc else "?"
-
-            entry["after"] = running_total
-            history.append(entry)
-
-        inventory = self.inventory_controller._build_inventory()
-        product_row = next((p for p in inventory["products"] if p["product"] == product.name), None)
-
-        total_in = sum(m.quantity for m in movements if m.movement_type.name == "IN")
-        total_out = sum(m.quantity for m in movements if m.movement_type.name == "OUT")
-
-        in_prices = [float(m.price) for m in movements if m.movement_type.name == "IN" and m.price]
-        out_prices = [float(m.price) for m in movements if m.movement_type.name == "OUT" and m.price]
-
-        avg_in_price = sum(in_prices) / len(in_prices) if in_prices else 0
-        avg_out_price = sum(out_prices) / len(out_prices) if out_prices else 0
-
-        fifo_cost = self.inventory_controller.calculate_fifo_cost(product_id, movements)
-        revenue = total_out * avg_out_price if avg_out_price else 0
-        profit = revenue - fifo_cost
-
-        return {"product": product.name, "unit": product.unit, "history": history, "final_total": running_total,
-                "warehouses": product_row["warehouses"] if product_row else {}, "delivered": total_in, "sold": total_out,
-                "avg_in": avg_in_price, "avg_out": avg_out_price, "fifo_cost": fifo_cost,
-                "revenue": revenue, "profit": profit, "last_movement": history[-1] if history else None}
