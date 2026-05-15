@@ -62,9 +62,9 @@ class SupplierView:
 
 
 
+
     def add_supplier(self, _):
         print("\nНов доставчик")
-
         while True:
             name = input("Име: ").strip()
             if not name:
@@ -77,7 +77,14 @@ class SupplierView:
                 continue
 
 
-            if any(s.name.lower() == name.lower() for s in self.controller.get_all()):
+            duplicate_found = False
+            suppliers = self.controller.get_all()
+            for s in suppliers:
+                if s.name.lower() == name.lower():
+                    duplicate_found = True
+                    break
+
+            if duplicate_found:
                 print(f"Доставчик с име '{name}' вече съществува.")
                 continue
 
@@ -91,10 +98,11 @@ class SupplierView:
                 continue
 
             error = self.controller.validate_field("contact", contact)
-            if not error:
-                break
+            if error:
+                print(f"Грешка: {error}")
+                continue
 
-            print(f"Грешка: {error}")
+            break
 
 
         while True:
@@ -104,14 +112,16 @@ class SupplierView:
                 continue
 
             error = self.controller.validate_field("address", address)
-            if not error:
-                break
+            if error:
+                print(f"Грешка: {error}")
+                continue
 
-            print(f"Грешка: {error}")
+            break
+
 
         try:
-            new_sup = self.controller.add(name=name, contact=contact, address=address)
-            print(f"\nДоставчикът е добавен. ID: {new_sup.supplier_id[:8]}")
+            new_supplier = self.controller.add(name=name, contact=contact, address=address)
+            print(f"\nДоставчикът е добавен. ID: {new_supplier.supplier_id[:8]}")
         except Exception as e:
             print(f"Грешка при запис: {e}")
 
@@ -136,8 +146,6 @@ class SupplierView:
 
         while True:
             new_name = input(f"Ново име [{supplier.name}]: ").strip()
-
-            # Ако е празно → запазваме старото
             if not new_name:
                 new_name = supplier.name
                 break

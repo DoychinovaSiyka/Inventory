@@ -16,11 +16,8 @@ class CategoryView:
                 break
 
     def _build_menu(self, is_admin):
-        # Добавяме Търсене като точка 2
-        items = [
-            MenuItem("1", "Списък с категории", self.show_all),
-            MenuItem("2", "Търсене на категория", self.search_category)
-        ]
+        items = [MenuItem("1", "Списък с категории", self.show_all),
+                 MenuItem("2", "Търсене на категория", self.search_category)]
 
         if is_admin:
             items.extend([
@@ -30,6 +27,8 @@ class CategoryView:
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
+
+
 
     def show_all(self, _):
         visual_tree = self.controller.get_visual_tree()
@@ -52,24 +51,23 @@ class CategoryView:
                 indent = "  " * level
                 print(f"{indent}- {cat.name} ({short_id})")
 
+
+
     def search_category(self, _):
-        """Търсене по име или по кратко/дълго ID."""
-        print("\n--- ТЪРСЕНЕ НА КАТЕГОРИЯ ---")
+        print("\nТЪРСЕНЕ НА КАТЕГОРИЯ")
         query = input("Въведете име или ID (кратко/пълно): ").strip().lower()
 
         if not query:
             return
 
-        # Вземаме всички категории от контролера
+
         all_cats = self.controller.get_all()
         results = []
-
         for c in all_cats:
             full_id = str(c.category_id).lower()
             short_id = full_id[:8]
             cat_name = c.name.lower()
 
-            # Логика: Търсим в името ИЛИ проверяваме дали query съвпада с началото на ID-то
             if query in cat_name or full_id.startswith(query):
                 results.append(c)
 
@@ -88,12 +86,16 @@ class CategoryView:
             print(f"Описание: {cat.description}")
             print("-" * 30)
 
+
+
+
     def add_category(self, user):
         print("\nНова категория (Enter за отказ)")
         while True:
             name = input("Име на категория: ").strip()
             if not name:
                 return
+
             if len(name) < 2:
                 print("Името трябва да е поне 2 символа.")
                 continue
@@ -103,33 +105,49 @@ class CategoryView:
                 print(f"Грешка: {error}")
                 continue
 
-            duplicate = any(c.name.lower() == name.lower() for c in self.controller.get_all())
-            if duplicate:
+
+            duplicate_found = False
+            for c in self.controller.get_all():
+                if c.name.lower() == name.lower():
+                    duplicate_found = True
+                    break
+
+            if duplicate_found:
                 print(f"Категория с име '{name}' вече съществува.")
                 continue
+
             break
+
 
         while True:
             description = input("Описание: ").strip()
             if not description:
                 print("Описанието е задължително.")
                 continue
+
             error = self.controller.validate_field("description", description)
             if error:
                 print(f"Грешка: {error}")
                 continue
+
             break
+
 
         print("\nИзберете родителска категория (Enter за ГЛАВНА):")
         parent = self.select_category()
-        parent_id = parent.category_id if parent else None
+        if parent is not None:
+            parent_id = parent.category_id
+        else:
+            parent_id = None
 
         try:
-            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id},
-                                          user_id=user.user_id)
+            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
             print(f"\nКатегорията '{new_cat.name}' е добавена успешно.")
         except Exception as e:
             print(f"Грешка при запис: {e}")
+
+
+
 
     def edit_category(self, user):
         print("\nРедактиране на категория")
@@ -196,6 +214,8 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
+
+
 
     def delete_category(self, user):
         print("\nИзтриване на категория")
