@@ -17,7 +17,6 @@ class MovementView:
     def _float(self, prompt, allow_empty=False, default=None):
         while True:
             val = input(prompt).strip()
-
             if not val and allow_empty:
                 return default
 
@@ -33,6 +32,8 @@ class MovementView:
                 return num
             except ValueError:
                 print("Невалидно число. Опитайте пак.")
+
+
 
     def _select_item(self, items, label):
         if not items:
