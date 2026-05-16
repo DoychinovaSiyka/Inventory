@@ -62,7 +62,6 @@ class JSONRepository(Repository):
     def save(self, data):
         """Записва само ако има промяна и имаме правилен тип."""
 
-
         if self.is_dict and not isinstance(data, dict):
             return
         if not self.is_dict and not isinstance(data, list):

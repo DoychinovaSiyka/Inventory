@@ -4,9 +4,12 @@ from models.report import Report
 
 
 class ReportController:
-    # Взима суровите бройки от склада, кръстосва ги с цените от движенията и изчислява пари, печалби и средни стойности.
-    def __init__(self, repo, product_controller, movement_controller, invoice_controller,
+    # Този контролер прави различни справки (отчети).
+    # Той не записва нищо в база/файлове – само взима данни от другите контролери
+    # и ги комбинира, за да върне готов отчет за показване.
+    def __init__(self, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
+
 
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -17,7 +20,7 @@ class ReportController:
 
 
 
-
+    # проверява дали даден текст съдържа ключова дума
     def _match_string(self, target: str, keyword: str) -> bool:
         if not keyword:
             return True
@@ -25,31 +28,34 @@ class ReportController:
 
 
 
+    # Филтрираме движенията по тип – IN, OUT или MOVE
     def _filter_movements_by_type(self, movements, m_type: str):
-        """ Филтър по тип движение – IN, OUT или MOVE."""
         return [m for m in movements if m.movement_type.name == m_type.upper()]
 
 
 
+    # Пълен инвентарен отчет –  комбинираме наличностите с движенията,
+    # за да изчислим средни цени, разходи, приходи и т.н.
     def report_inventory_full(self):
-        """Превръща суровите данни от инвентара в обект Report с финансови показатели."""
-        # Взимаме наличности
+        # Взимаме суровите данни от инвентара
         raw_inventory = self.inventory_controller._build_inventory()
         report_data = []
 
         for item in raw_inventory["products"]:
             pid = item["product_id"]
 
-            # Филтрираме движенията само за този продукт, за да сметнем парите
+            # Взимаме всички движения за този продукт
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
+            # Разделяме ги на входящи и изходящи
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
-            # Изчисляваме сумите
+            # Колко е доставено и колко е продадено
             delivered = sum(float(m.quantity) for m in in_moves)
             sold = sum(float(m.quantity) for m in out_moves)
 
+            # Събираме цените, за да изчислим средни стойности
             in_prices = [float(m.price) for m in in_moves if m.price]
             out_prices = [float(m.price) for m in out_moves if m.price]
 
@@ -63,7 +69,7 @@ class ReportController:
                            "expense": f"{round(delivered * avg_in, 2):.2f} лв.",
                            "revenue": f"{round(sold * avg_out, 2):.2f} лв."}
 
-            # Добавяме последното движение
+            # Последно движение за продукта
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
                 report_item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
@@ -72,12 +78,12 @@ class ReportController:
 
             report_data.append(report_item)
 
-
+        # Връщаме готовия отчет
         return Report(report_type="Inventory Full", data=report_data)
 
 
 
-
+    # Отчет за всички движения – просто ги подреждаме в удобен вид
     def report_movements(self):
         rows = []
         for m in self.movement_controller.movements:
@@ -90,14 +96,16 @@ class ReportController:
 
 
 
+    # Отчет за всички доставки (IN движения)
     def report_deliveries_all(self, keyword=""):
         moves = self._filter_movements_by_type(self.movement_controller.movements, "IN")
         data = []
+
         for m in moves:
             sup = self.supplier_controller.get_by_id(m.supplier_id)
             supplier_name = sup.name if sup else "Неизвестен"
 
-
+            # Филтър по продукт или доставчик
             if self._match_string(m.product_name, keyword) or self._match_string(supplier_name, keyword):
                 data.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
                              "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
@@ -106,6 +114,7 @@ class ReportController:
 
 
 
+    # Отчет за продажбите – взимаме само активните фактури
     def report_sales(self):
         active = [i for i in self.invoice_controller.get_all() if i.is_active]
         data = [{"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10], "client": i.customer,

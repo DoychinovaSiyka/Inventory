@@ -2,23 +2,25 @@ from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
 
 
-
-
 class InventoryController:
-    """Управлява наличностите в реално време - колко стока има и в кой склад се намира."""
+    """Този контролер отговаря за наличностите – колко стока имаме и в кой склад се намира."""
+
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
+
+        # Зареждаме текущите данни от файла
         self.data = self._load()
+
+        # Пресмятаме инвентара от всички движения до момента
         self.update_inventory_from_movements(self.movement_controller.movements)
 
 
 
     def _load(self):
         data = self.repo.load()
-
         if not isinstance(data, dict):
             return {"products": {}}
 
@@ -28,25 +30,25 @@ class InventoryController:
         return data
 
 
-
+    # Записваме инвентара обратно в JSON файла
     def _save(self):
         summary = self._build_inventory()
         self.repo.save(summary)
 
-
-
+    # Намираме ID на продукт по въведен текст
     def _product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
 
         user_input = str(user_input).strip()
-
         if user_input in self.data.get("products", {}):
             return user_input
+
 
         for full_id in self.data.get("products", {}).keys():
             if full_id.startswith(user_input):
                 return full_id
+
 
         for p in self.product_controller.get_all():
             if user_input.lower() == p.name.lower() or str(p.product_id).startswith(user_input):
@@ -54,9 +56,7 @@ class InventoryController:
 
         return user_input
 
-
-
-
+    # Намираме ID на склад
     def _location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -73,54 +73,59 @@ class InventoryController:
 
         return user_input
 
+    # Увеличаваме наличността
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за заприходяване")
 
+        # Ако продуктът го няма – създаваме го
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
         locations = self.data["products"][pid]["locations"]
         current = float(locations.get(lid, 0.0))
 
+        # Добавяме новото количество
         locations[lid] = round(current + qty, 3)
 
-
-
+    # Намаляваме наличността
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за изписване")
 
+        # Проверяваме дали имаме достатъчно наличност
         current_stock = self.get_stock(pid, lid)
-
 
         product_obj = self.product_controller.get_by_id(pid)
         p_name = product_obj.name if product_obj else pid
+
         InventoryValidator.validate_stock_availability(qty, current_stock, p_name)
 
+        # Намаляваме количеството
         locations = self.data["products"][pid]["locations"]
         locations[lid] = round(current_stock - qty, 3)
         return True
 
 
 
+    # Преместване на стока между складове
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         InventoryValidator.validate_move_locations(from_location_id, to_location_id)
 
         pid = self._product_id(product_id)
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за трансфер")
 
-
+        # Първо вадим от стария склад, после добавяме в новия
         if self.decrease_stock(pid, qty, from_location_id):
             self.increase_stock(pid, qty, to_location_id)
             return True
         return False
 
-
+    # Общо количество от продукт - във всички складове
     def get_total_stock(self, product_id: str) -> float:
         pid = self._product_id(product_id)
 
@@ -129,6 +134,7 @@ class InventoryController:
 
         locations = product_info.get("locations", {})
         total = 0.0
+
         for qty in locations.values():
             try:
                 total += float(qty)
@@ -139,6 +145,7 @@ class InventoryController:
 
 
 
+    # Количество от продукт в конкретен склад
     def get_stock(self, product_id, location_id):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -150,6 +157,7 @@ class InventoryController:
 
         product_info = products[pid]
         locations = product_info.get("locations", {})
+
         if lid not in locations:
             return 0.0
 
@@ -159,10 +167,9 @@ class InventoryController:
             return 0.0
 
 
-
-
+    # Генерираме структурата, която ще се запише в JSON файла
     def _build_inventory(self):
-        """Данните за наличност, необходими за базата данни."""
+        """Сглобяваме данните за инвентара в удобен формат за запис."""
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
@@ -171,7 +178,6 @@ class InventoryController:
                 continue
 
             total = self.get_total_stock(pid)
-
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
                 loc = self.location_controller.get_by_id(lid)
@@ -186,31 +192,35 @@ class InventoryController:
 
 
 
+    # Пресмятаме инвентара от всички движения (IN, OUT, MOVE)
     def update_inventory_from_movements(self, movements):
         self.data = {"products": {}}
-
         sorted_movements = sorted(movements, key=lambda x: x.date)
+
         for mv in sorted_movements:
             mtype = mv.movement_type.name
             pid = str(mv.product_id)
             qty = float(mv.quantity)
 
-
+            # Ако продуктът го няма – създаваме го
             if pid not in self.data["products"]:
                 self.data["products"][pid] = {"locations": {}}
 
             locations = self.data["products"][pid]["locations"]
 
+            # Заприхождаване
             if mtype == "IN":
                 lid = str(mv.location_id)
                 current = locations.get(lid, 0.0)
                 locations[lid] = round(current + qty, 3)
 
+            # Изписване
             elif mtype == "OUT":
                 lid = str(mv.location_id)
                 current = locations.get(lid, 0.0)
                 locations[lid] = round(current - qty, 3)
 
+            # Трансфер между складове
             elif mtype == "MOVE":
                 from_lid = str(mv.from_location_id)
                 to_lid = str(mv.to_location_id)
@@ -219,5 +229,6 @@ class InventoryController:
                 locations[from_lid] = round(locations.get(from_lid, 0.0) - qty, 3)
                 # Добавяме в новия
                 locations[to_lid] = round(locations.get(to_lid, 0.0) + qty, 3)
+
 
         self._save()

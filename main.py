@@ -6,7 +6,7 @@ from controllers.supplier_controller import SupplierController
 from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
-from controllers.inventory_report_controller import ReportController
+from controllers.report_controller import ReportController
 from controllers.inventory_controller import InventoryController
 
 from views.admin_menu_view import AdminMenuView
