@@ -178,7 +178,7 @@ class InventoryController:
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
 
-            # Тук НЕ смятаме цени и приходи. Само наличност.
+
             rows.append({"product_id": pid, "product_name": product_obj.name, "unit": product_obj.unit,
                          "total": total, "warehouses": warehouse_map})
 
