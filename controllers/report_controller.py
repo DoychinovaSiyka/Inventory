@@ -1,6 +1,7 @@
 from models.movement import MovementType
 from datetime import datetime
 from models.report import Report
+from filters import product_sorters
 
 
 class ReportController:
@@ -117,3 +118,17 @@ class ReportController:
                  "product": i.product, "total_price": i.total_price, "status": "АКТИВНА"} for i in active]
 
         return Report(report_type="Sales", data=data)
+
+
+
+    def sort_inventory_by_quantity(self, algorithm="selection", reverse=True):
+        data = self.report_inventory_full().data[:]
+        key_fn = lambda x: x["total"]
+
+        sorted_data = (product_sorters.selection_sort(data, key=key_fn, reverse=reverse)
+                       if algorithm == "selection"
+                       else product_sorters.bubble_sort(data, key=key_fn, reverse=reverse))
+
+        return Report(report_type=f"Sort by Quantity ({algorithm})", data=sorted_data)
+
+

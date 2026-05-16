@@ -32,6 +32,8 @@ class ReportsView:
             MenuItem("2", "Хронология на движенията", self.report_movements),
             MenuItem("3", "Всички доставки", self.report_deliveries_all),
             MenuItem("4", "Всички продажби", self.report_sales_all),
+            MenuItem("5", "Сортиране по количество (Selection)", self.sort_qty_selection),
+            MenuItem("6", "Сортиране по количество (Bubble)", self.sort_qty_bubble),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
@@ -128,3 +130,29 @@ class ReportsView:
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо", "Статус"]
         self._display_report("ВСИЧКИ ПРОДАЖБИ", headers, rows)
+
+
+
+
+    def sort_qty_selection(self, _):
+        result = self.controller.sort_inventory_by_quantity(algorithm="selection", reverse=True)
+        rows = []
+        for item in result.data:
+            rows.append([item["product"], f"{item['total']} {item['unit']}"])
+
+        headers = ["Продукт", "Наличност"]
+        self._display_report("СОРТИРАНЕ ПО КОЛИЧЕСТВО (SELECTION SORT)", headers, rows)
+
+
+
+    def sort_qty_bubble(self, _):
+        result = self.controller.sort_inventory_by_quantity(algorithm="bubble", reverse=True)
+        rows = []
+        for item in result.data:
+            rows.append([item["product"], f"{item['total']} {item['unit']}"])
+
+        headers = ["Продукт", "Наличност"]
+        self._display_report("СОРТИРАНЕ ПО КОЛИЧЕСТВО (BUBBLE SORT)", headers, rows)
+
+
+
