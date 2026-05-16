@@ -5,8 +5,7 @@ from filters import product_sorters
 
 
 class ReportController:
-    # Този контролер прави различни справки (отчети).
-    # Взима данни от другите контролери и ги комбинира, за да върне готов отчет за показване.
+    # Контролерът взима данни от другите контролери и ги комбинира, за да върне готов отчет за показване.
     def __init__(self, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
 
@@ -43,7 +42,7 @@ class ReportController:
         for item in raw_inventory["products"]:
             pid = item["product_id"]
 
-            # Взимаме всички движения за този продукт
+            # всички движения за този продукт
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
@@ -52,7 +51,7 @@ class ReportController:
             delivered = sum(float(m.quantity) for m in in_moves)
             sold = sum(float(m.quantity) for m in out_moves)
 
-            # Събираме цените, за да изчислим средни стойности
+
             in_prices = [float(m.price) for m in in_moves if m.price]
             out_prices = [float(m.price) for m in out_moves if m.price]
 

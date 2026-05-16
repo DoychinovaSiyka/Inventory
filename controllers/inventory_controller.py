@@ -3,8 +3,7 @@ from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
-    """Този контролер отговаря за наличностите – колко стока имаме и в кой склад се намира."""
-
+    """Контролерът отговаря за наличностите – колко стока имаме и в кой склад се намира."""
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
