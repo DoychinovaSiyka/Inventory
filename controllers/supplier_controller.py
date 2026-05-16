@@ -74,5 +74,6 @@ class SupplierController:
         except ValueError as e:
             return str(e)
 
+
     def _save_changes(self):
         self.repo.save([s.to_dict() for s in self.suppliers])
