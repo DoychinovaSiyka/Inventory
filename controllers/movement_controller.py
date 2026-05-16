@@ -119,15 +119,15 @@ class MovementController:
         for m in self.movements:
             ok = True
 
-            # Филтър по Продукт (сравняваме пълни ID)
+
             if product_id is not None and str(m.product_id) != str(product_id):
                 ok = False
 
-            # Филтър по Тип (IN, OUT, MOVE)
+
             if movement_type is not None and m.movement_type.name != movement_type:
                 ok = False
 
-            # Филтър по Дата (сравняваме само YYYY-MM-DD частта)
+
             if date is not None and str(m.date)[:10] != str(date):
                 ok = False
 
