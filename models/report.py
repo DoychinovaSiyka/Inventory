@@ -1,31 +1,16 @@
 import uuid
 from datetime import datetime
 
+
 class Report:
-    def __init__(self, report_type, parameters=None, data=None, generated_on=None, report_id=None):
-        """ Модел за отчет. Съхранява метаданни и резултати от справки. """
-        if not report_id:
-            self.report_id = str(uuid.uuid4())
-        else:
-            self.report_id = str(report_id)
+    def __init__(self, report_type, data=None):
+        """ Модел за отчет. Съществува само в паметта, за да пренесе данните от контролера към view."""
 
-        self.generated_on = generated_on or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.report_id = str(uuid.uuid4())
+        self.generated_on = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         self.report_type = report_type
-        self.parameters = parameters if parameters is not None else {}
-        self.data = data if data is not None else {}
-
-    def to_dict(self):
-        return {"report_id": self.report_id, "report_type": self.report_type,
-                "generated_on": self.generated_on, "parameters": self.parameters, "data": self.data}
-
-    @staticmethod
-    def from_dict(d):
-        if not d:
-            return None
-        return Report(report_id=d.get("report_id"), report_type=d.get("report_type", ""),
-                      generated_on=d.get("generated_on", ""), parameters=d.get("parameters"),
-                      data=d.get("data"))
-
+        self.data = data if data is not None else []
 
     def __str__(self):
         short_id = self.report_id[:8]

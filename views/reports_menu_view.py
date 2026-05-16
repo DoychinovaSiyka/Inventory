@@ -84,7 +84,7 @@ class ReportsView:
 
         print("\n" + "=" * 20)
         print(" ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ ")
-        print(f"Генериран на: {result.generated_on}")  # Вече имаме достъп до това от модела Report
+        print(f"Генериран на: {result.generated_on}")
         print("=" * 20)
 
         for item in result.data:

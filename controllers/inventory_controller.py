@@ -2,8 +2,10 @@ from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
 
 
+
+
 class InventoryController:
-    """Управлява наличностите в реално време."""
+    """Управлява наличностите в реално време - колко стока има и в кой склад се намира."""
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
@@ -160,6 +162,7 @@ class InventoryController:
 
 
     def _build_inventory(self):
+        """Данните за наличност, необходими за базата данни."""
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
@@ -168,53 +171,23 @@ class InventoryController:
                 continue
 
             total = self.get_total_stock(pid)
-            if total <= 0:
-                continue
 
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
-                if qty <= 0:
-                    continue
-
                 loc = self.location_controller.get_by_id(lid)
-                name = loc.name if loc else "Неизвестен склад"
-                warehouse_map[name] = qty
+                name = loc.name if loc else f"Склад {lid}"
+                warehouse_map[name] = float(qty)
 
-            movements = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
-
-            delivered = sum(float(m.quantity) for m in movements if m.movement_type.name == "IN")
-            sold = sum(float(m.quantity) for m in movements if m.movement_type.name == "OUT")
-
-            in_prices = [float(m.price) for m in movements if m.movement_type.name == "IN" and m.price]
-            out_prices = [float(m.price) for m in movements if m.movement_type.name == "OUT" and m.price]
-
-            avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
-            avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
-
-            expense = round(delivered * avg_in, 2)
-            revenue = round(sold * avg_out, 2)
-
-
-            if movements:
-                last = sorted(movements, key=lambda x: x.date)[-1]
-                last_movement = f"{last.movement_type.name} - {last.date}"
-            else:
-                last_movement = "Няма движения"
-
-            rows.append({"product": product_obj.name, "unit": product_obj.unit, "total": total,
-                         "warehouses": warehouse_map, "delivered": delivered, "sold": sold,
-                         "avg_in_price": avg_in, "avg_out_price": avg_out, "expense": expense,
-                         "revenue": revenue, "last_movement": last_movement})
+            # Тук НЕ смятаме цени и приходи. Само наличност.
+            rows.append({"product_id": pid, "product_name": product_obj.name, "unit": product_obj.unit,
+                         "total": total, "warehouses": warehouse_map})
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
 
 
 
-
-
     def update_inventory_from_movements(self, movements):
         self.data = {"products": {}}
-
 
         sorted_movements = sorted(movements, key=lambda x: x.date)
         for mv in sorted_movements:

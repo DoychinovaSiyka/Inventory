@@ -4,6 +4,7 @@ from models.report import Report
 
 
 class ReportController:
+    # Взима суровите бройки от склада, кръстосва ги с цените от движенията и изчислява пари, печалби и средни стойности.
     def __init__(self, repo, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
 
@@ -22,61 +23,57 @@ class ReportController:
             return True
         return keyword.lower().strip() in (target or "").lower()
 
+
+
     def _filter_movements_by_type(self, movements, m_type: str):
         """ Филтър по тип движение – IN, OUT или MOVE."""
         return [m for m in movements if m.movement_type.name == m_type.upper()]
 
 
 
-
     def report_inventory_full(self):
-        data = self.inventory_controller._build_inventory()
-        for item in data["products"]:
-            product = None
-            for p in self.product_controller.get_all():
-                if p.name == item["product"]:
-                    product = p
-                    break
+        """Превръща суровите данни от инвентара в обект Report с финансови показатели."""
+        # Взимаме наличности
+        raw_inventory = self.inventory_controller._build_inventory()
+        report_data = []
 
-            if product is None:
-                item.update({"avg_in_price": "-", "avg_out_price": "-", "expense": "-", "revenue": "-", "last_movement": "Няма"})
-                continue
+        for item in raw_inventory["products"]:
+            pid = item["product_id"]
 
-            pid = str(product.product_id)
+            # Филтрираме движенията само за този продукт, за да сметнем парите
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-            in_prices = []
-            out_prices = []
-            total_expense = 0.0
-            total_revenue = 0.0
+            in_moves = [m for m in moves if m.movement_type.name == "IN"]
+            out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
-            in_moves = self._filter_movements_by_type(moves, "IN")
-            out_moves = self._filter_movements_by_type(moves, "OUT")
+            # Изчисляваме сумите
+            delivered = sum(float(m.quantity) for m in in_moves)
+            sold = sum(float(m.quantity) for m in out_moves)
 
-            for m in in_moves:
-                if m.price:
-                    p_val, q_val = float(m.price), float(m.quantity)
-                    in_prices.append(p_val)
-                    total_expense += q_val * p_val
+            in_prices = [float(m.price) for m in in_moves if m.price]
+            out_prices = [float(m.price) for m in out_moves if m.price]
 
-            for m in out_moves:
-                if m.price:
-                    p_val, q_val = float(m.price), float(m.quantity)
-                    out_prices.append(p_val)
-                    total_revenue += q_val * p_val
+            avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
+            avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
-            item["avg_in_price"] = f"{sum(in_prices) / len(in_prices):.2f} лв." if in_prices else "-"
-            item["avg_out_price"] = f"{sum(out_prices) / len(out_prices):.2f} лв." if out_prices else "-"
-            item["expense"] = f"{total_expense:.2f} лв." if total_expense > 0 else "-"
-            item["revenue"] = f"{total_revenue:.2f} лв." if total_revenue > 0 else "-"
 
+            report_item = {"product": item["product_name"], "unit": item["unit"], "total": item["total"],
+                           "warehouses": item["warehouses"], "delivered": delivered, "sold": sold,
+                           "avg_in_price": f"{avg_in:.2f} лв.", "avg_out_price": f"{avg_out:.2f} лв.",
+                           "expense": f"{round(delivered * avg_in, 2):.2f} лв.",
+                           "revenue": f"{round(sold * avg_out, 2):.2f} лв."}
+
+            # Добавяме последното движение
             if moves:
-                last = max(moves, key=lambda x: x.date)
-                item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
+                last = sorted(moves, key=lambda x: x.date)[-1]
+                report_item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
             else:
-                item["last_movement"] = "Няма"
+                report_item["last_movement"] = "Няма движения"
 
-        return Report(report_type="Inventory Full", data=data["products"])
+            report_data.append(report_item)
+
+
+        return Report(report_type="Inventory Full", data=report_data)
 
 
 
