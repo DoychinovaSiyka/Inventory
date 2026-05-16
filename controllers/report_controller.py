@@ -34,8 +34,7 @@ class ReportController:
 
 
 
-    # Пълен инвентарен отчет –  комбинираме наличностите с движенията,
-    # за да изчислим средни цени, разходи, приходи и т.н.
+    # Пълен инвентарен отчет
     def report_inventory_full(self):
         # Взимаме суровите данни от инвентара
         raw_inventory = self.inventory_controller._build_inventory()
@@ -83,7 +82,7 @@ class ReportController:
 
 
 
-    # Отчет за всички движения – просто ги подреждаме в удобен вид
+    # Отчет за всички движения
     def report_movements(self):
         rows = []
         for m in self.movement_controller.movements:
@@ -96,7 +95,7 @@ class ReportController:
 
 
 
-    # Отчет за всички доставки (IN движения)
+    # Отчет за всички доставки
     def report_deliveries_all(self, keyword=""):
         moves = self._filter_movements_by_type(self.movement_controller.movements, "IN")
         data = []
