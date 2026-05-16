@@ -208,7 +208,6 @@ class CategoryView:
 
 
 
-
     def delete_category(self, user):
         print("\nИзтриване на категория")
         category = self.select_category()

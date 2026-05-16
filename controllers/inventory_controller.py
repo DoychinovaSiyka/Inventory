@@ -210,8 +210,9 @@ class InventoryController:
 
 
 
+
+
     def update_inventory_from_movements(self, movements):
-        # Нулираме данните, за да ги изчислим наново
         self.data = {"products": {}}
 
 

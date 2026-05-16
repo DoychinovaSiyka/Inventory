@@ -1,3 +1,4 @@
+
 def get_category_stats(categories, products):
     """Брои продуктите във всяка категория."""
     result = []

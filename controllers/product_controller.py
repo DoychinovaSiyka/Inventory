@@ -6,7 +6,6 @@ from filters import product_filters, product_sorters
 
 
 
-
 class ProductController:
     """Управлява каталога с продукти и гарантира бизнес логиката."""
     def __init__(self, repo, category_controller):
@@ -63,8 +62,10 @@ class ProductController:
                 if not self.category_controller.get_by_id(value):
                     return "Невалидна категория."
             return None
+
         except ValueError as e:
             return str(e)
+
         except Exception as e:
             return f"Неочаквана грешка: {e}"
 

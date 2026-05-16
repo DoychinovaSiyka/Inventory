@@ -11,6 +11,7 @@ def bubble_sort(products: List, key: Callable, reverse: bool) -> List:
             val_b = key(arr[j + 1])
             if (reverse and val_a < val_b) or (not reverse and val_a > val_b):
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
     return arr
 
 

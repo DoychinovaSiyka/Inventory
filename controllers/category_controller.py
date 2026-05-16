@@ -80,7 +80,6 @@ class CategoryController:
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
-
         self._save()
         return True
 

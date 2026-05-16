@@ -4,7 +4,6 @@ from models.category import Category
 
 
 
-
 def filter_categories(categories, keyword):
     if not keyword:
         return categories
