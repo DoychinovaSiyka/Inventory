@@ -17,6 +17,9 @@ from views.password_utils import input_password
 from storage.json_repository import JSONRepository
 
 
+
+
+
 class InventoryApplication:
     def __init__(self):
         self._init_repositories()
@@ -62,7 +65,7 @@ class InventoryApplication:
                                                   self.invoice_controller, self.location_controller, self.inventory_controller,
                                                   self.supplier_controller)
 
-        # Графики
+
         self.graph_view = GraphView(self.inventory_controller, self.location_controller, self.product_controller)
 
 
