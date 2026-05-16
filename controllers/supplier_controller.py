@@ -54,6 +54,8 @@ class SupplierController:
         q = str(query).strip().lower()
         return [s for s in self.suppliers if q in s.name.lower() or q in s.supplier_id[:8].lower()]
 
+
+
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
         if supplier:
@@ -61,6 +63,7 @@ class SupplierController:
             self._save_changes()
             return True
         return False
+
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:

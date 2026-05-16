@@ -167,9 +167,8 @@ class InventoryController:
             return 0.0
 
 
-    # Генерираме структурата, която ще се запише в JSON файла
+    # Структурата, която ще се запише в JSON файла
     def _build_inventory(self):
-        """Сглобяваме данните за инвентара в удобен формат за запис."""
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
@@ -177,22 +176,53 @@ class InventoryController:
             if not product_obj:
                 continue
 
+
             total = self.get_total_stock(pid)
+
+            # Разпределение по складове
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
                 loc = self.location_controller.get_by_id(lid)
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
 
+            # Взимаме всички движения за този продукт
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-            rows.append({"product_id": pid, "product_name": product_obj.name, "unit": product_obj.unit,
-                         "total": total, "warehouses": warehouse_map})
+            in_moves = [m for m in moves if m.movement_type.name == "IN"]
+            out_moves = [m for m in moves if m.movement_type.name == "OUT"]
+
+            delivered = sum(float(m.quantity) for m in in_moves)
+            sold = sum(float(m.quantity) for m in out_moves)
+
+            in_prices = [float(m.price) for m in in_moves if m.price]
+            out_prices = [float(m.price) for m in out_moves if m.price]
+
+            avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
+            avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
+
+            expense = round(delivered * avg_in, 2)
+            revenue = round(sold * avg_out, 2)
+
+
+            if moves:
+                last = sorted(moves, key=lambda x: x.date)[-1]
+                last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
+            else:
+                last_movement = "Няма движения"
+
+            # Добавяме реда в JSON структурата
+            rows.append({ "product_id": pid, "product_name": product_obj.name,
+                          "unit": product_obj.unit, "total": total, "warehouses": warehouse_map,
+                          "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
+                          "avg_out_price": avg_out, "expense": expense, "revenue": revenue,
+                          "last_movement": last_movement})
 
         return {"products": rows, "summary": {"total_products": len(rows)}}
 
 
 
-    # Пресмятаме инвентара от всички движения (IN, OUT, MOVE)
+    # Пресмятаме инвентара от всички движения
     def update_inventory_from_movements(self, movements):
         self.data = {"products": {}}
         sorted_movements = sorted(movements, key=lambda x: x.date)

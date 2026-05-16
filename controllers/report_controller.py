@@ -5,8 +5,7 @@ from models.report import Report
 
 class ReportController:
     # Този контролер прави различни справки (отчети).
-    # Той не записва нищо в база/файлове – само взима данни от другите контролери
-    # и ги комбинира, за да върне готов отчет за показване.
+    # Взима данни от другите контролери и ги комбинира, за да върне готов отчет за показване.
     def __init__(self, product_controller, movement_controller, invoice_controller,
                  location_controller, inventory_controller, supplier_controller):
 
@@ -45,8 +44,6 @@ class ReportController:
 
             # Взимаме всички движения за този продукт
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
-
-            # Разделяме ги на входящи и изходящи
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
