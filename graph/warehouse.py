@@ -5,5 +5,6 @@ class Warehouse:
         self.name = name
         self.location = location
 
+
     def __repr__(self):
         return f"Warehouse(ID: {self.warehouse_id}, Име: {self.name}, Град: {self.location})"

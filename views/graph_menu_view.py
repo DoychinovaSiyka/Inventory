@@ -100,7 +100,6 @@ class GraphView:
         distances, predecessors = self.graph.dijkstra(my_location)
 
         reachable = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
-
         if not reachable:
             print(f"\nИма складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
             return

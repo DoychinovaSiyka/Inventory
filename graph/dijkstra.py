@@ -37,12 +37,13 @@ class Graph:
         # добавяме реброто
         self.edges[start][end] = dist
 
+
+
     def dijkstra(self, initial: NodeType) -> tuple[dict[NodeType, int], dict[NodeType, NodeType]]:
         visited: dict[NodeType, int] = {initial: 0}  # най-кратко разстояние до всеки възел
         prev: dict[NodeType, NodeType] = {}  # предишен възел по най-краткия път
 
         nodes = set(self.nodes)  # всички необработени възли
-
         while nodes:
             min_node = None
 
@@ -70,7 +71,7 @@ class Graph:
         return visited, prev
 
 
-# Възстановяване на пътя — трябва за логистичната система
+# Възстановяване на пътя
 def reconstruct_path(start: NodeType, end: NodeType, prev: dict[NodeType, NodeType]):
     path = []
     curr = end

@@ -29,7 +29,7 @@ class Invoice:
         self.unit = unit
         self.unit_price = float(unit_price)
         self.total_price = float(total_price)
-        self.is_active = bool(is_active) # False означава анулирана ("нулена")
+        self.is_active = bool(is_active) # False означава анулирана - нулена
 
 
         now_val = Invoice.now()

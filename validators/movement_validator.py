@@ -20,9 +20,11 @@ class MovementValidator:
 
         raise ValueError("Невалиден тип движение. Разрешени: IN, OUT, MOVE.")
 
+
+
+
     @staticmethod
     def parse_quantity(quantity):
-        """Превръща входа в число и чисти мерни единици."""
         if quantity is None or str(quantity).strip() == "":
             raise ValueError("Количеството е задължително.")
 
@@ -50,6 +52,8 @@ class MovementValidator:
         if available < quantity:
             raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
         return True
+
+
 
     @staticmethod
     def validate_move_rules(product, quantity, inventory_controller, from_location_id, to_location_id):

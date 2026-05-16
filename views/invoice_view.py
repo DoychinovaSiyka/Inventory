@@ -12,6 +12,8 @@ class InvoiceView:
             return None
         return text
 
+
+
     def _show_invoices(self, invoices):
         if not invoices:
             print("\nНяма намерени фактури.\n")
@@ -19,24 +21,17 @@ class InvoiceView:
 
         rows = []
         for inv in invoices:
-            # Твоята логика за статус и форматиране
             status_text = "V" if inv.is_active else "X (АНУЛИРАНА)"
             total = float(inv.total_price)
             total_display = f"{total:.2f} лв." if inv.is_active else f"[{total:.2f} лв.]"
 
-            # Подаваме атрибутите на обекта директно
-            rows.append([
-                inv.invoice_id[:8],
-                inv.product,
-                inv.customer,
-                f"{inv.quantity} {inv.unit}",
-                total_display,
-                status_text,
-                str(inv.date)[:19] # Чисто показване на датата
-            ])
+
+            rows.append([inv.invoice_id[:8], inv.product, inv.customer,
+                         f"{inv.quantity} {inv.unit}", total_display, status_text, str(inv.date)[:19]])
 
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
+
 
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
@@ -52,18 +47,20 @@ class InvoiceView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def show_all(self, _):
         invoices = self.invoice_controller.get_all(include_cancelled=False)
         self._show_invoices(invoices)
+
 
     def search_by_id(self, _):
         invoice_id = self._input("\nВъведете ID: ")
         if not invoice_id:
             return
 
-        # Тук контролерът вече връща списък с обекти, затова работи със _show_invoices
         results = self.invoice_controller.search(invoice_id)
         self._show_invoices(results)
+
 
     def cancel_by_id(self, user):
         invoice_id = self._input("\nВъведете ID: ")
@@ -77,7 +74,7 @@ class InvoiceView:
 
         status_str = "АКТИВНА" if invoice.is_active else "АНУЛИРАНА"
 
-        # Твоята таблица с детайли
+
         rows = [["Статус", status_str],
                 ["Пълно ID", invoice.invoice_id],
                 ["Продукт", invoice.product],
@@ -91,7 +88,7 @@ class InvoiceView:
 
         short_id = invoice.invoice_id[:8]
 
-        # Твоята проверка и директно анулиране
+
         if invoice.is_active:
             if self.invoice_controller.remove(short_id, user.user_id):
                 print("\nФактурата беше успешно анулирана.")

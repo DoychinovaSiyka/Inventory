@@ -1,10 +1,4 @@
-from typing import List
-from models.category import Category
-
-
-
-def filter_categories(categories: List[Category], keyword: str) -> List[Category]:
-    """Филтрира категории по име, описание или кратко/пълно ID."""
+def filter_categories(categories, keyword):
     if not keyword:
         return categories
 
@@ -25,7 +19,7 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
 
 
 def get_all_children_objects(categories: List[Category], parent_id: str, visited=None) -> List[Category]:
-    """Безопасно рекурсивно събиране на всички наследници (предотвратява цикли)."""
+    """Рекурсивно събиране на всички наследници - предотвратява цикли."""
     results = []
     if not parent_id:
         return results
@@ -47,9 +41,24 @@ def get_all_children_objects(categories: List[Category], parent_id: str, visited
 
 
 
+def get_all_children_ids(categories, parent_id):
+    """Връща списък с ID-то на родителя и всички негови подкатегории."""
+    result = [str(parent_id)]
 
-def get_all_children_ids(categories: List[Category], parent_id: str) -> List[str]:
-    """Връща уникален списък от ID-то на родителя и всички негови подкатегории."""
-    children = get_all_children_objects(categories, parent_id)
-    raw_list = [str(parent_id)] + [str(c.category_id) for c in children]
-    return list(dict.fromkeys(raw_list))
+    # намираме всички деца
+    for cat in categories:
+        if str(cat.parent_id) == str(parent_id):
+            result.append(str(cat.category_id))
+
+            # проверяваме и под-децата
+            for sub in categories:
+                if str(sub.parent_id) == str(cat.category_id):
+                    result.append(str(sub.category_id))
+
+    # премахваме дублиращи се ID-та
+    unique = []
+    for cid in result:
+        if cid not in unique:
+            unique.append(cid)
+
+    return unique

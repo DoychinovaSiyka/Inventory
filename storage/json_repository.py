@@ -4,36 +4,29 @@ from pathlib import Path
 from storage.repository import Repository
 
 
+
+
 class JSONRepository(Repository):
-    """
-    Унифициран JSON Repository с правилна логика:
-    - inventory.json → речник
-    - всички други → списък
+    """ JSON Repository:
+    - inventory.json - речник
+    - всички други - списък
     - стабилен кеш
-    - никога не връща грешен тип
-    """
+    - никога не връща грешен тип"""
+
 
     def __init__(self, filepath, is_dict=False):
         self.filepath = Path(filepath)
-
-        # inventory.json → dict
-        # всички други → list
         self.is_dict = is_dict
         self.default_data = {} if is_dict else []
 
         # Създаваме папката, ако липсва
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
 
-
-        # Зареждаме кеша
         self._cache = self._safe_load()
 
-    # -----------------------------
-    #   Вътрешно безопасно зареждане
-    # -----------------------------
-    def _safe_load(self):
-        """Гарантира, че винаги връщаме правилния тип (dict или list)."""
 
+
+    def _safe_load(self):
         if not self.filepath.exists():
             return self.default_data.copy()
 
@@ -46,7 +39,7 @@ class JSONRepository(Repository):
 
                 data = json.loads(content)
 
-                # Ако структурата е грешна → връщаме default
+                # Ако структурата е грешна - връщаме default
                 if self.is_dict and not isinstance(data, dict):
                     return self.default_data.copy()
 
@@ -58,27 +51,24 @@ class JSONRepository(Repository):
         except Exception:
             return self.default_data.copy()
 
-    # -----------------------------
-    #   Публично зареждане
-    # -----------------------------
+
     def load(self):
         """Връща последното валидно състояние."""
         self._cache = self._safe_load()
         return self._cache
 
-    # -----------------------------
-    #   Запис
-    # -----------------------------
-    def save(self, data):
-        """Записва само ако има промяна и гарантира правилен тип."""
 
-        # Гарантираме тип
+
+    def save(self, data):
+        """Записва само ако има промяна и имаме правилен тип."""
+
+
         if self.is_dict and not isinstance(data, dict):
             return
         if not self.is_dict and not isinstance(data, list):
             return
 
-        # Ако няма промяна → не пишем
+
         if data == self._cache:
             return
 
@@ -91,9 +81,8 @@ class JSONRepository(Repository):
         except Exception as e:
             print(f"Грешка при запис в {self.filepath.name}: {e}")
 
-    # -----------------------------
-    #   get_all()
-    # -----------------------------
+
+
     def get_all(self):
         """Връща текущото състояние."""
         return self.load()

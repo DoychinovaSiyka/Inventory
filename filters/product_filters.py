@@ -1,9 +1,6 @@
-from typing import List
 
-
-
-def filter_combined(products: List, **kwargs):
-    """Филтър за продукти. Поддържа: keyword (име/описание/категория), category_ids (списък)."""
+def filter_combined(products, **kwargs):
+    """Филтър за продукти по ключова дума и категории."""
     results = products
 
     keyword = kwargs.get("keyword")
@@ -11,27 +8,48 @@ def filter_combined(products: List, **kwargs):
         keyword = keyword.lower().strip()
         words = keyword.split()
 
-        filtered_by_text = []
+        filtered = []
         for p in results:
-            cat_names = " ".join([c.name.lower() for c in p.categories])
-            full_text = f"{p.name.lower()} {p.description.lower()} {cat_names}"
+            text = p.name.lower() + " " + p.description.lower()
 
+            for c in p.categories:
+                text += " " + c.name.lower()
 
-            if all(word in full_text for word in words):
-                filtered_by_text.append(p)
-        results = filtered_by_text
+            ok = True
+            for w in words:
+                if w not in text:
+                    ok = False
+                    break
+
+            if ok:
+                filtered.append(p)
+
+        results = filtered
+
 
 
     category_ids = kwargs.get("category_ids")
     if category_ids:
-        wanted_ids = set(str(cid) for cid in category_ids)
+        wanted = []
+        for cid in category_ids:
+            wanted.append(str(cid))
 
-        filtered_by_cat = []
+        filtered = []
         for p in results:
-            product_cat_ids = {str(c.category_id) for c in p.categories}
-            if product_cat_ids & wanted_ids:
-                filtered_by_cat.append(p)
-        results = filtered_by_cat
+            product_cat_ids = []
+            for c in p.categories:
+                product_cat_ids.append(str(c.category_id))
 
+
+            match = False
+            for cid in product_cat_ids:
+                if cid in wanted:
+                    match = True
+                    break
+
+            if match:
+                filtered.append(p)
+
+        results = filtered
 
     return results

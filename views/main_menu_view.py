@@ -53,6 +53,7 @@ class MainMenuView:
     def open_invoices(self, user):
         InvoiceView(self.controllers["invoice"]).show_menu(user)
 
+
     def open_reports(self, user):
         ReportsView(self.controllers["report"]).show_menu(user)
 

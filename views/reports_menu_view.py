@@ -8,7 +8,6 @@ class ReportsView:
         self.controller = controller
 
 
-
     def _display_report(self, title, headers, rows):
         if not rows:
             print("\nНяма данни за показване.\n")
@@ -27,7 +26,6 @@ class ReportsView:
                 break
 
 
-
     def show_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
@@ -37,24 +35,25 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
+
+
+
     def format_card(self, item):
-        """Форматира информацията за продукт под формата на карта с вградена защита на данните."""
         try:
             lines = []
             lines.append("─" * 45)
 
-            # Име на продукта (защита при None)
+
             product_name = str(item.get('product', 'НЕИЗВЕСТЕН ПРОДУКТ')).upper()
             lines.append(f"ПРОДУКТ:          {product_name}")
 
-            # Количества и мерни единици
+
             unit = item.get('unit', 'бр.')
             total_qty = item.get('total', 0)
             lines.append(f"Общо количество:  {total_qty} {unit}")
             lines.append("")
 
             lines.append("РАЗПРЕДЕЛЕНИЕ ПО СКЛАДОВЕ:")
-            # Проверка дали 'warehouses' съществува и е речник
             warehouses = item.get("warehouses", {})
             if isinstance(warehouses, dict) and warehouses:
                 for wh, qty in warehouses.items():
@@ -64,7 +63,6 @@ class ReportsView:
 
             lines.append("")
 
-            # Финансови и логистични показатели с подсигуряване на стойностите
             lines.append(f"Доставено количество: {item.get('delivered', 0)}")
             lines.append(f"Продадено количество: {item.get('sold', 0)}")
             lines.append(f"Средна входна цена:   {item.get('avg_in_price', '-')}")
@@ -79,15 +77,15 @@ class ReportsView:
         except Exception as e:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
 
+
+
     def inventory_full_report(self, _):
-        """Показва детайлен отчет за наличностите, използвайки модела Report."""
         result = self.controller.report_inventory_full()
 
         print("\n" + "=" * 20)
         print(" ОБЕДИНЕН ОТЧЕТ ЗА НАЛИЧНОСТИТЕ ")
         print(f"Генериран на: {result.generated_on}")  # Вече имаме достъп до това от модела Report
         print("=" * 20)
-
 
         for item in result.data:
             print(self.format_card(item))

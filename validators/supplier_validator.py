@@ -1,5 +1,6 @@
 import re
 
+
 class SupplierValidator:
     email_regex = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
     phone_regex = re.compile(r"\+?[\d\s\-]{7,15}")
@@ -13,6 +14,7 @@ class SupplierValidator:
             raise ValueError("Името не може да е само цифри.")
         return clean
 
+
     @staticmethod
     def validate_unique_name(name, suppliers, exclude_id=None):
         clean = str(name).strip().lower()
@@ -21,12 +23,16 @@ class SupplierValidator:
                 raise ValueError(f"Доставчик с име '{name}' вече съществува.")
         return name
 
+
+
     @staticmethod
     def validate_contact(contact):
         clean = str(contact).strip()
         if not (SupplierValidator.email_regex.search(clean) or SupplierValidator.phone_regex.search(clean)):
             raise ValueError("Контактът трябва да съдържа валиден телефон или имейл.")
         return clean
+
+
 
     @staticmethod
     def validate_address(address):

@@ -23,6 +23,7 @@ class Supplier:
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
     def to_dict(self):
         return {"supplier_id": self.supplier_id, "name": self.name, "contact": self.contact,
                 "address": self.address, "created": self.created, "modified": self.modified}

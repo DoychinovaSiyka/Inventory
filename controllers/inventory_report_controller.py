@@ -50,7 +50,6 @@ class ReportController:
             total_expense = 0.0
             total_revenue = 0.0
 
-
             in_moves = self._filter_movements_by_type(moves, "IN")
             out_moves = self._filter_movements_by_type(moves, "OUT")
 

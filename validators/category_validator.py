@@ -1,5 +1,6 @@
 class CategoryValidator:
 
+
     @staticmethod
     def validate_name(name):
         cleaned = str(name).strip()
@@ -51,17 +52,24 @@ class CategoryValidator:
             else:
                 current = parent_node.parent_id
 
-
-
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
         cid = str(category_id)
+
+        # Проверка за подкатегории
         for c in all_categories:
             if str(c.parent_id) == cid:
                 raise ValueError("Категорията има подкатегории. Изтрийте ги първо.")
 
+        # Проверка дали категорията се използва от продукт
         for p in products:
             for pc in p.categories:
-                pc_id = str(pc.category_id) if hasattr(pc, 'category_id') else str(pc)
-                if pc_id == cid:
-                    raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
+
+                # pc може да е Category или само ID - нормализираме
+                if type(pc) is str or type(pc) is int:
+                    current_id = str(pc)
+                else:
+                    current_id = str(pc.category_id)
+
+                if current_id == cid:
+                    raise ValueError("Категорията се използва от продукт '" + p.name + "'.")

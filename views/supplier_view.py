@@ -6,6 +6,8 @@ class SupplierView:
     def __init__(self, controller):
         self.controller = controller
 
+
+
     def show_menu(self, user):
         while True:
             is_admin = (user and user.role == "Admin")
@@ -15,6 +17,8 @@ class SupplierView:
                 break
             if menu.execute(choice, user) == "break":
                 break
+
+
 
     def _build_menu(self, is_admin):
         items = [MenuItem("1", "Списък с доставчици", self.show_suppliers),
@@ -28,6 +32,8 @@ class SupplierView:
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", items)
 
+
+
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
@@ -38,6 +44,8 @@ class SupplierView:
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
         print(format_table(columns, rows))
+
+
 
     def search_supplier(self, _):
         print("\nТърсене на доставчик")
@@ -56,21 +64,20 @@ class SupplierView:
         rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in results]
         print(format_table(columns, rows))
 
-    def add_supplier(self, _):
-        print("\nНов доставчик (Остави празно за отказ)")
 
-        # ВЪВЕЖДАНЕ НА ИМЕ
+
+    def add_supplier(self, _):
+        print("\nНов доставчик ")
         while True:
             name = input("Име: ").strip()
-            if not name: return
+            if not name:
+                return
 
-            # Проверка на формат чрез контролера
             error = self.controller.validate_field("name", name)
             if error:
                 print(f"Грешка: {error}")
                 continue
 
-            # Проверка на уникалност чрез контролера (Без импорт на валидатор тук!)
             unique_error = self.controller.validate_unique_name(name)
             if unique_error:
                 print(f"Грешка: {unique_error}")
@@ -78,7 +85,7 @@ class SupplierView:
 
             break
 
-        # ВЪВЕЖДАНЕ НА КОНТАКТ
+
         while True:
             contact = input("Контакт (тел/имейл): ").strip()
             if not contact: return
@@ -87,7 +94,7 @@ class SupplierView:
                 break
             print(f"Грешка: {error}")
 
-        # ВЪВЕЖДАНЕ НА АДРЕС
+
         while True:
             address = input("Адрес: ").strip()
             if not address: return
@@ -102,19 +109,21 @@ class SupplierView:
         except Exception as e:
             print(f"Грешка при запис: {e}")
 
+
+
+
     def edit_supplier(self, _):
         print("\nРедактиране на доставчик")
-        sid = input("Въведете кратко ID: ").strip()
-        if not sid: return
+        sid = input("Въведете ID: ").strip()
+        if not sid:
+            return
 
         supplier = self.controller.get_by_id(sid)
         if not supplier:
             print("Не е намерен доставчик.")
             return
 
-        print(f"\nРедакция на: {supplier.name} (Enter за запазване на старото)")
-
-        # РЕДАКЦИЯ НА ИМЕ
+        print(f"\nРедакция на: {supplier.name}")
         while True:
             n = input(f"Ново име [{supplier.name}]: ").strip()
             new_name = n if n else supplier.name
@@ -124,14 +133,13 @@ class SupplierView:
                 print(f"Грешка: {error}")
                 continue
 
-            # Проверка на уникалност чрез контролера с изключване на текущото ID
             unique_error = self.controller.validate_unique_name(new_name, exclude_id=supplier.supplier_id)
             if unique_error:
                 print(f"Грешка: {unique_error}")
                 continue
             break
 
-        # РЕДАКЦИЯ НА КОНТАКТ
+
         while True:
             c = input(f"Нов контакт [{supplier.contact}]: ").strip()
             new_contact = c if c else supplier.contact
@@ -140,7 +148,7 @@ class SupplierView:
                 break
             print(f"Грешка: {error}")
 
-        # РЕДАКЦИЯ НА АДРЕС
+
         while True:
             a = input(f"Нов адрес [{supplier.address}]: ").strip()
             new_address = a if a else supplier.address
@@ -150,19 +158,17 @@ class SupplierView:
             print(f"Грешка: {error}")
 
         try:
-            self.controller.update(
-                supplier_id=supplier.supplier_id,
-                name=new_name,
-                contact=new_contact,
-                address=new_address
-            )
+            self.controller.update(supplier_id=supplier.supplier_id, name=new_name, contact=new_contact, address=new_address)
             print("Данните са обновени успешно.")
         except Exception as e:
             print(f"Проблем при обновяване: {e}")
 
+
+
+
     def delete_supplier(self, _):
         print("\nИзтриване на доставчик")
-        sid = input("Кратко ID на доставчик: ").strip()
+        sid = input("ID на доставчик: ").strip()
         if not sid: return
 
         supplier = self.controller.get_by_id(sid)

@@ -3,6 +3,8 @@ from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
 
 
+
+
 class InvoiceController:
     """Управлява жизнения цикъл на фактурите."""
 
@@ -11,14 +13,17 @@ class InvoiceController:
         self.invoices: List[Invoice] = []
         self._reload()
 
+
     def _reload(self) -> None:
         """Зарежда фактурите от хранилището."""
         raw = self.repo.load() or []
         self.invoices = [Invoice.from_dict(inv) for inv in raw if isinstance(inv, dict)]
 
+
     def _save_changes(self) -> None:
         """Записва промените в хранилището."""
         self.repo.save([inv.to_dict() for inv in self.invoices])
+
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         """Създава фактура въз основа на складово движение."""
@@ -26,7 +31,6 @@ class InvoiceController:
         # Проверява дали движението е от тип OUT
         InvoiceValidator.validate_movement_for_invoice(movement)
 
-        # Ако вече има фактура за това движение, връщаме я
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
@@ -57,7 +61,7 @@ class InvoiceController:
 
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        """Търси фактура по пълно или частично ID."""
+        """Търси фактура по ID."""
         tid = str(invoice_id or "").strip().lower()
         if not tid:
             return None
@@ -90,7 +94,6 @@ class InvoiceController:
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False
-
 
         if not inv.is_active:
             return False

@@ -4,9 +4,11 @@ from validators.product_validator import ProductValidator
 from filters import product_filters, product_sorters
 
 
+
+
+
 class ProductController:
     """Управлява каталога с продукти и гарантира бизнес логиката."""
-
     def __init__(self, repo, category_controller):
         self.repo = repo
         self.category_controller = category_controller
@@ -27,8 +29,9 @@ class ProductController:
         """Връща всички налични продукти."""
         return self.products
 
+
+
     def get_by_id(self, product_id: str) -> Optional[Product]:
-        """Търси продукт по пълно или съкратено ID."""
         pid = str(product_id or "").strip().lower()
         if not pid:
             return None
@@ -40,15 +43,13 @@ class ProductController:
                 return p
         return None
 
+
+
     def validate_field(self, field_type: str, value: str, exclude_id: str = None) -> Optional[str]:
-        """
-        Централизирана валидация за интерфейса (View).
-        Връща съобщение за грешка или None, ако е валидно.
-        """
+
         try:
             if field_type == "name":
                 name = self.validator.validate_name(value)
-                # Проверка за уникалност директно тук, за да освободим View-то
                 self.validator.validate_unique_name(name, self.products, exclude_product_id=exclude_id)
             elif field_type == "price":
                 self.validator.parse_float(value, "Цена")
@@ -65,8 +66,9 @@ class ProductController:
         except Exception as e:
             return f"Неочаквана грешка: {e}"
 
+
+
     def add(self, product_data: dict) -> Product:
-        """Добавя нов продукт след финална валидация."""
         name = self.validator.validate_name(product_data["name"])
         self.validator.validate_unique_name(name, self.products)
 
@@ -74,7 +76,7 @@ class ProductController:
         unit = self.validator.validate_unit(product_data.get("unit", "бр."))
         description = self.validator.validate_description(product_data.get("description", ""))
 
-        # Мапване на категориите
+
         category_ids = product_data.get("category_ids", [])
         categories = []
         for cid in (category_ids if isinstance(category_ids, list) else [category_ids]):
@@ -92,8 +94,9 @@ class ProductController:
         self._save_changes()
         return product
 
+
+
     def update(self, product_id: str, updates: dict) -> bool:
-        """Обновява съществуващ продукт."""
         product = self.get_by_id(product_id)
         if not product:
             return False
@@ -126,6 +129,8 @@ class ProductController:
         self._save_changes()
         return True
 
+
+
     def delete_by_id(self, product_id: str) -> bool:
         """Изтрива продукт от каталога."""
         product = self.get_by_id(product_id)
@@ -136,19 +141,18 @@ class ProductController:
         self._save_changes()
         return True
 
+
+
     def search(self, keyword: str) -> List[Product]:
-        """
-        Търси продукти по ключова дума.
-        Връща списък от ОБЕКТИ за консистентност с интерфейса.
-        """
         return product_filters.filter_combined(self.products, keyword=keyword)
 
+
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
-        """Филтрира продукти по списък от IDs на категории."""
         return product_filters.filter_combined(self.products, category_ids=category_ids)
 
+
+
     def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
-        """Сортира продуктите по зададен критерий и алгоритъм."""
         if sort_type == "name":
             key_fn = lambda p: p.name.lower()
         elif sort_type == "price":

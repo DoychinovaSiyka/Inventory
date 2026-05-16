@@ -47,7 +47,7 @@ class UserView:
 
 
     def add_user(self, _):
-        print("\nНОВ ПОТРЕБИТЕЛ (Enter за отказ)")
+        print("\nНОВ ПОТРЕБИТЕЛ ")
         while True:
             username = input("Потребителско име: ").strip()
             if not username:
@@ -87,17 +87,18 @@ class UserView:
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
 
+
+
     def delete_user(self, current_user):
         print("\nИЗТРИВАНЕ")
         while True:
-            target = input("Username или ID за изтриване (Enter за отказ): ").strip()
+            target = input("Username или ID за изтриване: ").strip()
             if not target:
                 return
 
-            # Проверка дали такъв потребител съществува, преди да трием
             user_to_delete = self.controller.find_user_flexible(target)
             if not user_to_delete:
-                print(f"Грешка: Потребител '{target}' не съществува.")
+                print(f"Потребител '{target}' не съществува.")
                 continue
 
             break

@@ -23,13 +23,17 @@ class User:
         self.created = created or now_val
         self.modified = modified or now_val
 
+
+
     @staticmethod
     def now():
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+
     def update_modified(self):
-        """Обновява датата при промяна на потребителя."""
         self.modified = User.now()
+
+
 
     @staticmethod
     def from_dict(data):
@@ -42,9 +46,9 @@ class User:
                      status=data.get("status", "Active"), user_id=data.get("user_id"),
                      created=data.get("created"), modified=data.get("modified"))
 
+
     def to_dict(self):
         """Връща User като речник за JSON запис."""
-
         return {"user_id": self.user_id, "first_name": self.first_name, "last_name": self.last_name,
                 "email": self.email, "username": self.username, "password": self.password,
                 "role": self.role, "status": self.status, "created": self.created,

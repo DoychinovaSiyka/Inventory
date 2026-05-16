@@ -16,13 +16,14 @@ class ProductSortView:
             if menu.execute(choice, None) == "break":
                 break
 
+
+
     def _build_menu(self):
         return Menu("Сортиране на продукти", [
             MenuItem("1", "По име (A–Z)", self.sort_by_name),
             MenuItem("2", "По цена (висока -> ниска)", self.sort_price_desc),
             MenuItem("3", "По цена (ниска -> висока)", self.sort_price_asc),
             MenuItem("0", "Назад", lambda u: "break")])
-
 
 
 

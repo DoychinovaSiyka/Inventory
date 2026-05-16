@@ -92,6 +92,8 @@ class Movement:
                  "date": self.date, "created": self.created, "modified": self.modified,
                  "from_location_id": self.from_location_id, "to_location_id": self.to_location_id}
 
+
+
     @staticmethod
     def from_dict(data):
         if not data:

@@ -10,7 +10,7 @@ class UserValidator:
         if not username.isalnum():
             raise ValueError("Потребителското име може да съдържа само букви и цифри.")
 
-        # Валидация на парола (преди хеширане)
+        # Валидация на парола - преди хеширане
         if len(password) < 6:
             raise ValueError("Паролата трябва да бъде поне 6 символа.")
         if password.isdigit() or password.isalpha():

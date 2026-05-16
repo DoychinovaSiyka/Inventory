@@ -9,7 +9,6 @@ class SupplierController:
         self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
-        # Валидация на данни и уникалност
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
         SupplierValidator.validate_address(address)
@@ -59,9 +58,12 @@ class SupplierController:
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
-            if field_type == "name": SupplierValidator.validate_name(value)
-            elif field_type == "contact": SupplierValidator.validate_contact(value)
-            elif field_type == "address": SupplierValidator.validate_address(value)
+            if field_type == "name":
+                SupplierValidator.validate_name(value)
+            elif field_type == "contact":
+                SupplierValidator.validate_contact(value)
+            elif field_type == "address":
+                SupplierValidator.validate_address(value)
             return None
         except ValueError as e:
             return str(e)

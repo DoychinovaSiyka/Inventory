@@ -5,6 +5,7 @@ from filters.category_filters import filter_categories, get_all_children_ids
 from filters.category_analytics import get_category_stats
 
 
+
 class CategoryController:
     """Управлява категориите и йерархичната цялост."""
     def __init__(self, repo):
@@ -12,16 +13,13 @@ class CategoryController:
         self.categories: List[Category] = self._load()
 
 
-
     def _load(self) -> List[Category]:
         raw = self.repo.load() or []
         return [Category.from_dict(c) for c in raw]
 
 
-
     def _save(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])
-
 
 
     def get_all(self) -> List[Category]:

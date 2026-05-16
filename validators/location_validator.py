@@ -14,14 +14,17 @@ class LocationValidator:
             raise ValueError("Името е твърде дълго.")
         return cleaned
 
+
+
     @staticmethod
     def validate_unique_name(name, locations, exclude_id=None):
-        """Проверява дали името вече съществува в списъка с локации."""
         cleaned_name = name.strip().lower()
         for loc in locations:
             if loc.name.lower() == cleaned_name and loc.location_id != exclude_id:
                 raise ValueError(f"Локация с име '{name}' вече съществува.")
         return name
+
+
 
     @staticmethod
     def validate_code(code, locations, exclude_id=None):
@@ -37,14 +40,15 @@ class LocationValidator:
         if len(cleaned) > 10:
             raise ValueError("Кодът не може да бъде по-дълъг от 10 символа.")
 
-        # Проверка за уникалност в списъка
+
         for loc in locations:
-            # Проверяваме дали кодът съществува и дали не принадлежи на същата локация (при update)
             if hasattr(loc, 'code') and loc.code:
                 if loc.code.upper() == cleaned and loc.location_id != exclude_id:
                     raise ValueError(f"Кодът '{cleaned}' вече е зает от друга локация.")
 
         return cleaned
+
+
 
     @staticmethod
     def validate_zone(zone):
@@ -61,6 +65,8 @@ class LocationValidator:
             raise ValueError("Зоната/секторът не може да бъде повече от 50 символа.")
 
         return cleaned
+
+
 
     @staticmethod
     def validate_capacity(capacity):

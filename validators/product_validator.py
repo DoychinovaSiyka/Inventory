@@ -9,12 +9,16 @@ class ProductValidator:
             raise ValueError("Името трябва да е поне 3 символа.")
         return name
 
+
+
     @staticmethod
     def validate_description(description):
         desc = str(description).strip()
         if desc and len(desc) < 3:
             raise ValueError("Описанието трябва да е поне 3 символа.")
         return desc
+
+
 
     @staticmethod
     def validate_unique_name(name, products, exclude_product_id=None):
@@ -26,6 +30,8 @@ class ProductValidator:
                 raise ValueError(f"Вече има продукт с име '{name}'.")
         return True
 
+
+
     @staticmethod
     def parse_float(value, field_name="цена"):
         v = str(value).lower().replace("лв", "").replace(",", ".").replace(" ", "").strip()
@@ -36,6 +42,8 @@ class ProductValidator:
             return round(num, 2)
         except ValueError:
             raise ValueError(f"Въведете валидно число за '{field_name}'.")
+
+
 
     @staticmethod
     def validate_unit(unit):

@@ -1,5 +1,5 @@
 def get_category_stats(categories, products):
-    """Брои продуктите и връща точната структура, която контролерът изисква."""
+    """Брои продуктите във всяка категория."""
     result = []
 
     for cat in categories:
@@ -8,11 +8,15 @@ def get_category_stats(categories, products):
 
         for p in products:
             for pc in p.categories:
-                pc_id = str(pc.category_id) if hasattr(pc, 'category_id') else str(pc)
+                if type(pc) is str or type(pc) is int:
+                    current_id = str(pc)
+                else:
+                    current_id = str(pc.category_id)
 
-                if pc_id == cat_id:
+                if current_id == cat_id:
                     count += 1
                     break
+
 
         result.append({"id": cat.category_id, "name": cat.name, "product_count": count})
 

@@ -2,12 +2,13 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
 class CategoryView:
 
     def __init__(self, controller, product_controller):
         self.controller = controller
         self.product_controller = product_controller
-
 
 
     def show_menu(self, user):
@@ -60,7 +61,7 @@ class CategoryView:
 
     def search_category(self, _):
         print("\nТЪРСЕНЕ НА КАТЕГОРИЯ")
-        query = input("Въведете име или ID (кратко/пълно): ").strip()
+        query = input("Въведете име или ID: ").strip()
         if not query:
             return
 
@@ -96,7 +97,7 @@ class CategoryView:
 
 
     def add_category(self, user):
-        print("\nНова категория (Enter за отказ)")
+        print("\nНова категория")
         while True:
             name = input("Име на категория: ").strip()
             if not name:
@@ -120,7 +121,7 @@ class CategoryView:
                 continue
             break
 
-        print("\nИзберете родителска категория (Enter за ГЛАВНА):")
+        print("\nИзберете родителска категория:")
         parent = self.select_category()
         parent_id = parent.category_id if parent else None
 
@@ -163,7 +164,7 @@ class CategoryView:
                 continue
             break
 
-        print("\nИзберете нов родител (Enter за без промяна):")
+        print("\nИзберете нов родител:")
         parent = self.select_category()
         new_parent_id = parent.category_id if parent else category.parent_id
 

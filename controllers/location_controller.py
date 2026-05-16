@@ -5,7 +5,6 @@ from validators.location_validator import LocationValidator
 
 class LocationController:
     """Контролерът управлява локациите в системата."""
-
     def __init__(self, repo, inventory_controller=None):
         self.repo = repo
         self.inventory_controller = inventory_controller
@@ -26,17 +25,19 @@ class LocationController:
         capacity = LocationValidator.validate_capacity(capacity)
         LocationValidator.validate_unique_name(name, self.locations)
 
-
         code = LocationValidator.validate_code(code, self.locations)
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
         self.locations.append(location)
         self._save_changes()
-
         return location
+
+
 
     def get_all(self) -> List[Location]:
         return self.locations
+
+
 
     def get_by_id(self, identifier: str) -> Optional[Location]:
         if not identifier:
@@ -79,7 +80,6 @@ class LocationController:
 
     def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
 
-
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
@@ -113,7 +113,6 @@ class LocationController:
 
         if self.inventory_controller:
             products_data = self.inventory_controller.data.get("products", {})
-
             for pid, pdata in products_data.items():
                 locations_map = pdata.get("locations", {})
 

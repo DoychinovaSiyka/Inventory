@@ -4,6 +4,9 @@ from models.user import User
 from validators.user_validator import UserValidator
 
 
+
+
+
 class UserController:
     def __init__(self, repo, activity_log_controller=None):
         self.repo = repo
@@ -19,8 +22,6 @@ class UserController:
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
-
-
 
 
 
@@ -128,6 +129,8 @@ class UserController:
         user.update_modified()
         self._save_changes()
 
+
+
     def change_status(self, acting_user: User, identifier: str, new_status: str):
         user = self.find_user_flexible(identifier)
         if not user:
@@ -167,6 +170,8 @@ class UserController:
         self.users.append(admin)
         self._save_changes()
 
+
+
     def _create_default_operator(self):
         operator = User(user_id=None, first_name="Operator", last_name="User",
                         email="operator@example.com", username="operator", password=self._hash_password("operator123"),
@@ -174,47 +179,31 @@ class UserController:
         self.users.append(operator)
         self._save_changes()
 
+
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
-        """
-        Универсален метод за валидация на отделни полета.
-        Използва се от View-то за проверка в реално време (while True цикли).
-        """
         try:
             if field_type == "username":
-                # Проверка за уникалност
                 UserValidator.validate_unique_username(value, self)
-                # Проверка за формат (използваме базовите изисквания)
                 if not value or len(value.strip()) < 3:
                     raise ValueError("Потребителското име трябва да е поне 3 символа.")
                 if not value.isalnum():
                     raise ValueError("Потребителското име може да съдържа само букви и цифри.")
 
             elif field_type == "email":
-                # Вместо да пишем Regex тук, викаме UserValidator
-                # Подаваме временни валидни данни за останалите полета
-                UserValidator.validate_user_data(
-                    username="tmp_valid",
-                    password="Valid123Password",
-                    email=value,
-                    role="Operator",
-                    status="Active"
-                )
+                UserValidator.validate_user_data(username="tmp_valid", password="Valid123Password",
+                                                 email=value, role="Operator", status="Active")
 
             elif field_type == "password":
-                # Проверка на сложност и дължина през централния валидатор
-                UserValidator.validate_user_data(
-                    username="tmp_valid",
-                    password=value,
-                    email="tmp@email.com",
-                    role="Operator",
-                    status="Active"
-                )
+
+                UserValidator.validate_user_data(username="tmp_valid", password=value,
+                                                 email="tmp@email.com", role="Operator", status="Active")
 
             elif field_type == "role":
-                # Директна проверка на ролята
                 UserValidator.validate_role(value)
 
-            return None  # Няма грешки
+            return None
 
         except ValueError as e:
-            return str(e)  # Връщаме текста на грешката към View-то
+            return str(e)

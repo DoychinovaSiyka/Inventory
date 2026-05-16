@@ -42,6 +42,8 @@ class Category:
         return {"category_id": self.category_id, "name": self.name, "description": self.description,
                 "parent_id": self.parent_id, "created": self.created, "modified": self.modified}
 
+
+
     @staticmethod
     def from_dict(data):
         if not data:

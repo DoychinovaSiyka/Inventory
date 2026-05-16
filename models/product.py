@@ -28,6 +28,7 @@ class Product:
                  "price": self.price, "created": self.created,
                  "modified": self.modified}
 
+
     @staticmethod
     def from_dict(data, category_controller=None):
         """Възстановява обект Product от речник."""
@@ -45,10 +46,11 @@ class Product:
                        unit=data.get("unit"), description=data.get("description", ""), price=data.get("price", 0.0),
                        created=data.get("created"), modified=data.get("modified"))
 
+
+
     def __str__(self):
         short_id = str(self.product_id)[:8]
 
         category_names = [c.name for c in self.categories]
         cats = ", ".join(category_names) if category_names else "Няма"
-
         return (f"Продукт: {self.name} (ID: {short_id})\n" f"Категории: {cats}\n" f"Цена: {float(self.price):.2f} {self.unit}")

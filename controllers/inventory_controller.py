@@ -4,7 +4,6 @@ from validators.inventory_validator import InventoryValidator
 
 class InventoryController:
     """Управлява наличностите в реално време."""
-
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
@@ -218,7 +217,6 @@ class InventoryController:
 
         for mv in movements:
             mtype = mv.movement_type.name
-
             if mtype == "MOVE":
                 if mv.from_location_id is None or mv.to_location_id is None:
                     continue
