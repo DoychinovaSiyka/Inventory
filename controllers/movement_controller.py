@@ -192,7 +192,6 @@ class MovementController:
             if m_type_str == "OUT":
                 MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
 
-            # За IN не ни трябва допълнителна валидация (освен parse_quantity, която вече мина)
 
             # Определяне на цена
             if price is not None and str(price).strip() != "":
@@ -200,7 +199,7 @@ class MovementController:
             else:
                 prc = float(product.price)
 
-        # 4. Създаване на записа
+
         movement_id = str(uuid.uuid4())
 
         movement = Movement(movement_id=movement_id, product_id=product.product_id, product_name=product.name,

@@ -39,10 +39,7 @@ class ReportController:
                     break
 
             if product is None:
-                item.update({
-                    "avg_in_price": "-", "avg_out_price": "-",
-                    "expense": "-", "revenue": "-", "last_movement": "Няма"
-                })
+                item.update({"avg_in_price": "-", "avg_out_price": "-", "expense": "-", "revenue": "-", "last_movement": "Няма"})
                 continue
 
             pid = str(product.product_id)
@@ -53,7 +50,7 @@ class ReportController:
             total_expense = 0.0
             total_revenue = 0.0
 
-            # Използваме вградения филтър
+
             in_moves = self._filter_movements_by_type(moves, "IN")
             out_moves = self._filter_movements_by_type(moves, "OUT")
 
@@ -82,41 +79,40 @@ class ReportController:
 
         return Report(report_type="Inventory Full", data=data["products"])
 
+
+
+
     def report_movements(self):
         rows = []
         for m in self.movement_controller.movements:
             loc = self.location_controller.get_by_id(m.location_id)
-            rows.append({
-                "date": str(m.date)[:10], "movement_id": m.movement_id[:8],
-                "type": m.movement_type.name, "product": m.product_name,
-                "quantity": m.quantity, "unit": m.unit,
-                "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
-                "to": m.customer if m.movement_type.name == "OUT" else (loc.name if loc else "Склад")
-            })
+            rows.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8], "type": m.movement_type.name,
+                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                         "from": "Склад" if m.movement_type.name == "OUT" else "Доставчик",
+                         "to": m.customer if m.movement_type.name == "OUT" else (loc.name if loc else "Склад")})
         return Report(report_type="Movement History", data=rows)
 
+
+
     def report_deliveries_all(self, keyword=""):
-        # Използваме вградения филтър
         moves = self._filter_movements_by_type(self.movement_controller.movements, "IN")
         data = []
         for m in moves:
             sup = self.supplier_controller.get_by_id(m.supplier_id)
             supplier_name = sup.name if sup else "Неизвестен"
 
-            # Използваме вградения _match_string
+
             if self._match_string(m.product_name, keyword) or self._match_string(supplier_name, keyword):
-                data.append({
-                    "date": str(m.date)[:10], "movement_id": m.movement_id[:8],
-                    "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
-                    "price": m.price, "supplier": supplier_name
-                })
+                data.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
+                             "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
+                             "price": m.price, "supplier": supplier_name})
         return Report(report_type="Deliveries", data=data)
+
+
 
     def report_sales(self):
         active = [i for i in self.invoice_controller.get_all() if i.is_active]
-        data = [{
-            "invoice_number": i.invoice_id[:8], "date": str(i.date)[:10],
-            "client": i.customer, "product": i.product,
-            "total_price": i.total_price, "status": "АКТИВНА"
-        } for i in active]
+        data = [{"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10], "client": i.customer,
+                 "product": i.product, "total_price": i.total_price, "status": "АКТИВНА"} for i in active]
+
         return Report(report_type="Sales", data=data)

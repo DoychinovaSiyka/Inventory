@@ -21,14 +21,12 @@ class LocationController:
                 self.locations.append(obj)
 
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
-        """Добавя нова локация с валидация на всички полета, включително код."""
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
         capacity = LocationValidator.validate_capacity(capacity)
-        # Валидация за уникалност на името
         LocationValidator.validate_unique_name(name, self.locations)
 
-        # НОВО: Валидация за уникалност на кратък код (напр. W1, A1)
+
         code = LocationValidator.validate_code(code, self.locations)
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
@@ -41,24 +39,25 @@ class LocationController:
         return self.locations
 
     def get_by_id(self, identifier: str) -> Optional[Location]:
-        """Търси локация по Пълно ID, Кратко ID (8 символа) или по КОД (напр. W1)."""
         if not identifier:
             return None
 
         target = str(identifier).strip().lower()
 
         for loc in self.locations:
-            # 1. Проверка по пълно ID
             if loc.location_id.lower() == target:
                 return loc
-            # 2. Проверка по кратко ID (първите 8 символа)
+
             if loc.location_id[:8].lower() == target:
                 return loc
-            # 3. НОВО: Проверка по потребителски код (напр. W1)
+
             if loc.code and loc.code.lower() == target:
                 return loc
 
         return None
+
+
+
 
     def search(self, query: str) -> List[dict]:
         q = str(query or "").strip().lower()
@@ -74,19 +73,13 @@ class LocationController:
             code = str(loc.code or "").lower()
 
             if q in short_id or q in name or q in zone or q in cap or q in code:
-                results.append({
-                    "id": loc.location_id[:8],
-                    "name": loc.name,
-                    "zone": loc.zone,
-                    "capacity": loc.capacity,
-                    "code": loc.code
-                })
+                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity,"code": loc.code})
 
         return results
 
-    def update(self, location_id: str, name: Optional[str] = None,
-               zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
-        """Обновява локация, включително и нейния код."""
+    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
+
+
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
@@ -104,13 +97,14 @@ class LocationController:
             capacity = LocationValidator.validate_capacity(capacity)
             location.capacity = capacity
 
-        # НОВО: Обновяване на код
+
         if code is not None:
             location.code = LocationValidator.validate_code(code, self.locations, exclude_id=location.location_id)
 
         location.update_modified()
         self._save_changes()
         return True
+
 
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
@@ -146,6 +140,8 @@ class LocationController:
         self._save_changes()
         return True
 
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":
@@ -155,12 +151,12 @@ class LocationController:
             elif field_type == "capacity":
                 LocationValidator.validate_capacity(value)
             elif field_type == "code":
-                # За обща валидация на полето без проверка за уникалност в реално време
                 if not value.strip():
                     raise ValueError("Кодът не може да е празен.")
             return None
         except ValueError as e:
             return str(e)
+
 
     def _save_changes(self) -> None:
         data = [l.to_dict() for l in self.locations]

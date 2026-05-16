@@ -76,7 +76,6 @@ class InventoryController:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
-        # СИНХРОН: Валидираме числото през валидатора
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за заприходяване")
 
         if pid not in self.data["products"]:
@@ -87,6 +86,8 @@ class InventoryController:
 
         locations[lid] = round(current + qty, 3)
 
+
+
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -95,7 +96,7 @@ class InventoryController:
 
         current_stock = self.get_stock(pid, lid)
 
-        # Проверка на наличност през валидатора
+
         product_obj = self.product_controller.get_by_id(pid)
         p_name = product_obj.name if product_obj else pid
         InventoryValidator.validate_stock_availability(qty, current_stock, p_name)
@@ -104,13 +105,15 @@ class InventoryController:
         locations[lid] = round(current_stock - qty, 3)
         return True
 
+
+
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         InventoryValidator.validate_move_locations(from_location_id, to_location_id)
 
         pid = self._product_id(product_id)
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за трансфер")
 
-        # Първо махаме от изходния склад (това ще пусне validate_stock_availability автоматично)
+
         if self.decrease_stock(pid, qty, from_location_id):
             self.increase_stock(pid, qty, to_location_id)
             return True

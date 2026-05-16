@@ -121,7 +121,6 @@ class CategoryController:
 
 
 
-
     def search(self, keyword: str) -> List[dict]:
         filtered = filter_categories(self.categories, keyword)
         results = []
@@ -133,13 +132,11 @@ class CategoryController:
 
 
 
-
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
         categories_with_counts = get_category_stats(self.categories, products)
 
         return {"total_categories": len(self.categories), "categories": categories_with_counts}
-
 
 
 
