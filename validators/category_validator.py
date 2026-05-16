@@ -11,6 +11,8 @@ class CategoryValidator:
             raise ValueError("Името трябва да е между 3 и 50 символа.")
         return cleaned
 
+
+
     @staticmethod
     def validate_unique(name: str, categories: List[Any], exclude_id: Optional[str] = None) -> None:
         target = name.strip().lower()
@@ -19,6 +21,8 @@ class CategoryValidator:
                 continue
             if c.name.strip().lower() == target:
                 raise ValueError(f"Категория с име '{name}' вече съществува.")
+
+
 
     @staticmethod
     def validate_description(description: Any) -> str:
@@ -43,7 +47,6 @@ class CategoryValidator:
         current_parent_id = parent_id
 
         while current_parent_id:
-            # Ако срещнем собственото ID → цикъл
             if category_id and str(current_parent_id) == str(category_id):
                 raise ValueError("Открита циклична зависимост в йерархията.")
 
@@ -54,11 +57,14 @@ class CategoryValidator:
                     parent_node = c
                     break
 
-            # Ако няма родител → стигнали сме до корена
+            # Ако няма родител - стигнали сме до корена
             if not parent_node:
                 break
 
             current_parent_id = parent_node.parent_id
+
+
+
 
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
