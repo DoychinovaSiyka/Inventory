@@ -46,7 +46,7 @@ def format_table(columns, rows):
     if not rows:
         return "\nНяма налични данни.\n"
 
-    # Изчисляваме максималната ширина за всяка колона
+
     col_widths = [len(str(c)) for c in columns]
 
     for row in rows:

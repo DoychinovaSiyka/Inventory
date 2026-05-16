@@ -1042,5 +1042,23 @@
         "modified": "2026-05-15 11:48:54",
         "from_location_id": null,
         "to_location_id": null
+    },
+    {
+        "movement_id": "a7dd2f3a-7119-47b5-8e55-3f0a8040dd34",
+        "product_id": "fe1dfd3d-827f-4fc1-827b-c44f32a77127",
+        "product_name": "пилешко филе",
+        "user_id": "446e8664-2608-410d-9ad1-0fac87b93aad",
+        "location_id": "3a94c75c-a29a-440e-b9f1-8edd5884bbae",
+        "movement_type": "OUT",
+        "quantity": 1.0,
+        "unit": "кг.",
+        "price": 10.0,
+        "supplier_id": null,
+        "customer": "qewoi",
+        "date": "2026-05-15 23:20:59",
+        "created": "2026-05-15 23:20:59",
+        "modified": "2026-05-15 23:20:59",
+        "from_location_id": null,
+        "to_location_id": null
     }
 ]

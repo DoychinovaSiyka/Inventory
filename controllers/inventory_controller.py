@@ -10,12 +10,8 @@ class InventoryController:
         self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
-
         self.data = self._load()
-
-        # Първоначално изграждане на наличностите от историята
         self.update_inventory_from_movements(self.movement_controller.movements)
-
 
 
 
@@ -76,89 +72,49 @@ class InventoryController:
 
         return user_input
 
-
-
-
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
-        if "products" not in self.data:
-            self.data["products"] = {}
+        # СИНХРОН: Валидираме числото през валидатора
+        qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за заприходяване")
 
         if pid not in self.data["products"]:
             self.data["products"][pid] = {"locations": {}}
 
-
         locations = self.data["products"][pid]["locations"]
+        current = float(locations.get(lid, 0.0))
 
-        # Текущо количество
-        if lid in locations:
-            try:
-                current = float(locations[lid])
-            except:
-                current = 0.0
-        else:
-            current = 0.0
-
-
-        try:
-            qty = float(quantity)
-        except:
-            qty = 0.0
-
-        new_value = current + qty
-        locations[lid] = round(new_value, 2)
-
-
-
-
+        locations[lid] = round(current + qty, 3)
 
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
-        products = self.data.get("products", {})
-        if pid not in products:
-            return False
 
-        product_info = products[pid]
-        locations = product_info.get("locations", {})
-        if lid not in locations:
-            return False
+        qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за изписване")
 
-        try:
-            current = float(locations[lid])
-        except:
-            current = 0.0
+        current_stock = self.get_stock(pid, lid)
 
-        try:
-            qty = float(quantity)
-        except:
-            qty = 0.0
+        # Проверка на наличност през валидатора
+        product_obj = self.product_controller.get_by_id(pid)
+        p_name = product_obj.name if product_obj else pid
+        InventoryValidator.validate_stock_availability(qty, current_stock, p_name)
 
-        if current < qty:
-            return False
-
-        new_value = current - qty
-        locations[lid] = round(new_value, 2)
-
+        locations = self.data["products"][pid]["locations"]
+        locations[lid] = round(current_stock - qty, 3)
         return True
-
-
-
-
 
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
+        InventoryValidator.validate_move_locations(from_location_id, to_location_id)
+
         pid = self._product_id(product_id)
-        from_lid = self._location_id(from_location_id)
-        to_lid = self._location_id(to_location_id)
+        qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за трансфер")
 
-        if not self.decrease_stock(pid, quantity, from_lid):
-            return False
-
-        self.increase_stock(pid, quantity, to_lid)
-        return True
-
+        # Първо махаме от изходния склад (това ще пусне validate_stock_availability автоматично)
+        if self.decrease_stock(pid, qty, from_location_id):
+            self.increase_stock(pid, qty, to_location_id)
+            return True
+        return False
 
 
     def get_total_stock(self, product_id: str) -> float:
@@ -197,61 +153,6 @@ class InventoryController:
             return float(locations[lid])
         except:
             return 0.0
-
-
-
-
-
-    def calculate_fifo_cost(self, product_id: str, movements: List, fallback_price: float = 0.0) -> float:
-        pid = self._product_id(product_id)
-
-        # смятаме колко е продадено общо
-        total_sold = 0.0
-        for m in movements:
-            if str(m.product_id) == pid and m.movement_type.name == "OUT":
-                total_sold += float(m.quantity)
-
-
-        if total_sold <= 0:
-            return 0.0
-
-        # Събираме всички доставки като партиди
-        batches = []
-        sorted_moves = sorted(movements, key=lambda x: x.date)
-
-        for m in sorted_moves:
-            if str(m.product_id) == pid and m.movement_type.name == "IN":
-                if m.price and float(m.price) > 0:
-                    price = float(m.price)
-                else:
-                    price = float(fallback_price)
-
-                qty = float(m.quantity)
-                batches.append({"qty": qty, "price": price})
-
-
-        total_cost = 0.0
-        remaining = total_sold
-
-        for batch in batches:
-            if remaining <= 0:
-                break
-
-            # Колко можем да вземем от тази партида
-            if batch["qty"] < remaining:
-                take = batch["qty"]
-            else:
-                take = remaining
-
-            total_cost += take * batch["price"]
-            remaining -= take
-
-        # Ако не стигат партидите - дописваме с fallback цена
-        if remaining > 0:
-            total_cost += remaining * float(fallback_price)
-
-        return round(total_cost, 2)
-
 
 
 

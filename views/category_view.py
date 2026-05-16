@@ -1,4 +1,5 @@
 from views.menu import Menu, MenuItem
+from views.password_utils import format_table
 
 
 class CategoryView:
@@ -6,6 +7,8 @@ class CategoryView:
     def __init__(self, controller, product_controller):
         self.controller = controller
         self.product_controller = product_controller
+
+
 
     def show_menu(self, user):
         while True:
@@ -15,15 +18,17 @@ class CategoryView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def _build_menu(self, is_admin):
         items = [MenuItem("1", "Списък с категории", self.show_all),
-                 MenuItem("2", "Търсене на категория", self.search_category)]
+                 MenuItem("2", "Търсене на категория", self.search_category),
+                 MenuItem("3", "Статистика за категориите", self.show_stats)]
 
         if is_admin:
             items.extend([
-                MenuItem("3", "Добавяне на категория", self.add_category),
-                MenuItem("4", "Редактиране на категория", self.edit_category),
-                MenuItem("5", "Изтриване на категория", self.delete_category)])
+                MenuItem("4", "Добавяне на категория", self.add_category),
+                MenuItem("5", "Редактиране на категория", self.edit_category),
+                MenuItem("6", "Изтриване на категория", self.delete_category)])
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
@@ -55,22 +60,11 @@ class CategoryView:
 
     def search_category(self, _):
         print("\nТЪРСЕНЕ НА КАТЕГОРИЯ")
-        query = input("Въведете име или ID (кратко/пълно): ").strip().lower()
-
+        query = input("Въведете име или ID (кратко/пълно): ").strip()
         if not query:
             return
 
-
-        all_cats = self.controller.get_all()
-        results = []
-        for c in all_cats:
-            full_id = str(c.category_id).lower()
-            short_id = full_id[:8]
-            cat_name = c.name.lower()
-
-            if query in cat_name or full_id.startswith(query):
-                results.append(c)
-
+        results = self.controller.search(query)
         if not results:
             print(f"\nНе бяха намерени категории по критерий: '{query}'")
             return
@@ -78,14 +72,26 @@ class CategoryView:
         print(f"\nНамерени резултати ({len(results)}):")
         print("-" * 30)
         for cat in results:
-            parent = self.controller.get_by_id(cat.parent_id)
-            parent_name = parent.name if parent else "ГЛАВНА"
-            print(f"Име:      {cat.name}")
-            print(f"ID:       {str(cat.category_id)[:8]}... (Пълно: {cat.category_id})")
-            print(f"Родител:  {parent_name}")
-            print(f"Описание: {cat.description}")
+            print(f"Име:      {cat['name']}")
+            print(f"ID:       {str(cat['id'])[:8]}... (Пълно: {cat['id']})")
+            print(f"Родител:  {cat['parent'] if cat['parent'] else 'ГЛАВНА'}")
+            print(f"Описание: {cat['description']}")
             print("-" * 30)
 
+
+
+    def show_stats(self, _):
+        print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
+        stats = self.controller.get_stats(self.product_controller)
+
+        print(f"Общ брой дефинирани категории: {stats['total_categories']}")
+        columns = ["ID", "Име на категория", "Брой продукти"]
+        rows = []
+        for c in stats["categories"]:
+            rows.append([c['id'][:8], c['name'], str(c['product_count'])])
+
+        table_output = format_table(columns, rows)
+        print(table_output)
 
 
 
@@ -96,28 +102,11 @@ class CategoryView:
             if not name:
                 return
 
-            if len(name) < 2:
-                print("Името трябва да е поне 2 символа.")
-                continue
-
             error = self.controller.validate_field("name", name)
             if error:
                 print(f"Грешка: {error}")
                 continue
-
-
-            duplicate_found = False
-            for c in self.controller.get_all():
-                if c.name.lower() == name.lower():
-                    duplicate_found = True
-                    break
-
-            if duplicate_found:
-                print(f"Категория с име '{name}' вече съществува.")
-                continue
-
             break
-
 
         while True:
             description = input("Описание: ").strip()
@@ -129,23 +118,19 @@ class CategoryView:
             if error:
                 print(f"Грешка: {error}")
                 continue
-
             break
-
 
         print("\nИзберете родителска категория (Enter за ГЛАВНА):")
         parent = self.select_category()
-        if parent is not None:
-            parent_id = parent.category_id
-        else:
-            parent_id = None
+        parent_id = parent.category_id if parent else None
 
         try:
             new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
             print(f"\nКатегорията '{new_cat.name}' е добавена успешно.")
+        except ValueError as e:
+            print(f"Грешка при валидация: {e}")
         except Exception as e:
             print(f"Грешка при запис: {e}")
-
 
 
 
@@ -187,8 +172,13 @@ class CategoryView:
         try:
             self.controller.update(category.category_id, updates)
             print("Промените са запазени успешно.")
+        except ValueError as e:
+            print(f"Грешка при валидация: {e}")
         except Exception as e:
             print(f"Грешка при обновяване: {e}")
+
+
+
 
     def select_category(self):
         categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
@@ -214,6 +204,7 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
+
 
 
 

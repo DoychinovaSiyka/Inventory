@@ -87,16 +87,23 @@ class UserView:
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
 
-
-
     def delete_user(self, current_user):
         print("\nИЗТРИВАНЕ")
-        target = input("Username или ID за изтриване: ").strip()
-        if not target:
-            return
+        while True:
+            target = input("Username или ID за изтриване (Enter за отказ): ").strip()
+            if not target:
+                return
+
+            # Проверка дали такъв потребител съществува, преди да трием
+            user_to_delete = self.controller.find_user_flexible(target)
+            if not user_to_delete:
+                print(f"Грешка: Потребител '{target}' не съществува.")
+                continue
+
+            break
 
         try:
             self.controller.delete_user(current_user, target)
-            print("Потребителят е изтрит.")
-        except (ValueError, PermissionError) as e:
+            print(f"Потребителят '{target}' е изтрит успешно.")
+        except Exception as e:
             print(f"Грешка: {e}")

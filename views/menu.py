@@ -25,6 +25,7 @@ class Menu:
             print(f"'{choice}' не е валидна опция. Опитайте отново.\n")
 
 
+
     def execute(self, choice, user):
         for item in self.items:
             if item.key == choice:

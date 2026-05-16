@@ -50,7 +50,7 @@ class Location:
             "capacity": self.capacity,
             "created": self.created,
             "modified": self.modified,
-            "code": self.code  # НОВО ПОЛЕ
+            "code": self.code
         }
 
     @staticmethod
@@ -65,7 +65,7 @@ class Location:
             capacity=data.get("capacity", 0),
             created=data.get("created"),
             modified=data.get("modified"),
-            code=data.get("code")  # НОВО ПОЛЕ
+            code=data.get("code")
         )
 
     def __str__(self):

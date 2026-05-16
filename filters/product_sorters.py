@@ -19,11 +19,11 @@ def selection_sort(products: List, key: Callable, reverse: bool) -> List:
     arr = products[:]
     n = len(arr)
     for i in range(n):
-        best_idx = i
+        min_index = i
         for j in range(i + 1, n):
             val_j = key(arr[j])
-            val_best = key(arr[best_idx])
+            val_best = key(arr[min_index])
             if (reverse and val_j > val_best) or (not reverse and val_j < val_best):
-                best_idx = j
-        arr[i], arr[best_idx] = arr[best_idx], arr[i]
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
     return arr

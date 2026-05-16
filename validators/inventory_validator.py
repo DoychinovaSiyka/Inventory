@@ -1,6 +1,4 @@
-
 class InventoryValidator:
-
     @staticmethod
     def validate_string(text, field_name, min_len=2):
         if not text or not isinstance(text, str):
@@ -12,44 +10,34 @@ class InventoryValidator:
 
     @staticmethod
     def parse_and_validate_number(value, field_name="Количество"):
-        """ Приема числа или стрингове (напр. '10.5 лв', '5 бр'), изчиства ги и проверява дали са валидни."""
-        if value is None:
-            return 0.0
+        if value is None or str(value).strip() == "":
+            raise ValueError(f"Полето '{field_name}' е задължително.")
 
         if isinstance(value, (int, float)):
             val = float(value)
         else:
+            # Изчистване на текстови добавки като 'кг', 'лв' и оправяне на запетаи
             cleaned = "".join(ch for ch in str(value) if ch.isdigit() or ch == "." or ch == ",")
             cleaned = cleaned.replace(",", ".")
             try:
                 val = float(cleaned)
             except ValueError:
-                val = 0.0
+                raise ValueError(f"'{value}' не е валидно число за {field_name}.")
 
         if val < 0:
-            raise ValueError(f"{field_name} не може да бъде отрицателно.")
-        return val
-
-
+            raise ValueError(f"{field_name} не може да бъде отрицателно число.")
+        return round(val, 3)
 
     @staticmethod
-    def validate_stock_availability(product_name, requested_qty, available_qty, location_name):
+    def validate_stock_availability(requested_qty, available_qty, product_name="Продуктът"):
         if requested_qty > available_qty:
             raise ValueError(
-                f"Недостатъчна наличност на '{product_name}'! "
-                f"В {location_name} има {available_qty}, а се изискват {requested_qty}.")
-
-    @staticmethod
-    def validate_report_result(data):
-        if not isinstance(data, list):
-            raise ValueError("Грешка при генериране на справката: Невалиден формат на данните.")
-        return True
-
-
+                f"Недостатъчна наличност! Продукт: {product_name}. "
+                f"Налично: {available_qty}, Заявено: {requested_qty}.")
 
     @staticmethod
     def validate_move_locations(from_wh_id, to_wh_id):
         if not from_wh_id or not to_wh_id:
-            raise ValueError("MOVE операцията изисква изходен и целеви склад.")
+            raise ValueError("Трансферът изисква начална и крайна локация.")
         if str(from_wh_id) == str(to_wh_id):
-            raise ValueError("Изходният и целевият склад не могат да бъдат еднакви.")
+            raise ValueError("Началната и крайната локация не могат да бъдат еднакви.")

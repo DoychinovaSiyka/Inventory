@@ -194,5 +194,19 @@
         "date": "2026-05-15 11:48:54",
         "created": "2026-05-15 11:48:54",
         "modified": "2026-05-15 11:48:54"
+    },
+    {
+        "invoice_id": "15d23aa1-9c42-49dd-ab4f-b5b49b79167d",
+        "movement_id": "a7dd2f3a-7119-47b5-8e55-3f0a8040dd34",
+        "product": "пилешко филе",
+        "quantity": 1.0,
+        "unit": "кг.",
+        "unit_price": 10.0,
+        "total_price": 10.0,
+        "customer": "qewoi",
+        "is_active": true,
+        "date": "2026-05-15 23:20:59",
+        "created": "2026-05-15 23:20:59",
+        "modified": "2026-05-15 23:20:59"
     }
 ]

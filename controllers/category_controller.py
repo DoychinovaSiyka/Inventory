@@ -1,26 +1,33 @@
 from typing import List, Optional
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_filters import filter_categories
-from filters.category_analytics import build_category_tree, get_category_stats
+from filters.category_filters import filter_categories, get_all_children_ids
+from filters.category_analytics import get_category_stats
 
 
 class CategoryController:
-    """Управлява категориите и гарантира йерархичната цялост."""
-
+    """Управлява категориите и йерархичната цялост."""
     def __init__(self, repo):
         self.repo = repo
         self.categories: List[Category] = self._load()
+
+
 
     def _load(self) -> List[Category]:
         raw = self.repo.load() or []
         return [Category.from_dict(c) for c in raw]
 
+
+
     def _save(self) -> None:
         self.repo.save([c.to_dict() for c in self.categories])
 
+
+
     def get_all(self) -> List[Category]:
         return self.categories
+
+
 
     def add(self, category_data: dict, user_id: str) -> Category:
         name = CategoryValidator.validate_name(category_data.get("name", ""))
@@ -42,6 +49,9 @@ class CategoryController:
         self.categories.append(category)
         self._save()
         return category
+
+
+
 
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
@@ -76,6 +86,8 @@ class CategoryController:
         self._save()
         return True
 
+
+
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
         category = self.get_by_id(category_id)
         if not category:
@@ -87,6 +99,7 @@ class CategoryController:
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
         self._save()
         return True
+
 
 
 
@@ -104,37 +117,29 @@ class CategoryController:
         parent_cat = self.get_by_id(parent_short_id)
         if not parent_cat:
             return []
+        return get_all_children_ids(self.categories, parent_cat.category_id)
 
-        result = [parent_cat.category_id]
-        for cat in self.categories:
-            if cat.parent_id == parent_cat.category_id:
-                result.extend(self.get_all_hierarchical_ids(cat.category_id[:8]))
 
-        return list(set(result))
+
 
     def search(self, keyword: str) -> List[dict]:
-        cleaned = (keyword or "").strip().lower()
-        if not cleaned:
-            return []
-
+        filtered = filter_categories(self.categories, keyword)
         results = []
-        for c in self.categories:
-            full_id = str(c.category_id).lower()
-            if cleaned in c.name.lower() or full_id.startswith(cleaned):
-                parent_obj = self.get_by_id(c.parent_id) if c.parent_id else None
-                results.append({"id": c.category_id,  "name": c.name,
-                                "description": c.description, "parent": parent_obj.name if parent_obj else None})
+        for c in filtered:
+            parent_obj = self.get_by_id(c.parent_id) if c.parent_id else None
+            results.append({"id": c.category_id, "name": c.name, "description": c.description,
+                            "parent": parent_obj.name if parent_obj else None})
         return results
+
 
 
 
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
-        raw = get_category_stats(self.categories, products)
+        categories_with_counts = get_category_stats(self.categories, products)
 
-        return {"total_categories": raw.get("total_categories", 0),
-                "categories": [{"id": c["id"][:8], "name": c["name"], "product_count": c["product_count"]}
-                               for c in raw.get("categories", [])]}
+        return {"total_categories": len(self.categories), "categories": categories_with_counts}
+
 
 
 
@@ -150,6 +155,7 @@ class CategoryController:
             return result
 
         return build_recursive_list()
+
 
 
 

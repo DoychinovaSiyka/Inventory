@@ -4,6 +4,7 @@ from models.category import Category
 
 
 def filter_categories(categories: List[Category], keyword: str) -> List[Category]:
+    """Филтрира категории по име, описание или кратко/пълно ID."""
     if not keyword:
         return categories
 
@@ -13,31 +14,42 @@ def filter_categories(categories: List[Category], keyword: str) -> List[Category
     for c in categories:
         name_txt = (c.name or "").lower()
         desc_txt = (c.description or "").lower()
+        full_id = str(c.category_id).lower()
 
-        if keyword in name_txt or keyword in desc_txt:
+        if keyword in name_txt or keyword in desc_txt or full_id.startswith(keyword):
             results.append(c)
 
     return results
 
 
-def get_all_children_objects(categories: List[Category], parent_id: str) -> List[Category]:
-    """Рекурсивно събира ВСИЧКИ обекти, които са наследници на parent_id."""
+
+
+def get_all_children_objects(categories: List[Category], parent_id: str, visited=None) -> List[Category]:
+    """Безопасно рекурсивно събиране на всички наследници (предотвратява цикли)."""
     results = []
     if not parent_id:
         return results
 
+    if visited is None:
+        visited = set()
+
     parent_id_str = str(parent_id).strip()
+    if parent_id_str in visited:
+        return results
+    visited.add(parent_id_str)
 
     for c in categories:
         if c.parent_id and str(c.parent_id).strip() == parent_id_str:
             results.append(c)
-            # Продължаваме надолу по дървото
-            results.extend(get_all_children_objects(categories, c.category_id))
+            results.extend(get_all_children_objects(categories, c.category_id, visited))
 
     return results
 
 
+
+
 def get_all_children_ids(categories: List[Category], parent_id: str) -> List[str]:
-    """Връща списък от ID-то на родителя и ВСИЧКИ негови обекти наследници - за филтриране."""
+    """Връща уникален списък от ID-то на родителя и всички негови подкатегории."""
     children = get_all_children_objects(categories, parent_id)
-    return [str(parent_id)] + [str(c.category_id) for c in children]
+    raw_list = [str(parent_id)] + [str(c.category_id) for c in children]
+    return list(dict.fromkeys(raw_list))

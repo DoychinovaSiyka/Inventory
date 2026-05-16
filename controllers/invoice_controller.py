@@ -1,7 +1,6 @@
 from typing import List, Optional
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
-from filters import invoice_filters
 
 
 class InvoiceController:
@@ -12,46 +11,58 @@ class InvoiceController:
         self.invoices: List[Invoice] = []
         self._reload()
 
-
-
     def _reload(self) -> None:
+        """Зарежда фактурите от хранилището."""
         raw = self.repo.load() or []
         self.invoices = [Invoice.from_dict(inv) for inv in raw if isinstance(inv, dict)]
 
     def _save_changes(self) -> None:
+        """Записва промените в хранилището."""
         self.repo.save([inv.to_dict() for inv in self.invoices])
 
-
-
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
+        """Създава фактура въз основа на складово движение (само за OUT)."""
+
+        # 1. Валидация: Проверява дали движението е от тип OUT (Продажба)
+        InvoiceValidator.validate_movement_for_invoice(movement)
+
+        # 2. Проверка за дублиране: Ако вече има фактура за това движение, връщаме я
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
 
+        # 3. Изчисляване на сумите
         qty = float(movement.quantity)
         u_price = float(movement.price)
         total = round(qty * u_price, 2)
         cust_name = str(customer).strip() if customer else "Общ клиент"
 
-        invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
-                          unit_price=u_price, total_price=total, customer=cust_name,
-                          movement_id=movement.movement_id, date=movement.date,
-                          invoice_id=None, is_active=True)
+        # 4. Инициализация на обекта
+        invoice = Invoice(
+            product=movement.product_name,
+            quantity=qty,
+            unit=movement.unit,
+            unit_price=u_price,
+            total_price=total,
+            customer=cust_name,
+            movement_id=movement.movement_id,
+            date=movement.date,
+            invoice_id=None,
+            is_active=True
+        )
 
         self.invoices.append(invoice)
         self._save_changes()
         return invoice
 
-
-
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
+        """Връща всички фактури (по подразбиране само активните)."""
         if include_cancelled:
             return self.invoices
         return [inv for inv in self.invoices if inv.is_active]
 
-
-
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
+        """Търси фактура по пълно или частично ID."""
         tid = str(invoice_id or "").strip().lower()
         if not tid:
             return None
@@ -59,36 +70,35 @@ class InvoiceController:
         for inv in self.invoices:
             if inv.invoice_id[:8].lower() == tid:
                 return inv
-
         return None
 
-
-
-    def search(self, query: str) -> List[dict]:
+    def search(self, query: str) -> List[Invoice]:
+        """
+        Търси фактури по частично ID.
+        Връща списък от ОБЕКТИ (List[Invoice]) за пълна съвместимост с View-то.
+        """
         q = str(query or "").strip().lower()
         if not q:
             return []
 
         results = []
         for inv in self.invoices:
+            # Сравняваме първите 8 символа на ID-то с търсената дума
             if inv.invoice_id[:8].lower() == q:
-                results.append({"invoice_id": inv.invoice_id[:8], "date": str(inv.date)[:10],
-                                "customer": inv.customer, "product": inv.product, "total_price": inv.total_price,
-                                "status": "АКТИВНА" if inv.is_active else "АНУЛИРАНА"})
+                results.append(inv)
 
         return results
 
-
-
-
     def remove(self, invoice_id: str, user_id: str) -> bool:
+        """Анулира фактура по подадено кратко ID."""
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False
 
+        # Ако фактурата вече е анулирана, не правим нищо
         if not inv.is_active:
             return False
 
-        inv.cancel()
+        inv.cancel()  # Променя статуса на is_active = False
         self._save_changes()
         return True

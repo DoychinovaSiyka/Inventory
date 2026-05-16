@@ -192,84 +192,71 @@ class MovementView:
 
 
 
-
     def process_transfer(self, user):
-        print("\nВътрешно преместване")
-
+        print("\nВЪТРЕШНО ПРЕМЕСТВАНЕ")
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
-
         product_id = str(product.product_id)
 
-        # Складове с наличност
-        valid_sources = []
-        for loc in self.location_controller.get_all():
-            qty = self.inventory_controller.get_stock(product_id, str(loc.location_id))
-            if qty > 0:
-                valid_sources.append((loc, qty))
 
-        if not valid_sources:
-            print(f"\n'{product.name}' не е наличен в нито един склад.")
-            return
+        from_loc = None
+        while True:
+            valid_sources = [loc for loc in self.location_controller.get_all()
+                             if self.inventory_controller.get_stock(product_id, str(loc.location_id)) > 0]
 
-        print("\nСкладове с наличност:")
-        for i, (loc, qty) in enumerate(valid_sources, 1):
-            print(f"{i}. {loc.name} – {qty:.2f} {product.unit}")
+            if not valid_sources:
+                print(f"\nГрешка: Продуктът '{product.name}' не е наличен в нито един склад.")
+                return
 
-        choice = input("\nИзберете склад ИЗТОЧНИК: ").strip()
-        if not choice.isdigit():
-            print("Невалиден избор.")
-            return
+            from_loc = self._select_item(valid_sources, "склад ИЗТОЧНИК (с наличност)")
+            if from_loc:
+                break
+            print("Изборът на източник е задължителен за трансфер.")
+            if input("Натиснете '0' за отказ или Enter за нов опит: ").strip() == "0": return
 
-        idx = int(choice) - 1
-        if idx < 0 or idx >= len(valid_sources):
-            print("Невалиден избор.")
-            return
-
-        from_loc, available = valid_sources[idx]
         from_loc_id = str(from_loc.location_id)
+        available = self.inventory_controller.get_stock(product_id, from_loc_id)
+        print(f"--- Налично в {from_loc.name}: {available:.2f} {product.unit} ---")
 
-        # Избор на склад получател
-        all_locs = [loc for loc in self.location_controller.get_all()
-                    if str(loc.location_id) != from_loc_id]
 
-        print("\nИзбор на склад ПОЛУЧАТЕЛ:")
-        for i, loc in enumerate(all_locs, 1):
-            print(f"{i}. {loc.name}")
+        to_loc = None
+        while True:
+            other_locations = [loc for loc in self.location_controller.get_all()
+                               if str(loc.location_id) != from_loc_id]
 
-        choice = input("\nНомер или ID: ").strip()
-        if not choice:
-            return
-
-        if choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(all_locs):
-                to_loc = all_locs[idx]
-            else:
-                print("Невалиден избор.")
-                return
-        else:
-            matches = [loc for loc in all_locs if str(loc.location_id).startswith(choice)]
-            if len(matches) == 1:
-                to_loc = matches[0]
-            else:
-                print("Невалиден избор.")
+            if not other_locations:
+                print("Грешка: Няма друг заведен склад, към който да преместите стоката.")
                 return
 
-        qty = self._float(f"Количество (макс {available}): ")
-        if qty > available:
-            print(f"Няма толкова наличност ({available}).")
-            return
+            to_loc = self._select_item(other_locations, "склад ПОЛУЧАТЕЛ")
+            if to_loc:
+                break
+            print(f"Не можете да преместите стока обратно в същия склад ({from_loc.name}).")
+            if input("Натиснете '0' за отказ или Enter за нов опит: ").strip() == "0": return
+
+
+        qty = 0
+        while True:
+            qty = self._float(f"Количество за местене (макс {available} {product.unit}): ")
+
+            if 0 < qty <= available:
+                break
+
+            if qty <= 0:
+                print("Грешка: Количеството трябва да е по-голямо от нула.")
+            else:
+                print(f"Грешка: Недостатъчна наличност. Максимумът е {available:.2f}.")
+
+            if input("Желаете ли нов опит? (Enter за да, '0' за отказ): ").strip() == "0": return
+
 
         try:
-            self.movement_controller.move_stock(product_id, qty, from_loc_id,
-                                                str(to_loc.location_id), str(user.user_id))
-            print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} към {to_loc.name}.")
+            self.movement_controller.move_stock(product_id=product_id, quantity=qty, from_loc=from_loc_id,
+                                                to_loc=str(to_loc.location_id), user_id=str(user.user_id))
+            print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} в {to_loc.name}.")
         except Exception as e:
-            print(f"Проблем при преместването: {e}")
-
-
+            print(f"\nКритична грешка при запис: {e}")
 
 
     def advanced_search(self, user):

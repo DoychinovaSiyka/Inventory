@@ -8,8 +8,6 @@ class AnonymousMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
         self.product_view = ProductMenuView(controllers["product"], controllers["category"])
-
-
         self.category_view = CategoryView(controllers["category"], controllers["product"])
         self.system_info_view = SystemInfoView()
 

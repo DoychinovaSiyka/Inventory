@@ -29,8 +29,6 @@ class GraphView:
 
     def _get_warehouses_with_product(self, product_name):
         result = []
-
-        # намираме продукта по име
         product = None
         for p in self.product_controller.get_all():
             if p.name.lower() == product_name.lower():

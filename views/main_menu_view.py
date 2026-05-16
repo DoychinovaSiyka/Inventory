@@ -13,6 +13,7 @@ class MainMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
 
+
     def _build_menu(self):
         return Menu("Главно меню", [
             MenuItem("1", "Продукти", self.open_products),

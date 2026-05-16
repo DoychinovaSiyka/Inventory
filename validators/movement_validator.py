@@ -39,11 +39,7 @@ class MovementValidator:
         except Exception:
             raise ValueError("Невалидно количество. Въведете число.")
 
-    @staticmethod
-    def validate_in_rules(product, quantity):
-        if quantity <= 0:
-            raise ValueError("Количеството трябва да е положително.")
-        return True
+
 
     @staticmethod
     def validate_out_rules(product, quantity, customer, inventory_controller, location_id):

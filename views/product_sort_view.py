@@ -25,13 +25,16 @@ class ProductSortView:
 
 
 
+
     def sort_by_name(self, _):
         products = self.product_controller.get_custom_sort(sort_type="name", algorithm="selection", reverse=False)
         self.parent_view._print_products(products, "Име (A–Z)")
 
+
     def sort_price_desc(self, _):
         products = self.product_controller.get_custom_sort(sort_type="price", algorithm="selection", reverse=True)
         self.parent_view._print_products(products, "Цена (висока -> ниска)")
+
 
 
     def sort_price_asc(self, _):

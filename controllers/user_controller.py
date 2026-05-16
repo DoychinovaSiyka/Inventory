@@ -174,33 +174,47 @@ class UserController:
         self.users.append(operator)
         self._save_changes()
 
-
-
-
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
+        """
+        Универсален метод за валидация на отделни полета.
+        Използва се от View-то за проверка в реално време (while True цикли).
+        """
         try:
             if field_type == "username":
+                # Проверка за уникалност
+                UserValidator.validate_unique_username(value, self)
+                # Проверка за формат (използваме базовите изисквания)
                 if not value or len(value.strip()) < 3:
                     raise ValueError("Потребителското име трябва да е поне 3 символа.")
                 if not value.isalnum():
                     raise ValueError("Потребителското име може да съдържа само букви и цифри.")
-                UserValidator.validate_unique_username(value, self)
 
             elif field_type == "email":
-                email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-                if not re.match(email_regex, value):
-                    raise ValueError(f"Невалиден формат на имейл: {value}")
+                # Вместо да пишем Regex тук, викаме UserValidator
+                # Подаваме временни валидни данни за останалите полета
+                UserValidator.validate_user_data(
+                    username="tmp_valid",
+                    password="Valid123Password",
+                    email=value,
+                    role="Operator",
+                    status="Active"
+                )
 
             elif field_type == "password":
-                if len(value) < 6:
-                    raise ValueError("Паролата трябва да бъде поне 6 символа.")
-                if value.isdigit() or value.isalpha():
-                    raise ValueError("Паролата трябва да съдържа комбинация от букви и цифри.")
+                # Проверка на сложност и дължина през централния валидатор
+                UserValidator.validate_user_data(
+                    username="tmp_valid",
+                    password=value,
+                    email="tmp@email.com",
+                    role="Operator",
+                    status="Active"
+                )
 
             elif field_type == "role":
+                # Директна проверка на ролята
                 UserValidator.validate_role(value)
 
-            return None
+            return None  # Няма грешки
 
         except ValueError as e:
-            return str(e)
+            return str(e)  # Връщаме текста на грешката към View-то

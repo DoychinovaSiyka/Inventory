@@ -1,6 +1,7 @@
 from typing import List
 
 
+
 def filter_combined(products: List, **kwargs):
     """Филтър за продукти. Поддържа: keyword (име/описание/категория), category_ids (списък)."""
     results = products

@@ -33,24 +33,6 @@ class MovementController:
 
 
 
-    def get_all_clean(self) -> List[dict]:
-        rows = []
-        for m in self.movements:
-            loc = self.location_controller.get_by_id(m.location_id)
-            from_loc = self.location_controller.get_by_id(m.from_location_id)
-            to_loc = self.location_controller.get_by_id(m.to_location_id)
-
-            rows.append({"id": m.movement_id[:8], "date": str(m.date)[:10], "type": m.movement_type.name,
-                         "product": m.product_name, "quantity": m.quantity, "unit": m.unit,
-                         "location": loc.name if loc else None, "from": from_loc.name if from_loc else None,
-                         "to": to_loc.name if to_loc else None, "customer": m.customer,
-                         "supplier": m.supplier_id[:8] if m.supplier_id else None})
-
-        return rows
-
-
-
-
 
     def _set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
@@ -126,50 +108,50 @@ class MovementController:
 
         return movement
 
-
-
-
-
     def search_movements(self, product_id=None, movement_type=None,
-                         date=None, location_id=None, customer=None, supplier_id=None) -> List[dict]:
-
+                         date=None, location_id=None, customer=None, supplier_id=None) -> List[Movement]:
+        """
+        Филтрира движенията по подадени критерии и връща списък от обекти Movement.
+        Ако даден параметър е None, той не се взема предвид при филтрирането.
+        """
         results = []
 
         for m in self.movements:
             ok = True
 
+            # Филтър по Продукт (сравняваме пълни ID)
             if product_id is not None and str(m.product_id) != str(product_id):
                 ok = False
 
+            # Филтър по Тип (IN, OUT, MOVE)
             if movement_type is not None and m.movement_type.name != movement_type:
                 ok = False
 
+            # Филтър по Дата (сравняваме само YYYY-MM-DD частта)
             if date is not None and str(m.date)[:10] != str(date):
                 ok = False
 
+            # Филтър по Локация (проверява всички възможни полета за склад)
             if location_id is not None:
-                if m.location_id != location_id and m.from_location_id != location_id and m.to_location_id != location_id:
+                is_in_loc = (str(m.location_id) == str(location_id) or
+                             str(m.from_location_id) == str(location_id) or
+                             str(m.to_location_id) == str(location_id))
+                if not is_in_loc:
                     ok = False
 
+            # Филтър по Клиент (точно съвпадение)
             if customer is not None and m.customer != customer:
                 ok = False
 
-            if supplier_id is not None and m.supplier_id != supplier_id:
+            # Филтър по Доставчик (сравняваме пълни ID)
+            if supplier_id is not None and str(m.supplier_id) != str(supplier_id):
                 ok = False
 
+            # Ако е минало всички филтри, добавяме обекта в резултатите
             if ok:
-                loc = self.location_controller.get_by_id(m.location_id)
-                from_loc = self.location_controller.get_by_id(m.from_location_id)
-                to_loc = self.location_controller.get_by_id(m.to_location_id)
-
-                results.append({"id": m.movement_id[:8], "date": str(m.date)[:10], "type": m.movement_type.name,
-                                "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "location": loc.name if loc else None,
-                                "from": from_loc.name if from_loc else None, "to": to_loc.name if to_loc else None,
-                                "customer": m.customer, "supplier": m.supplier_id[:8] if m.supplier_id else None})
+                results.append(m)
 
         return results
-
-
 
 
 
@@ -178,6 +160,7 @@ class MovementController:
                          customer: Optional[str] = None, supplier_id: Optional[str] = None,
                          from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
 
+        # 1. Основна проверка на обектите
         product = self.product_controller.get_by_id(product_id)
         if not product:
             raise ValueError("Продуктът не съществува.")
@@ -186,40 +169,38 @@ class MovementController:
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
+        # 2. Нормализация на типа и количеството
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-
-
+        # 3. Логика според типа движение (Групирана за яснота)
         if m_type_str == "MOVE":
+            # Валидация за трансфер
             resolved_loc = None
             resolved_from = self._location_id(from_location_id)
             resolved_to = self._location_id(to_location_id)
+
+            MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
+            prc = 0.0  # При вътрешно преместване няма продажна цена
+
         else:
+            # Валидация за Вход/Изход
             resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
 
-        if m_type_str == "IN":
-            MovementValidator.validate_in_rules(product, qty)
+            if m_type_str == "OUT":
+                MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
 
-        elif m_type_str == "OUT":
-            MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
+            # За IN не ни трябва допълнителна валидация (освен parse_quantity, която вече мина)
 
+            # Определяне на цена
+            if price is not None and str(price).strip() != "":
+                prc = float(price)
+            else:
+                prc = float(product.price)
 
-        elif m_type_str == "MOVE":
-            MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
-
-
-        if m_type_str == "MOVE":
-            prc = 0.0
-
-
-        elif price is not None and str(price).strip() != "":
-            prc = float(price)
-        else:
-            prc = float(product.price)
-
+        # 4. Създаване на записа
         movement_id = str(uuid.uuid4())
 
         movement = Movement(movement_id=movement_id, product_id=product.product_id, product_name=product.name,
@@ -227,7 +208,7 @@ class MovementController:
                             quantity=qty, unit=product.unit, price=prc, supplier_id=supplier_id,
                             customer=customer or "Общ клиент", from_location_id=resolved_from, to_location_id=resolved_to)
 
-
+        # 5. Запис в паметта и файла
         self.movements.append(movement)
         self._save_changes()
 
