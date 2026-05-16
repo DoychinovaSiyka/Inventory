@@ -61,7 +61,7 @@ def get_all_children_ids(categories, parent_id):
                 if str(sub.parent_id) == str(cat.category_id):
                     result.append(str(sub.category_id))
 
-    # премахваме дублиращи се ID-та
+
     unique = []
     for cid in result:
         if cid not in unique:
