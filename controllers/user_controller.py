@@ -60,6 +60,7 @@ class UserController:
 
 
 
+
     def get_by_username(self, username: str) -> Optional[User]:
         if not username:
             return None
@@ -99,6 +100,8 @@ class UserController:
             self.logged_user = user
             return user
         return None
+
+
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")

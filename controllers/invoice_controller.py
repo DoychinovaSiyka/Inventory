@@ -74,6 +74,7 @@ class InvoiceController:
 
 
 
+
     def search(self, query: str) -> List[Invoice]:
         q = str(query or "").strip().lower()
         if not q:

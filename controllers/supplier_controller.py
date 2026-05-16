@@ -37,12 +37,18 @@ class SupplierController:
         self._save_changes()
         return True
 
+
+
     def get_by_id(self, identifier: str) -> Optional[Supplier]:
         sid = str(identifier).strip().lower()
         for s in self.suppliers:
             if s.supplier_id.lower() == sid or s.supplier_id[:8].lower() == sid:
                 return s
         return None
+
+    def get_all(self) -> List[Supplier]:
+        return self.suppliers
+
 
     def search(self, query: str) -> List[Supplier]:
         q = str(query).strip().lower()

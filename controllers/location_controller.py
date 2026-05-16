@@ -78,6 +78,8 @@ class LocationController:
 
         return results
 
+
+
     def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
 
         location = self.get_by_id(location_id)
@@ -153,8 +155,11 @@ class LocationController:
                 if not value.strip():
                     raise ValueError("Кодът не може да е празен.")
             return None
+
         except ValueError as e:
             return str(e)
+
+
 
 
     def _save_changes(self) -> None:

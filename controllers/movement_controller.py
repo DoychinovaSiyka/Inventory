@@ -53,7 +53,6 @@ class MovementController:
 
 
 
-
     def get_all(self) -> List[Movement]:
         return self.movements
 

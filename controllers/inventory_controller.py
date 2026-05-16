@@ -210,25 +210,40 @@ class InventoryController:
 
 
 
-
-
     def update_inventory_from_movements(self, movements):
+        # Нулираме данните, за да ги изчислим наново
         self.data = {"products": {}}
 
-        for mv in movements:
-            mtype = mv.movement_type.name
-            if mtype == "MOVE":
-                if mv.from_location_id is None or mv.to_location_id is None:
-                    continue
-                self.move_stock(mv.product_id, mv.quantity, mv.from_location_id, mv.to_location_id)
-                continue
 
-            if mv.location_id is None:
-                continue
+        sorted_movements = sorted(movements, key=lambda x: x.date)
+        for mv in sorted_movements:
+            mtype = mv.movement_type.name
+            pid = str(mv.product_id)
+            qty = float(mv.quantity)
+
+
+            if pid not in self.data["products"]:
+                self.data["products"][pid] = {"locations": {}}
+
+            locations = self.data["products"][pid]["locations"]
 
             if mtype == "IN":
-                self.increase_stock(mv.product_id, mv.quantity, mv.location_id)
+                lid = str(mv.location_id)
+                current = locations.get(lid, 0.0)
+                locations[lid] = round(current + qty, 3)
+
             elif mtype == "OUT":
-                self.decrease_stock(mv.product_id, mv.quantity, mv.location_id)
+                lid = str(mv.location_id)
+                current = locations.get(lid, 0.0)
+                locations[lid] = round(current - qty, 3)
+
+            elif mtype == "MOVE":
+                from_lid = str(mv.from_location_id)
+                to_lid = str(mv.to_location_id)
+
+                # Вадим от стария склад
+                locations[from_lid] = round(locations.get(from_lid, 0.0) - qty, 3)
+                # Добавяме в новия
+                locations[to_lid] = round(locations.get(to_lid, 0.0) + qty, 3)
 
         self._save()

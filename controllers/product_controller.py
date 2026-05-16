@@ -25,6 +25,8 @@ class ProductController:
         """Записва текущото състояние в базата данни."""
         self.repo.save([p.to_dict() for p in self.products])
 
+
+
     def get_all(self) -> List[Product]:
         """Връща всички налични продукти."""
         return self.products

@@ -57,7 +57,7 @@ class ReportsView:
             warehouses = item.get("warehouses", {})
             if isinstance(warehouses, dict) and warehouses:
                 for wh, qty in warehouses.items():
-                    lines.append(f"   • {wh}: {qty} {unit}")
+                    lines.append(f"   {wh}: {qty} {unit}")
             else:
                 lines.append("   (Няма налични данни за локации)")
 
