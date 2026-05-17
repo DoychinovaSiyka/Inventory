@@ -16,8 +16,8 @@ class User:
         self.email = email
         self.username = username
         self.password = password
-        self.role = role       # Роля: Admin, Operator и т.н.
-        self.status = status   # Статус: Active, Inactive
+        self.role = role       # Admin, Operator и т.н.
+        self.status = status   # Active, Inactive
 
         now_val = User.now()
         self.created = created or now_val

@@ -1,293 +1,41 @@
 WAREHOUSE INVENTORY MANAGEMENT SYSTEM (WIMS)
-Документация на проекта
-Автор: Сийка Дойчинова, ФН 5049, ФМИ – Задочно обучение
+Автор: Сийка Дойчинова
 
+
+1. ОПИСАНИЕ
+WIMS е модулна система за управление на складове (ООП, Python 3.x).
+Следва MVC архитектура и съхранява данни в JSON формат.
+
+2. СТРУКТУРА НА ПРОЕКТА - Ключови директории
 ------------------------------------------------------------
-1. Кратко описание на проекта
+/models/      - Дефиниция на бизнес обектите (Product, User, etc.)
+/controllers/ - Бизнес логика и CRUD операции
+/views/       - CLI интерфейс и Utility (password_utils)
+/storage/     - Работа с JSON Repository
+/validators/  - Логическа проверка на входните данни
+/graph/       - Алгоритмичен модул (Dijkstra за локации)
+main.py       - Входна точка на приложението
 
-Warehouse Inventory Management System (WIMS) е модулна, обектно-ориентирана система за управление на складови наличности.
-Системата поддържа управление на продукти, категории, доставчици, потребители, движения (IN/OUT/MOVE), фактури и справки.
-Данните се съхраняват в JSON файлове, а интерфейсът е текстов (CLI).
 
-Основни цели:
-- автоматизация на складови процеси
-- минимизиране на грешки
-- ролеви достъп (Admin / Operator)
-- проследимост чрез Movement
-- генериране на справки
-- разширяема архитектура
 
-2. Архитектура на системата
+3. ИНСТРУКЦИИ ЗА СТАРТИРАНЕ
 ------------------------------------------------------------
-
-Проектът следва многослойна архитектура:
-
-1) Data Model (models/)
-   - Entity класове: Product, Category, Supplier, Movement, Location, Invoice, User, Report
-
-2) Business Logic (controllers/)
-   - CRUD операции и бизнес правила
-
-3) Storage Layer (storage/)
-   - JSON сериализация и десериализация
-
-4) User Interface (views/)
-   - текстови менюта за всички модули
-
-5) Utility Layer (views/)
-   - password_utils.py – маскиране на пароли и защита с декоратор
-   - format_utils.py – форматиране на таблици за CLI
-
-6) Algorithmic Module (graph/)
-   - Warehouse, WarehouseGraph, Dijkstra
+1) Стартирайте: python main.py
+2) Тестови потребители:
+   - Администратор: admin / admin123
+   - Оператор: dimitar_01 / dimitar01
 
 
-3. Структура на проекта
+
+4. ТЕХНИЧЕСКИ ОСОБЕНОСТИ
 ------------------------------------------------------------
-Inventory/
+- Маскиране на пароли: реализирано в password_utils.py (msvcrt/getpass).
+- Разпределена наличност: Проследяване на количества по конкретни локации (W1, W2...).
+- Логистика: MOVE операциите актуализират инвентара двустранно без финансова транзакция.
+- Сигурност: Декоратор @require_password защитава критичните менюта.
 
-
-controllers/
----------
-init.py
-category_controller.py
-invoice_controller.py
-inventory_controller.py
-location_controller.py
-movement_controller.py
-product_controller.py
-report_controller.py
-supplier_controller.py
-user_controller.py
-
-data/
----------
-categories.json
-invoices.json
-locations.json
-inventory.json
-movements.json
-products.json
-reports.json
-suppliers.json
-users.json
-
-documentation/
----------
-Siyka_project_summary_.docx
-Warehouse Inventory Management System (WIMS)_Siyka.docx
-wims_documentation.txt
-
-graph/
----------
-init.py
-dijkstra.py
-warehouse.py
-warehouse_graph.py
-
-models/
----------
-init.py
-category.py
-invoice.py
-location.py
-movement.py
-product.py
-report.py
-stock_log.py
-supplier.py
-user.py
-
-
-storage/
----------
-init.py
-json_repository.py
-repository.py
-
-validators/
-category_validator.py
-invoice_validator.py
-location_validator.py
-movement_validator.py
-product_validator.py
-supplier_validator.py
-user_validator.py
-
-
-filters/
----------
-category_filters.py
-invoice_filters.py
-movement_filters.py
-product_filters.py
-report_filters.py
-
-
-view_models/
----------
-product_view_model.py
-
-analytics/
----------
-category_analytics.py
-product_analytics.py
-
-
-views/
----------
-admin_menu_view.py
-anonymous_menu_view.py
-category_view.py
-invoice_view.py
-location_view.py
-main_menu_view.py
-menu.py
-movement_view.py
-operator_menu_view.py
-password_utils.py
-product_menu_view.py
-product_sort_view.py
-reports_menu_view.py
-supplier_view.py
-system_info_view.py
-user_view.py
-
-последният файл (извън views)
-main.py
-
-
-
-4. Инструкции за стартиране
+5. ИЗПОЛЗВАНИ БИБЛИОТЕКИ (Standard Library Only)
 ------------------------------------------------------------
-
-1) Инсталирайте Python 3.x
-2) Влезте в директорията:
-   cd Inventory
-3) Стартирайте системата:
-   python main.py
-4) Вход в системата:
-
-   Потребител: admin
-   Парола: admin123
-
-   Потребител: dimitar_01
-   Парола: dimitar01
-
-5) Навигирайте чрез текстовото меню.
-
-
-5. Ролеви модел
-------------------------------------------------------------
-
-Administrator:
-- пълен CRUD достъп
-- управление на потребители
-- управление на категории, доставчици, продукти
-- преглед на всички движения и фактури
-
-Operator:
-- регистрира IN/OUT движения
-- редактира количества и цени
-- преглежда продукти, категории, доставчици
-- генерира справки
-- парола за достъп parola123
-
-
-6. Наличност и вътрешни премествания (MOVE)
-------------------------------------------------------------
-
-Системата използва модел на разпределена наличност. Това означава:
-
-    - Всеки продукт има конкретно количество във всяка отделна локация.
-    - Наличността е детайлно проследима по складове и зони.
-    - Общото количество е сбор от наличностите във всички негови локации.
-    - При MOVE се променя наличността в локациите, но не и общият баланс.
-
-MOVE е вътрешно преместване на стока между две локации.
-    - То не е финансова операция, защото:
-    - няма покупка и няма продажба
-    - няма външен доставчик или клиент
-    - не се генерира приход и няма фактура
-    - няма промяна в цената на придобиване
-
-Затова системата показва:
-„Тип: Логистичен трансфер (вътрешно преместване)“
-
-    При MOVE се извършва двустранна актуализация:
-    Намаляване на количеството в изходната локация.
-
-Увеличаване на количеството в целевата локация.
-7. Маскиране на пароли
-------------------------------------------------------------
-
-Паролите се въвеждат със символи „*“. Това е реализирано чрез файла password_utils.py,
-който се намира в директория views/.
-
-Използвани библиотеки:
-- msvcrt – прихваща клавиши без визуализация (работи в CMD/PowerShell)
-- getpass – резервен механизъм, ако msvcrt не е налична
-- functools.wraps – използва се в декоратора require_password
-- uuid - генерира уникални идентификатори
-- textwrap - форматира текст (пренасяне на редове, wrap), използва се само за визуализация
-
-Файлът password_utils.py съдържа:
-- функция за въвеждане на парола със звездички
-- декоратор за защита на менюта с парола
-
-
-8. Използвани библиотеки в проекта
-------------------------------------------------------------
-
-Проектът използва само стандартни Python библиотеки:
-
-Системни и файлови:
-- sys
-- os
-- pathlib
-- json
-
-Дати и идентификатори:
-- datetime
-- uuid
-
-Типизация:
-- typing (Optional, List)
-
-Сигурност и декоратори:
-- functools
-- msvcrt
-- getpass
-
-
-9. Автоматично създадени потребители
-------------------------------------------------------------
-
-Ако файлът users.json е празен, системата автоматично създава два
-потребителя:
-- един потребител с роля Admin
-- един потребител с роля Operator
-Потребител (Admin)
-Потребителско име: dimitar_01
-Парола: dimitar01
-Това гарантира, че системата винаги може да бъде достъпена,
- дори при първо стартиране или при изтриване на файла с потребители.
-
-
-10. Бъдещо развитие
-------------------------------------------------------------
-- баркод скенери
-- многоскладови операции
-- автоматични известия
-- ERP интеграция
-- разширяване на графовия модул
-- оптимизация на маршрути чрез Dijkstra
-
-
-11. Литература
-------------------------------------------------------------
-1. Python 3 Documentation – Официална документация на езика Python.
-2. JSON Specification – Формат за структурирани данни.
-3. Материали от курса по ООП и структури от данни – ФМИ.
-4. Алгоритъм на Дейкстра – учебни ресурси и лекции по графи.
-5. PyCharm Documentation – Официална документация на JetBrains.
+- json, os, sys, pathlib (Данни и Файлове)
+- datetime, uuid (Време и ID)
+- msvcrt, getpass, functools (Сигурност)
