@@ -1,12 +1,11 @@
 from views.menu import Menu, MenuItem
 
 
+
 class ProductSortView:
     def __init__(self, product_controller, parent_view):
         self.product_controller = product_controller
         self.parent_view = parent_view
-
-
 
     def show_menu(self, _=None):
         menu = self._build_menu()
@@ -16,7 +15,6 @@ class ProductSortView:
                 break
             if menu.execute(choice, None) == "break":
                 break
-
 
     def _build_menu(self):
         return Menu("Сортиране на продукти", [
@@ -30,20 +28,22 @@ class ProductSortView:
 
 
     def sort_by_name_asc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="name", algorithm="selection", reverse=False)
+        products = self.product_controller.get_custom_sort(sort_type="name", algorithm="merge", reverse=False)
         self.parent_view._print_products(products, "Име (A–Z)")
 
 
+
     def sort_by_name_desc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="name", algorithm="selection", reverse=True)
+        products = self.product_controller.get_custom_sort(sort_type="name", algorithm="merge", reverse=True)
         self.parent_view._print_products(products, "Име (Z–A)")
 
 
+
     def sort_price_desc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="selection", reverse=True)
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="quick", reverse=True)
         self.parent_view._print_products(products, "Цена (висока - ниска)")
 
 
     def sort_price_asc(self, _):
-        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="bubble", reverse=False)
+        products = self.product_controller.get_custom_sort(sort_type="price", algorithm="quick", reverse=False)
         self.parent_view._print_products(products, "Цена (ниска - висока)")

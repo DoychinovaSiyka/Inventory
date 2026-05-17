@@ -156,9 +156,7 @@ class ProductController:
 
 
 
-
-    def get_custom_sort(self, sort_type="price", algorithm="selection", reverse=True) -> List[Product]:
-
+    def get_custom_sort(self, sort_type="price", algorithm="quick", reverse=True) -> List[Product]:
         if sort_type == "name":
             key_fn = lambda p: p.name.lower()
         elif sort_type == "price":
@@ -168,12 +166,12 @@ class ProductController:
 
         products_copy = self.products[:]
 
+
         if sort_type == "name":
-            return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
+            return product_sorters.merge_sort(products_copy, key=key_fn, reverse=reverse)
 
 
-        if sort_type == "price":
-            if algorithm == "bubble":
-                return product_sorters.bubble_sort(products_copy, key=key_fn, reverse=reverse)
-            else:
-                return product_sorters.selection_sort(products_copy, key=key_fn, reverse=reverse)
+        if algorithm == "quick":
+            return product_sorters.quick_sort(products_copy, key=key_fn, reverse=reverse)
+        else:
+            return product_sorters.merge_sort(products_copy, key=key_fn, reverse=reverse)
