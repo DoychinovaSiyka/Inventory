@@ -4,6 +4,8 @@ from models.report import Report
 from filters import product_sorters
 
 
+
+
 class ReportController:
     # Контролерът взима данни от другите контролери и ги комбинира, за да върне готов отчет за показване.
     def __init__(self, product_controller, movement_controller, invoice_controller,
