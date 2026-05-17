@@ -166,7 +166,7 @@ class InventoryController:
             return 0.0
 
 
-    # Структурата, която ще се запише в JSON файла
+
     def _build_inventory(self):
         rows = []
 

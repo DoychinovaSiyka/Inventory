@@ -154,6 +154,7 @@ class CategoryController:
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
+
         try:
             if field_type == "name":
                 CategoryValidator.validate_name(value)
@@ -163,5 +164,6 @@ class CategoryController:
                 if value and not self.get_by_id(value):
                     raise ValueError("Невалидна родителска категория.")
             return None
+
         except ValueError as e:
             return str(e)

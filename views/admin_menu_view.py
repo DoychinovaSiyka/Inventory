@@ -10,6 +10,9 @@ from views.supplier_view import SupplierView
 from views.location_view import LocationView
 
 
+
+
+
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
@@ -17,8 +20,6 @@ class AdminMenuView:
         self.movement_controller = controllers["movement"]
 
         self.product_view = ProductMenuView(controllers["product"], controllers["category"])
-
-
         self.category_view = CategoryView(controllers["category"], controllers["product"])
 
         self.movement_view = MovementView(controllers["product"], controllers["movement"],
