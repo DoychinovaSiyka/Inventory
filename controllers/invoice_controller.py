@@ -1,28 +1,26 @@
 from typing import List, Optional
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
+from controllers.abstract_controller import AbstractController
 
 
-
-
-class InvoiceController:
+class InvoiceController(AbstractController):
     """Управлява жизнения цикъл на фактурите."""
 
     def __init__(self, repo):
-        self.repo = repo
-        self.invoices: List[Invoice] = []
-        self._reload()
+        super().__init__(repo)
+        self.invoices = self.load() or []
 
+    #  Мапване dict <-> Invoice
+    def from_dict(self, data):
+        return Invoice.from_dict(data)
 
-    def _reload(self) -> None:
-        """Зарежда фактурите от хранилището."""
-        raw = self.repo.load() or []
-        self.invoices = [Invoice.from_dict(inv) for inv in raw if isinstance(inv, dict)]
+    def to_dict(self, obj):
+        return obj.to_dict()
 
+    def save_invoices(self):
+        self.save(self.invoices)
 
-    def _save_changes(self) -> None:
-        """Записва промените в хранилището."""
-        self.repo.save([inv.to_dict() for inv in self.invoices])
 
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
@@ -47,7 +45,7 @@ class InvoiceController:
                           date=movement.date, invoice_id=None, is_active=True)
 
         self.invoices.append(invoice)
-        self._save_changes()
+        self.save_invoices()
         return invoice
 
 
@@ -100,5 +98,5 @@ class InvoiceController:
             return False
 
         inv.cancel()  # Променя статуса
-        self._save_changes()
+        self.save_invoices()
         return True

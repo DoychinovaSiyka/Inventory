@@ -38,7 +38,7 @@ class ReportController:
     # Пълен инвентарен отчет
     def report_inventory_full(self):
         # Взимаме суровите данни от инвентара
-        raw_inventory = self.inventory_controller._build_inventory()
+        raw_inventory = self.inventory_controller.build_inventory()
         report_data = []
 
         for item in raw_inventory["products"]:

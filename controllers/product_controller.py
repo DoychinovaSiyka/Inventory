@@ -2,29 +2,27 @@ from typing import List, Optional
 from models.product import Product
 from validators.product_validator import ProductValidator
 from filters import product_filters, product_sorters
+from controllers.abstract_controller import AbstractController
 
 
-
-
-class ProductController:
+class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
+
     def __init__(self, repo, category_controller):
-        self.repo = repo
         self.category_controller = category_controller
         self.validator = ProductValidator()
-        self.products: List[Product] = []
-        self._reload()
+        super().__init__(repo)
+        self.products = self.load() or []
 
-    def _reload(self) -> None:
-        """Зарежда продуктите от хранилището."""
-        data = self.repo.load() or []
-        self.products = [Product.from_dict(p, self.category_controller) for p in data]
+    #  Мапване dict <-> Product
+    def from_dict(self, data):
+        return Product.from_dict(data, self.category_controller)
 
-    def _save_changes(self) -> None:
-        """Записва текущото състояние в базата данни."""
-        self.repo.save([p.to_dict() for p in self.products])
+    def to_dict(self, obj):
+        return obj.to_dict()
 
-
+    def save_products(self):
+        self.save(self.products)
 
     def get_all(self) -> List[Product]:
         """Връща всички налични продукти."""
@@ -94,7 +92,7 @@ class ProductController:
                           unit=unit, description=description, price=price)
 
         self.products.append(product)
-        self._save_changes()
+        self.save_products()
         return product
 
 
@@ -129,7 +127,7 @@ class ProductController:
             product.categories = new_cats
 
         product.update_modified()
-        self._save_changes()
+        self.save_products()
         return True
 
 
@@ -141,7 +139,7 @@ class ProductController:
             return False
 
         self.products = [p for p in self.products if p.product_id != product.product_id]
-        self._save_changes()
+        self.save_products()
         return True
 
 

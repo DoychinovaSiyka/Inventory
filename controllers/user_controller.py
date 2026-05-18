@@ -1,30 +1,34 @@
-import re
 from typing import Optional, List
 from models.user import User
 from validators.user_validator import UserValidator
+from controllers.abstract_controller import AbstractController
 
 
+class UserController(AbstractController):
+    """Управлява потребителите, автентикацията, ролите и статусите."""
 
-
-
-class UserController:
-    def __init__(self, repo, activity_log_controller=None):
-        self.repo = repo
-
-        raw_data = self.repo.load()
-        if not raw_data or not isinstance(raw_data, list):
-            raw_data = []
-
-        self.users: List[User] = [User.from_dict(u) for u in raw_data if isinstance(u, dict)]
+    def __init__(self, repo):
         self.logged_user: Optional[User] = None
+        super().__init__(repo)
 
+        # Зареждаме потребителите
+        self.users = self.load() or []
+
+        # Създаваме системните потребители, ако липсват
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
+    #  Мапване dict <-> User
+    def from_dict(self, data):
+        return User.from_dict(data)
 
+    def to_dict(self, obj):
+        return obj.to_dict()
 
+    def save_users(self):
+        self.save(self.users)
 
     def find_user_flexible(self, identifier: str) -> Optional[User]:
         if not identifier:
@@ -53,10 +57,6 @@ class UserController:
         if not user:
             return False
         return str(user.role).lower() == "admin"
-
-
-    def _save_changes(self):
-        self.repo.save([u.to_dict() for u in self.users])
 
 
 
@@ -112,7 +112,7 @@ class UserController:
                         role=role, status="Active")
 
         self.users.append(new_user)
-        self._save_changes()
+        self.save_users()
         return new_user
 
 
@@ -130,7 +130,7 @@ class UserController:
 
         user.role = new_role
         user.update_modified()
-        self._save_changes()
+        self.save_users()
 
 
 
@@ -145,7 +145,7 @@ class UserController:
 
         user.status = new_status
         user.update_modified()
-        self._save_changes()
+        self.save_users()
         return True
 
 
@@ -161,7 +161,7 @@ class UserController:
         UserValidator.validate_not_last_admin(user, self.users)
 
         self.users.remove(user)
-        self._save_changes()
+        self.save_users()
         return True
 
 
@@ -171,7 +171,7 @@ class UserController:
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                      username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
-        self._save_changes()
+        self.save_users()
 
 
 
@@ -180,7 +180,7 @@ class UserController:
                         email="operator@example.com", username="operator", password=self._hash_password("operator123"),
                         role="Operator", status="Active")
         self.users.append(operator)
-        self._save_changes()
+        self.save_users()
 
 
 

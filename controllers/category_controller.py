@@ -3,23 +3,24 @@ from models.category import Category
 from validators.category_validator import CategoryValidator
 from filters.category_filters import filter_categories, get_all_children_ids
 from filters.category_analytics import get_category_stats
+from controllers.abstract_controller import AbstractController
 
 
+class CategoryController(AbstractController):
+    """Управлява категориите и йерархичната им структура."""
 
-class CategoryController:
-    """Управлява категориите и йерархичната цялост."""
     def __init__(self, repo):
-        self.repo = repo
-        self.categories: List[Category] = self._load()
+        super().__init__(repo)
+        self.categories = self.load()
 
+    def from_dict(self, data):
+        return Category.from_dict(data)
 
-    def _load(self) -> List[Category]:
-        raw = self.repo.load() or []
-        return [Category.from_dict(c) for c in raw]
+    def to_dict(self, obj):
+        return obj.to_dict()
 
-
-    def _save(self) -> None:
-        self.repo.save([c.to_dict() for c in self.categories])
+    def save_categories(self):
+        self.save(self.categories)
 
 
     def get_all(self) -> List[Category]:
@@ -45,7 +46,7 @@ class CategoryController:
 
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
-        self._save()
+        self.save_categories()
         return category
 
 
@@ -80,7 +81,7 @@ class CategoryController:
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
-        self._save()
+        self.save_categories()
         return True
 
 
@@ -94,7 +95,7 @@ class CategoryController:
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
-        self._save()
+        self.save_categories()
         return True
 
 

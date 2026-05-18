@@ -1,15 +1,26 @@
 from typing import Optional, List
 from models.supplier import Supplier
 from validators.supplier_validator import SupplierValidator
+from controllers.abstract_controller import AbstractController
 
 
+class SupplierController(AbstractController):
+    """Управлява доставчиците в системата."""
 
-
-class SupplierController:
     def __init__(self, repo):
-        self.repo = repo
-        data = self.repo.load() or []
-        self.suppliers: List[Supplier] = [Supplier.from_dict(s) for s in data]
+        super().__init__(repo)
+        self.suppliers = self.load() or []
+
+
+    def from_dict(self, data):
+        return Supplier.from_dict(data)
+
+    def to_dict(self, obj):
+        return obj.to_dict()
+
+    def save_suppliers(self):
+        self.save(self.suppliers)
+
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_name(name)
@@ -19,7 +30,7 @@ class SupplierController:
 
         supplier = Supplier(name=name, contact=contact, address=address)
         self.suppliers.append(supplier)
-        self._save_changes()
+        self.save_suppliers()
         return supplier
 
     def update(self, supplier_id: str, name=None, contact=None, address=None) -> bool:
@@ -37,7 +48,7 @@ class SupplierController:
             supplier.address = SupplierValidator.validate_address(address)
 
         supplier.update_modified()
-        self._save_changes()
+        self.save_suppliers()
         return True
 
 
@@ -63,7 +74,7 @@ class SupplierController:
         supplier = self.get_by_id(supplier_id)
         if supplier:
             self.suppliers.remove(supplier)
-            self._save_changes()
+            self.save_suppliers()
             return True
         return False
 
@@ -81,5 +92,3 @@ class SupplierController:
             return str(e)
 
 
-    def _save_changes(self):
-        self.repo.save([s.to_dict() for s in self.suppliers])

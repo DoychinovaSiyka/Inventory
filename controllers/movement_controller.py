@@ -7,8 +7,7 @@ from validators.movement_validator import MovementValidator
 
 class MovementController:
 
-    def __init__(self, repo, product_controller, user_controller,
-                 location_controller, supplier_controller, invoice_controller):
+    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller, invoice_controller):
 
         self.repo = repo
         self.product_controller = product_controller
@@ -32,6 +31,9 @@ class MovementController:
 
 
 
+    def save_movements(self):
+        """Записва всички движения в JSON файла."""
+        self.repo.save([m.to_dict() for m in self.movements])
 
 
     def _set_inventory_controller(self, inventory_controller):
@@ -55,11 +57,6 @@ class MovementController:
 
     def get_all(self) -> List[Movement]:
         return self.movements
-
-
-
-    def _save_changes(self) -> None:
-        self.repo.save([m.to_dict() for m in self.movements])
 
 
 
@@ -204,6 +201,6 @@ class MovementController:
 
 
         self.movements.append(movement)
-        self._save_changes()
+        self.save_movements()
 
         return movement

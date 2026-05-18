@@ -1,23 +1,26 @@
 from typing import Optional, List
 from models.location import Location
 from validators.location_validator import LocationValidator
+from controllers.abstract_controller import AbstractController
 
 
-class LocationController:
+class LocationController(AbstractController):
     """Контролерът управлява локациите в системата."""
+
     def __init__(self, repo, inventory_controller=None):
-        self.repo = repo
         self.inventory_controller = inventory_controller
+        super().__init__(repo)
+        self.locations = self.load() or []
 
-        raw = self.repo.load()
-        if not raw or not isinstance(raw, list):
-            raw = []
 
-        self.locations: List[Location] = []
-        for l in raw:
-            obj = Location.from_dict(l)
-            if obj:
-                self.locations.append(obj)
+    def from_dict(self, data):
+        return Location.from_dict(data)
+
+    def to_dict(self, obj):
+        return obj.to_dict()
+
+    def save_locations(self):
+        self.save(self.locations)
 
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
         name = LocationValidator.validate_name(name)
@@ -29,7 +32,7 @@ class LocationController:
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
         self.locations.append(location)
-        self._save_changes()
+        self.save_locations()
         return location
 
 
@@ -104,7 +107,7 @@ class LocationController:
             location.code = LocationValidator.validate_code(code, self.locations, exclude_id=location.location_id)
 
         location.update_modified()
-        self._save_changes()
+        self.save_locations()
         return True
 
 
@@ -138,7 +141,7 @@ class LocationController:
 
         full_id = location.location_id
         self.locations = [l for l in self.locations if l.location_id != full_id]
-        self._save_changes()
+        self.save_locations()
         return True
 
 
@@ -162,6 +165,3 @@ class LocationController:
 
 
 
-    def _save_changes(self) -> None:
-        data = [l.to_dict() for l in self.locations]
-        self.repo.save(data)

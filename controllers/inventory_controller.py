@@ -167,7 +167,7 @@ class InventoryController:
 
 
 
-    def _build_inventory(self):
+    def build_inventory(self):
         rows = []
 
         for pid, p_info in self.data.get("products", {}).items():
