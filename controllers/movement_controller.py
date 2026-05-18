@@ -31,12 +31,12 @@ class MovementController:
 
 
 
-    def save_movements(self):
+    def _save_movements(self):
         """Записва всички движения в JSON файла."""
         self.repo.save([m.to_dict() for m in self.movements])
 
 
-    def _set_inventory_controller(self, inventory_controller):
+    def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
 
@@ -62,8 +62,8 @@ class MovementController:
 
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
-        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
-                                         quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
+        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
+                                        quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
 
         if self.inventory_controller:
             self.inventory_controller.increase_stock(product_id, quantity, location_id)
@@ -79,8 +79,8 @@ class MovementController:
         MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity),
                                              customer, self.inventory_controller, resolved_loc)
 
-        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
-                                         quantity=quantity, price=price, location_id=location_id, customer=customer)
+        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
+                                        quantity=quantity, price=price, location_id=location_id, customer=customer)
 
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, quantity, location_id)
@@ -96,8 +96,8 @@ class MovementController:
 
 
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
-        movement = self._create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
-                                         quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
+        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
+                                        quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
 
         if self.inventory_controller:
             self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
@@ -147,10 +147,10 @@ class MovementController:
 
 
 
-    def _create_movement(self, product_id: str, user_id: str, movement_type: str,
-                         quantity: str, price: Optional[str], location_id: Optional[str] = None,
-                         customer: Optional[str] = None, supplier_id: Optional[str] = None,
-                         from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
+    def create_movement(self, product_id: str, user_id: str, movement_type: str,
+                        quantity: str, price: Optional[str], location_id: Optional[str] = None,
+                        customer: Optional[str] = None, supplier_id: Optional[str] = None,
+                        from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
 
 
         product = self.product_controller.get_by_id(product_id)
@@ -201,6 +201,6 @@ class MovementController:
 
 
         self.movements.append(movement)
-        self.save_movements()
+        self._save_movements()
 
         return movement

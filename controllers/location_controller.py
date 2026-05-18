@@ -19,7 +19,7 @@ class LocationController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_locations(self):
+    def _save_locations(self):
         self.save(self.locations)
 
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
@@ -32,7 +32,7 @@ class LocationController(AbstractController):
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
         self.locations.append(location)
-        self.save_locations()
+        self._save_locations()
         return location
 
 
@@ -107,7 +107,7 @@ class LocationController(AbstractController):
             location.code = LocationValidator.validate_code(code, self.locations, exclude_id=location.location_id)
 
         location.update_modified()
-        self.save_locations()
+        self._save_locations()
         return True
 
 
@@ -141,7 +141,7 @@ class LocationController(AbstractController):
 
         full_id = location.location_id
         self.locations = [l for l in self.locations if l.location_id != full_id]
-        self.save_locations()
+        self._save_locations()
         return True
 
 

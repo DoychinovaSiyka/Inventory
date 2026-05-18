@@ -18,7 +18,7 @@ class SupplierController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_suppliers(self):
+    def _save_suppliers(self):
         self.save(self.suppliers)
 
 
@@ -30,7 +30,7 @@ class SupplierController(AbstractController):
 
         supplier = Supplier(name=name, contact=contact, address=address)
         self.suppliers.append(supplier)
-        self.save_suppliers()
+        self._save_suppliers()
         return supplier
 
     def update(self, supplier_id: str, name=None, contact=None, address=None) -> bool:
@@ -48,7 +48,7 @@ class SupplierController(AbstractController):
             supplier.address = SupplierValidator.validate_address(address)
 
         supplier.update_modified()
-        self.save_suppliers()
+        self._save_suppliers()
         return True
 
 
@@ -74,7 +74,7 @@ class SupplierController(AbstractController):
         supplier = self.get_by_id(supplier_id)
         if supplier:
             self.suppliers.remove(supplier)
-            self.save_suppliers()
+            self._save_suppliers()
             return True
         return False
 

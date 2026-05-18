@@ -36,9 +36,8 @@ class InventoryApplication:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
 
-        self.inventory_repo = JSONRepository("data/inventory.json", is_dict=True)
 
-
+        self.inventory_repo = JSONRepository("data/inventory.json")
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
@@ -58,7 +57,7 @@ class InventoryApplication:
                                                         self.location_controller, self.movement_controller)
 
 
-        self.movement_controller._set_inventory_controller(self.inventory_controller)
+        self.movement_controller.set_inventory_controller(self.inventory_controller)
 
         # Отчети
         self.report_controller = ReportController(self.product_controller, self.movement_controller,

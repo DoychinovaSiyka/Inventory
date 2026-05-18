@@ -3,36 +3,30 @@ from validators.inventory_validator import InventoryValidator
 
 
 class InventoryController:
-    """Контролерът отговаря за наличностите – колко стока имаме и в кой склад се намира."""
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         self.repo = repository
         self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Зареждаме текущите данни от файла
-        self.data = self._load()
+        #  ЗАРЕЖДАНЕ - Случва се тук в началото
+        raw_data = self.repo.load()
 
-        # Пресмятаме инвентара от всички движения до момента
+        # Проверка и подготовка на данните директно в конструктора
+        if isinstance(raw_data, dict) and "products" in raw_data:
+            self._data = raw_data
+        else:
+            self._data = {"products": {}}
+
+        # Пресмятаме инвентара
         self.update_inventory_from_movements(self.movement_controller.movements)
 
-
-
-    def _load(self):
-        data = self.repo.load()
-        if not isinstance(data, dict):
-            return {"products": {}}
-
-        if "products" not in data or not isinstance(data["products"], dict):
-            data["products"] = {}
-
-        return data
-
-
-    # Записваме инвентара обратно в JSON файла
+    # Капсулиран метод, който се вика само при нужда
     def _save(self):
-        summary = self._build_inventory()
+        summary = self.build_inventory()
         self.repo.save(summary)
+
+
 
     # Намираме ID на продукт по въведен текст
     def _product_id(self, user_input: str) -> Optional[str]:

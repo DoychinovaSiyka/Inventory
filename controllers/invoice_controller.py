@@ -18,7 +18,7 @@ class InvoiceController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_invoices(self):
+    def _save_invoices(self):
         self.save(self.invoices)
 
 
@@ -45,7 +45,7 @@ class InvoiceController(AbstractController):
                           date=movement.date, invoice_id=None, is_active=True)
 
         self.invoices.append(invoice)
-        self.save_invoices()
+        self._save_invoices()
         return invoice
 
 
@@ -98,5 +98,5 @@ class InvoiceController(AbstractController):
             return False
 
         inv.cancel()  # Променя статуса
-        self.save_invoices()
+        self._save_invoices()
         return True

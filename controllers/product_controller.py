@@ -21,7 +21,7 @@ class ProductController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_products(self):
+    def _save_products(self):
         self.save(self.products)
 
     def get_all(self) -> List[Product]:
@@ -92,7 +92,7 @@ class ProductController(AbstractController):
                           unit=unit, description=description, price=price)
 
         self.products.append(product)
-        self.save_products()
+        self._save_products()
         return product
 
 
@@ -127,7 +127,7 @@ class ProductController(AbstractController):
             product.categories = new_cats
 
         product.update_modified()
-        self.save_products()
+        self._save_products()
         return True
 
 
@@ -139,7 +139,7 @@ class ProductController(AbstractController):
             return False
 
         self.products = [p for p in self.products if p.product_id != product.product_id]
-        self.save_products()
+        self._save_products()
         return True
 
 

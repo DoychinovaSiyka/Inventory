@@ -27,7 +27,7 @@ class UserController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_users(self):
+    def _save_users(self):
         self.save(self.users)
 
     def find_user_flexible(self, identifier: str) -> Optional[User]:
@@ -112,7 +112,7 @@ class UserController(AbstractController):
                         role=role, status="Active")
 
         self.users.append(new_user)
-        self.save_users()
+        self._save_users()
         return new_user
 
 
@@ -130,7 +130,7 @@ class UserController(AbstractController):
 
         user.role = new_role
         user.update_modified()
-        self.save_users()
+        self._save_users()
 
 
 
@@ -145,7 +145,7 @@ class UserController(AbstractController):
 
         user.status = new_status
         user.update_modified()
-        self.save_users()
+        self._save_users()
         return True
 
 
@@ -161,7 +161,7 @@ class UserController(AbstractController):
         UserValidator.validate_not_last_admin(user, self.users)
 
         self.users.remove(user)
-        self.save_users()
+        self._save_users()
         return True
 
 
@@ -171,7 +171,7 @@ class UserController(AbstractController):
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                      username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
-        self.save_users()
+        self._save_users()
 
 
 
@@ -180,7 +180,7 @@ class UserController(AbstractController):
                         email="operator@example.com", username="operator", password=self._hash_password("operator123"),
                         role="Operator", status="Active")
         self.users.append(operator)
-        self.save_users()
+        self._save_users()
 
 
 

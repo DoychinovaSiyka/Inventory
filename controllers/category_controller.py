@@ -19,8 +19,9 @@ class CategoryController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def save_categories(self):
-        self.save(self.categories)
+    # Капсулиран метод за запис
+    def _save_categories(self):
+        self.save(self._categories)
 
 
     def get_all(self) -> List[Category]:
@@ -46,7 +47,7 @@ class CategoryController(AbstractController):
 
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
-        self.save_categories()
+        self._save_categories()
         return category
 
 
@@ -81,7 +82,7 @@ class CategoryController(AbstractController):
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
-        self.save_categories()
+        self._save_categories()
         return True
 
 
@@ -95,7 +96,7 @@ class CategoryController(AbstractController):
         CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
-        self.save_categories()
+        self._save_categories()
         return True
 
 
