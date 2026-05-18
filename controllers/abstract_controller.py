@@ -28,9 +28,10 @@ class AbstractController(ABC):
 
     def save(self, data):
         if isinstance(data, list):
-            payload = [self.to_dict(x) for x in data]
+            normalized_data = [self.to_dict(x) for x in data]
         elif isinstance(data, dict):
-            payload = {k: self.to_dict(v) for k, v in data.items()}
+            normalized_data = {k: self.to_dict(v) for k, v in data.items()}
         else:
-            payload = self.to_dict(data)
-        self.repo.save(payload)
+            normalized_data = self.to_dict(data)
+
+        self.repo.save(normalized_data)
