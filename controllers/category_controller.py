@@ -6,9 +6,11 @@ from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 
 
+
+
+
 class CategoryController(AbstractController):
     """Управлява категориите и йерархичната им структура."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.categories = self.load()
