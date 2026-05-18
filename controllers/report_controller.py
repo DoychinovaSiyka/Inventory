@@ -120,16 +120,16 @@ class ReportController:
 
         return Report(report_type="Sales", data=data)
 
-
-
-    def sort_inventory_by_quantity(self, algorithm="selection", reverse=True):
+    def sort_inventory_by_quantity(self, algorithm="merge", reverse=True):
         data = self.report_inventory_full().data[:]
         key_fn = lambda x: x["total"]
 
-        sorted_data = (product_sorters.selection_sort(data, key=key_fn, reverse=reverse)
-                       if algorithm == "selection"
-                       else product_sorters.bubble_sort(data, key=key_fn, reverse=reverse))
+        if algorithm == "merge":
+            sorted_data = product_sorters.merge_sort(data, key=key_fn, reverse=reverse)
+        elif algorithm == "quick":
+            sorted_data = product_sorters.quick_sort(data, key=key_fn, reverse=reverse)
+        else:
+            raise ValueError(f"Unknown sorting algorithm: {algorithm}")
 
         return Report(report_type=f"Sort by Quantity ({algorithm})", data=sorted_data)
-
 
