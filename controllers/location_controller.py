@@ -22,6 +22,7 @@ class LocationController(AbstractController):
     def _save_locations(self):
         self.save(self.locations)
 
+
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)

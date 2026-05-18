@@ -19,7 +19,7 @@ class CategoryController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    # Капсулиран метод за запис
+
     def _save_categories(self):
         self.save(self._categories)
 

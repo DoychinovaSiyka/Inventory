@@ -20,7 +20,7 @@ class UserController(AbstractController):
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
-    #  Мапване dict <-> User
+
     def from_dict(self, data):
         return User.from_dict(data)
 

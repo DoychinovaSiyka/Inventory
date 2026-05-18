@@ -11,7 +11,7 @@ class InvoiceController(AbstractController):
         super().__init__(repo)
         self.invoices = self.load() or []
 
-    #  Мапване dict <-> Invoice
+
     def from_dict(self, data):
         return Invoice.from_dict(data)
 

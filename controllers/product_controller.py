@@ -14,7 +14,7 @@ class ProductController(AbstractController):
         super().__init__(repo)
         self.products = self.load() or []
 
-    #  Мапване dict <-> Product
+
     def from_dict(self, data):
         return Product.from_dict(data, self.category_controller)
 

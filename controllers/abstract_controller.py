@@ -13,15 +13,18 @@ class AbstractController(ABC):
     def to_dict(self, obj):
         pass
 
+
     def load(self):
         raw = self.repo.load()
-        if raw is None: return []  # Винаги връщаме нещо, с което може да се работи
+        if raw is None: return []
 
         if isinstance(raw, list):
             return [self.from_dict(x) for x in raw]
         if isinstance(raw, dict):
             return {k: self.from_dict(v) for k, v in raw.items()}
         return self.from_dict(raw)
+
+
 
     def save(self, data):
         if isinstance(data, list):

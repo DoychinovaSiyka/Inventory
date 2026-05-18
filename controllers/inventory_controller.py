@@ -9,10 +9,10 @@ class InventoryController:
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        #  ЗАРЕЖДАНЕ - Случва се тук в началото
+
         raw_data = self.repo.load()
 
-        # Проверка и подготовка на данните директно в конструктора
+        # Проверка на данните в конструктора
         if isinstance(raw_data, dict) and "products" in raw_data:
             self._data = raw_data
         else:
