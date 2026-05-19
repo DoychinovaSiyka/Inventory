@@ -91,9 +91,8 @@ class GraphView:
 
 
         best_source = min(reachable, key=lambda s: distances[s])
-
-
         path = self.graph.reconstruct_path(my_location, best_source, predecessors)
+        path_with_names = [f"{self.graph.nodes[node].name} ({node})" for node in path]
 
 
         source_name = self.graph.nodes[best_source].name
@@ -103,5 +102,6 @@ class GraphView:
         print(f"  Продукт:    {product_name}")
         print(f"  Източник:   {source_name} ({best_source})")
         print(f"  Разстояние: {distances[best_source]} км")
-        print(f"  Маршрут:    {' -> '.join(path)}")
+        print(f"  Маршрут:    {' -> '.join(path_with_names)}")
         print("=" * 40)
+
