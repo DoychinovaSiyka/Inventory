@@ -21,14 +21,14 @@ class InventoryController:
         # Пресмятаме инвентара
         self.update_inventory_from_movements(self.movement_controller.movements)
 
-    # Капсулиран метод, който се вика само при нужда
+
     def _save(self):
         summary = self.build_inventory()
         self.repo.save(summary)
 
 
 
-    # Намираме ID на продукт по въведен текст
+    # Намираме ID на продукт
     def _product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None

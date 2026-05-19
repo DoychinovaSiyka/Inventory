@@ -7,7 +7,6 @@ from controllers.abstract_controller import AbstractController
 
 class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
-
     def __init__(self, repo, category_controller):
         self.category_controller = category_controller
         self.validator = ProductValidator()

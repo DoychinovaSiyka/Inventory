@@ -25,24 +25,17 @@ class GraphView:
             self.graph.add_edge(start, end, dist)
             self.graph.add_edge(end, start, dist)
 
-
-
     def _get_warehouses_with_product(self, product_name):
         result = []
-        product = None
-        for p in self.product_controller.get_all():
-            if p.name.lower() == product_name.lower():
-                product = p
-                break
+        product = next((p for p in self.product_controller.get_all()
+                        if p.name.lower() == product_name.lower()), None)
 
         if not product:
             return []
 
-
         product_id = str(product.product_id)
 
         for loc in self.location_controller.get_all():
-
             warehouse_code = loc.code
             warehouse_uuid = str(loc.location_id)
 
@@ -54,8 +47,6 @@ class GraphView:
                 result.append((warehouse_code, qty))
 
         return result
-
-
 
     def _build_menu(self):
         return Menu("Логистичен Модул (Dijkstra)",
@@ -71,55 +62,46 @@ class GraphView:
 
     def calculate_best_delivery(self, user: User):
         product_name = input("\nИме на стока (Enter = отказ): ").strip()
-        if not product_name:
-            print("Операцията е отказана.")
-            return
+        if not product_name: return
 
         my_location = input("Вашето ID (напр. W1, Enter = отказ): ").strip().upper()
-        if not my_location:
-            print("Операцията е отказана.")
-            return
-        if my_location not in self.graph.nodes:
-            print(f"Локация '{my_location}' не съществува.")
-            print(f"Достъпни: {', '.join(self.graph.nodes.keys())}")
+        if not my_location or my_location not in self.graph.nodes:
+            print(f"Грешка: Локация '{my_location}' не съществува.")
             return
 
-        # Взимаме складовете с наличност
+
         sources = self._get_warehouses_with_product(product_name)
-
         if not sources:
-            print(f"'{product_name}' не е наличен в нито един склад.")
+            print(f"'{product_name}' не е наличен никъде.")
             return
 
-        all_sources = [wid.upper() for wid, qty in sources]
-        other_sources = [s for s in all_sources if s != my_location]
+        other_sources = [wid.upper() for wid, qty in sources if wid.upper() != my_location]
         if not other_sources:
-            print(f"'{product_name}' се среща само в {my_location}.")
+            print(f"'{product_name}' е наличен само при Вас ({my_location}).")
             return
+
 
         distances, predecessors = self.graph.dijkstra(my_location)
 
+
         reachable = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
         if not reachable:
-            print(f"\nИма складове с наличност ({', '.join(other_sources)}), но няма път до тях.")
+            print("\nИма складове с наличност, но няма сухопътен маршрут до тях.")
             return
 
-        best_source = min(reachable, key=lambda s: distances[s])
-        shortest_distance = distances[best_source]
 
-        path = []
-        step = best_source
-        while step is not None:
-            path.append(step)
-            if step == my_location:
-                break
-            step = predecessors.get(step)
-        path.reverse()
+        best_source = min(reachable, key=lambda s: distances[s])
+
+
+        path = self.graph.reconstruct_path(my_location, best_source, predecessors)
+
 
         source_name = self.graph.nodes[best_source].name
-
-        print("\n         ЛОГИСТИЧЕН АНАЛИЗ (Dijkstra)")
+        print("\n" + "=" * 40)
+        print("         ЛОГИСТИЧЕН АНАЛИЗ")
+        print("=" * 40)
         print(f"  Продукт:    {product_name}")
         print(f"  Източник:   {source_name} ({best_source})")
-        print(f"  Разстояние: {shortest_distance} км")
+        print(f"  Разстояние: {distances[best_source]} км")
         print(f"  Маршрут:    {' -> '.join(path)}")
+        print("=" * 40)

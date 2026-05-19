@@ -48,7 +48,7 @@ class Invoice:
 
     def to_dict(self):
         """ Превръща обекта в речник за запис в JSON. """
-        return { "invoice_id": self.invoice_id, "movement_id": self.movement_id, "product": self.product,
+        return {"invoice_id": self.invoice_id, "movement_id": self.movement_id, "product": self.product,
                  "quantity": self.quantity, "unit": self.unit, "unit_price": self.unit_price,
                  "total_price": self.total_price,
                  "customer": self.customer, "is_active": self.is_active,
@@ -60,7 +60,7 @@ class Invoice:
         if not data:
             return None
 
-        return Invoice( invoice_id=data.get("invoice_id"), movement_id=data.get("movement_id"),
+        return Invoice(invoice_id=data.get("invoice_id"), movement_id=data.get("movement_id"),
                         product=data.get("product", "Неизвестен"), quantity=data.get("quantity", 0), unit=data.get("unit", "бр."),
                         unit_price=data.get("unit_price", 0.0), total_price=data.get("total_price", 0.0),
                         customer=data.get("customer", "Неизвестен"), is_active=data.get("is_active", True),
@@ -71,4 +71,4 @@ class Invoice:
     def __str__(self):
         short_id = self.invoice_id[:8]
         status = "ВАЛИДНА" if self.is_active else "АНУЛИРАНА"
-        return f"Фактура #{short_id} [{status}] | Клиент: {self.customer} | Общо: {self.total_price:.2f} лв."
+        return f"Фактура {short_id} [{status}] | Клиент: {self.customer} | Общо: {self.total_price:.2f} лв."

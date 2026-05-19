@@ -6,7 +6,6 @@ from controllers.abstract_controller import AbstractController
 
 class InvoiceController(AbstractController):
     """Управлява жизнения цикъл на фактурите."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.invoices = self.load() or []

@@ -16,7 +16,8 @@ class AbstractController(ABC):
 
     def load(self):
         raw = self.repo.load()
-        if raw is None: return []
+        if raw is None:
+            return []
 
         if isinstance(raw, list):
             return [self.from_dict(x) for x in raw]

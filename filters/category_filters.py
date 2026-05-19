@@ -25,7 +25,7 @@ def filter_categories(categories, keyword):
 
 
 def get_all_children_objects(categories: List[Category], parent_id: str, visited=None) -> List[Category]:
-    """Рекурсивно събиране на всички наследници - предотвратява цикли."""
+    """Рекурсивно събиране на всички наследници."""
     results = []
     if not parent_id:
         return results
