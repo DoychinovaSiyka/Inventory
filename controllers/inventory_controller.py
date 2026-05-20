@@ -1,31 +1,37 @@
 from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
+from controllers.abstract_controller import AbstractController
 
 
-class InventoryController:
+class InventoryController(AbstractController):
     def __init__(self, repository, product_controller, location_controller, movement_controller):
-        self.repo = repository
+        super().__init__(repository)
+
         self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
 
-        raw_data = self.repo.load()
+        raw_data = self.load()
 
-        # Проверка на данните в конструктора
         if isinstance(raw_data, dict) and "products" in raw_data:
-            self._data = raw_data
+            self.data = raw_data
         else:
-            self._data = {"products": {}}
+            self.data = {"products": {}}
 
-        # Пресмятаме инвентара
+        # Пресмятаме инвентара на база движенията
         self.update_inventory_from_movements(self.movement_controller.movements)
 
 
+    def from_dict(self, data):
+        return data
+
+    def to_dict(self, obj):
+        return obj
+
     def _save(self):
         summary = self.build_inventory()
-        self.repo.save(summary)
-
+        self.save(summary)
 
 
     # Намираме ID на продукт

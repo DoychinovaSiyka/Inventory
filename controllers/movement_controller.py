@@ -3,37 +3,35 @@ from typing import Optional, List
 from datetime import datetime
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
+from controllers.abstract_controller import AbstractController
 
 
-class MovementController:
+class MovementController(AbstractController):
 
-    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller, invoice_controller):
+    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller,
+                 invoice_controller):
 
-        self.repo = repo
+        super().__init__(repo)
+
         self.product_controller = product_controller
         self.user_controller = user_controller
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
 
-        raw = self.repo.load() or []
-        self.movements: List[Movement] = []
 
-        for m in raw:
-            try:
-                obj = Movement.from_dict(m)
-                if obj:
-                    self.movements.append(obj)
-            except Exception:
-                continue
-
+        self.movements: List[Movement] = self.load()
         self.inventory_controller = None
 
 
+    def from_dict(self, data):
+        return Movement.from_dict(data)
+
+    def to_dict(self, obj):
+        return obj.to_dict()
 
     def _save_movements(self):
-        """Записва всички движения в JSON файла."""
-        self.repo.save([m.to_dict() for m in self.movements])
+        self.save(self.movements)
 
 
     def set_inventory_controller(self, inventory_controller):
