@@ -16,13 +16,10 @@ class MovementView:
 
 
 
-    def _float(self, prompt, allow_empty=False, default=None):
+    def _float(self, prompt):
         while True:
             val = input(prompt).strip()
-            if not val and allow_empty:
-                return default
-
-            if not val:
+            if val == "":
                 print("Моля въведете число.")
                 continue
 
@@ -66,7 +63,6 @@ class MovementView:
                 print("Невалиден номер.")
                 continue
 
-
             matches = [item for item in items if get_id(item).startswith(choice)]
             if len(matches) == 1:
                 return matches[0]
@@ -75,8 +71,6 @@ class MovementView:
                 print("Няколко ID започват така. Въведете повече символи.")
             else:
                 print("Невалиден избор. Опитайте пак.")
-
-
 
 
     def show_menu(self, user):
@@ -95,7 +89,6 @@ class MovementView:
                 break
 
 
-
     def process_delivery(self, user):
         print("\nНова доставка")
         product = self._select_item(self.product_controller.get_all(), "продукт")
@@ -111,16 +104,13 @@ class MovementView:
             return
 
         qty = self._float(f"Количество ({product.unit}): ")
-        price = self._float(f"Цена (Enter за {product.price} лв.): ",
-                            allow_empty=True, default=product.price)
 
-        movement = self.movement_controller.add_in(str(product.product_id), qty, price,
-                                                   str(location.location_id), str(supplier.supplier_id),
-                                                   str(user.user_id))
+        raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
+        price = product.price if raw_price == "" else float(raw_price)
+        self.movement_controller.add_in(str(product.product_id), qty, price, str(location.location_id),
+                                        str(supplier.supplier_id), str(user.user_id))
 
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
-
-
 
 
     def _get_locations_with_stock(self, product):
@@ -130,8 +120,6 @@ class MovementView:
             if stock > 0:
                 valid.append((loc, stock))
         return valid
-
-
 
 
     def _select_location_for_sale(self, product):
@@ -156,8 +144,6 @@ class MovementView:
         return None
 
 
-
-
     def process_sale(self, user):
         print("\nНова продажба")
 
@@ -172,27 +158,22 @@ class MovementView:
 
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
 
-        max_stock = self.inventory_controller.get_stock(str(product.product_id),
-                                                        str(location.location_id))
-
+        max_stock = self.inventory_controller.get_stock(str(product.product_id), str(location.location_id))
 
         qty = self._float(f"Количество (макс {max_stock}): ")
         if qty > max_stock:
             print(f"Няма толкова наличност ({max_stock}).")
             return
 
-        sale_price = self._float(f"Цена (Enter за {product.price} лв.): ", allow_empty=True,
-                                 default=product.price)
+        raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
+        sale_price = product.price if raw_price == "" else float(raw_price)
 
         try:
-            self.movement_controller.add_out(str(product.product_id), qty, customer,
-                                             str(location.location_id), str(user.user_id),
-                                             sale_price)
+            self.movement_controller.add_out(str(product.product_id), qty, customer, str(location.location_id),
+                                             str(user.user_id), sale_price)
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
-
-
 
 
     def process_transfer(self, user):
@@ -200,10 +181,9 @@ class MovementView:
         product = self._select_item(self.product_controller.get_all(), "продукт")
         if not product:
             return
+
         product_id = str(product.product_id)
 
-
-        from_loc = None
         while True:
             valid_sources = [loc for loc in self.location_controller.get_all()
                              if self.inventory_controller.get_stock(product_id, str(loc.location_id)) > 0]
@@ -221,11 +201,8 @@ class MovementView:
         available = self.inventory_controller.get_stock(product_id, from_loc_id)
         print(f"Налично в {from_loc.name}: {available:.2f} {product.unit}")
 
-        to_loc = None
         while True:
-            other_locations = [loc for loc in self.location_controller.get_all()
-                               if str(loc.location_id) != from_loc_id]
-
+            other_locations = [loc for loc in self.location_controller.get_all() if str(loc.location_id) != from_loc_id]
             if not other_locations:
                 print("Няма друг заведен склад, към който да преместите стоката.")
                 return
@@ -235,9 +212,6 @@ class MovementView:
                 break
             print(f"Не можете да преместите стока обратно в същия склад ({from_loc.name}).")
 
-
-
-        qty = 0
         while True:
             qty = self._float(f"Количество за местене (макс {available} {product.unit}): ")
 
@@ -249,15 +223,12 @@ class MovementView:
             else:
                 print(f"Недостатъчна наличност. Максимумът е {available:.2f}.")
 
-
         try:
-            self.movement_controller.move_stock(product_id=product_id, quantity=qty, from_loc=from_loc_id,
-                                                to_loc=str(to_loc.location_id), user_id=str(user.user_id))
+            self.movement_controller.move_stock(product_id=product_id, quantity=qty,
+                                                from_loc=from_loc_id, to_loc=str(to_loc.location_id), user_id=str(user.user_id))
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} в {to_loc.name}.")
         except Exception as e:
             print(f"\nКритична грешка при запис: {e}")
-
-
 
 
     def advanced_search(self, user):

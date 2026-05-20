@@ -30,7 +30,7 @@ def input_password(prompt="Въведете парола: "):
             msvcrt.getch()       # втори байт
             continue
 
-        # Нормален символ
+
         try:
             char = ch.decode("utf-8")
         except UnicodeDecodeError:
@@ -40,6 +40,7 @@ def input_password(prompt="Въведете парола: "):
         print("*", end="", flush=True)
 
     return password
+
 
 
 def format_table(columns, rows):
@@ -123,11 +124,3 @@ def show_products_menu(product_controller):
 
 
 
-# Кодовете на специалните клавиши не са ASCII или Unicode.
-# Те идват от хардуерните scan codes на клавиатурата.
-# Windows Console API ги превежда в два байта – първо \x00 или \xE0, което е сигнал, че клавишът е специален,
-# и втори байт, който е конкретният код на клавиша. msvcrt.getch() просто връща тези байтове директно от Windows.
-# Конкретните кодове не съм ги измисляла – взела съм ги от стандарта на Windows,
-# описан в документацията за keyboard scan codes. Същите кодове могат да се видят и в
-# официалната документация за Windows Console Input.
-# Освен това мога да ги проверя и сама, като пусна малък тест с getch() и натискам стрелките, за да видя какво връща

@@ -204,7 +204,7 @@ class InventoryController:
             else:
                 last_movement = "Няма движения"
 
-            # Добавяме реда в JSON структурата
+
             rows.append({ "product_id": pid, "product_name": product_obj.name,
                           "unit": product_obj.unit, "total": total, "warehouses": warehouse_map,
                           "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
