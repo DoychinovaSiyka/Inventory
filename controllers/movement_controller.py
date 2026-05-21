@@ -108,6 +108,7 @@ class MovementController(AbstractController):
 
 
 
+
     def create_movement(self, product_id: str, user_id: str, movement_type: str,
                         quantity: str, price: Optional[str], location_id: Optional[str] = None,
                         customer: Optional[str] = None, supplier_id: Optional[str] = None,
@@ -124,29 +125,43 @@ class MovementController(AbstractController):
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-        # MOVE
+
         if m_type_str == "MOVE":
             resolved_loc = None
             resolved_from = self._location_id(from_location_id)
             resolved_to = self._location_id(to_location_id)
 
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
+
             prc = 0.0
 
-        # IN / OUT
+
+        elif m_type_str == "OUT":
+            resolved_loc = self._location_id(location_id)
+            resolved_from = None
+            resolved_to = None
+
+            MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
+
+            if price:
+                clean = str(price).lower().replace("лв.", "").replace("лв", "")
+                clean = clean.replace(",", ".").replace(" ", "").strip()
+                if clean.endswith("."):
+                    clean = clean[:-1]
+                prc = float(clean)
+            else:
+                prc = float(product.price)
+
+
+
+        # IN движение
         else:
             resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
 
-            if m_type_str == "OUT":
-                MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
-
-
-
             if price:
-                clean = str(price).lower()
-                clean = clean.replace("лв.", "").replace("лв", "")
+                clean = str(price).lower().replace("лв.", "").replace("лв", "")
                 clean = clean.replace(",", ".").replace(" ", "").strip()
                 if clean.endswith("."):
                     clean = clean[:-1]

@@ -18,14 +18,24 @@ class UserController(AbstractController):
         if not self.get_by_username("operator"):
             self._create_default_operator()
 
+
+
+
     def from_dict(self, data):
         return User.from_dict(data)
+
+
 
     def to_dict(self, obj):
         return obj.to_dict()
 
+
+
     def _save_users(self):
         self.save(self.users)
+
+
+
 
     def find_user_flexible(self, identifier: str) -> Optional[User]:
         if not identifier:
@@ -36,18 +46,28 @@ class UserController(AbstractController):
             return user
         return self.get_by_username(identifier)
 
+
+
+
     def _hash_password(self, password: str) -> str:
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
 
+
+
     def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
         return stored_password_hash == self._hash_password(provided_password)
+
+
 
     def is_admin(self, user):
         if not user:
             return False
         return str(user.role).lower() == "admin"
+
+
+
 
     def get_by_username(self, username: str) -> Optional[User]:
         if not username:
@@ -59,8 +79,14 @@ class UserController(AbstractController):
                 return u
         return None
 
+
+
+
     def get_all(self):
         return self.users
+
+
+
 
     def get_by_id(self, user_id: str) -> Optional[User]:
         uid = str(user_id or "").strip()
@@ -83,6 +109,8 @@ class UserController(AbstractController):
             return user
         return None
 
+
+
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
@@ -94,6 +122,8 @@ class UserController(AbstractController):
         self.users.append(new_user)
         self._save_users()
         return new_user
+
+
 
 
     def change_role(self, acting_user: User, identifier: str, new_role: str):
@@ -116,6 +146,9 @@ class UserController(AbstractController):
 
 
 
+
+
+
     def change_status(self, acting_user: User, identifier: str, new_status: str):
         user = self.find_user_flexible(identifier)
         if not user:
@@ -129,6 +162,9 @@ class UserController(AbstractController):
         user.update_modified()
         self._save_users()
         return True
+
+
+
 
     def delete_user(self, acting_user: User, identifier: str):
         user = self.find_user_flexible(identifier)
@@ -153,12 +189,16 @@ class UserController(AbstractController):
         self.users.append(admin)
         self._save_users()
 
+
+
     def _create_default_operator(self):
         operator = User(user_id=None, first_name="Operator", last_name="User",
                         email="operator@example.com", username="operator", password=self._hash_password("operator123"),
                         role="Operator", status="Active")
         self.users.append(operator)
         self._save_users()
+
+
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
