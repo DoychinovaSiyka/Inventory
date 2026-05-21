@@ -2,7 +2,6 @@ from views.menu import Menu, MenuItem
 from views.password_utils import input_password, format_table
 
 
-
 class UserView:
     def __init__(self, controller):
         self.controller = controller
@@ -20,7 +19,6 @@ class UserView:
                 break
 
 
-
     def _build_menu(self):
         return Menu("Администрация на потребители", [
             MenuItem("1", "Списък на всички потребители", self.show_users),
@@ -30,7 +28,6 @@ class UserView:
             MenuItem("5", "Активиране", self.activate_user),
             MenuItem("6", "Изтриване от системата", self.delete_user),
             MenuItem("0", "Назад", lambda u: "break")])
-
 
 
     def show_users(self, _):
@@ -45,9 +42,9 @@ class UserView:
         print(format_table(columns, rows))
 
 
-
     def add_user(self, _):
-        print("\nНОВ ПОТРЕБИТЕЛ ")
+        print("\nНОВ ПОТРЕБИТЕЛ")
+
         while True:
             username = input("Потребителско име: ").strip()
             if not username:
@@ -56,7 +53,6 @@ class UserView:
             if not error:
                 break
             print(f"Грешка: {error}")
-
 
         while True:
             email = input("Имейл: ").strip()
@@ -81,6 +77,7 @@ class UserView:
 
         fn = input("Име (Enter за '-' ): ").strip() or "-"
         ln = input("Фамилия (Enter за '-' ): ").strip() or "-"
+
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен успешно.")
@@ -89,8 +86,66 @@ class UserView:
 
 
 
+    def change_role(self, current_user):
+        print("\nПРОМЯНА НА РОЛЯ")
+
+        target = input("Въведете Username или ID: ").strip()
+        if not target:
+            return
+
+        user_obj = self.controller.find_user_flexible(target)
+        if not user_obj:
+            print(f"Грешка: Потребител '{target}' не е намерен.")
+            return
+
+        print(f"Текуща роля: {user_obj.role}")
+        new_role = input("Нова роля (Admin/Operator): ").strip().capitalize()
+
+        if new_role not in ["Admin", "Operator"]:
+            print("Грешка: Невалидна роля. Разрешени: Admin, Operator.")
+            return
+
+        try:
+            self.controller.change_role(current_user, user_obj.user_id, new_role)
+            print(f"Ролята на '{user_obj.username}' е променена на {new_role}.")
+        except Exception as e:
+            print(f"Грешка: {e}")
+
+
+
+    def deactivate_user(self, current_user):
+        print("\nДЕАКТИВИРАНЕ НА ПОТРЕБИТЕЛ")
+
+        target = input("Username или ID: ").strip()
+        if not target:
+            return
+
+        try:
+            self.controller.deactivate_user(current_user, target)
+            print(f"Потребител '{target}' е деактивиран.")
+        except Exception as e:
+            print(f"Грешка: {e}")
+
+
+
+    def activate_user(self, current_user):
+        print("\nАКТИВИРАНЕ НА ПОТРЕБИТЕЛ")
+
+        target = input("Username или ID: ").strip()
+        if not target:
+            return
+
+        try:
+            self.controller.activate_user(current_user, target)
+            print(f"Потребител '{target}' е активиран.")
+        except Exception as e:
+            print(f"Грешка: {e}")
+
+
+
     def delete_user(self, current_user):
         print("\nИЗТРИВАНЕ")
+
         while True:
             target = input("Username или ID за изтриване: ").strip()
             if not target:

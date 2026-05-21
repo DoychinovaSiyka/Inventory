@@ -56,30 +56,36 @@ def format_table(columns, rows):
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
-    #  padding от 2 интервала - отляво и отдясно
+
     col_widths = [w + 2 for w in col_widths]
-    separator = "+" + "+".join(["-" * w for w in col_widths]) + "+"
+
+    separator = "+" + "+".join("-" * w for w in col_widths) + "+"
 
 
-    # Центрираме или подравняваме вляво заглавията
-    header_parts = []
-    for i, col_name in enumerate(columns):
-        cell = f" {col_name}".ljust(col_widths[i])
-        header_parts.append(cell)
-    header_row = "|" + "|".join(header_parts) + "|"
+    header_cells = []
+    for i, col in enumerate(columns):
+        header_cells.append(col.center(col_widths[i]))
+    header_row = "|" + "|".join(header_cells) + "|"
 
-    table_lines = [separator, header_row, separator]
 
+    data_lines = []
     for row in rows:
-        row_parts = []
-        for i, cell_val in enumerate(row):
-            cell_str = f" {cell_val}".ljust(col_widths[i])
-            row_parts.append(cell_str)
-        table_lines.append("|" + "|".join(row_parts) + "|")
+        row_cells = []
+        for i, val in enumerate(row):
+            val_str = str(val)
+
+            if val_str.replace(".", "", 1).isdigit():
+                cell = val_str.rjust(col_widths[i])
+            else:
+                cell = val_str.ljust(col_widths[i])
+
+            row_cells.append(cell)
+
+        data_lines.append("|" + "|".join(row_cells) + "|")
 
 
-    table_lines.append(separator)
-    return "\n" + "\n".join(table_lines) + "\n"
+    return "\n" + "\n".join([separator, header_row, separator] + data_lines + [separator]) + "\n"
+
 
 
 

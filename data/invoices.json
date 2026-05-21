@@ -1,3 +1,72 @@
 [
-
+    {
+        "invoice_id": "2932740f-b8ce-42dc-b1b6-514b1517f165",
+        "movement_id": "09b7ab98-f66d-4a32-aa3c-6583e0f30116",
+        "product": "Прясно мляко Верея 3.6%",
+        "quantity": 50.0,
+        "unit": "л.",
+        "unit_price": 3.89,
+        "total_price": 194.5,
+        "customer": "Красимир",
+        "is_active": true,
+        "date": "2026-05-21 23:04:28",
+        "created": "2026-05-21 23:04:28",
+        "modified": "2026-05-21 23:04:28"
+    },
+    {
+        "invoice_id": "8fd3436e-05a9-4df3-9c19-b0d149772aed",
+        "movement_id": "2a27b2fd-abf2-42cd-bd87-607af6f8f94a",
+        "product": "Кашкавал от краве масло",
+        "quantity": 10.0,
+        "unit": "кг.",
+        "unit_price": 24.01,
+        "total_price": 240.1,
+        "customer": "Стефан",
+        "is_active": true,
+        "date": "2026-05-21 23:07:29",
+        "created": "2026-05-21 23:07:29",
+        "modified": "2026-05-21 23:07:29"
+    },
+    {
+        "invoice_id": "fc541321-d557-4b72-b464-516e9cab0b16",
+        "movement_id": "92b911e5-b83f-49e5-9e19-e4896763034d",
+        "product": "Кашкавал от краве масло",
+        "quantity": 6.0,
+        "unit": "кг.",
+        "unit_price": 23.99,
+        "total_price": 143.94,
+        "customer": "Иван",
+        "is_active": false,
+        "date": "2026-05-21 23:09:02",
+        "created": "2026-05-21 23:09:02",
+        "modified": "2026-05-21 23:10:39"
+    },
+    {
+        "invoice_id": "c61eb346-5968-4017-93a4-bb5c23b41660",
+        "movement_id": "7233d1fb-66fb-4d0d-8c4f-3c07dc5befba",
+        "product": "Картофи червени",
+        "quantity": 230.0,
+        "unit": "кг.",
+        "unit_price": 2.34,
+        "total_price": 538.2,
+        "customer": "Мария",
+        "is_active": true,
+        "date": "2026-05-22 00:50:07",
+        "created": "2026-05-22 00:50:07",
+        "modified": "2026-05-22 00:50:07"
+    },
+    {
+        "invoice_id": "f5ab7ae3-f60a-468e-99ed-00143e13e484",
+        "movement_id": "f247b1f5-09f7-41a2-91f1-ebcb7c6e77ab",
+        "product": "Картофи червени",
+        "quantity": 100.0,
+        "unit": "кг.",
+        "unit_price": 2.78,
+        "total_price": 278.0,
+        "customer": "Николина",
+        "is_active": false,
+        "date": "2026-05-22 00:52:05",
+        "created": "2026-05-22 00:52:05",
+        "modified": "2026-05-22 00:53:00"
+    }
 ]

@@ -87,6 +87,8 @@ class MovementView:
             if menu.execute(choice, user) == "break":
                 break
 
+
+
     def process_delivery(self, user):
         print("\nНова доставка")
         product = self._select_item(self.product_controller.get_all(), "продукт")
@@ -104,11 +106,14 @@ class MovementView:
         qty = self._float(f"Количество ({product.unit}): ")
 
         raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
-        price = product.price if raw_price == "" else float(raw_price)
-        self.movement_controller.add_in(str(product.product_id), qty, price, str(location.location_id),
-                                        str(supplier.supplier_id), str(user.user_id))
+        price = product.price if raw_price == "" else raw_price  # НЕ float()
+
+        self.movement_controller.add_in(str(product.product_id), qty, price,
+                                        str(location.location_id), str(supplier.supplier_id), str(user.user_id))
 
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
+
+
 
     def _get_locations_with_stock(self, product):
         valid = []
@@ -117,6 +122,8 @@ class MovementView:
             if stock > 0:
                 valid.append((loc, stock))
         return valid
+
+
 
     def _select_location_for_sale(self, product):
         valid = self._get_locations_with_stock(product)
@@ -138,6 +145,9 @@ class MovementView:
 
         print("Невалиден избор.")
         return None
+
+
+
 
     def process_sale(self, user):
         print("\nНова продажба")
@@ -161,7 +171,7 @@ class MovementView:
             return
 
         raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
-        sale_price = product.price if raw_price == "" else float(raw_price)
+        sale_price = product.price if raw_price == "" else raw_price  # НЕ float()
 
         try:
             self.movement_controller.add_out(str(product.product_id), qty, customer, str(location.location_id),
@@ -169,7 +179,6 @@ class MovementView:
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
-
 
 
 
@@ -222,7 +231,7 @@ class MovementView:
 
         try:
             self.movement_controller.move_stock(product_id=product_id, quantity=qty, from_loc=from_loc_id,
-                                                to_loc=str(to_loc.location_id), user_id=str(user.user_id))
+                                                to_loc=str(to_loc.location_id),user_id=str(user.user_id))
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} в {to_loc.name}.")
         except Exception as e:
             print(f"\nКритична грешка при запис: {e}")

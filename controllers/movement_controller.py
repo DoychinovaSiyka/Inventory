@@ -7,8 +7,8 @@ from controllers.abstract_controller import AbstractController
 
 class MovementController(AbstractController):
 
-    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller,
-                 invoice_controller):
+    def __init__(self, repo, product_controller, user_controller,
+                 location_controller, supplier_controller):
 
         super().__init__(repo)
 
@@ -16,10 +16,19 @@ class MovementController(AbstractController):
         self.user_controller = user_controller
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
+
+        self.invoice_controller = None
+        self.inventory_controller = None
+
+        self.movements: List[Movement] = self.load() or []
+
+
+
+    def set_invoice_controller(self, invoice_controller):
         self.invoice_controller = invoice_controller
 
-        self.movements: List[Movement] = self.load()
-        self.inventory_controller = None
+    def set_inventory_controller(self, inventory_controller):
+        self.inventory_controller = inventory_controller
 
 
 
@@ -31,9 +40,6 @@ class MovementController(AbstractController):
 
     def _save_movements(self):
         self.save(self.movements)
-
-    def set_inventory_controller(self, inventory_controller):
-        self.inventory_controller = inventory_controller
 
 
 
@@ -49,9 +55,12 @@ class MovementController(AbstractController):
 
 
 
-
     def get_all(self) -> List[Movement]:
         return self.movements
+
+
+
+
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
@@ -62,7 +71,10 @@ class MovementController(AbstractController):
 
         return movement
 
+
+
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
+
         resolved_loc = self._location_id(location_id)
 
         MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity),
@@ -74,11 +86,14 @@ class MovementController(AbstractController):
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, quantity, location_id)
 
+        # Фактура
         if self.invoice_controller:
             self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
                                                          customer=customer or "Общ клиент", user_id=user_id)
 
         return movement
+
+
 
 
 
@@ -90,6 +105,7 @@ class MovementController(AbstractController):
             self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
 
         return movement
+
 
 
     def create_movement(self, product_id: str, user_id: str, movement_type: str,
@@ -108,6 +124,7 @@ class MovementController(AbstractController):
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
+        # MOVE
         if m_type_str == "MOVE":
             resolved_loc = None
             resolved_from = self._location_id(from_location_id)
@@ -116,6 +133,7 @@ class MovementController(AbstractController):
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
             prc = 0.0
 
+        # IN / OUT
         else:
             resolved_loc = self._location_id(location_id)
             resolved_from = None
@@ -126,8 +144,13 @@ class MovementController(AbstractController):
 
 
 
-            if price is not None and str(price).strip() != "":
-                prc = float(price)
+            if price:
+                clean = str(price).lower()
+                clean = clean.replace("лв.", "").replace("лв", "")
+                clean = clean.replace(",", ".").replace(" ", "").strip()
+                if clean.endswith("."):
+                    clean = clean[:-1]
+                prc = float(clean)
             else:
                 prc = float(product.price)
 

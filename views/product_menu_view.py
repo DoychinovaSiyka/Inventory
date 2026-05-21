@@ -13,8 +13,6 @@ class ProductMenuView:
         self.allowed_units = ["кг.", "бр.", "л.", "пакет"]
         self.sort_view = ProductSortView(product_controller, self)
 
-
-
     def _print_products(self, products, title=""):
         if not products:
             print("\nНяма намерени продукти.\n")
@@ -23,16 +21,13 @@ class ProductMenuView:
         rows = []
         for p in products:
             short_id = str(p.product_id)[:8]
-            price_text = f"{float(p.price):.2f} лв."
+            price_text = f"{float(p.price):.2f}"  # само числото, без 'лв.'
             rows.append([short_id, p.name[:30], price_text])
 
         if title:
             print(f"\n{title.upper()}")
 
-        print(format_table(["ID", "Име", "Цена"], rows))
-
-
-
+        print(format_table(["ID", "Име", "Цена (лв.)"], rows))
 
     def _select_parent_category(self):
         all_categories = self.category_controller.get_all()
@@ -67,13 +62,12 @@ class ProductMenuView:
 
 
     def _select_category(self):
-        # Взимаме дървото от CategoryController
         tree = self.category_controller.get_visual_tree()
         if not tree:
             print("\nНяма дефинирани категории.")
             return None
 
-        # Създаваме плосък списък за избор
+
         flat = []
         print("\nИЗБОР НА КАТЕГОРИЯ")
 
@@ -87,7 +81,7 @@ class ProductMenuView:
 
             flat.append(cat)
 
-        # Избор
+
         while True:
             choice = input("\nИзберете номер, име или съкратено ID: ").strip()
             if not choice:
@@ -311,15 +305,15 @@ class ProductMenuView:
         if not category_id:
             return
 
-        # 1) Взимаме всички подкатегории
+
         sub_ids = self.category_controller.get_all_hierarchical_ids(category_id)
         all_ids = [category_id] + sub_ids
 
-        # 2) Показваме избраната категория
+
         parent = self.category_controller.get_by_id(category_id)
         print(f"\nФИЛТЪР ПО КАТЕГОРИЯ: {parent.name}")
 
-        # 3) Показваме подкатегориите
+
         print("\nПодкатегории:")
         if not sub_ids:
             print(" (няма подкатегории)")
@@ -329,9 +323,8 @@ class ProductMenuView:
                 if cat:
                     print(f" - {cat.name}")
 
-        # 4) Филтрираме продуктите
+
         results = self.product_controller.filter_by_category_hierarchy(all_ids)
 
-        # 5) Показваме продуктите
         print("\nНамерени продукти:")
         self._print_products(results)

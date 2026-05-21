@@ -11,15 +11,12 @@ class UserController(AbstractController):
         self.logged_user: Optional[User] = None
         super().__init__(repo)
 
-        # Зареждаме потребителите
         self.users = self.load() or []
 
-        # Създаваме системните потребители, ако липсват
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
             self._create_default_operator()
-
 
     def from_dict(self, data):
         return User.from_dict(data)
@@ -39,27 +36,18 @@ class UserController(AbstractController):
             return user
         return self.get_by_username(identifier)
 
-
-
     def _hash_password(self, password: str) -> str:
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
 
-
-
     def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
         return stored_password_hash == self._hash_password(provided_password)
-
-
 
     def is_admin(self, user):
         if not user:
             return False
         return str(user.role).lower() == "admin"
-
-
-
 
     def get_by_username(self, username: str) -> Optional[User]:
         if not username:
@@ -71,11 +59,8 @@ class UserController(AbstractController):
                 return u
         return None
 
-
     def get_all(self):
         return self.users
-
-
 
     def get_by_id(self, user_id: str) -> Optional[User]:
         uid = str(user_id or "").strip()
@@ -91,17 +76,12 @@ class UserController(AbstractController):
 
         return None
 
-
-
-
     def login(self, username: str, password: str) -> Optional[User]:
         user = UserValidator.validate_login(username, password, self)
         if user:
             self.logged_user = user
             return user
         return None
-
-
 
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")
@@ -116,21 +96,23 @@ class UserController(AbstractController):
         return new_user
 
 
+    def change_role(self, acting_user: User, identifier: str, new_role: str):
+        UserValidator.confirm_admin(acting_user)
 
-
-    def change_role(self, identifier, new_role):
         user = self.find_user_flexible(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
 
         UserValidator.validate_role(new_role)
+        UserValidator.validate_not_self(acting_user.username, user.username)
 
-        if user.role == new_role:
-            raise ValueError(f"Потребителят вече е с роля '{new_role}'.")
+        if user.role == "Admin" and new_role != "Admin":
+            UserValidator.validate_not_last_admin(user, self.users)
 
         user.role = new_role
         user.update_modified()
         self._save_users()
+        return True
 
 
 
@@ -148,9 +130,6 @@ class UserController(AbstractController):
         self._save_users()
         return True
 
-
-
-
     def delete_user(self, acting_user: User, identifier: str):
         user = self.find_user_flexible(identifier)
         if not user:
@@ -167,13 +146,12 @@ class UserController(AbstractController):
 
 
 
+
     def _create_default_admin(self):
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                      username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self._save_users()
-
-
 
     def _create_default_operator(self):
         operator = User(user_id=None, first_name="Operator", last_name="User",
@@ -181,9 +159,6 @@ class UserController(AbstractController):
                         role="Operator", status="Active")
         self.users.append(operator)
         self._save_users()
-
-
-
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
@@ -195,8 +170,7 @@ class UserController(AbstractController):
                     raise ValueError("Потребителското име може да съдържа само букви и цифри.")
 
             elif field_type == "email":
-                UserValidator.validate_user_data(username="tmp_valid", password="Valid123Password",
-                                                 email=value, role="Operator", status="Active")
+                UserValidator.validate_email(value)
 
             elif field_type == "password":
 

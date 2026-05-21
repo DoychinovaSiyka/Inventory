@@ -22,5 +22,17 @@
         "status": "Active",
         "created": "2026-05-21 15:00:18",
         "modified": "2026-05-21 15:00:18"
+    },
+    {
+        "user_id": "91a1bbee-74df-492e-a888-77747ecc6842",
+        "first_name": "Сийка",
+        "last_name": "Дойчинова",
+        "email": "doichinova06@abv.bg",
+        "username": "siyka",
+        "password": "8310512110797495051",
+        "role": "Admin",
+        "status": "Active",
+        "created": "2026-05-22 00:23:42",
+        "modified": "2026-05-22 00:23:42"
     }
 ]

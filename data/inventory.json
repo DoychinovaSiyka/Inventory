@@ -1,6 +1,42 @@
 {
-    "products": [],
+    "products": [
+        {
+            "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
+            "product_name": "Прясно мляко Верея 3.6%",
+            "unit": "л.",
+            "total": 950.0,
+            "warehouses": {
+                "Варна": 750.0,
+                "Пловдив": 200.0
+            },
+            "delivered": 1000.0,
+            "sold": 50.0,
+            "avg_in_price": 3.55,
+            "avg_out_price": 3.89,
+            "expense": 3550.0,
+            "revenue": 194.5,
+            "last_movement": "OUT - 2026-05-21 23:04:28"
+        },
+        {
+            "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
+            "product_name": "Кашкавал от краве масло",
+            "unit": "кг.",
+            "total": 446.0,
+            "warehouses": {
+                "Смолян": 280.0,
+                "София": 46.0,
+                "Варна": 120.0
+            },
+            "delivered": 456.0,
+            "sold": 10.0,
+            "avg_in_price": 25.56,
+            "avg_out_price": 24.01,
+            "expense": 11655.36,
+            "revenue": 240.1,
+            "last_movement": "MOVE - 2026-05-21 23:09:19"
+        }
+    ],
     "summary": {
-        "total_products": 0
+        "total_products": 2
     }
 }

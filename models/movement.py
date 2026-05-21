@@ -41,7 +41,9 @@ class Movement:
         self.unit = unit
 
         if price is not None:
-            self.price = float(price)
+            clean_price = str(price).lower()
+            clean_price = clean_price.replace("лв", "").replace(",", ".").strip()
+            self.price = float(clean_price)
         else:
             self.price = 0.0
 

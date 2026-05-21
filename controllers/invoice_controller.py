@@ -6,9 +6,11 @@ from controllers.abstract_controller import AbstractController
 
 class InvoiceController(AbstractController):
     """Управлява жизнения цикъл на фактурите."""
-    def __init__(self, repo):
+
+    def __init__(self, repo, movement_controller):
         super().__init__(repo)
         self.invoices = self.load() or []
+        self.movement_controller = movement_controller
 
 
     def from_dict(self, data):
@@ -21,17 +23,14 @@ class InvoiceController(AbstractController):
         self.save(self.invoices)
 
 
-
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
-        """Създава фактура въз основа на складово движение."""
-        # Проверява дали движението е от тип OUT
         InvoiceValidator.validate_movement_for_invoice(movement)
 
+        # Ако вече има фактура за това движение - връщаме я
         for inv in self.invoices:
             if inv.movement_id == movement.movement_id:
                 return inv
 
-        # Изчисляване на сумите
         qty = float(movement.quantity)
         u_price = float(movement.price)
         total = round(qty * u_price, 2)
@@ -47,17 +46,11 @@ class InvoiceController(AbstractController):
         return invoice
 
 
-
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
-        """Връща всички фактури."""
-        if include_cancelled:
-            return self.invoices
-        return [inv for inv in self.invoices if inv.is_active]
-
+        return self.invoices if include_cancelled else [inv for inv in self.invoices if inv.is_active]
 
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:
-        """Търси фактура по ID."""
         tid = str(invoice_id or "").strip().lower()
         if not tid:
             return None
@@ -68,26 +61,14 @@ class InvoiceController(AbstractController):
         return None
 
 
-
-
-
     def search(self, query: str) -> List[Invoice]:
         q = str(query or "").strip().lower()
-        if not q:
-            return []
-
-        results = []
-        for inv in self.invoices:
-            if inv.invoice_id[:8].lower() == q:
-                results.append(inv)
-
-        return results
-
-
-
+        return [inv for inv in self.invoices if inv.invoice_id[:8].lower() == q]
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        """Анулира фактура по подадено кратко ID."""
+        """Анулира фактура и връща стоката в склада, ако е OUT движение."""
+
+
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False
@@ -95,6 +76,24 @@ class InvoiceController(AbstractController):
         if not inv.is_active:
             return False
 
-        inv.cancel()  # Променя статуса
+
+        movement = None
+        for m in self.movement_controller.movements:
+            if m.movement_id == inv.movement_id:
+                movement = m
+                break
+
+        # Ако движението е OUT - връщаме стоката обратно
+        if movement and movement.movement_type.name == "OUT":
+            self.movement_controller.inventory_controller.increase_stock(movement.product_id,
+                                                                         movement.quantity, movement.location_id)
+
+
+            self.movement_controller.movements.remove(movement)
+            self.movement_controller._save_movements()
+
+
+        inv.cancel()
         self._save_invoices()
+
         return True

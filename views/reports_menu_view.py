@@ -16,7 +16,6 @@ class ReportsView:
         print(format_table(headers, rows))
 
 
-
     def _run_menu(self, menu_obj, user):
         while True:
             choice = menu_obj.show()
@@ -38,17 +37,13 @@ class ReportsView:
         self._run_menu(menu, user)
 
 
-
-
     def format_card(self, item):
         try:
             lines = []
             lines.append("─" * 45)
 
-
             product_name = str(item.get('product', 'НЕИЗВЕСТЕН ПРОДУКТ')).upper()
             lines.append(f"ПРОДУКТ:          {product_name}")
-
 
             unit = item.get('unit', 'бр.')
             total_qty = item.get('total', 0)
@@ -80,7 +75,6 @@ class ReportsView:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
 
 
-
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
 
@@ -106,7 +100,6 @@ class ReportsView:
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
 
-
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
@@ -117,7 +110,6 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
-
 
 
     def report_sales_all(self, _):
@@ -136,22 +128,32 @@ class ReportsView:
 
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
-        rows = []
+
+        groups = {}
         for item in result.data:
-            rows.append([item["product"], f"{item['total']} {item['unit']}"])
+            unit = item["unit"]
+            groups.setdefault(unit, []).append(item)
 
-        headers = ["Продукт", "Наличност"]
-        self._display_report("СОРТИРАНЕ ПО КОЛИЧЕСТВО (MERGE SORT)", headers, rows)
+        print("\nСОРТИРАНЕ ПО КОЛИЧЕСТВО (MERGE SORT)")
 
-
-
+        for unit, items in groups.items():
+            print(f"\nМерна единица: {unit}")
+            rows = [[i["product"], f"{i['total']} {i['unit']}"] for i in items]
+            headers = ["Продукт", "Наличност"]
+            print(format_table(headers, rows))
 
 
     def sort_qty_quick(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="quick", reverse=True)
-        rows = []
-        for item in result.data:
-            rows.append([item["product"], f"{item['total']} {item['unit']}"])
 
-        headers = ["Продукт", "Наличност"]
-        self._display_report("СОРТИРАНЕ ПО КОЛИЧЕСТВО (QUICK SORT)", headers, rows)
+        groups = {}
+        for item in result.data:
+            unit = item["unit"]
+            groups.setdefault(unit, []).append(item)
+
+        print("\nСОРТИРАНЕ ПО КОЛИЧЕСТВО (QUICK SORT)")
+        for unit, items in groups.items():
+            print(f"\nМерна единица: {unit}")
+            rows = [[i["product"], f"{i['total']} {i['unit']}"] for i in items]
+            headers = ["Продукт", "Наличност"]
+            print(format_table(headers, rows))

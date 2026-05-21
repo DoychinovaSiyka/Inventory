@@ -37,37 +37,32 @@ class InventoryApplication:
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-
-
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
         self.location_controller = LocationController(self.location_repo)
-        self.invoice_controller = InvoiceController(self.invoice_repo)
 
-        # Продукти
         self.product_controller = ProductController(self.product_repo, self.category_controller)
 
+        self.movement_controller = MovementController(self.movement_repo, self.product_controller,
+                                                      self.user_controller, self.location_controller,
+                                                      self.supplier_controller)
 
-        self.movement_controller = MovementController(self.movement_repo, self.product_controller, self.user_controller,
-                                                      self.location_controller, self.supplier_controller, self.invoice_controller)
-
-        # Инвентар
         self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller,
                                                         self.location_controller, self.movement_controller)
 
-
         self.movement_controller.set_inventory_controller(self.inventory_controller)
 
-        # Отчети
-        self.report_controller = ReportController(self.product_controller, self.movement_controller,
-                                                  self.invoice_controller, self.location_controller, self.inventory_controller,
-                                                  self.supplier_controller)
+        self.invoice_controller = InvoiceController(self.invoice_repo, self.movement_controller)
 
+        self.movement_controller.set_invoice_controller(self.invoice_controller)
+
+        self.report_controller = ReportController(self.product_controller, self.movement_controller,
+                                                  self.invoice_controller, self.location_controller,
+                                                  self.inventory_controller, self.supplier_controller)
 
         self.graph_view = GraphView(self.inventory_controller, self.location_controller, self.product_controller)
-
 
 
 
