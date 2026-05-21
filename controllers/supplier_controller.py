@@ -6,7 +6,6 @@ from controllers.abstract_controller import AbstractController
 
 class SupplierController(AbstractController):
     """Управлява доставчиците в системата."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.suppliers = self.load() or []

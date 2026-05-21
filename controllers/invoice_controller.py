@@ -24,7 +24,6 @@ class InvoiceController(AbstractController):
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
         """Създава фактура въз основа на складово движение."""
-
         # Проверява дали движението е от тип OUT
         InvoiceValidator.validate_movement_for_invoice(movement)
 

@@ -13,7 +13,6 @@ class InventoryController(AbstractController):
 
 
         raw_data = self.load()
-
         if isinstance(raw_data, dict) and "products" in raw_data:
             self.data = raw_data
         else:

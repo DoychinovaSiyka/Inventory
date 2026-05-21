@@ -19,7 +19,8 @@ class JSONRepository(Repository):
             with open(self.filepath, "r", encoding="utf-8") as f:
                 self._cache = json.load(f)
                 return self._cache
-        except: return None
+        except:
+            return None
 
 
 
