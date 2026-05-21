@@ -1,47 +1,47 @@
 [
     {
-        "location_id": "3a94c75c-a29a-440e-b9f1-8edd5884bbae",
-        "name": "София (W1)",
+        "location_id": "baf64ac5-8289-4706-9f8c-5384c175495d",
+        "name": "София",
         "zone": "Централен Хъб",
         "capacity": 5000,
-        "created": "2026-05-11 15:07:47",
-        "modified": "2026-05-11 15:07:47",
+        "created": "2026-05-21 15:38:47",
+        "modified": "2026-05-21 15:38:47",
         "code": "W1"
     },
     {
-        "location_id": "03d98b48-d4b9-4268-b867-516e7b7eceb0",
-        "name": "Пловдив (W2)",
+        "location_id": "260bf38b-fb65-4a5e-8411-a3a92ab885c9",
+        "name": "Пловдив",
         "zone": "Южна зона",
         "capacity": 3000,
-        "created": "2026-05-11 15:56:14",
-        "modified": "2026-05-11 15:56:14",
+        "created": "2026-05-21 15:39:42",
+        "modified": "2026-05-21 15:40:20",
         "code": "W2"
     },
     {
-        "location_id": "c92d9984-991c-4c18-9672-962cf0345c7c",
-        "name": "Варна (W3)",
+        "location_id": "550a98d8-9a68-4dc2-9c63-6305d1a8bf6a",
+        "name": "Варна",
         "zone": "Североизток - Порт",
         "capacity": 2500,
-        "created": "2026-05-11 15:57:15",
-        "modified": "2026-05-11 15:57:15",
+        "created": "2026-05-21 15:41:06",
+        "modified": "2026-05-21 15:41:06",
         "code": "W3"
     },
     {
-        "location_id": "5281632b-fd14-4b17-8e66-c4e8d265323a",
-        "name": "Бургас (W4)",
+        "location_id": "1e1f9fa9-d845-4fa8-a17c-057401701e90",
+        "name": "Бургас",
         "zone": "General",
         "capacity": 2000,
-        "created": "2026-05-11 16:26:09",
-        "modified": "2026-05-11 16:26:09",
+        "created": "2026-05-21 15:41:54",
+        "modified": "2026-05-21 15:41:54",
         "code": "W4"
     },
     {
-        "location_id": "9156e3a0-71cd-4d75-a5ef-600327e4a4e3",
-        "name": "Смолян (W5)",
+        "location_id": "12f11b5e-eddb-4cc3-83b3-1c5329b1e3cd",
+        "name": "Смолят",
         "zone": "Магазин",
         "capacity": 500,
-        "created": "2026-05-11 16:26:38",
-        "modified": "2026-05-11 16:27:32",
+        "created": "2026-05-21 15:42:50",
+        "modified": "2026-05-21 15:42:50",
         "code": "W5"
     }
 ]

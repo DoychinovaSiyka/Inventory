@@ -6,14 +6,11 @@ from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 
 
-
-
-
 class CategoryController(AbstractController):
     """Управлява категориите и йерархичната им структура."""
     def __init__(self, repo):
         super().__init__(repo)
-        self.categories = self.load()
+        self.categories: List[Category] = self.load()
 
     def from_dict(self, data):
         return Category.from_dict(data)
@@ -21,15 +18,11 @@ class CategoryController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-
     def _save_categories(self):
-        self.save(self._categories)
-
+        self.save(self.categories)
 
     def get_all(self) -> List[Category]:
         return self.categories
-
-
 
     def add(self, category_data: dict, user_id: str) -> Category:
         name = CategoryValidator.validate_name(category_data.get("name", ""))
@@ -51,9 +44,6 @@ class CategoryController(AbstractController):
         self.categories.append(category)
         self._save_categories()
         return category
-
-
-
 
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
@@ -87,8 +77,6 @@ class CategoryController(AbstractController):
         self._save_categories()
         return True
 
-
-
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
         category = self.get_by_id(category_id)
         if not category:
@@ -101,9 +89,6 @@ class CategoryController(AbstractController):
         self._save_categories()
         return True
 
-
-
-
     def get_by_id(self, user_input: str) -> Optional[Category]:
         target = str(user_input or "").strip().lower()
         for c in self.categories:
@@ -112,15 +97,11 @@ class CategoryController(AbstractController):
                 return c
         return None
 
-
-
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
         parent_cat = self.get_by_id(parent_short_id)
         if not parent_cat:
             return []
         return get_all_children_ids(self.categories, parent_cat.category_id)
-
-
 
     def search(self, keyword: str) -> List[dict]:
         filtered = filter_categories(self.categories, keyword)
@@ -131,13 +112,13 @@ class CategoryController(AbstractController):
                             "parent": parent_obj.name if parent_obj else None})
         return results
 
-
-
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
         categories_with_counts = get_category_stats(self.categories, products)
 
         return {"total_categories": len(self.categories), "categories": categories_with_counts}
+
+
 
 
 
@@ -158,7 +139,6 @@ class CategoryController(AbstractController):
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
-
         try:
             if field_type == "name":
                 CategoryValidator.validate_name(value)
@@ -168,6 +148,5 @@ class CategoryController(AbstractController):
                 if value and not self.get_by_id(value):
                     raise ValueError("Невалидна родителска категория.")
             return None
-
         except ValueError as e:
             return str(e)
