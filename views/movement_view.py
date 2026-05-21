@@ -15,7 +15,6 @@ class MovementView:
 
 
 
-
     def _float(self, prompt):
         while True:
             val = input(prompt).strip()
@@ -73,12 +72,12 @@ class MovementView:
                 print("Невалиден избор. Опитайте пак.")
 
 
+
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
             MenuItem("1", "Доставка (вход)", self.process_delivery),
             MenuItem("2", "Продажба (изход)", self.process_sale),
             MenuItem("3", "Вътрешно преместване", self.process_transfer),
-            MenuItem("4", "Търсене на движения", self.advanced_search),
             MenuItem("0", "Назад", lambda u: "break")])
 
         while True:
@@ -87,7 +86,6 @@ class MovementView:
                 break
             if menu.execute(choice, user) == "break":
                 break
-
 
     def process_delivery(self, user):
         print("\nНова доставка")
@@ -112,7 +110,6 @@ class MovementView:
 
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
 
-
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
@@ -120,7 +117,6 @@ class MovementView:
             if stock > 0:
                 valid.append((loc, stock))
         return valid
-
 
     def _select_location_for_sale(self, product):
         valid = self._get_locations_with_stock(product)
@@ -142,7 +138,6 @@ class MovementView:
 
         print("Невалиден избор.")
         return None
-
 
     def process_sale(self, user):
         print("\nНова продажба")
@@ -174,6 +169,8 @@ class MovementView:
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
+
+
 
 
     def process_transfer(self, user):
@@ -224,66 +221,8 @@ class MovementView:
                 print(f"Недостатъчна наличност. Максимумът е {available:.2f}.")
 
         try:
-            self.movement_controller.move_stock(product_id=product_id, quantity=qty,
-                                                from_loc=from_loc_id, to_loc=str(to_loc.location_id), user_id=str(user.user_id))
+            self.movement_controller.move_stock(product_id=product_id, quantity=qty, from_loc=from_loc_id,
+                                                to_loc=str(to_loc.location_id), user_id=str(user.user_id))
             print(f"\nПреместени {qty:.2f} {product.unit} от {from_loc.name} в {to_loc.name}.")
         except Exception as e:
             print(f"\nКритична грешка при запис: {e}")
-
-
-    def advanced_search(self, user):
-        print("\n ТЪРСЕНЕ НА ДВИЖЕНИЯ ")
-        print("1. По Тип (IN/OUT/MOVE)")
-        print("2. По Продукт")
-        print("3. По Дата (ГГГГ-ММ-ДД)")
-        print("4. По Склад")
-        print("0. Всички движения")
-
-        choice = input("\nВашият избор: ").strip()
-        search_params = {}
-
-        if choice == "1":
-            print("1. IN\n2. OUT\n3. MOVE")
-            sub = input("Избор: ").strip()
-            mapping = {"1": "IN", "2": "OUT", "3": "MOVE"}
-            search_params["movement_type"] = mapping.get(sub, "IN")
-
-        elif choice == "2":
-            product = self._select_item(self.product_controller.get_all(), "продукт")
-            if product:
-                search_params["product_id"] = str(product.product_id)
-
-        elif choice == "3":
-            date_str = input("Въведете дата (ГГГГ-ММ-ДД): ").strip()
-            search_params["date"] = date_str
-
-        elif choice == "4":
-            loc = self._select_item(self.location_controller.get_all(), "склад")
-            if loc:
-                search_params["location_id"] = str(loc.location_id)
-
-        elif choice != "0":
-            print("Невалиден избор.")
-            return
-
-        results = self.movement_controller.search_movements(**search_params)
-
-        if not results:
-            print("\nНяма намерени движения.")
-            return
-
-        headers = ["Дата", "Тип", "Продукт", "Кол.", "Склад/Обект"]
-        rows = []
-
-        for m in results:
-            if m.movement_type.name == "IN":
-                target = "От доставчик"
-            elif m.movement_type.name == "OUT":
-                target = f"Към {m.customer}"
-            else:
-                target = "Трансфер"
-
-            rows.append([str(m.date)[:10], m.movement_type.name, m.product_name, f"{m.quantity} {m.unit}", target])
-
-        print(f"\nНамерени резултати: {len(results)}")
-        print(format_table(headers, rows))

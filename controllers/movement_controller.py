@@ -1,6 +1,5 @@
 import uuid
 from typing import Optional, List
-from datetime import datetime
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
 from controllers.abstract_controller import AbstractController
@@ -19,9 +18,9 @@ class MovementController(AbstractController):
         self.supplier_controller = supplier_controller
         self.invoice_controller = invoice_controller
 
-
         self.movements: List[Movement] = self.load()
         self.inventory_controller = None
+
 
 
     def from_dict(self, data):
@@ -33,10 +32,8 @@ class MovementController(AbstractController):
     def _save_movements(self):
         self.save(self.movements)
 
-
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
-
 
 
 
@@ -56,9 +53,6 @@ class MovementController(AbstractController):
     def get_all(self) -> List[Movement]:
         return self.movements
 
-
-
-
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
                                         quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
@@ -67,9 +61,6 @@ class MovementController(AbstractController):
             self.inventory_controller.increase_stock(product_id, quantity, location_id)
 
         return movement
-
-
-
 
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
         resolved_loc = self._location_id(location_id)
@@ -91,8 +82,6 @@ class MovementController(AbstractController):
 
 
 
-
-
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
                                         quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
@@ -103,53 +92,10 @@ class MovementController(AbstractController):
         return movement
 
 
-
-
-    def search_movements(self, product_id=None, movement_type=None, date=None, location_id=None, customer=None, supplier_id=None) -> List[Movement]:
-        results = []
-
-        for m in self.movements:
-            ok = True
-
-            if product_id is not None and str(m.product_id) != str(product_id):
-                ok = False
-
-            if movement_type is not None and m.movement_type.name != movement_type:
-                ok = False
-
-
-            if date is not None and str(m.date)[:10] != str(date):
-                ok = False
-
-
-            if location_id is not None:
-                is_in_loc = (str(m.location_id) == str(location_id) or
-                             str(m.from_location_id) == str(location_id) or
-                             str(m.to_location_id) == str(location_id))
-                if not is_in_loc:
-                    ok = False
-
-
-            if customer is not None and m.customer != customer:
-                ok = False
-
-
-            if supplier_id is not None and str(m.supplier_id) != str(supplier_id):
-                ok = False
-
-
-            if ok:
-                results.append(m)
-
-        return results
-
-
-
     def create_movement(self, product_id: str, user_id: str, movement_type: str,
                         quantity: str, price: Optional[str], location_id: Optional[str] = None,
                         customer: Optional[str] = None, supplier_id: Optional[str] = None,
                         from_location_id: Optional[str] = None, to_location_id: Optional[str] = None) -> Movement:
-
 
         product = self.product_controller.get_by_id(product_id)
         if not product:
@@ -159,10 +105,8 @@ class MovementController(AbstractController):
         if not user:
             raise ValueError("Потребителят не е намерен.")
 
-
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
-
 
         if m_type_str == "MOVE":
             resolved_loc = None
@@ -173,7 +117,6 @@ class MovementController(AbstractController):
             prc = 0.0
 
         else:
-
             resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
@@ -187,7 +130,6 @@ class MovementController(AbstractController):
                 prc = float(price)
             else:
                 prc = float(product.price)
-
 
         movement_id = str(uuid.uuid4())
 
