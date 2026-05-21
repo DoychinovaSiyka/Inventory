@@ -12,8 +12,6 @@ class InvoiceView:
             return None
         return text
 
-
-
     def _show_invoices(self, invoices):
         if not invoices:
             print("\nНяма намерени фактури.\n")
@@ -32,10 +30,9 @@ class InvoiceView:
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
 
-
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
-            MenuItem("1", "Активни фактури", self.show_all),
+            MenuItem("1", "Всички фактури", self.show_all),
             MenuItem("2", "Търсене по ID", self.search_by_id),
             MenuItem("3", "Анулиране по ID", self.cancel_by_id),
             MenuItem("0", "Назад", lambda u: "break")])
@@ -47,11 +44,9 @@ class InvoiceView:
             if menu.execute(choice, user) == "break":
                 break
 
-
     def show_all(self, _):
-        invoices = self.invoice_controller.get_all(include_cancelled=False)
+        invoices = self.invoice_controller.get_all(include_cancelled=True)
         self._show_invoices(invoices)
-
 
     def search_by_id(self, _):
         invoice_id = self._input("\nВъведете ID: ")
@@ -60,7 +55,6 @@ class InvoiceView:
 
         results = self.invoice_controller.search(invoice_id)
         self._show_invoices(results)
-
 
     def cancel_by_id(self, user):
         invoice_id = self._input("\nВъведете ID: ")
@@ -87,7 +81,6 @@ class InvoiceView:
         print("\n" + format_table(["Детайл", "Стойност"], rows))
 
         short_id = invoice.invoice_id[:8]
-
 
         if invoice.is_active:
             if self.invoice_controller.remove(short_id, user.user_id):

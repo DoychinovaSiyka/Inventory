@@ -34,9 +34,26 @@
             "expense": 11655.36,
             "revenue": 240.1,
             "last_movement": "MOVE - 2026-05-21 23:09:19"
+        },
+        {
+            "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
+            "product_name": "Картофи червени",
+            "unit": "кг.",
+            "total": 2770.0,
+            "warehouses": {
+                "Бургас": 1770.0,
+                "Пловдив": 1000.0
+            },
+            "delivered": 3000.0,
+            "sold": 230.0,
+            "avg_in_price": 2.01,
+            "avg_out_price": 2.34,
+            "expense": 6030.0,
+            "revenue": 538.2,
+            "last_movement": "MOVE - 2026-05-22 00:50:24"
         }
     ],
     "summary": {
-        "total_products": 2
+        "total_products": 3
     }
 }
