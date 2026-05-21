@@ -26,29 +26,16 @@ def filter_combined(products, **kwargs):
 
         results = filtered
 
-
-
     category_ids = kwargs.get("category_ids")
     if category_ids:
-        wanted = []
-        for cid in category_ids:
-            wanted.append(str(cid))
+        wanted = set(str(cid) for cid in category_ids)
 
         filtered = []
         for p in results:
-            product_cat_ids = []
             for c in p.categories:
-                product_cat_ids.append(str(c.category_id))
-
-
-            match = False
-            for cid in product_cat_ids:
-                if cid in wanted:
-                    match = True
+                if str(c.category_id) in wanted:
+                    filtered.append(p)
                     break
-
-            if match:
-                filtered.append(p)
 
         results = filtered
 

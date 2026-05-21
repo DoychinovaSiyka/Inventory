@@ -67,31 +67,45 @@ class ProductMenuView:
 
 
     def _select_category(self):
-        categories = sorted(self.category_controller.get_all(), key=lambda x: x.name.lower())
-        if not categories:
+        # Взимаме дървото от CategoryController
+        tree = self.category_controller.get_visual_tree()
+        if not tree:
             print("\nНяма дефинирани категории.")
             return None
 
-        while True:
-            print("\nИЗБОР НА КАТЕГОРИЯ")
-            for i, cat in enumerate(categories, start=1):
-                short_id = str(cat.category_id)[:8]
-                print(f"{i}. {cat.name} ({short_id})")
+        # Създаваме плосък списък за избор
+        flat = []
+        print("\nИЗБОР НА КАТЕГОРИЯ")
 
+        for idx, item in enumerate(tree, start=1):
+            cat = item["category"]
+            level = item["level"]
+            short_id = str(cat.category_id)[:8]
+
+            indent = "  " * level
+            print(f"{idx}. {indent}{cat.name} ({short_id})")
+
+            flat.append(cat)
+
+        # Избор
+        while True:
             choice = input("\nИзберете номер, име или съкратено ID: ").strip()
             if not choice:
                 return None
+
+            # Избор по номер
             if choice.isdigit():
                 idx = int(choice) - 1
-                if 0 <= idx < len(categories):
-                    return categories[idx].category_id
+                if 0 <= idx < len(flat):
+                    return flat[idx].category_id
 
-            for cat in categories:
+            # Избор по име или ID
+            for cat in flat:
                 short_id = str(cat.category_id)[:8]
                 if choice.lower() == cat.name.lower() or choice.lower() == short_id:
                     return cat.category_id
 
-            print("Невалидна категория. Опитайте отново.")
+            print("Невалиден избор. Опитайте отново.")
 
 
 
@@ -292,12 +306,32 @@ class ProductMenuView:
             results = self.product_controller.search(keyword)
             self._print_products(results, f"Резултати за '{keyword}'")
 
-
     def filter_by_category(self, _):
         category_id = self._select_parent_category()
         if not category_id:
             return
 
-        all_ids = [category_id] + self.category_controller.get_all_hierarchical_ids(category_id)
+        # 1) Взимаме всички подкатегории
+        sub_ids = self.category_controller.get_all_hierarchical_ids(category_id)
+        all_ids = [category_id] + sub_ids
+
+        # 2) Показваме избраната категория
+        parent = self.category_controller.get_by_id(category_id)
+        print(f"\nФИЛТЪР ПО КАТЕГОРИЯ: {parent.name}")
+
+        # 3) Показваме подкатегориите
+        print("\nПодкатегории:")
+        if not sub_ids:
+            print(" (няма подкатегории)")
+        else:
+            for cid in sub_ids:
+                cat = self.category_controller.get_by_id(cid)
+                if cat:
+                    print(f" - {cat.name}")
+
+        # 4) Филтрираме продуктите
         results = self.product_controller.filter_by_category_hierarchy(all_ids)
-        self._print_products(results, "Резултати")
+
+        # 5) Показваме продуктите
+        print("\nНамерени продукти:")
+        self._print_products(results)

@@ -47,24 +47,22 @@ def get_all_children_objects(categories: List[Category], parent_id: str, visited
 
 
 
+
 def get_all_children_ids(categories, parent_id):
-    """Връща списък с ID-то на родителя и всички негови подкатегории."""
-    result = [str(parent_id)]
+    result = []
+    visited = set()
 
-    # намираме всички деца
-    for cat in categories:
-        if str(cat.parent_id) == str(parent_id):
-            result.append(str(cat.category_id))
+    def collect(pid):
+        pid_str = str(pid)
+        if pid_str in visited:
+            return
+        visited.add(pid_str)
 
-            # проверяваме и под-децата
-            for sub in categories:
-                if str(sub.parent_id) == str(cat.category_id):
-                    result.append(str(sub.category_id))
+        for c in categories:
+            if str(c.parent_id) == pid_str:
+                cid = str(c.category_id)
+                result.append(cid)
+                collect(cid)
 
-
-    unique = []
-    for cid in result:
-        if cid not in unique:
-            unique.append(cid)
-
-    return unique
+    collect(parent_id)
+    return result
