@@ -80,6 +80,7 @@ class InvoiceView:
 
         print("\n" + format_table(["Детайл", "Стойност"], rows))
 
+
         short_id = invoice.invoice_id[:8]
 
         if invoice.is_active:
