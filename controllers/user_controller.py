@@ -6,7 +6,6 @@ from controllers.abstract_controller import AbstractController
 
 class UserController(AbstractController):
     """Управлява потребителите, автентикацията, ролите и статусите."""
-
     def __init__(self, repo):
         self.logged_user: Optional[User] = None
         super().__init__(repo)
@@ -213,7 +212,6 @@ class UserController(AbstractController):
                 UserValidator.validate_email(value)
 
             elif field_type == "password":
-
                 UserValidator.validate_user_data(username="tmp_valid", password=value,
                                                  email="tmp@email.com", role="Operator", status="Active")
 

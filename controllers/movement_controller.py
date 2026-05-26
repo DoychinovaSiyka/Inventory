@@ -16,7 +16,6 @@ class MovementController(AbstractController):
         self.user_controller = user_controller
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
-
         self.invoice_controller = None
         self.inventory_controller = None
 

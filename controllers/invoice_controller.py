@@ -68,7 +68,6 @@ class InvoiceController(AbstractController):
     def remove(self, invoice_id: str, user_id: str) -> bool:
         """Анулира фактура и връща стоката в склада, ако е OUT движение."""
 
-
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False

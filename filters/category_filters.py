@@ -24,28 +24,6 @@ def filter_categories(categories, keyword):
 
 
 
-def get_all_children_objects(categories: List[Category], parent_id: str, visited=None) -> List[Category]:
-    """Рекурсивно събиране на всички наследници."""
-    results = []
-    if not parent_id:
-        return results
-
-    if visited is None:
-        visited = set()
-
-    parent_id_str = str(parent_id).strip()
-    if parent_id_str in visited:
-        return results
-    visited.add(parent_id_str)
-
-    for c in categories:
-        if c.parent_id and str(c.parent_id).strip() == parent_id_str:
-            results.append(c)
-            results.extend(get_all_children_objects(categories, c.category_id, visited))
-
-    return results
-
-
 
 
 def get_all_children_ids(categories, parent_id):

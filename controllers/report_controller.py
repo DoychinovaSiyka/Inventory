@@ -53,7 +53,6 @@ class ReportController:
             delivered = sum(float(m.quantity) for m in in_moves)
             sold = sum(float(m.quantity) for m in out_moves)
 
-
             in_prices = [float(m.price) for m in in_moves if m.price]
             out_prices = [float(m.price) for m in out_moves if m.price]
 

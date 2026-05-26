@@ -210,7 +210,7 @@ class InventoryController(AbstractController):
                 last_movement = "Няма движения"
 
 
-            rows.append({ "product_id": pid, "product_name": product_obj.name,
+            rows.append({"product_id": pid, "product_name": product_obj.name,
                           "unit": product_obj.unit, "total": total, "warehouses": warehouse_map,
                           "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
                           "avg_out_price": avg_out, "expense": expense, "revenue": revenue,

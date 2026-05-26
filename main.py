@@ -20,6 +20,7 @@ from storage.json_repository import JSONRepository
 
 
 
+
 class InventoryApplication:
     def __init__(self):
         self._init_repositories()

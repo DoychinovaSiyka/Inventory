@@ -17,17 +17,14 @@ class CategoryView:
                 break
 
     def _build_menu(self, is_admin):
-        items = [
-            MenuItem("1", "Списък с категории", self.show_all),
-            MenuItem("2", "Статистика за категориите", self.show_stats)
-        ]
+        items = [MenuItem("1", "Списък с категории", self.show_all),
+                 MenuItem("2", "Статистика за категориите", self.show_stats)]
 
         if is_admin:
             items.extend([
                 MenuItem("3", "Добавяне на категория", self.add_category),
                 MenuItem("4", "Редактиране на категория", self.edit_category),
-                MenuItem("5", "Изтриване на категория", self.delete_category)
-            ])
+                MenuItem("5", "Изтриване на категория", self.delete_category)])
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
@@ -96,10 +93,7 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            new_cat = self.controller.add(
-                {"name": name, "description": description, "parent_id": parent_id},
-                user_id=user.user_id
-            )
+            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
             print(f"\nКатегорията '{new_cat.name}' е добавена успешно.")
         except ValueError as e:
             print(f"Грешка при валидация: {e}")

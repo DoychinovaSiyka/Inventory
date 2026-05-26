@@ -103,14 +103,6 @@ class CategoryController(AbstractController):
             return []
         return get_all_children_ids(self.categories, parent_cat.category_id)
 
-    def search(self, keyword: str) -> List[dict]:
-        filtered = filter_categories(self.categories, keyword)
-        results = []
-        for c in filtered:
-            parent_obj = self.get_by_id(c.parent_id) if c.parent_id else None
-            results.append({"id": c.category_id, "name": c.name, "description": c.description,
-                            "parent": parent_obj.name if parent_obj else None})
-        return results
 
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []

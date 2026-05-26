@@ -6,7 +6,6 @@ from controllers.abstract_controller import AbstractController
 
 class LocationController(AbstractController):
     """Контролерът управлява локациите в системата."""
-
     def __init__(self, repo, inventory_controller=None):
         self.inventory_controller = inventory_controller
         super().__init__(repo)

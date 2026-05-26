@@ -76,14 +76,7 @@ class ProductController(AbstractController):
         if not categories and category_ids:
             raise ValueError("Избраните категории са невалидни.")
 
-        product = Product(
-            product_id=None,
-            name=name,
-            categories=categories,
-            unit=unit,
-            description=description,
-            price=price
-        )
+        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
 
         self.products.append(product)
         self._save_products()

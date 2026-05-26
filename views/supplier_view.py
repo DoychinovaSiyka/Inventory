@@ -20,15 +20,13 @@ class SupplierView:
     def _build_menu(self, is_admin):
         items = [
             MenuItem("1", "Списък с доставчици", self.show_suppliers),
-            MenuItem("2", "Търсене на доставчик", self.search_supplier)
-        ]
+            MenuItem("2", "Търсене на доставчик", self.search_supplier)]
 
         if is_admin:
             items.extend([
                 MenuItem("3", "Добавяне на доставчик", self.add_supplier),
                 MenuItem("4", "Редактиране на доставчик", self.edit_supplier),
-                MenuItem("5", "Изтриване на доставчик", self.delete_supplier)
-            ])
+                MenuItem("5", "Изтриване на доставчик", self.delete_supplier)])
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", items)
@@ -83,7 +81,7 @@ class SupplierView:
 
             break
 
-        # --- КОНТАКТ ---
+
         while True:
             contact = input("Контакт (тел/имейл): ").strip()
             if not contact:
@@ -94,7 +92,7 @@ class SupplierView:
                 break
             print(f"Грешка: {error}")
 
-        # --- АДРЕС ---
+
         while True:
             address = input("Адрес: ").strip()
             if not address:
@@ -124,7 +122,7 @@ class SupplierView:
 
         print(f"\nРедакция на: {supplier.name}")
 
-        # --- ИМЕ ---
+
         while True:
             n = input(f"Ново име [{supplier.name}]: ").strip()
             new_name = n if n else supplier.name
@@ -146,7 +144,7 @@ class SupplierView:
 
             break
 
-        # --- КОНТАКТ ---
+
         while True:
             c = input(f"Нов контакт [{supplier.contact}]: ").strip()
             new_contact = c if c else supplier.contact
@@ -156,7 +154,7 @@ class SupplierView:
                 break
             print(f"Грешка: {error}")
 
-        # --- АДРЕС ---
+
         while True:
             a = input(f"Нов адрес [{supplier.address}]: ").strip()
             new_address = a if a else supplier.address
