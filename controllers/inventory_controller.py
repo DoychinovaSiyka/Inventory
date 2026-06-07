@@ -184,7 +184,7 @@ class InventoryController(AbstractController):
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
 
-            # Взимаме всички движения за този продукт
+            # всички движения за този продукт
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
             in_moves = [m for m in moves if m.movement_type.name == "IN"]

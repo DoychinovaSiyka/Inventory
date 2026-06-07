@@ -170,7 +170,7 @@ class MovementView:
             return
 
         raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
-        sale_price = product.price if raw_price == "" else raw_price  # НЕ float()
+        sale_price = product.price if raw_price == "" else raw_price  
 
         try:
             self.movement_controller.add_out(str(product.product_id), qty, customer, str(location.location_id),

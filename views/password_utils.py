@@ -97,7 +97,7 @@ def require_password(correct_password):
             try:
                 password = input_password("Въведете парола: ")
             except Exception:
-                # Ако средата не поддържа - видима парола
+                # Ако средата не поддържа
                 password = input("Въведете парола (видима): ")
 
             if password == correct_password:
