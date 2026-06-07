@@ -29,6 +29,9 @@ class CategoryView:
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
 
+
+
+
     def show_all(self, _):
         visual_tree = self.controller.get_visual_tree()
         if not visual_tree:
@@ -50,6 +53,9 @@ class CategoryView:
                 indent = "  " * level
                 print(f"{indent}- {cat.name} ({short_id})")
 
+
+
+
     def show_stats(self, _):
         print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
         stats = self.controller.get_stats(self.product_controller)
@@ -62,6 +68,9 @@ class CategoryView:
 
         table_output = format_table(columns, rows)
         print(table_output)
+
+
+
 
     def add_category(self, user):
         print("\nНова категория")
@@ -100,6 +109,9 @@ class CategoryView:
         except Exception as e:
             print(f"Грешка при запис: {e}")
 
+
+
+
     def edit_category(self, user):
         print("\nРедактиране на категория")
         category = self.select_category()
@@ -130,18 +142,24 @@ class CategoryView:
             break
 
         print("\nИзберете нов родител:")
-        parent = self.select_category()
-        new_parent_id = parent.category_id if parent else category.parent_id
+        print("(Enter за запазване на текущия, напишете 'none' за главна категория)")
 
-        updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
+        choice = input("Избор: ").strip().lower()
 
-        try:
-            self.controller.update(category.category_id, updates)
-            print("Промените са запазени успешно.")
-        except ValueError as e:
-            print(f"Грешка при валидация: {e}")
-        except Exception as e:
-            print(f"Грешка при обновяване: {e}")
+        if choice == 'none':
+            new_parent_id = None
+        elif not choice:
+            new_parent_id = category.parent_id
+        else:
+            parent = self.controller.get_by_id(choice)
+            if parent:
+                new_parent_id = parent.category_id
+            else:
+                print("Невалидна категория. Запазва се старият родител.")
+                new_parent_id = category.parent_id
+
+
+
 
     def select_category(self):
         categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
@@ -167,6 +185,9 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
+
+
+
 
     def delete_category(self, user):
         print("\nИзтриване на категория")

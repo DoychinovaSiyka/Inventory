@@ -178,5 +178,41 @@
         "modified": "2026-05-22 00:50:24",
         "from_location_id": "1e1f9fa9-d845-4fa8-a17c-057401701e90",
         "to_location_id": "260bf38b-fb65-4a5e-8411-a3a92ab885c9"
+    },
+    {
+        "movement_id": "51638a1c-289e-4350-8fa5-3e983e8be3c9",
+        "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
+        "product_name": "кисело мляко \"Габровци\"",
+        "user_id": "d219709f-c19d-4e83-bd5a-2521748f38c0",
+        "location_id": "260bf38b-fb65-4a5e-8411-a3a92ab885c9",
+        "movement_type": "IN",
+        "quantity": 2220.0,
+        "unit": "бр.",
+        "price": 3.09,
+        "supplier_id": "3810510b-81a4-45fc-a3ce-4c5a8caa73fd",
+        "customer": "Общ клиент",
+        "date": "2026-05-27 22:52:54",
+        "created": "2026-05-27 22:52:54",
+        "modified": "2026-05-27 22:52:54",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "f275c03a-e3fc-4860-bf0c-b357326094d4",
+        "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
+        "product_name": "кисело мляко \"Габровци\"",
+        "user_id": "d219709f-c19d-4e83-bd5a-2521748f38c0",
+        "location_id": null,
+        "movement_type": "MOVE",
+        "quantity": 232.0,
+        "unit": "бр.",
+        "price": 0.0,
+        "supplier_id": null,
+        "customer": "Общ клиент",
+        "date": "2026-05-27 22:53:57",
+        "created": "2026-05-27 22:53:57",
+        "modified": "2026-05-27 22:53:57",
+        "from_location_id": "260bf38b-fb65-4a5e-8411-a3a92ab885c9",
+        "to_location_id": "12f11b5e-eddb-4cc3-83b3-1c5329b1e3cd"
     }
 ]

@@ -61,8 +61,6 @@ class SupplierView:
 
     def add_supplier(self, _):
         print("\nНов доставчик ")
-
-        # --- ИМЕ ---
         while True:
             name = input("Име: ").strip()
             if not name:
@@ -133,11 +131,7 @@ class SupplierView:
                 continue
 
             try:
-                SupplierValidator.validate_unique_name(
-                    new_name,
-                    self.controller.suppliers,
-                    exclude_id=supplier.supplier_id
-                )
+                SupplierValidator.validate_unique_name(new_name, self.controller.suppliers, exclude_id=supplier.supplier_id)
             except ValueError as e:
                 print(f"Грешка: {e}")
                 continue

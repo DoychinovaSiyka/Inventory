@@ -88,7 +88,6 @@ class UserView:
 
     def change_role(self, current_user):
         print("\nПРОМЯНА НА РОЛЯ")
-
         target = input("Въведете Username или ID: ").strip()
         if not target:
             return

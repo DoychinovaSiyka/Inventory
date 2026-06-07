@@ -70,7 +70,6 @@ class ProductMenuView:
 
         flat = []
         print("\nИЗБОР НА КАТЕГОРИЯ")
-
         for idx, item in enumerate(tree, start=1):
             cat = item["category"]
             level = item["level"]
@@ -312,7 +311,6 @@ class ProductMenuView:
 
         parent = self.category_controller.get_by_id(category_id)
         print(f"\nФИЛТЪР ПО КАТЕГОРИЯ: {parent.name}")
-
 
         print("\nПодкатегории:")
         if not sub_ids:

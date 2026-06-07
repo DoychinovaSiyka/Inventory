@@ -164,7 +164,6 @@ class MovementView:
         customer = input("Клиент (Enter за 'Общ клиент'): ").strip() or "Общ клиент"
 
         max_stock = self.inventory_controller.get_stock(str(product.product_id), str(location.location_id))
-
         qty = self._float(f"Количество (макс {max_stock}): ")
         if qty > max_stock:
             print(f"Няма толкова наличност ({max_stock}).")

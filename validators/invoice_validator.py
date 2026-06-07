@@ -12,7 +12,7 @@ class InvoiceValidator:
             m_type = str(movement.movement_type).upper()
 
         if m_type != "OUT":
-            raise ValueError(f"Критична грешка: Не може да се издаде фактура за движение тип '{m_type}'. "
+            raise ValueError(f"Не може да се издаде фактура за движение тип '{m_type}'. "
                 f"Системата позволява фактуриране само на продажби към клиенти (OUT).")
 
 

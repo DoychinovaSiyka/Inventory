@@ -21,7 +21,7 @@ class ReportController:
 
 
 
-    # проверява дали даден текст съдържа ключова дума
+    # дали даден текст съдържа ключова дума
     def _match_string(self, target: str, keyword: str) -> bool:
         if not keyword:
             return True
@@ -111,7 +111,7 @@ class ReportController:
 
 
 
-    # Отчет за продажбите – взимаме само активните фактури
+    # Отчет за продажбите – активните фактури
     def report_sales(self):
         active = [i for i in self.invoice_controller.get_all() if i.is_active]
         data = [{"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10], "client": i.customer,

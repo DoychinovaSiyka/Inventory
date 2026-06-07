@@ -1,3 +1,4 @@
+from filters.category_filters import get_all_children_ids
 from typing import List, Optional, Any
 
 
@@ -43,7 +44,7 @@ class CategoryValidator:
         if category_id and str(category_id) == str(parent_id):
             raise ValueError("Категорията не може да бъде родител на самата себе си.")
 
-        # Започваме да се изкачваме нагоре по веригата
+        # Изкачваме се нагоре по веригата
         current_parent_id = parent_id
 
         while current_parent_id:
@@ -66,25 +67,19 @@ class CategoryValidator:
 
 
 
+
     @staticmethod
     def validate_can_delete(category_id, all_categories, products):
-        """ Проверява дали категорията може да бъде изтрита. """
         cid = str(category_id)
 
-        # Проверка за подкатегории
-        for c in all_categories:
-            if str(c.parent_id) == cid:
-                raise ValueError("Категорията има подкатегории. Изтрийте ги първо.")
+        # Търсим ВСИЧКИ подкатегории
+        all_descendant_ids = get_all_children_ids(all_categories, cid)
+        if all_descendant_ids:
+            raise ValueError(f"Категорията има {len(all_descendant_ids)} подкатегории в йерархията. Изтрийте ги първо.")
 
-        # Проверка дали категорията се използва от продукт
+        # Проверка за продукти в тази конкретна категория
         for p in products:
             for pc in p.categories:
-
-                # Нормализиране на ID
-                if type(pc) is str or type(pc) is int:
-                    current_id = str(pc)
-                else:
-                    current_id = str(pc.category_id)
-
+                current_id = str(pc) if isinstance(pc, (str, int)) else str(pc.category_id)
                 if current_id == cid:
-                    raise ValueError("Категорията се използва от продукт '" + p.name + "'.")
+                    raise ValueError(f"Категорията се използва от продукт '{p.name}'.")
