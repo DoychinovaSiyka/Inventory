@@ -82,5 +82,19 @@
         "date": "2026-05-27 22:53:41",
         "created": "2026-05-27 22:53:41",
         "modified": "2026-05-27 22:54:58"
+    },
+    {
+        "invoice_id": "b08bdea7-e4e8-409d-90a4-d83c4fb314d1",
+        "movement_id": "c0ec7cc5-17fd-48eb-a780-8b00d0d875fc",
+        "product": "Салам Бургас",
+        "quantity": 9.0,
+        "unit": "бр.",
+        "unit_price": 8.34,
+        "total_price": 75.06,
+        "customer": "Димитър",
+        "is_active": true,
+        "date": "2026-06-12 13:19:45",
+        "created": "2026-06-12 13:19:45",
+        "modified": "2026-06-12 13:19:45"
     }
 ]

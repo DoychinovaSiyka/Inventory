@@ -33,8 +33,11 @@ class ReportsView:
             MenuItem("4", "Всички продажби", self.report_sales_all),
             MenuItem("5", "Сортиране по количество (Merge Sort)", self.sort_qty_merge),
             MenuItem("6", "Сортиране по количество (Quick Sort)", self.sort_qty_quick),
+            MenuItem("7", "Филтриране на движения", self.movements_filter_menu),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
+
+
 
 
     def format_card(self, item):
@@ -73,6 +76,7 @@ class ReportsView:
 
         except Exception as e:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
+
 
 
     def inventory_full_report(self, _):
@@ -125,7 +129,6 @@ class ReportsView:
 
 
 
-
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
 
@@ -145,7 +148,6 @@ class ReportsView:
 
     def sort_qty_quick(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="quick", reverse=True)
-
         groups = {}
         for item in result.data:
             unit = item["unit"]
@@ -157,3 +159,64 @@ class ReportsView:
             rows = [[i["product"], f"{i['total']} {i['unit']}"] for i in items]
             headers = ["Продукт", "Наличност"]
             print(format_table(headers, rows))
+
+
+
+    def movements_filter_menu(self, user):
+        menu = Menu("Филтриране на движения", [
+            MenuItem("1", "По тип (IN / OUT / MOVE)", self.filter_movements_by_type),
+            MenuItem("2", "По продукт", self.filter_movements_by_product),
+            MenuItem("3", "По доставчик", self.filter_movements_by_supplier),
+            MenuItem("4", "По клиент", self.filter_movements_by_client),
+            MenuItem("5", "По склад", self.filter_movements_by_warehouse),
+            MenuItem("6", "По дата или период", self.filter_movements_by_date),
+            MenuItem("0", "Назад", lambda u: "break")])
+        self._run_menu(menu, user)
+
+
+
+    def filter_movements_by_type(self, _):
+        mtype = input("Въведете тип (IN / OUT / MOVE): ").strip().upper()
+        result = self.controller.filter_movements(type=mtype)
+        self._render_filtered_movements(result)
+
+
+    def filter_movements_by_product(self, _):
+        product = input("Въведете име на продукт: ").strip()
+        result = self.controller.filter_movements(product=product)
+        self._render_filtered_movements(result)
+
+
+    def filter_movements_by_supplier(self, _):
+        supplier = input("Въведете доставчик: ").strip()
+        result = self.controller.filter_movements(supplier=supplier)
+        self._render_filtered_movements(result)
+
+
+    def filter_movements_by_client(self, _):
+        client = input("Въведете клиент: ").strip()
+        result = self.controller.filter_movements(client=client)
+        self._render_filtered_movements(result)
+
+
+    def filter_movements_by_warehouse(self, _):
+        wh = input("Въведете склад: ").strip()
+        result = self.controller.filter_movements(warehouse=wh)
+        self._render_filtered_movements(result)
+
+
+    def filter_movements_by_date(self, _):
+        start = input("От дата (YYYY-MM-DD): ").strip()
+        end = input("До дата (YYYY-MM-DD): ").strip()
+        result = self.controller.filter_movements(date_from=start, date_to=end)
+        self._render_filtered_movements(result)
+
+
+
+    def _render_filtered_movements(self, result):
+        rows = []
+        for m in result.data:
+            rows.append([m["date"], m["movement_id"], m["type"], m["product"], f"{m['quantity']} {m['unit']}", m["from"], m["to"]])
+
+        headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
+        self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)

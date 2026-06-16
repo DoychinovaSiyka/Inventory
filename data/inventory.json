@@ -51,9 +51,43 @@
             "expense": 6030.0,
             "revenue": 538.2,
             "last_movement": "MOVE - 2026-05-22 00:50:24"
+        },
+        {
+            "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
+            "product_name": "кисело мляко \"Габровци\"",
+            "unit": "бр.",
+            "total": 2220.0,
+            "warehouses": {
+                "Пловдив": 1988.0,
+                "Смолян": 232.0
+            },
+            "delivered": 2220.0,
+            "sold": 0,
+            "avg_in_price": 3.09,
+            "avg_out_price": 0.0,
+            "expense": 6859.8,
+            "revenue": 0.0,
+            "last_movement": "MOVE - 2026-05-27 22:53:57"
+        },
+        {
+            "product_id": "f35a3aeb-11fd-457c-bb6b-ac712cd9458b",
+            "product_name": "Салам Бургас",
+            "unit": "бр.",
+            "total": 80.0,
+            "warehouses": {
+                "Смолян": 68.0,
+                "Бургас": 12.0
+            },
+            "delivered": 89.0,
+            "sold": 9.0,
+            "avg_in_price": 8.09,
+            "avg_out_price": 8.34,
+            "expense": 720.01,
+            "revenue": 75.06,
+            "last_movement": "MOVE - 2026-06-12 13:20:04"
         }
     ],
     "summary": {
-        "total_products": 3
+        "total_products": 5
     }
 }

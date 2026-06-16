@@ -41,7 +41,7 @@ class AdminMenuView:
         return Menu("Администраторско меню", [
             MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
             MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
-            MenuItem("3", "Доставки и продажби", lambda u: self.movement_view.show_menu(u)),
+            MenuItem("3", "Доставки, продажби и премествание", lambda u: self.movement_view.show_menu(u)),
             MenuItem("4", "Управление на потребители", lambda u: self.user_view.show_menu(u)),
             MenuItem("5", "Отчети", lambda u: self.reports_view.show_menu(u)),
             MenuItem("6", "Фактури", lambda u: self.invoice_view.show_menu(u)),
