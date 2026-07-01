@@ -1,13 +1,11 @@
 from typing import List, Optional
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_filters import filter_categories, get_all_children_ids
-from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 
 
 class CategoryController(AbstractController):
-    """Управлява категориите и йерархичната им структура."""
+
     def __init__(self, repo):
         super().__init__(repo)
         self.categories: List[Category] = self.load()
@@ -18,12 +16,23 @@ class CategoryController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def _save_categories(self):
+    def _save(self):
         self.save(self.categories)
 
     def get_all(self) -> List[Category]:
         return self.categories
 
+    def get_by_id(self, user_input: str) -> Optional[Category]:
+        target = str(user_input or "").strip().lower()
+        for c in self.categories:
+            full_id = str(c.category_id).lower()
+            if full_id.startswith(target) or target == full_id:
+                return c
+        return None
+
+    # -----------------------------
+    # ADD
+    # -----------------------------
     def add(self, category_data: dict, user_id: str) -> Category:
         name = CategoryValidator.validate_name(category_data.get("name", ""))
         description = CategoryValidator.validate_description(category_data.get("description", ""))
@@ -42,9 +51,12 @@ class CategoryController(AbstractController):
 
         category = Category(category_id=None, name=name, description=description, parent_id=parent_id)
         self.categories.append(category)
-        self._save_categories()
+        self._save()
         return category
 
+    # -----------------------------
+    # UPDATE
+    # -----------------------------
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
         if not category:
@@ -74,46 +86,29 @@ class CategoryController(AbstractController):
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
-        self._save_categories()
+        self._save()
         return True
 
-    def remove(self, category_id: str, user_id: str, product_controller) -> bool:
+    # -----------------------------
+    # REMOVE (без зависимост от product_controller)
+    # -----------------------------
+    def remove(self, category_id: str) -> bool:
         category = self.get_by_id(category_id)
         if not category:
             return False
 
-        products = product_controller.get_all() if product_controller else []
-        CategoryValidator.validate_can_delete(category.category_id, self.categories, products)
+        # проста MVC проверка: дали категорията има деца
+        for c in self.categories:
+            if c.parent_id == category.category_id:
+                raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
 
         self.categories = [c for c in self.categories if c.category_id != category.category_id]
-        self._save_categories()
+        self._save()
         return True
 
-    def get_by_id(self, user_input: str) -> Optional[Category]:
-        target = str(user_input or "").strip().lower()
-        for c in self.categories:
-            full_id = str(c.category_id).lower()
-            if full_id.startswith(target) or target == full_id:
-                return c
-        return None
-
-    def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
-        parent_cat = self.get_by_id(parent_short_id)
-        if not parent_cat:
-            return []
-        return get_all_children_ids(self.categories, parent_cat.category_id)
-
-
-    def get_stats(self, product_controller) -> dict:
-        products = product_controller.get_all() if product_controller else []
-        categories_with_counts = get_category_stats(self.categories, products)
-
-        return {"total_categories": len(self.categories), "categories": categories_with_counts}
-
-
-
-
-
+    # -----------------------------
+    # TREE VIEW
+    # -----------------------------
     def get_visual_tree(self) -> List[dict]:
         def build_recursive_list(parent_id=None, level=0):
             result = []
@@ -127,9 +122,9 @@ class CategoryController(AbstractController):
 
         return build_recursive_list()
 
-
-
-
+    # -----------------------------
+    # VALIDATION
+    # -----------------------------
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":

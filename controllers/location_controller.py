@@ -5,12 +5,11 @@ from controllers.abstract_controller import AbstractController
 
 
 class LocationController(AbstractController):
-    """Контролерът управлява локациите в системата."""
-    def __init__(self, repo, inventory_controller=None):
-        self.inventory_controller = inventory_controller
+    """Чист MVC контролер за локации – без цикличност, без enterprise зависимости."""
+
+    def __init__(self, repo):
         super().__init__(repo)
         self.locations = self.load() or []
-
 
     def from_dict(self, data):
         return Location.from_dict(data)
@@ -18,10 +17,12 @@ class LocationController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def _save_locations(self):
+    def _save(self):
         self.save(self.locations)
 
-
+    # -----------------------------
+    # ADD
+    # -----------------------------
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -30,17 +31,23 @@ class LocationController(AbstractController):
 
         code = LocationValidator.validate_code(code, self.locations)
 
-        location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
+        location = Location(
+            location_id=None,
+            name=name,
+            zone=zone,
+            capacity=capacity,
+            code=code
+        )
+
         self.locations.append(location)
-        self._save_locations()
+        self._save()
         return location
 
-
-
+    # -----------------------------
+    # GETTERS
+    # -----------------------------
     def get_all(self) -> List[Location]:
         return self.locations
-
-
 
     def get_by_id(self, identifier: str) -> Optional[Location]:
         if not identifier:
@@ -51,18 +58,16 @@ class LocationController(AbstractController):
         for loc in self.locations:
             if loc.location_id.lower() == target:
                 return loc
-
             if loc.location_id[:8].lower() == target:
                 return loc
-
             if loc.code and loc.code.lower() == target:
                 return loc
 
         return None
 
-
-
-
+    # -----------------------------
+    # SEARCH
+    # -----------------------------
     def search(self, query: str) -> List[dict]:
         q = str(query or "").strip().lower()
         if not q:
@@ -77,13 +82,21 @@ class LocationController(AbstractController):
             code = str(loc.code or "").lower()
 
             if q in short_id or q in name or q in zone or q in cap or q in code:
-                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity,"code": loc.code})
+                results.append({
+                    "id": loc.location_id[:8],
+                    "name": loc.name,
+                    "zone": loc.zone,
+                    "capacity": loc.capacity,
+                    "code": loc.code
+                })
 
         return results
 
-
-
-    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
+    # -----------------------------
+    # UPDATE
+    # -----------------------------
+    def update(self, location_id: str, name: Optional[str] = None,
+               zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
 
         location = self.get_by_id(location_id)
         if location is None:
@@ -95,57 +108,39 @@ class LocationController(AbstractController):
             location.name = name
 
         if zone is not None:
-            zone = LocationValidator.validate_zone(zone)
-            location.zone = zone
+            location.zone = LocationValidator.validate_zone(zone)
 
         if capacity is not None:
-            capacity = LocationValidator.validate_capacity(capacity)
-            location.capacity = capacity
-
+            location.capacity = LocationValidator.validate_capacity(capacity)
 
         if code is not None:
             location.code = LocationValidator.validate_code(code, self.locations, exclude_id=location.location_id)
 
         location.update_modified()
-        self._save_locations()
+        self._save()
         return True
 
-
+    # -----------------------------
+    # REMOVE (чист MVC – без inventory_controller)
+    # -----------------------------
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
 
-        if self.inventory_controller:
-            products_data = self.inventory_controller.data.get("products", {})
-            for pid, pdata in products_data.items():
-                locations_map = pdata.get("locations", {})
+        # Чист MVC: контролерът НЕ проверява инвентара.
+        # Проверка за наличности се прави в InventoryController или MovementController.
 
-                normalized_map = {}
-                for key, qty in locations_map.items():
-                    loc_obj = self.get_by_id(key)
-                    if loc_obj:
-                        normalized_map[loc_obj.location_id] = qty
-                    else:
-                        normalized_map[key] = qty
-
-                qty = normalized_map.get(location.location_id, 0)
-
-                try:
-                    qty_value = float(qty)
-                except Exception:
-                    qty_value = 0.0
-
-                if qty_value > 0:
-                    raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
-
-        full_id = location.location_id
-        self.locations = [l for l in self.locations if l.location_id != full_id]
-        self._save_locations()
+        self.locations = [l for l in self.locations if l.location_id != location.location_id]
+        self._save()
         return True
 
+    def get_all_dict(self):
+        return {str(loc.location_id): loc for loc in self.get_all()}
 
-
+    # -----------------------------
+    # VALIDATION
+    # -----------------------------
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":
@@ -158,10 +153,5 @@ class LocationController(AbstractController):
                 if not value.strip():
                     raise ValueError("Кодът не може да е празен.")
             return None
-
         except ValueError as e:
             return str(e)
-
-
-
-

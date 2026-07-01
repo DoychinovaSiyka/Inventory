@@ -190,5 +190,17 @@
         "price": 4.0,
         "created": "2026-05-26 17:27:01",
         "modified": "2026-05-26 17:27:01"
+    },
+    {
+        "product_id": "488c7147-197c-4622-85e6-c461aea5f833",
+        "name": "oiqwpo1i",
+        "categories": [
+            "7ccf449d-5e63-4875-8478-2f81829deb53"
+        ],
+        "unit": "кг.",
+        "description": "oiq[o",
+        "price": 2.0,
+        "created": "2026-07-02 00:43:48",
+        "modified": "2026-07-02 00:43:48"
     }
 ]
