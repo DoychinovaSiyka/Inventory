@@ -16,7 +16,7 @@ from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
 from views.movement_view import MovementView
 from views.password_utils import input_password
-from storage.json_repository import JSONRepository
+from storage.storage_repository import StorageRepository
 
 
 
@@ -31,14 +31,14 @@ class InventoryApplication:
 
 
     def _init_repositories(self):
-        self.user_repo = JSONRepository("data/users.json")
-        self.product_repo = JSONRepository("data/products.json")
-        self.category_repo = JSONRepository("data/categories.json")
-        self.supplier_repo = JSONRepository("data/suppliers.json")
-        self.location_repo = JSONRepository("data/locations.json")
-        self.movement_repo = JSONRepository("data/movements.json")
-        self.invoice_repo = JSONRepository("data/invoices.json")
-        self.inventory_repo = JSONRepository("data/inventory.json")
+        self.user_repo = StorageRepository("data/users.json")
+        self.product_repo = StorageRepository("data/products.json")
+        self.category_repo = StorageRepository("data/categories.json")
+        self.supplier_repo = StorageRepository("data/suppliers.json")
+        self.location_repo = StorageRepository("data/locations.json")
+        self.movement_repo = StorageRepository("data/movements.json")
+        self.invoice_repo = StorageRepository("data/invoices.json")
+        self.inventory_repo = StorageRepository("data/inventory.json")
 
 
     def _init_controllers(self):
@@ -97,6 +97,8 @@ class InventoryApplication:
 
 
 
+
+
     def _login_flow(self):
         while True:
             print("\n-----------------------------------------------------------")
@@ -121,6 +123,9 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"\nГрешка при вход: {e}")
                 print("Опитайте отново.\n")
+
+
+
 
 
 
@@ -149,6 +154,11 @@ class InventoryApplication:
                 sys.exit()
             else:
                 print("\nНевалиден избор. Моля, изберете опция от менюто.")
+
+
+
+
+
 
 
 if __name__ == "__main__":
