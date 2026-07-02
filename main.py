@@ -16,7 +16,9 @@ from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
 from views.movement_view import MovementView
 from views.password_utils import input_password
+
 from storage.json_repository import JSONStorage
+
 
 
 
@@ -25,12 +27,13 @@ from storage.json_repository import JSONStorage
 
 class InventoryApplication:
     def __init__(self):
-        self._init_repositories()
+        self._init_model()
         self._init_controllers()
-        self._init_menus()
+        self._init_views()
 
 
-    def _init_repositories(self):
+    # MODEL LAYER
+    def _init_model(self):
         self.user_repo = JSONStorage("data/users.json")
         self.product_repo = JSONStorage("data/products.json")
         self.category_repo = JSONStorage("data/categories.json")
@@ -41,10 +44,8 @@ class InventoryApplication:
         self.inventory_repo = JSONStorage("data/inventory.json")
 
 
-
-
+    # CONTROLLER LAYER
     def _init_controllers(self):
-
         self.user_controller = UserController(self.user_repo)
         self.category_controller = CategoryController(self.category_repo)
         self.supplier_controller = SupplierController(self.supplier_repo)
@@ -63,26 +64,21 @@ class InventoryApplication:
 
         self.invoice_controller = InvoiceController(self.invoice_repo)
 
-
-        self.report_controller = ReportController(self.inventory_controller, self.movement_controller,
-                                                  self.supplier_controller, self.location_controller, self.invoice_controller)
-
+        self.report_controller = ReportController(self.category_controller, self.product_controller,
+                                                  self.inventory_controller, self.movement_controller, self.supplier_controller,
+                                                  self.location_controller, self.invoice_controller)
 
         self.movement_controller.set_report_controller(self.report_controller)
 
 
+    # VIEW LAYER
+    def _init_views(self):
         self.graph_view = GraphView(self.inventory_controller, self.location_controller, self.product_controller)
-
 
         self.movement_view = MovementView(self.product_controller, self.movement_controller, self.user_controller,
                                           self.location_controller, self.supplier_controller, self.inventory_controller)
 
 
-
-
-
-
-    def _init_menus(self):
         self.admin_menu = AdminMenuView(user_controller=self.user_controller, product_controller=self.product_controller,
                                         category_controller=self.category_controller, supplier_controller=self.supplier_controller,
                                         location_controller=self.location_controller, movement_controller=self.movement_controller,
@@ -90,12 +86,16 @@ class InventoryApplication:
                                         inventory_controller=self.inventory_controller, graph_view=self.graph_view,
                                         movement_view=self.movement_view)
 
+
+
         self.operator_menu = OperatorMenuView(user_controller=self.user_controller, product_controller=self.product_controller,
-                                              category_controller=self.category_controller, supplier_controller=self.supplier_controller,
-                                              location_controller=self.location_controller, movement_controller=self.movement_controller,
-                                              invoice_controller=self.invoice_controller, report_controller=self.report_controller,
-                                              inventory_controller=self.inventory_controller,
+                                              category_controller=self.category_controller,
+                                              supplier_controller=self.supplier_controller, location_controller=self.location_controller,
+                                              movement_controller=self.movement_controller, invoice_controller=self.invoice_controller,
+                                              report_controller=self.report_controller, inventory_controller=self.inventory_controller,
                                               graph_view=self.graph_view, movement_view=self.movement_view)
+
+
 
         self.anonymous_menu = AnonymousMenuView(report_controller=self.report_controller, inventory_controller=self.inventory_controller,
                                                 movement_controller=self.movement_controller)
@@ -122,7 +122,7 @@ class InventoryApplication:
                 elif user.role == "Operator":
                     self.operator_menu.show_menu(user)
                 else:
-                    print("Непозната роля в системата.")
+                    print("Непозната роля.")
                 break
 
             except ValueError as e:
@@ -132,12 +132,11 @@ class InventoryApplication:
 
 
 
-
-
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
-        print("\nВлизане като Гост (Само за четене)...")
+        print("\nВлизане като Гост (Само за преглед)...")
         self.anonymous_menu.show_menu(guest)
+
 
 
 
@@ -158,12 +157,7 @@ class InventoryApplication:
                 print("\nДовиждане!")
                 sys.exit()
             else:
-                print("\nНевалиден избор. Моля, изберете опция от менюто.")
-
-
-
-
-
+                print("\nНевалиден избор. Опитайте пак.")
 
 
 if __name__ == "__main__":

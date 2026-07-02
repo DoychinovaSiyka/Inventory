@@ -2,6 +2,9 @@ from views.menu import Menu, MenuItem
 from views.password_utils import input_password, format_table
 
 
+
+
+
 class UserView:
     def __init__(self, controller):
         self.controller = controller
@@ -77,7 +80,6 @@ class UserView:
 
         fn = input("Име (Enter за '-' ): ").strip() or "-"
         ln = input("Фамилия (Enter за '-' ): ").strip() or "-"
-
         try:
             self.controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен успешно.")

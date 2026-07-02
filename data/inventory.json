@@ -4,39 +4,22 @@
             "product_id": "ce591a25-f951-4bf4-a56f-a2674fd9783b",
             "product_name": "rewoirpwoe",
             "unit": "л.",
-            "total": 78.0,
+            "total": 811.0,
             "warehouses": {
-                "Пловдив": 66.0,
-                "Бургас": 12.0
+                "Варна": 728.0,
+                "Бургас": 83.0
             },
-            "delivered": 90.0,
-            "sold": 12.0,
-            "avg_in_price": 234.0,
-            "avg_out_price": 9.0,
-            "expense": 21060.0,
-            "revenue": 108.0,
-            "last_movement": "MOVE - 2026-07-02 13:24:35"
-        },
-        "9c276cdc-2fc1-4afc-83c7-1487891ef078": {
-            "product_id": "9c276cdc-2fc1-4afc-83c7-1487891ef078",
-            "product_name": "Кафе Лаваца Роса",
-            "unit": "бр.",
-            "total": 410.0,
-            "warehouses": {
-                "Варна": 321.0,
-                "Бургас": 89.0
-            },
-            "delivered": 455.0,
-            "sold": 45.0,
-            "avg_in_price": 9.0,
-            "avg_out_price": 9.0,
-            "expense": 4095.0,
-            "revenue": 405.0,
-            "last_movement": "MOVE - 2026-07-02 13:38:26"
+            "delivered": 990.0,
+            "sold": 101.0,
+            "avg_in_price": 118.5,
+            "avg_out_price": 8.0,
+            "expense": 117315.0,
+            "revenue": 808.0,
+            "last_movement": "MOVE - 2026-07-02 22:25:32"
         }
     },
     "summary": {
-        "total_products": 2
+        "total_products": 1
     },
-    "generated_on": "2026-07-02 13:38:26"
+    "generated_on": "2026-07-02 22:25:32"
 }

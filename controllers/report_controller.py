@@ -4,15 +4,20 @@ from models.report import Report
 from storage.json_repository import JSONStorage
 
 
+
 class ReportController:
-    def __init__(self, inventory_controller, movement_controller, supplier_controller, location_controller, invoice_controller):
+    def __init__(self, category_controller, product_controller, inventory_controller, movement_controller,
+                 supplier_controller, location_controller, invoice_controller):
+
+        self.category_controller = category_controller
+        self.product_controller = product_controller
         self.inventory_controller = inventory_controller
         self.movement_controller = movement_controller
         self.supplier_controller = supplier_controller
         self.location_controller = location_controller
         self.invoice_controller = invoice_controller
-        self.inventory_repo = JSONStorage("data/inventory.json")
 
+        self.inventory_repo = JSONStorage("data/inventory.json")
 
 
     def save_inventory_list_report(self):
@@ -23,6 +28,24 @@ class ReportController:
                  "generated_on": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
         self.inventory_repo.save(final)
+
+
+
+    def get_category_stats(self):
+        categories = self.category_controller.get_all()
+        products = self.product_controller.get_all()
+
+        stats = {"total_categories": len(categories), "categories": []}
+
+        for cat in categories:
+            count = sum(1 for p in products if any(c.category_id == cat.category_id for c in p.categories))
+            stats["categories"].append({"id": str(cat.category_id), "name": cat.name, "product_count": count})
+
+        return stats
+
+
+
+
 
     def report_movements(self):
         movements = self.movement_controller.get_all()

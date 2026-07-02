@@ -12,9 +12,10 @@ class AnonymousMenuView:
 
         # Гостът може да разглежда продукти и категории
         self.product_view = ProductMenuView(None, None)   # само преглед
-        self.category_view = CategoryView(None, None)     # само преглед
+        self.category_view = CategoryView(None, None, self.report_controller)
 
         self.system_info_view = SystemInfoView()
+
 
     def _build_menu(self):
         return Menu("Меню за анонимен потребител", [

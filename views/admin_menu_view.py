@@ -27,7 +27,8 @@ class AdminMenuView:
         self.movement_view = movement_view
 
         self.product_view = ProductMenuView(product_controller, category_controller)
-        self.category_view = CategoryView(category_controller, product_controller)
+        self.category_view = CategoryView(category_controller, product_controller, report_controller)
+
         self.user_view = UserView(user_controller)
         self.reports_view = ReportsView(report_controller)
         self.invoice_view = InvoiceView(invoice_controller)
