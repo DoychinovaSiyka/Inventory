@@ -15,10 +15,10 @@ class MovementController(AbstractController):
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
 
-        # Връзка с инвентара
+        # Връзки към други контролери
         self.inventory_controller = None
-
         self.report_controller = None
+        self.invoice_controller = None   # ⭐ ДОБАВЕНО
 
         self.movements: List[Movement] = self.load() or []
 
@@ -26,9 +26,12 @@ class MovementController(AbstractController):
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
-
     def set_report_controller(self, report_controller):
         self.report_controller = report_controller
+
+    def set_invoice_controller(self, invoice_controller):   # ⭐ ДОБАВЕНО
+        self.invoice_controller = invoice_controller
+
 
     def from_dict(self, data):
         return Movement.from_dict(data)
@@ -57,14 +60,21 @@ class MovementController(AbstractController):
     # IN - доставка
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
 
-        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
-                                        quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
+        movement = self.create_movement(
+            product_id=product_id,
+            user_id=user_id,
+            movement_type="IN",
+            quantity=quantity,
+            price=price,
+            location_id=location_id,
+            supplier_id=supplier_id
+        )
 
         # Обновяваме инвентара
         if self.inventory_controller:
             self.inventory_controller.increase_stock(product_id, quantity, location_id)
 
-        # Автоматичен обединен отчет - запис в inventory.json
+        # Автоматичен обединен отчет
         if self.report_controller:
             self.report_controller.save_inventory_list_report()
 
@@ -76,17 +86,38 @@ class MovementController(AbstractController):
 
         resolved_loc = self._location_id(location_id)
 
-        MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity),
-                                             customer, self.inventory_controller, resolved_loc)
+        MovementValidator.validate_out_rules(
+            self.product_controller.get_by_id(product_id),
+            float(quantity),
+            customer,
+            self.inventory_controller,
+            resolved_loc
+        )
 
-        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
-                                        quantity=quantity, price=price, location_id=location_id, customer=customer)
+        movement = self.create_movement(
+            product_id=product_id,
+            user_id=user_id,
+            movement_type="OUT",
+            quantity=quantity,
+            price=price,
+            location_id=location_id,
+            customer=customer
+        )
 
         # Намаляваме наличността
         if self.inventory_controller:
             self.inventory_controller.decrease_stock(product_id, quantity, location_id)
 
-        # Автоматичен обединен отчет - запис в inventory.json
+        # ⭐ Създаваме фактура
+        if self.invoice_controller:
+            self.invoice_controller.create_from_movement(
+                movement=movement,
+                product=movement.product_name,
+                customer=movement.customer,
+                user_id=user_id
+            )
+
+        # Автоматичен обединен отчет
         if self.report_controller:
             self.report_controller.save_inventory_list_report()
 
@@ -99,17 +130,29 @@ class MovementController(AbstractController):
         resolved_from = self._location_id(from_loc)
         resolved_to = self._location_id(to_loc)
 
-        MovementValidator.validate_move_rules(self.product_controller.get_by_id(product_id), float(quantity),
-                                              self.inventory_controller, resolved_from, resolved_to)
+        MovementValidator.validate_move_rules(
+            self.product_controller.get_by_id(product_id),
+            float(quantity),
+            self.inventory_controller,
+            resolved_from,
+            resolved_to
+        )
 
-        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
-                                        quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
+        movement = self.create_movement(
+            product_id=product_id,
+            user_id=user_id,
+            movement_type="MOVE",
+            quantity=quantity,
+            price="0",
+            from_location_id=from_loc,
+            to_location_id=to_loc
+        )
 
         # Обновяваме инвентара
         if self.inventory_controller:
             self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
 
-        # Автоматичен обединен отчет - запис в inventory.json
+        # Автоматичен обединен отчет
         if self.report_controller:
             self.report_controller.save_inventory_list_report()
 

@@ -16,10 +16,94 @@
             "expense": 117315.0,
             "revenue": 808.0,
             "last_movement": "MOVE - 2026-07-02 22:25:32"
+        },
+        "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6": {
+            "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
+            "product_name": "Прясно мляко Верея 3.6%",
+            "unit": "л.",
+            "total": 1422.0,
+            "warehouses": {
+                "Варна": 1377.0,
+                "Бургас": 45.0
+            },
+            "delivered": 2456.0,
+            "sold": 84.0,
+            "avg_in_price": 3.27,
+            "avg_out_price": 4.45,
+            "expense": 8031.12,
+            "revenue": 373.8,
+            "last_movement": "MOVE - 2026-07-03 02:26:12"
+        },
+        "318436c9-6126-45ac-9630-7ad1633116ba": {
+            "product_id": "318436c9-6126-45ac-9630-7ad1633116ba",
+            "product_name": "Домати Чери",
+            "unit": "бр.",
+            "total": 2887.0,
+            "warehouses": {
+                "Варна": 1987.0,
+                "Смолян": 900.0
+            },
+            "delivered": 3232.0,
+            "sold": 345.0,
+            "avg_in_price": 14.0,
+            "avg_out_price": 7.0,
+            "expense": 45248.0,
+            "revenue": 2415.0,
+            "last_movement": "MOVE - 2026-07-03 02:29:08"
+        },
+        "af567560-55d5-4899-ac11-12581e39c4af": {
+            "product_id": "af567560-55d5-4899-ac11-12581e39c4af",
+            "product_name": "Портокали за сок",
+            "unit": "кг.",
+            "total": 355.0,
+            "warehouses": {
+                "Бургас": 355.0
+            },
+            "delivered": 355.0,
+            "sold": 45.0,
+            "avg_in_price": 4.0,
+            "avg_out_price": 9.0,
+            "expense": 1420.0,
+            "revenue": 405.0,
+            "last_movement": "OUT - 2026-07-03 02:33:48"
+        },
+        "3b90e773-cb3a-49b0-ba08-e8213ff6bd57": {
+            "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
+            "product_name": "Картофи червени",
+            "unit": "кг.",
+            "total": 111110766.0,
+            "warehouses": {
+                "Пловдив": 111109866.0,
+                "Смолян": 900.0
+            },
+            "delivered": 111114111.0,
+            "sold": 575.0,
+            "avg_in_price": 2.5,
+            "avg_out_price": 5.67,
+            "expense": 277785277.5,
+            "revenue": 3260.25,
+            "last_movement": "MOVE - 2026-07-03 02:38:10"
+        },
+        "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
+            "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
+            "product_name": "Свинска плешка без кост",
+            "unit": "кг.",
+            "total": 22221322.0,
+            "warehouses": {
+                "София": 22220422.0,
+                "Смолян": 900.0
+            },
+            "delivered": 22222222.0,
+            "sold": 900.0,
+            "avg_in_price": 5.0,
+            "avg_out_price": 6.0,
+            "expense": 111111110.0,
+            "revenue": 5400.0,
+            "last_movement": "MOVE - 2026-07-03 02:43:01"
         }
     },
     "summary": {
-        "total_products": 1
+        "total_products": 6
     },
-    "generated_on": "2026-07-02 22:25:32"
+    "generated_on": "2026-07-03 02:43:01"
 }
