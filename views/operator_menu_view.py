@@ -10,20 +10,9 @@ from views.location_view import LocationView
 
 
 class OperatorMenuView:
-    def __init__(
-        self,
-        user_controller,
-        product_controller,
-        category_controller,
-        supplier_controller,
-        location_controller,
-        movement_controller,
-        invoice_controller,
-        report_controller,
-        inventory_controller,
-        movement_view,
-        graph_view
-    ):
+    def __init__(self, user_controller, product_controller, category_controller, supplier_controller,
+                 location_controller, movement_controller,
+                 invoice_controller, report_controller, inventory_controller, movement_view, graph_view):
         self.user_controller = user_controller
         self.product_controller = product_controller
         self.category_controller = category_controller
@@ -34,7 +23,9 @@ class OperatorMenuView:
         self.report_controller = report_controller
         self.inventory_controller = inventory_controller
         self.movement_view = movement_view
-        self.graph_view = graph_view   # ← ДОБАВЕНО
+        self.graph_view = graph_view
+
+
 
     def _build_menu(self):
         return Menu("Операторско меню", [
@@ -45,9 +36,10 @@ class OperatorMenuView:
             MenuItem("5", "Архив фактури (защитено)", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("7", "Преглед на складови локации", self.open_locations_readonly),
-            MenuItem("8", "Логистичен модул (Dijkstra)", self.open_graph),   # ← ДОБАВЕНО
-            MenuItem("0", "Изход", lambda u: "break")
-        ])
+            MenuItem("8", "Логистичен модул (Dijkstra)", self.open_graph),
+            MenuItem("0", "Изход", lambda u: "break")])
+
+
 
     def show_menu(self, user):
         if user is None or not user.role:

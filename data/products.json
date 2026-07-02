@@ -202,5 +202,29 @@
         "price": 2.0,
         "created": "2026-07-02 00:43:48",
         "modified": "2026-07-02 00:43:48"
+    },
+    {
+        "product_id": "47bb20cc-849b-4e3d-9c05-d15a32df434e",
+        "name": "qweoiwqop",
+        "categories": [
+            "bd9a997e-affd-496b-a79c-5c29035867ec"
+        ],
+        "unit": "кг.",
+        "description": "wpoeri",
+        "price": 3.0,
+        "created": "2026-07-02 13:17:24",
+        "modified": "2026-07-02 13:17:24"
+    },
+    {
+        "product_id": "ce591a25-f951-4bf4-a56f-a2674fd9783b",
+        "name": "rewoirpwoe",
+        "categories": [
+            "56bb2cd8-f263-453d-847d-32ab7c2c8e08"
+        ],
+        "unit": "л.",
+        "description": "12kewqpoeripweri",
+        "price": 312.0,
+        "created": "2026-07-02 13:23:49",
+        "modified": "2026-07-02 13:23:49"
     }
 ]

@@ -84,15 +84,7 @@ class ProductController(AbstractController):
         if not categories and category_ids:
             raise ValueError("Избраните категории са невалидни.")
 
-        product = Product(
-            product_id=None,
-            name=name,
-            categories=categories,
-            unit=unit,
-            description=description,
-            price=price
-        )
-
+        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
         self.products.append(product)
         self._save()
         return product
@@ -159,13 +151,25 @@ class ProductController(AbstractController):
 
         return [p for p in self.products if any(c.category_id in all_ids for c in p.categories)]
 
+    def get_custom_sort(self, sort_type="price", algorithm="builtin", reverse=True) -> List[Product]:
+        products = self.products.copy()
 
-
-    def get_custom_sort(self, sort_type="price", reverse=True) -> List[Product]:
         if sort_type == "name":
-            return sorted(self.products, key=lambda p: p.name.lower(), reverse=reverse)
+            if algorithm == "merge":
+                return sorted(products, key=lambda p: p.name.lower(), reverse=reverse)
+            elif algorithm == "quick":
+                return sorted(products, key=lambda p: p.name.lower(), reverse=reverse)
+            else:
+                return sorted(products, key=lambda p: p.name.lower(), reverse=reverse)
+
 
         if sort_type == "price":
-            return sorted(self.products, key=lambda p: p.price, reverse=reverse)
+            if algorithm == "merge":
+                return sorted(products, key=lambda p: float(p.price), reverse=reverse)
+            elif algorithm == "quick":
+                return sorted(products, key=lambda p: float(p.price), reverse=reverse)
+            else:
+                return sorted(products, key=lambda p: float(p.price), reverse=reverse)
 
-        return sorted(self.products, key=lambda p: p.name.lower(), reverse=reverse)
+
+        return sorted(products, key=lambda p: p.name.lower(), reverse=reverse)

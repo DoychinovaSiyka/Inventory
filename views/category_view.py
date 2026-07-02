@@ -145,7 +145,6 @@ class CategoryView:
         print("(Enter за запазване на текущия, напишете 'none' за главна категория)")
 
         choice = input("Избор: ").strip().lower()
-
         if choice == 'none':
             new_parent_id = None
         elif not choice:

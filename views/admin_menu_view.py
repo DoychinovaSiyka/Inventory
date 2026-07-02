@@ -11,20 +11,9 @@ from views.reports_menu_view import ReportsView
 
 
 class AdminMenuView:
-    def __init__(
-        self,
-        user_controller,
-        product_controller,
-        category_controller,
-        supplier_controller,
-        location_controller,
-        movement_controller,
-        invoice_controller,
-        report_controller,
-        inventory_controller,
-        graph_view,
-        movement_view
-    ):
+    def __init__(self, user_controller, product_controller, category_controller, supplier_controller, location_controller,
+                 movement_controller, invoice_controller, report_controller, inventory_controller, graph_view, movement_view):
+
         self.user_controller = user_controller
         self.product_controller = product_controller
         self.category_controller = category_controller
@@ -58,8 +47,9 @@ class AdminMenuView:
             MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
             MenuItem("9", "Управление на локации", lambda u: self.location_view.show_menu(u)),
             MenuItem("10", "Логистичен модул (Dijkstra)", lambda u: self.graph_view.show_menu(u)),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
+
+
 
     def show_menu(self, user):
         if user.role.lower() != "admin":

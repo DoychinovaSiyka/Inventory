@@ -8,7 +8,6 @@ class InventoryController(AbstractController):
         self.location_controller = location_controller
 
         raw = self.load()
-
         if not raw or isinstance(raw, list):
             self.inventory = {"products": {}}
         else:

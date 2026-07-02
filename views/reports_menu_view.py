@@ -3,6 +3,9 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
+
 class ReportsView:
     def __init__(self, controller):
         self.controller = controller
@@ -31,9 +34,12 @@ class ReportsView:
             MenuItem("5", "Сортиране по количество (Merge Sort)", self.sort_qty_merge),
             MenuItem("6", "Сортиране по количество (Quick Sort)", self.sort_qty_quick),
             MenuItem("7", "Филтриране на движения", self.movements_filter_menu),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
+
+
+
+
 
     def format_card(self, item):
         try:
@@ -88,39 +94,40 @@ class ReportsView:
 
         for m in result.data:
             quantity_text = f"{m['quantity']} {m['unit']}"
-            rows.append([
-                m["date"], m["movement_id"], m["type"], m["product"],
-                quantity_text, m["from"], m["to"]  # ⭐ вече имена
-            ])
+            rows.append([m["date"], m["movement_id"], m["type"], m["product"], quantity_text, m["from"], m["to"]])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От склад", "Към склад"]
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
+
+
+
 
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
 
         for item in result.data:
-            rows.append([
-                item["date"], item["movement_id"], item["product"],
-                f"{item['quantity']} {item['unit']}", item["price"], item["supplier"]
-            ])
+            rows.append([item["date"], item["movement_id"], item["product"],
+                         f"{item['quantity']} {item['unit']}", item["price"], item["supplier"]])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
+
+
 
     def report_sales_all(self, _):
         result = self.controller.report_sales()
         rows = []
 
         for item in result.data:
-            rows.append([
-                item["invoice_number"], item["date"], item["client"],
-                item["product"], item["total_price"], item.get("status", "АКТИВНА")
-            ])
+            rows.append([item["invoice_number"], item["date"], item["client"],
+                         item["product"], item["total_price"], item.get("status", "АКТИВНА")])
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Общо", "Статус"]
         self._display_report("ВСИЧКИ ПРОДАЖБИ", headers, rows)
+
+
+
 
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
@@ -153,6 +160,9 @@ class ReportsView:
             headers = ["Продукт", "Наличност"]
             print(format_table(headers, rows))
 
+
+
+
     def movements_filter_menu(self, user):
         menu = Menu("Филтриране на движения", [
             MenuItem("1", "По тип (IN / OUT / MOVE)", self.filter_movements_by_type),
@@ -161,8 +171,7 @@ class ReportsView:
             MenuItem("4", "По клиент", self.filter_movements_by_client),
             MenuItem("5", "По склад", self.filter_movements_by_warehouse),
             MenuItem("6", "По дата или период", self.filter_movements_by_date),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
     def filter_movements_by_type(self, _):
@@ -185,10 +194,14 @@ class ReportsView:
         result = self.controller.filter_movements(client=client)
         self._render_filtered_movements(result)
 
+
+
     def filter_movements_by_warehouse(self, _):
         wh = input("Въведете склад: ").strip()
         result = self.controller.filter_movements(warehouse=wh)
         self._render_filtered_movements(result)
+
+
 
     def filter_movements_by_date(self, _):
         start = input("От дата (YYYY-MM-DD): ").strip()
@@ -196,13 +209,14 @@ class ReportsView:
         result = self.controller.filter_movements(date_from=start, date_to=end)
         self._render_filtered_movements(result)
 
+
+
+
     def _render_filtered_movements(self, result):
         rows = []
         for m in result.data:
-            rows.append([
-                m["date"], m["movement_id"], m["type"], m["product"],
-                f"{m['quantity']} {m['unit']}", m["from"], m["to"]  # ⭐ имена
-            ])
+            rows.append([m["date"], m["movement_id"], m["type"], m["product"],
+                         f"{m['quantity']} {m['unit']}", m["from"], m["to"]])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От склад", "Към склад"]
         self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)
