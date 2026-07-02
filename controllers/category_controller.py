@@ -30,9 +30,7 @@ class CategoryController(AbstractController):
                 return c
         return None
 
-    # -----------------------------
-    # ADD
-    # -----------------------------
+
     def add(self, category_data: dict, user_id: str) -> Category:
         name = CategoryValidator.validate_name(category_data.get("name", ""))
         description = CategoryValidator.validate_description(category_data.get("description", ""))
@@ -54,9 +52,8 @@ class CategoryController(AbstractController):
         self._save()
         return category
 
-    # -----------------------------
-    # UPDATE
-    # -----------------------------
+
+
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
         if not category:
@@ -89,15 +86,14 @@ class CategoryController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # REMOVE (без зависимост от product_controller)
-    # -----------------------------
+
+
     def remove(self, category_id: str) -> bool:
         category = self.get_by_id(category_id)
         if not category:
             return False
 
-        # проста MVC проверка: дали категорията има деца
+        # дали категорията има деца
         for c in self.categories:
             if c.parent_id == category.category_id:
                 raise ValueError("Категорията има подкатегории и не може да бъде изтрита.")
@@ -106,9 +102,7 @@ class CategoryController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # TREE VIEW
-    # -----------------------------
+
     def get_visual_tree(self) -> List[dict]:
         def build_recursive_list(parent_id=None, level=0):
             result = []
@@ -122,9 +116,8 @@ class CategoryController(AbstractController):
 
         return build_recursive_list()
 
-    # -----------------------------
-    # VALIDATION
-    # -----------------------------
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":

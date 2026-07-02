@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 
 class AbstractController(ABC):
-    """Базов учебен MVC контролер – без enterprise нотки."""
-
     def __init__(self, repo):
         self.repo = repo
 
@@ -19,11 +17,11 @@ class AbstractController(ABC):
         if not raw:
             return []
 
-        # Учебен MVC: работим само със списъци
+
         if isinstance(raw, list):
             return [self.from_dict(x) for x in raw]
 
-        # Ако е речник – връщаме го както е (InventoryController го обработва)
+
         if isinstance(raw, dict):
             return {k: self.from_dict(v) for k, v in raw.items()}
 

@@ -5,8 +5,6 @@ from controllers.abstract_controller import AbstractController
 
 
 class UserController(AbstractController):
-    """Чист MVC контролер за потребители – без enterprise зависимости."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.users: List[User] = self.load() or []
@@ -20,9 +18,8 @@ class UserController(AbstractController):
     def _save(self):
         self.save(self.users)
 
-    # -----------------------------
-    # GETTERS
-    # -----------------------------
+
+
     def get_all(self) -> List[User]:
         return self.users
 
@@ -48,25 +45,21 @@ class UserController(AbstractController):
                 return u
         return None
 
-    # -----------------------------
-    # PASSWORD HASHING (учебно)
-    # -----------------------------
+
+
     def _hash_password(self, password: str) -> str:
         return "".join(str(ord(c)) for c in password)
 
     def _check_password(self, stored_hash: str, provided_password: str) -> bool:
         return stored_hash == self._hash_password(provided_password)
 
-    # -----------------------------
-    # LOGIN
-    # -----------------------------
+
     def login(self, username: str, password: str) -> Optional[User]:
         user = UserValidator.validate_login(username, password, self)
         return user
 
-    # -----------------------------
-    # REGISTER
-    # -----------------------------
+
+
     def register(self, first_name, last_name, email, username, password, role="Operator"):
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
@@ -86,9 +79,8 @@ class UserController(AbstractController):
         self._save()
         return new_user
 
-    # -----------------------------
-    # CHANGE ROLE
-    # -----------------------------
+
+
     def change_role(self, acting_user: User, identifier: str, new_role: str):
         UserValidator.confirm_admin(acting_user)
 
@@ -107,9 +99,7 @@ class UserController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # CHANGE STATUS
-    # -----------------------------
+
     def change_status(self, acting_user: User, identifier: str, new_status: str):
         UserValidator.confirm_admin(acting_user)
 
@@ -125,9 +115,8 @@ class UserController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # DELETE USER
-    # -----------------------------
+
+
     def delete_user(self, acting_user: User, identifier: str):
         UserValidator.confirm_admin(acting_user)
 
@@ -142,9 +131,8 @@ class UserController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # VALIDATION
-    # -----------------------------
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "username":

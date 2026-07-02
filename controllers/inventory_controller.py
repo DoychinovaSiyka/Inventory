@@ -2,7 +2,6 @@ from controllers.abstract_controller import AbstractController
 
 class InventoryController(AbstractController):
     """Инвентарът се пази като речник: {product_id: {warehouses:{}, total:int}}"""
-
     def __init__(self, repo, product_controller, location_controller):
         super().__init__(repo)
         self.product_controller = product_controller
@@ -21,16 +20,12 @@ class InventoryController(AbstractController):
     def to_dict(self, obj):
         return obj
 
-    # ---------------------------------------------------------
-    # ЗАПИС НА ИНВЕНТАРА
-    # ---------------------------------------------------------
+
     def _save_inventory(self):
-        """Записва inventory.json при всяка промяна"""
         self.save(self.inventory)
 
-    # ---------------------------------------------------------
-    # ВЗИМАНЕ НА НАЛИЧНОСТ
-    # ---------------------------------------------------------
+
+
     def get_stock(self, product_id, location_id):
         product_id = str(product_id)
         location_id = str(location_id)
@@ -41,31 +36,24 @@ class InventoryController(AbstractController):
 
         return float(product_entry["warehouses"].get(location_id, 0))
 
-    # ---------------------------------------------------------
-    # УВЕЛИЧАВАНЕ НА НАЛИЧНОСТ
-    # ---------------------------------------------------------
+
+
     def increase_stock(self, product_id, quantity, location_id):
         product_id = str(product_id)
         location_id = str(location_id)
 
         if product_id not in self.inventory["products"]:
             product = self.product_controller.get_by_id(product_id)
-            self.inventory["products"][product_id] = {
-                "product_name": product.name,
-                "unit": product.unit,
-                "warehouses": {},
-                "total": 0
-            }
+            self.inventory["products"][product_id] = {"product_name": product.name, "unit": product.unit,
+                                                      "warehouses": {}, "total": 0}
 
         entry = self.inventory["products"][product_id]
         entry["warehouses"][location_id] = entry["warehouses"].get(location_id, 0) + float(quantity)
         entry["total"] = sum(entry["warehouses"].values())
 
-        self._save_inventory()   # ⭐ ЗАПИСВАМЕ
+        self._save_inventory()
 
-    # ---------------------------------------------------------
-    # НАМАЛЯВАНЕ НА НАЛИЧНОСТ
-    # ---------------------------------------------------------
+
     def decrease_stock(self, product_id, quantity, location_id):
         product_id = str(product_id)
         location_id = str(location_id)
@@ -81,11 +69,9 @@ class InventoryController(AbstractController):
         entry["warehouses"][location_id] = current - float(quantity)
         entry["total"] = sum(entry["warehouses"].values())
 
-        self._save_inventory()   # ⭐ ЗАПИСВАМЕ
+        self._save_inventory()
 
-    # ---------------------------------------------------------
-    # ПРЕМЕСТВАНЕ НА НАЛИЧНОСТ
-    # ---------------------------------------------------------
+
     def move_stock(self, product_id, quantity, from_loc, to_loc):
         product_id = str(product_id)
         from_loc = str(from_loc)
@@ -103,10 +89,8 @@ class InventoryController(AbstractController):
         entry["warehouses"][to_loc] = entry["warehouses"].get(to_loc, 0) + float(quantity)
         entry["total"] = sum(entry["warehouses"].values())
 
-        self._save_inventory()   # ⭐ ЗАПИСВАМЕ
+        self._save_inventory()
 
-    # ---------------------------------------------------------
-    # ПЪЛЕН ИНВЕНТАР
-    # ---------------------------------------------------------
+
     def build_inventory(self):
         return self.inventory

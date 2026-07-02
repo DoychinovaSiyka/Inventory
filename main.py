@@ -16,7 +16,6 @@ from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
 from views.movement_view import MovementView
 from views.password_utils import input_password
-
 from storage.json_repository import JSONRepository
 
 
@@ -26,9 +25,7 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-    # ---------------------------------------------------------
-    # REPOSITORIES
-    # ---------------------------------------------------------
+
     def _init_repositories(self):
         self.user_repo = JSONRepository("data/users.json")
         self.product_repo = JSONRepository("data/products.json")
@@ -41,9 +38,7 @@ class InventoryApplication:
         # Тук се записва ОБЕДИНЕНИЯТ ОТЧЕТ
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-    # ---------------------------------------------------------
-    # CONTROLLERS
-    # ---------------------------------------------------------
+
     def _init_controllers(self):
 
         # Основни контролери

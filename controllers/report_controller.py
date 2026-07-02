@@ -5,8 +5,6 @@ from storage.json_repository import JSONRepository
 
 
 class ReportController:
-    """Чист MVC контролер за отчети."""
-
     def __init__(self, inventory_controller, movement_controller, supplier_controller, location_controller, invoice_controller):
         self.inventory_controller = inventory_controller
         self.movement_controller = movement_controller
@@ -17,17 +15,14 @@ class ReportController:
         self.report_repo = JSONRepository("data/reports.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
 
-    # -----------------------------
-    # SAVE REPORT HISTORY
-    # -----------------------------
+
+
     def save_report(self, report: Report):
         existing = self.report_repo.load() or []
         existing.append(report.to_dict())
         self.report_repo.save(existing)
 
-    # -----------------------------
-    # SAVE INVENTORY LIST REPORT
-    # -----------------------------
+
     def save_inventory_list_report(self):
         report = self.report_inventory_full()
 
@@ -41,9 +36,8 @@ class ReportController:
 
         self.inventory_repo.save(final)
 
-    # -----------------------------
-    # MOVEMENTS REPORT (with warehouse names)
-    # -----------------------------
+
+
     def report_movements(self):
         movements = self.movement_controller.get_all()
         data = []
@@ -57,7 +51,7 @@ class ReportController:
             else:
                 from_name = "-"
 
-            # TO warehouse name
+
             if m.to_location_id:
                 loc_to = self.location_controller.get_by_id(m.to_location_id)
                 to_name = loc_to.name if loc_to else "-"
@@ -78,9 +72,8 @@ class ReportController:
         data = sorted(data, key=lambda x: x["date"])
         return Report(report_type="Movements", data=data)
 
-    # -----------------------------
+
     # DELIVERIES REPORT (IN)
-    # -----------------------------
     def report_deliveries_all(self, _filter=""):
         movements = self.movement_controller.get_all()
         deliveries = [m for m in movements if m.movement_type == MovementType.IN]
@@ -186,9 +179,8 @@ class ReportController:
 
         return Report(report_type="Inventory Full", data=report_data)
 
-    # -----------------------------
-    # FILTER MOVEMENTS (with warehouse names)
-    # -----------------------------
+
+
     def filter_movements(self, type=None, product=None, supplier=None,
                          client=None, warehouse=None, date_from=None, date_to=None):
 

@@ -6,8 +6,6 @@ from controllers.abstract_controller import AbstractController
 
 
 class MovementController(AbstractController):
-    """MVC контролер за движения – логистика + връзка с инвентара."""
-
     def __init__(self, repo, product_controller, user_controller,
                  location_controller, supplier_controller):
 
@@ -43,9 +41,7 @@ class MovementController(AbstractController):
     def _save(self):
         self.save(self.movements)
 
-    # -----------------------------
-    # Helpers
-    # -----------------------------
+
     def _location_id(self, loc_id: Optional[str]) -> Optional[str]:
         if not loc_id:
             raise ValueError("Не е избран склад.")
@@ -59,9 +55,8 @@ class MovementController(AbstractController):
     def get_all(self) -> List[Movement]:
         return self.movements
 
-    # -----------------------------
+
     # IN (доставка)
-    # -----------------------------
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
 
         movement = self.create_movement(
@@ -78,15 +73,14 @@ class MovementController(AbstractController):
         if self.inventory_controller:
             self.inventory_controller.increase_stock(product_id, quantity, location_id)
 
-        # Автоматичен обединен отчет → запис в inventory.json
+        # Автоматичен обединен отчет - запис в inventory.json
         if self.report_controller:
             self.report_controller.save_inventory_list_report()
 
         return movement
 
-    # -----------------------------
+
     # OUT (продажба)
-    # -----------------------------
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
 
         resolved_loc = self._location_id(location_id)
@@ -119,9 +113,8 @@ class MovementController(AbstractController):
 
         return movement
 
-    # -----------------------------
+
     # MOVE (вътрешно преместване)
-    # -----------------------------
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
 
         resolved_from = self._location_id(from_loc)
@@ -155,9 +148,8 @@ class MovementController(AbstractController):
 
         return movement
 
-    # -----------------------------
-    # CREATE MOVEMENT
-    # -----------------------------
+
+
     def create_movement(self, product_id: str, user_id: str, movement_type: str,
                         quantity: str, price: Optional[str], location_id: Optional[str] = None,
                         customer: Optional[str] = None, supplier_id: Optional[str] = None,

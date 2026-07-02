@@ -5,8 +5,6 @@ from controllers.abstract_controller import AbstractController
 
 
 class SupplierController(AbstractController):
-    """Чист MVC контролер за доставчици – без enterprise зависимости."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.suppliers: List[Supplier] = self.load() or []
@@ -20,9 +18,8 @@ class SupplierController(AbstractController):
     def _save(self):
         self.save(self.suppliers)
 
-    # -----------------------------
-    # ADD
-    # -----------------------------
+
+
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
@@ -34,9 +31,8 @@ class SupplierController(AbstractController):
         self._save()
         return supplier
 
-    # -----------------------------
-    # UPDATE
-    # -----------------------------
+
+
     def update(self, supplier_id: str, name=None, contact=None, address=None) -> bool:
         supplier = self.get_by_id(supplier_id)
         if not supplier:
@@ -57,9 +53,8 @@ class SupplierController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # GETTERS
-    # -----------------------------
+
+
     def get_by_id(self, identifier: str) -> Optional[Supplier]:
         sid = str(identifier).strip().lower()
         for s in self.suppliers:
@@ -70,9 +65,8 @@ class SupplierController(AbstractController):
     def get_all(self) -> List[Supplier]:
         return self.suppliers
 
-    # -----------------------------
-    # SEARCH
-    # -----------------------------
+
+
     def search(self, query: str) -> List[Supplier]:
         q = str(query).strip().lower()
         return [
@@ -80,9 +74,8 @@ class SupplierController(AbstractController):
             if q in s.name.lower() or q in s.supplier_id[:8].lower()
         ]
 
-    # -----------------------------
-    # REMOVE
-    # -----------------------------
+
+
     def remove(self, supplier_id: str) -> bool:
         supplier = self.get_by_id(supplier_id)
         if supplier:
@@ -94,9 +87,8 @@ class SupplierController(AbstractController):
     def get_all_dict(self):
         return {str(s.supplier_id): s for s in self.get_all()}
 
-    # -----------------------------
-    # VALIDATION
-    # -----------------------------
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":

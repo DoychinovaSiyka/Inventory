@@ -5,8 +5,6 @@ from controllers.abstract_controller import AbstractController
 
 
 class LocationController(AbstractController):
-    """Чист MVC контролер за локации – без цикличност, без enterprise зависимости."""
-
     def __init__(self, repo):
         super().__init__(repo)
         self.locations = self.load() or []
@@ -20,9 +18,8 @@ class LocationController(AbstractController):
     def _save(self):
         self.save(self.locations)
 
-    # -----------------------------
-    # ADD
-    # -----------------------------
+
+
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
         name = LocationValidator.validate_name(name)
         zone = LocationValidator.validate_zone(zone)
@@ -31,21 +28,13 @@ class LocationController(AbstractController):
 
         code = LocationValidator.validate_code(code, self.locations)
 
-        location = Location(
-            location_id=None,
-            name=name,
-            zone=zone,
-            capacity=capacity,
-            code=code
-        )
-
+        location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
         self.locations.append(location)
         self._save()
         return location
 
-    # -----------------------------
-    # GETTERS
-    # -----------------------------
+
+
     def get_all(self) -> List[Location]:
         return self.locations
 
@@ -65,9 +54,8 @@ class LocationController(AbstractController):
 
         return None
 
-    # -----------------------------
-    # SEARCH
-    # -----------------------------
+
+
     def search(self, query: str) -> List[dict]:
         q = str(query or "").strip().lower()
         if not q:
@@ -92,9 +80,8 @@ class LocationController(AbstractController):
 
         return results
 
-    # -----------------------------
-    # UPDATE
-    # -----------------------------
+
+
     def update(self, location_id: str, name: Optional[str] = None,
                zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
 
@@ -120,16 +107,12 @@ class LocationController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # REMOVE (чист MVC – без inventory_controller)
-    # -----------------------------
+
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
 
-        # Чист MVC: контролерът НЕ проверява инвентара.
-        # Проверка за наличности се прави в InventoryController или MovementController.
 
         self.locations = [l for l in self.locations if l.location_id != location.location_id]
         self._save()
@@ -138,9 +121,8 @@ class LocationController(AbstractController):
     def get_all_dict(self):
         return {str(loc.location_id): loc for loc in self.get_all()}
 
-    # -----------------------------
-    # VALIDATION
-    # -----------------------------
+
+
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "name":

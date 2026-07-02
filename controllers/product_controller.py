@@ -5,8 +5,6 @@ from controllers.abstract_controller import AbstractController
 
 
 class ProductController(AbstractController):
-    """Чист MVC контролер за продукти – без enterprise зависимости."""
-
     def __init__(self, repo, category_controller):
         super().__init__(repo)
         self.category_controller = category_controller
@@ -22,9 +20,8 @@ class ProductController(AbstractController):
     def _save(self):
         self.save(self.products)
 
-    # -----------------------------
-    # GETTERS
-    # -----------------------------
+
+
     def get_all(self) -> List[Product]:
         return self.products
 
@@ -40,9 +37,8 @@ class ProductController(AbstractController):
                 return p
         return None
 
-    # -----------------------------
-    # VALIDATION
-    # -----------------------------
+
+
     def validate_field(self, field_type: str, value: str, exclude_id: str = None) -> Optional[str]:
         try:
             if field_type == "name":
@@ -67,9 +63,8 @@ class ProductController(AbstractController):
         except ValueError as e:
             return str(e)
 
-    # -----------------------------
-    # ADD
-    # -----------------------------
+
+
     def add(self, product_data: dict) -> Product:
         name = self.validator.validate_name(product_data["name"])
         self.validator.validate_unique_name(name, self.products)
@@ -102,9 +97,7 @@ class ProductController(AbstractController):
         self._save()
         return product
 
-    # -----------------------------
-    # UPDATE
-    # -----------------------------
+
     def update(self, product_id: str, updates: dict) -> bool:
         product = self.get_by_id(product_id)
         if not product:
@@ -140,9 +133,7 @@ class ProductController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # DELETE
-    # -----------------------------
+
     def delete_by_id(self, product_id: str) -> bool:
         product = self.get_by_id(product_id)
         if not product:
@@ -152,16 +143,13 @@ class ProductController(AbstractController):
         self._save()
         return True
 
-    # -----------------------------
-    # SEARCH (чист MVC)
-    # -----------------------------
+
     def search(self, keyword: str) -> List[Product]:
         keyword = str(keyword or "").strip().lower()
         return [p for p in self.products if keyword in p.name.lower()]
 
-    # -----------------------------
-    # FILTER BY CATEGORY (чист MVC)
-    # -----------------------------
+
+
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
         all_ids = []
 
@@ -171,9 +159,8 @@ class ProductController(AbstractController):
 
         return [p for p in self.products if any(c.category_id in all_ids for c in p.categories)]
 
-    # -----------------------------
-    # SORT (чист MVC)
-    # -----------------------------
+
+
     def get_custom_sort(self, sort_type="price", reverse=True) -> List[Product]:
         if sort_type == "name":
             return sorted(self.products, key=lambda p: p.name.lower(), reverse=reverse)
