@@ -16,7 +16,7 @@ from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
 from views.movement_view import MovementView
 from views.password_utils import input_password
-from storage.storage_repository import StorageRepository
+from storage.json_repository import JSONStorage
 
 
 
@@ -31,14 +31,16 @@ class InventoryApplication:
 
 
     def _init_repositories(self):
-        self.user_repo = StorageRepository("data/users.json")
-        self.product_repo = StorageRepository("data/products.json")
-        self.category_repo = StorageRepository("data/categories.json")
-        self.supplier_repo = StorageRepository("data/suppliers.json")
-        self.location_repo = StorageRepository("data/locations.json")
-        self.movement_repo = StorageRepository("data/movements.json")
-        self.invoice_repo = StorageRepository("data/invoices.json")
-        self.inventory_repo = StorageRepository("data/inventory.json")
+        self.user_repo = JSONStorage("data/users.json")
+        self.product_repo = JSONStorage("data/products.json")
+        self.category_repo = JSONStorage("data/categories.json")
+        self.supplier_repo = JSONStorage("data/suppliers.json")
+        self.location_repo = JSONStorage("data/locations.json")
+        self.movement_repo = JSONStorage("data/movements.json")
+        self.invoice_repo = JSONStorage("data/invoices.json")
+        self.inventory_repo = JSONStorage("data/inventory.json")
+
+
 
 
     def _init_controllers(self):
@@ -74,6 +76,9 @@ class InventoryApplication:
 
         self.movement_view = MovementView(self.product_controller, self.movement_controller, self.user_controller,
                                           self.location_controller, self.supplier_controller, self.inventory_controller)
+
+
+
 
 
 

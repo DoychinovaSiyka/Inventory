@@ -1,7 +1,7 @@
 from models.movement import MovementType
 from datetime import datetime
 from models.report import Report
-from storage.storage_repository import StorageRepository
+from storage.json_repository import JSONStorage
 
 
 class ReportController:
@@ -11,7 +11,7 @@ class ReportController:
         self.supplier_controller = supplier_controller
         self.location_controller = location_controller
         self.invoice_controller = invoice_controller
-        self.inventory_repo = StorageRepository("data/inventory.json")
+        self.inventory_repo = JSONStorage("data/inventory.json")
 
 
 

@@ -5,7 +5,7 @@ from storage.repository import Repository
 
 
 
-class StorageRepository(Repository):
+class JSONStorage(Repository):
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
