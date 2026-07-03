@@ -5,16 +5,12 @@ from views.category_view import CategoryView
 
 
 class AnonymousMenuView:
-    def __init__(self, report_controller, inventory_controller, movement_controller):
-        self.report_controller = report_controller
-        self.inventory_controller = inventory_controller
-        self.movement_controller = movement_controller
-
-        # Гостът може да разглежда продукти и категории
-        self.product_view = ProductMenuView(None, None)   # само преглед
-        self.category_view = CategoryView(None, None, self.report_controller)
-
+    def __init__(self, controllers):
+        self.controllers = controllers
+        self.product_view = ProductMenuView(controllers["product"], controllers["category"])
+        self.category_view = CategoryView(controllers["category"], controllers["product"])
         self.system_info_view = SystemInfoView()
+
 
 
     def _build_menu(self):
@@ -23,8 +19,6 @@ class AnonymousMenuView:
             MenuItem("2", "Разглеждане на категории", self.open_categories),
             MenuItem("3", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")])
-
-
 
 
     def show_menu(self, user=None):
@@ -37,8 +31,10 @@ class AnonymousMenuView:
             if result == "break":
                 break
 
+    # Гостът вижда списъка, без меню
     def open_products(self, user):
         self.product_view.show_all(user)
+
 
     def open_categories(self, user):
         self.category_view.show_menu(user)

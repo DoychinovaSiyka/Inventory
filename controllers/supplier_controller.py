@@ -5,9 +5,11 @@ from controllers.abstract_controller import AbstractController
 
 
 class SupplierController(AbstractController):
+    """Управлява доставчиците в системата."""
     def __init__(self, repo):
         super().__init__(repo)
-        self.suppliers: List[Supplier] = self.load() or []
+        self.suppliers = self.load() or []
+
 
     def from_dict(self, data):
         return Supplier.from_dict(data)
@@ -15,9 +17,8 @@ class SupplierController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def _save(self):
+    def _save_suppliers(self):
         self.save(self.suppliers)
-
 
 
     def add(self, name: str, contact: str, address: str) -> Supplier:
@@ -28,29 +29,25 @@ class SupplierController(AbstractController):
 
         supplier = Supplier(name=name, contact=contact, address=address)
         self.suppliers.append(supplier)
-        self._save()
+        self._save_suppliers()
         return supplier
-
-
 
     def update(self, supplier_id: str, name=None, contact=None, address=None) -> bool:
         supplier = self.get_by_id(supplier_id)
         if not supplier:
-            raise ValueError("Доставчикът не е намерен.")
+            raise ValueError(f"Доставчикът не е намерен.")
 
         if name is not None:
             SupplierValidator.validate_name(name)
             SupplierValidator.validate_unique_name(name, self.suppliers, exclude_id=supplier.supplier_id)
             supplier.name = name.strip()
-
         if contact is not None:
             supplier.contact = SupplierValidator.validate_contact(contact)
-
         if address is not None:
             supplier.address = SupplierValidator.validate_address(address)
 
         supplier.update_modified()
-        self._save()
+        self._save_suppliers()
         return True
 
 
@@ -66,13 +63,9 @@ class SupplierController(AbstractController):
         return self.suppliers
 
 
-
     def search(self, query: str) -> List[Supplier]:
         q = str(query).strip().lower()
-        return [
-            s for s in self.suppliers
-            if q in s.name.lower() or q in s.supplier_id[:8].lower()
-        ]
+        return [s for s in self.suppliers if q in s.name.lower() or q in s.supplier_id[:8].lower()]
 
 
 
@@ -80,13 +73,9 @@ class SupplierController(AbstractController):
         supplier = self.get_by_id(supplier_id)
         if supplier:
             self.suppliers.remove(supplier)
-            self._save()
+            self._save_suppliers()
             return True
         return False
-
-    def get_all_dict(self):
-        return {str(s.supplier_id): s for s in self.get_all()}
-
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:
@@ -100,3 +89,5 @@ class SupplierController(AbstractController):
             return None
         except ValueError as e:
             return str(e)
+
+

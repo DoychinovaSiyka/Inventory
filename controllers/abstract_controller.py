@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class AbstractController(ABC):
     def __init__(self, repo):
         self.repo = repo
@@ -12,27 +13,26 @@ class AbstractController(ABC):
     def to_dict(self, obj):
         pass
 
+
     def load(self):
         raw = self.repo.load()
-        if not raw:
+        if raw is None:
             return []
-
 
         if isinstance(raw, list):
             return [self.from_dict(x) for x in raw]
-
-
         if isinstance(raw, dict):
             return {k: self.from_dict(v) for k, v in raw.items()}
-
         return self.from_dict(raw)
+
+
 
     def save(self, data):
         if isinstance(data, list):
-            normalized = [self.to_dict(x) for x in data]
+            normalized_data = [self.to_dict(x) for x in data]
         elif isinstance(data, dict):
-            normalized = {k: self.to_dict(v) for k, v in data.items()}
+            normalized_data = {k: self.to_dict(v) for k, v in data.items()}
         else:
-            normalized = self.to_dict(data)
+            normalized_data = self.to_dict(data)
 
-        self.repo.save(normalized)
+        self.repo.save(normalized_data)

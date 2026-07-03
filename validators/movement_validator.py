@@ -2,6 +2,7 @@ class MovementValidator:
 
     @staticmethod
     def normalize_movement_type(movement_type):
+        """Нормализира типа движение до IN, OUT или MOVE."""
         if not movement_type:
             raise ValueError("Типът движение е задължителен.")
 
@@ -18,6 +19,9 @@ class MovementValidator:
             return "MOVE"
 
         raise ValueError("Невалиден тип движение. Разрешени: IN, OUT, MOVE.")
+
+
+
 
     @staticmethod
     def parse_quantity(quantity):
@@ -37,18 +41,19 @@ class MovementValidator:
         except Exception:
             raise ValueError("Невалидно количество. Въведете число.")
 
+
+
     @staticmethod
     def validate_out_rules(product, quantity, customer, inventory_controller, location_id):
         if not customer or str(customer).strip() == "":
             raise ValueError("При продажба трябва да посочите клиент.")
 
-        if inventory_controller is None:
-            raise ValueError("Инвентарът не е зареден.")
-
         available = inventory_controller.get_stock(product.product_id, location_id)
         if available < quantity:
             raise ValueError(f"Недостатъчна наличност! Налично: {available} {product.unit}.")
         return True
+
+
 
     @staticmethod
     def validate_move_rules(product, quantity, inventory_controller, from_location_id, to_location_id):
@@ -57,9 +62,6 @@ class MovementValidator:
 
         if str(from_location_id) == str(to_location_id):
             raise ValueError("Складовете трябва да са различни.")
-
-        if inventory_controller is None:
-            raise ValueError("Инвентарът не е зареден.")
 
         available = inventory_controller.get_stock(product.product_id, from_location_id)
         if available < quantity:

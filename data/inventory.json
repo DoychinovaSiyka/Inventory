@@ -1,109 +1,95 @@
 {
     "products": {
-        "ce591a25-f951-4bf4-a56f-a2674fd9783b": {
-            "product_id": "ce591a25-f951-4bf4-a56f-a2674fd9783b",
-            "product_name": "rewoirpwoe",
-            "unit": "л.",
-            "total": 811.0,
-            "warehouses": {
-                "Варна": 728.0,
-                "Бургас": 83.0
-            },
-            "delivered": 990.0,
-            "sold": 101.0,
-            "avg_in_price": 118.5,
-            "avg_out_price": 8.0,
-            "expense": 117315.0,
-            "revenue": 808.0,
-            "last_movement": "MOVE - 2026-07-02 22:25:32"
-        },
         "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6": {
             "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
             "product_name": "Прясно мляко Верея 3.6%",
             "unit": "л.",
-            "total": 1422.0,
+            "total": 204586.0,
             "warehouses": {
-                "Варна": 1377.0,
-                "Бургас": 45.0
+                "Варна": 30438.0,
+                "Пловдив": 425.0,
+                "София": 81934.0,
+                "Бургас": 91789.0
             },
-            "delivered": 2456.0,
-            "sold": 84.0,
-            "avg_in_price": 3.27,
-            "avg_out_price": 4.45,
-            "expense": 8031.12,
-            "revenue": 373.8,
-            "last_movement": "MOVE - 2026-07-03 02:26:12"
+            "delivered": 210889.0,
+            "sold": 6303.0,
+            "avg_in_price": 5.42,
+            "avg_out_price": 5.48,
+            "expense": 1143018.38,
+            "revenue": 34540.44,
+            "last_movement": "MOVE - 2026-07-03 12:17:17"
         },
-        "318436c9-6126-45ac-9630-7ad1633116ba": {
-            "product_id": "318436c9-6126-45ac-9630-7ad1633116ba",
-            "product_name": "Домати Чери",
-            "unit": "бр.",
-            "total": 2887.0,
-            "warehouses": {
-                "Варна": 1987.0,
-                "Смолян": 900.0
-            },
-            "delivered": 3232.0,
-            "sold": 345.0,
-            "avg_in_price": 14.0,
-            "avg_out_price": 7.0,
-            "expense": 45248.0,
-            "revenue": 2415.0,
-            "last_movement": "MOVE - 2026-07-03 02:29:08"
-        },
-        "af567560-55d5-4899-ac11-12581e39c4af": {
-            "product_id": "af567560-55d5-4899-ac11-12581e39c4af",
-            "product_name": "Портокали за сок",
+        "4a1a3169-9f88-4476-b603-e28f90f38e40": {
+            "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
+            "product_name": "Кашкавал от краве масло",
             "unit": "кг.",
-            "total": 355.0,
+            "total": 446.0,
             "warehouses": {
-                "Бургас": 355.0
+                "Смолян": 280.0,
+                "София": 46.0,
+                "Варна": 120.0
             },
-            "delivered": 355.0,
-            "sold": 45.0,
-            "avg_in_price": 4.0,
-            "avg_out_price": 9.0,
-            "expense": 1420.0,
-            "revenue": 405.0,
-            "last_movement": "OUT - 2026-07-03 02:33:48"
+            "delivered": 456.0,
+            "sold": 10.0,
+            "avg_in_price": 25.56,
+            "avg_out_price": 24.01,
+            "expense": 11655.36,
+            "revenue": 240.1,
+            "last_movement": "MOVE - 2026-05-21 23:09:19"
         },
         "3b90e773-cb3a-49b0-ba08-e8213ff6bd57": {
             "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
             "product_name": "Картофи червени",
             "unit": "кг.",
-            "total": 111110766.0,
+            "total": 2770.0,
             "warehouses": {
-                "Пловдив": 111109866.0,
-                "Смолян": 900.0
+                "Бургас": 1770.0,
+                "Пловдив": 1000.0
             },
-            "delivered": 111114111.0,
-            "sold": 575.0,
-            "avg_in_price": 2.5,
-            "avg_out_price": 5.67,
-            "expense": 277785277.5,
-            "revenue": 3260.25,
-            "last_movement": "MOVE - 2026-07-03 02:38:10"
+            "delivered": 3000.0,
+            "sold": 230.0,
+            "avg_in_price": 2.01,
+            "avg_out_price": 2.34,
+            "expense": 6030.0,
+            "revenue": 538.2,
+            "last_movement": "MOVE - 2026-05-22 00:50:24"
         },
-        "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
-            "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
-            "product_name": "Свинска плешка без кост",
-            "unit": "кг.",
-            "total": 22221322.0,
+        "13889b06-e120-4d7d-9ec5-6adbe08a6ab1": {
+            "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
+            "product_name": "кисело мляко \"Габровци\"",
+            "unit": "бр.",
+            "total": 2220.0,
             "warehouses": {
-                "София": 22220422.0,
-                "Смолян": 900.0
+                "Пловдив": 1988.0,
+                "Смолян": 232.0
             },
-            "delivered": 22222222.0,
-            "sold": 900.0,
-            "avg_in_price": 5.0,
-            "avg_out_price": 6.0,
-            "expense": 111111110.0,
-            "revenue": 5400.0,
-            "last_movement": "MOVE - 2026-07-03 02:43:01"
+            "delivered": 2220.0,
+            "sold": 0,
+            "avg_in_price": 3.09,
+            "avg_out_price": 0.0,
+            "expense": 6859.8,
+            "revenue": 0.0,
+            "last_movement": "MOVE - 2026-05-27 22:53:57"
+        },
+        "f35a3aeb-11fd-457c-bb6b-ac712cd9458b": {
+            "product_id": "f35a3aeb-11fd-457c-bb6b-ac712cd9458b",
+            "product_name": "Салам Бургас",
+            "unit": "бр.",
+            "total": 80.0,
+            "warehouses": {
+                "Смолян": 68.0,
+                "Бургас": 12.0
+            },
+            "delivered": 89.0,
+            "sold": 9.0,
+            "avg_in_price": 8.09,
+            "avg_out_price": 8.34,
+            "expense": 720.01,
+            "revenue": 75.06,
+            "last_movement": "MOVE - 2026-06-12 13:20:04"
         }
     },
     "summary": {
-        "total_products": 6
-    },
-    "generated_on": "2026-07-03 02:43:01"
+        "total_products": 5
+    }
 }

@@ -3,10 +3,6 @@ from views.password_utils import format_table
 from validators.supplier_validator import SupplierValidator
 
 
-
-
-
-
 class SupplierView:
     def __init__(self, controller):
         self.controller = controller

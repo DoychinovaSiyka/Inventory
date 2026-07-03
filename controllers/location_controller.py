@@ -5,9 +5,12 @@ from controllers.abstract_controller import AbstractController
 
 
 class LocationController(AbstractController):
-    def __init__(self, repo):
+    """Контролерът управлява локациите в системата."""
+    def __init__(self, repo, inventory_controller=None):
+        self.inventory_controller = inventory_controller
         super().__init__(repo)
         self.locations = self.load() or []
+
 
     def from_dict(self, data):
         return Location.from_dict(data)
@@ -15,9 +18,8 @@ class LocationController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
-    def _save(self):
+    def _save_locations(self):
         self.save(self.locations)
-
 
 
     def add(self, name: str, zone: str = "", capacity=None, code: str = "") -> Location:
@@ -30,13 +32,15 @@ class LocationController(AbstractController):
 
         location = Location(location_id=None, name=name, zone=zone, capacity=capacity, code=code)
         self.locations.append(location)
-        self._save()
+        self._save_locations()
         return location
 
 
 
     def get_all(self) -> List[Location]:
         return self.locations
+
+
 
     def get_by_id(self, identifier: str) -> Optional[Location]:
         if not identifier:
@@ -47,12 +51,15 @@ class LocationController(AbstractController):
         for loc in self.locations:
             if loc.location_id.lower() == target:
                 return loc
+
             if loc.location_id[:8].lower() == target:
                 return loc
+
             if loc.code and loc.code.lower() == target:
                 return loc
 
         return None
+
 
 
 
@@ -70,20 +77,13 @@ class LocationController(AbstractController):
             code = str(loc.code or "").lower()
 
             if q in short_id or q in name or q in zone or q in cap or q in code:
-                results.append({
-                    "id": loc.location_id[:8],
-                    "name": loc.name,
-                    "zone": loc.zone,
-                    "capacity": loc.capacity,
-                    "code": loc.code
-                })
+                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity,"code": loc.code})
 
         return results
 
 
 
-    def update(self, location_id: str, name: Optional[str] = None,
-               zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
+    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
 
         location = self.get_by_id(location_id)
         if location is None:
@@ -95,16 +95,19 @@ class LocationController(AbstractController):
             location.name = name
 
         if zone is not None:
-            location.zone = LocationValidator.validate_zone(zone)
+            zone = LocationValidator.validate_zone(zone)
+            location.zone = zone
 
         if capacity is not None:
-            location.capacity = LocationValidator.validate_capacity(capacity)
+            capacity = LocationValidator.validate_capacity(capacity)
+            location.capacity = capacity
+
 
         if code is not None:
             location.code = LocationValidator.validate_code(code, self.locations, exclude_id=location.location_id)
 
         location.update_modified()
-        self._save()
+        self._save_locations()
         return True
 
 
@@ -113,13 +116,33 @@ class LocationController(AbstractController):
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
 
+        if self.inventory_controller:
+            products_data = self.inventory_controller.data.get("products", {})
+            for pid, pdata in products_data.items():
+                locations_map = pdata.get("locations", {})
 
-        self.locations = [l for l in self.locations if l.location_id != location.location_id]
-        self._save()
+                normalized_map = {}
+                for key, qty in locations_map.items():
+                    loc_obj = self.get_by_id(key)
+                    if loc_obj:
+                        normalized_map[loc_obj.location_id] = qty
+                    else:
+                        normalized_map[key] = qty
+
+                qty = normalized_map.get(location.location_id, 0)
+
+                try:
+                    qty_value = float(qty)
+                except Exception:
+                    qty_value = 0.0
+
+                if qty_value > 0:
+                    raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
+
+        full_id = location.location_id
+        self.locations = [l for l in self.locations if l.location_id != full_id]
+        self._save_locations()
         return True
-
-    def get_all_dict(self):
-        return {str(loc.location_id): loc for loc in self.get_all()}
 
 
 
@@ -135,5 +158,10 @@ class LocationController(AbstractController):
                 if not value.strip():
                     raise ValueError("Кодът не може да е празен.")
             return None
+
         except ValueError as e:
             return str(e)
+
+
+
+

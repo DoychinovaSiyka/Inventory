@@ -4,11 +4,9 @@ from views.password_utils import format_table
 
 class CategoryView:
 
-    def __init__(self, controller, product_controller, report_controller):
-
+    def __init__(self, controller, product_controller):
         self.controller = controller
         self.product_controller = product_controller
-        self.report_controller = report_controller
 
     def show_menu(self, user):
         while True:
@@ -60,7 +58,7 @@ class CategoryView:
 
     def show_stats(self, _):
         print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
-        stats = self.report_controller.get_category_stats()
+        stats = self.controller.get_stats(self.product_controller)
 
         print(f"Общ брой дефинирани категории: {stats['total_categories']}")
         columns = ["ID", "Име на категория", "Брой продукти"]
@@ -147,6 +145,7 @@ class CategoryView:
         print("(Enter за запазване на текущия, напишете 'none' за главна категория)")
 
         choice = input("Избор: ").strip().lower()
+
         if choice == 'none':
             new_parent_id = None
         elif not choice:

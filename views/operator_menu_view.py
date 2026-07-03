@@ -9,22 +9,21 @@ from views.password_utils import require_password
 from views.location_view import LocationView
 
 
-class OperatorMenuView:
-    def __init__(self, user_controller, product_controller, category_controller, supplier_controller,
-                 location_controller, movement_controller,
-                 invoice_controller, report_controller, inventory_controller, movement_view, graph_view):
-        self.user_controller = user_controller
-        self.product_controller = product_controller
-        self.category_controller = category_controller
-        self.supplier_controller = supplier_controller
-        self.location_controller = location_controller
-        self.movement_controller = movement_controller
-        self.invoice_controller = invoice_controller
-        self.report_controller = report_controller
-        self.inventory_controller = inventory_controller
-        self.movement_view = movement_view
-        self.graph_view = graph_view
 
+
+
+class OperatorMenuView:
+    def __init__(self, controllers):
+        self.controllers = controllers
+        self.product_controller = controllers["product"]
+        self.category_controller = controllers["category"]
+        self.location_controller = controllers["location"]
+        self.movement_controller = controllers["movement"]
+        self.invoice_controller = controllers["invoice"]
+        self.report_controller = controllers["report"]
+        self.user_controller = controllers["user"]
+        self.supplier_controller = controllers["supplier"]
+        self.inventory_controller = controllers["inventory"]
 
 
     def _build_menu(self):
@@ -36,9 +35,7 @@ class OperatorMenuView:
             MenuItem("5", "Архив фактури (защитено)", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("7", "Преглед на складови локации", self.open_locations_readonly),
-            MenuItem("8", "Логистичен модул (Dijkstra)", self.open_graph),
             MenuItem("0", "Изход", lambda u: "break")])
-
 
 
     def show_menu(self, user):
@@ -53,8 +50,10 @@ class OperatorMenuView:
         while True:
             menu = self._build_menu()
             choice = menu.show()
+
             if choice == "0" or choice is None:
                 break
+
             result = menu.execute(choice, user)
             if result == "break":
                 break
@@ -64,10 +63,12 @@ class OperatorMenuView:
         view = ProductMenuView(self.product_controller, self.category_controller)
         view.show_menu(user)
 
+
     @require_password("parola123")
     def open_categories(self, user):
-        view = CategoryView(self.category_controller, self.product_controller, self.report_controller)
+        view = CategoryView(self.category_controller, self.product_controller)
         view.show_menu(user)
+
 
     @require_password("parola123")
     def open_reports(self, user):
@@ -79,16 +80,17 @@ class OperatorMenuView:
         view = InvoiceView(self.invoice_controller)
         view.show_menu(user)
 
+    # СВОБОДЕН ДОСТЪП
     def open_movements(self, user):
-        self.movement_view.show_menu(user)
+        view = MovementView(self.product_controller, self.movement_controller,
+                            self.user_controller, self.location_controller, self.supplier_controller, self.inventory_controller)
+        view.show_menu(user)
 
     def open_locations_readonly(self, user):
         print("\nСкладови локации:")
         view = LocationView(self.location_controller)
         view.show_all(user)
 
+
     def open_system_info(self, _):
         SystemInfoView().show_menu()
-
-    def open_graph(self, user):
-        self.graph_view.show_menu(user)

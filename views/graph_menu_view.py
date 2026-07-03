@@ -12,8 +12,6 @@ class GraphView:
         self.graph = WarehouseGraph()
         self._setup_network()
 
-
-
     def _setup_network(self):
         warehouses = [Warehouse("W1", "София"), Warehouse("W2", "Пловдив"),
                       Warehouse("W3", "Варна"), Warehouse("W4", "Бургас"),
