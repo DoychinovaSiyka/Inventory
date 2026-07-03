@@ -185,14 +185,14 @@ class ReportsView:
 
 
     def filter_movements_by_product(self, _):
-        product = input("Въведете продукт (Enter за всички): ").strip()
+        product = input("Въведете продукт: ").strip()
         result = self.controller.filter_movements(product=product if product else None)
         self._render_filtered_movements(result)
 
 
 
     def filter_movements_by_supplier(self, _):
-        supplier = input("Въведете доставчик (Enter за всички): ").strip()
+        supplier = input("Въведете доставчик: ").strip()
         result = self.controller.report_deliveries_all("")
 
         rows = []
@@ -231,7 +231,7 @@ class ReportsView:
 
 
     def filter_movements_by_warehouse(self, _):
-        wh = input("Въведете склад (Enter за всички): ").strip()
+        wh = input("Въведете склад: ").strip()
         result = self.controller.report_inventory_full()
 
         rows = []
