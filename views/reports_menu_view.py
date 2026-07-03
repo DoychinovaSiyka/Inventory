@@ -3,6 +3,8 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
 class ReportsView:
     def __init__(self, controller):
         self.controller = controller
@@ -22,7 +24,7 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
-    # ⭐ ОПТИМИЗИРАНО МЕНЮ
+
     def show_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
@@ -30,11 +32,10 @@ class ReportsView:
             MenuItem("3", "Операции по тип (IN / OUT / MOVE)", self.operations_by_type_menu),
             MenuItem("4", "Сортиране по количество", self.sort_menu),
             MenuItem("5", "Филтриране на движения", self.movements_filter_menu),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-    # ⭐ КАРТОЧКА ЗА ПРОДУКТ
+
     def format_card(self, item):
         try:
             lines = []
@@ -69,7 +70,7 @@ class ReportsView:
         except Exception as e:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
 
-    # ⭐ ОБЕДИНЕН ОТЧЕТ
+
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
         print("\n" + "=" * 20)
@@ -80,60 +81,51 @@ class ReportsView:
         for item in result.data:
             print(self.format_card(item))
 
-    # ⭐ ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА
+
+
+
     def report_movements(self, _):
         result = self.controller.report_movements()
         rows = []
 
         for m in result.data:
-            rows.append([
-                m.get("date", "-"),
-                m.get("movement_id", "-"),
-                m.get("type", "-"),
-                m.get("product_name", "-"),
-                f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                m.get("from", "-"),
-                m.get("to", "-")
-            ])
+            rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("type", "-"),
+                         m.get("product_name", "-"),
+                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
-    # ⭐ ОПЕРАЦИИ ПО ТИП
+
+
+
     def operations_by_type_menu(self, user):
         menu = Menu("Операции по тип", [
             MenuItem("1", "Всички доставки (IN)", self.report_deliveries_all),
             MenuItem("2", "Всички продажби (OUT)", self.report_sales_all),
             MenuItem("3", "Всички премествания (MOVE)", self.report_moves_all),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-    # ⭐ ПРЕМЕСТВАНИЯ
+
     def report_moves_all(self, _):
         result = self.controller.filter_movements(type="MOVE")
         self._render_filtered_movements(result)
 
-    # ⭐ ДОСТАВКИ
+
     def report_deliveries_all(self, _):
         result = self.controller.report_deliveries_all("")
         rows = []
 
         for item in result.data:
-            rows.append([
-                item.get("date", "-"),
-                item.get("movement_id", "-"),
-                item.get("product", "-"),
-                f"{item.get('quantity', 0)} {item.get('unit', '')}",
-                item.get("price", "-"),
-                item.get("supplier", "-"),
-                item.get("to", "-")
-            ])
+            rows.append([item.get("date", "-"), item.get("movement_id", "-"), item.get("product", "-"),
+                         f"{item.get('quantity', 0)} {item.get('unit', '')}",
+                         item.get("price", "-"), item.get("supplier", "-"), item.get("to", "-")])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
 
-    # ⭐ ПРОДАЖБИ
+
     def report_sales_all(self, _):
         result = self.controller.report_sales()
         rows = []
@@ -142,27 +134,21 @@ class ReportsView:
             qty = item.get("quantity")
             unit = item.get("unit")
             qty_display = f"{qty} {unit}" if qty and unit else "—"
-
-            rows.append([
-                item.get("invoice_number", "-"),
-                item.get("date", "-"),
-                item.get("client", "Неизвестен"),
-                item.get("product", "-"),
-                qty_display,
-                item.get("total_price", "-"),
-                item.get("status", "АКТИВНА")
-            ])
+            rows.append([item.get("invoice_number", "-"), item.get("date", "-"),
+                         item.get("client", "Неизвестен"), item.get("product", "-"), qty_display,
+                         item.get("total_price", "-"), item.get("status", "АКТИВНА")])
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Кол.", "Общо", "Статус"]
         self._display_report("ВСИЧКИ ПРОДАЖБИ (OUT)", headers, rows)
 
-    # ⭐ СОРТИРАНЕ
+
+
+
     def sort_menu(self, user):
         menu = Menu("Сортиране по количество", [
             MenuItem("1", "Merge Sort", self.sort_qty_merge),
             MenuItem("2", "Quick Sort", self.sort_qty_quick),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
     def sort_qty_merge(self, _):
@@ -186,23 +172,24 @@ class ReportsView:
             headers = ["Продукт", "Наличност"]
             print(format_table(headers, rows))
 
-    # ⭐ ФИЛТРИРАНЕ НА ДВИЖЕНИЯ
+
     def movements_filter_menu(self, user):
         menu = Menu("Филтриране на движения", [
             MenuItem("1", "По продукт", self.filter_movements_by_product),
             MenuItem("2", "По доставчик", self.filter_movements_by_supplier),
             MenuItem("3", "По клиент", self.filter_movements_by_client),
             MenuItem("4", "По склад", self.filter_movements_by_warehouse),
-            MenuItem("0", "Назад", lambda u: "break")
-        ])
+            MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-    # ⭐ ФИЛТРИ — МАКСИМАЛНО ЛОГИЧНИ
+
 
     def filter_movements_by_product(self, _):
         product = input("Въведете продукт (Enter за всички): ").strip()
         result = self.controller.filter_movements(product=product if product else None)
         self._render_filtered_movements(result)
+
+
 
     def filter_movements_by_supplier(self, _):
         supplier = input("Въведете доставчик (Enter за всички): ").strip()
@@ -213,21 +200,17 @@ class ReportsView:
             if supplier and m.get("supplier") != supplier:
                 continue
 
-            rows.append([
-                m.get("date", "-"),
-                m.get("movement_id", "-"),
-                m.get("product", "-"),
-                f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                m.get("price", "-"),
-                m.get("supplier", "Неизвестен"),
-                m.get("to", "Няма")
-            ])
+            rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("product", "-"),
+                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("price", "-"),
+                         m.get("supplier", "Неизвестен"), m.get("to", "Няма")])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ДОСТАВКИ ПО ДОСТАВЧИК", headers, rows)
 
+
+
     def filter_movements_by_client(self, _):
-        client = input("Въведете клиент (Enter за всички): ").strip()
+        client = input("Въведете клиент: ").strip()
         result = self.controller.report_sales()
 
         rows = []
@@ -239,18 +222,13 @@ class ReportsView:
             unit = m.get("unit")
             qty_display = f"{qty} {unit}" if qty and unit else "—"
 
-            rows.append([
-                m.get("invoice_number", "-"),
-                m.get("date", "-"),
-                m.get("client", "Неизвестен"),
-                m.get("product", "-"),
-                qty_display,
-                m.get("total_price", "-"),
-                m.get("status", "АКТИВНА")
-            ])
+            rows.append([m.get("invoice_number", "-"), m.get("date", "-"), m.get("client", "Неизвестен"),
+                         m.get("product", "-"), qty_display, m.get("total_price", "-"), m.get("status", "АКТИВНА")])
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Кол.", "Общо", "Статус"]
         self._display_report("ПРОДАЖБИ ПО КЛИЕНТ", headers, rows)
+
+
 
     def filter_movements_by_warehouse(self, _):
         wh = input("Въведете склад (Enter за всички): ").strip()
@@ -261,36 +239,24 @@ class ReportsView:
             warehouses = item.get("warehouses", {})
             if not wh:
                 for wname, qty in warehouses.items():
-                    rows.append([
-                        item.get("product_name", "-"),
-                        wname,
-                        f"{qty} {item.get('unit', '')}"
-                    ])
+                    rows.append([item.get("product_name", "-"), wname, f"{qty} {item.get('unit', '')}"])
             else:
                 qty = warehouses.get(wh, None)
                 if qty is not None:
-                    rows.append([
-                        item.get("product_name", "-"),
-                        wh,
-                        f"{qty} {item.get('unit', '')}"
-                    ])
+                    rows.append([item.get("product_name", "-"), wh, f"{qty} {item.get('unit', '')}"])
 
         headers = ["Продукт", "Склад", "Наличност"]
         self._display_report("НАЛИЧНОСТИ ПО СКЛАДОВЕ", headers, rows)
 
-    # ⭐ ОБЩИ ДВИЖЕНИЯ
+
+
+
     def _render_filtered_movements(self, result):
         rows = []
         for m in result.data:
-            rows.append([
-                m.get("date", "-"),
-                m.get("movement_id", "-"),
-                m.get("type", "-"),
-                m.get("product_name", "-"),
-                f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                m.get("from", "-"),
-                m.get("to", "-")
-            ])
+            rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("type", "-"),
+                         m.get("product_name", "-"), f"{m.get('quantity', 0)} {m.get('unit', '')}",
+                         m.get("from", "-"), m.get("to", "-")])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)

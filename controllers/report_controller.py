@@ -26,7 +26,7 @@ class ReportController:
         return [m for m in movements if m.movement_type.name == m_type.upper()]
 
 
-    # ⭐ ПЪЛЕН ИНВЕНТАРЕН ОТЧЕТ
+
     def report_inventory_full(self):
         raw_inventory = self.inventory_controller.build_inventory()
         report_data = []
@@ -46,19 +46,12 @@ class ReportController:
             avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
             avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
-            report_item = {
-                "product_id": pid,
-                "product_name": item["product_name"],
-                "unit": item["unit"],
-                "total": item["total"],
-                "warehouses": item["warehouses"],
-                "delivered": delivered,
-                "sold": sold,
-                "avg_in_price": avg_in,
-                "avg_out_price": avg_out,
-                "expense": round(delivered * avg_in, 2),
-                "revenue": round(sold * avg_out, 2)
-            }
+            report_item = {"product_id": pid, "product_name": item["product_name"], "unit": item["unit"],
+                           "total": item["total"], "warehouses": item["warehouses"], "delivered": delivered, "sold": sold,
+                           "avg_in_price": avg_in, "avg_out_price": avg_out,
+                           "expense": round(delivered * avg_in, 2), "revenue": round(sold * avg_out, 2)}
+
+
 
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
@@ -71,12 +64,11 @@ class ReportController:
         return Report(report_type="Inventory Full", data=report_data)
 
 
-    # ⭐ ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА
+
     def report_movements(self):
         rows = []
 
         for m in self.movement_controller.movements:
-
             loc_from = self.location_controller.get_by_id(m.from_location_id) if m.from_location_id else None
             loc_to = self.location_controller.get_by_id(m.to_location_id) if m.to_location_id else None
             loc_main = self.location_controller.get_by_id(m.location_id)
@@ -98,21 +90,14 @@ class ReportController:
                 from_name = loc_from.name if loc_from else "Склад"
                 to_name = loc_to.name if loc_to else "Склад"
 
-            rows.append({
-                "date": str(m.date)[:10],
-                "movement_id": m.movement_id[:8],
-                "type": m.movement_type.name,
-                "product_name": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_name,
-                "to": to_name
-            })
+            rows.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
+                         "type": m.movement_type.name, "product_name": m.product_name, "quantity": m.quantity,
+                         "unit": m.unit, "from": from_name, "to": to_name})
 
         return Report(report_type="Movement History", data=rows)
 
 
-    # ⭐ Доставки — ОПРАВЕНО: добавен склад
+
     def report_deliveries_all(self, keyword=""):
         moves = self._filter_movements_by_type(self.movement_controller.movements, "IN")
         data = []
@@ -125,41 +110,27 @@ class ReportController:
             warehouse_name = loc.name if loc else "Няма"
 
             if self._match_string(m.product_name, keyword) or self._match_string(supplier_name, keyword):
-                data.append({
-                    "date": str(m.date)[:10],
-                    "movement_id": m.movement_id[:8],
-                    "product": m.product_name,
-                    "quantity": m.quantity,
-                    "unit": m.unit,
-                    "price": m.price,
-                    "supplier": supplier_name,
-                    "to": warehouse_name
-                })
+                data.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
+                             "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "price": m.price,
+                             "supplier": supplier_name, "to": warehouse_name})
 
         return Report(report_type="Deliveries", data=data)
 
 
-    # ⭐ Продажби — ОПРАВЕНО: quantity + unit
+
     def report_sales(self):
         active = [i for i in self.invoice_controller.get_all() if i.is_active]
 
         data = []
         for i in active:
-            data.append({
-                "invoice_number": i.invoice_id[:8],
-                "date": str(i.date)[:10],
-                "client": i.customer,
-                "product": i.product,
-                "quantity": i.quantity,
-                "unit": i.unit,
-                "total_price": i.total_price,
-                "status": "АКТИВНА"
-            })
+            data.append({"invoice_number": i.invoice_id[:8], "date": str(i.date)[:10], "client": i.customer,
+                         "product": i.product, "quantity": i.quantity, "unit": i.unit,
+                         "total_price": i.total_price, "status": "АКТИВНА"})
 
         return Report(report_type="Sales", data=data)
 
 
-    # ⭐ Сортиране
+
     def sort_inventory_by_quantity(self, algorithm="merge", reverse=True):
         data = self.report_inventory_full().data[:]
         key_fn = lambda x: x["total"]
@@ -174,9 +145,8 @@ class ReportController:
         return Report(report_type=f"Sort by Quantity ({algorithm})", data=sorted_data)
 
 
-    # ⭐ Филтрирани движения — напълно оправено
-    def filter_movements(self, type=None, product=None, supplier=None, client=None,
-                         warehouse=None, date_from=None, date_to=None):
+
+    def filter_movements(self, type=None, product=None, supplier=None, client=None, warehouse=None, date_from=None, date_to=None):
 
         movements = self.movement_controller.movements
         filtered = []
@@ -227,7 +197,7 @@ class ReportController:
             if date_to and m_date > date_to:
                 continue
 
-            # ⭐ Логични имена за from/to
+
             if m.movement_type.name == "IN":
                 loc_main = self.location_controller.get_by_id(m.location_id)
                 loc_name = loc_main.name if loc_main else "Склад"
@@ -249,15 +219,8 @@ class ReportController:
                 from_name = loc_from.name if loc_from else "Склад"
                 to_name = loc_to.name if loc_to else "Склад"
 
-            filtered.append({
-                "date": m_date,
-                "movement_id": m.movement_id[:8],
-                "type": m.movement_type.name,
-                "product_name": m.product_name,
-                "quantity": m.quantity,
-                "unit": m.unit,
-                "from": from_name,
-                "to": to_name
-            })
+            filtered.append({"date": m_date, "movement_id": m.movement_id[:8], "type": m.movement_type.name,
+                             "product_name": m.product_name, "quantity": m.quantity,
+                             "unit": m.unit, "from": from_name, "to": to_name})
 
         return Report(report_type="Filtered Movements", data=filtered)

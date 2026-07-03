@@ -3,6 +3,9 @@ from validators.inventory_validator import InventoryValidator
 from controllers.abstract_controller import AbstractController
 
 
+
+
+
 class InventoryController(AbstractController):
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         super().__init__(repository)
@@ -12,8 +15,6 @@ class InventoryController(AbstractController):
         self.movement_controller = movement_controller
 
         raw_data = self.load()
-
-        # ⭐ ВАЖНО: products трябва да е DICT, не LIST
         if isinstance(raw_data, dict) and "products" in raw_data and isinstance(raw_data["products"], dict):
             self.data = raw_data
         else:
@@ -168,37 +169,31 @@ class InventoryController(AbstractController):
         products_dict = {}
 
         for pid, p_info in self.data.get("products", {}).items():
-
-            # 1) Опитваме да вземем продукта от product_controller
             product_obj = self.product_controller.get_by_id(pid)
-
             if product_obj:
-                # продуктът съществува → взимаме истинското име
                 product_name = product_obj.name
                 unit = product_obj.unit
             else:
-                # продуктът е изтрит → взимаме името от първото движение
                 moves_for_product = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
                 if moves_for_product:
                     product_name = moves_for_product[0].product_name
                     unit = moves_for_product[0].unit
                 else:
-                    # няма движения → последен fallback
                     product_name = pid
                     unit = "бр."
 
-            # 2) Общо количество
+            # Общо количество
             total = self.get_total_stock(pid)
 
-            # 3) Разпределение по складове
+            # Разпределение по складове
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
                 loc = self.location_controller.get_by_id(lid)
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
 
-            # 4) Движения
+            # Движения
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
@@ -216,33 +211,25 @@ class InventoryController(AbstractController):
             expense = round(delivered * avg_in, 2)
             revenue = round(sold * avg_out, 2)
 
-            # 5) Последно движение
+            # Последно движение
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
                 last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
             else:
                 last_movement = "Няма движения"
 
-            # 6) Записваме продукта в dict
-            products_dict[pid] = {
-                "product_id": pid,
-                "product_name": product_name,
-                "unit": unit,
-                "total": total,
-                "warehouses": warehouse_map,
-                "delivered": delivered,
-                "sold": sold,
-                "avg_in_price": avg_in,
-                "avg_out_price": avg_out,
-                "expense": expense,
-                "revenue": revenue,
-                "last_movement": last_movement
-            }
 
-        return {
-            "products": products_dict,
-            "summary": {"total_products": len(products_dict)}
-        }
+            products_dict[pid] = {"product_id": pid, "product_name": product_name,
+                                  "unit": unit, "total": total, "warehouses": warehouse_map,
+                                  "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
+                                  "avg_out_price": avg_out, "expense": expense, "revenue": revenue,
+                                  "last_movement": last_movement}
+
+        return {"products": products_dict, "summary": {"total_products": len(products_dict)}}
+
+
+
+
 
     # Пресмятаме инвентара от движенията
     def update_inventory_from_movements(self, movements):

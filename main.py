@@ -27,6 +27,8 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
+
+
     def _init_repositories(self):
         """Инициализация на JSON хранилищата."""
         self.user_repo = JSONRepository("data/users.json")
@@ -37,6 +39,8 @@ class InventoryApplication:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
+
+
 
     def _init_controllers(self):
         self.user_controller = UserController(self.user_repo)
@@ -67,6 +71,8 @@ class InventoryApplication:
 
 
 
+
+
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,
                             "category": self.category_controller, "supplier": self.supplier_controller,
@@ -77,6 +83,8 @@ class InventoryApplication:
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
         self.anonymous_menu = AnonymousMenuView(self.controllers)
+
+
 
 
 
