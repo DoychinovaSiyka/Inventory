@@ -264,3 +264,23 @@ class InventoryController(AbstractController):
                 locations[to_lid] = round(locations.get(to_lid, 0.0) + qty, 3)
 
         self._save()
+
+    def get_critical_items(self, threshold=5):
+        """Връща списък с критично изчерпани артикули."""
+        critical = []
+
+        inventory = self.build_inventory()["products"]
+
+        for pid, item in inventory.items():
+            total = item.get("total", 0)
+
+            if total <= threshold:
+                critical.append({
+                    "product_id": pid,
+                    "product_name": item.get("product_name", "-"),
+                    "unit": item.get("unit", "-"),
+                    "total": total,
+                    "warehouses": item.get("warehouses", {})
+                })
+
+        return critical

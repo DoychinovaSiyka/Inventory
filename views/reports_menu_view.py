@@ -24,15 +24,15 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
-
-    def show_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
             MenuItem("2", "Хронология на всички движения", self.report_movements),
             MenuItem("3", "Операции по тип (IN / OUT / MOVE)", self.operations_by_type_menu),
             MenuItem("4", "Сортиране по количество", self.sort_menu),
             MenuItem("5", "Филтриране на движения", self.movements_filter_menu),
+            MenuItem("6", "Критично изчерпани артикули", self.report_critical_items),
             MenuItem("0", "Назад", lambda u: "break")])
+
         self._run_menu(menu, user)
 
 
@@ -260,3 +260,15 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)
+
+
+    def report_critical_items(self, _):
+        items = self.controller.inventory_controller.get_critical_items(threshold=5)
+
+        rows = []
+        for item in items:
+            warehouses = ", ".join([f"{wh}: {qty}" for wh, qty in item.get("warehouses", {}).items()])
+            rows.append([item.get("product_name", "-"), f"{item.get('total', 0)} {item.get('unit', '')}", warehouses])
+
+        headers = ["Продукт", "Общо количество", "По складове"]
+        self._display_report("КРИТИЧНО ИЗЧЕРПАНИ АРТИКУЛИ", headers, rows)
