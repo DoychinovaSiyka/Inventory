@@ -284,3 +284,23 @@ class InventoryController(AbstractController):
                 })
 
         return critical
+
+    def get_overstocked_items(self, threshold=130):
+        """Връща списък с артикули, които имат прекомерно голяма наличност (излишества)."""
+        overstocked = []
+
+        inventory = self.build_inventory()["products"]
+
+        for pid, item in inventory.items():
+            total = item.get("total", 0)
+
+            if total >= threshold:
+                overstocked.append({
+                    "product_id": pid,
+                    "product_name": item.get("product_name", "-"),
+                    "unit": item.get("unit", "-"),
+                    "total": total,
+                    "warehouses": item.get("warehouses", {})
+                })
+
+        return overstocked
