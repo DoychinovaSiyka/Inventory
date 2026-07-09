@@ -70,10 +70,13 @@ class OperatorMenuView:
         view.show_menu(user)
 
 
+
     @require_password("parola123")
     def open_reports(self, user):
         view = ReportsView(self.report_controller)
-        view.show_menu(user)
+        view.show_main_menu(user)
+
+
 
     @require_password("parola123")
     def open_invoices(self, user):
