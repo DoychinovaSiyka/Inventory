@@ -3,8 +3,6 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
-
-
 class ReportsView:
     def __init__(self, controller):
         self.controller = controller
@@ -24,6 +22,7 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
+    def show_main_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
             MenuItem("2", "Хронология на всички движения", self.report_movements),
@@ -33,8 +32,8 @@ class ReportsView:
             MenuItem("6", "Критично изчерпани артикули", self.report_critical_items),
             MenuItem("7", "Излишества (над 130 бр.)", self.report_overstock_items),
             MenuItem("0", "Назад", lambda u: "break")])
-
         self._run_menu(menu, user)
+
 
 
     def format_card(self, item):
@@ -48,10 +47,9 @@ class ReportsView:
             total_qty = item.get('total', 0)
             lines.append(f"Общо количество:  {total_qty} {unit}")
             lines.append("")
-
             lines.append("РАЗПРЕДЕЛЕНИЕ ПО СКЛАДОВЕ:")
             warehouses = item.get("warehouses", {})
-            if isinstance(warehouses, dict) and warehouses:
+            if warehouses:
                 for wh, qty in warehouses.items():
                     lines.append(f"   {wh}: {qty} {unit}")
             else:
@@ -70,6 +68,7 @@ class ReportsView:
 
         except Exception as e:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
+
 
 
     def inventory_full_report(self, _):
@@ -91,12 +90,11 @@ class ReportsView:
 
         for m in result.data:
             rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("type", "-"),
-                         m.get("product_name", "-"),
-                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
+                         m.get("product_name", "-"), f"{m.get('quantity', 0)} {m.get('unit', '')}",
+                         m.get("from", "-"), m.get("to", "-")])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
-
 
 
 
@@ -108,10 +106,10 @@ class ReportsView:
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
 
-
     def report_moves_all(self, _):
         result = self.controller.filter_movements(type="MOVE")
         self._render_filtered_movements(result)
+
 
 
     def report_deliveries_all(self, _):
@@ -120,11 +118,14 @@ class ReportsView:
 
         for item in result.data:
             rows.append([item.get("date", "-"), item.get("movement_id", "-"), item.get("product", "-"),
-                         f"{item.get('quantity', 0)} {item.get('unit', '')}",
-                         item.get("price", "-"), item.get("supplier", "-"), item.get("to", "-")])
+                         f"{item.get('quantity', 0)} {item.get('unit', '')}", item.get("price", "-"),
+                         item.get("supplier", "-"), item.get("to", "-")])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
+
+
+
 
 
     def report_sales_all(self, _):
@@ -135,6 +136,7 @@ class ReportsView:
             qty = item.get("quantity")
             unit = item.get("unit")
             qty_display = f"{qty} {unit}" if qty and unit else "—"
+
             rows.append([item.get("invoice_number", "-"), item.get("date", "-"),
                          item.get("client", "Неизвестен"), item.get("product", "-"), qty_display,
                          item.get("total_price", "-"), item.get("status", "АКТИВНА")])
@@ -144,13 +146,14 @@ class ReportsView:
 
 
 
-
     def sort_menu(self, user):
         menu = Menu("Сортиране по количество", [
             MenuItem("1", "Merge Sort", self.sort_qty_merge),
             MenuItem("2", "Quick Sort", self.sort_qty_quick),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
+
+
 
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
@@ -172,6 +175,7 @@ class ReportsView:
             rows = [[item.get("product_name", "-"), f"{item.get('total', 0)} {item.get('unit', '')}"] for item in items]
             headers = ["Продукт", "Наличност"]
             print(format_table(headers, rows))
+
 
 
     def movements_filter_menu(self, user):
@@ -201,12 +205,13 @@ class ReportsView:
             if supplier and m.get("supplier") != supplier:
                 continue
 
-            rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("product", "-"),
-                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("price", "-"),
-                         m.get("supplier", "Неизвестен"), m.get("to", "Няма")])
+            rows.append([m.get("date", "-"), m.get("movement_id", "-"),
+                         m.get("product", "-"), f"{m.get('quantity', 0)} {m.get('unit', '')}",
+                         m.get("price", "-"), m.get("supplier", "Неизвестен"), m.get("to", "Няма")])
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ДОСТАВКИ ПО ДОСТАВЧИК", headers, rows)
+
 
 
 
@@ -223,11 +228,13 @@ class ReportsView:
             unit = m.get("unit")
             qty_display = f"{qty} {unit}" if qty and unit else "—"
 
-            rows.append([m.get("invoice_number", "-"), m.get("date", "-"), m.get("client", "Неизвестен"),
-                         m.get("product", "-"), qty_display, m.get("total_price", "-"), m.get("status", "АКТИВНА")])
+            rows.append([m.get("invoice_number", "-"), m.get("date", "-"),
+                         m.get("client", "Неизвестен"), m.get("product", "-"), qty_display,
+                         m.get("total_price", "-"), m.get("status", "АКТИВНА")])
 
         headers = ["Фактура", "Дата", "Клиент", "Продукт", "Кол.", "Общо", "Статус"]
         self._display_report("ПРОДАЖБИ ПО КЛИЕНТ", headers, rows)
+
 
 
 
@@ -242,7 +249,7 @@ class ReportsView:
                 for wname, qty in warehouses.items():
                     rows.append([item.get("product_name", "-"), wname, f"{qty} {item.get('unit', '')}"])
             else:
-                qty = warehouses.get(wh, None)
+                qty = warehouses.get(wh)
                 if qty is not None:
                     rows.append([item.get("product_name", "-"), wh, f"{qty} {item.get('unit', '')}"])
 
@@ -251,16 +258,17 @@ class ReportsView:
 
 
 
-
     def _render_filtered_movements(self, result):
         rows = []
         for m in result.data:
-            rows.append([m.get("date", "-"), m.get("movement_id", "-"), m.get("type", "-"),
-                         m.get("product_name", "-"), f"{m.get('quantity', 0)} {m.get('unit', '')}",
-                         m.get("from", "-"), m.get("to", "-")])
+            rows.append([m.get("date", "-"), m.get("movement_id", "-"),
+                         m.get("type", "-"), m.get("product_name", "-"),
+                         f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")])
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)
+
+
 
 
     def report_critical_items(self, _):
@@ -269,7 +277,8 @@ class ReportsView:
         rows = []
         for item in items:
             warehouses = ", ".join([f"{wh}: {qty}" for wh, qty in item.get("warehouses", {}).items()])
-            rows.append([item.get("product_name", "-"), f"{item.get('total', 0)} {item.get('unit', '')}", warehouses])
+            rows.append([item.get("product_name", "-"),
+                         f"{item.get('total', 0)} {item.get('unit', '')}", warehouses])
 
         headers = ["Продукт", "Общо количество", "По складове"]
         self._display_report("КРИТИЧНО ИЗЧЕРПАНИ АРТИКУЛИ", headers, rows)
@@ -279,15 +288,10 @@ class ReportsView:
 
     def report_overstock_items(self, _):
         items = self.controller.inventory_controller.get_overstocked_items(threshold=130)
-
         rows = []
+
         for item in items:
             warehouses = ", ".join([f"{wh}: {qty}" for wh, qty in item.get("warehouses", {}).items()])
-            rows.append([
-                item.get("product_name", "-"),
-                f"{item.get('total', 0)} {item.get('unit', '')}",
-                warehouses
-            ])
-
+            rows.append([item.get("product_name", "-"), f"{item.get('total', 0)} {item.get('unit', '')}", warehouses])
         headers = ["Продукт", "Общо количество", "По складове"]
         self._display_report("ИЗЛИШЕСТВА (над 130 бр.)", headers, rows)
