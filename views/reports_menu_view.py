@@ -22,7 +22,7 @@ class ReportsView:
             if menu_obj.execute(choice, user) == "break":
                 break
 
-    def show_main_menu(self, user):
+    def show_menu(self, user):
         menu = Menu("Отчети", [
             MenuItem("1", "Обединен отчет за наличностите", self.inventory_full_report),
             MenuItem("2", "Хронология на всички движения", self.report_movements),
@@ -108,7 +108,7 @@ class ReportsView:
 
     def report_moves_all(self, _):
         result = self.controller.filter_movements(type="MOVE")
-        self._render_filtered_movements(result)
+        self._filtered_movements(result)
 
 
 
@@ -163,7 +163,7 @@ class ReportsView:
         result = self.controller.sort_inventory_by_quantity(algorithm="quick", reverse=True)
         self._render_sorted(result)
 
-    def _render_sorted(self, result):
+    def _sorted(self, result):
         groups = {}
         for item in result.data:
             unit = item.get("unit", "")
@@ -192,7 +192,7 @@ class ReportsView:
     def filter_movements_by_product(self, _):
         product = input("Въведете продукт: ").strip()
         result = self.controller.filter_movements(product=product if product else None)
-        self._render_filtered_movements(result)
+        self._filtered_movements(result)
 
 
 
@@ -258,7 +258,7 @@ class ReportsView:
 
 
 
-    def _render_filtered_movements(self, result):
+    def _filtered_movements(self, result):
         rows = []
         for m in result.data:
             rows.append([m.get("date", "-"), m.get("movement_id", "-"),
