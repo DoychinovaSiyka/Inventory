@@ -106,7 +106,7 @@ class MovementView:
         qty = self._float(f"Количество ({product.unit}): ")
 
         raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
-        price = product.price if raw_price == "" else raw_price  # НЕ float()
+        price = product.price if raw_price == "" else raw_price
 
         self.movement_controller.add_in(str(product.product_id), qty, price,
                                         str(location.location_id), str(supplier.supplier_id), str(user.user_id))
