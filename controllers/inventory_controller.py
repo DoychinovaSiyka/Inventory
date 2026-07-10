@@ -265,6 +265,9 @@ class InventoryController(AbstractController):
 
         self._save()
 
+
+
+
     def get_critical_items(self, threshold=5):
         """Връща списък с критично изчерпани артикули."""
         critical = []
@@ -275,18 +278,16 @@ class InventoryController(AbstractController):
             total = item.get("total", 0)
 
             if total <= threshold:
-                critical.append({
-                    "product_id": pid,
-                    "product_name": item.get("product_name", "-"),
-                    "unit": item.get("unit", "-"),
-                    "total": total,
-                    "warehouses": item.get("warehouses", {})
-                })
+                critical.append({"product_id": pid, "product_name": item.get("product_name", "-"),
+                                 "unit": item.get("unit", "-"), "total": total, "warehouses": item.get("warehouses", {})})
 
         return critical
 
+
+
+
     def get_overstocked_items(self, threshold=130):
-        """Връща списък с артикули, които имат прекомерно голяма наличност (излишества)."""
+        """Връща списък с артикули, които имат прекомерно голяма наличност."""
         overstocked = []
 
         inventory = self.build_inventory()["products"]
@@ -295,12 +296,7 @@ class InventoryController(AbstractController):
             total = item.get("total", 0)
 
             if total >= threshold:
-                overstocked.append({
-                    "product_id": pid,
-                    "product_name": item.get("product_name", "-"),
-                    "unit": item.get("unit", "-"),
-                    "total": total,
-                    "warehouses": item.get("warehouses", {})
-                })
+                overstocked.append({"product_id": pid, "product_name": item.get("product_name", "-"),
+                                    "unit": item.get("unit", "-"), "total": total, "warehouses": item.get("warehouses", {})})
 
         return overstocked
