@@ -190,5 +190,17 @@
         "price": 4.0,
         "created": "2026-05-26 17:27:01",
         "modified": "2026-05-26 17:27:01"
+    },
+    {
+        "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
+        "name": "круша",
+        "categories": [
+            "15bc4b73-ace5-4a4f-8b6f-2bf58406ef3a"
+        ],
+        "unit": "кг.",
+        "description": "суедзид",
+        "price": 8.0,
+        "created": "2026-07-10 14:22:29",
+        "modified": "2026-07-10 14:22:29"
     }
 ]
