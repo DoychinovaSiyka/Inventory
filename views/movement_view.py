@@ -142,7 +142,6 @@ class MovementView:
         idx = int(choice) - 1
         if 0 <= idx < len(valid):
             return valid[idx][0]
-
         print("Невалиден избор.")
         return None
 
@@ -219,7 +218,6 @@ class MovementView:
 
         while True:
             qty = self._float(f"Количество за местене (макс {available} {product.unit}): ")
-
             if 0 < qty <= available:
                 break
 
