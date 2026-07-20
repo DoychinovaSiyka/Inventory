@@ -166,5 +166,19 @@
         "date": "2026-07-10 14:23:09",
         "created": "2026-07-10 14:23:09",
         "modified": "2026-07-10 14:23:09"
+    },
+    {
+        "invoice_id": "59f85671-27f8-4f4c-9bd2-03a4f79059f0",
+        "movement_id": "b7004984-2234-49c2-adba-b761cbea20f1",
+        "product": "Свинска плешка без кост",
+        "quantity": 89.0,
+        "unit": "кг.",
+        "unit_price": 5.0,
+        "total_price": 445.0,
+        "customer": "Ivan",
+        "is_active": true,
+        "date": "2026-07-20 12:44:38",
+        "created": "2026-07-20 12:44:38",
+        "modified": "2026-07-20 12:44:38"
     }
 ]

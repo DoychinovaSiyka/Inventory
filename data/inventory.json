@@ -87,9 +87,26 @@
             "expense": 720.01,
             "revenue": 75.06,
             "last_movement": "MOVE - 2026-06-12 13:20:04"
+        },
+        "ac1aaae2-07d2-4fce-9583-8350defac4e0": {
+            "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
+            "product_name": "круша",
+            "unit": "кг.",
+            "total": 8000.0,
+            "warehouses": {
+                "Пловдив": 7877.0,
+                "Варна": 123.0
+            },
+            "delivered": 8999.0,
+            "sold": 999.0,
+            "avg_in_price": 12.0,
+            "avg_out_price": 8.0,
+            "expense": 107988.0,
+            "revenue": 7992.0,
+            "last_movement": "MOVE - 2026-07-10 14:23:18"
         }
     },
     "summary": {
-        "total_products": 5
+        "total_products": 6
     }
 }
