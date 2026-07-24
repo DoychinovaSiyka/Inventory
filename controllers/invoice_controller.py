@@ -65,9 +65,10 @@ class InvoiceController(AbstractController):
         q = str(query or "").strip().lower()
         return [inv for inv in self.invoices if inv.invoice_id[:8].lower() == q]
 
+
+
     def remove(self, invoice_id: str, user_id: str) -> bool:
         """Анулира фактура и връща стоката в склада, ако е OUT движение."""
-
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False
@@ -82,7 +83,7 @@ class InvoiceController(AbstractController):
                 movement = m
                 break
 
-        # Ако движението е OUT - връщаме стоката обратно
+
         if movement and movement.movement_type.name == "OUT":
             self.movement_controller.inventory_controller.increase_stock(movement.product_id,
                                                                          movement.quantity, movement.location_id)

@@ -13,6 +13,8 @@ class ProductMenuView:
         self.allowed_units = ["кг.", "бр.", "л.", "пакет"]
         self.sort_view = ProductSortView(product_controller, self)
 
+
+
     def _print_products(self, products, title=""):
         if not products:
             print("\nНяма намерени продукти.\n")
@@ -21,13 +23,16 @@ class ProductMenuView:
         rows = []
         for p in products:
             short_id = str(p.product_id)[:8]
-            price_text = f"{float(p.price):.2f}"  # само числото, без 'лв.'
+            price_text = f"{float(p.price):.2f}"
             rows.append([short_id, p.name[:30], price_text])
 
         if title:
             print(f"\n{title.upper()}")
 
         print(format_table(["ID", "Име", "Цена (лв.)"], rows))
+
+
+
 
     def _select_parent_category(self):
         all_categories = self.category_controller.get_all()
@@ -311,7 +316,6 @@ class ProductMenuView:
 
         parent = self.category_controller.get_by_id(category_id)
         print(f"\nФИЛТЪР ПО КАТЕГОРИЯ: {parent.name}")
-
         print("\nПодкатегории:")
         if not sub_ids:
             print(" (няма подкатегории)")

@@ -104,9 +104,26 @@
             "expense": 107988.0,
             "revenue": 7992.0,
             "last_movement": "MOVE - 2026-07-10 14:23:18"
+        },
+        "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
+            "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
+            "product_name": "Свинска плешка без кост",
+            "unit": "кг.",
+            "total": 110.0,
+            "warehouses": {
+                "Варна": 92.0,
+                "Пловдив": 18.0
+            },
+            "delivered": 199.0,
+            "sold": 89.0,
+            "avg_in_price": 4.0,
+            "avg_out_price": 5.0,
+            "expense": 796.0,
+            "revenue": 445.0,
+            "last_movement": "MOVE - 2026-07-20 12:44:47"
         }
     },
     "summary": {
-        "total_products": 6
+        "total_products": 7
     }
 }

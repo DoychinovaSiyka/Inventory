@@ -14,6 +14,8 @@ class ReportsView:
         print(f"\n{title}")
         print(format_table(headers, rows))
 
+
+
     def _run_menu(self, menu_obj, user):
         while True:
             choice = menu_obj.show()
