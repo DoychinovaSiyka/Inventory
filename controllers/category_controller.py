@@ -1,7 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_filters import filter_categories, get_all_children_ids
+from filters.category_filters import get_all_children_ids
 from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 
@@ -12,17 +12,36 @@ class CategoryController(AbstractController):
         super().__init__(repo)
         self.categories: List[Category] = self.load()
 
-    def from_dict(self, data):
+
+
+    def from_dict(self, data: dict) -> Category:
         return Category.from_dict(data)
 
-    def to_dict(self, obj):
+    def to_dict(self, obj: Category) -> dict:
         return obj.to_dict()
 
-    def _save_categories(self):
+    def _save_categories(self) -> None:
         self.save(self.categories)
+
+
 
     def get_all(self) -> List[Category]:
         return self.categories
+
+
+    def get_by_id(self, user_input: str) -> Optional[Category]:
+        target = str(user_input or "").strip().lower()
+        if not target:
+            return None
+
+        for c in self.categories:
+            cid = str(c.category_id).lower()
+            if cid.startswith(target):
+                return c
+        return None
+
+
+
 
     def add(self, category_data: dict, user_id: str) -> Category:
         name = CategoryValidator.validate_name(category_data.get("name", ""))
@@ -45,6 +64,9 @@ class CategoryController(AbstractController):
         self._save_categories()
         return category
 
+
+
+
     def update(self, category_id: str, updates: dict) -> bool:
         category = self.get_by_id(category_id)
         if not category:
@@ -53,9 +75,11 @@ class CategoryController(AbstractController):
         new_name = updates.get("name", category.name).strip()
         new_desc = updates.get("description", category.description).strip()
 
-        new_parent_input = updates.get("parent_id")
-        if new_parent_input:
-            parent_obj = self.get_by_id(new_parent_input)
+        parent_input = updates.get("parent_id")
+        if parent_input == "":
+            new_parent_id = None
+        elif parent_input is not None:
+            parent_obj = self.get_by_id(parent_input)
             new_parent_id = parent_obj.category_id if parent_obj else None
         else:
             new_parent_id = category.parent_id
@@ -74,8 +98,12 @@ class CategoryController(AbstractController):
         category.description = new_desc
         category.parent_id = new_parent_id
         category.update_modified()
+
         self._save_categories()
         return True
+
+
+
 
     def remove(self, category_id: str, user_id: str, product_controller) -> bool:
         category = self.get_by_id(category_id)
@@ -89,44 +117,39 @@ class CategoryController(AbstractController):
         self._save_categories()
         return True
 
-    def get_by_id(self, user_input: str) -> Optional[Category]:
-        target = str(user_input or "").strip().lower()
-        for c in self.categories:
-            full_id = str(c.category_id).lower()
-            if full_id.startswith(target) or target == full_id:
-                return c
-        return None
+
 
     def get_all_hierarchical_ids(self, parent_short_id: str) -> list:
         parent_cat = self.get_by_id(parent_short_id)
-        if not parent_cat:
-            return []
-        return get_all_children_ids(self.categories, parent_cat.category_id)
-
+        return get_all_children_ids(self.categories, parent_cat.category_id) if parent_cat else []
 
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
-        categories_with_counts = get_category_stats(self.categories, products)
-
-        return {"total_categories": len(self.categories), "categories": categories_with_counts}
-
-
+        return {
+            "total_categories": len(self.categories),
+            "categories": get_category_stats(self.categories, products)
+        }
 
 
 
     def get_visual_tree(self) -> List[dict]:
-        def build_recursive_list(parent_id=None, level=0):
-            result = []
-            children = [c for c in self.categories if c.parent_id == parent_id]
-            children.sort(key=lambda x: x.name.lower())
+        """Генерира списък с категории и нивото им за визуално дърво."""
+        tree_map: Dict[Optional[str], List[Category]] = {}
 
-            for child in children:
+        for c in self.categories:
+            tree_map.setdefault(c.parent_id, []).append(c)
+
+        for pid in tree_map:
+            tree_map[pid].sort(key=lambda x: x.name.lower())
+
+        def build(parent_id=None, level=0):
+            result = []
+            for child in tree_map.get(parent_id, []):
                 result.append({"category": child, "level": level})
-                result.extend(build_recursive_list(child.category_id, level + 1))
+                result.extend(build(child.category_id, level + 1))
             return result
 
-        return build_recursive_list()
-
+        return build()
 
 
 
@@ -136,9 +159,8 @@ class CategoryController(AbstractController):
                 CategoryValidator.validate_name(value)
             elif field_type == "description":
                 CategoryValidator.validate_description(value)
-            elif field_type == "parent":
-                if value and not self.get_by_id(value):
-                    raise ValueError("Невалидна родителска категория.")
+            elif field_type == "parent" and value and not self.get_by_id(value):
+                raise ValueError("Невалидна родителска категория.")
             return None
         except ValueError as e:
             return str(e)
