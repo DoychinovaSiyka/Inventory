@@ -171,9 +171,26 @@
             "expense": 4.0,
             "revenue": 0.0,
             "last_movement": "IN - 2026-07-27 22:25:01"
+        },
+        "72cad965-66cc-4a2c-aca6-4f7201f1fb38": {
+            "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
+            "product_name": "sisa",
+            "unit": "кг.",
+            "total": 443.0,
+            "warehouses": {
+                "Варна": 398.0,
+                "Бургас": 45.0
+            },
+            "delivered": 899.0,
+            "sold": 456.0,
+            "avg_in_price": 3.32,
+            "avg_out_price": 5.0,
+            "expense": 2984.68,
+            "revenue": 2280.0,
+            "last_movement": "MOVE - 2026-07-27 23:08:56"
         }
     },
     "summary": {
-        "total_products": 10
+        "total_products": 11
     }
 }

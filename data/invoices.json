@@ -208,5 +208,19 @@
         "date": "2026-07-27 22:05:37",
         "created": "2026-07-27 22:05:37",
         "modified": "2026-07-27 22:05:37"
+    },
+    {
+        "invoice_id": "b12bc02b-6196-46b1-920e-33d83ad80149",
+        "movement_id": "686a9936-9e80-4a47-80cd-7464fb7372f1",
+        "product": "sisa",
+        "quantity": 456.0,
+        "unit": "кг.",
+        "unit_price": 5.0,
+        "total_price": 2280.0,
+        "customer": "Dida",
+        "is_active": true,
+        "date": "2026-07-27 23:08:46",
+        "created": "2026-07-27 23:08:46",
+        "modified": "2026-07-27 23:08:46"
     }
 ]

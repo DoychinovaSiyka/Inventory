@@ -238,5 +238,17 @@
         "price": 2.0,
         "created": "2026-07-27 22:24:46",
         "modified": "2026-07-27 22:24:46"
+    },
+    {
+        "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
+        "name": "sisa",
+        "categories": [
+            "f8e16b06-a34d-4b9c-9ac1-8aeac75d2e84"
+        ],
+        "unit": "кг.",
+        "description": "prwoi",
+        "price": 3.0,
+        "created": "2026-07-27 23:08:08",
+        "modified": "2026-07-27 23:08:08"
     }
 ]
