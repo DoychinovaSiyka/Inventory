@@ -58,13 +58,21 @@ class CategoryView:
 
     def show_stats(self, _):
         print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
-        stats = self.controller.get_stats(self.product_controller)
 
-        print(f"Общ брой дефинирани категории: {stats['total_categories']}")
+        stats = self.controller.get_stats(self.product_controller)
+        parent_categories = [c for c in self.controller.get_all() if c.parent_id is None]
+
+        print(f"Брой главни категории: {len(parent_categories)}")
+
         columns = ["ID", "Име на категория", "Брой продукти"]
         rows = []
+
+        # Показваме само родителските категории
         for c in stats["categories"]:
-            rows.append([c['id'][:8], c['name'], str(c['product_count'])])
+            # филтрираме само тези без parent_id
+            cat_obj = self.controller.get_by_id(c['id'])
+            if cat_obj and cat_obj.parent_id is None:
+                rows.append([c['id'][:8], c['name'], str(c['product_count'])])
 
         table_output = format_table(columns, rows)
         print(table_output)
