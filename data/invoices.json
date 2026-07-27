@@ -222,5 +222,19 @@
         "date": "2026-07-27 23:08:46",
         "created": "2026-07-27 23:08:46",
         "modified": "2026-07-27 23:08:46"
+    },
+    {
+        "invoice_id": "e65c8db2-5e06-4d04-ba80-f41dd6facd8a",
+        "movement_id": "6eaf09ae-8b6c-482c-89ad-aea10d2068ef",
+        "product": "eoiw",
+        "quantity": 89.0,
+        "unit": "кг.",
+        "unit_price": 5.0,
+        "total_price": 445.0,
+        "customer": "iewowrpo",
+        "is_active": true,
+        "date": "2026-07-27 23:29:16",
+        "created": "2026-07-27 23:29:16",
+        "modified": "2026-07-27 23:29:16"
     }
 ]
