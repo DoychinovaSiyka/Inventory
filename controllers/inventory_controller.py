@@ -18,6 +18,8 @@ class InventoryController(AbstractController):
             self.data = {"products": {}}
 
 
+        self.update_inventory_from_movements(self.movement_controller.movements)
+
 
     def from_dict(self, data):
         return data
@@ -28,7 +30,6 @@ class InventoryController(AbstractController):
     def _save(self):
         summary = self.build_inventory()
         self.save(summary)
-
 
 
     def _product_id(self, user_input: str) -> Optional[str]:
@@ -51,8 +52,6 @@ class InventoryController(AbstractController):
         return user_input
 
 
-
-
     def _location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -68,8 +67,6 @@ class InventoryController(AbstractController):
                 return str(l.location_id)
 
         return user_input
-
-
 
 
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
@@ -107,8 +104,6 @@ class InventoryController(AbstractController):
         return True
 
 
-
-
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         InventoryValidator.validate_move_locations(from_location_id, to_location_id)
 
@@ -119,6 +114,7 @@ class InventoryController(AbstractController):
             self.increase_stock(pid, qty, to_location_id)
             return True
         return False
+
 
 
 
@@ -141,7 +137,6 @@ class InventoryController(AbstractController):
         return total
 
 
-
     def get_stock(self, product_id, location_id):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -161,6 +156,8 @@ class InventoryController(AbstractController):
             return float(locations[lid])
         except:
             return 0.0
+
+
 
 
 
@@ -225,6 +222,8 @@ class InventoryController(AbstractController):
 
 
 
+
+
     def update_inventory_from_movements(self, movements):
         self.data = {"products": {}}
         sorted_movements = sorted(movements, key=lambda x: x.date)
@@ -271,7 +270,8 @@ class InventoryController(AbstractController):
 
             if total <= threshold:
                 critical.append({"product_id": pid, "product_name": item.get("product_name", "-"),
-                                 "unit": item.get("unit", "-"), "total": total, "warehouses": item.get("warehouses", {})})
+                                 "unit": item.get("unit", "-"), "total": total,
+                                 "warehouses": item.get("warehouses", {})})
 
         return critical
 
@@ -287,6 +287,7 @@ class InventoryController(AbstractController):
 
             if total >= threshold:
                 overstocked.append({"product_id": pid, "product_name": item.get("product_name", "-"),
-                                    "unit": item.get("unit", "-"), "total": total, "warehouses": item.get("warehouses", {})})
+                                    "unit": item.get("unit", "-"), "total": total,
+                                    "warehouses": item.get("warehouses", {})})
 
         return overstocked

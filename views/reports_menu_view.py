@@ -157,13 +157,16 @@ class ReportsView:
 
 
 
+
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
-        self._render_sorted(result)
+        self._sorted(result)
 
     def sort_qty_quick(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="quick", reverse=True)
-        self._render_sorted(result)
+        self._sorted(result)
+
+
 
     def _sorted(self, result):
         groups = {}

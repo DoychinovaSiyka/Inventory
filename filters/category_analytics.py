@@ -1,14 +1,27 @@
 from collections import Counter
+from filters.category_filters import get_all_children_ids
+
+
 
 
 
 def get_category_stats(categories, products):
-    """Брои продуктите във всяка категория с O(N) сложност."""
-    counts = Counter()
-    for p in products:
-        for pc in p.categories:
-            cat_id = str(pc if isinstance(pc, (str, int)) else pc.category_id)
-            counts[cat_id] += 1
+    """Статистика само за родителските категории + броене на всички подкатегории."""
+    stats = []
 
 
-    return [{"id": cat.category_id, "name": cat.name, "product_count": counts[str(cat.category_id)]} for cat in categories]
+    parent_categories = [c for c in categories if c.parent_id is None]
+
+    for parent in parent_categories:
+        child_ids = get_all_children_ids(categories, parent.category_id)
+
+        count = 0
+        for p in products:
+            for pc in p.categories:
+                cat_id = str(pc if isinstance(pc, (str, int)) else pc.category_id)
+                if cat_id in child_ids:
+                    count += 1
+
+        stats.append({"id": parent.category_id, "name": parent.name, "product_count": count})
+
+    return stats

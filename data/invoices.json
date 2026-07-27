@@ -134,10 +134,10 @@
         "unit_price": 5.0,
         "total_price": 17280.0,
         "customer": "Irina Ivanova",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-07-03 12:00:34",
         "created": "2026-07-03 12:00:34",
-        "modified": "2026-07-03 12:00:34"
+        "modified": "2026-07-27 22:22:45"
     },
     {
         "invoice_id": "b89f643a-5284-4054-b6e5-b96cbdceb867",
@@ -162,10 +162,10 @@
         "unit_price": 8.0,
         "total_price": 7992.0,
         "customer": "Стойчо",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-07-10 14:23:09",
         "created": "2026-07-10 14:23:09",
-        "modified": "2026-07-10 14:23:09"
+        "modified": "2026-07-27 22:27:56"
     },
     {
         "invoice_id": "59f85671-27f8-4f4c-9bd2-03a4f79059f0",
@@ -194,5 +194,19 @@
         "date": "2026-07-26 17:31:15",
         "created": "2026-07-26 17:31:15",
         "modified": "2026-07-26 17:31:15"
+    },
+    {
+        "invoice_id": "6d6b615f-25c3-43d5-8221-1b782da74a9f",
+        "movement_id": "89ae63c3-4ca0-425d-9add-9be163c4188c",
+        "product": "кока кола 330 мл",
+        "quantity": 345.0,
+        "unit": "бр.",
+        "unit_price": 2.91,
+        "total_price": 1003.95,
+        "customer": "Тодор",
+        "is_active": true,
+        "date": "2026-07-27 22:05:37",
+        "created": "2026-07-27 22:05:37",
+        "modified": "2026-07-27 22:05:37"
     }
 ]

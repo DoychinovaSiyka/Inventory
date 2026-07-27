@@ -4,19 +4,19 @@
             "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
             "product_name": "Прясно мляко Верея 3.6%",
             "unit": "л.",
-            "total": 204586.0,
+            "total": 208042.0,
             "warehouses": {
                 "Варна": 30438.0,
                 "Пловдив": 425.0,
-                "София": 81934.0,
+                "София": 85390.0,
                 "Бургас": 91789.0
             },
             "delivered": 210889.0,
-            "sold": 6303.0,
+            "sold": 2847.0,
             "avg_in_price": 5.42,
-            "avg_out_price": 5.48,
+            "avg_out_price": 5.58,
             "expense": 1143018.38,
-            "revenue": 34540.44,
+            "revenue": 15886.26,
             "last_movement": "MOVE - 2026-07-03 12:17:17"
         },
         "4a1a3169-9f88-4476-b603-e28f90f38e40": {
@@ -92,17 +92,17 @@
             "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
             "product_name": "круша",
             "unit": "кг.",
-            "total": 8000.0,
+            "total": 8999.0,
             "warehouses": {
-                "Пловдив": 7877.0,
+                "Пловдив": 8876.0,
                 "Варна": 123.0
             },
             "delivered": 8999.0,
-            "sold": 999.0,
+            "sold": 0,
             "avg_in_price": 12.0,
-            "avg_out_price": 8.0,
+            "avg_out_price": 0.0,
             "expense": 107988.0,
-            "revenue": 7992.0,
+            "revenue": 0.0,
             "last_movement": "MOVE - 2026-07-10 14:23:18"
         },
         "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
@@ -138,9 +138,42 @@
             "expense": 6293.0,
             "revenue": 7230.0,
             "last_movement": "MOVE - 2026-07-26 17:31:23"
+        },
+        "59548022-8398-4df2-b481-b31f9b546b0a": {
+            "product_id": "59548022-8398-4df2-b481-b31f9b546b0a",
+            "product_name": "кока кола 330 мл",
+            "unit": "бр.",
+            "total": 1555.0,
+            "warehouses": {
+                "Варна": 1421.0,
+                "Бургас": 134.0
+            },
+            "delivered": 1900.0,
+            "sold": 345.0,
+            "avg_in_price": 2.98,
+            "avg_out_price": 2.91,
+            "expense": 5662.0,
+            "revenue": 1003.95,
+            "last_movement": "MOVE - 2026-07-27 22:05:50"
+        },
+        "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642": {
+            "product_id": "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642",
+            "product_name": "ябълка",
+            "unit": "кг.",
+            "total": 1.0,
+            "warehouses": {
+                "Пловдив": 1.0
+            },
+            "delivered": 1.0,
+            "sold": 0,
+            "avg_in_price": 4.0,
+            "avg_out_price": 0.0,
+            "expense": 4.0,
+            "revenue": 0.0,
+            "last_movement": "IN - 2026-07-27 22:25:01"
         }
     },
     "summary": {
-        "total_products": 8
+        "total_products": 10
     }
 }

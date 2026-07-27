@@ -214,5 +214,29 @@
         "price": 4.0,
         "created": "2026-07-26 13:33:36",
         "modified": "2026-07-26 13:33:36"
+    },
+    {
+        "product_id": "59548022-8398-4df2-b481-b31f9b546b0a",
+        "name": "кока кола 330 мл",
+        "categories": [
+            "ba84c6a2-90cd-4cd8-ab00-32b35c00321d"
+        ],
+        "unit": "бр.",
+        "description": "газирана напитка",
+        "price": 3.0,
+        "created": "2026-07-27 22:04:55",
+        "modified": "2026-07-27 22:04:55"
+    },
+    {
+        "product_id": "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642",
+        "name": "ябълка",
+        "categories": [
+            "939718d0-a969-4d6c-a258-ed6a2f668b4d"
+        ],
+        "unit": "кг.",
+        "description": "плод",
+        "price": 2.0,
+        "created": "2026-07-27 22:24:46",
+        "modified": "2026-07-27 22:24:46"
     }
 ]
