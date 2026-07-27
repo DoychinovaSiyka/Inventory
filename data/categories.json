@@ -382,5 +382,13 @@
         "parent_id": "32b1b7e3-8a48-4352-a447-4f549e517c5f",
         "created": "2026-05-21 15:34:38",
         "modified": "2026-05-21 15:34:38"
+    },
+    {
+        "category_id": "d46fb007-b51e-4659-8768-544f09772589",
+        "name": "owieruo",
+        "description": "iweo",
+        "parent_id": "9ba0a2b0-c1a3-4d83-be1f-85a5bcc0fd5f",
+        "created": "2026-07-26 01:18:50",
+        "modified": "2026-07-26 01:18:50"
     }
 ]

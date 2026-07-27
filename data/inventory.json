@@ -121,9 +121,26 @@
             "expense": 796.0,
             "revenue": 445.0,
             "last_movement": "MOVE - 2026-07-20 12:44:47"
+        },
+        "1718c150-fef0-4508-95c0-8d3883e33921": {
+            "product_id": "1718c150-fef0-4508-95c0-8d3883e33921",
+            "product_name": "proben product",
+            "unit": "кг.",
+            "total": 176.0,
+            "warehouses": {
+                "Пловдив": 87.0,
+                "Варна": 89.0
+            },
+            "delivered": 899.0,
+            "sold": 723.0,
+            "avg_in_price": 7.0,
+            "avg_out_price": 10.0,
+            "expense": 6293.0,
+            "revenue": 7230.0,
+            "last_movement": "MOVE - 2026-07-26 17:31:23"
         }
     },
     "summary": {
-        "total_products": 7
+        "total_products": 8
     }
 }

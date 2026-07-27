@@ -3,9 +3,6 @@ from validators.inventory_validator import InventoryValidator
 from controllers.abstract_controller import AbstractController
 
 
-
-
-
 class InventoryController(AbstractController):
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         super().__init__(repository)
@@ -20,8 +17,6 @@ class InventoryController(AbstractController):
         else:
             self.data = {"products": {}}
 
-        # Пресмятаме инвентара на база движенията
-        self.update_inventory_from_movements(self.movement_controller.movements)
 
 
     def from_dict(self, data):
@@ -35,23 +30,20 @@ class InventoryController(AbstractController):
         self.save(summary)
 
 
-    # Намираме ID на продукт
+
     def _product_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
 
         user_input = str(user_input).strip()
 
-        # директно ID
         if user_input in self.data.get("products", {}):
             return user_input
 
-        # частично ID
         for full_id in self.data.get("products", {}).keys():
             if full_id.startswith(user_input):
                 return full_id
 
-        # по име
         for p in self.product_controller.get_all():
             if user_input.lower() == p.name.lower() or str(p.product_id).startswith(user_input):
                 return str(p.product_id)
@@ -59,7 +51,8 @@ class InventoryController(AbstractController):
         return user_input
 
 
-    # Намираме ID на склад
+
+
     def _location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -77,7 +70,8 @@ class InventoryController(AbstractController):
         return user_input
 
 
-    # Увеличаваме наличността
+
+
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -93,7 +87,8 @@ class InventoryController(AbstractController):
         locations[lid] = round(current + qty, 3)
 
 
-    # Намаляваме наличността
+
+
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -112,7 +107,8 @@ class InventoryController(AbstractController):
         return True
 
 
-    # Преместване между складове
+
+
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
         InventoryValidator.validate_move_locations(from_location_id, to_location_id)
 
@@ -125,7 +121,8 @@ class InventoryController(AbstractController):
         return False
 
 
-    # Общо количество от продукт
+
+
     def get_total_stock(self, product_id: str) -> float:
         pid = self._product_id(product_id)
 
@@ -144,7 +141,7 @@ class InventoryController(AbstractController):
         return total
 
 
-    # Количество в конкретен склад
+
     def get_stock(self, product_id, location_id):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -165,6 +162,9 @@ class InventoryController(AbstractController):
         except:
             return 0.0
 
+
+
+
     def build_inventory(self):
         products_dict = {}
 
@@ -183,17 +183,14 @@ class InventoryController(AbstractController):
                     product_name = pid
                     unit = "бр."
 
-            # Общо количество
             total = self.get_total_stock(pid)
 
-            # Разпределение по складове
             warehouse_map = {}
             for lid, qty in p_info.get("locations", {}).items():
                 loc = self.location_controller.get_by_id(lid)
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
 
-            # Движения
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
@@ -211,19 +208,16 @@ class InventoryController(AbstractController):
             expense = round(delivered * avg_in, 2)
             revenue = round(sold * avg_out, 2)
 
-            # Последно движение
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
                 last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
             else:
                 last_movement = "Няма движения"
 
-
-            products_dict[pid] = {"product_id": pid, "product_name": product_name,
-                                  "unit": unit, "total": total, "warehouses": warehouse_map,
-                                  "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
-                                  "avg_out_price": avg_out, "expense": expense, "revenue": revenue,
-                                  "last_movement": last_movement}
+            products_dict[pid] = {"product_id": pid, "product_name": product_name, "unit": unit,
+                                  "total": total, "warehouses": warehouse_map, "delivered": delivered,
+                                  "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
+                                  "expense": expense, "revenue": revenue, "last_movement": last_movement}
 
         return {"products": products_dict, "summary": {"total_products": len(products_dict)}}
 
@@ -231,7 +225,6 @@ class InventoryController(AbstractController):
 
 
 
-    # Пресмятаме инвентара от движенията
     def update_inventory_from_movements(self, movements):
         self.data = {"products": {}}
         sorted_movements = sorted(movements, key=lambda x: x.date)
@@ -269,7 +262,6 @@ class InventoryController(AbstractController):
 
 
     def get_critical_items(self, threshold=5):
-        """Връща списък с критично изчерпани артикули."""
         critical = []
 
         inventory = self.build_inventory()["products"]
@@ -285,9 +277,7 @@ class InventoryController(AbstractController):
 
 
 
-
     def get_overstocked_items(self, threshold=130):
-        """Връща списък с артикули, които имат прекомерно голяма наличност."""
         overstocked = []
 
         inventory = self.build_inventory()["products"]

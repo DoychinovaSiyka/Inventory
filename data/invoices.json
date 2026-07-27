@@ -180,5 +180,19 @@
         "date": "2026-07-20 12:44:38",
         "created": "2026-07-20 12:44:38",
         "modified": "2026-07-20 12:44:38"
+    },
+    {
+        "invoice_id": "3ebfba9e-f496-42ce-97fc-8631a31b4c85",
+        "movement_id": "c1e10bec-d684-488e-bedb-7333f06c1080",
+        "product": "proben product",
+        "quantity": 723.0,
+        "unit": "кг.",
+        "unit_price": 10.0,
+        "total_price": 7230.0,
+        "customer": "Stoyan Petrov",
+        "is_active": true,
+        "date": "2026-07-26 17:31:15",
+        "created": "2026-07-26 17:31:15",
+        "modified": "2026-07-26 17:31:15"
     }
 ]

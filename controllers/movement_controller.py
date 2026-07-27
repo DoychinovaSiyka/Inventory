@@ -22,13 +22,11 @@ class MovementController(AbstractController):
         self.movements: List[Movement] = self.load() or []
 
 
-
     def set_invoice_controller(self, invoice_controller):
         self.invoice_controller = invoice_controller
 
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
-
 
 
     def from_dict(self, data):
@@ -37,9 +35,14 @@ class MovementController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
+
+
     def _save_movements(self):
         self.save(self.movements)
 
+
+        if self.inventory_controller:
+            self.inventory_controller.update_inventory_from_movements(self.movements)
 
 
     def _location_id(self, loc_id: Optional[str]) -> Optional[str]:
@@ -53,22 +56,17 @@ class MovementController(AbstractController):
         return str(loc.location_id)
 
 
-
     def get_all(self) -> List[Movement]:
         return self.movements
-
-
-
 
 
     def add_in(self, product_id, quantity, price, location_id, supplier_id, user_id):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="IN",
                                         quantity=quantity, price=price, location_id=location_id, supplier_id=supplier_id)
 
-        if self.inventory_controller:
-            self.inventory_controller.increase_stock(product_id, quantity, location_id)
-
+        self._save_movements()
         return movement
+
 
 
 
@@ -82,14 +80,12 @@ class MovementController(AbstractController):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
                                         quantity=quantity, price=price, location_id=location_id, customer=customer)
 
-        if self.inventory_controller:
-            self.inventory_controller.decrease_stock(product_id, quantity, location_id)
-
         # Фактура
         if self.invoice_controller:
             self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
                                                          customer=customer or "Общ клиент", user_id=user_id)
 
+        self._save_movements()
         return movement
 
 
@@ -100,12 +96,8 @@ class MovementController(AbstractController):
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
                                         quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
 
-        if self.inventory_controller:
-            self.inventory_controller.move_stock(product_id, quantity, from_loc, to_loc)
-
+        self._save_movements()
         return movement
-
-
 
 
     def create_movement(self, product_id: str, user_id: str, movement_type: str,
@@ -124,7 +116,6 @@ class MovementController(AbstractController):
         m_type_str = MovementValidator.normalize_movement_type(movement_type)
         qty = MovementValidator.parse_quantity(quantity)
 
-
         if m_type_str == "MOVE":
             resolved_loc = None
             resolved_from = self._location_id(from_location_id)
@@ -133,7 +124,6 @@ class MovementController(AbstractController):
             MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
 
             prc = 0.0
-
 
         elif m_type_str == "OUT":
             resolved_loc = self._location_id(location_id)
@@ -151,10 +141,7 @@ class MovementController(AbstractController):
             else:
                 prc = float(product.price)
 
-
-
-        # IN движение
-        else:
+        else:  # IN
             resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
@@ -178,6 +165,4 @@ class MovementController(AbstractController):
 
 
         self.movements.append(movement)
-        self._save_movements()
-
         return movement

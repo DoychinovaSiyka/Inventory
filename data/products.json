@@ -202,5 +202,17 @@
         "price": 8.0,
         "created": "2026-07-10 14:22:29",
         "modified": "2026-07-10 14:22:29"
+    },
+    {
+        "product_id": "1718c150-fef0-4508-95c0-8d3883e33921",
+        "name": "proben product",
+        "categories": [
+            "11ae0067-39a5-4812-b623-2e43372824cb"
+        ],
+        "unit": "кг.",
+        "description": "jweroi",
+        "price": 4.0,
+        "created": "2026-07-26 13:33:36",
+        "modified": "2026-07-26 13:33:36"
     }
 ]
