@@ -58,11 +58,11 @@ class MovementController(AbstractController):
 
         clean = str(price).lower().replace("лв.", "").replace("лв", "")
         clean = clean.replace(",", ".").replace(" ", "").strip()
-
         if clean.endswith("."):
             clean = clean[:-1]
 
         return float(clean)
+
 
 
     def get_all(self) -> List[Movement]:
