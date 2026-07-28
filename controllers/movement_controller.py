@@ -5,22 +5,15 @@ from validators.movement_validator import MovementValidator
 from controllers.abstract_controller import AbstractController
 
 
-
-
-
-
-
 class MovementController(AbstractController):
 
-    def __init__(self, repo, product_controller, user_controller,
-                 location_controller, supplier_controller):
-
+    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller):
         super().__init__(repo)
-
         self.product_controller = product_controller
         self.user_controller = user_controller
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
+
         self.invoice_controller = None
         self.inventory_controller = None
 
@@ -59,6 +52,19 @@ class MovementController(AbstractController):
         return str(loc.location_id)
 
 
+    def _clean_price(self, price, default):
+        if not price:
+            return float(default)
+
+        clean = str(price).lower().replace("лв.", "").replace("лв", "")
+        clean = clean.replace(",", ".").replace(" ", "").strip()
+
+        if clean.endswith("."):
+            clean = clean[:-1]
+
+        return float(clean)
+
+
     def get_all(self) -> List[Movement]:
         return self.movements
 
@@ -73,16 +79,16 @@ class MovementController(AbstractController):
 
 
 
-
     def add_out(self, product_id, quantity, customer, location_id, user_id, price):
 
         resolved_loc = self._location_id(location_id)
+        available = self.inventory_controller.get_stock(product_id, resolved_loc)
 
-        MovementValidator.validate_out_rules(self.product_controller.get_by_id(product_id), float(quantity),
-                                             customer, self.inventory_controller, resolved_loc)
+        MovementValidator.validate_out_rules(product=self.product_controller.get_by_id(product_id), quantity=float(quantity),
+                                             customer=customer, available_stock=available)
 
-        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT",
-                                        quantity=quantity, price=price, location_id=location_id, customer=customer)
+        movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT", quantity=quantity,
+                                        price=price, location_id=location_id, customer=customer)
 
         if self.invoice_controller:
             self.invoice_controller.create_from_movement(movement=movement, product=self.product_controller.get_by_id(product_id),
@@ -95,15 +101,22 @@ class MovementController(AbstractController):
 
 
 
-
     def move_stock(self, product_id, quantity, from_loc, to_loc, user_id):
+
+        resolved_from = self._location_id(from_loc)
+        resolved_to = self._location_id(to_loc)
+
+        available = self.inventory_controller.get_stock(product_id, resolved_from)
+
+        MovementValidator.validate_move_rules(product=self.product_controller.get_by_id(product_id), quantity=float(quantity),
+                                              available_stock=available,
+                                              from_location_id=resolved_from, to_location_id=resolved_to)
+
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="MOVE",
                                         quantity=quantity, price="0", from_location_id=from_loc, to_location_id=to_loc)
 
         self._save_movements()
         return movement
-
-
 
 
 
@@ -127,42 +140,21 @@ class MovementController(AbstractController):
 
         if m_type_str == "MOVE":
             resolved_loc = None
-            resolved_from = str(self._location_id(from_location_id))
-            resolved_to = str(self._location_id(to_location_id))
-
-            MovementValidator.validate_move_rules(product, qty, self.inventory_controller, resolved_from, resolved_to)
-
+            resolved_from = self._location_id(from_location_id)
+            resolved_to = self._location_id(to_location_id)
             prc = 0.0
 
         elif m_type_str == "OUT":
-            resolved_loc = str(self._location_id(location_id))
+            resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
-
-            MovementValidator.validate_out_rules(product, qty, customer, self.inventory_controller, resolved_loc)
-
-            if price:
-                clean = str(price).lower().replace("лв.", "").replace("лв", "")
-                clean = clean.replace(",", ".").replace(" ", "").strip()
-                if clean.endswith("."):
-                    clean = clean[:-1]
-                prc = float(clean)
-            else:
-                prc = float(product.price)
+            prc = self._clean_price(price, product.price)
 
         else:  # IN
-            resolved_loc = str(self._location_id(location_id))
+            resolved_loc = self._location_id(location_id)
             resolved_from = None
             resolved_to = None
-
-            if price:
-                clean = str(price).lower().replace("лв.", "").replace("лв", "")
-                clean = clean.replace(",", ".").replace(" ", "").strip()
-                if clean.endswith("."):
-                    clean = clean[:-1]
-                prc = float(clean)
-            else:
-                prc = float(product.price)
+            prc = self._clean_price(price, product.price)
 
         movement_id = str(uuid.uuid4())
 
