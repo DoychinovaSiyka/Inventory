@@ -4,20 +4,20 @@
             "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
             "product_name": "Прясно мляко Верея 3.6%",
             "unit": "л.",
-            "total": 208042.0,
+            "total": 208020.0,
             "warehouses": {
-                "Варна": 30438.0,
-                "Пловдив": 425.0,
-                "София": 85390.0,
+                "Варна": 30527.0,
+                "Пловдив": 391.0,
+                "София": 85313.0,
                 "Бургас": 91789.0
             },
-            "delivered": 210889.0,
-            "sold": 2847.0,
-            "avg_in_price": 5.42,
-            "avg_out_price": 5.58,
-            "expense": 1143018.38,
-            "revenue": 15886.26,
-            "last_movement": "MOVE - 2026-07-03 12:17:17"
+            "delivered": 210901.0,
+            "sold": 2881.0,
+            "avg_in_price": 4.94,
+            "avg_out_price": 5.31,
+            "expense": 1041850.94,
+            "revenue": 15298.11,
+            "last_movement": "MOVE - 2026-08-07 09:10:43"
         },
         "4a1a3169-9f88-4476-b603-e28f90f38e40": {
             "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
@@ -193,18 +193,18 @@
             "product_id": "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee",
             "product_name": "eoiw",
             "unit": "кг.",
-            "total": 367.0,
+            "total": 456.0,
             "warehouses": {
-                "Варна": 244.0,
+                "Варна": 333.0,
                 "Смолян": 100.0,
                 "Бургас": 23.0
             },
             "delivered": 456.0,
-            "sold": 89.0,
+            "sold": 0,
             "avg_in_price": 4.0,
-            "avg_out_price": 5.0,
+            "avg_out_price": 0.0,
             "expense": 1824.0,
-            "revenue": 445.0,
+            "revenue": 0.0,
             "last_movement": "MOVE - 2026-07-27 23:29:55"
         }
     },

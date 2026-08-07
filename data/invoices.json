@@ -232,9 +232,23 @@
         "unit_price": 5.0,
         "total_price": 445.0,
         "customer": "iewowrpo",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-07-27 23:29:16",
         "created": "2026-07-27 23:29:16",
-        "modified": "2026-07-27 23:29:16"
+        "modified": "2026-08-07 09:07:50"
+    },
+    {
+        "invoice_id": "60e4aa1c-9d78-43b5-9c17-538d778daed9",
+        "movement_id": "285924d6-3fdd-4b4d-a945-2e687dda01ae",
+        "product": "Прясно мляко Верея 3.6%",
+        "quantity": 34.0,
+        "unit": "л.",
+        "unit_price": 4.0,
+        "total_price": 136.0,
+        "customer": "Operator123",
+        "is_active": true,
+        "date": "2026-08-07 09:10:32",
+        "created": "2026-08-07 09:10:32",
+        "modified": "2026-08-07 09:10:32"
     }
 ]
