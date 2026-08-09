@@ -58,6 +58,8 @@ class ProductController(AbstractController):
         except Exception as e:
             return f"Неочаквана грешка: {e}"
 
+
+
     def add(self, product_data: dict) -> Product:
         name = self.validator.validate_name(product_data["name"])
         self.validator.validate_unique_name(name, self.products)
@@ -81,6 +83,9 @@ class ProductController(AbstractController):
         self.products.append(product)
         self._save_products()
         return product
+
+
+
 
     def update(self, product_id: str, updates: dict) -> bool:
         product = self.get_by_id(product_id)
@@ -126,6 +131,7 @@ class ProductController(AbstractController):
 
     def search(self, keyword: str) -> List[Product]:
         return product_filters.filter_combined(self.products, keyword=keyword)
+
 
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
         """Филтрира продукти по категория + всички нейни подкатегории."""

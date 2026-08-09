@@ -67,9 +67,8 @@ class CategoryView:
         columns = ["ID", "Име на категория", "Брой продукти"]
         rows = []
 
-        # Показваме само родителските категории
+        # Показваме само родителските категории и филтрираме само тези без parent_id
         for c in stats["categories"]:
-            # филтрираме само тези без parent_id
             cat_obj = self.controller.get_by_id(c['id'])
             if cat_obj and cat_obj.parent_id is None:
                 rows.append([c['id'][:8], c['name'], str(c['product_count'])])

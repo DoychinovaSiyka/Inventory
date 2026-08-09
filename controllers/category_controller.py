@@ -123,6 +123,8 @@ class CategoryController(AbstractController):
         parent_cat = self.get_by_id(parent_short_id)
         return get_all_children_ids(self.categories, parent_cat.category_id) if parent_cat else []
 
+
+
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
         return {

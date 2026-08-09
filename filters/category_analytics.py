@@ -1,4 +1,3 @@
-from collections import Counter
 from filters.category_filters import get_all_children_ids
 
 
