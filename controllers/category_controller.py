@@ -134,6 +134,8 @@ class CategoryController(AbstractController):
 
 
 
+
+
     def get_visual_tree(self) -> List[dict]:
         """Списък с категории и нивото им за визуално дърво."""
 
@@ -154,6 +156,8 @@ class CategoryController(AbstractController):
             return result
 
         return dfs()
+
+
 
 
 
