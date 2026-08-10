@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_filters import get_all_children_ids
+from filters.category_tree import get_all_children_ids
 from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 

@@ -1,4 +1,4 @@
-from filters.category_filters import get_all_children_ids
+from filters.category_tree import get_all_children_ids
 from typing import List, Optional, Any
 
 
