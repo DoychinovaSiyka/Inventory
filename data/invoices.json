@@ -250,5 +250,19 @@
         "date": "2026-08-07 09:10:32",
         "created": "2026-08-07 09:10:32",
         "modified": "2026-08-07 09:10:32"
+    },
+    {
+        "invoice_id": "215811fd-f478-42c6-a75e-59a9f8a4b09e",
+        "movement_id": "ffc52654-0db8-4c86-8ffe-391374007cf5",
+        "product": "бира",
+        "quantity": 23.0,
+        "unit": "бр.",
+        "unit_price": 3.03,
+        "total_price": 69.69,
+        "customer": "Симон",
+        "is_active": true,
+        "date": "2026-08-16 20:05:13",
+        "created": "2026-08-16 20:05:13",
+        "modified": "2026-08-16 20:05:13"
     }
 ]

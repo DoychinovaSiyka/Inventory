@@ -206,9 +206,29 @@
             "expense": 1824.0,
             "revenue": 0.0,
             "last_movement": "MOVE - 2026-07-27 23:29:55"
+        },
+        "fd328f58-7cb0-476c-ab36-5bec35e3e788": {
+            "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
+            "product_name": "бира",
+            "unit": "бр.",
+            "total": 1591.0,
+            "warehouses": {
+                "Пловдив": 100.0,
+                "Бургас": 12.0,
+                "Смолян": 1344.0,
+                "София": 12.0,
+                "Варна": 123.0
+            },
+            "delivered": 1614.0,
+            "sold": 23.0,
+            "avg_in_price": 2.47,
+            "avg_out_price": 3.03,
+            "expense": 3986.58,
+            "revenue": 69.69,
+            "last_movement": "IN - 2026-08-16 20:08:55"
         }
     },
     "summary": {
-        "total_products": 12
+        "total_products": 13
     }
 }

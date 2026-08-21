@@ -274,5 +274,17 @@
         "price": 2.0,
         "created": "2026-08-07 09:11:30",
         "modified": "2026-08-07 09:11:30"
+    },
+    {
+        "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
+        "name": "бира",
+        "categories": [
+            "3bf78a78-e546-49fa-b878-c15d19af1cb3"
+        ],
+        "unit": "бр.",
+        "description": "алкохол",
+        "price": 3.0,
+        "created": "2026-08-16 20:04:32",
+        "modified": "2026-08-16 20:04:32"
     }
 ]
