@@ -9,8 +9,8 @@ from controllers.abstract_controller import AbstractController
 
 
 class InventoryController(AbstractController):
-    def __init__(self, repository, product_controller, location_controller, movement_controller):
-        super().__init__(repository)
+    def __init__(self, repo, product_controller, location_controller, movement_controller):
+        super().__init__(repo)
 
         self.product_controller = product_controller
         self.location_controller = location_controller
