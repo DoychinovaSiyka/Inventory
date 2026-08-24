@@ -65,6 +65,10 @@ class ReportController:
 
 
 
+
+
+
+
     def report_movements(self):
         rows = []
 

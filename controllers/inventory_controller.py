@@ -3,6 +3,11 @@ from validators.inventory_validator import InventoryValidator
 from controllers.abstract_controller import AbstractController
 
 
+
+
+
+
+
 class InventoryController(AbstractController):
     def __init__(self, repository, product_controller, location_controller, movement_controller):
         super().__init__(repository)
@@ -17,8 +22,9 @@ class InventoryController(AbstractController):
         else:
             self.data = {"products": {}}
 
-
         self.update_inventory_from_movements(self.movement_controller.movements)
+
+
 
 
     def from_dict(self, data):
@@ -52,6 +58,7 @@ class InventoryController(AbstractController):
         return user_input
 
 
+
     def _location_id(self, user_input: str) -> Optional[str]:
         if not user_input:
             return None
@@ -69,6 +76,8 @@ class InventoryController(AbstractController):
         return user_input
 
 
+
+
     def increase_stock(self, product_id: str, quantity: float, location_id: str):
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
@@ -76,12 +85,12 @@ class InventoryController(AbstractController):
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за заприходяване")
 
         if pid not in self.data["products"]:
-            self.data["products"][pid] = {"locations": {}}
+            self.data["products"][pid] = {"warehouses": {}}
 
-        locations = self.data["products"][pid]["locations"]
-        current = float(locations.get(lid, 0.0))
+        warehouses = self.data["products"][pid].setdefault("warehouses", {})
+        current = float(warehouses.get(lid, 0.0))
 
-        locations[lid] = round(current + qty, 3)
+        warehouses[lid] = round(current + qty, 3)
 
 
 
@@ -99,9 +108,11 @@ class InventoryController(AbstractController):
 
         InventoryValidator.validate_stock_availability(qty, current_stock, p_name)
 
-        locations = self.data["products"][pid]["locations"]
-        locations[lid] = round(current_stock - qty, 3)
+        warehouses = self.data["products"][pid].setdefault("warehouses", {})
+        warehouses[lid] = round(current_stock - qty, 3)
         return True
+
+
 
 
     def move_stock(self, product_id: str, quantity: float, from_location_id: str, to_location_id: str) -> bool:
@@ -125,16 +136,19 @@ class InventoryController(AbstractController):
         products = self.data.get("products", {})
         product_info = products.get(pid, {})
 
-        locations = product_info.get("locations", {})
+        warehouses = product_info.get("warehouses", {})
         total = 0.0
 
-        for qty in locations.values():
+        for qty in warehouses.values():
             try:
                 total += float(qty)
             except:
                 total += 0.0
 
         return total
+
+
+
 
 
     def get_stock(self, product_id, location_id):
@@ -147,21 +161,19 @@ class InventoryController(AbstractController):
             return 0.0
 
         product_info = products[pid]
-        locations = product_info.get("locations", {})
+        warehouses = product_info.get("warehouses", {})
 
-        if lid not in locations:
+        if lid not in warehouses:
             return 0.0
 
         try:
-            return float(locations[lid])
+            return float(warehouses[lid])
         except:
             return 0.0
 
 
 
-
-
-
+    # BUILD INVENTORY -> warehouses
     def build_inventory(self):
         products_dict = {}
 
@@ -183,7 +195,7 @@ class InventoryController(AbstractController):
             total = self.get_total_stock(pid)
 
             warehouse_map = {}
-            for lid, qty in p_info.get("locations", {}).items():
+            for lid, qty in p_info.get("warehouses", {}).items():
                 loc = self.location_controller.get_by_id(lid)
                 name = loc.name if loc else f"Склад {lid}"
                 warehouse_map[name] = float(qty)
@@ -211,9 +223,9 @@ class InventoryController(AbstractController):
             else:
                 last_movement = "Няма движения"
 
-            products_dict[pid] = {"product_id": pid, "product_name": product_name, "unit": unit,
-                                  "total": total, "warehouses": warehouse_map, "delivered": delivered,
-                                  "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
+            products_dict[pid] = {"product_id": pid, "product_name": product_name, "unit": unit, "total": total,
+                                  "warehouses": warehouse_map, "delivered": delivered, "sold": sold,
+                                  "avg_in_price": avg_in, "avg_out_price": avg_out,
                                   "expense": expense, "revenue": revenue, "last_movement": last_movement}
 
         return {"products": products_dict, "summary": {"total_products": len(products_dict)}}
@@ -234,28 +246,30 @@ class InventoryController(AbstractController):
             qty = float(mv.quantity)
 
             if pid not in self.data["products"]:
-                self.data["products"][pid] = {"locations": {}}
+                self.data["products"][pid] = {"warehouses": {}}
 
-            locations = self.data["products"][pid]["locations"]
+            warehouses = self.data["products"][pid]["warehouses"]
 
             if mtype == "IN":
                 lid = str(mv.location_id)
-                current = locations.get(lid, 0.0)
-                locations[lid] = round(current + qty, 3)
+                current = warehouses.get(lid, 0.0)
+                warehouses[lid] = round(current + qty, 3)
 
             elif mtype == "OUT":
                 lid = str(mv.location_id)
-                current = locations.get(lid, 0.0)
-                locations[lid] = round(current - qty, 3)
+                current = warehouses.get(lid, 0.0)
+                warehouses[lid] = round(current - qty, 3)
 
             elif mtype == "MOVE":
                 from_lid = str(mv.from_location_id)
                 to_lid = str(mv.to_location_id)
 
-                locations[from_lid] = round(locations.get(from_lid, 0.0) - qty, 3)
-                locations[to_lid] = round(locations.get(to_lid, 0.0) + qty, 3)
+                warehouses[from_lid] = round(warehouses.get(from_lid, 0.0) - qty, 3)
+                warehouses[to_lid] = round(warehouses.get(to_lid, 0.0) + qty, 3)
 
         self._save()
+
+
 
 
 
@@ -274,6 +288,8 @@ class InventoryController(AbstractController):
                                  "warehouses": item.get("warehouses", {})})
 
         return critical
+
+
 
 
 

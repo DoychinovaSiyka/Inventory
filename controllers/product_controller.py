@@ -120,6 +120,9 @@ class ProductController(AbstractController):
         self._save_products()
         return True
 
+
+
+
     def delete_by_id(self, product_id: str) -> bool:
         product = self.get_by_id(product_id)
         if not product:
@@ -142,6 +145,10 @@ class ProductController(AbstractController):
             all_ids.extend(self.category_controller.get_all_hierarchical_ids(cid))
 
         return product_filters.filter_combined(self.products, category_ids=all_ids)
+
+
+
+
 
     def get_custom_sort(self, sort_type="price", algorithm="quick", reverse=True) -> List[Product]:
         if sort_type == "name":
