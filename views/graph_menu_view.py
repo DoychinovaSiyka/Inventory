@@ -109,11 +109,11 @@ class GraphView:
 
         for wid, qty in other_sources:
             if qty < min_threshold:
-                filtered.append(wid)  # под минимума
+                filtered.append(wid)
             elif qty > max_threshold:
-                filtered.append(wid)  # над максимума
+                filtered.append(wid)
             elif min_threshold <= qty <= max_threshold:
-                filtered.append(wid)  # в нормата
+                filtered.append(wid)
 
         if not filtered:
             print("Няма складове, които отговарят на количествените условия.")
