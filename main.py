@@ -13,7 +13,6 @@ from views.admin_menu_view import AdminMenuView
 from views.operator_menu_view import OperatorMenuView
 from views.anonymous_menu_view import AnonymousMenuView
 from views.graph_menu_view import GraphView
-from views.password_utils import input_password
 from storage.json_repository import JSONRepository
 
 
@@ -27,8 +26,6 @@ class InventoryApplication:
         self._init_controllers()
         self._init_menus()
 
-
-
     def _init_repositories(self):
         """Инициализация на JSON хранилищата."""
         self.user_repo = JSONRepository("data/users.json")
@@ -39,6 +36,7 @@ class InventoryApplication:
         self.movement_repo = JSONRepository("data/movements.json")
         self.invoice_repo = JSONRepository("data/invoices.json")
         self.inventory_repo = JSONRepository("data/inventory.json")
+
 
 
 
@@ -60,7 +58,6 @@ class InventoryApplication:
         self.movement_controller.set_inventory_controller(self.inventory_controller)
 
         self.invoice_controller = InvoiceController(self.invoice_repo, self.movement_controller)
-
         self.movement_controller.set_invoice_controller(self.invoice_controller)
 
         self.report_controller = ReportController(self.product_controller, self.movement_controller,
@@ -72,13 +69,12 @@ class InventoryApplication:
 
 
 
-
     def _init_menus(self):
         self.controllers = {"user": self.user_controller, "product": self.product_controller,
-                            "category": self.category_controller, "supplier": self.supplier_controller,
-                            "location": self.location_controller, "movement": self.movement_controller,
-                            "invoice": self.invoice_controller, "report": self.report_controller,
-                            "inventory": self.inventory_controller, "graph": self.graph_view}
+                             "category": self.category_controller, "supplier": self.supplier_controller,
+                             "location": self.location_controller, "movement": self.movement_controller,
+                             "invoice": self.invoice_controller,
+                             "report": self.report_controller, "inventory": self.inventory_controller, "graph": self.graph_view}
 
         self.admin_menu = AdminMenuView(self.controllers)
         self.operator_menu = OperatorMenuView(self.controllers)
@@ -87,16 +83,15 @@ class InventoryApplication:
 
 
 
-
     def _login_flow(self):
         while True:
-            print("\n-----------------------------------------------------------")
             print("\nВХОД В СИСТЕМАТА")
             username = input("Потребителско име (Enter за връщане): ").strip()
             if not username:
                 break
 
-            password = input_password("Парола: ")
+
+            password = input("Парола: ").strip()
             try:
                 user = self.user_controller.login(username, password)
                 print(f"\nДобре дошли, {user.first_name}. Роля: {user.role}")
@@ -118,6 +113,8 @@ class InventoryApplication:
         print("\nВлизане като Гост (Само за четене)...")
         self.anonymous_menu.show_menu(guest)
 
+
+
     def run(self):
         while True:
             print("\n-----------------------------------------------------------\n")
@@ -136,6 +133,8 @@ class InventoryApplication:
                 sys.exit()
             else:
                 print("\nНевалиден избор. Моля, изберете опция от менюто.")
+
+
 
 
 if __name__ == "__main__":

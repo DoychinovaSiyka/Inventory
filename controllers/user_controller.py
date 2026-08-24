@@ -4,14 +4,18 @@ from validators.user_validator import UserValidator
 from controllers.abstract_controller import AbstractController
 
 
+
+
+
 class UserController(AbstractController):
-    """Управлява потребителите, автентикацията, ролите и статусите."""
+    """Контролер за управление на потребители, вход, роли и статуси."""
     def __init__(self, repo):
         self.logged_user: Optional[User] = None
         super().__init__(repo)
 
         self.users = self.load() or []
 
+        # Създаване на начални потребители, ако липсват
         if not self.get_by_username("admin"):
             self._create_default_admin()
         if not self.get_by_username("operator"):
@@ -23,40 +27,37 @@ class UserController(AbstractController):
     def from_dict(self, data):
         return User.from_dict(data)
 
-
-
     def to_dict(self, obj):
         return obj.to_dict()
 
 
 
-    def _save_users(self):
+    def save_all(self):
         self.save(self.users)
 
 
-
-
-    def find_user_flexible(self, identifier: str) -> Optional[User]:
+    def find_user(self, identifier: str) -> Optional[User]:
+        """Търси потребител по ID (кратко/пълно) или username."""
         if not identifier:
             return None
+
         identifier = str(identifier).strip()
         user = self.get_by_id(identifier)
         if user:
             return user
+
         return self.get_by_username(identifier)
 
 
-
-
-    def _hash_password(self, password: str) -> str:
+    def hash_password(self, password: str) -> str:
         if not password:
             return ""
         return "".join(str(ord(c)) for c in password)
 
 
 
-    def _check_password(self, stored_password_hash: str, provided_password: str) -> bool:
-        return stored_password_hash == self._hash_password(provided_password)
+    def check_password(self, stored_hash: str, provided_password: str) -> bool:
+        return stored_hash == self.hash_password(provided_password)
 
 
 
@@ -64,7 +65,6 @@ class UserController(AbstractController):
         if not user:
             return False
         return str(user.role).lower() == "admin"
-
 
 
 
@@ -77,8 +77,6 @@ class UserController(AbstractController):
             if u.username.lower() == username:
                 return u
         return None
-
-
 
 
     def get_all(self):
@@ -101,6 +99,9 @@ class UserController(AbstractController):
 
         return None
 
+
+
+
     def login(self, username: str, password: str) -> Optional[User]:
         user = UserValidator.validate_login(username, password, self)
         if user:
@@ -114,21 +115,20 @@ class UserController(AbstractController):
         UserValidator.validate_user_data(username, password, email, role, "Active")
         UserValidator.validate_unique_username(username, self)
 
-        new_user = User(user_id=None, first_name=first_name.strip(),last_name=last_name.strip(), email=email.strip(),
-                        username=username.strip().lower(), password=self._hash_password(password),
-                        role=role, status="Active")
+        new_user = User(user_id=None, first_name=first_name.strip(), last_name=last_name.strip(), email=email.strip(),
+                        username=username.strip().lower(),
+                        password=self.hash_password(password), role=role, status="Active")
 
         self.users.append(new_user)
-        self._save_users()
+        self.save_all()
         return new_user
-
 
 
 
     def change_role(self, acting_user: User, identifier: str, new_role: str):
         UserValidator.confirm_admin(acting_user)
 
-        user = self.find_user_flexible(identifier)
+        user = self.find_user(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
 
@@ -140,16 +140,14 @@ class UserController(AbstractController):
 
         user.role = new_role
         user.update_modified()
-        self._save_users()
+        self.save_all()
         return True
 
 
 
 
-
-
     def change_status(self, acting_user: User, identifier: str, new_status: str):
-        user = self.find_user_flexible(identifier)
+        user = self.find_user(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
 
@@ -159,14 +157,15 @@ class UserController(AbstractController):
 
         user.status = new_status
         user.update_modified()
-        self._save_users()
+        self.save_all()
         return True
 
 
 
 
+
     def delete_user(self, acting_user: User, identifier: str):
-        user = self.find_user_flexible(identifier)
+        user = self.find_user(identifier)
         if not user:
             raise ValueError(f"Потребител '{identifier}' не е намерен.")
 
@@ -175,31 +174,29 @@ class UserController(AbstractController):
         UserValidator.validate_not_last_admin(user, self.users)
 
         self.users.remove(user)
-        self._save_users()
+        self.save_all()
         return True
-
-
 
 
 
     def _create_default_admin(self):
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
-                     username="admin", password=self._hash_password("admin123"), role="Admin", status="Active")
+                      username="admin", password=self.hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
-        self._save_users()
+        self.save_all()
 
 
 
     def _create_default_operator(self):
-        operator = User(user_id=None, first_name="Operator", last_name="User",
-                        email="operator@example.com", username="operator", password=self._hash_password("operator123"),
-                        role="Operator", status="Active")
+        operator = User(user_id=None, first_name="Operator", last_name="User", email="operator@example.com", username="operator",
+                        password=self.hash_password("operator123"), role="Operator", status="Active")
         self.users.append(operator)
-        self._save_users()
+        self.save_all()
 
 
 
-    def validate_field(self, field_type: str, value: str) -> Optional[str]:
+
+    def validate_input(self, field_type: str, value: str) -> Optional[str]:
         try:
             if field_type == "username":
                 UserValidator.validate_unique_username(value, self)

@@ -4,6 +4,11 @@ from graph.warehouse_graph import WarehouseGraph
 from models.user import User
 
 
+
+
+
+
+
 class GraphView:
     def __init__(self, inventory_controller, location_controller, product_controller):
         self.inventory_controller = inventory_controller
@@ -60,47 +65,79 @@ class GraphView:
             if menu.execute(choice, user) == "break":
                 break
 
-    def calculate_best_delivery(self, user: User):
-        product_name = input("\nИме на стока (Enter = отказ): ").strip()
-        if not product_name: return
 
-        my_location = input("Вашето ID (напр. W1, Enter = отказ): ").strip().upper()
+
+
+
+    def calculate_best_delivery(self, user: User):
+        product_name = input("\nИме на стока: ").strip()
+        if not product_name:
+            return
+
+
+        try:
+            min_threshold_input = input("Минимално количество: ").strip()
+            max_threshold_input = input("Максимално количество: ").strip()
+
+            min_threshold = float(min_threshold_input) if min_threshold_input else 0.0
+            max_threshold = float(max_threshold_input) if max_threshold_input else float('inf')
+        except ValueError:
+            print("Грешка: праговете трябва да са числа.")
+            return
+
+
+        my_location = input("Вашето ID (напр. W1): ").strip().upper()
         if not my_location or my_location not in self.graph.nodes:
             print(f"Грешка: Локация '{my_location}' не съществува.")
             return
 
-
+        # Всички складове с наличност
         sources = self._get_warehouses_with_product(product_name)
         if not sources:
             print(f"'{product_name}' не е наличен никъде.")
             return
 
-        other_sources = [wid.upper() for wid, qty in sources if wid.upper() != my_location]
+        # Ако продуктът е наличен само при текущата локация
+        other_sources = [(wid.upper(), qty) for wid, qty in sources if wid.upper() != my_location]
         if not other_sources:
             print(f"'{product_name}' е наличен само при Вас ({my_location}).")
             return
 
 
-        distances, predecessors = self.graph.dijkstra(my_location)
 
+        filtered = []
 
-        reachable = [s for s in other_sources if distances.get(s, float('inf')) < float('inf')]
-        if not reachable:
-            print("\nИма складове с наличност, но няма сухопътен маршрут до тях.")
+        for wid, qty in other_sources:
+            if qty < min_threshold:
+                filtered.append(wid)  # под минимума
+            elif qty > max_threshold:
+                filtered.append(wid)  # над максимума
+            elif min_threshold <= qty <= max_threshold:
+                filtered.append(wid)  # в нормата
+
+        if not filtered:
+            print("Няма складове, които отговарят на количествените условия.")
             return
 
 
+        distances, predecessors = self.graph.dijkstra(my_location)
+
+        reachable = [s for s in filtered if distances.get(s, float('inf')) < float('inf')]
+        if not reachable:
+            print("\nИма складове с наличност, но няма маршрут до тях.")
+            return
+
+        # Най-близък склад
         best_source = min(reachable, key=lambda s: distances[s])
         path = self.graph.reconstruct_path(my_location, best_source, predecessors)
         path_with_names = [f"{self.graph.nodes[node].name} ({node})" for node in path]
 
 
-        source_name = self.graph.nodes[best_source].name
         print("\n" + "=" * 40)
         print("         ЛОГИСТИЧЕН АНАЛИЗ")
         print("=" * 40)
         print(f"  Продукт:    {product_name}")
-        print(f"  Източник:   {source_name} ({best_source})")
+        print(f"  Източник:   {self.graph.nodes[best_source].name} ({best_source})")
         print(f"  Разстояние: {distances[best_source]} км")
         print(f"  Маршрут:    {' -> '.join(path_with_names)}")
         print("=" * 40)

@@ -1,5 +1,5 @@
 from views.menu import Menu, MenuItem
-from views.password_utils import input_password, format_table
+from views.password_utils import format_table
 
 
 class UserView:
@@ -18,7 +18,6 @@ class UserView:
             if menu.execute(choice, user) == "break":
                 break
 
-
     def _build_menu(self):
         return Menu("Администрация на потребители", [
             MenuItem("1", "Списък на всички потребители", self.show_users),
@@ -28,6 +27,8 @@ class UserView:
             MenuItem("5", "Активиране", self.activate_user),
             MenuItem("6", "Изтриване от системата", self.delete_user),
             MenuItem("0", "Назад", lambda u: "break")])
+
+
 
 
     def show_users(self, _):
@@ -42,6 +43,8 @@ class UserView:
         print(format_table(columns, rows))
 
 
+
+
     def add_user(self, _):
         print("\nНОВ ПОТРЕБИТЕЛ")
 
@@ -49,28 +52,28 @@ class UserView:
             username = input("Потребителско име: ").strip()
             if not username:
                 return
-            error = self.controller.validate_field("username", username)
+            error = self.controller.validate_input("username", username)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
             email = input("Имейл: ").strip()
-            error = self.controller.validate_field("email", email)
+            error = self.controller.validate_input("email", email)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
-            password = input_password("Парола: ").strip()
-            error = self.controller.validate_field("password", password)
+            password = input("Парола: ").strip()
+            error = self.controller.validate_input("password", password)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
             role = input("Роля (Admin/Operator) [Operator]: ").strip().capitalize() or "Operator"
-            error = self.controller.validate_field("role", role)
+            error = self.controller.validate_input("role", role)
             if not error:
                 break
             print(f"Грешка: {error}")
@@ -86,13 +89,14 @@ class UserView:
 
 
 
+
     def change_role(self, current_user):
         print("\nПРОМЯНА НА РОЛЯ")
         target = input("Въведете Username или ID: ").strip()
         if not target:
             return
 
-        user_obj = self.controller.find_user_flexible(target)
+        user_obj = self.controller.find_user(target)
         if not user_obj:
             print(f"Грешка: Потребител '{target}' не е намерен.")
             return
@@ -112,6 +116,7 @@ class UserView:
 
 
 
+
     def deactivate_user(self, current_user):
         print("\nДЕАКТИВИРАНЕ НА ПОТРЕБИТЕЛ")
 
@@ -120,10 +125,11 @@ class UserView:
             return
 
         try:
-            self.controller.deactivate_user(current_user, target)
+            self.controller.change_status(current_user, target, "Inactive")
             print(f"Потребител '{target}' е деактивиран.")
         except Exception as e:
             print(f"Грешка: {e}")
+
 
 
 
@@ -135,22 +141,24 @@ class UserView:
             return
 
         try:
-            self.controller.activate_user(current_user, target)
+            self.controller.change_status(current_user, target, "Active")
             print(f"Потребител '{target}' е активиран.")
         except Exception as e:
             print(f"Грешка: {e}")
 
 
 
+
+
     def delete_user(self, current_user):
-        print("\nИЗТРИВАНЕ")
+        print("\nИЗТРИВАНЕ НА ПОТРЕБИТЕЛ")
 
         while True:
             target = input("Username или ID за изтриване: ").strip()
             if not target:
                 return
 
-            user_to_delete = self.controller.find_user_flexible(target)
+            user_to_delete = self.controller.find_user(target)
             if not user_to_delete:
                 print(f"Потребител '{target}' не съществува.")
                 continue
