@@ -86,7 +86,7 @@ class InventoryApplication:
     def _login_flow(self):
         while True:
             print("\nВХОД В СИСТЕМАТА")
-            username = input("Потребителско име (Enter за връщане): ").strip()
+            username = input("Потребителско име: ").strip()
             if not username:
                 break
 
@@ -107,6 +107,8 @@ class InventoryApplication:
             except ValueError as e:
                 print(f"\nГрешка при вход: {e}")
                 print("Опитайте отново.\n")
+
+
 
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
