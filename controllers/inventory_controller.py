@@ -100,14 +100,17 @@ class InventoryController(AbstractController):
 
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за заприходяване")
 
+        # Търсим продукта в инвентара
         product = self._find_product(pid)
         if not product:
             product = {"product_id": pid, "warehouses": {}}
             self.data.append(product)
 
-        warehouses = product.setdefault("warehouses", {})
+        warehouses = product["warehouses"]
+        if lid not in warehouses:
+            warehouses[lid] = 0.0
 
-        current = float(warehouses.get(lid, 0.0))
+        current = float(warehouses[lid])
         warehouses[lid] = round(current + qty, 3)
 
 
@@ -115,7 +118,6 @@ class InventoryController(AbstractController):
     def decrease_stock(self, product_id: str, quantity: float, location_id: str) -> bool:
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
-
         qty = InventoryValidator.parse_and_validate_number(quantity, "Количество за изписване")
 
         current_stock = self.get_stock(pid, lid)
@@ -129,9 +131,14 @@ class InventoryController(AbstractController):
         if not product:
             return False
 
-        warehouses = product.setdefault("warehouses", {})
+        warehouses = product["warehouses"]
+
+        if lid not in warehouses:
+            warehouses[lid] = 0.0
+
         warehouses[lid] = round(current_stock - qty, 3)
         return True
+
 
 
 
@@ -172,6 +179,7 @@ class InventoryController(AbstractController):
 
 
     def get_stock(self, product_id, location_id):
+        """"Връща наличността само в конкретния склад."""
         pid = self._product_id(product_id)
         lid = self._location_id(location_id)
 
