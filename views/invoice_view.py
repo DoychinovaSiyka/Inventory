@@ -2,6 +2,8 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
 class InvoiceView:
     def __init__(self, invoice_controller):
         self.invoice_controller = invoice_controller

@@ -13,6 +13,8 @@ from views.location_view import LocationView
 
 
 
+
+
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers

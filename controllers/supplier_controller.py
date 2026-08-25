@@ -4,6 +4,8 @@ from validators.supplier_validator import SupplierValidator
 from controllers.abstract_controller import AbstractController
 
 
+
+
 class SupplierController(AbstractController):
     """Управлява доставчиците в системата."""
     def __init__(self, repo):

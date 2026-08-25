@@ -1,13 +1,17 @@
 from typing import List, Optional
+
+from controllers.category_controller import CategoryController
 from models.product import Product
 from validators.product_validator import ProductValidator
 from filters import product_filters, product_sorters
 from controllers.abstract_controller import AbstractController
 
 
+
+
 class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
-    def __init__(self, repo, category_controller):
+    def __init__(self, repo, category_controller: CategoryController):
         self.category_controller = category_controller
         self.validator = ProductValidator()
         super().__init__(repo)

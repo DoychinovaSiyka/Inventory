@@ -1,12 +1,23 @@
-from models.movement import MovementType
 from datetime import datetime
+from models.movement import MovementType
 from models.report import Report
 from filters import product_sorters
 
+from controllers.product_controller import ProductController
+from controllers.movement_controller import MovementController
+from controllers.invoice_controller import InvoiceController
+from controllers.location_controller import LocationController
+from controllers.inventory_controller import InventoryController
+from controllers.supplier_controller import SupplierController
+
+
+
 
 class ReportController:
-    def __init__(self, product_controller, movement_controller, invoice_controller,
-                 location_controller, inventory_controller, supplier_controller):
+    def __init__(self, product_controller: ProductController,
+                 movement_controller: MovementController, invoice_controller: InvoiceController,
+                 location_controller: LocationController, inventory_controller: InventoryController,
+                 supplier_controller: SupplierController):
 
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -14,6 +25,7 @@ class ReportController:
         self.location_controller = location_controller
         self.inventory_controller = inventory_controller
         self.supplier_controller = supplier_controller
+
 
 
     def _match_string(self, target: str, keyword: str) -> bool:
@@ -31,7 +43,10 @@ class ReportController:
         raw_inventory = self.inventory_controller.build_inventory()
         report_data = []
 
-        for pid, item in raw_inventory["products"].items():
+        # синхронизирано с новия инвентар
+        for pid, item in raw_inventory.items():
+            if pid == "summary":
+                continue
 
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
@@ -47,11 +62,9 @@ class ReportController:
             avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
             report_item = {"product_id": pid, "product_name": item["product_name"], "unit": item["unit"],
-                           "total": item["total"], "warehouses": item["warehouses"], "delivered": delivered, "sold": sold,
-                           "avg_in_price": avg_in, "avg_out_price": avg_out,
+                           "total": item["total"], "warehouses": item["warehouses"], "delivered": delivered,
+                           "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
                            "expense": round(delivered * avg_in, 2), "revenue": round(sold * avg_out, 2)}
-
-
 
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
@@ -62,10 +75,6 @@ class ReportController:
             report_data.append(report_item)
 
         return Report(report_type="Inventory Full", data=report_data)
-
-
-
-
 
 
 
@@ -95,8 +104,8 @@ class ReportController:
                 to_name = loc_to.name if loc_to else "Склад"
 
             rows.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
-                         "type": m.movement_type.name, "product_name": m.product_name, "quantity": m.quantity,
-                         "unit": m.unit, "from": from_name, "to": to_name})
+                         "type": m.movement_type.name, "product_name": m.product_name,
+                         "quantity": m.quantity, "unit": m.unit, "from": from_name, "to": to_name})
 
         return Report(report_type="Movement History", data=rows)
 
@@ -200,7 +209,6 @@ class ReportController:
                 continue
             if date_to and m_date > date_to:
                 continue
-
 
             if m.movement_type.name == "IN":
                 loc_main = self.location_controller.get_by_id(m.location_id)

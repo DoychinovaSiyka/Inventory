@@ -6,6 +6,8 @@ from filters.category_analytics import get_category_stats
 from controllers.abstract_controller import AbstractController
 
 
+
+
 class CategoryController(AbstractController):
     """Управлява категориите и йерархичната им структура."""
     def __init__(self, repo):
@@ -137,7 +139,7 @@ class CategoryController(AbstractController):
 
 
     def get_visual_tree(self) -> List[dict]:
-        """Списък с категории и нивото им за визуално дърво."""
+        """Списък с категории и нивото им за дърво."""
 
         # групиране на категориите по parent_id
         tree = {}

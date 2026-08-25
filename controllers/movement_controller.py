@@ -1,13 +1,22 @@
 import uuid
 from typing import Optional, List
+
 from models.movement import Movement, MovementType
 from validators.movement_validator import MovementValidator
+
 from controllers.abstract_controller import AbstractController
+from controllers.product_controller import ProductController
+from controllers.user_controller import UserController
+from controllers.location_controller import LocationController
+from controllers.supplier_controller import SupplierController
+
+
 
 
 class MovementController(AbstractController):
 
-    def __init__(self, repo, product_controller, user_controller, location_controller, supplier_controller):
+    def __init__(self, repo, product_controller: ProductController, user_controller: UserController,
+                 location_controller:LocationController, supplier_controller:SupplierController):
         super().__init__(repo)
         self.product_controller = product_controller
         self.user_controller = user_controller

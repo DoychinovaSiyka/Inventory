@@ -1,232 +1,230 @@
 {
-    "products": {
-        "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6": {
-            "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
-            "product_name": "Прясно мляко Верея 3.6%",
-            "unit": "л.",
-            "total": 208020.0,
-            "warehouses": {
-                "Варна": 30527.0,
-                "Пловдив": 391.0,
-                "София": 85313.0,
-                "Бургас": 91789.0
-            },
-            "delivered": 210901.0,
-            "sold": 2881.0,
-            "avg_in_price": 4.94,
-            "avg_out_price": 5.31,
-            "expense": 1041850.94,
-            "revenue": 15298.11,
-            "last_movement": "MOVE - 2026-08-07 09:10:43"
+    "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6": {
+        "product_id": "57d5d921-5e90-4a70-88d5-fffbd2ba4ad6",
+        "product_name": "Прясно мляко Верея 3.6%",
+        "unit": "л.",
+        "total": 208020.0,
+        "warehouses": {
+            "Варна": 30527.0,
+            "Пловдив": 391.0,
+            "София": 85313.0,
+            "Бургас": 91789.0
         },
-        "4a1a3169-9f88-4476-b603-e28f90f38e40": {
-            "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
-            "product_name": "Кашкавал от краве масло",
-            "unit": "кг.",
-            "total": 446.0,
-            "warehouses": {
-                "Смолян": 280.0,
-                "София": 46.0,
-                "Варна": 120.0
-            },
-            "delivered": 456.0,
-            "sold": 10.0,
-            "avg_in_price": 25.56,
-            "avg_out_price": 24.01,
-            "expense": 11655.36,
-            "revenue": 240.1,
-            "last_movement": "MOVE - 2026-05-21 23:09:19"
+        "delivered": 210901.0,
+        "sold": 2881.0,
+        "avg_in_price": 4.94,
+        "avg_out_price": 5.31,
+        "expense": 1041850.94,
+        "revenue": 15298.11,
+        "last_movement": "MOVE - 2026-08-07 09:10:43"
+    },
+    "4a1a3169-9f88-4476-b603-e28f90f38e40": {
+        "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
+        "product_name": "Кашкавал от краве масло",
+        "unit": "кг.",
+        "total": 446.0,
+        "warehouses": {
+            "Смолян": 280.0,
+            "София": 46.0,
+            "Варна": 120.0
         },
-        "3b90e773-cb3a-49b0-ba08-e8213ff6bd57": {
-            "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
-            "product_name": "Картофи червени",
-            "unit": "кг.",
-            "total": 2770.0,
-            "warehouses": {
-                "Бургас": 1770.0,
-                "Пловдив": 1000.0
-            },
-            "delivered": 3000.0,
-            "sold": 230.0,
-            "avg_in_price": 2.01,
-            "avg_out_price": 2.34,
-            "expense": 6030.0,
-            "revenue": 538.2,
-            "last_movement": "MOVE - 2026-05-22 00:50:24"
+        "delivered": 456.0,
+        "sold": 10.0,
+        "avg_in_price": 25.56,
+        "avg_out_price": 24.01,
+        "expense": 11655.36,
+        "revenue": 240.1,
+        "last_movement": "MOVE - 2026-05-21 23:09:19"
+    },
+    "3b90e773-cb3a-49b0-ba08-e8213ff6bd57": {
+        "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
+        "product_name": "Картофи червени",
+        "unit": "кг.",
+        "total": 2770.0,
+        "warehouses": {
+            "Бургас": 1770.0,
+            "Пловдив": 1000.0
         },
-        "13889b06-e120-4d7d-9ec5-6adbe08a6ab1": {
-            "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
-            "product_name": "кисело мляко \"Габровци\"",
-            "unit": "бр.",
-            "total": 2220.0,
-            "warehouses": {
-                "Пловдив": 1988.0,
-                "Смолян": 232.0
-            },
-            "delivered": 2220.0,
-            "sold": 0,
-            "avg_in_price": 3.09,
-            "avg_out_price": 0.0,
-            "expense": 6859.8,
-            "revenue": 0.0,
-            "last_movement": "MOVE - 2026-05-27 22:53:57"
+        "delivered": 3000.0,
+        "sold": 230.0,
+        "avg_in_price": 2.01,
+        "avg_out_price": 2.34,
+        "expense": 6030.0,
+        "revenue": 538.2,
+        "last_movement": "MOVE - 2026-05-22 00:50:24"
+    },
+    "13889b06-e120-4d7d-9ec5-6adbe08a6ab1": {
+        "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
+        "product_name": "кисело мляко \"Габровци\"",
+        "unit": "бр.",
+        "total": 2220.0,
+        "warehouses": {
+            "Пловдив": 1988.0,
+            "Смолян": 232.0
         },
-        "f35a3aeb-11fd-457c-bb6b-ac712cd9458b": {
-            "product_id": "f35a3aeb-11fd-457c-bb6b-ac712cd9458b",
-            "product_name": "Салам Бургас",
-            "unit": "бр.",
-            "total": 80.0,
-            "warehouses": {
-                "Смолян": 68.0,
-                "Бургас": 12.0
-            },
-            "delivered": 89.0,
-            "sold": 9.0,
-            "avg_in_price": 8.09,
-            "avg_out_price": 8.34,
-            "expense": 720.01,
-            "revenue": 75.06,
-            "last_movement": "MOVE - 2026-06-12 13:20:04"
+        "delivered": 2220.0,
+        "sold": 0,
+        "avg_in_price": 3.09,
+        "avg_out_price": 0.0,
+        "expense": 6859.8,
+        "revenue": 0.0,
+        "last_movement": "MOVE - 2026-05-27 22:53:57"
+    },
+    "f35a3aeb-11fd-457c-bb6b-ac712cd9458b": {
+        "product_id": "f35a3aeb-11fd-457c-bb6b-ac712cd9458b",
+        "product_name": "Салам Бургас",
+        "unit": "бр.",
+        "total": 80.0,
+        "warehouses": {
+            "Смолян": 68.0,
+            "Бургас": 12.0
         },
-        "ac1aaae2-07d2-4fce-9583-8350defac4e0": {
-            "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
-            "product_name": "круша",
-            "unit": "кг.",
-            "total": 8999.0,
-            "warehouses": {
-                "Пловдив": 8876.0,
-                "Варна": 123.0
-            },
-            "delivered": 8999.0,
-            "sold": 0,
-            "avg_in_price": 12.0,
-            "avg_out_price": 0.0,
-            "expense": 107988.0,
-            "revenue": 0.0,
-            "last_movement": "MOVE - 2026-07-10 14:23:18"
+        "delivered": 89.0,
+        "sold": 9.0,
+        "avg_in_price": 8.09,
+        "avg_out_price": 8.34,
+        "expense": 720.01,
+        "revenue": 75.06,
+        "last_movement": "MOVE - 2026-06-12 13:20:04"
+    },
+    "ac1aaae2-07d2-4fce-9583-8350defac4e0": {
+        "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
+        "product_name": "круша",
+        "unit": "кг.",
+        "total": 8999.0,
+        "warehouses": {
+            "Пловдив": 8876.0,
+            "Варна": 123.0
         },
-        "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
-            "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
-            "product_name": "Свинска плешка без кост",
-            "unit": "кг.",
-            "total": 110.0,
-            "warehouses": {
-                "Варна": 92.0,
-                "Пловдив": 18.0
-            },
-            "delivered": 199.0,
-            "sold": 89.0,
-            "avg_in_price": 4.0,
-            "avg_out_price": 5.0,
-            "expense": 796.0,
-            "revenue": 445.0,
-            "last_movement": "MOVE - 2026-07-20 12:44:47"
+        "delivered": 8999.0,
+        "sold": 0,
+        "avg_in_price": 12.0,
+        "avg_out_price": 0.0,
+        "expense": 107988.0,
+        "revenue": 0.0,
+        "last_movement": "MOVE - 2026-07-10 14:23:18"
+    },
+    "a9c18800-cb9f-4d9f-a486-04ffcb01a323": {
+        "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
+        "product_name": "Свинска плешка без кост",
+        "unit": "кг.",
+        "total": 110.0,
+        "warehouses": {
+            "Варна": 92.0,
+            "Пловдив": 18.0
         },
-        "1718c150-fef0-4508-95c0-8d3883e33921": {
-            "product_id": "1718c150-fef0-4508-95c0-8d3883e33921",
-            "product_name": "proben product",
-            "unit": "кг.",
-            "total": 176.0,
-            "warehouses": {
-                "Пловдив": 87.0,
-                "Варна": 89.0
-            },
-            "delivered": 899.0,
-            "sold": 723.0,
-            "avg_in_price": 7.0,
-            "avg_out_price": 10.0,
-            "expense": 6293.0,
-            "revenue": 7230.0,
-            "last_movement": "MOVE - 2026-07-26 17:31:23"
+        "delivered": 199.0,
+        "sold": 89.0,
+        "avg_in_price": 4.0,
+        "avg_out_price": 5.0,
+        "expense": 796.0,
+        "revenue": 445.0,
+        "last_movement": "MOVE - 2026-07-20 12:44:47"
+    },
+    "1718c150-fef0-4508-95c0-8d3883e33921": {
+        "product_id": "1718c150-fef0-4508-95c0-8d3883e33921",
+        "product_name": "proben product",
+        "unit": "кг.",
+        "total": 176.0,
+        "warehouses": {
+            "Пловдив": 87.0,
+            "Варна": 89.0
         },
-        "59548022-8398-4df2-b481-b31f9b546b0a": {
-            "product_id": "59548022-8398-4df2-b481-b31f9b546b0a",
-            "product_name": "кока кола 330 мл",
-            "unit": "бр.",
-            "total": 1555.0,
-            "warehouses": {
-                "Варна": 1421.0,
-                "Бургас": 134.0
-            },
-            "delivered": 1900.0,
-            "sold": 345.0,
-            "avg_in_price": 2.98,
-            "avg_out_price": 2.91,
-            "expense": 5662.0,
-            "revenue": 1003.95,
-            "last_movement": "MOVE - 2026-07-27 22:05:50"
+        "delivered": 899.0,
+        "sold": 723.0,
+        "avg_in_price": 7.0,
+        "avg_out_price": 10.0,
+        "expense": 6293.0,
+        "revenue": 7230.0,
+        "last_movement": "MOVE - 2026-07-26 17:31:23"
+    },
+    "59548022-8398-4df2-b481-b31f9b546b0a": {
+        "product_id": "59548022-8398-4df2-b481-b31f9b546b0a",
+        "product_name": "кока кола 330 мл",
+        "unit": "бр.",
+        "total": 1555.0,
+        "warehouses": {
+            "Варна": 1421.0,
+            "Бургас": 134.0
         },
-        "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642": {
-            "product_id": "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642",
-            "product_name": "ябълка",
-            "unit": "кг.",
-            "total": 1.0,
-            "warehouses": {
-                "Пловдив": 1.0
-            },
-            "delivered": 1.0,
-            "sold": 0,
-            "avg_in_price": 4.0,
-            "avg_out_price": 0.0,
-            "expense": 4.0,
-            "revenue": 0.0,
-            "last_movement": "IN - 2026-07-27 22:25:01"
+        "delivered": 1900.0,
+        "sold": 345.0,
+        "avg_in_price": 2.98,
+        "avg_out_price": 2.91,
+        "expense": 5662.0,
+        "revenue": 1003.95,
+        "last_movement": "MOVE - 2026-07-27 22:05:50"
+    },
+    "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642": {
+        "product_id": "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642",
+        "product_name": "ябълка",
+        "unit": "кг.",
+        "total": 1.0,
+        "warehouses": {
+            "Пловдив": 1.0
         },
-        "72cad965-66cc-4a2c-aca6-4f7201f1fb38": {
-            "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
-            "product_name": "sisa",
-            "unit": "кг.",
-            "total": 443.0,
-            "warehouses": {
-                "Варна": 398.0,
-                "Бургас": 45.0
-            },
-            "delivered": 899.0,
-            "sold": 456.0,
-            "avg_in_price": 3.32,
-            "avg_out_price": 5.0,
-            "expense": 2984.68,
-            "revenue": 2280.0,
-            "last_movement": "MOVE - 2026-07-27 23:08:56"
+        "delivered": 1.0,
+        "sold": 0,
+        "avg_in_price": 4.0,
+        "avg_out_price": 0.0,
+        "expense": 4.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-07-27 22:25:01"
+    },
+    "72cad965-66cc-4a2c-aca6-4f7201f1fb38": {
+        "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
+        "product_name": "sisa",
+        "unit": "кг.",
+        "total": 443.0,
+        "warehouses": {
+            "Варна": 398.0,
+            "Бургас": 45.0
         },
-        "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee": {
-            "product_id": "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee",
-            "product_name": "eoiw",
-            "unit": "кг.",
-            "total": 456.0,
-            "warehouses": {
-                "Варна": 333.0,
-                "Смолян": 100.0,
-                "Бургас": 23.0
-            },
-            "delivered": 456.0,
-            "sold": 0,
-            "avg_in_price": 4.0,
-            "avg_out_price": 0.0,
-            "expense": 1824.0,
-            "revenue": 0.0,
-            "last_movement": "MOVE - 2026-07-27 23:29:55"
+        "delivered": 899.0,
+        "sold": 456.0,
+        "avg_in_price": 3.32,
+        "avg_out_price": 5.0,
+        "expense": 2984.68,
+        "revenue": 2280.0,
+        "last_movement": "MOVE - 2026-07-27 23:08:56"
+    },
+    "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee": {
+        "product_id": "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee",
+        "product_name": "eoiw",
+        "unit": "кг.",
+        "total": 456.0,
+        "warehouses": {
+            "Варна": 333.0,
+            "Смолян": 100.0,
+            "Бургас": 23.0
         },
-        "fd328f58-7cb0-476c-ab36-5bec35e3e788": {
-            "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
-            "product_name": "бира",
-            "unit": "бр.",
-            "total": 1591.0,
-            "warehouses": {
-                "Пловдив": 100.0,
-                "Бургас": 12.0,
-                "Смолян": 1344.0,
-                "София": 12.0,
-                "Варна": 123.0
-            },
-            "delivered": 1614.0,
-            "sold": 23.0,
-            "avg_in_price": 2.47,
-            "avg_out_price": 3.03,
-            "expense": 3986.58,
-            "revenue": 69.69,
-            "last_movement": "IN - 2026-08-16 20:08:55"
-        }
+        "delivered": 456.0,
+        "sold": 0,
+        "avg_in_price": 4.0,
+        "avg_out_price": 0.0,
+        "expense": 1824.0,
+        "revenue": 0.0,
+        "last_movement": "MOVE - 2026-07-27 23:29:55"
+    },
+    "fd328f58-7cb0-476c-ab36-5bec35e3e788": {
+        "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
+        "product_name": "бира",
+        "unit": "бр.",
+        "total": 1591.0,
+        "warehouses": {
+            "Пловдив": 100.0,
+            "Бургас": 12.0,
+            "Смолян": 1344.0,
+            "София": 12.0,
+            "Варна": 123.0
+        },
+        "delivered": 1614.0,
+        "sold": 23.0,
+        "avg_in_price": 2.47,
+        "avg_out_price": 3.03,
+        "expense": 3986.58,
+        "revenue": 69.69,
+        "last_movement": "IN - 2026-08-16 20:08:55"
     },
     "summary": {
         "total_products": 13

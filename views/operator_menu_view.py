@@ -12,6 +12,7 @@ from views.location_view import LocationView
 
 
 
+
 class OperatorMenuView:
     def __init__(self, controllers):
         self.controllers = controllers

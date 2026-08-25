@@ -4,6 +4,9 @@ from views.product_menu_view import ProductMenuView
 from views.category_view import CategoryView
 
 
+
+
+
 class AnonymousMenuView:
     def __init__(self, controllers):
         self.controllers = controllers

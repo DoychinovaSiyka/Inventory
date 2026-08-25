@@ -2,6 +2,8 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
 class MovementView:
     def __init__(self, product_controller, movement_controller, user_controller,
                  location_controller, supplier_controller, inventory_controller):

@@ -2,6 +2,8 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
+
 class CategoryView:
 
     def __init__(self, controller, product_controller):

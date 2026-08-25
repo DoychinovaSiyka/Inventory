@@ -2,12 +2,15 @@ from typing import List, Optional
 from models.invoice import Invoice
 from validators.invoice_validator import InvoiceValidator
 from controllers.abstract_controller import AbstractController
+from controllers.movement_controller import MovementController
+
+
 
 
 class InvoiceController(AbstractController):
     """Управлява жизнения цикъл на фактурите."""
 
-    def __init__(self, repo, movement_controller):
+    def __init__(self, repo, movement_controller: MovementController):
         super().__init__(repo)
         self.invoices = self.load() or []
         self.movement_controller = movement_controller
