@@ -93,9 +93,8 @@ class MovementController(AbstractController):
         resolved_loc = self._location_id(location_id)
         available = self.inventory_controller.get_stock(product_id, resolved_loc)
 
-        MovementValidator.validate_out_rules(product=self.product_controller.get_by_id(product_id), quantity=float(quantity),
-                                             customer=customer, available_stock=available)
-
+        MovementValidator.validate_out_rules(product = self.product_controller.get_by_id(product_id), quantitty = float(quantity),
+                                             customer = customer, available_stock = available)
         movement = self.create_movement(product_id=product_id, user_id=user_id, movement_type="OUT", quantity=quantity,
                                         price=price, location_id=location_id, customer=customer)
 
