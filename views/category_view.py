@@ -2,13 +2,16 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+from controllers.category_controller import CategoryController
+from controllers.product_controller import ProductController
 
 
 class CategoryView:
 
-    def __init__(self, controller, product_controller):
+    def __init__(self, controller: CategoryController, product_controller: ProductController):
         self.controller = controller
         self.product_controller = product_controller
+
 
     def show_menu(self, user):
         while True:
@@ -17,6 +20,7 @@ class CategoryView:
             choice = menu.show()
             if menu.execute(choice, user) == "break":
                 break
+
 
     def _build_menu(self, is_admin):
         items = [MenuItem("1", "Списък с категории", self.show_all),
@@ -30,8 +34,6 @@ class CategoryView:
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
-
-
 
 
     def show_all(self, _):
@@ -56,8 +58,6 @@ class CategoryView:
                 print(f"{indent}- {cat.name} ({short_id})")
 
 
-
-
     def show_stats(self, _):
         print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
 
@@ -69,7 +69,6 @@ class CategoryView:
         columns = ["ID", "Име на категория", "Брой продукти"]
         rows = []
 
-        # Показваме само родителските категории и филтрираме само тези без parent_id
         for c in stats["categories"]:
             cat_obj = self.controller.get_by_id(c['id'])
             if cat_obj and cat_obj.parent_id is None:
@@ -77,8 +76,6 @@ class CategoryView:
 
         table_output = format_table(columns, rows)
         print(table_output)
-
-
 
 
     def add_category(self, user):
@@ -111,14 +108,13 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id}, user_id=user.user_id)
+            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id},
+                                          user_id=user.user_id)
             print(f"\nКатегорията '{new_cat.name}' е добавена успешно.")
         except ValueError as e:
             print(f"Грешка при валидация: {e}")
         except Exception as e:
             print(f"Грешка при запис: {e}")
-
-
 
 
     def edit_category(self, user):
@@ -168,8 +164,6 @@ class CategoryView:
                 new_parent_id = category.parent_id
 
 
-
-
     def select_category(self):
         categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
         if not categories:
@@ -194,8 +188,6 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
-
-
 
 
     def delete_category(self, user):

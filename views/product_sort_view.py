@@ -1,9 +1,14 @@
+from controllers.product_controller import ProductController
 from views.menu import Menu, MenuItem
 
 
 
+
+
+
+
 class ProductSortView:
-    def __init__(self, product_controller, parent_view):
+    def __init__(self, product_controller: ProductController, parent_view):
         self.product_controller = product_controller
         self.parent_view = parent_view
 

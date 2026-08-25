@@ -12,6 +12,7 @@ from views.graph_view import GraphView
 
 
 
+
 class MainMenuView:
     def __init__(self, controllers):
         self.controllers = controllers

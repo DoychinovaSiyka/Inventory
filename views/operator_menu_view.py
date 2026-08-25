@@ -27,6 +27,7 @@ class OperatorMenuView:
         self.inventory_controller = controllers["inventory"]
 
 
+
     def _build_menu(self):
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти (защитено)", self.open_products),
@@ -37,6 +38,8 @@ class OperatorMenuView:
             MenuItem("6", "Информация за системата", self.open_system_info),
             MenuItem("7", "Преглед на складови локации", self.open_locations_readonly),
             MenuItem("0", "Изход", lambda u: "break")])
+
+
 
 
     def show_menu(self, user):

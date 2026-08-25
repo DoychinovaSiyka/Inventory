@@ -1,18 +1,23 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
+from controllers.invoice_controller import InvoiceController
+
+
 
 
 
 class InvoiceView:
-    def __init__(self, invoice_controller):
+    def __init__(self, invoice_controller: InvoiceController):
         self.invoice_controller = invoice_controller
+
 
     def _input(self, prompt):
         text = input(prompt).strip()
         if text == "":
             return None
         return text
+
 
     def _show_invoices(self, invoices):
         if not invoices:
@@ -32,6 +37,7 @@ class InvoiceView:
         headers = ["ID", "Продукт", "Клиент", "Количество", "Общо", "Статус", "Дата"]
         print("\n" + format_table(headers, rows))
 
+
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
             MenuItem("1", "Всички фактури", self.show_all),
@@ -46,9 +52,11 @@ class InvoiceView:
             if menu.execute(choice, user) == "break":
                 break
 
+
     def show_all(self, _):
         invoices = self.invoice_controller.get_all(include_cancelled=True)
         self._show_invoices(invoices)
+
 
     def search_by_id(self, _):
         invoice_id = self._input("\nВъведете ID: ")
@@ -57,6 +65,7 @@ class InvoiceView:
 
         results = self.invoice_controller.search(invoice_id)
         self._show_invoices(results)
+
 
     def cancel_by_id(self, user):
         invoice_id = self._input("\nВъведете ID: ")
@@ -81,7 +90,6 @@ class InvoiceView:
                 ["Дата/Час", str(invoice.date)]]
 
         print("\n" + format_table(["Детайл", "Стойност"], rows))
-
 
         short_id = invoice.invoice_id[:8]
 

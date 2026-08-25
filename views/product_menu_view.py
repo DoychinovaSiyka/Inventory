@@ -3,15 +3,19 @@ from views.password_utils import format_table
 from views.product_sort_view import ProductSortView
 
 
+from controllers.product_controller import ProductController
+from controllers.category_controller import CategoryController
 
 
 class ProductMenuView:
-    def __init__(self, product_controller, category_controller):
+    def __init__(self, product_controller: ProductController, category_controller: CategoryController):
         self.product_controller = product_controller
         self.category_controller = category_controller
 
         self.allowed_units = ["кг.", "бр.", "л.", "пакет"]
-        self.sort_view = ProductSortView(product_controller, self)
+
+
+        self.sort_view: ProductSortView = ProductSortView(product_controller, self)
 
 
 

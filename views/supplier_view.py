@@ -1,10 +1,14 @@
+from controllers.supplier_controller import SupplierController
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 from validators.supplier_validator import SupplierValidator
 
 
+
+
+
 class SupplierView:
-    def __init__(self, controller):
+    def __init__(self, controller: SupplierController):
         self.controller = controller
 
     def show_menu(self, user):

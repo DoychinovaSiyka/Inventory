@@ -3,8 +3,13 @@ from views.password_utils import format_table
 
 
 
+from controllers.location_controller import LocationController
+
+
+
+
 class LocationView:
-    def __init__(self, location_controller):
+    def __init__(self, location_controller: LocationController):
         self.controller = location_controller
 
 
@@ -33,7 +38,6 @@ class LocationView:
         return Menu("Управление на локации", items)
 
 
-
     def show_all(self, _):
         locations = self.controller.get_all()
         if not locations:
@@ -45,7 +49,6 @@ class LocationView:
         rows = [[loc.code if loc.code else "-", loc.name, loc.zone, loc.capacity, loc.location_id[:8]]
                 for loc in locations]
         print(format_table(columns, rows))
-
 
 
     def search_location(self, _):
@@ -65,7 +68,6 @@ class LocationView:
         rows = [[loc.get("code", "-"), loc["name"], loc["zone"], loc["capacity"], loc["id"]]
                 for loc in results]
         print(format_table(columns, rows))
-
 
 
     def add_location(self, _):
@@ -91,10 +93,8 @@ class LocationView:
             print(f"\nЛокацията е добавена успешно!")
             print(f"Код: {new_loc.code} | Име: {new_loc.name}")
 
-
         except Exception as e:
             print(f"Грешка при добавяне: {e}")
-
 
 
     def edit_location(self, _):
@@ -127,7 +127,6 @@ class LocationView:
 
         except Exception as e:
             print(f"Грешка при обновяване: {e}")
-
 
 
     def delete_location(self, _):

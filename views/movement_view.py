@@ -2,11 +2,21 @@ from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+from controllers.product_controller import ProductController
+from controllers.movement_controller import MovementController
+from controllers.user_controller import UserController
+from controllers.location_controller import LocationController
+from controllers.supplier_controller import SupplierController
+from controllers.inventory_controller import InventoryController
+
+
+
+
 
 
 class MovementView:
-    def __init__(self, product_controller, movement_controller, user_controller,
-                 location_controller, supplier_controller, inventory_controller):
+    def __init__(self, product_controller, movement_controller, user_controller, location_controller,
+                 supplier_controller, inventory_controller):
 
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -14,7 +24,6 @@ class MovementView:
         self.location_controller = location_controller
         self.supplier_controller = supplier_controller
         self.inventory_controller = inventory_controller
-
 
 
     def _float(self, prompt):
@@ -32,7 +41,6 @@ class MovementView:
                 return num
             except ValueError:
                 print("Невалидно число. Опитайте пак.")
-
 
 
     def _select_item(self, items, label):
@@ -74,7 +82,6 @@ class MovementView:
                 print("Невалиден избор. Опитайте пак.")
 
 
-
     def show_menu(self, user):
         menu = Menu("Логистични операции", [
             MenuItem("1", "Доставка (вход)", self.process_delivery),
@@ -88,7 +95,6 @@ class MovementView:
                 break
             if menu.execute(choice, user) == "break":
                 break
-
 
 
     def process_delivery(self, user):
@@ -116,7 +122,6 @@ class MovementView:
         print(f"\nДобавени {qty:.2f} {product.unit} от {product.name}.")
 
 
-
     def _get_locations_with_stock(self, product):
         valid = []
         for loc in self.location_controller.get_all():
@@ -124,7 +129,6 @@ class MovementView:
             if stock > 0:
                 valid.append((loc, stock))
         return valid
-
 
 
     def _select_location_for_sale(self, product):
@@ -144,10 +148,9 @@ class MovementView:
         idx = int(choice) - 1
         if 0 <= idx < len(valid):
             return valid[idx][0]
+
         print("Невалиден избор.")
         return None
-
-
 
 
     def process_sale(self, user):
@@ -171,7 +174,7 @@ class MovementView:
             return
 
         raw_price = input(f"Цена (Enter за {product.price} лв.): ").strip()
-        sale_price = product.price if raw_price == "" else raw_price  
+        sale_price = product.price if raw_price == "" else raw_price
 
         try:
             self.movement_controller.add_out(str(product.product_id), qty, customer, str(location.location_id),
@@ -179,7 +182,6 @@ class MovementView:
             print(f"\nПродадени {qty:.2f} {product.unit} на {customer}.")
         except Exception as e:
             print(f"Проблем при продажбата: {e}")
-
 
 
     def process_transfer(self, user):
@@ -201,6 +203,7 @@ class MovementView:
             from_loc = self._select_item(valid_sources, "склад ИЗТОЧНИК (с наличност)")
             if from_loc:
                 break
+
             print("Изборът на източник е задължителен за трансфер.")
 
         from_loc_id = str(from_loc.location_id)
@@ -216,6 +219,7 @@ class MovementView:
             to_loc = self._select_item(other_locations, "склад ПОЛУЧАТЕЛ")
             if to_loc:
                 break
+
             print(f"Не можете да преместите стока обратно в същия склад ({from_loc.name}).")
 
         while True:

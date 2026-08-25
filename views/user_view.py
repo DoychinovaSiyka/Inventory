@@ -1,9 +1,11 @@
+from controllers.user_controller import UserController
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
 
+
 class UserView:
-    def __init__(self, controller):
+    def __init__(self, controller: UserController):
         self.controller = controller
 
 

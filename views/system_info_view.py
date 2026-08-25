@@ -1,5 +1,6 @@
 class SystemInfoView:
 
+
     @staticmethod
     def show_menu():
         print("\n" + "="*50)
