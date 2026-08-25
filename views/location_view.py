@@ -1,8 +1,6 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
 
-
-
 from controllers.location_controller import LocationController
 
 
