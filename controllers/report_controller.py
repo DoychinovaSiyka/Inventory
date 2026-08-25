@@ -13,11 +13,11 @@ from controllers.supplier_controller import SupplierController
 
 
 
+
 class ReportController:
-    def __init__(self, product_controller: ProductController,
-                 movement_controller: MovementController, invoice_controller: InvoiceController,
-                 location_controller: LocationController, inventory_controller: InventoryController,
-                 supplier_controller: SupplierController):
+    def __init__(self, product_controller: ProductController, movement_controller: MovementController,
+                 invoice_controller: InvoiceController, location_controller: LocationController,
+                 inventory_controller: InventoryController, supplier_controller: SupplierController):
 
         self.product_controller = product_controller
         self.movement_controller = movement_controller
@@ -28,10 +28,12 @@ class ReportController:
 
 
 
+
     def _match_string(self, target: str, keyword: str) -> bool:
         if not keyword:
             return True
         return keyword.lower().strip() in (target or "").lower()
+
 
 
     def _filter_movements_by_type(self, movements, m_type: str):
@@ -39,14 +41,16 @@ class ReportController:
 
 
 
+
     def report_inventory_full(self):
         raw_inventory = self.inventory_controller.build_inventory()
         report_data = []
 
-        # синхронизирано с новия инвентар
-        for pid, item in raw_inventory.items():
-            if pid == "summary":
+        for item in raw_inventory:
+            if "summary" in item:
                 continue
+
+            pid = item["product_id"]
 
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
@@ -66,6 +70,7 @@ class ReportController:
                            "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
                            "expense": round(delivered * avg_in, 2), "revenue": round(sold * avg_out, 2)}
 
+
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
                 report_item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
@@ -75,6 +80,8 @@ class ReportController:
             report_data.append(report_item)
 
         return Report(report_type="Inventory Full", data=report_data)
+
+
 
 
 
@@ -111,6 +118,7 @@ class ReportController:
 
 
 
+
     def report_deliveries_all(self, keyword=""):
         moves = self._filter_movements_by_type(self.movement_controller.movements, "IN")
         data = []
@@ -126,8 +134,8 @@ class ReportController:
                 data.append({"date": str(m.date)[:10], "movement_id": m.movement_id[:8],
                              "product": m.product_name, "quantity": m.quantity, "unit": m.unit, "price": m.price,
                              "supplier": supplier_name, "to": warehouse_name})
-
         return Report(report_type="Deliveries", data=data)
+
 
 
 
@@ -141,6 +149,7 @@ class ReportController:
                          "total_price": i.total_price, "status": "АКТИВНА"})
 
         return Report(report_type="Sales", data=data)
+
 
 
 
@@ -159,7 +168,10 @@ class ReportController:
 
 
 
-    def filter_movements(self, type=None, product=None, supplier=None, client=None, warehouse=None, date_from=None, date_to=None):
+
+
+    def filter_movements(self, type=None, product=None, supplier=None, client=None,
+                         warehouse=None, date_from=None, date_to=None):
 
         movements = self.movement_controller.movements
         filtered = []
@@ -232,7 +244,6 @@ class ReportController:
                 to_name = loc_to.name if loc_to else "Склад"
 
             filtered.append({"date": m_date, "movement_id": m.movement_id[:8], "type": m.movement_type.name,
-                             "product_name": m.product_name, "quantity": m.quantity,
-                             "unit": m.unit, "from": from_name, "to": to_name})
+                             "product_name": m.product_name, "quantity": m.quantity, "unit": m.unit, "from": from_name, "to": to_name})
 
         return Report(report_type="Filtered Movements", data=filtered)

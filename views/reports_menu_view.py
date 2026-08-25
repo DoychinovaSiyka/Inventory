@@ -15,12 +15,15 @@ class ReportsView:
         self.inventory_controller: InventoryController = controller.inventory_controller
 
 
+
     def _display_report(self, title, headers, rows):
         if not rows:
             print("\nНяма данни за показване.\n")
             return
         print(f"\n{title}")
         print(format_table(headers, rows))
+
+
 
 
     def _run_menu(self, menu_obj, user):
@@ -30,6 +33,8 @@ class ReportsView:
                 break
             if menu_obj.execute(choice, user) == "break":
                 break
+
+
 
 
     def show_menu(self, user):
@@ -43,6 +48,9 @@ class ReportsView:
             MenuItem("7", "Излишества (над 130 бр.)", self.report_overstock_items),
             MenuItem("0", "Назад", lambda u: "break")])
         self._run_menu(menu, user)
+
+
+
 
 
     def format_card(self, item):
@@ -79,6 +87,8 @@ class ReportsView:
             return f"\nГрешка при визуализация на продукт: {str(e)}\n"
 
 
+
+
     def inventory_full_report(self, _):
         result = self.controller.report_inventory_full()
         print("\n" + "=" * 20)
@@ -87,7 +97,18 @@ class ReportsView:
         print("=" * 20)
 
         for item in result.data:
+            if "summary" in item:
+                continue
             print(self.format_card(item))
+
+
+        for item in result.data:
+            if "summary" in item:
+                summary = item["summary"]
+                print(f"\nОбщо продукти: {summary.get('total_products', 0)}")
+                break
+
+
 
 
     def report_movements(self, _):
@@ -103,6 +124,9 @@ class ReportsView:
         self._display_report("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
 
 
+
+
+
     def operations_by_type_menu(self, user):
         menu = Menu("Операции по тип", [
             MenuItem("1", "Всички доставки (IN)", self.report_deliveries_all),
@@ -112,9 +136,13 @@ class ReportsView:
         self._run_menu(menu, user)
 
 
+
+
     def report_moves_all(self, _):
         result = self.controller.filter_movements(type="MOVE")
         self._filtered_movements(result)
+
+
 
 
     def report_deliveries_all(self, _):
@@ -128,6 +156,8 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ВСИЧКИ ДОСТАВКИ (IN)", headers, rows)
+
+
 
 
     def report_sales_all(self, _):
@@ -147,6 +177,8 @@ class ReportsView:
         self._display_report("ВСИЧКИ ПРОДАЖБИ (OUT)", headers, rows)
 
 
+
+
     def sort_menu(self, user):
         menu = Menu("Сортиране по количество", [
             MenuItem("1", "Merge Sort", self.sort_qty_merge),
@@ -155,18 +187,25 @@ class ReportsView:
         self._run_menu(menu, user)
 
 
+
     def sort_qty_merge(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="merge", reverse=True)
         self._sorted(result)
+
+
 
     def sort_qty_quick(self, _):
         result = self.controller.sort_inventory_by_quantity(algorithm="quick", reverse=True)
         self._sorted(result)
 
 
+
+
     def _sorted(self, result):
         groups = {}
         for item in result.data:
+            if "summary" in item:
+                continue
             unit = item.get("unit", "")
             groups.setdefault(unit, []).append(item)
 
@@ -176,6 +215,8 @@ class ReportsView:
             rows = [[item.get("product_name", "-"), f"{item.get('total', 0)} {item.get('unit', '')}"] for item in items]
             headers = ["Продукт", "Наличност"]
             print(format_table(headers, rows))
+
+
 
 
     def movements_filter_menu(self, user):
@@ -188,10 +229,14 @@ class ReportsView:
         self._run_menu(menu, user)
 
 
+
+
     def filter_movements_by_product(self, _):
         product = input("Въведете продукт: ").strip()
         result = self.controller.filter_movements(product=product if product else None)
         self._filtered_movements(result)
+
+
 
 
     def filter_movements_by_supplier(self, _):
@@ -209,6 +254,8 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
         self._display_report("ДОСТАВКИ ПО ДОСТАВЧИК", headers, rows)
+
+
 
 
     def filter_movements_by_client(self, _):
@@ -232,12 +279,18 @@ class ReportsView:
         self._display_report("ПРОДАЖБИ ПО КЛИЕНТ", headers, rows)
 
 
+
+
+
+
     def filter_movements_by_warehouse(self, _):
         wh = input("Въведете склад: ").strip()
         result = self.controller.report_inventory_full()
 
         rows = []
         for item in result.data:
+            if "summary" in item:
+                continue
             warehouses = item.get("warehouses", {})
             if not wh:
                 for wname, qty in warehouses.items():
@@ -251,6 +304,8 @@ class ReportsView:
         self._display_report("НАЛИЧНОСТИ ПО СКЛАДОВЕ", headers, rows)
 
 
+
+
     def _filtered_movements(self, result):
         rows = []
         for m in result.data:
@@ -260,6 +315,8 @@ class ReportsView:
 
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display_report("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)
+
+
 
 
     def report_critical_items(self, _):
@@ -273,6 +330,9 @@ class ReportsView:
 
         headers = ["Продукт", "Общо количество", "По складове"]
         self._display_report("КРИТИЧНО ИЗЧЕРПАНИ АРТИКУЛИ", headers, rows)
+
+
+
 
 
     def report_overstock_items(self, _):
