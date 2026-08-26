@@ -3,10 +3,10 @@ from graph.warehouse import Warehouse
 from graph.warehouse_graph import WarehouseGraph
 from models.user import User
 
-
 from controllers.inventory_controller import InventoryController
 from controllers.location_controller import LocationController
 from controllers.product_controller import ProductController
+
 
 
 

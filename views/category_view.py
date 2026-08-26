@@ -1,7 +1,5 @@
 from views.menu import Menu, MenuItem
 from views.password_utils import format_table
-
-
 from controllers.category_controller import CategoryController
 from controllers.product_controller import ProductController
 

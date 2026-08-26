@@ -63,6 +63,8 @@ class OperatorMenuView:
             if result == "break":
                 break
 
+
+
     @require_password("parola123")
     def open_products(self, user):
         view = ProductMenuView(self.product_controller, self.category_controller)

@@ -36,6 +36,8 @@ class LocationView:
         return Menu("Управление на локации", items)
 
 
+
+
     def show_all(self, _):
         locations = self.controller.get_all()
         if not locations:

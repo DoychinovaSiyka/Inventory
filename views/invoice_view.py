@@ -40,6 +40,7 @@ class InvoiceView:
 
 
 
+
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
             MenuItem("1", "Всички фактури", self.show_all),

@@ -3,6 +3,7 @@ from functools import wraps
 
 
 
+
 def format_table(columns, rows):
     if not rows:
         return "\nНяма налични данни.\n"

@@ -11,6 +11,9 @@ from controllers.inventory_controller import InventoryController
 
 
 
+
+
+
 class MovementView:
     def __init__(self, product_controller, movement_controller, user_controller,
                  location_controller, supplier_controller, inventory_controller):
@@ -76,13 +79,16 @@ class MovementView:
     def process_delivery(self, user):
         print("\nНова доставка")
         product = self._choose(self.product_controller.get_all(), "продукти")
-        if not product: return
+        if not product:
+            return
 
         supplier = self._choose(self.supplier_controller.get_all(), "доставчици")
-        if not supplier: return
+        if not supplier:
+            return
 
         location = self._choose(self.location_controller.get_all(), "складове")
-        if not location: return
+        if not location:
+            return
 
         qty = self._float("Количество: ")
         price = input(f"Цена (Enter за {product.price}): ").strip() or product.price
@@ -104,7 +110,8 @@ class MovementView:
         print("\nНова продажба")
 
         product = self._choose(self.product_controller.get_all(), "продукти")
-        if not product: return
+        if not product:
+            return
 
         stock_locations = []
         for loc in self.location_controller.get_all():
@@ -112,7 +119,8 @@ class MovementView:
                 stock_locations.append(loc)
 
         location = self._choose(stock_locations, "складове с наличност")
-        if not location: return
+        if not location:
+            return
 
         max_qty = self.inventory_controller.get_stock(str(product.product_id), str(location.location_id))
         qty = self._float(f"Количество (макс {max_qty}): ")
@@ -140,7 +148,8 @@ class MovementView:
         print("\nВътрешно преместване")
 
         product = self._choose(self.product_controller.get_all(), "продукти")
-        if not product: return
+        if not product:
+            return
 
         sources = []
         for loc in self.location_controller.get_all():
@@ -148,7 +157,8 @@ class MovementView:
                 sources.append(loc)
 
         from_loc = self._choose(sources, "складове с наличност")
-        if not from_loc: return
+        if not from_loc:
+            return
 
         available = self.inventory_controller.get_stock(str(product.product_id), str(from_loc.location_id))
         print(f"Налично: {available}")
@@ -159,7 +169,8 @@ class MovementView:
                 destinations.append(loc)
 
         to_loc = self._choose(destinations, "други складове")
-        if not to_loc: return
+        if not to_loc:
+            return
 
         qty = self._float(f"Количество (макс {available}): ")
         if qty > available:

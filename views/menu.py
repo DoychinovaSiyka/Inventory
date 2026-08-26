@@ -6,6 +6,7 @@ class MenuItem:
 
 
 
+
 class Menu:
     def __init__(self, title, items):
         self.title = title

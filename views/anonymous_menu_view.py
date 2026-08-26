@@ -4,6 +4,9 @@ from views.product_menu_view import ProductMenuView
 from views.category_view import CategoryView
 
 
+
+
+
 class AnonymousMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
@@ -21,6 +24,8 @@ class AnonymousMenuView:
             MenuItem("2", "Разглеждане на категории", self.open_categories),
             MenuItem("3", "Информация за системата", self.show_system_info),
             MenuItem("0", "Назад", lambda u: "break")])
+
+
 
 
     def show_menu(self, user=None):
