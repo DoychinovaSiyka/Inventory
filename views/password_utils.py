@@ -73,6 +73,7 @@ def require_password(password_required):
 
 
 
+
 # Показване на продукти - само за админ
 @require_role("admin")
 @require_password("parola123")

@@ -5,6 +5,7 @@ class MenuItem:
         self.action = action
 
 
+
 class Menu:
     def __init__(self, title, items):
         self.title = title

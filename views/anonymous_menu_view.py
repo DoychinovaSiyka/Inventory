@@ -4,15 +4,14 @@ from views.product_menu_view import ProductMenuView
 from views.category_view import CategoryView
 
 
-
-
-
 class AnonymousMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
+
         self.product_view = ProductMenuView(controllers["product"], controllers["category"])
         self.category_view = CategoryView(controllers["category"], controllers["product"])
         self.system_info_view = SystemInfoView()
+
 
 
 
@@ -28,19 +27,25 @@ class AnonymousMenuView:
         while True:
             menu = self._build_menu()
             choice = menu.show()
+
             if choice == "0" or choice is None:
-                break
+                return
+
             result = menu.execute(choice, user)
             if result == "break":
-                break
-
-    # Гостът вижда списъка, без меню
-    def open_products(self, user):
-        self.product_view.show_all(user)
+                return
 
 
-    def open_categories(self, user):
-        self.category_view.show_menu(user)
+
+    def open_products(self, _):
+        self.product_view.show_all(None)
+
+
+
+    def open_categories(self, _):
+        self.category_view.show_menu(None)
+
+
 
     def show_system_info(self, _):
         self.system_info_view.show_menu()

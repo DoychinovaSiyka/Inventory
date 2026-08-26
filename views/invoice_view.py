@@ -38,6 +38,8 @@ class InvoiceView:
         print("\n" + format_table(headers, rows))
 
 
+
+
     def show_menu(self, user):
         menu = Menu("Меню Фактури", [
             MenuItem("1", "Всички фактури", self.show_all),
@@ -51,6 +53,7 @@ class InvoiceView:
                 break
             if menu.execute(choice, user) == "break":
                 break
+
 
 
     def show_all(self, _):

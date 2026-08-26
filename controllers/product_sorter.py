@@ -3,7 +3,7 @@ from controllers.product_controller import ProductController
 
 
 
-class ProductSortController:
+class ProductSorter:
     def __init__(self, product_controller: ProductController):
         self.product_controller = product_controller
 

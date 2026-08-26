@@ -335,6 +335,7 @@ class ReportsView:
 
 
 
+
     def report_overstock_items(self, _):
         items = self.inventory_controller.get_overstocked_items(threshold=130)
         rows = []

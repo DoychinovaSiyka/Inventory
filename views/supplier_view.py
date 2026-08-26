@@ -35,6 +35,8 @@ class SupplierView:
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Меню Доставчици", items)
 
+
+
     def show_suppliers(self, _):
         suppliers = self.controller.get_all()
         if not suppliers:
@@ -45,6 +47,9 @@ class SupplierView:
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in suppliers]
         print(format_table(columns, rows))
+
+
+
 
     def search_supplier(self, _):
         print("\nТърсене на доставчик")
@@ -62,6 +67,9 @@ class SupplierView:
         columns = ["ID", "Име", "Контакт", "Адрес"]
         rows = [[s.supplier_id[:8], s.name, s.contact, s.address] for s in results]
         print(format_table(columns, rows))
+
+
+
 
     def add_supplier(self, _):
         print("\nНов доставчик ")

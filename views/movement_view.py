@@ -220,7 +220,6 @@ class MovementView:
             if to_loc:
                 break
 
-            print(f"Не можете да преместите стока обратно в същия склад ({from_loc.name}).")
 
         while True:
             qty = self._float(f"Количество за местене (макс {available} {product.unit}): ")

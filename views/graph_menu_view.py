@@ -80,15 +80,27 @@ class GraphView:
         if not product_name:
             return
 
-        try:
-            min_threshold_input = input("Минимално количество: ").strip()
-            max_threshold_input = input("Максимално количество: ").strip()
+        while True:
+            min_raw = input("Минимално количество: ").strip()
+            max_raw = input("Максимално количество: ").strip()
 
-            min_threshold = float(min_threshold_input) if min_threshold_input else 0.0
-            max_threshold = float(max_threshold_input) if max_threshold_input else float('inf')
-        except ValueError:
-            print("Грешка: праговете трябва да са числа.")
-            return
+            try:
+                min_threshold = float(min_raw) if min_raw else 0.0
+                max_threshold = float(max_raw) if max_raw else float('inf')
+            except ValueError:
+                print("Грешка: въведете валидни числа.")
+                continue
+
+            if min_threshold < 0:
+                print("Минималното количество не може да е отрицателно.")
+                continue
+
+            if max_threshold < min_threshold:
+                print("Максимумът трябва да е >= минимумът.")
+                continue
+
+            break
+
 
         my_location = input("Вашето ID (напр. W1): ").strip().upper()
         if not my_location or my_location not in self.graph.nodes:

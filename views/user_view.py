@@ -152,6 +152,7 @@ class UserView:
 
 
 
+
     def delete_user(self, current_user):
         print("\nИЗТРИВАНЕ НА ПОТРЕБИТЕЛ")
 

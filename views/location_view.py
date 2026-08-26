@@ -83,9 +83,14 @@ class LocationView:
             if not zone:
                 return
 
-            capacity = input("Капацитет (число): ").strip()
-            if not capacity:
-                return
+            while True:
+                capacity_raw = input("Капацитет (число): ").strip()
+                if not capacity_raw:
+                    return
+                if capacity_raw.isdigit():
+                    capacity = int(capacity_raw)
+                    break
+                print("Капацитетът трябва да е положително число.")
 
             new_loc = self.controller.add(name=name, zone=zone, capacity=capacity, code=code)
             print(f"\nЛокацията е добавена успешно!")
@@ -93,6 +98,8 @@ class LocationView:
 
         except Exception as e:
             print(f"Грешка при добавяне: {e}")
+
+
 
 
     def edit_location(self, _):

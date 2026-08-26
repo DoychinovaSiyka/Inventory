@@ -40,6 +40,7 @@ class MainMenuView:
                 break
 
 
+
     def open_products(self, user):
         ProductView(self.controllers["product"], self.controllers["category"],
                     self.controllers["location"], self.controllers["activity_log"]).show_menu(user)

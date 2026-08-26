@@ -139,6 +139,7 @@ class InventoryApplication:
 
 
 
+
 if __name__ == "__main__":
     try:
         app = InventoryApplication()

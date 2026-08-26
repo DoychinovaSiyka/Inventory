@@ -12,14 +12,9 @@ from views.location_view import LocationView
 
 
 
-
-
-
 class AdminMenuView:
     def __init__(self, controllers):
         self.controllers = controllers
-        self.inventory_controller = controllers["inventory"]
-        self.movement_controller = controllers["movement"]
 
         self.product_view = ProductMenuView(controllers["product"], controllers["category"])
         self.category_view = CategoryView(controllers["category"], controllers["product"])
@@ -39,18 +34,19 @@ class AdminMenuView:
 
 
 
+
     def _build_menu(self):
         return Menu("Администраторско меню", [
-            MenuItem("1", "Управление на продукти", lambda u: self.product_view.show_menu(u)),
-            MenuItem("2", "Управление на категории", lambda u: self.category_view.show_menu(u)),
-            MenuItem("3", "Доставки, продажби и премествание", lambda u: self.movement_view.show_menu(u)),
-            MenuItem("4", "Управление на потребители", lambda u: self.user_view.show_menu(u)),
-            MenuItem("5", "Отчети", lambda u: self.reports_view.show_menu(u)),
-            MenuItem("6", "Фактури", lambda u: self.invoice_view.show_menu(u)),
+            MenuItem("1", "Управление на продукти", self.product_view.show_menu),
+            MenuItem("2", "Управление на категории", self.category_view.show_menu),
+            MenuItem("3", "Доставки, продажби и преместване", self.movement_view.show_menu),
+            MenuItem("4", "Управление на потребители", self.user_view.show_menu),
+            MenuItem("5", "Отчети", self.reports_view.show_menu),
+            MenuItem("6", "Фактури", self.invoice_view.show_menu),
             MenuItem("7", "Информация за системата", lambda u: self.system_info_view.show_menu()),
-            MenuItem("8", "Управление на доставчици", lambda u: self.supplier_view.show_menu(u)),
-            MenuItem("9", "Управление на локации", lambda u: self.location_view.show_menu(u)),
-            MenuItem("10", "Логистичен модул (Dijkstra)", lambda u: self.graph_view.show_menu(u)),
+            MenuItem("8", "Управление на доставчици", self.supplier_view.show_menu),
+            MenuItem("9", "Управление на локации", self.location_view.show_menu),
+            MenuItem("10", "Логистичен модул (Dijkstra)", self.open_graph),
             MenuItem("0", "Назад", lambda u: "break")])
 
 
@@ -61,19 +57,21 @@ class AdminMenuView:
             return
 
         while True:
-            current_menu = self._build_menu()
-            choice = current_menu.show()
-            if choice == "0" or choice is None:
-                break
+            menu = self._build_menu()
+            choice = menu.show()
 
-            result = current_menu.execute(choice, user)
+            if choice == "0" or choice is None:
+                return
+
+            result = menu.execute(choice, user)
             if result == "break":
-                break
+                return
 
 
 
     def open_graph(self, user):
         if self.graph_view:
-            self.graph_view.show_menu()
+            self.graph_view.show_menu(user)
         else:
             print("\nЛогистичният модул не е наличен.")
+

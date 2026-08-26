@@ -28,6 +28,7 @@ class OperatorMenuView:
 
 
 
+
     def _build_menu(self):
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти (защитено)", self.open_products),

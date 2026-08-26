@@ -1,6 +1,5 @@
 class SystemInfoView:
 
-
     @staticmethod
     def show_menu():
         print("\n" + "="*50)
@@ -40,6 +39,7 @@ class SystemInfoView:
         print("Бъдещо развитие:")
         print("  Интеграция на графови алгоритми (Dijkstra) за оптимизация")
         print("  на вътрешната логистика и разширяване с външни ERP модули.\n")
+
 
         print("="*50)
         print("         Край на системната информация")
