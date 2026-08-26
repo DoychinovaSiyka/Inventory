@@ -1,8 +1,8 @@
 from typing import List, Optional, Dict
 from models.category import Category
 from validators.category_validator import CategoryValidator
-from filters.category_tree import get_all_children_ids
-from filters.category_analytics import get_category_stats
+from filters.category_functions import get_all_children_ids
+from filters.category_functions import get_category_stats
 from controllers.abstract_controller import AbstractController
 
 
@@ -129,10 +129,8 @@ class CategoryController(AbstractController):
 
     def get_stats(self, product_controller) -> dict:
         products = product_controller.get_all() if product_controller else []
-        return {
-            "total_categories": len(self.categories),
-            "categories": get_category_stats(self.categories, products)
-        }
+        return {"total_categories": len(self.categories),
+                "categories": get_category_stats(self.categories, products)}
 
 
 

@@ -210,25 +210,42 @@
         "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
         "product_name": "бира",
         "unit": "бр.",
-        "total": 1591.0,
+        "total": 1625.0,
         "warehouses": {
             "Пловдив": 100.0,
             "Бургас": 12.0,
-            "Смолян": 1344.0,
+            "Смолян": 1378.0,
             "София": 12.0,
             "Варна": 123.0
         },
-        "delivered": 1614.0,
+        "delivered": 1648.0,
         "sold": 23.0,
-        "avg_in_price": 2.47,
+        "avg_in_price": 2.72,
         "avg_out_price": 3.03,
-        "expense": 3986.58,
+        "expense": 4482.56,
         "revenue": 69.69,
-        "last_movement": "IN - 2026-08-16 20:08:55"
+        "last_movement": "IN - 2026-08-26 17:52:48"
+    },
+    {
+        "product_id": "df33f6af-4fb2-4bd2-99d1-8828f6763ee9",
+        "product_name": "Минерална вода Девин",
+        "unit": "бр.",
+        "total": 11.0,
+        "warehouses": {
+            "Варна": 8.0,
+            "Смолян": 3.0
+        },
+        "delivered": 12.0,
+        "sold": 1.0,
+        "avg_in_price": 3.0,
+        "avg_out_price": 4.0,
+        "expense": 36.0,
+        "revenue": 4.0,
+        "last_movement": "MOVE - 2026-08-26 17:53:17"
     },
     {
         "summary": {
-            "total_products": 13
+            "total_products": 14
         }
     }
 ]

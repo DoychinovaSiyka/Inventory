@@ -24,21 +24,17 @@ class MovementValidator:
 
     @staticmethod
     def parse_quantity(quantity):
-        if quantity is None or str(quantity).strip() == "":
-            raise ValueError("Количеството е задължително.")
-
-        raw = str(quantity).lower().strip().replace(",", ".")
-        tokens = ["бр.", "бр", "кг.", "кг", "kg", "л.", "л", "l", " "]
-        for t in tokens:
-            raw = raw.replace(t, "")
+        clean_qty = str(quantity).replace(",", ".").strip()
 
         try:
-            q = float(raw)
-            if q <= 0:
-                raise ValueError("Количеството трябва да е по-голямо от 0.")
-            return round(q, 2)
-        except Exception:
+            q = float(clean_qty)
+        except (ValueError, TypeError):
             raise ValueError("Невалидно количество. Въведете число.")
+
+        if q <= 0:
+            raise ValueError("Количеството трябва да е по-голямо от 0.")
+
+        return round(q, 2)
 
 
 
@@ -49,7 +45,8 @@ class MovementValidator:
             raise ValueError("При продажба трябва да посочите клиент.")
 
         if available_stock < quantity:
-            raise ValueError(f"Недостатъчна наличност! Налично: {available_stock} {product.unit}.")
+            unit = getattr(product, 'unit', 'бр.') if product else 'бр.'
+            raise ValueError(f"Недостатъчна наличност! Налично: {available_stock} {unit}.")
 
         return True
 
@@ -62,9 +59,10 @@ class MovementValidator:
             raise ValueError("Трансферът изисква два склада.")
 
         if str(from_location_id) == str(to_location_id):
-            raise ValueError("Складовете трябва да са различни.")
+            raise ValueError("Изходният и целевият склад трябва да са различни.")
 
         if available_stock < quantity:
-            raise ValueError(f"Недостатъчна наличност за преместване! Налично: {available_stock} {product.unit}.")
+            unit = getattr(product, 'unit', 'бр.') if product else 'бр.'
+            raise ValueError(f"Недостатъчна наличност за преместване! Налично: {available_stock} {unit}.")
 
         return True

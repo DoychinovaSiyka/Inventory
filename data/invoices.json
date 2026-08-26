@@ -264,5 +264,19 @@
         "date": "2026-08-16 20:05:13",
         "created": "2026-08-16 20:05:13",
         "modified": "2026-08-16 20:05:13"
+    },
+    {
+        "invoice_id": "bacec81e-7e8d-4eb9-93c1-247acc6a5ffd",
+        "movement_id": "7dfb742c-dc69-4d4d-88b4-f4aa883634e3",
+        "product": "Минерална вода Девин",
+        "quantity": 1.0,
+        "unit": "бр.",
+        "unit_price": 4.0,
+        "total_price": 4.0,
+        "customer": "Иван",
+        "is_active": true,
+        "date": "2026-08-26 17:53:06",
+        "created": "2026-08-26 17:53:06",
+        "modified": "2026-08-26 17:53:06"
     }
 ]

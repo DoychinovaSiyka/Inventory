@@ -31,6 +31,9 @@ def quick_sort(products: List, key: Callable, reverse: bool) -> List:
 
 
 
+
+
+
 def merge_sort(products: List, key: Callable, reverse: bool) -> List:
     if len(products) <= 1:
         return products[:]
@@ -40,6 +43,10 @@ def merge_sort(products: List, key: Callable, reverse: bool) -> List:
     right = merge_sort(products[mid:], key, reverse)
 
     return merge(left, right, key, reverse)
+
+
+
+
 
 
 def merge(left: List, right: List, key: Callable, reverse: bool) -> List:

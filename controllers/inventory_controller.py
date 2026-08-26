@@ -15,7 +15,7 @@ class InventoryController(AbstractController):
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Инвентарът винаги се генерира от движенията
+        # Инвентарът винаги се получава от движенията
         self.data = []
         self.update_inventory_from_movements(self.movement_controller.movements)
 
@@ -37,13 +37,11 @@ class InventoryController(AbstractController):
 
 
 
-
     def update_inventory_from_movements(self, movements):
-        """Генерира инвентара от движенията."""
+        """Създава инвентара от движенията."""
         self.data = []
-        sorted_movements = sorted(movements, key=lambda m: m.date)
 
-        for mv in sorted_movements:
+        for mv in movements:
             pid = str(mv.product_id)
             qty = float(mv.quantity)
             mtype = mv.movement_type.name
@@ -70,7 +68,6 @@ class InventoryController(AbstractController):
                 warehouses[to_lid] = warehouses.get(to_lid, 0.0) + qty
 
         self._save()
-
 
 
 

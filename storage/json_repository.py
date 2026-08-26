@@ -3,11 +3,17 @@ from pathlib import Path
 from storage.repository import Repository
 
 
+
+
+
 class JSONRepository(Repository):
     def __init__(self, filepath):
         self.filepath = Path(filepath)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
         self._cache = None
+
+
+
 
     def load(self):
         if not self.filepath.exists():
@@ -19,6 +25,8 @@ class JSONRepository(Repository):
                 return self._cache
         except (json.JSONDecodeError, OSError):
             return None
+
+
 
     def save(self, data):
         if data == self._cache:
