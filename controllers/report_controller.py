@@ -1,9 +1,7 @@
 from datetime import datetime
-from models.movement import MovementType
 from models.report import Report
 from filters import product_sorters
 
-from controllers.product_controller import ProductController
 from controllers.movement_controller import MovementController
 from controllers.invoice_controller import InvoiceController
 from controllers.location_controller import LocationController
@@ -15,11 +13,10 @@ from controllers.supplier_controller import SupplierController
 
 
 class ReportController:
-    def __init__(self, product_controller: ProductController, movement_controller: MovementController,
-                 invoice_controller: InvoiceController, location_controller: LocationController,
-                 inventory_controller: InventoryController, supplier_controller: SupplierController):
+    def __init__(self, movement_controller: MovementController, invoice_controller: InvoiceController,
+                 location_controller: LocationController, inventory_controller: InventoryController,
+                 supplier_controller: SupplierController):
 
-        self.product_controller = product_controller
         self.movement_controller = movement_controller
         self.invoice_controller = invoice_controller
         self.location_controller = location_controller
@@ -33,8 +30,6 @@ class ReportController:
         if not keyword:
             return True
         return keyword.lower().strip() in (target or "").lower()
-
-
 
     def _filter_movements_by_type(self, movements, m_type: str):
         return [m for m in movements if m.movement_type.name == m_type.upper()]
@@ -51,8 +46,8 @@ class ReportController:
                 continue
 
             pid = item["product_id"]
-
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
+
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
@@ -65,19 +60,16 @@ class ReportController:
             avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
             avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
-            report_item = {"product_id": pid, "product_name": item["product_name"], "unit": item["unit"],
-                           "total": item["total"], "warehouses": item["warehouses"], "delivered": delivered,
-                           "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
-                           "expense": round(delivered * avg_in, 2), "revenue": round(sold * avg_out, 2)}
-
-
+            last_move = "Няма движения"
             if moves:
                 last = sorted(moves, key=lambda x: x.date)[-1]
-                report_item["last_movement"] = f"{last.movement_type.name} - {str(last.date)[:19]}"
-            else:
-                report_item["last_movement"] = "Няма движения"
+                last_move = f"{last.movement_type.name} - {str(last.date)[:19]}"
 
-            report_data.append(report_item)
+            report_data.append({"product_id": pid, "product_name": item["product_name"], "unit": item["unit"],
+                                "total": item["total"], "warehouses": item["warehouses"], "delivered": delivered,
+                                "sold": sold, "avg_in_price": avg_in, "avg_out_price": avg_out,
+                                "expense": round(delivered * avg_in, 2), "revenue": round(sold * avg_out, 2),
+                                "last_movement": last_move})
 
         return Report(report_type="Inventory Full", data=report_data)
 
@@ -95,7 +87,6 @@ class ReportController:
 
             sup = self.supplier_controller.get_by_id(m.supplier_id) if m.supplier_id else None
             supplier_name = sup.name if sup else None
-
             client_name = m.customer if m.customer else None
 
             if m.movement_type.name == "IN":
@@ -153,8 +144,9 @@ class ReportController:
 
 
 
+
     def sort_inventory_by_quantity(self, algorithm="merge", reverse=True):
-        data = self.report_inventory_full().data[:]
+        data = [item for item in self.report_inventory_full().data if "summary" not in item]
         key_fn = lambda x: x["total"]
 
         if algorithm == "merge":
@@ -170,8 +162,8 @@ class ReportController:
 
 
 
-    def filter_movements(self, type=None, product=None, supplier=None, client=None,
-                         warehouse=None, date_from=None, date_to=None):
+    def filter_movements(self, type=None, product=None, supplier=None,
+                         client=None, warehouse=None, date_from=None, date_to=None):
 
         movements = self.movement_controller.movements
         filtered = []
@@ -186,30 +178,22 @@ class ReportController:
             sup = self.supplier_controller.get_by_id(m.supplier_id) if m.supplier_id else None
             supplier_name = sup.name if sup else None
 
-            if supplier:
-                if not supplier_name or supplier.lower() not in supplier_name.lower():
-                    continue
+            if supplier and (not supplier_name or supplier.lower() not in supplier_name.lower()):
+                continue
 
             client_name = m.customer if m.customer else None
-            if client:
-                if not client_name or client.lower() not in client_name.lower():
-                    continue
+            if client and (not client_name or client.lower() not in client_name.lower()):
+                continue
 
             if warehouse:
                 w = warehouse.lower()
                 match_found = False
 
-                loc_ids = [m.location_id, m.from_location_id, m.to_location_id]
-
-                for lid in loc_ids:
+                for lid in [m.location_id, m.from_location_id, m.to_location_id]:
                     if not lid:
                         continue
-
                     loc = self.location_controller.get_by_id(lid)
-                    if not loc:
-                        continue
-
-                    if w == loc.name.lower() or w == str(loc.location_id).lower():
+                    if loc and (w == loc.name.lower() or w == str(loc.location_id).lower()):
                         match_found = True
                         break
 
@@ -222,24 +206,20 @@ class ReportController:
             if date_to and m_date > date_to:
                 continue
 
+            # FROM / TO
             if m.movement_type.name == "IN":
                 loc_main = self.location_controller.get_by_id(m.location_id)
-                loc_name = loc_main.name if loc_main else "Склад"
-
                 from_name = supplier_name or "Доставчик"
-                to_name = loc_name
+                to_name = loc_main.name if loc_main else "Склад"
 
             elif m.movement_type.name == "OUT":
                 loc_main = self.location_controller.get_by_id(m.location_id)
-                loc_name = loc_main.name if loc_main else "Склад"
-
-                from_name = loc_name
+                from_name = loc_main.name if loc_main else "Склад"
                 to_name = client_name or "Клиент"
 
-            else:
+            else:  # MOVE
                 loc_from = self.location_controller.get_by_id(m.from_location_id) if m.from_location_id else None
                 loc_to = self.location_controller.get_by_id(m.to_location_id) if m.to_location_id else None
-
                 from_name = loc_from.name if loc_from else "Склад"
                 to_name = loc_to.name if loc_to else "Склад"
 

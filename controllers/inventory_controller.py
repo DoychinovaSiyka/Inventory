@@ -1,17 +1,17 @@
 from typing import Optional, List
 from validators.inventory_validator import InventoryValidator
 from controllers.abstract_controller import AbstractController
-from controllers.product_controller import ProductController
 from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 
 
 
 
+
+
 class InventoryController(AbstractController):
-    def __init__(self, repo, product_controller, location_controller, movement_controller):
+    def __init__(self, repo, location_controller, movement_controller):
         super().__init__(repo)
-        self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
@@ -39,7 +39,7 @@ class InventoryController(AbstractController):
 
 
     def update_inventory_from_movements(self, movements):
-        """Генерира инвентара само от движенията."""
+        """Генерира инвентара от движенията."""
         self.data = []
         sorted_movements = sorted(movements, key=lambda m: m.date)
 
@@ -91,7 +91,6 @@ class InventoryController(AbstractController):
 
 
 
-
     def build_inventory(self):
         items = []
 
@@ -99,19 +98,15 @@ class InventoryController(AbstractController):
             pid = item["product_id"]
             warehouses_raw = item["warehouses"]
 
-            product = self.product_controller.get_by_id(pid)
-            if product:
-                name = product.name
-                unit = product.unit
+
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
+            if moves:
+                first = moves[0]
+                name = first.product_name
+                unit = first.unit
             else:
-                moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
-                if moves:
-                    first = moves[0]
-                    name = first.product_name
-                    unit = first.unit
-                else:
-                    name = pid
-                    unit = "бр."
+                name = ""
+                unit = ""
 
             # Общо количество
             total = self.get_total_stock(pid)
@@ -126,7 +121,6 @@ class InventoryController(AbstractController):
                     warehouses[f"Склад {lid}"] = float(qty)
 
             # Движения
-            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
@@ -137,19 +131,13 @@ class InventoryController(AbstractController):
             in_prices = [float(m.price) for m in in_moves if m.price]
             out_prices = [float(m.price) for m in out_moves if m.price]
 
-            if in_prices:
-                avg_in = round(sum(in_prices) / len(in_prices), 2)
-            else:
-                avg_in = 0.0
-
-            if out_prices:
-                avg_out = round(sum(out_prices) / len(out_prices), 2)
-            else:
-                avg_out = 0.0
+            avg_in = round(sum(in_prices) / len(in_prices), 2) if in_prices else 0.0
+            avg_out = round(sum(out_prices) / len(out_prices), 2) if out_prices else 0.0
 
             expense = round(delivered * avg_in, 2)
             revenue = round(sold * avg_out, 2)
 
+            # Последно движение
             if moves:
                 last = max(moves, key=lambda m: m.date)
                 last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
@@ -166,11 +154,10 @@ class InventoryController(AbstractController):
 
 
 
-
     def get_critical_items(self, threshold=5):
-        return [item for item in self.build_inventory() if item.get("total", 999999) <= threshold]
+        return [item for item in self.build_inventory() if "summary" not in item and item["total"] <= threshold]
 
 
 
     def get_overstocked_items(self, threshold=130):
-        return [item for item in self.build_inventory() if item.get("total", 0) >= threshold]
+        return [item for item in self.build_inventory() if "summary" not in item and item["total"] >= threshold]
