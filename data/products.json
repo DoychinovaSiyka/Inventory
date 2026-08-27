@@ -277,14 +277,26 @@
     },
     {
         "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
-        "name": "бира",
+        "name": "Бира \"Ариана\"",
         "categories": [
             "3bf78a78-e546-49fa-b878-c15d19af1cb3"
         ],
         "unit": "бр.",
-        "description": "алкохол",
-        "price": 3.0,
+        "description": "Алкохол",
+        "price": 4.09,
         "created": "2026-08-16 20:04:32",
-        "modified": "2026-08-16 20:04:32"
+        "modified": "2026-08-27 09:59:11"
+    },
+    {
+        "product_id": "3d61f593-6cba-4a4b-abc2-3293ed5aeec5",
+        "name": "кока-кола 330 мл",
+        "categories": [
+            "ba84c6a2-90cd-4cd8-ab00-32b35c00321d"
+        ],
+        "unit": "бр.",
+        "description": "газарана напитка",
+        "price": 3.01,
+        "created": "2026-08-27 09:58:02",
+        "modified": "2026-08-27 09:58:02"
     }
 ]

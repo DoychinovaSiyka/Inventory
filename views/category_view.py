@@ -127,7 +127,6 @@ class CategoryView:
         if not category:
             return
 
-
         while True:
             new_name = input(f"Ново име [{category.name}]: ").strip()
             if new_name == "":
@@ -139,7 +138,6 @@ class CategoryView:
                 print(f"Грешка: {error}")
                 continue
             break
-
 
         while True:
             new_desc = input(f"Ново описание [{category.description}]: ").strip()
@@ -153,14 +151,12 @@ class CategoryView:
                 continue
             break
 
-
         while True:
             print("\nИзберете нов родител:")
             choice = input("Избор: ").strip().lower()
             if choice == "":
                 new_parent_id = category.parent_id
                 break
-
 
             parent = self.controller.get_by_id(choice)
             if parent:
@@ -169,17 +165,18 @@ class CategoryView:
 
             print("Невалидна категория. Опитайте пак.")
 
-
         updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
 
         try:
-            updated = self.controller.update(category.category_id, updates, user.user_id)
+            updated = self.controller.update(category.category_id, updates)
             if updated:
                 print(f"\nКатегорията '{new_name}' беше обновена успешно.")
             else:
                 print("\nКатегорията не можа да бъде обновена.")
         except Exception as e:
             print(f"\nГрешка при обновяване: {e}")
+
+
 
 
 

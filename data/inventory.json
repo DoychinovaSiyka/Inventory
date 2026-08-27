@@ -244,8 +244,25 @@
         "last_movement": "MOVE - 2026-08-26 17:53:17"
     },
     {
+        "product_id": "3d61f593-6cba-4a4b-abc2-3293ed5aeec5",
+        "product_name": "кока-кола 330 мл",
+        "unit": "бр.",
+        "total": 300.0,
+        "warehouses": {
+            "Варна": 178.0,
+            "Смолян": 122.0
+        },
+        "delivered": 312.0,
+        "sold": 12.0,
+        "avg_in_price": 2.01,
+        "avg_out_price": 1.99,
+        "expense": 627.12,
+        "revenue": 23.88,
+        "last_movement": "MOVE - 2026-08-27 10:14:03"
+    },
+    {
         "summary": {
-            "total_products": 14
+            "total_products": 15
         }
     }
 ]
