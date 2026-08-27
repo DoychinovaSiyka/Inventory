@@ -4,10 +4,6 @@ from validators.user_validator import UserValidator
 from controllers.abstract_controller import AbstractController
 
 
-
-
-
-
 class UserController(AbstractController):
     """Контролер за управление на потребители, вход, роли и статуси."""
     def __init__(self, repo):
@@ -28,6 +24,8 @@ class UserController(AbstractController):
     def from_dict(self, data):
         return User.from_dict(data)
 
+
+
     def to_dict(self, obj):
         return obj.to_dict()
 
@@ -37,8 +35,8 @@ class UserController(AbstractController):
         self.save(self.users)
 
 
+
     def find_user(self, identifier: str) -> Optional[User]:
-        """Търси потребител по ID (кратко/пълно) или username."""
         if not identifier:
             return None
 
@@ -50,22 +48,12 @@ class UserController(AbstractController):
         return self.get_by_username(identifier)
 
 
-    def hash_password(self, password: str) -> str:
-        if not password:
-            return ""
-        return "".join(str(ord(c)) for c in password)
 
 
 
-    def check_password(self, stored_hash: str, provided_password: str) -> bool:
-        return stored_hash == self.hash_password(provided_password)
+    def get_all(self):
+        return self.users
 
-
-
-    def is_admin(self, user):
-        if not user:
-            return False
-        return str(user.role).lower() == "admin"
 
 
 
@@ -78,11 +66,6 @@ class UserController(AbstractController):
             if u.username.lower() == username:
                 return u
         return None
-
-
-    def get_all(self):
-        return self.users
-
 
 
 
@@ -101,6 +84,21 @@ class UserController(AbstractController):
         return None
 
 
+
+
+    def hash_password(self, password: str) -> str:
+        if not password:
+            return ""
+        return "".join(str(ord(c)) for c in password)
+
+    def check_password(self, stored_hash: str, provided_password: str) -> bool:
+        return stored_hash == self.hash_password(provided_password)
+
+
+    def is_admin(self, user):
+        if not user:
+            return False
+        return str(user.role).lower() == "admin"
 
 
     def login(self, username: str, password: str) -> Optional[User]:
@@ -126,6 +124,7 @@ class UserController(AbstractController):
 
 
 
+
     def change_role(self, acting_user: User, identifier: str, new_role: str):
         UserValidator.confirm_admin(acting_user)
 
@@ -143,7 +142,6 @@ class UserController(AbstractController):
         user.update_modified()
         self.save_all()
         return True
-
 
 
 
@@ -180,11 +178,15 @@ class UserController(AbstractController):
 
 
 
+
+
     def _create_default_admin(self):
+        """Създава системен администратор, ако липсва."""
         admin = User(user_id=None, first_name="Admin", last_name="System", email="admin@system.local",
                       username="admin", password=self.hash_password("admin123"), role="Admin", status="Active")
         self.users.append(admin)
         self.save_all()
+
 
 
 
@@ -193,6 +195,8 @@ class UserController(AbstractController):
                         password=self.hash_password("operator123"), role="Operator", status="Active")
         self.users.append(operator)
         self.save_all()
+
+
 
 
 

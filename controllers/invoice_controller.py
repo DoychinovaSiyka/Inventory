@@ -22,8 +22,12 @@ class InvoiceController(AbstractController):
     def to_dict(self, obj):
         return obj.to_dict()
 
+
+
     def _save_invoices(self):
         self.save(self.invoices)
+
+
 
 
     def create_from_movement(self, movement, product, customer: Optional[str], user_id: str) -> Invoice:
@@ -51,6 +55,7 @@ class InvoiceController(AbstractController):
 
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
         return self.invoices if include_cancelled else [inv for inv in self.invoices if inv.is_active]
+
 
 
     def get_by_id(self, invoice_id: str) -> Optional[Invoice]:

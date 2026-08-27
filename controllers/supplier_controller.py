@@ -23,6 +23,28 @@ class SupplierController(AbstractController):
         self.save(self.suppliers)
 
 
+
+
+    def get_by_id(self, identifier: str) -> Optional[Supplier]:
+        sid = str(identifier).strip().lower()
+        for s in self.suppliers:
+            if s.supplier_id.lower() == sid or s.supplier_id[:8].lower() == sid:
+                return s
+        return None
+
+
+
+    def get_all(self) -> List[Supplier]:
+        return self.suppliers
+
+
+    def search(self, query: str) -> List[Supplier]:
+        q = str(query).strip().lower()
+        return [s for s in self.suppliers if q in s.name.lower() or q in s.supplier_id[:8].lower()]
+
+
+
+
     def add(self, name: str, contact: str, address: str) -> Supplier:
         SupplierValidator.validate_name(name)
         SupplierValidator.validate_contact(contact)
@@ -33,6 +55,9 @@ class SupplierController(AbstractController):
         self.suppliers.append(supplier)
         self._save_suppliers()
         return supplier
+
+
+
 
     def update(self, supplier_id: str, name=None, contact=None, address=None) -> bool:
         supplier = self.get_by_id(supplier_id)
@@ -54,20 +79,7 @@ class SupplierController(AbstractController):
 
 
 
-    def get_by_id(self, identifier: str) -> Optional[Supplier]:
-        sid = str(identifier).strip().lower()
-        for s in self.suppliers:
-            if s.supplier_id.lower() == sid or s.supplier_id[:8].lower() == sid:
-                return s
-        return None
 
-    def get_all(self) -> List[Supplier]:
-        return self.suppliers
-
-
-    def search(self, query: str) -> List[Supplier]:
-        q = str(query).strip().lower()
-        return [s for s in self.suppliers if q in s.name.lower() or q in s.supplier_id[:8].lower()]
 
 
 
@@ -78,6 +90,8 @@ class SupplierController(AbstractController):
             self._save_suppliers()
             return True
         return False
+
+
 
 
     def validate_field(self, field_type: str, value: str) -> Optional[str]:

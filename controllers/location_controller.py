@@ -5,6 +5,8 @@ from controllers.abstract_controller import AbstractController
 
 
 
+
+
 class LocationController(AbstractController):
     """Контролерът управлява локациите в системата."""
     def __init__(self, repo, inventory_controller=None):
@@ -78,13 +80,15 @@ class LocationController(AbstractController):
             code = str(loc.code or "").lower()
 
             if q in short_id or q in name or q in zone or q in cap or q in code:
-                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone, "capacity": loc.capacity,"code": loc.code})
+                results.append({"id": loc.location_id[:8], "name": loc.name, "zone": loc.zone,
+                                "capacity": loc.capacity, "code": loc.code})
 
         return results
 
 
 
-    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None, capacity=None, code: Optional[str] = None) -> bool:
+    def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None,
+               capacity=None, code: Optional[str] = None) -> bool:
 
         location = self.get_by_id(location_id)
         if location is None:

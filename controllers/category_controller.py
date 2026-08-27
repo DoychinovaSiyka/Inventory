@@ -136,27 +136,32 @@ class CategoryController(AbstractController):
 
 
 
+
     def get_visual_tree(self) -> List[dict]:
         """Списък с категории и нивото им за дърво."""
 
         # групиране на категориите по parent_id
         tree = {}
         for c in self.categories:
-            tree.setdefault(c.parent_id, []).append(c)
+            pid = c.parent_id
+            if pid not in tree:
+                tree[pid] = []
+            tree[pid].append(c)
 
-        for children in tree.values():
-            children.sort(key=lambda x: x.name.lower())
 
-        # рекурсивно изграждане на дървото
+        for pid in tree:
+            tree[pid].sort(key=lambda x: x.name.lower())
+
+
         def dfs(pid=None, level=0):
             result = []
-            for child in tree.get(pid, []):
+            children = tree.get(pid, [])
+            for child in children:
                 result.append({"category": child, "level": level})
                 result.extend(dfs(child.category_id, level + 1))
             return result
 
         return dfs()
-
 
 
 

@@ -38,8 +38,10 @@ class MovementController(AbstractController):
     def set_inventory_controller(self, inventory_controller):
         self.inventory_controller = inventory_controller
 
+
     def from_dict(self, data):
         return Movement.from_dict(data)
+
 
     def to_dict(self, obj):
         return obj.to_dict()
@@ -152,6 +154,7 @@ class MovementController(AbstractController):
             resolved_from = self._location_id(from_location_id)
             resolved_to = self._location_id(to_location_id)
             prc = 0.0
+
         else:  # "IN" или "OUT"
             resolved_loc = self._location_id(location_id)
             resolved_from = None

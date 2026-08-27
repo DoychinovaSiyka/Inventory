@@ -1,6 +1,8 @@
 from typing import Optional, List
+from models.movement import Movement
 from validators.inventory_validator import InventoryValidator
 from controllers.abstract_controller import AbstractController
+from controllers.product_controller import ProductController
 from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 
@@ -10,12 +12,13 @@ from controllers.movement_controller import MovementController
 
 
 class InventoryController(AbstractController):
-    def __init__(self, repo, location_controller, movement_controller):
+    def __init__(self, repo, product_controller, location_controller, movement_controller):
         super().__init__(repo)
+        self.product_controller = product_controller
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Инвентарът винаги се получава от движенията
+        # Инвентарът се получава от движенията
         self.data = []
         self.update_inventory_from_movements(self.movement_controller.movements)
 
@@ -29,6 +32,8 @@ class InventoryController(AbstractController):
         summary = self.build_inventory()
         self.save(summary)
 
+
+
     def _find_product(self, pid):
         for item in self.data:
             if item.get("product_id") == pid:
@@ -37,8 +42,8 @@ class InventoryController(AbstractController):
 
 
 
-    def update_inventory_from_movements(self, movements):
-        """Създава инвентара от движенията."""
+    def update_inventory_from_movements(self, movements: List[Movement]):
+        """Обновява инвентара според всички движения."""
         self.data = []
 
         for mv in movements:
@@ -72,6 +77,7 @@ class InventoryController(AbstractController):
 
 
     def get_total_stock(self, pid):
+        """Връща общото количество от продукта във всички складове."""
         product = self._find_product(pid)
         if not product:
             return 0.0
@@ -80,6 +86,7 @@ class InventoryController(AbstractController):
 
 
     def get_stock(self, pid, lid):
+        """Връща наличността на продукта в конкретен склад."""
         product = self._find_product(pid)
         if not product:
             return 0.0
@@ -87,23 +94,24 @@ class InventoryController(AbstractController):
 
 
 
-
     def build_inventory(self):
+        # Създава пълен отчет от текущия инвентар.
         items = []
 
         for item in self.data:
             pid = item["product_id"]
             warehouses_raw = item["warehouses"]
 
-
-            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
-            if moves:
-                first = moves[0]
-                name = first.product_name
-                unit = first.unit
+            product = self.product_controller.get_by_id(pid)
+            if product:
+                name = product.name
+                unit = product.unit
             else:
                 name = ""
                 unit = ""
+
+            # Всички движения за продукта
+            moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
             # Общо количество
             total = self.get_total_stock(pid)
@@ -112,12 +120,10 @@ class InventoryController(AbstractController):
             warehouses = {}
             for lid, qty in warehouses_raw.items():
                 loc = self.location_controller.get_by_id(lid)
-                if loc:
-                    warehouses[loc.name] = float(qty)
-                else:
-                    warehouses[f"Склад {lid}"] = float(qty)
+                loc_name = loc.name if loc else f"Склад {lid}"
+                warehouses[loc_name] = float(qty)
 
-            # Движения
+
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
 
@@ -134,20 +140,24 @@ class InventoryController(AbstractController):
             expense = round(delivered * avg_in, 2)
             revenue = round(sold * avg_out, 2)
 
-            # Последно движение
+
             if moves:
                 last = max(moves, key=lambda m: m.date)
                 last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
             else:
                 last_movement = "Няма движения"
 
+
             items.append({"product_id": pid, "product_name": name, "unit": unit, "total": total,
                           "warehouses": warehouses, "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
-                          "avg_out_price": avg_out, "expense": expense, "revenue": revenue,
-                          "last_movement": last_movement})
+                          "avg_out_price": avg_out, "expense": expense,
+                          "revenue": revenue, "last_movement": last_movement})
+
 
         items.append({"summary": {"total_products": len(items)}})
         return items
+
+
 
 
 

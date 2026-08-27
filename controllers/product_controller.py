@@ -127,6 +127,8 @@ class ProductController(AbstractController):
 
 
 
+
+
     def delete_by_id(self, product_id: str) -> bool:
         product = self.get_by_id(product_id)
         if not product:
@@ -136,12 +138,18 @@ class ProductController(AbstractController):
         self._save_products()
         return True
 
+
+
+
+
     def search(self, keyword: str) -> List[Product]:
         return product_filters.filter_combined(self.products, keyword=keyword)
 
 
+
+
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
-        """Филтрира продукти по категория + всички нейни подкатегории."""
+        """Филтрира продукти по категория и всички нейни подкатегории."""
         all_ids = []
 
         for cid in category_ids:
