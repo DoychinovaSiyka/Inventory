@@ -44,7 +44,7 @@ class MainMenuView:
 
 
     def open_products(self, user):
-        ProductView(self.controllers["product"], self.controllers["category"], self.controllers["location"]).show_menu(user)
+        ProductView(self.controllers["product"], self.controllers["category"]).show_menu(user)
 
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
@@ -54,7 +54,10 @@ class MainMenuView:
 
     def open_movements(self, _):
         MovementView(self.controllers["product"], self.controllers["movement"], self.controllers["user"],
-                     self.controllers["location"], self.controllers["supplier"]).show_menu()
+                     self.controllers["location"],
+                     self.controllers["supplier"], self.controllers["inventory"]).show_menu()
+
+
 
     def open_invoices(self, user):
         InvoiceView(self.controllers["invoice"]).show_menu(user)
