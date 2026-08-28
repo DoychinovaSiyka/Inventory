@@ -43,7 +43,7 @@ class UserView:
 
         print("\nСПИСЪК НА ПОТРЕБИТЕЛИТЕ")
         columns = ["ID", "Username", "Имейл", "Роля", "Статус"]
-        rows = [[u.user_id[:8], u.username, u.email, u.role, u.status] for u in users]
+        rows = [[str(u.user_id)[:8], u.username, u.email, u.role, u.status] for u in users]
         print(format_table(columns, rows))
 
 
@@ -82,8 +82,8 @@ class UserView:
                 break
             print(f"Грешка: {error}")
 
-        fn = input("Име (Enter за '-' ): ").strip() or "-"
-        ln = input("Фамилия (Enter за '-' ): ").strip() or "-"
+        fn = input("Име: ").strip() or "-"
+        ln = input("Фамилия: ").strip() or "-"
 
         try:
             self.controller.register(fn, ln, email, username, password, role)
@@ -106,8 +106,7 @@ class UserView:
             return
 
         print(f"Текуща роля: {user_obj.role}")
-        new_role = input("Нова роля (Admin/Operator): ").strip().capitalize()
-
+        new_role = input("Нова роля (Admin/Operator): ").strip().lower().capitalize()
         if new_role not in ["Admin", "Operator"]:
             print("Грешка: Невалидна роля. Разрешени: Admin, Operator.")
             return
