@@ -261,8 +261,25 @@
         "last_movement": "MOVE - 2026-08-27 10:14:03"
     },
     {
+        "product_id": "de404504-4a4c-48cc-9b10-b4f2db5de0b0",
+        "product_name": "краставици",
+        "unit": "кг.",
+        "total": 10.0,
+        "warehouses": {
+            "Варна": 6.0,
+            "Смолян": 4.0
+        },
+        "delivered": 12.0,
+        "sold": 2.0,
+        "avg_in_price": 1.0,
+        "avg_out_price": 2.0,
+        "expense": 12.0,
+        "revenue": 4.0,
+        "last_movement": "MOVE - 2026-08-28 13:32:32"
+    },
+    {
         "summary": {
-            "total_products": 15
+            "total_products": 16
         }
     }
 ]
