@@ -44,8 +44,7 @@ class MainMenuView:
 
 
     def open_products(self, user):
-        ProductView(self.controllers["product"], self.controllers["category"],
-                    self.controllers["location"], self.controllers["activity_log"]).show_menu(user)
+        ProductView(self.controllers["product"], self.controllers["category"], self.controllers["location"]).show_menu(user)
 
     def open_categories(self, user):
         CategoryView(self.controllers["category"]).show_menu(user)
