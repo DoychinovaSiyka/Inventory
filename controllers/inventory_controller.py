@@ -7,10 +7,6 @@ from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 
 
-
-
-
-
 class InventoryController(AbstractController):
     def __init__(self, repo, product_controller, location_controller, movement_controller):
         super().__init__(repo)
@@ -18,7 +14,6 @@ class InventoryController(AbstractController):
         self.location_controller = location_controller
         self.movement_controller = movement_controller
 
-        # Инвентарът се получава от движенията
         self.data = []
         self.update_inventory_from_movements(self.movement_controller.movements)
 
@@ -27,6 +22,8 @@ class InventoryController(AbstractController):
 
     def to_dict(self, obj):
         return obj
+
+
 
     def _save(self):
         summary = self.build_inventory()
@@ -42,8 +39,9 @@ class InventoryController(AbstractController):
 
 
 
+
+
     def update_inventory_from_movements(self, movements: List[Movement]):
-        """Обновява инвентара според всички движения."""
         self.data = []
 
         for mv in movements:
@@ -76,8 +74,9 @@ class InventoryController(AbstractController):
 
 
 
+
+
     def get_total_stock(self, pid):
-        """Връща общото количество от продукта във всички складове."""
         product = self._find_product(pid)
         if not product:
             return 0.0
@@ -85,8 +84,8 @@ class InventoryController(AbstractController):
 
 
 
+
     def get_stock(self, pid, lid):
-        """Връща наличността на продукта в конкретен склад."""
         product = self._find_product(pid)
         if not product:
             return 0.0
@@ -94,8 +93,9 @@ class InventoryController(AbstractController):
 
 
 
+
+
     def build_inventory(self):
-        # Създава пълен отчет от текущия инвентар.
         items = []
 
         for item in self.data:
@@ -103,26 +103,18 @@ class InventoryController(AbstractController):
             warehouses_raw = item["warehouses"]
 
             product = self.product_controller.get_by_id(pid)
-            if product:
-                name = product.name
-                unit = product.unit
-            else:
-                name = ""
-                unit = ""
+            name = product.name if product else ""
+            unit = product.unit if product else ""
 
-            # Всички движения за продукта
             moves = [m for m in self.movement_controller.movements if str(m.product_id) == pid]
 
-            # Общо количество
             total = self.get_total_stock(pid)
 
-            # Разпределение по складове
             warehouses = {}
             for lid, qty in warehouses_raw.items():
                 loc = self.location_controller.get_by_id(lid)
                 loc_name = loc.name if loc else f"Склад {lid}"
                 warehouses[loc_name] = float(qty)
-
 
             in_moves = [m for m in moves if m.movement_type.name == "IN"]
             out_moves = [m for m in moves if m.movement_type.name == "OUT"]
@@ -130,7 +122,6 @@ class InventoryController(AbstractController):
             delivered = sum(float(m.quantity) for m in in_moves)
             sold = sum(float(m.quantity) for m in out_moves)
 
-            # Средни цени
             in_prices = [float(m.price) for m in in_moves if m.price]
             out_prices = [float(m.price) for m in out_moves if m.price]
 
@@ -140,31 +131,29 @@ class InventoryController(AbstractController):
             expense = round(delivered * avg_in, 2)
             revenue = round(sold * avg_out, 2)
 
-
             if moves:
                 last = max(moves, key=lambda m: m.date)
                 last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
             else:
                 last_movement = "Няма движения"
 
-
             items.append({"product_id": pid, "product_name": name, "unit": unit, "total": total,
                           "warehouses": warehouses, "delivered": delivered, "sold": sold, "avg_in_price": avg_in,
-                          "avg_out_price": avg_out, "expense": expense,
-                          "revenue": revenue, "last_movement": last_movement})
+                          "avg_out_price": avg_out, "expense": expense, "revenue": revenue,
+                          "last_movement": last_movement})
 
 
-        items.append({"summary": {"total_products": len(items)}})
+        items.append({"total_products": len(items)})
+
         return items
 
 
 
 
-
     def get_critical_items(self, threshold=5):
-        return [item for item in self.build_inventory() if "summary" not in item and item["total"] <= threshold]
+        return [item for item in self.build_inventory() if "total_products" not in item and item["total"] <= threshold]
 
 
 
     def get_overstocked_items(self, threshold=130):
-        return [item for item in self.build_inventory() if "summary" not in item and item["total"] >= threshold]
+        return [item for item in self.build_inventory() if "total_products" not in item and item["total"] >= threshold]

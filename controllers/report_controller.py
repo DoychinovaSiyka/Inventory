@@ -37,12 +37,13 @@ class ReportController:
 
 
 
+
     def report_inventory_full(self):
         raw_inventory = self.inventory_controller.build_inventory()
         report_data = []
 
         for item in raw_inventory:
-            if "summary" in item:
+            if "product_id" not in item:
                 continue
 
             pid = item["product_id"]
@@ -72,6 +73,7 @@ class ReportController:
                                 "last_movement": last_move})
 
         return Report(report_type="Inventory Full", data=report_data)
+
 
 
 

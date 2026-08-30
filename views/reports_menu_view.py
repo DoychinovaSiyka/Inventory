@@ -10,6 +10,9 @@ from controllers.inventory_controller import InventoryController
 
 
 
+
+
+
 class ReportsView:
     def __init__(self, controller: ReportController):
         self.controller = controller
@@ -23,6 +26,8 @@ class ReportsView:
             print("Няма данни.")
             return
         print(format_table(headers, rows))
+
+
 
     def _menu(self, title, items, user):
         menu = Menu(title, items)
@@ -58,15 +63,18 @@ class ReportsView:
         print(f"Генериран на: {result.generated_on}")
         print("=" * 20)
 
+        # Показваме само продуктите
         for item in result.data:
-            if "summary" in item:
+            if "product_id" not in item:
                 continue
             print(self._format_card(item))
 
+
         for item in result.data:
-            if "summary" in item:
-                print(f"\nОбщо продукти: {item['summary'].get('total_products', 0)}")
+            if "total_products" in item:
+                print(f"\nОбщо продукти: {item['total_products']}")
                 break
+
 
 
 
@@ -98,6 +106,8 @@ class ReportsView:
 
 
 
+
+
     def report_movements(self, _):
         result = self.controller.report_movements()
         rows = [
@@ -105,6 +115,7 @@ class ReportsView:
              f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")] for m in result.data]
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display("ХРОНОЛОГИЯ НА ДВИЖЕНИЯТА", headers, rows)
+
 
 
 
@@ -118,9 +129,11 @@ class ReportsView:
         self._menu("Операции по тип", items, user)
 
 
+
     def _ops_type(self, type_name):
         result = self.controller.filter_movements(type=type_name)
         self._filtered(result)
+
 
 
 
@@ -133,12 +146,13 @@ class ReportsView:
 
 
 
+
     def _sort(self, algorithm):
         result = self.controller.sort_inventory_by_quantity(algorithm=algorithm, reverse=True)
         groups = {}
 
         for item in result.data:
-            if "summary" in item:
+            if "product_id" not in item:
                 continue
             unit = item.get("unit", "")
             groups.setdefault(unit, []).append(item)
@@ -165,7 +179,6 @@ class ReportsView:
 
 
 
-
     def _filter(self, mode):
         key = input("Въведете стойност: ").strip()
         if mode == "product":
@@ -181,9 +194,6 @@ class ReportsView:
             headers = ["Дата", "ID", "Продукт", "Кол.", "Цена", "Доставчик", "Склад"]
             self._display("ДОСТАВКИ ПО ДОСТАВЧИК", headers, rows)
 
-
-
-
         elif mode == "client":
             result = self.controller.report_sales()
             rows = [
@@ -193,14 +203,11 @@ class ReportsView:
             headers = ["Фактура", "Дата", "Клиент", "Продукт", "Кол.", "Общо", "Статус"]
             self._display("ПРОДАЖБИ ПО КЛИЕНТ", headers, rows)
 
-
-
-
         elif mode == "warehouse":
             result = self.controller.report_inventory_full()
             rows = []
             for item in result.data:
-                if "summary" in item:
+                if "product_id" not in item:
                     continue
                 for wh, qty in item.get("warehouses", {}).items():
                     if not key or wh == key:
@@ -211,12 +218,17 @@ class ReportsView:
 
 
 
+
+
+
+
     def _filtered(self, result):
         rows = [
             [m.get("date", "-"), m.get("movement_id", "-"), m.get("type", "-"), m.get("product_name", "-"),
              f"{m.get('quantity', 0)} {m.get('unit', '')}", m.get("from", "-"), m.get("to", "-")] for m in result.data]
         headers = ["Дата", "ID", "Тип", "Продукт", "Кол.", "От", "Към"]
         self._display("ФИЛТРИРАНИ ДВИЖЕНИЯ", headers, rows)
+
 
 
 
