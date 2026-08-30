@@ -69,16 +69,20 @@ class Movement:
         if not data or not isinstance(data, dict):
             return None
 
+        mtype = data.get("movement_type")
+        if mtype:
+            try:
+                mtype = MovementType[mtype]
+            except KeyError:
+                mtype = None
 
         return Movement(movement_id=data.get("movement_id"), product_id=data.get("product_id"),
-                        product_name=data.get("product_name", ""), user_id=data.get("user_id"), location_id=data.get("location_id"),
-                        movement_type=data.get("movement_type"), quantity=data.get("quantity"), unit=data.get("unit", "бр."),
-                        price=data.get("price"), supplier_id=data.get("supplier_id"), customer=data.get("customer"),
-                        date=data.get("date"), created=data.get("created"), modified=data.get("modified"),
-                        from_location_id=data.get("from_location_id"), to_location_id=data.get("to_location_id"))
-
-
-
+                        product_name=data.get("product_name", ""), user_id=data.get("user_id"),
+                        location_id=data.get("location_id"), movement_type=mtype, quantity=data.get("quantity"),
+                        unit=data.get("unit", "бр."), price=data.get("price"), supplier_id=data.get("supplier_id"),
+                        customer=data.get("customer"), date=data.get("date"), created=data.get("created"),
+                        modified=data.get("modified"), from_location_id=data.get("from_location_id"),
+                        to_location_id=data.get("to_location_id"))
 
 
 

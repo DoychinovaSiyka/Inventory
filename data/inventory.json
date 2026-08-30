@@ -278,6 +278,23 @@
         "last_movement": "MOVE - 2026-08-28 13:32:32"
     },
     {
-        "total_products": 16
+        "product_id": "e97d9bea-843f-49a1-995e-70b4b92f7b1f",
+        "product_name": "piperka",
+        "unit": "кг.",
+        "total": 823.0,
+        "warehouses": {
+            "Бургас": 700.0,
+            "Варна": 123.0
+        },
+        "delivered": 890.0,
+        "sold": 67.0,
+        "avg_in_price": 1.0,
+        "avg_out_price": 2.0,
+        "expense": 890.0,
+        "revenue": 134.0,
+        "last_movement": "MOVE - 2026-08-30 23:22:36"
+    },
+    {
+        "total_products": 17
     }
 ]

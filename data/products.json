@@ -310,5 +310,17 @@
         "price": 3.0,
         "created": "2026-08-28 13:30:58",
         "modified": "2026-08-28 13:30:58"
+    },
+    {
+        "product_id": "e97d9bea-843f-49a1-995e-70b4b92f7b1f",
+        "name": "piperka",
+        "categories": [
+            "77a55c2f-85fb-4b88-93f9-579e08f84f29"
+        ],
+        "unit": "кг.",
+        "description": "zelenchuk",
+        "price": 2.0,
+        "created": "2026-08-30 23:21:32",
+        "modified": "2026-08-30 23:21:32"
     }
 ]
