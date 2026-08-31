@@ -28,14 +28,14 @@ class InventoryApplication:
 
     def _init_repositories(self):
         """Инициализация на JSON хранилищата."""
-        self.user_repo = JSONRepository("data/users.json")
-        self.product_repo = JSONRepository("data/products.json")
-        self.category_repo = JSONRepository("data/categories.json")
-        self.supplier_repo = JSONRepository("data/suppliers.json")
-        self.location_repo = JSONRepository("data/locations.json")
-        self.movement_repo = JSONRepository("data/movements.json")
-        self.invoice_repo = JSONRepository("data/invoices.json")
-        self.inventory_repo = JSONRepository("data/inventory.json")
+        self.user_repo = JSONRepository("storage/data/users.json")
+        self.product_repo = JSONRepository("storage/data/products.json")
+        self.category_repo = JSONRepository("storage/data/categories.json")
+        self.supplier_repo = JSONRepository("storage/data/suppliers.json")
+        self.location_repo = JSONRepository("storage/data/locations.json")
+        self.movement_repo = JSONRepository("storage/data/movements.json")
+        self.invoice_repo = JSONRepository("storage/data/invoices.json")
+        self.inventory_repo = JSONRepository("storage/data/inventory.json")
 
 
 

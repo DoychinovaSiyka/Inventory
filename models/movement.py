@@ -12,23 +12,37 @@ class MovementType(Enum):
 class Movement:
     @staticmethod
     def now():
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.now()
+
+    @staticmethod
+    def parse_date(value):
+        if isinstance(value, datetime):
+            return value
+        if isinstance(value, str):
+            try:
+                return datetime.fromisoformat(value)
+            except ValueError:
+                pass
+        return Movement.now()
+
+
+
+
+
 
     def __init__(self, movement_id=None, product_id=None, product_name="",
-                 user_id=None, location_id=None, movement_type=None, quantity=None, unit="бр.", price=None, supplier_id=None,
-                 customer=None, date=None, created=None, modified=None, from_location_id=None, to_location_id=None):
-
+                 user_id=None, location_id=None, movement_type=None, quantity=None, unit="бр.", price=None,
+                 supplier_id=None, customer=None, date=None, created=None, modified=None,
+                 from_location_id=None, to_location_id=None):
 
         self.movement_id = str(movement_id) if movement_id else str(uuid.uuid4())
         self.product_id = str(product_id) if product_id else None
         self.user_id = str(user_id) if user_id else None
         self.product_name = product_name
 
-
         self.location_id = location_id
         self.from_location_id = from_location_id
         self.to_location_id = to_location_id
-
 
         self.movement_type = movement_type
         self.quantity = quantity
@@ -38,12 +52,10 @@ class Movement:
         self.supplier_id = supplier_id
         self.customer = customer
 
-
-        now_val = Movement.now()
-        self.date = date if date else now_val
-        self.created = created if created else now_val
-        self.modified = modified if modified else now_val
-
+        #  Датите са datetime обекти
+        self.date = Movement.parse_date(date)
+        self.created = Movement.parse_date(created)
+        self.modified = Movement.parse_date(modified)
 
 
 

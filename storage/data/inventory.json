@@ -295,6 +295,22 @@
         "last_movement": "MOVE - 2026-08-30 23:22:36"
     },
     {
-        "total_products": 17
+        "product_id": "fc5ef470-c22c-48e5-9275-8dd59b465977",
+        "product_name": "banan",
+        "unit": "кг.",
+        "total": 2.0,
+        "warehouses": {
+            "Пловдив": 2.0
+        },
+        "delivered": 2.0,
+        "sold": 0,
+        "avg_in_price": 1.0,
+        "avg_out_price": 0.0,
+        "expense": 2.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-08-31 13:19:42"
+    },
+    {
+        "total_products": 18
     }
 ]
