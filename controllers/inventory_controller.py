@@ -7,6 +7,10 @@ from controllers.location_controller import LocationController
 from controllers.movement_controller import MovementController
 
 
+
+
+
+
 class InventoryController(AbstractController):
     def __init__(self, repo, product_controller, location_controller, movement_controller):
         super().__init__(repo)
@@ -133,7 +137,8 @@ class InventoryController(AbstractController):
 
             if moves:
                 last = max(moves, key=lambda m: m.date)
-                last_movement = f"{last.movement_type.name} - {str(last.date)[:19]}"
+                last_movement = f"{last.movement_type.name} - {last.date.strftime('%Y-%m-%d %H:%M:%S')}"
+
             else:
                 last_movement = "Няма движения"
 
