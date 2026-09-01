@@ -281,18 +281,19 @@
         "product_id": "e97d9bea-843f-49a1-995e-70b4b92f7b1f",
         "product_name": "piperka",
         "unit": "кг.",
-        "total": 823.0,
+        "total": 789.0,
         "warehouses": {
             "Бургас": 700.0,
-            "Варна": 123.0
+            "Варна": 44.0,
+            "Пловдив": 45.0
         },
-        "delivered": 890.0,
-        "sold": 67.0,
-        "avg_in_price": 1.0,
-        "avg_out_price": 2.0,
-        "expense": 890.0,
-        "revenue": 134.0,
-        "last_movement": "MOVE - 2026-08-30 23:22:36"
+        "delivered": 893.0,
+        "sold": 104.0,
+        "avg_in_price": 2.5,
+        "avg_out_price": 2.33,
+        "expense": 2232.5,
+        "revenue": 242.32,
+        "last_movement": "MOVE - 2026-09-01 21:01:24"
     },
     {
         "product_id": "fc5ef470-c22c-48e5-9275-8dd59b465977",

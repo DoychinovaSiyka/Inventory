@@ -320,5 +320,33 @@
         "date": "2026-08-30 23:22:17",
         "created": "2026-08-30 23:22:17",
         "modified": "2026-08-30 23:22:17"
+    },
+    {
+        "invoice_id": "d0425e3c-d71a-45bd-8d74-639ae6991cf3",
+        "movement_id": "1df72564-cdc6-4092-bf37-6b5ea2ecf286",
+        "product": "piperka",
+        "quantity": 34.0,
+        "unit": "кг.",
+        "unit_price": 2.0,
+        "total_price": 68.0,
+        "customer": "Калин",
+        "is_active": true,
+        "date": "2026-09-01 20:33:35",
+        "created": "2026-09-01 20:33:35",
+        "modified": "2026-09-01 20:33:35"
+    },
+    {
+        "invoice_id": "4b4d49fe-058f-4a92-8e68-332c13647afc",
+        "movement_id": "8e46785f-0848-4a06-9421-240bd9b1bacb",
+        "product": "piperka",
+        "quantity": 3.0,
+        "unit": "кг.",
+        "unit_price": 3.0,
+        "total_price": 9.0,
+        "customer": "ЕИДСИДУ",
+        "is_active": true,
+        "date": "2026-09-01 21:01:13",
+        "created": "2026-09-01 21:01:13",
+        "modified": "2026-09-01 21:01:13"
     }
 ]

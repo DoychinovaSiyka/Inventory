@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
 
+
+
 class Repository(ABC):
     @abstractmethod
     def load(self):
@@ -9,6 +11,8 @@ class Repository(ABC):
     @abstractmethod
     def save(self, data):
         pass
+
+
 
 
 # Repository е абстрактен клас, който определя общ интерфейс за работа с данни.

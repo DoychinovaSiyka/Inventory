@@ -2,6 +2,9 @@ import uuid
 from datetime import datetime
 
 
+
+
+
 class Report:
     def __init__(self, report_type, data=None):
         self.report_id = str(uuid.uuid4())
@@ -9,6 +12,7 @@ class Report:
 
         self.report_type = report_type
         self.data = data if data is not None else []
+
 
 
 
