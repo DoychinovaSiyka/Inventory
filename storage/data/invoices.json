@@ -362,5 +362,19 @@
         "date": "2026-09-01 21:39:49",
         "created": "2026-09-01 21:39:49",
         "modified": "2026-09-01 21:39:49"
+    },
+    {
+        "invoice_id": "3ebd0647-c8c7-4fbf-8b31-eaf7c10cbdd2",
+        "movement_id": "8faf6a96-b6b5-492e-b36a-0d05f59bd276",
+        "product": "АНАНАС",
+        "quantity": 899.0,
+        "unit": "кг.",
+        "unit_price": 7.0,
+        "total_price": 6293.0,
+        "customer": "Красимир",
+        "is_active": true,
+        "date": "2026-09-01 23:23:58",
+        "created": "2026-09-01 23:23:58",
+        "modified": "2026-09-01 23:23:58"
     }
 ]

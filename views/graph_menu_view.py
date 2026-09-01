@@ -75,6 +75,10 @@ class GraphView:
                 break
 
 
+
+
+
+
     def calculate_best_delivery(self, user: User):
         product_name = input("\nИме на стока: ").strip()
         if not product_name:
@@ -101,7 +105,6 @@ class GraphView:
 
             break
 
-
         my_location = input("Вашето ID (напр. W1): ").strip().upper()
         if not my_location or my_location not in self.graph.nodes:
             print(f"Грешка: Локация '{my_location}' не съществува.")
@@ -117,13 +120,10 @@ class GraphView:
             print(f"'{product_name}' е наличен само при Вас ({my_location}).")
             return
 
+
         filtered = []
         for wid, qty in other_sources:
-            if qty < min_threshold:
-                filtered.append(wid)
-            elif qty > max_threshold:
-                filtered.append(wid)
-            elif min_threshold <= qty <= max_threshold:
+            if min_threshold <= qty <= max_threshold:
                 filtered.append(wid)
 
         if not filtered:

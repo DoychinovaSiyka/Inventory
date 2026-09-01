@@ -329,6 +329,26 @@
         "last_movement": "MOVE - 2026-09-01 21:40:00"
     },
     {
-        "total_products": 19
+        "product_id": "4e57bd64-edeb-4654-8d06-f84e5507910e",
+        "product_name": "АНАНАС",
+        "unit": "кг.",
+        "total": 3348.0,
+        "warehouses": {
+            "Бургас": 568.0,
+            "Варна": 344.0,
+            "Смолян": 89.0,
+            "София": 2344.0,
+            "Пловдив": 3.0
+        },
+        "delivered": 4247.0,
+        "sold": 899.0,
+        "avg_in_price": 5.33,
+        "avg_out_price": 7.0,
+        "expense": 22636.51,
+        "revenue": 6293.0,
+        "last_movement": "IN - 2026-09-01 23:44:50"
+    },
+    {
+        "total_products": 20
     }
 ]
