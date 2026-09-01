@@ -21,6 +21,9 @@ class InventoryController(AbstractController):
         self.data = []
         self.update_inventory_from_movements(self.movement_controller.movements)
 
+
+
+
     def from_dict(self, data):
         return data
 
