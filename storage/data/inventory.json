@@ -312,6 +312,23 @@
         "last_movement": "IN - 2026-08-31 13:19:42"
     },
     {
-        "total_products": 18
+        "product_id": "b982e826-02d5-4729-9616-202884d9943d",
+        "product_name": "КАФЕ",
+        "unit": "бр.",
+        "total": 655.0,
+        "warehouses": {
+            "Пловдив": 310.0,
+            "Смолян": 345.0
+        },
+        "delivered": 1000.0,
+        "sold": 345.0,
+        "avg_in_price": 3.0,
+        "avg_out_price": 3.9,
+        "expense": 3000.0,
+        "revenue": 1345.5,
+        "last_movement": "MOVE - 2026-09-01 21:40:00"
+    },
+    {
+        "total_products": 19
     }
 ]

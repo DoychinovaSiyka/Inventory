@@ -348,5 +348,19 @@
         "date": "2026-09-01 21:01:13",
         "created": "2026-09-01 21:01:13",
         "modified": "2026-09-01 21:01:13"
+    },
+    {
+        "invoice_id": "9b1ffb24-f4d7-4086-b7c7-037e2ec77f51",
+        "movement_id": "924ed219-8d10-483c-a88b-0da08e94b186",
+        "product": "КАФЕ",
+        "quantity": 345.0,
+        "unit": "бр.",
+        "unit_price": 3.9,
+        "total_price": 1345.5,
+        "customer": "Данчо",
+        "is_active": true,
+        "date": "2026-09-01 21:39:49",
+        "created": "2026-09-01 21:39:49",
+        "modified": "2026-09-01 21:39:49"
     }
 ]

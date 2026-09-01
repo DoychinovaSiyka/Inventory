@@ -201,6 +201,14 @@ class UserController(AbstractController):
 
 
 
+    def create_anonymous_user(self) -> User:
+        """Създава временен гост-потребител."""
+        guest = User(user_id="guest", first_name="Guest", last_name="User",
+            email="guest@local", username="guest", password="", role="Guest", status="Active")
+        return guest
+
+
+
 
     def validate_input(self, field_type: str, value: str) -> Optional[str]:
         try:

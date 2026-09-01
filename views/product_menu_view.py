@@ -6,6 +6,10 @@ from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
 
 
+
+
+
+
 class ProductMenuView:
     def __init__(self, product_controller: ProductController, category_controller: CategoryController):
         self.product_controller = product_controller
@@ -109,6 +113,9 @@ class ProductMenuView:
 
 
 
+
+
+
     def _print_products(self, products, title=""):
         if not products:
             print("\nНяма намерени продукти.\n")
@@ -116,14 +123,16 @@ class ProductMenuView:
 
         rows = []
         for p in products:
-            short_id = str(p.product_id)[:8]
-            price_text = f"{float(p.price):.2f}"
-            rows.append([short_id, p.name[:30], price_text])
+            short_id = str(p.product_id).split("-")[0][:8]
+            name = p.name[:30]
+            price = f"{float(p.price):.2f}"
+            rows.append([short_id, name, price])
 
         if title:
             print(f"\n{title.upper()}")
 
         print(format_table(["ID", "Име", "Цена (лв.)"], rows))
+
 
 
 

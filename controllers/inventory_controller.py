@@ -140,7 +140,8 @@ class InventoryController(AbstractController):
 
             if moves:
                 last = max(moves, key=lambda m: m.date)
-                last_movement = f"{last.movement_type.name} - {last.date.strftime('%Y-%m-%d %H:%M:%S')}"
+                last_movement = f"{last.movement_type.name} - {last.date}"
+
 
             else:
                 last_movement = "Няма движения"

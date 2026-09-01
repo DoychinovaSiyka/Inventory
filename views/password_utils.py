@@ -3,20 +3,22 @@ from functools import wraps
 
 
 
-
 def format_table(columns, rows):
     if not rows:
         return "\nНяма налични данни.\n"
+
+    columns = [str(c).strip() for c in columns]
 
     col_widths = [len(str(c)) for c in columns]
 
     for row in rows:
         for i, val in enumerate(row):
-            val_str = str(val)
+            val_str = str(val).strip().replace("\t", "").replace("\n", "")
             if len(val_str) > col_widths[i]:
                 col_widths[i] = len(val_str)
 
     col_widths = [w + 2 for w in col_widths]
+
     separator = "+" + "+".join("-" * w for w in col_widths) + "+"
 
     header_cells = [col.center(col_widths[i]) for i, col in enumerate(columns)]
@@ -26,15 +28,25 @@ def format_table(columns, rows):
     for row in rows:
         row_cells = []
         for i, val in enumerate(row):
-            val_str = str(val)
-            if val_str.replace(".", "", 1).isdigit():
+            val_str = str(val).strip().replace("\t", "").replace("\n", "")
+
+            if i == 0:
+                cell = val_str.ljust(col_widths[i])
+
+
+            elif val_str.replace(".", "", 1).isdigit():
                 cell = val_str.rjust(col_widths[i])
+
+
             else:
                 cell = val_str.ljust(col_widths[i])
+
             row_cells.append(cell)
+
         data_lines.append("|" + "|".join(row_cells) + "|")
 
     return "\n" + "\n".join([separator, header_row, separator] + data_lines + [separator]) + "\n"
+
 
 
 
