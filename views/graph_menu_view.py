@@ -79,6 +79,8 @@ class GraphView:
 
 
 
+
+
     def calculate_best_delivery(self, user: User):
         product_name = input("\nИме на стока: ").strip()
         if not product_name:
