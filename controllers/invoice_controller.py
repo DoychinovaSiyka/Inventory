@@ -53,6 +53,9 @@ class InvoiceController(AbstractController):
         return invoice
 
 
+
+
+
     def get_all(self, include_cancelled: bool = False) -> List[Invoice]:
         return self.invoices if include_cancelled else [inv for inv in self.invoices if inv.is_active]
 

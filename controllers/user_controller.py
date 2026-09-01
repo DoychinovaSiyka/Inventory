@@ -9,7 +9,6 @@ from controllers.abstract_controller import AbstractController
 
 class UserController(AbstractController):
     """Контролер за управление на потребители, вход, роли и статуси."""
-
     def __init__(self, repo):
         self.logged_user: Optional[User] = None
         super().__init__(repo)

@@ -5,6 +5,7 @@ from datetime import datetime
 
 
 
+
 class Report:
     def __init__(self, report_type, data=None):
         self.report_id = str(uuid.uuid4())
@@ -18,4 +19,4 @@ class Report:
 
     def __str__(self):
         short_id = self.report_id[:8]
-        return f"Отчет #{short_id} | Тип: {self.report_type} | Генериран на: {self.generated_on}"
+        return f"Отчет {short_id} | Тип: {self.report_type} | Генериран на: {self.generated_on}"

@@ -6,7 +6,6 @@ from typing import Optional, Union
 
 
 
-
 class Location:
     def __init__(self, location_id: Optional[Union[str, int]] = None, name: Optional[str] = "",
                  zone: Optional[str] = "", capacity: int = 0, created: Optional[str] = None,
@@ -20,14 +19,14 @@ class Location:
         # Код за Dijkstra (W1, W2, W3...)
         self.code = code if code is not None else ""
 
-
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
 
         self.created = created if isinstance(created, str) else now_val
         self.modified = modified if isinstance(modified, str) else now_val
 
 
+    def update_modified(self):
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
     def to_dict(self):
@@ -44,8 +43,10 @@ class Location:
             return None
 
         return Location(location_id=data.get("location_id"), name=data.get("name"), zone=data.get("zone"),
-                        capacity=data.get("capacity", 0), created=data.get("created"), modified=data.get("modified"),
-                        code=data.get("code"))
+                        capacity=data.get("capacity", 0), created=data.get("created"),
+                        modified=data.get("modified"), code=data.get("code"))
+
+
 
     def __str__(self):
         short_id = self.location_id[:8]

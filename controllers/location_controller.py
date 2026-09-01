@@ -87,6 +87,9 @@ class LocationController(AbstractController):
 
 
 
+
+
+
     def update(self, location_id: str, name: Optional[str] = None, zone: Optional[str] = None,
                capacity=None, code: Optional[str] = None) -> bool:
 
@@ -114,6 +117,9 @@ class LocationController(AbstractController):
         location.update_modified()
         self._save_locations()
         return True
+
+
+
 
 
     def remove(self, location_id: str) -> bool:
@@ -148,6 +154,8 @@ class LocationController(AbstractController):
         self.locations = [l for l in self.locations if l.location_id != full_id]
         self._save_locations()
         return True
+
+
 
 
 

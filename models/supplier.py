@@ -5,7 +5,6 @@ from datetime import datetime
 
 
 
-
 class Supplier:
     def __init__(self, supplier_id=None, name="", contact="", address="", created=None, modified=None):
 
@@ -18,6 +17,12 @@ class Supplier:
 
         self.created = created if isinstance(created, str) else now_val
         self.modified = modified if isinstance(modified, str) else now_val
+
+
+
+
+    def update_modified(self):
+        self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 

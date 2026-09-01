@@ -11,7 +11,6 @@ class User:
                  role="Operator", status="Active", user_id=None, created=None, modified=None):
 
         self.user_id = str(user_id) if user_id else str(uuid.uuid4())
-
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -29,13 +28,22 @@ class User:
 
 
 
+    def update_modified(self):
+        self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+
+
+
     @staticmethod
     def from_dict(data):
         if not data:
             return None
 
-        return User(first_name=data.get("first_name", ""), last_name=data.get("last_name", ""), email=data.get("email", ""),
-                    username=data.get("username", ""), password=data.get("password", ""), role=data.get("role", "Operator"),
+        return User(first_name=data.get("first_name", ""), last_name=data.get("last_name", ""),
+                    email=data.get("email", ""),
+                    username=data.get("username", ""), password=data.get("password", ""),
+                    role=data.get("role", "Operator"),
                     status=data.get("status", "Active"),
                     user_id=data.get("user_id"), created=data.get("created"), modified=data.get("modified"))
 

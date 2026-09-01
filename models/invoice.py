@@ -21,7 +21,6 @@ class Invoice:
         self.total_price = float(total_price)
         self.is_active = bool(is_active)
 
-
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         self.date = date if isinstance(date, str) else now_val

@@ -6,8 +6,7 @@ from datetime import datetime
 
 
 class Category:
-    def __init__(self, category_id, name, description="", parent_id=None,
-                 created=None, modified=None):
+    def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
 
         self.category_id = str(category_id) if category_id else str(uuid.uuid4())
         self.name = name
@@ -19,6 +18,14 @@ class Category:
 
         self.created = created if isinstance(created, str) else now_val
         self.modified = modified if isinstance(modified, str) else now_val
+
+
+
+
+    def update_modified(self):
+        self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
 
 
 
@@ -37,6 +44,7 @@ class Category:
         return Category(category_id=data.get("category_id"), name=data.get("name"),
                         description=data.get("description", ""), parent_id=data.get("parent_id"),
                         created=data.get("created"), modified=data.get("modified"))
+
 
 
 
