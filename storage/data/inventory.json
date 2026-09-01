@@ -349,6 +349,24 @@
         "last_movement": "IN - 2026-09-01 23:44:50"
     },
     {
-        "total_products": 20
+        "product_id": "318436c9-6126-45ac-9630-7ad1633116ba",
+        "product_name": "Домати Чери",
+        "unit": "бр.",
+        "total": 3300.0,
+        "warehouses": {
+            "Пловдив": 2956.0,
+            "Варна": 310.0,
+            "София": 34.0
+        },
+        "delivered": 3333.0,
+        "sold": 33.0,
+        "avg_in_price": 3.0,
+        "avg_out_price": 2.0,
+        "expense": 9999.0,
+        "revenue": 66.0,
+        "last_movement": "MOVE - 2026-09-02 01:13:41"
+    },
+    {
+        "total_products": 21
     }
 ]

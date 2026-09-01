@@ -376,5 +376,19 @@
         "date": "2026-09-01 23:23:58",
         "created": "2026-09-01 23:23:58",
         "modified": "2026-09-01 23:23:58"
+    },
+    {
+        "invoice_id": "950e7390-f016-4f79-8159-4827a41928b0",
+        "movement_id": "e3670af1-26c5-4931-a5f3-2bf4a179ee55",
+        "product": "Домати Чери",
+        "quantity": 33.0,
+        "unit": "бр.",
+        "unit_price": 2.0,
+        "total_price": 66.0,
+        "customer": "Irina",
+        "is_active": true,
+        "date": "2026-09-02 01:13:16",
+        "created": "2026-09-02 01:13:16",
+        "modified": "2026-09-02 01:13:16"
     }
 ]
