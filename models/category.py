@@ -7,24 +7,40 @@ from datetime import datetime
 
 class Category:
     def __init__(self, category_id, name, description="", parent_id=None, created=None, modified=None):
+        if category_id:
+            self.category_id = str(category_id)
+        else:
+            self.category_id = str(uuid.uuid4())
 
-        self.category_id = str(category_id) if category_id else str(uuid.uuid4())
+
         self.name = name
         self.description = description
 
-        self.parent_id = str(parent_id) if parent_id else None
+        if parent_id:
+            self.parent_id = str(parent_id)
+        else:
+            self.parent_id = None
+
+
 
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
 
 
 
 
     def update_modified(self):
         self.modified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
 
 
 

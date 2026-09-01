@@ -4,14 +4,21 @@ from datetime import datetime
 
 
 
-
-
 class Invoice:
     def __init__(self, product, quantity, unit, unit_price, total_price, customer,
                  movement_id=None, date=None, created=None, modified=None, invoice_id=None, is_active=True):
 
-        self.invoice_id = str(invoice_id) if invoice_id else str(uuid.uuid4())
-        self.movement_id = str(movement_id) if movement_id else None
+
+        if invoice_id:
+            self.invoice_id = str(invoice_id)
+        else:
+            self.invoice_id = str(uuid.uuid4())
+
+
+        if movement_id:
+            self.movement_id = str(movement_id)
+        else:
+            self.movement_id = None
 
         self.product = product
         self.customer = customer
@@ -21,11 +28,25 @@ class Invoice:
         self.total_price = float(total_price)
         self.is_active = bool(is_active)
 
+
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        self.date = date if isinstance(date, str) else now_val
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(date, str):
+            self.date = date
+        else:
+            self.date = now_val
+
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+
 
 
 

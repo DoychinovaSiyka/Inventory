@@ -12,7 +12,11 @@ class Report:
         self.generated_on = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         self.report_type = report_type
-        self.data = data if data is not None else []
+        if data is not None:
+            self.data = data
+        else:
+            self.data = []
+
 
 
 

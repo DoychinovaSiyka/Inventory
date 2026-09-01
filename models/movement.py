@@ -13,35 +13,64 @@ class MovementType(Enum):
 
 
 
-
 class Movement:
-    def __init__(self, movement_id=None, product_id=None, product_name="",
-                 user_id=None, location_id=None, movement_type=None, quantity=None, unit="бр.", price=None,
-                 supplier_id=None, customer=None, date=None, created=None, modified=None, from_location_id=None, to_location_id=None):
+    def __init__(self, movement_id=None, product_id=None, product_name="", user_id=None, location_id=None, movement_type=None,
+                 quantity=None, unit="бр.", price=None, supplier_id=None, customer=None, date=None, created=None, modified=None,
+                 from_location_id=None, to_location_id=None):
 
-        self.movement_id = str(movement_id) if movement_id else str(uuid.uuid4())
-        self.product_id = str(product_id) if product_id else None
-        self.user_id = str(user_id) if user_id else None
+
+        if movement_id is not None:
+            self.movement_id = str(movement_id)
+        else:
+            self.movement_id = str(uuid.uuid4())
+
+
+        if product_id is not None:
+            self.product_id = str(product_id)
+        else:
+            self.product_id = None
+
+
+        if user_id is not None:
+            self.user_id = str(user_id)
+        else:
+            self.user_id = None
+
+
         self.product_name = product_name
 
         self.location_id = location_id
         self.from_location_id = from_location_id
         self.to_location_id = to_location_id
 
+
         self.movement_type = movement_type
         self.quantity = quantity
         self.price = price
         self.unit = unit
+
 
         self.supplier_id = supplier_id
         self.customer = customer
 
         now_val = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        if isinstance(date, str):
+            self.date = date
+        else:
+            self.date = now_val
 
-        self.date = date if isinstance(date, str) else now_val
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+
 
 
 

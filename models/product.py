@@ -7,18 +7,38 @@ from datetime import datetime
 
 class Product:
     def __init__(self, product_id, name, categories, unit, description, price, created=None, modified=None):
+        if product_id:
+            self.product_id = str(product_id)
+        else:
+            self.product_id = str(uuid.uuid4())
 
-        self.product_id = str(product_id) if product_id else str(uuid.uuid4())
+
         self.name = name
-        self.categories = categories or []
+
+        if categories:
+            self.categories = categories
+        else:
+            self.categories = []
+
         self.unit = unit
         self.description = description
         self.price = float(price)
 
+
         now_val = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+
+
 
 
     def update_modified(self):
@@ -54,8 +74,7 @@ class Product:
 
         return Product(product_id=data.get("product_id"), name=data.get("name"), categories=categories_list,
                        unit=data.get("unit"), description=data.get("description", ""),
-                       price=data.get("price", 0.0),
-                       created=data.get("created"), modified=data.get("modified"))
+                       price=data.get("price", 0.0), created=data.get("created"), modified=data.get("modified"))
 
 
 

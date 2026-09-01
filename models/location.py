@@ -7,22 +7,54 @@ from typing import Optional, Union
 
 
 class Location:
-    def __init__(self, location_id: Optional[Union[str, int]] = None, name: Optional[str] = "",
-                 zone: Optional[str] = "", capacity: int = 0, created: Optional[str] = None,
-                 modified: Optional[str] = None, code: Optional[str] = None):
+    def __init__(self, location_id: Optional[Union[str, int]] = None,
+                 name: Optional[str] = "", zone: Optional[str] = "",
+                 capacity: int = 0, created: Optional[str] = None, modified: Optional[str] = None, code: Optional[str] = None):
 
-        self.location_id = str(location_id) if location_id else str(uuid.uuid4())
-        self.name = name if name is not None else ""
-        self.zone = zone if zone is not None else ""
-        self.capacity = int(capacity) if capacity is not None else 0
+
+        if location_id is not None:
+            self.location_id = str(location_id)
+        else:
+            self.location_id = str(uuid.uuid4())
+
+
+        if name is not None:
+            self.name = name
+        else:
+            self.name = ""
+
+
+        if zone is not None:
+            self.zone = zone
+        else:
+            self.zone = ""
+
+
+        if capacity is not None:
+            self.capacity = int(capacity)
+        else:
+            self.capacity = 0
 
         # Код за Dijkstra (W1, W2, W3...)
-        self.code = code if code is not None else ""
+        if code is not None:
+            self.code = code
+        else:
+            self.code = ""
+
 
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+
 
 
     def update_modified(self):

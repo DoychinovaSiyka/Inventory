@@ -5,25 +5,39 @@ from datetime import datetime
 
 
 
+
 class Supplier:
     def __init__(self, supplier_id=None, name="", contact="", address="", created=None, modified=None):
+        if supplier_id:
+            self.supplier_id = str(supplier_id)
+        else:
+            self.supplier_id = str(uuid.uuid4())
 
-        self.supplier_id = str(supplier_id) if supplier_id else str(uuid.uuid4())
+
         self.name = str(name).strip()
         self.contact = str(contact).strip()
         self.address = str(address).strip()
 
+
         now_val = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
+
+
 
 
 
 
     def update_modified(self):
         self.modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
 
 

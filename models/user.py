@@ -5,12 +5,20 @@ from datetime import datetime
 
 
 
+import uuid
+from datetime import datetime
 
 class User:
-    def __init__(self, first_name, last_name, email, username, password,
-                 role="Operator", status="Active", user_id=None, created=None, modified=None):
+    def __init__(self, first_name, last_name, email, username, password, role="Operator", status="Active",
+                 user_id=None, created=None, modified=None):
 
-        self.user_id = str(user_id) if user_id else str(uuid.uuid4())
+
+        if user_id:
+            self.user_id = str(user_id)
+        else:
+            self.user_id = str(uuid.uuid4())
+
+
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -21,8 +29,15 @@ class User:
 
         now_val = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        self.created = created if isinstance(created, str) else now_val
-        self.modified = modified if isinstance(modified, str) else now_val
+        if isinstance(created, str):
+            self.created = created
+        else:
+            self.created = now_val
+
+        if isinstance(modified, str):
+            self.modified = modified
+        else:
+            self.modified = now_val
 
 
 
