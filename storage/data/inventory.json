@@ -367,6 +367,23 @@
         "last_movement": "MOVE - 2026-09-02 01:13:41"
     },
     {
-        "total_products": 21
+        "product_id": "5b6a76a0-f57c-435b-89f5-25f809e20b78",
+        "product_name": "КАРТОФ",
+        "unit": "кг.",
+        "total": 889.0,
+        "warehouses": {
+            "Бургас": 329.0,
+            "Смолян": 560.0
+        },
+        "delivered": 1234.0,
+        "sold": 345.0,
+        "avg_in_price": 3.0,
+        "avg_out_price": 5.0,
+        "expense": 3702.0,
+        "revenue": 1725.0,
+        "last_movement": "MOVE - 2026-09-02 11:00:20"
+    },
+    {
+        "total_products": 22
     }
 ]

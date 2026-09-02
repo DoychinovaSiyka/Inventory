@@ -390,5 +390,19 @@
         "date": "2026-09-02 01:13:16",
         "created": "2026-09-02 01:13:16",
         "modified": "2026-09-02 01:13:16"
+    },
+    {
+        "invoice_id": "1f78852d-63e0-46d8-8104-64dddd958139",
+        "movement_id": "567d687f-fe7c-4082-a2b0-c82ab8a0b9e7",
+        "product": "КАРТОФ",
+        "quantity": 345.0,
+        "unit": "кг.",
+        "unit_price": 5.0,
+        "total_price": 1725.0,
+        "customer": "Траян",
+        "is_active": true,
+        "date": "2026-09-02 10:59:57",
+        "created": "2026-09-02 10:59:57",
+        "modified": "2026-09-02 10:59:57"
     }
 ]
