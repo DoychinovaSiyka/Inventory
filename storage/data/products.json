@@ -9,7 +9,8 @@
         "description": "Пълномаслено пастьоризирано мляко.",
         "price": 3.67,
         "created": "2026-05-21 18:57:07",
-        "modified": "2026-05-21 18:57:07"
+        "modified": "2026-05-21 18:57:07",
+        "status": "Active"
     },
     {
         "product_id": "f8b4e720-a6ae-4a1a-8974-62fd6b939c42",
@@ -21,7 +22,8 @@
         "description": "Традиционно българско кисело мляко.",
         "price": 1.98,
         "created": "2026-05-21 18:58:48",
-        "modified": "2026-05-21 18:58:48"
+        "modified": "2026-05-21 18:58:48",
+        "status": "Active"
     },
     {
         "product_id": "4a1a3169-9f88-4476-b603-e28f90f38e40",
@@ -33,7 +35,8 @@
         "description": "Балкански кашкавал, зрял 6 месеца.",
         "price": 25.78,
         "created": "2026-05-21 18:59:54",
-        "modified": "2026-05-21 18:59:54"
+        "modified": "2026-05-21 18:59:54",
+        "status": "Active"
     },
     {
         "product_id": "1529ddd0-1868-4a1d-bfba-ac5eecd67ea4",
@@ -45,7 +48,8 @@
         "description": "Френско краве масло, 250гр.",
         "price": 9.99,
         "created": "2026-05-21 19:01:03",
-        "modified": "2026-05-21 19:01:03"
+        "modified": "2026-05-21 19:01:03",
+        "status": "Active"
     },
     {
         "product_id": "a9c18800-cb9f-4d9f-a486-04ffcb01a323",
@@ -57,7 +61,8 @@
         "description": "Прясно охладено месо, български произход.",
         "price": 13.56,
         "created": "2026-05-21 19:03:03",
-        "modified": "2026-05-21 19:03:03"
+        "modified": "2026-05-21 19:03:03",
+        "status": "Active"
     },
     {
         "product_id": "f35a3aeb-11fd-457c-bb6b-ac712cd9458b",
@@ -69,7 +74,8 @@
         "description": "Класически полутраен шпеков салам.",
         "price": 8.34,
         "created": "2026-05-21 19:04:04",
-        "modified": "2026-05-21 19:04:04"
+        "modified": "2026-05-21 19:04:04",
+        "status": "Active"
     },
     {
         "product_id": "c53ddf0e-51d0-4b8a-bbb8-5d855ad726d8",
@@ -81,7 +87,8 @@
         "description": "Диетичен хляб със семена и трици.",
         "price": 4.33,
         "created": "2026-05-21 19:05:37",
-        "modified": "2026-05-21 19:05:37"
+        "modified": "2026-05-21 19:05:37",
+        "status": "Active"
     },
     {
         "product_id": "af567560-55d5-4899-ac11-12581e39c4af",
@@ -93,7 +100,8 @@
         "description": "Сладки цитруси, сорт Валенсия.",
         "price": 3.09,
         "created": "2026-05-21 19:12:15",
-        "modified": "2026-05-21 19:12:15"
+        "modified": "2026-05-21 19:12:15",
+        "status": "Active"
     },
     {
         "product_id": "5b9497d5-5ef8-4377-9c71-6fffe1997af8",
@@ -105,7 +113,8 @@
         "description": "Висококачествени тропически плодове.",
         "price": 3.89,
         "created": "2026-05-21 19:14:56",
-        "modified": "2026-05-21 19:14:56"
+        "modified": "2026-05-21 19:14:56",
+        "status": "Active"
     },
     {
         "product_id": "3b90e773-cb3a-49b0-ba08-e8213ff6bd57",
@@ -117,7 +126,8 @@
         "description": "Подходящи за пържене и печене.",
         "price": 2.89,
         "created": "2026-05-21 19:16:07",
-        "modified": "2026-05-21 19:16:07"
+        "modified": "2026-05-21 19:16:07",
+        "status": "Active"
     },
     {
         "product_id": "318436c9-6126-45ac-9630-7ad1633116ba",
@@ -129,7 +139,8 @@
         "description": "Сладки домати в опаковка 250гр.",
         "price": 5.68,
         "created": "2026-05-21 19:17:16",
-        "modified": "2026-05-21 19:20:29"
+        "modified": "2026-05-21 19:20:29",
+        "status": "Active"
     },
     {
         "product_id": "df33f6af-4fb2-4bd2-99d1-8828f6763ee9",
@@ -141,7 +152,8 @@
         "description": "Бутилка 1.5 литра.",
         "price": 2.45,
         "created": "2026-05-21 19:18:33",
-        "modified": "2026-05-21 19:18:33"
+        "modified": "2026-05-21 19:18:33",
+        "status": "Active"
     },
     {
         "product_id": "9c276cdc-2fc1-4afc-83c7-1487891ef078",
@@ -153,7 +165,8 @@
         "description": "Мляно кафе, вакуумна опаковка 250гр.",
         "price": 16.99,
         "created": "2026-05-21 19:21:32",
-        "modified": "2026-05-21 19:21:32"
+        "modified": "2026-05-21 19:21:32",
+        "status": "Active"
     },
     {
         "product_id": "9fbdfc05-36a1-407a-b2a1-3e204994004f",
@@ -165,7 +178,8 @@
         "description": "Тъмен шоколад с високо съдържание на какао.",
         "price": 7.17,
         "created": "2026-05-21 19:22:24",
-        "modified": "2026-05-21 19:22:24"
+        "modified": "2026-05-21 19:22:24",
+        "status": "Active"
     },
     {
         "product_id": "ad43f0c0-e6ea-4aab-910a-667b85c82747",
@@ -177,7 +191,8 @@
         "description": "Почистващ препарат с аромат на маслина.",
         "price": 6.01,
         "created": "2026-05-21 19:24:34",
-        "modified": "2026-05-21 19:24:34"
+        "modified": "2026-05-21 19:24:34",
+        "status": "Active"
     },
     {
         "product_id": "13889b06-e120-4d7d-9ec5-6adbe08a6ab1",
@@ -189,7 +204,8 @@
         "description": "",
         "price": 4.0,
         "created": "2026-05-26 17:27:01",
-        "modified": "2026-05-26 17:27:01"
+        "modified": "2026-05-26 17:27:01",
+        "status": "Active"
     },
     {
         "product_id": "ac1aaae2-07d2-4fce-9583-8350defac4e0",
@@ -201,7 +217,8 @@
         "description": "суедзид",
         "price": 8.0,
         "created": "2026-07-10 14:22:29",
-        "modified": "2026-07-10 14:22:29"
+        "modified": "2026-07-10 14:22:29",
+        "status": "Active"
     },
     {
         "product_id": "1718c150-fef0-4508-95c0-8d3883e33921",
@@ -213,7 +230,8 @@
         "description": "jweroi",
         "price": 4.0,
         "created": "2026-07-26 13:33:36",
-        "modified": "2026-07-26 13:33:36"
+        "modified": "2026-07-26 13:33:36",
+        "status": "Active"
     },
     {
         "product_id": "59548022-8398-4df2-b481-b31f9b546b0a",
@@ -225,7 +243,8 @@
         "description": "газирана напитка",
         "price": 3.0,
         "created": "2026-07-27 22:04:55",
-        "modified": "2026-07-27 22:04:55"
+        "modified": "2026-07-27 22:04:55",
+        "status": "Active"
     },
     {
         "product_id": "ee5b2c60-ea84-4d08-9e9e-ae3723aa5642",
@@ -237,7 +256,8 @@
         "description": "плод",
         "price": 2.0,
         "created": "2026-07-27 22:24:46",
-        "modified": "2026-07-27 22:24:46"
+        "modified": "2026-07-27 22:24:46",
+        "status": "Active"
     },
     {
         "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
@@ -249,7 +269,8 @@
         "description": "prwoi",
         "price": 3.0,
         "created": "2026-07-27 23:08:08",
-        "modified": "2026-07-27 23:08:08"
+        "modified": "2026-07-27 23:08:08",
+        "status": "Active"
     },
     {
         "product_id": "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee",
@@ -261,7 +282,8 @@
         "description": "weoi",
         "price": 3.0,
         "created": "2026-07-27 23:28:50",
-        "modified": "2026-07-27 23:28:50"
+        "modified": "2026-07-27 23:28:50",
+        "status": "Active"
     },
     {
         "product_id": "fc5ef470-c22c-48e5-9275-8dd59b465977",
@@ -273,7 +295,8 @@
         "description": "plod",
         "price": 2.0,
         "created": "2026-08-07 09:11:30",
-        "modified": "2026-08-07 09:11:30"
+        "modified": "2026-08-07 09:11:30",
+        "status": "Active"
     },
     {
         "product_id": "fd328f58-7cb0-476c-ab36-5bec35e3e788",
@@ -285,7 +308,8 @@
         "description": "Алкохол",
         "price": 4.09,
         "created": "2026-08-16 20:04:32",
-        "modified": "2026-08-27 09:59:11"
+        "modified": "2026-08-27 09:59:11",
+        "status": "Active"
     },
     {
         "product_id": "3d61f593-6cba-4a4b-abc2-3293ed5aeec5",
@@ -297,7 +321,8 @@
         "description": "газарана напитка",
         "price": 3.01,
         "created": "2026-08-27 09:58:02",
-        "modified": "2026-08-27 09:58:02"
+        "modified": "2026-08-27 09:58:02",
+        "status": "Active"
     },
     {
         "product_id": "de404504-4a4c-48cc-9b10-b4f2db5de0b0",
@@ -309,7 +334,8 @@
         "description": "зеленчук",
         "price": 3.0,
         "created": "2026-08-28 13:30:58",
-        "modified": "2026-08-28 13:30:58"
+        "modified": "2026-08-28 13:30:58",
+        "status": "Active"
     },
     {
         "product_id": "e97d9bea-843f-49a1-995e-70b4b92f7b1f",
@@ -321,7 +347,8 @@
         "description": "zelenchuk",
         "price": 2.0,
         "created": "2026-08-30 23:21:32",
-        "modified": "2026-08-30 23:21:32"
+        "modified": "2026-08-30 23:21:32",
+        "status": "Active"
     },
     {
         "product_id": "b982e826-02d5-4729-9616-202884d9943d",
@@ -333,7 +360,8 @@
         "description": "КОФЕИНОВА НАПИТКА",
         "price": 3.0,
         "created": "2026-09-01 21:38:44",
-        "modified": "2026-09-01 21:38:44"
+        "modified": "2026-09-01 21:38:44",
+        "status": "Active"
     },
     {
         "product_id": "4e57bd64-edeb-4654-8d06-f84e5507910e",
@@ -345,7 +373,8 @@
         "description": "ПЛОД ТРОПИЧЕСКИ",
         "price": 5.0,
         "created": "2026-09-01 23:22:44",
-        "modified": "2026-09-01 23:22:44"
+        "modified": "2026-09-01 23:22:44",
+        "status": "Active"
     },
     {
         "product_id": "5b6a76a0-f57c-435b-89f5-25f809e20b78",
@@ -357,7 +386,8 @@
         "description": "ЗЕЛЕНЧУК",
         "price": 3.0,
         "created": "2026-09-02 10:59:04",
-        "modified": "2026-09-02 10:59:04"
+        "modified": "2026-09-04 20:34:22",
+        "status": "Inactive"
     },
     {
         "product_id": "ea96af07-6cf3-4bc0-a335-8ffc135743df",
@@ -369,6 +399,20 @@
         "description": "цитросов плод",
         "price": 3.0,
         "created": "2026-09-04 09:37:03",
-        "modified": "2026-09-04 09:37:03"
+        "modified": "2026-09-04 09:37:03",
+        "status": "Active"
+    },
+    {
+        "product_id": "c5253078-b469-4991-a067-fcbfb9b1c612",
+        "name": "ЧУШКА",
+        "categories": [
+            "77a55c2f-85fb-4b88-93f9-579e08f84f29"
+        ],
+        "unit": "кг.",
+        "description": "ЗЕЛЕНЧУК",
+        "price": 4.0,
+        "created": "2026-09-04 21:08:06",
+        "modified": "2026-09-04 21:09:04",
+        "status": "Inactive"
     }
 ]

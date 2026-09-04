@@ -36,6 +36,9 @@ class InventoryController(AbstractController):
         summary = self.build_inventory()
         self.save(summary)
 
+    def get_all_inventory(self):
+        return self.data
+
 
 
     def _find_product(self, pid):
@@ -91,6 +94,19 @@ class InventoryController(AbstractController):
 
 
 
+
+    def get_stock_by_name(self, product_name, location_id):
+        total = 0.0
+
+        for item in self.data:
+            pid = item["product_id"]
+            product = self.product_controller.get_by_id(pid)
+
+            if product and product.name.lower() == product_name.lower():
+                qty = item["warehouses"].get(location_id, 0.0)
+                total += qty
+
+        return total
 
     def get_stock(self, pid, lid):
         product = self._find_product(pid)

@@ -9,6 +9,7 @@ from controllers.abstract_controller import AbstractController
 
 
 
+
 class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
     def __init__(self, repo, category_controller: CategoryController):
@@ -26,8 +27,12 @@ class ProductController(AbstractController):
     def _save_products(self):
         self.save(self.products)
 
+
     def get_all(self) -> List[Product]:
-        return self.products
+        return [p for p in self.products if isinstance(p, Product) and p.status == "Active"]
+
+
+
 
     def get_by_id(self, product_id: str) -> Optional[Product]:
         pid = str(product_id or "").strip().lower()
@@ -41,11 +46,14 @@ class ProductController(AbstractController):
                 return p
         return None
 
+
+
+
     def validate_field(self, field_type: str, value: str, exclude_id: str = None) -> Optional[str]:
         try:
             if field_type == "name":
                 name = self.validator.validate_name(value)
-                self.validator.validate_unique_name(name, self.products, exclude_product_id=exclude_id)
+                self.validator.validate_unique_name(name, self.products, exclude_product_id = exclude_id)
             elif field_type == "price":
                 self.validator.parse_float(value, "Цена")
             elif field_type == "description":
@@ -61,6 +69,7 @@ class ProductController(AbstractController):
             return str(e)
         except Exception as e:
             return f"Неочаквана грешка: {e}"
+
 
 
 
@@ -82,7 +91,9 @@ class ProductController(AbstractController):
         if not categories and category_ids:
             raise ValueError("Избраните категории са невалидни.")
 
-        product = Product(product_id=None, name=name, categories=categories, unit=unit, description=description, price=price)
+
+        product = Product(product_id=None, name=name, categories=categories,
+                          unit=unit, description=description, price=price, status="Active")
 
         self.products.append(product)
         self._save_products()
@@ -127,42 +138,43 @@ class ProductController(AbstractController):
 
 
 
-
-
     def delete_by_id(self, product_id: str) -> bool:
         product = self.get_by_id(product_id)
         if not product:
             return False
 
-        self.products = [p for p in self.products if p.product_id != product.product_id]
+        product.status = "Inactive"
+        product.update_modified()
         self._save_products()
         return True
 
 
 
 
-
     def search(self, keyword: str) -> List[Product]:
-        return product_filters.filter_combined(self.products, keyword=keyword)
+        active_products = self.get_all()
+        return product_filters.filter_combined(active_products, keyword=keyword)
+
 
 
 
 
     def filter_by_category_hierarchy(self, category_ids: List[str]) -> List[Product]:
-        """Филтрира продукти по категория и всички нейни подкатегории."""
         all_ids = []
 
         for cid in category_ids:
             all_ids.append(cid)
             all_ids.extend(self.category_controller.get_all_hierarchical_ids(cid))
 
-        return product_filters.filter_combined(self.products, category_ids=all_ids)
-
+        active_products = self.get_all()
+        return product_filters.filter_combined(active_products, category_ids=all_ids)
 
 
 
 
     def get_custom_sort(self, sort_type="price", algorithm="quick", reverse=True) -> List[Product]:
+        active_products = self.get_all()
+
         if sort_type == "name":
             key_fn = lambda p: p.name.lower()
         elif sort_type == "price":
@@ -170,7 +182,7 @@ class ProductController(AbstractController):
         else:
             key_fn = lambda p: p.name.lower()
 
-        products_copy = self.products[:]
+        products_copy = active_products[:]
 
         if sort_type == "name":
             return product_sorters.merge_sort(products_copy, key=key_fn, reverse=reverse)

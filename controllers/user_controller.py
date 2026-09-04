@@ -132,6 +132,10 @@ class UserController(AbstractController):
         UserValidator.validate_role(new_role)
         UserValidator.validate_not_self(acting_user.username, user.username)
 
+
+        if user.role == new_role:
+            raise ValueError(f"Ролята на '{user.username}' вече е {new_role}.")
+
         if user.role == "Admin" and new_role != "Admin":
             UserValidator.validate_not_last_admin(user, self.users)
 
@@ -139,7 +143,6 @@ class UserController(AbstractController):
         user.update_modified()
         self.save_all()
         return True
-
 
 
 

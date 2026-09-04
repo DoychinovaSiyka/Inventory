@@ -404,6 +404,22 @@
         "last_movement": "MOVE - 2026-09-04 09:38:57"
     },
     {
-        "total_products": 23
+        "product_id": "c5253078-b469-4991-a067-fcbfb9b1c612",
+        "product_name": "ЧУШКА",
+        "unit": "кг.",
+        "total": 123.0,
+        "warehouses": {
+            "Смолян": 123.0
+        },
+        "delivered": 123.0,
+        "sold": 0,
+        "avg_in_price": 5.0,
+        "avg_out_price": 0.0,
+        "expense": 615.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-04 21:08:26"
+    },
+    {
+        "total_products": 24
     }
 ]

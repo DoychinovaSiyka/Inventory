@@ -38,28 +38,32 @@ class GraphView:
             self.graph.add_edge(end, start, dist)
 
 
+
+
     def _get_warehouses_with_product(self, product_name):
         result = []
-        product = next((p for p in self.product_controller.get_all()
-                        if p.name.lower() == product_name.lower()), None)
+        has_any = False
 
-        if not product:
-            return []
-
-        product_id = str(product.product_id)
-
+        # За всеки склад проверяваме количеството от инвентара
         for loc in self.location_controller.get_all():
             warehouse_code = loc.code
             warehouse_uuid = str(loc.location_id)
 
-            if not warehouse_code:
-                continue
+            qty = self.inventory_controller.get_stock_by_name(product_name, warehouse_uuid)
 
-            qty = self.inventory_controller.get_stock(product_id, warehouse_uuid)
             if qty > 0:
+                has_any = True
                 result.append((warehouse_code, qty))
 
+        if not has_any:
+            return []
+
         return result
+
+
+
+
+
 
 
     def _build_menu(self):
@@ -67,15 +71,16 @@ class GraphView:
             [MenuItem("1", "Намери най-близка наличност", self.calculate_best_delivery),
              MenuItem("0", "Назад", lambda u: "break")])
 
+
+
+
+
     def show_menu(self, user: User):
         while True:
             menu = self._build_menu()
             choice = menu.show()
             if menu.execute(choice, user) == "break":
                 break
-
-
-
 
 
 
