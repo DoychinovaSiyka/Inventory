@@ -46,7 +46,7 @@ class InvoiceController(AbstractController):
 
         invoice = Invoice(product=movement.product_name, quantity=qty, unit=movement.unit,
                           unit_price=u_price, total_price=total, customer=cust_name, movement_id=movement.movement_id,
-                          date=movement.date, invoice_id=None, is_active=True)
+                          date=movement.date, invoice_id=None, status=True)
 
         self.invoices.append(invoice)
         self._save_invoices()
@@ -79,7 +79,7 @@ class InvoiceController(AbstractController):
 
 
     def remove(self, invoice_id: str, user_id: str) -> bool:
-        """Анулира фактура и връща стоката в склада, ако е OUT движение."""
+        """Анулира фактура и връща стоката в склада чрез ново движение IN."""
         inv = self.get_by_id(invoice_id)
         if not inv:
             return False
@@ -87,19 +87,20 @@ class InvoiceController(AbstractController):
         if not inv.is_active:
             return False
 
-
+        # Намираме движението, свързано с фактурата
         movement = None
         for m in self.movement_controller.movements:
             if m.movement_id == inv.movement_id:
                 movement = m
                 break
 
-
+        # Ако движението е OUT - връщаме количеството чрез ново движение IN
         if movement and movement.movement_type.name == "OUT":
-            self.movement_controller.inventory_controller.increase_stock(movement.product_id,
-                                                                         movement.quantity, movement.location_id)
+            # Създаваме автоматично движение IN, което връща стоката обратно
+            self.movement_controller.add_in(product_id=movement.product_id, quantity=movement.quantity, price=movement.price,
+                                            location_id=movement.location_id, supplier_id="SYSTEM", user_id=user_id)
 
-
+            # Премахваме старото OUT движение
             self.movement_controller.movements.remove(movement)
             self.movement_controller._save_movements()
 

@@ -6,7 +6,7 @@ from datetime import datetime
 
 class Invoice:
     def __init__(self, product, quantity, unit, unit_price, total_price, customer,
-                 movement_id=None, date=None, created=None, modified=None, invoice_id=None, is_active=True):
+                 movement_id=None, date=None, created=None, modified=None, invoice_id=None, status=True):
 
 
         if invoice_id:
@@ -26,7 +26,7 @@ class Invoice:
         self.unit = unit
         self.unit_price = float(unit_price)
         self.total_price = float(total_price)
-        self.is_active = bool(is_active)
+        self.is_active = bool(status)
 
 
         now_val = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -76,7 +76,7 @@ class Invoice:
                        product=data.get("product", "Неизвестен"), quantity=data.get("quantity", 0),
                        unit=data.get("unit", "бр."), unit_price=data.get("unit_price", 0.0),
                        total_price=data.get("total_price", 0.0), customer=data.get("customer", "Неизвестен"),
-                       is_active=data.get("is_active", True), date=data.get("date"), created=data.get("created"),
+                       status=data.get("is_active", True), date=data.get("date"), created=data.get("created"),
                        modified=data.get("modified"))
 
 

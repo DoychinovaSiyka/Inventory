@@ -142,6 +142,12 @@ class MovementController(AbstractController):
         if not product:
             raise ValueError("Продуктът не съществува.")
 
+
+
+
+        if isinstance(product.status, bool) and not product.status:
+            raise ValueError("Продуктът е неактивен и не може да участва в движения.")
+
         user = self.user_controller.get_by_id(user_id)
         if not user:
             raise ValueError("Потребителят не е намерен.")

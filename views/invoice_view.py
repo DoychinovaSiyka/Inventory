@@ -70,7 +70,6 @@ class InvoiceView:
         results = self.invoice_controller.search(invoice_id)
         self._show_invoices(results)
 
-
     def cancel_by_id(self, user):
         invoice_id = self._input("\nВъведете ID: ")
         if not invoice_id:
@@ -81,26 +80,23 @@ class InvoiceView:
             print("Фактурата не е намерена.")
             return
 
-        status_str = "АКТИВНА" if invoice.is_active else "АНУЛИРАНА"
+        if not invoice.is_active:
+            print("\nТази фактура вече е анулирана.\n")
+            return
 
 
-        rows = [["Статус", status_str],
-                ["Пълно ID", invoice.invoice_id],
-                ["Продукт", invoice.product],
-                ["Количество", f"{invoice.quantity} {invoice.unit}"],
-                ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
-                ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."],
-                ["Клиент", invoice.customer],
+        status_str = "АКТИВНА"
+
+        rows = [["Статус", status_str], ["Пълно ID", invoice.invoice_id], ["Продукт", invoice.product],
+                ["Количество", f"{invoice.quantity} {invoice.unit}"], ["Ед. цена", f"{float(invoice.unit_price):.2f} лв."],
+                ["ОБЩА СУМА", f"{float(invoice.total_price):.2f} лв."], ["Клиент", invoice.customer],
                 ["Дата/Час", str(invoice.date)]]
 
         print("\n" + format_table(["Детайл", "Стойност"], rows))
 
         short_id = invoice.invoice_id[:8]
 
-        if invoice.is_active:
-            if self.invoice_controller.remove(short_id, user.user_id):
-                print("\nФактурата беше успешно анулирана.")
-            else:
-                print("\nГрешка при анулиране.")
+        if self.invoice_controller.remove(short_id, user.user_id):
+            print("\nФактурата беше успешно анулирана.")
         else:
-            print("\nТази фактура вече е анулирана.")
+            print("\nГрешка при анулиране.")
