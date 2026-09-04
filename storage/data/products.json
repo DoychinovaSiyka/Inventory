@@ -358,5 +358,17 @@
         "price": 3.0,
         "created": "2026-09-02 10:59:04",
         "modified": "2026-09-02 10:59:04"
+    },
+    {
+        "product_id": "ea96af07-6cf3-4bc0-a335-8ffc135743df",
+        "name": "лимон",
+        "categories": [
+            "1cca06ac-21a3-47aa-b18e-9ffb46dc94eb"
+        ],
+        "unit": "кг.",
+        "description": "цитросов плод",
+        "price": 3.0,
+        "created": "2026-09-04 09:37:03",
+        "modified": "2026-09-04 09:37:03"
     }
 ]

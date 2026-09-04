@@ -384,6 +384,26 @@
         "last_movement": "MOVE - 2026-09-02 11:00:20"
     },
     {
-        "total_products": 22
+        "product_id": "ea96af07-6cf3-4bc0-a335-8ffc135743df",
+        "product_name": "лимон",
+        "unit": "кг.",
+        "total": 1008.0,
+        "warehouses": {
+            "Бургас": 762.0,
+            "Пловдив": 123.0,
+            "Смолян": 50.0,
+            "София": 23.0,
+            "Варна": 50.0
+        },
+        "delivered": 1209.0,
+        "sold": 201.0,
+        "avg_in_price": 4.0,
+        "avg_out_price": 4.0,
+        "expense": 4836.0,
+        "revenue": 804.0,
+        "last_movement": "MOVE - 2026-09-04 09:38:57"
+    },
+    {
+        "total_products": 23
     }
 ]
