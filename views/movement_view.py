@@ -15,8 +15,10 @@ from controllers.inventory_controller import InventoryController
 
 
 class MovementView:
-    def __init__(self, product_controller, movement_controller, user_controller,
-                 location_controller, supplier_controller, inventory_controller):
+    def __init__(self, product_controller:ProductController, movement_controller:MovementController,user_controller:UserController,
+                 location_controller:LocationController, supplier_controller:SupplierController,
+                 inventory_controller:InventoryController):
+
 
         self.product_controller = product_controller
         self.movement_controller = movement_controller

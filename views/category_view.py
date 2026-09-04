@@ -10,8 +10,8 @@ from controllers.product_controller import ProductController
 
 class CategoryView:
 
-    def __init__(self, controller: CategoryController, product_controller: ProductController):
-        self.controller = controller
+    def __init__(self, category_controller: CategoryController, product_controller: ProductController):
+        self.category_controller = category_controller
         self.product_controller = product_controller
 
 
@@ -29,17 +29,21 @@ class CategoryView:
                  MenuItem("2", "Статистика за категориите", self.show_stats)]
 
         if is_admin:
-            items.extend([
-                MenuItem("3", "Добавяне на категория", self.add_category),
-                MenuItem("4", "Редактиране на категория", self.edit_category),
-                MenuItem("5", "Изтриване на категория", self.delete_category)])
+            items.extend([MenuItem("3", "Добавяне на категория", self.add_category),
+                          MenuItem("4", "Редактиране на категория", self.edit_category),
+                          MenuItem("5", "Изтриване на категория", self.delete_category)])
 
         items.append(MenuItem("0", "Назад", lambda u: "break"))
         return Menu("Управление на категории", items)
 
 
+
+
+
+
+
     def show_all(self, _):
-        visual_tree = self.controller.get_visual_tree()
+        visual_tree = self.category_controller.get_visual_tree()
         if not visual_tree:
             print("\nНяма дефинирани категории.")
             return
@@ -60,11 +64,14 @@ class CategoryView:
                 print(f"{indent}- {cat.name} ({short_id})")
 
 
+
+
+
     def show_stats(self, _):
         print("\nСТАТИСТИКА ЗА КАТЕГОРИИТЕ")
 
-        stats = self.controller.get_stats(self.product_controller)
-        parent_categories = [c for c in self.controller.get_all() if c.parent_id is None]
+        stats = self.category_controller.get_stats(self.product_controller)
+        parent_categories = [c for c in self.category_controller.get_all() if c.parent_id is None]
 
         print(f"Брой главни категории: {len(parent_categories)}")
 
@@ -72,12 +79,13 @@ class CategoryView:
         rows = []
 
         for c in stats["categories"]:
-            cat_obj = self.controller.get_by_id(c['id'])
+            cat_obj = self.category_controller.get_by_id(c['id'])
             if cat_obj and cat_obj.parent_id is None:
                 rows.append([c['id'][:8], c['name'], str(c['product_count'])])
 
-        table_output = format_table(columns, rows)
-        print(table_output)
+        print(format_table(columns, rows))
+
+
 
 
     def add_category(self, user):
@@ -87,7 +95,7 @@ class CategoryView:
             if not name:
                 return
 
-            error = self.controller.validate_field("name", name)
+            error = self.category_controller.validate_field("name", name)
             if error:
                 print(f"Грешка: {error}")
                 continue
@@ -99,7 +107,7 @@ class CategoryView:
                 print("Описанието е задължително.")
                 continue
 
-            error = self.controller.validate_field("description", description)
+            error = self.category_controller.validate_field("description", description)
             if error:
                 print(f"Грешка: {error}")
                 continue
@@ -110,13 +118,14 @@ class CategoryView:
         parent_id = parent.category_id if parent else None
 
         try:
-            new_cat = self.controller.add({"name": name, "description": description, "parent_id": parent_id},
-                                          user_id=user.user_id)
+            new_cat = self.category_controller.add({"name": name, "description": description, "parent_id": parent_id},
+                                                   user_id=user.user_id)
             print(f"\nКатегорията '{new_cat.name}' е добавена успешно.")
         except ValueError as e:
             print(f"Грешка при валидация: {e}")
         except Exception as e:
             print(f"Грешка при запис: {e}")
+
 
 
 
@@ -133,7 +142,7 @@ class CategoryView:
                 new_name = category.name
                 break
 
-            error = self.controller.validate_field("name", new_name)
+            error = self.category_controller.validate_field("name", new_name)
             if error:
                 print(f"Грешка: {error}")
                 continue
@@ -145,7 +154,7 @@ class CategoryView:
                 new_desc = category.description
                 break
 
-            error = self.controller.validate_field("description", new_desc)
+            error = self.category_controller.validate_field("description", new_desc)
             if error:
                 print(f"Грешка: {error}")
                 continue
@@ -153,12 +162,12 @@ class CategoryView:
 
         while True:
             print("\nИзберете нов родител:")
-            choice = input("Избор: ").strip().lower()
+            choice = input("Избор: ").strip()
             if choice == "":
                 new_parent_id = category.parent_id
                 break
 
-            parent = self.controller.get_by_id(choice)
+            parent = self.category_controller.get_by_id(choice)
             if parent:
                 new_parent_id = parent.category_id
                 break
@@ -168,7 +177,7 @@ class CategoryView:
         updates = {"name": new_name, "description": new_desc, "parent_id": new_parent_id}
 
         try:
-            updated = self.controller.update(category.category_id, updates)
+            updated = self.category_controller.update(category.category_id, updates)
             if updated:
                 print(f"\nКатегорията '{new_name}' беше обновена успешно.")
             else:
@@ -180,8 +189,9 @@ class CategoryView:
 
 
 
+
     def select_category(self):
-        categories = sorted(self.controller.get_all(), key=lambda x: x.name.lower())
+        categories = sorted(self.category_controller.get_all(), key=lambda x: x.name.lower())
         if not categories:
             return None
 
@@ -199,11 +209,12 @@ class CategoryView:
                 if 0 <= idx < len(categories):
                     return categories[idx]
 
-            found = self.controller.get_by_id(choice)
+            found = self.category_controller.get_by_id(choice)
             if found:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
+
 
 
 
@@ -215,7 +226,7 @@ class CategoryView:
             return
 
         try:
-            self.controller.remove(category.category_id, user.user_id, self.product_controller)
+            self.category_controller.remove(category.category_id, user.user_id, self.product_controller)
             print(f"Категорията '{category.name}' е изтрита успешно.")
         except ValueError as e:
             print(f"Грешка: {e}")

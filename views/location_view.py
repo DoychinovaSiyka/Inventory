@@ -6,9 +6,11 @@ from controllers.location_controller import LocationController
 
 
 
+
+
 class LocationView:
     def __init__(self, location_controller: LocationController):
-        self.controller = location_controller
+        self.location_controller = location_controller
 
 
     def show_menu(self, user):
@@ -36,19 +38,19 @@ class LocationView:
         return Menu("Управление на локации", items)
 
 
-
-
     def show_all(self, _):
-        locations = self.controller.get_all()
+        locations = self.location_controller.get_all()
         if not locations:
             print("\nНяма налични локации.")
             return
 
         print("\nСПИСЪК С ЛОКАЦИИ")
         columns = ["Код", "Име", "Зона", "Капацитет", "Системно ID"]
-        rows = [[loc.code if loc.code else "-", loc.name, loc.zone, loc.capacity, loc.location_id[:8]]
-                for loc in locations]
+        rows = [[loc.code if loc.code else "-", loc.name, loc.zone, loc.capacity, loc.location_id[:8]] for loc in locations]
         print(format_table(columns, rows))
+
+
+
 
 
     def search_location(self, _):
@@ -58,16 +60,17 @@ class LocationView:
             print("Празно търсене.")
             return
 
-        results = self.controller.search(query)
+        results = self.location_controller.search(query)
         if not results:
             print("Няма намерени локации.")
             return
 
         print("\nНамерени локации:")
         columns = ["Код", "Име", "Зона", "Капацитет", "Системно ID"]
-        rows = [[loc.get("code", "-"), loc["name"], loc["zone"], loc["capacity"], loc["id"]]
-                for loc in results]
+        rows = [[loc.get("code", "-"), loc["name"], loc["zone"], loc["capacity"], loc["id"]] for loc in results]
         print(format_table(columns, rows))
+
+
 
 
     def add_location(self, _):
@@ -94,12 +97,14 @@ class LocationView:
                     break
                 print("Капацитетът трябва да е положително число.")
 
-            new_loc = self.controller.add(name=name, zone=zone, capacity=capacity, code=code)
-            print(f"\nЛокацията е добавена успешно!")
+            new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity, code=code)
+            print("\nЛокацията е добавена успешно!")
             print(f"Код: {new_loc.code} | Име: {new_loc.name}")
 
         except Exception as e:
             print(f"Грешка при добавяне: {e}")
+
+
 
 
 
@@ -110,7 +115,7 @@ class LocationView:
         if not identifier:
             return
 
-        location = self.controller.get_by_id(identifier)
+        location = self.location_controller.get_by_id(identifier)
         if not location:
             print("Не е намерена локация.")
             return
@@ -129,11 +134,15 @@ class LocationView:
             new_cap_raw = input(f"Нов капацитет [{location.capacity}]: ").strip()
             new_cap = new_cap_raw if new_cap_raw else location.capacity
 
-            self.controller.update(location.location_id, name=new_name, zone=new_zone, capacity=new_cap, code=new_code)
+            self.location_controller.update(location.location_id, name=new_name, zone=new_zone, capacity=new_cap, code=new_code)
             print("Данните са обновени успешно.")
 
         except Exception as e:
             print(f"Грешка при обновяване: {e}")
+
+
+
+
 
 
     def delete_location(self, _):
@@ -142,13 +151,13 @@ class LocationView:
         if not identifier:
             return
 
-        location = self.controller.get_by_id(identifier)
+        location = self.location_controller.get_by_id(identifier)
         if not location:
             print("Не е намерена локация.")
             return
 
         try:
-            if self.controller.remove(location.location_id):
+            if self.location_controller.remove(location.location_id):
                 print(f"Локация {location.code} / {location.name} е изтрита успешно.")
         except Exception as e:
             print(f"Грешка при изтриване: {e}")

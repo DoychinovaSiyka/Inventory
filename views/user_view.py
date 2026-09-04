@@ -6,13 +6,16 @@ from views.password_utils import format_table
 
 
 
+
+
+
 class UserView:
-    def __init__(self, controller: UserController):
-        self.controller = controller
+    def __init__(self, user_controller: UserController):
+        self.user_controller = user_controller
 
 
     def show_menu(self, user):
-        if not self.controller.is_admin(user):
+        if not self.user_controller.is_admin(user):
             print("\nНямате администраторски права.")
             return
 
@@ -21,6 +24,7 @@ class UserView:
             choice = menu.show()
             if menu.execute(choice, user) == "break":
                 break
+
 
     def _build_menu(self):
         return Menu("Администрация на потребители", [
@@ -36,7 +40,7 @@ class UserView:
 
 
     def show_users(self, _):
-        users = self.controller.get_all()
+        users = self.user_controller.get_all()
         if not users:
             print("\nНяма регистрирани потребители.")
             return
@@ -49,6 +53,9 @@ class UserView:
 
 
 
+
+
+
     def add_user(self, _):
         print("\nНОВ ПОТРЕБИТЕЛ")
 
@@ -56,28 +63,28 @@ class UserView:
             username = input("Потребителско име: ").strip()
             if not username:
                 return
-            error = self.controller.validate_input("username", username)
+            error = self.user_controller.validate_input("username", username)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
             email = input("Имейл: ").strip()
-            error = self.controller.validate_input("email", email)
+            error = self.user_controller.validate_input("email", email)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
             password = input("Парола: ").strip()
-            error = self.controller.validate_input("password", password)
+            error = self.user_controller.validate_input("password", password)
             if not error:
                 break
             print(f"Грешка: {error}")
 
         while True:
             role = input("Роля (Admin/Operator) [Operator]: ").strip().capitalize() or "Operator"
-            error = self.controller.validate_input("role", role)
+            error = self.user_controller.validate_input("role", role)
             if not error:
                 break
             print(f"Грешка: {error}")
@@ -86,10 +93,12 @@ class UserView:
         ln = input("Фамилия: ").strip() or "-"
 
         try:
-            self.controller.register(fn, ln, email, username, password, role)
+            self.user_controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен успешно.")
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
+
+
 
 
 
@@ -100,22 +109,24 @@ class UserView:
         if not target:
             return
 
-        user_obj = self.controller.find_user(target)
+        user_obj = self.user_controller.find_user(target)
         if not user_obj:
             print(f"Грешка: Потребител '{target}' не е намерен.")
             return
 
         print(f"Текуща роля: {user_obj.role}")
         new_role = input("Нова роля (Admin/Operator): ").strip().lower().capitalize()
+
         if new_role not in ["Admin", "Operator"]:
             print("Грешка: Невалидна роля. Разрешени: Admin, Operator.")
             return
 
         try:
-            self.controller.change_role(current_user, user_obj.user_id, new_role)
+            self.user_controller.change_role(current_user, user_obj.user_id, new_role)
             print(f"Ролята на '{user_obj.username}' е променена на {new_role}.")
         except Exception as e:
             print(f"Грешка: {e}")
+
 
 
 
@@ -128,10 +139,12 @@ class UserView:
             return
 
         try:
-            self.controller.change_status(current_user, target, "Inactive")
+            self.user_controller.change_status(current_user, target, "Inactive")
             print(f"Потребител '{target}' е деактивиран.")
         except Exception as e:
             print(f"Грешка: {e}")
+
+
 
 
 
@@ -144,7 +157,7 @@ class UserView:
             return
 
         try:
-            self.controller.change_status(current_user, target, "Active")
+            self.user_controller.change_status(current_user, target, "Active")
             print(f"Потребител '{target}' е активиран.")
         except Exception as e:
             print(f"Грешка: {e}")
@@ -162,7 +175,7 @@ class UserView:
             if not target:
                 return
 
-            user_to_delete = self.controller.find_user(target)
+            user_to_delete = self.user_controller.find_user(target)
             if not user_to_delete:
                 print(f"Потребител '{target}' не съществува.")
                 continue
@@ -170,7 +183,7 @@ class UserView:
             break
 
         try:
-            self.controller.delete_user(current_user, target)
+            self.user_controller.delete_user(current_user, target)
             print(f"Потребителят '{target}' е изтрит успешно.")
         except Exception as e:
             print(f"Грешка: {e}")
