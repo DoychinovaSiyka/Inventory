@@ -1,4 +1,3 @@
-import sys
 from controllers.user_controller import UserController
 from controllers.product_controller import ProductController
 from controllers.category_controller import CategoryController
@@ -134,7 +133,7 @@ class InventoryApplication:
                 self._anonymous_flow()
             elif choice == "0":
                 print("\nДовиждане!")
-                sys.exit()
+                return
             else:
                 print("\nНевалиден избор. Моля, изберете опция от менюто.")
 
