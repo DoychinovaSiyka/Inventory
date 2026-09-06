@@ -146,6 +146,7 @@ class MovementView:
 
 
 
+
     def process_transfer(self, user):
         print("\nВътрешно преместване")
 

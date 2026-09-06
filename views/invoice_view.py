@@ -70,6 +70,9 @@ class InvoiceView:
         results = self.invoice_controller.search(invoice_id)
         self._show_invoices(results)
 
+
+
+
     def cancel_by_id(self, user):
         invoice_id = self._input("\nВъведете ID: ")
         if not invoice_id:

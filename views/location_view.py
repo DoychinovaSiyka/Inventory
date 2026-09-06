@@ -75,36 +75,55 @@ class LocationView:
 
     def add_location(self, _):
         print("\nНова локация")
-        try:
+
+        while True:
             code = input("Кратък КОД (напр. W1): ").strip()
             if not code:
                 return
+            error = self.location_controller.validate_field("code", code)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+
+        while True:
             name = input("Име на локация: ").strip()
             if not name:
                 return
+            error = self.location_controller.validate_field("name", name)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+
+        while True:
             zone = input("Зона/Сектор: ").strip()
             if not zone:
                 return
+            error = self.location_controller.validate_field("zone", zone)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
-            while True:
-                capacity_raw = input("Капацитет (число): ").strip()
-                if not capacity_raw:
-                    return
-                if capacity_raw.isdigit():
-                    capacity = int(capacity_raw)
-                    break
-                print("Капацитетът трябва да е положително число.")
 
+        while True:
+            cap_raw = input("Капацитет (число): ").strip()
+            error = self.location_controller.validate_field("capacity", cap_raw)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            capacity = int(cap_raw)
+            break
+
+        try:
             new_loc = self.location_controller.add(name=name, zone=zone, capacity=capacity, code=code)
             print("\nЛокацията е добавена успешно!")
             print(f"Код: {new_loc.code} | Име: {new_loc.name}")
-
         except Exception as e:
             print(f"Грешка при добавяне: {e}")
-
-
 
 
 
@@ -121,19 +140,48 @@ class LocationView:
             return
 
         print(f"\nРедактиране на [{location.name}]")
-        try:
+
+
+        while True:
             new_code_raw = input(f"Нов КОД [{location.code}]: ").strip()
             new_code = new_code_raw if new_code_raw else location.code
+            error = self.location_controller.validate_field("code", new_code)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+
+        while True:
             new_name_raw = input(f"Ново име [{location.name}]: ").strip()
             new_name = new_name_raw if new_name_raw else location.name
+            error = self.location_controller.validate_field("name", new_name)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+
+        while True:
             new_zone_raw = input(f"Нова зона [{location.zone}]: ").strip()
             new_zone = new_zone_raw if new_zone_raw else location.zone
+            error = self.location_controller.validate_field("zone", new_zone)
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+
+        while True:
             new_cap_raw = input(f"Нов капацитет [{location.capacity}]: ").strip()
             new_cap = new_cap_raw if new_cap_raw else location.capacity
+            error = self.location_controller.validate_field("capacity", str(new_cap))
+            if error:
+                print(f"Грешка: {error}")
+                continue
+            break
 
+        try:
             self.location_controller.update(location.location_id, name=new_name, zone=new_zone, capacity=new_cap, code=new_code)
             print("Данните са обновени успешно.")
 

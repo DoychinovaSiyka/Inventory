@@ -186,6 +186,7 @@ class ProductMenuView:
         try:
             new_product = self.product_controller.add(product_data)
             print(f"\nПродуктът '{new_product.name}' е добавен успешно.")
+
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
 

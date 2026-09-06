@@ -189,7 +189,6 @@ class CategoryView:
 
 
 
-
     def select_category(self):
         categories = sorted(self.category_controller.get_all(), key=lambda x: x.name.lower())
         if not categories:
@@ -214,6 +213,7 @@ class CategoryView:
                 return found
 
             print("Невалиден избор. Опитайте пак.")
+
 
 
 

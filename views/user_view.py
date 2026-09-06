@@ -95,8 +95,10 @@ class UserView:
         try:
             self.user_controller.register(fn, ln, email, username, password, role)
             print(f"\nПотребител '{username}' е добавен успешно.")
+
         except Exception as e:
             print(f"\nГрешка при запис: {e}")
+
 
 
 
@@ -185,5 +187,6 @@ class UserView:
         try:
             self.user_controller.delete_user(current_user, target)
             print(f"Потребителят '{target}' е изтрит успешно.")
+
         except Exception as e:
             print(f"Грешка: {e}")
