@@ -460,5 +460,19 @@
         "date": "2026-09-06 12:40:45",
         "created": "2026-09-06 12:40:45",
         "modified": "2026-09-06 12:40:45"
+    },
+    {
+        "invoice_id": "20521d8a-2efb-4c4f-9c35-d87ae8970a12",
+        "movement_id": "b1ac66e8-a339-4848-a231-3e00077ee449",
+        "product": "Сладолед",
+        "quantity": 789.0,
+        "unit": "бр.",
+        "unit_price": 7.0,
+        "total_price": 5523.0,
+        "customer": "Стамен",
+        "is_active": false,
+        "date": "2026-09-06 21:50:05",
+        "created": "2026-09-06 21:50:05",
+        "modified": "2026-09-06 21:51:18"
     }
 ]

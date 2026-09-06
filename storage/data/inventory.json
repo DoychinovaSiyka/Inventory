@@ -472,6 +472,23 @@
         "last_movement": "MOVE - 2026-09-06 12:40:56"
     },
     {
-        "total_products": 27
+        "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
+        "product_name": "Сладолед",
+        "unit": "бр.",
+        "total": 2788.0,
+        "warehouses": {
+            "Варна": 2598.0,
+            "Смолян": 190.0
+        },
+        "delivered": 2788.0,
+        "sold": 0,
+        "avg_in_price": 6.0,
+        "avg_out_price": 0.0,
+        "expense": 16728.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-06 21:51:18"
+    },
+    {
+        "total_products": 28
     }
 ]

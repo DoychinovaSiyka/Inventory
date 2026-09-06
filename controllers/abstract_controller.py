@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
+from storage.repository import Repository
 
 
 
 
 class AbstractController(ABC):
-    def __init__(self, repo):
+    def __init__(self, repo:Repository):
         self.repo = repo
 
     @abstractmethod
