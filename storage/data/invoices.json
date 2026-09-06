@@ -218,10 +218,10 @@
         "unit_price": 5.0,
         "total_price": 2280.0,
         "customer": "Dida",
-        "is_active": true,
+        "is_active": false,
         "date": "2026-07-27 23:08:46",
         "created": "2026-07-27 23:08:46",
-        "modified": "2026-07-27 23:08:46"
+        "modified": "2026-09-05 14:48:35"
     },
     {
         "invoice_id": "e65c8db2-5e06-4d04-ba80-f41dd6facd8a",
@@ -418,5 +418,47 @@
         "date": "2026-09-04 09:37:58",
         "created": "2026-09-04 09:37:58",
         "modified": "2026-09-04 09:37:58"
+    },
+    {
+        "invoice_id": "40469b66-733c-4dbf-8c1e-bd7b5dcc15f3",
+        "movement_id": "cf62a0ce-95d9-445e-b4be-9774c9db2b71",
+        "product": "Вафла",
+        "quantity": 34.0,
+        "unit": "бр.",
+        "unit_price": 6.0,
+        "total_price": 204.0,
+        "customer": "Димитър Димитров",
+        "is_active": true,
+        "date": "2026-09-05 14:45:29",
+        "created": "2026-09-05 14:45:29",
+        "modified": "2026-09-05 14:45:29"
+    },
+    {
+        "invoice_id": "63463e04-1d9f-4770-94b1-5441c7a9a4af",
+        "movement_id": "63210040-a3f6-4b05-b928-c0a88e9b2330",
+        "product": "Кайсия",
+        "quantity": 567.0,
+        "unit": "кг.",
+        "unit_price": 4.0,
+        "total_price": 2268.0,
+        "customer": "Тодор Константинов",
+        "is_active": false,
+        "date": "2026-09-05 15:32:00",
+        "created": "2026-09-05 15:32:00",
+        "modified": "2026-09-05 15:33:45"
+    },
+    {
+        "invoice_id": "3471c9e5-20bc-436a-a1d3-11ccdbba36a8",
+        "movement_id": "5bd67592-b6cf-4054-813c-0a4f4bfb302b",
+        "product": "КАФЕ НОВА БРАЗИЛИЯ",
+        "quantity": 456.0,
+        "unit": "бр.",
+        "unit_price": 7.88,
+        "total_price": 3593.28,
+        "customer": "Калин Димитров",
+        "is_active": true,
+        "date": "2026-09-06 12:40:45",
+        "created": "2026-09-06 12:40:45",
+        "modified": "2026-09-06 12:40:45"
     }
 ]

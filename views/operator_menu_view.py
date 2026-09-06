@@ -33,7 +33,7 @@ class OperatorMenuView:
         return Menu("Операторско меню", [
             MenuItem("1", "Управление на продукти (защитено)", self.open_products),
             MenuItem("2", "Управление на категории (защитено)", self.open_categories),
-            MenuItem("3", "Доставки и продажби (IN/OUT)", self.open_movements),
+            MenuItem("3", "Доставки, продажби и преместване (IN/OUT/MOVE)", self.open_movements),
             MenuItem("4", "Справки и анализи (защитено)", self.open_reports),
             MenuItem("5", "Архив фактури (защитено)", self.open_invoices),
             MenuItem("6", "Информация за системата", self.open_system_info),

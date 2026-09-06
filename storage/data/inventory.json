@@ -175,18 +175,18 @@
         "product_id": "72cad965-66cc-4a2c-aca6-4f7201f1fb38",
         "product_name": "sisa",
         "unit": "кг.",
-        "total": 443.0,
+        "total": 1355.0,
         "warehouses": {
-            "Варна": 398.0,
+            "Варна": 1310.0,
             "Бургас": 45.0
         },
-        "delivered": 899.0,
-        "sold": 456.0,
-        "avg_in_price": 3.32,
-        "avg_out_price": 5.0,
-        "expense": 2984.68,
-        "revenue": 2280.0,
-        "last_movement": "MOVE - 2026-07-27 23:08:56"
+        "delivered": 1355.0,
+        "sold": 0,
+        "avg_in_price": 4.16,
+        "avg_out_price": 0.0,
+        "expense": 5636.8,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-05 14:48:35"
     },
     {
         "product_id": "a39808fd-bd4a-4bcd-9bb5-627cf27b3bee",
@@ -420,6 +420,58 @@
         "last_movement": "IN - 2026-09-04 21:08:26"
     },
     {
-        "total_products": 24
+        "product_id": "77458af4-96b2-4e04-ad39-eecd72488cda",
+        "product_name": "Вафла",
+        "unit": "бр.",
+        "total": 1984.0,
+        "warehouses": {
+            "Варна": 1651.0,
+            "Смолян": 199.0,
+            "Пловдив": 134.0
+        },
+        "delivered": 2018.0,
+        "sold": 34.0,
+        "avg_in_price": 4.0,
+        "avg_out_price": 6.0,
+        "expense": 8072.0,
+        "revenue": 204.0,
+        "last_movement": "IN - 2026-09-06 13:11:40"
+    },
+    {
+        "product_id": "a58e3804-9141-438d-8436-9974d90e5770",
+        "product_name": "Кайсия",
+        "unit": "кг.",
+        "total": 1834.0,
+        "warehouses": {
+            "Смолян": 1489.0,
+            "Бургас": 345.0
+        },
+        "delivered": 1834.0,
+        "sold": 0,
+        "avg_in_price": 3.0,
+        "avg_out_price": 0.0,
+        "expense": 5502.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-05 15:33:45"
+    },
+    {
+        "product_id": "b284bca3-cdfb-42c9-a714-b4d3585ec756",
+        "product_name": "КАФЕ НОВА БРАЗИЛИЯ",
+        "unit": "бр.",
+        "total": 1543.0,
+        "warehouses": {
+            "Бургас": 976.0,
+            "Варна": 567.0
+        },
+        "delivered": 1999.0,
+        "sold": 456.0,
+        "avg_in_price": 6.0,
+        "avg_out_price": 7.88,
+        "expense": 11994.0,
+        "revenue": 3593.28,
+        "last_movement": "MOVE - 2026-09-06 12:40:56"
+    },
+    {
+        "total_products": 27
     }
 ]
