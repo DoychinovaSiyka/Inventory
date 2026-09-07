@@ -27,5 +27,4 @@ class AbstractController(ABC):
 
 
     def save(self, data):
-        normalized = [self.to_dict(obj) for obj in data]
-        self.repo.save(normalized)
+        self.repo.save([self.to_dict(obj) for obj in data])
