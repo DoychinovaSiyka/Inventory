@@ -54,6 +54,7 @@ class InventoryApplication:
         self.inventory_controller = InventoryController(self.inventory_repo, self.product_controller,
                                                         self.location_controller, self.movement_controller)
 
+        self.location_controller.inventory_controller = self.inventory_controller
         self.movement_controller.set_inventory_controller(self.inventory_controller)
 
         self.invoice_controller = InvoiceController(self.invoice_repo, self.movement_controller)

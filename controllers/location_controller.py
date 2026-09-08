@@ -120,42 +120,24 @@ class LocationController(AbstractController):
 
 
 
-
-
     def remove(self, location_id: str) -> bool:
         location = self.get_by_id(location_id)
         if location is None:
             raise ValueError(f"Локация с идентификатор {location_id} не съществува.")
 
+        # Проверка за наличности в склада
         if self.inventory_controller:
-            products_data = self.inventory_controller.data.get("products", {})
-            for pid, pdata in products_data.items():
-                locations_map = pdata.get("locations", {})
+            for product in self.inventory_controller.data:
+                warehouses = product.get("warehouses", {})
+                qty = float(warehouses.get(location.location_id, 0))
 
-                normalized_map = {}
-                for key, qty in locations_map.items():
-                    loc_obj = self.get_by_id(key)
-                    if loc_obj:
-                        normalized_map[loc_obj.location_id] = qty
-                    else:
-                        normalized_map[key] = qty
+                if qty > 0:
+                    raise ValueError("Не можете да изтриете склад, в който има наличност.")
 
-                qty = normalized_map.get(location.location_id, 0)
-
-                try:
-                    qty_value = float(qty)
-                except Exception:
-                    qty_value = 0.0
-
-                if qty_value > 0:
-                    raise ValueError("Локацията съдържа стока и не може да бъде изтрита.")
-
-        full_id = location.location_id
-        self.locations = [l for l in self.locations if l.location_id != full_id]
+        # Ако няма наличност - изтриваме
+        self.locations = [l for l in self.locations if l.location_id != location.location_id]
         self._save_locations()
         return True
-
-
 
 
 

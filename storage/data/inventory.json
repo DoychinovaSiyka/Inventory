@@ -489,6 +489,24 @@
         "last_movement": "IN - 2026-09-06 21:51:18"
     },
     {
-        "total_products": 28
+        "product_id": "581a9ebd-10f3-48cb-b53a-3ecfb5fff70a",
+        "product_name": "ВИНО",
+        "unit": "бр.",
+        "total": 2790.0,
+        "warehouses": {
+            "Бургас": 2600.0,
+            "Смолян": 156.0,
+            "София": 34.0
+        },
+        "delivered": 2790.0,
+        "sold": 0,
+        "avg_in_price": 11.5,
+        "avg_out_price": 0.0,
+        "expense": 32085.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-08 12:34:15"
+    },
+    {
+        "total_products": 29
     }
 ]

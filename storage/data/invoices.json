@@ -474,5 +474,19 @@
         "date": "2026-09-06 21:50:05",
         "created": "2026-09-06 21:50:05",
         "modified": "2026-09-06 21:51:18"
+    },
+    {
+        "invoice_id": "369e6898-2504-480c-af03-ec94831da2ab",
+        "movement_id": "1e34967c-d651-4b16-ad90-7e1fe6351a39",
+        "product": "ВИНО",
+        "quantity": 890.0,
+        "unit": "бр.",
+        "unit_price": 11.0,
+        "total_price": 9790.0,
+        "customer": "Нанко",
+        "is_active": false,
+        "date": "2026-09-08 12:32:20",
+        "created": "2026-09-08 12:32:20",
+        "modified": "2026-09-08 12:34:15"
     }
 ]
