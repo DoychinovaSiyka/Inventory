@@ -14,7 +14,6 @@ class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
     def __init__(self, repo, category_controller: CategoryController):
         self.category_controller = category_controller
-        self.validator = ProductValidator()
         super().__init__(repo)
         self.products = self.load() or []
 
@@ -52,14 +51,14 @@ class ProductController(AbstractController):
     def validate_field(self, field_type: str, value: str, exclude_id: str = None) -> Optional[str]:
         try:
             if field_type == "name":
-                name = self.validator.validate_name(value)
-                self.validator.validate_unique_name(name, self.products, exclude_product_id = exclude_id)
+                name = ProductValidator.validate_name(value)
+                ProductValidator.validate_unique_name(name, self.products, exclude_product_id = exclude_id)
             elif field_type == "price":
-                self.validator.parse_float(value, "Цена")
+                ProductValidator.parse_float(value, "Цена")
             elif field_type == "description":
-                self.validator.validate_description(value)
+                    ProductValidator.validate_description(value)
             elif field_type == "unit":
-                self.validator.validate_unit(value)
+                ProductValidator.validate_unit(value)
             elif field_type == "category":
                 if not self.category_controller.get_by_id(value):
                     return "Невалидна категория."
@@ -74,12 +73,12 @@ class ProductController(AbstractController):
 
 
     def add(self, product_data: dict) -> Product:
-        name = self.validator.validate_name(product_data["name"])
-        self.validator.validate_unique_name(name, self.products)
+        name = ProductValidator.validate_name(product_data["name"])
+        ProductValidator.validate_unique_name(name, self.products)
 
-        price = self.validator.parse_float(product_data["price"], "Цена")
-        unit = self.validator.validate_unit(product_data.get("unit", "бр."))
-        description = self.validator.validate_description(product_data.get("description", ""))
+        price = ProductValidator.parse_float(product_data["price"], "Цена")
+        unit = ProductValidator.validate_unit(product_data.get("unit", "бр."))
+        description = ProductValidator.validate_description(product_data.get("description", ""))
 
         category_ids = product_data.get("category_ids", [])
         categories = []
@@ -108,18 +107,18 @@ class ProductController(AbstractController):
             return False
 
         if "name" in updates:
-            new_name = self.validator.validate_name(updates["name"])
-            self.validator.validate_unique_name(new_name, self.products, exclude_product_id=product.product_id)
+            new_name = ProductValidator.validate_name(updates["name"])
+            ProductValidator.validate_unique_name(new_name, self.products, exclude_product_id=product.product_id)
             product.name = new_name
 
         if "price" in updates:
-            product.price = self.validator.parse_float(updates["price"], "Цена")
+            product.price = ProductValidator.parse_float(updates["price"], "Цена")
 
         if "description" in updates:
-            product.description = self.validator.validate_description(updates["description"])
+            product.description = ProductValidator.validate_description(updates["description"])
 
         if "unit" in updates:
-            product.unit = self.validator.validate_unit(updates["unit"])
+            product.unit = ProductValidator.validate_unit(updates["unit"])
 
         if "category_ids" in updates:
             new_cats = []

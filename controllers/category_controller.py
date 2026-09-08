@@ -8,6 +8,7 @@ from controllers.abstract_controller import AbstractController
 
 
 
+
 class CategoryController(AbstractController):
     """Управлява категориите и йерархичната им структура."""
     def __init__(self, repo):
