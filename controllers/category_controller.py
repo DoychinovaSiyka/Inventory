@@ -32,6 +32,7 @@ class CategoryController(AbstractController):
         return self.categories
 
 
+
     def get_by_id(self, user_input: str) -> Optional[Category]:
         target = str(user_input or "").strip().lower()
         if not target:
@@ -39,8 +40,13 @@ class CategoryController(AbstractController):
 
         for c in self.categories:
             cid = str(c.category_id).lower()
-            if cid.startswith(target):
+            if cid == target:
                 return c
+
+
+            if len(target) == 8 and cid.startswith(target):
+                return c
+
         return None
 
 

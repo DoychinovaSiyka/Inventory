@@ -3,30 +3,17 @@ from models.category import Category
 
 
 
-
-
-
-
 def get_all_children_ids(categories, parent_id):
     result = []
-    visited = set()
 
-    def collect(pid):
-        pid_str = str(pid)
-        if pid_str in visited:
-            return
-        visited.add(pid_str)
-
+    def dfs(pid):
         for c in categories:
-            if str(c.parent_id) == pid_str:
-                cid = str(c.category_id)
-                result.append(cid)
-                collect(cid)
+            if c.parent_id == pid:
+                result.append(c.category_id)
+                dfs(c.category_id)
 
-    collect(parent_id)
+    dfs(parent_id)
     return result
-
-
 
 
 
