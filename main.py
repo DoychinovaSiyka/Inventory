@@ -121,7 +121,6 @@ class InventoryApplication:
 
 
 
-
     def run(self):
         while True:
             print("\n-----------------------------------------------------------\n")
