@@ -110,10 +110,13 @@ class InventoryApplication:
 
 
 
+
+
     def _anonymous_flow(self):
         guest = self.user_controller.create_anonymous_user()
         print("\nВлизане като Гост (Само за четене)...")
         self.anonymous_menu.show_menu(guest)
+
 
 
 

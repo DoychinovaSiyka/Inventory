@@ -488,5 +488,47 @@
         "date": "2026-09-08 12:32:20",
         "created": "2026-09-08 12:32:20",
         "modified": "2026-09-08 12:34:15"
+    },
+    {
+        "invoice_id": "11334087-9a47-4ad8-a8cc-bc3572c49c27",
+        "movement_id": "be719a63-6329-4abd-b5ac-e23554d96d3f",
+        "product": "banani",
+        "quantity": 90.0,
+        "unit": "кг.",
+        "unit_price": 8.0,
+        "total_price": 720.0,
+        "customer": "Rich",
+        "is_active": false,
+        "date": "2026-09-26 14:08:15",
+        "created": "2026-09-26 14:08:15",
+        "modified": "2026-09-26 14:09:44"
+    },
+    {
+        "invoice_id": "f0a0fdd9-79f4-44e5-8394-4b69f7989e3d",
+        "movement_id": "344cc49c-95d1-409c-81ba-85a1ab55f5a8",
+        "product": "сладолед",
+        "quantity": 98.0,
+        "unit": "бр.",
+        "unit_price": 6.0,
+        "total_price": 588.0,
+        "customer": "Стамен Кирилов",
+        "is_active": false,
+        "date": "2026-09-29 22:43:19",
+        "created": "2026-09-29 22:43:19",
+        "modified": "2026-09-29 22:45:47"
+    },
+    {
+        "invoice_id": "6891387c-fbff-4a97-8b8d-2f190cc29e3a",
+        "movement_id": "fba34b04-2162-4120-a3fe-9598057a56c3",
+        "product": "сладолед",
+        "quantity": 34.0,
+        "unit": "бр.",
+        "unit_price": 3.0,
+        "total_price": 102.0,
+        "customer": "Irina Hristova",
+        "is_active": true,
+        "date": "2026-10-08 21:37:23",
+        "created": "2026-10-08 21:37:23",
+        "modified": "2026-10-08 21:37:23"
     }
 ]

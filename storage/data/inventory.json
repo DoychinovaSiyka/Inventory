@@ -475,18 +475,19 @@
         "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
         "product_name": "сладолед",
         "unit": "бр.",
-        "total": 2788.0,
+        "total": 3886.0,
         "warehouses": {
-            "Варна": 2598.0,
-            "Смолян": 190.0
+            "Варна": 3730.0,
+            "Смолян": 122.0,
+            "Пловдив": 34.0
         },
-        "delivered": 2788.0,
-        "sold": 0,
-        "avg_in_price": 6.0,
-        "avg_out_price": 0.0,
-        "expense": 16728.0,
-        "revenue": 0.0,
-        "last_movement": "IN - 2026-09-06 21:51:18"
+        "delivered": 3920.0,
+        "sold": 34.0,
+        "avg_in_price": 5.6,
+        "avg_out_price": 3.0,
+        "expense": 21952.0,
+        "revenue": 102.0,
+        "last_movement": "MOVE - 2026-10-08 21:37:34"
     },
     {
         "product_id": "581a9ebd-10f3-48cb-b53a-3ecfb5fff70a",
@@ -507,6 +508,23 @@
         "last_movement": "IN - 2026-09-08 12:34:15"
     },
     {
-        "total_products": 29
+        "product_id": "8cff30e2-c78b-48b6-8fcb-befa396db968",
+        "product_name": "banani",
+        "unit": "кг.",
+        "total": 1090.0,
+        "warehouses": {
+            "Варна": 1000.0,
+            "Бургас": 90.0
+        },
+        "delivered": 1090.0,
+        "sold": 0,
+        "avg_in_price": 6.5,
+        "avg_out_price": 0.0,
+        "expense": 7085.0,
+        "revenue": 0.0,
+        "last_movement": "IN - 2026-09-26 14:09:44"
+    },
+    {
+        "total_products": 30
     }
 ]
