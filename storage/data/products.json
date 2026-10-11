@@ -456,15 +456,15 @@
     },
     {
         "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
-        "name": "сладолед",
+        "name": "Сладолед \"Family\"",
         "categories": [
-            "9ba0a2b0-c1a3-4d83-be1f-85a5bcc0fd5f"
+            "ce34ff4a-615b-4b02-897b-12043f5f4542"
         ],
         "unit": "бр.",
-        "description": "захарно изделие",
-        "price": 4.0,
+        "description": "Сладко изделие",
+        "price": 5.0,
         "created": "2026-09-06 21:49:33",
-        "modified": "2026-09-08 10:25:53",
+        "modified": "2026-10-11 15:48:06",
         "status": "Active"
     },
     {

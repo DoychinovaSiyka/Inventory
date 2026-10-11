@@ -473,21 +473,21 @@
     },
     {
         "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
-        "product_name": "сладолед",
+        "product_name": "Сладолед \"Family\"",
         "unit": "бр.",
-        "total": 3886.0,
+        "total": 3997.0,
         "warehouses": {
-            "Варна": 3730.0,
-            "Смолян": 122.0,
+            "Варна": 3853.0,
+            "Смолян": 110.0,
             "Пловдив": 34.0
         },
-        "delivered": 3920.0,
-        "sold": 34.0,
-        "avg_in_price": 5.6,
-        "avg_out_price": 3.0,
-        "expense": 21952.0,
-        "revenue": 102.0,
-        "last_movement": "MOVE - 2026-10-08 21:37:34"
+        "delivered": 4043.0,
+        "sold": 46.0,
+        "avg_in_price": 5.5,
+        "avg_out_price": 4.5,
+        "expense": 22236.5,
+        "revenue": 207.0,
+        "last_movement": "OUT - 2026-10-10 16:31:49"
     },
     {
         "product_id": "581a9ebd-10f3-48cb-b53a-3ecfb5fff70a",

@@ -530,5 +530,19 @@
         "date": "2026-10-08 21:37:23",
         "created": "2026-10-08 21:37:23",
         "modified": "2026-10-08 21:37:23"
+    },
+    {
+        "invoice_id": "87d8c4bd-15d9-4f2e-ba68-9f0df6a2052a",
+        "movement_id": "d52f5577-9bb8-49eb-b008-d3bd26998ec8",
+        "product": "сладолед",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "unit_price": 6.0,
+        "total_price": 72.0,
+        "customer": "Oqnqn Hristov",
+        "is_active": true,
+        "date": "2026-10-10 16:31:49",
+        "created": "2026-10-10 16:31:49",
+        "modified": "2026-10-10 16:31:49"
     }
 ]

@@ -2248,5 +2248,41 @@
         "modified": "2026-10-08 21:37:34",
         "from_location_id": "12f11b5e-eddb-4cc3-83b3-1c5329b1e3cd",
         "to_location_id": "550a98d8-9a68-4dc2-9c63-6305d1a8bf6a"
+    },
+    {
+        "movement_id": "e5004138-92dc-4cef-ad0c-39935a47fe30",
+        "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
+        "product_name": "сладолед",
+        "user_id": "b4132d5f-fe9a-4e2a-9ef2-eb8f8e13eab9",
+        "location_id": "550a98d8-9a68-4dc2-9c63-6305d1a8bf6a",
+        "movement_type": "IN",
+        "quantity": 123.0,
+        "unit": "бр.",
+        "price": 5.0,
+        "supplier_id": "3810510b-81a4-45fc-a3ce-4c5a8caa73fd",
+        "customer": "Общ клиент",
+        "date": "2026-10-10 16:31:12",
+        "created": "2026-10-10 16:31:12",
+        "modified": "2026-10-10 16:31:12",
+        "from_location_id": null,
+        "to_location_id": null
+    },
+    {
+        "movement_id": "d52f5577-9bb8-49eb-b008-d3bd26998ec8",
+        "product_id": "b51b8e08-f25c-46b5-b77b-9b34ea85dac4",
+        "product_name": "сладолед",
+        "user_id": "b4132d5f-fe9a-4e2a-9ef2-eb8f8e13eab9",
+        "location_id": "12f11b5e-eddb-4cc3-83b3-1c5329b1e3cd",
+        "movement_type": "OUT",
+        "quantity": 12.0,
+        "unit": "бр.",
+        "price": 6.0,
+        "supplier_id": null,
+        "customer": "Oqnqn Hristov",
+        "date": "2026-10-10 16:31:49",
+        "created": "2026-10-10 16:31:49",
+        "modified": "2026-10-10 16:31:49",
+        "from_location_id": null,
+        "to_location_id": null
     }
 ]

@@ -10,6 +10,7 @@ from controllers.abstract_controller import AbstractController
 
 
 
+
 class ProductController(AbstractController):
     """Управлява каталога с продукти и гарантира бизнес логиката."""
     def __init__(self, repo, category_controller: CategoryController):
@@ -100,35 +101,37 @@ class ProductController(AbstractController):
 
 
 
-
     def update(self, product_id: str, updates: dict) -> bool:
         product = self.get_by_id(product_id)
         if not product:
             return False
 
-        if "name" in updates:
-            new_name = ProductValidator.validate_name(updates["name"])
+
+        new_name = ProductValidator.validate_name(updates.get("name", product.name))
+        if new_name != product.name:
             ProductValidator.validate_unique_name(new_name, self.products, exclude_product_id=product.product_id)
-            product.name = new_name
 
-        if "price" in updates:
-            product.price = ProductValidator.parse_float(updates["price"], "Цена")
+        new_price = ProductValidator.parse_float(updates.get("price", product.price), "Цена")
+        new_desc = ProductValidator.validate_description(updates.get("description", product.description))
+        new_unit = ProductValidator.validate_unit(updates.get("unit", product.unit))
 
-        if "description" in updates:
-            product.description = ProductValidator.validate_description(updates["description"])
-
-        if "unit" in updates:
-            product.unit = ProductValidator.validate_unit(updates["unit"])
-
+        new_cats = product.categories
         if "category_ids" in updates:
             new_cats = []
-            for cid in updates["category_ids"]:
+            category_ids = updates["category_ids"]
+            for cid in (category_ids if isinstance(category_ids, list) else [category_ids]):
                 cat = self.category_controller.get_by_id(cid)
                 if cat:
                     new_cats.append(cat)
-            if not new_cats and updates["category_ids"]:
+            if not new_cats and category_ids:
                 raise ValueError("Категориите не са валидни.")
-            product.categories = new_cats
+
+
+        product.name = new_name
+        product.price = new_price
+        product.description = new_desc
+        product.unit = new_unit
+        product.categories = new_cats
 
         product.update_modified()
         self._save_products()
