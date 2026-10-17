@@ -39,16 +39,48 @@ class MovementValidator:
 
 
 
+
+    @staticmethod
+    def parse_price(price, default_price=0.0) -> float:
+        """Парсва цената от низ или я връща по подразбиране."""
+        if price is None or str(price).strip() == "":
+            return float(default_price)
+
+        try:
+            clean_price = str(price).lower().replace("лв", "").replace(",", ".").strip()
+            prc = float(clean_price)
+            if prc < 0:
+                raise ValueError
+            return round(prc, 2)
+        except (ValueError, TypeError):
+            raise ValueError("Невалидна цена.")
+
+
+
+
+    @staticmethod
+    def validate_in_rules(supplier_id):
+        if not supplier_id or str(supplier_id).strip() == "":
+            raise ValueError("При доставка (вход) трябва да посочите доставчик.")
+        return True
+
+
+
     @staticmethod
     def validate_out_rules(product, quantity, customer, available_stock):
         if not customer or str(customer).strip() == "":
             raise ValueError("При продажба трябва да посочите клиент.")
 
         if available_stock < quantity:
-            unit = getattr(product, 'unit', 'бр.') if product else 'бр.'
+            unit = "бр."
+            if product is not None and hasattr(product, 'unit'):
+                if isinstance(product.unit, str) and product.unit.strip():
+                    unit = product.unit
+
             raise ValueError(f"Недостатъчна наличност! Налично: {available_stock} {unit}.")
 
         return True
+
 
 
 
@@ -62,7 +94,11 @@ class MovementValidator:
             raise ValueError("Изходният и целевият склад трябва да са различни.")
 
         if available_stock < quantity:
-            unit = getattr(product, 'unit', 'бр.') if product else 'бр.'
+            unit = "бр."
+            if product is not None and hasattr(product, 'unit'):
+                if isinstance(product.unit, str) and product.unit.strip():
+                    unit = product.unit
+
             raise ValueError(f"Недостатъчна наличност за преместване! Налично: {available_stock} {unit}.")
 
         return True
