@@ -544,5 +544,33 @@
         "date": "2026-10-10 16:31:49",
         "created": "2026-10-10 16:31:49",
         "modified": "2026-10-10 16:31:49"
+    },
+    {
+        "invoice_id": "bd36d385-af3f-41e6-9049-7e8ea93df21b",
+        "movement_id": "f28b39ef-ffea-432b-8586-8d8ac8ceb669",
+        "product": "Сладолед \"Family\"",
+        "quantity": 23.0,
+        "unit": "бр.",
+        "unit_price": 8.0,
+        "total_price": 184.0,
+        "customer": "Стамен Николов",
+        "is_active": true,
+        "date": "2026-10-17 15:01:59",
+        "created": "2026-10-17 15:01:59",
+        "modified": "2026-10-17 15:01:59"
+    },
+    {
+        "invoice_id": "29617b7e-f3e7-4f5b-82e1-00700c68d53d",
+        "movement_id": "55c386fd-7d77-431a-b074-793e3e690aa2",
+        "product": "Сладолед \"Family\"",
+        "quantity": 23.0,
+        "unit": "бр.",
+        "unit_price": 6.0,
+        "total_price": 138.0,
+        "customer": "Калинка Красимирова",
+        "is_active": false,
+        "date": "2026-10-17 15:02:25",
+        "created": "2026-10-17 15:02:25",
+        "modified": "2026-10-17 15:05:20"
     }
 ]
